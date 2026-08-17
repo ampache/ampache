@@ -67,7 +67,7 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         ) {
             $objects = Stats::get_newest('video', -1, 0, 0, $gatekeeper->getUser());
             $browse  = $this->browseFactory->create();
-            $browse->set_threshold($thresh_value);
+            $browse->set_threshold((string) $thresh_value);
             $browse->set_type('video');
             $browse->show_objects($objects);
             $browse->store();

@@ -140,6 +140,9 @@ class Stream_Playlist
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` WHERE `session`.`id` IS NULL';
         Dba::write($sql);
+
+        // clamp the max id
+        Dba::write('ALTER TABLE `stream_playlist` AUTO_INCREMENT = 1');
     }
 
     /**

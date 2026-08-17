@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Module\Util\Rss\PodcastGuid;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -51,6 +52,20 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     ) {}
 
     /**
+     * Returns the itunes author of the item
+     */
+    public function getAuthor(): string
+    {
+        $author = ($this->playable instanceof container_item)
+            ? $this->playable->get_parent_fullname()
+            : '';
+
+        return ($author !== '')
+            ? $author
+            : $this->getTitle();
+    }
+
+    /**
      * Returns the itunes category of the item
      * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
      */
@@ -60,19 +75,38 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns the items image-url
+     * itunes:explicit, required by directories. Ampache has no per-item rating so it comes from the config
      */
-    public function getImageUrl(): string
+    public function getExplicit(): string
     {
-        return (string) Art::url($this->playable->getId(), 'album');
+        return (AmpConfig::get('rss_explicit', false))
+            ? 'true'
+            : 'false';
     }
 
     /**
-     * RSS channel language (RFC 5646), from the installation locale
+     * Returns the items image-url; Art falls back to the placeholder when the item has no art
+     */
+    public function getImageUrl(): string
+    {
+        $type = $this->playable->getMediaType()->value;
+
+        // directories require 1400px artwork, so ask for the thumbnail that size unless upscaling is disabled
+        $thumb = (AmpConfig::get('upscale_images', true))
+            ? 700
+            : null;
+
+        return Art::url($this->playable->getId(), $type, null, $thumb)
+            ?? Art::get_fallback_url($type, 'original');
+    }
+
+    /**
+     * RSS channel language, a lowercase ISO 639 code with an optional region modifier (e.g. "en-us")
+     * https://help.apple.com/itc/podcasts_connect/#/itcb54353390
      */
     public function getLanguage(): string
     {
-        return str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'));
+        return strtolower(str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')));
     }
 
     /**
@@ -100,7 +134,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      *     url: null|string,
      *     season: null|string,
      *     season_name: null|string,
-     *     episode: null|string
+     *     episode: null|string,
+     *     image: string,
+     *     explicit: string
      * }>
      */
     public function getMedias(): Generator
@@ -133,6 +169,8 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     : $media->get_description(),
                 'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
+                'image' => $this->getMediaImageUrl($media),
+                'explicit' => $this->getExplicit(),
                 'pubDate' => null,
                 'type' => null,
                 'size' => null,
@@ -181,7 +219,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getPodcastGuid(): string
     {
-        return PodcastGuid::fromFeedUrl((string) preg_replace('/&?rsstoken=[^&]*/', '', $this->getRssLink()));
+        // the query form identifies a feed whatever url shape it is served under
+        $params = RssUrl::currentQueryParams();
+        unset($params['rsstoken']);
+
+        return PodcastGuid::fromFeedUrl(RssUrl::canonical($params));
     }
 
     /**
@@ -189,7 +231,15 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getRssLink(): string
     {
-        return AmpConfig::get_web_path('/client') . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? '');
+        return RssUrl::published(RssUrl::currentQueryParams(), $this->getTitle());
+    }
+
+    /**
+     * Apple sub-category, empty unless the admin picked one (Music Commentary, Music History, Music Interviews)
+     */
+    public function getSubCategory(): string
+    {
+        return (string) AmpConfig::get('rss_subcategory', '');
     }
 
     /**
@@ -197,7 +247,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getSummary(): string
     {
-        return $this->playable->get_description();
+        $summary = $this->playable->get_description();
+
+        return ($summary !== '')
+            ? $summary
+            : sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
     }
 
     /**
@@ -209,14 +263,6 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool
-    {
-        return $this->playable->has_art();
-    }
-
-    /**
      * Returns `true` if an item-owner is set
      */
     public function hasOwner(): bool
@@ -225,10 +271,14 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns `true` if the item provides a summary/description text
+     * Art of a single episode, its own if it has any, the feed art otherwise
      */
-    public function hasSummary(): bool
+    private function getMediaImageUrl(Song|Podcast_Episode $media): string
     {
-        return $this->playable->get_description() !== '';
+        $type = $media->getMediaType()->value;
+
+        return ($media->has_art())
+            ? (Art::url($media->getId(), $type, null, 700) ?? $this->getImageUrl())
+            : $this->getImageUrl();
     }
 }

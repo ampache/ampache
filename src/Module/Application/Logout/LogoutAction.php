@@ -57,6 +57,7 @@ final readonly class LogoutAction implements ApplicationActionInterface
                 'path' => (string) $this->configContainer->get('cookie_path'),
                 'domain' => (string) $this->configContainer->get('cookie_domain'),
                 'secure' => $this->configContainer->getBool('cookie_secure'),
+                'httponly' => true,
                 'samesite' => 'Strict'
             ];
             $this->logger->debug(

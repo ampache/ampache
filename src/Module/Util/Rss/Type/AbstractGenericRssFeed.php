@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\TemplateInterface;
+use Ampache\Module\Util\Rss\RssUrl;
 use Ampache\Module\Util\Rss\View\GenericRssFeedView;
 use Generator;
 use Override;
@@ -43,13 +44,15 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         return new GenericRssFeedView(
             AmpConfig::get('site_title') . ' - ' . $this->getTitle(),
             AmpConfig::get_web_path('/client'),
-            AmpConfig::get_web_path('/client') . '/rss.php?' . ($_SERVER['QUERY_STRING'] ?? ''),
+            RssUrl::published(RssUrl::currentQueryParams()),
             ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null,
             $this->getImage(),
             $this->getItems(),
             $this->getMedium(),
             $this->getRemoteItems(),
-            str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'))
+            // lowercase ISO 639 + region (e.g. "en-us"); see https://help.apple.com/itc/podcasts_connect/#/itcb54353390
+            strtolower(str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US'))),
+            (AmpConfig::get('rss_explicit', false)) ? 'true' : 'false'
         );
     }
 

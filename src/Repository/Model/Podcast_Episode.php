@@ -145,6 +145,41 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $podcast_ids = [];
+        foreach (self::getPodcastEpisodeRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('podcast_episode', (int) $row['id'], $row);
+            if (!empty($row['podcast'])) {
+                $podcast_ids[(int) $row['podcast']] = (int) $row['podcast'];
+            }
+        }
+
+        // warm parent podcasts so getPodcastLink()/getPodcastName() hit cache instead of one query per row
+        if ($podcast_ids !== []) {
+            Podcast::build_cache(array_values($podcast_ids));
+        }
+
+        Art::build_cache($ids, 'podcast_episode');
+
+        return true;
+    }
+
+    /**
      * update_file
      * sets the file path
      */
@@ -538,9 +573,8 @@ class Podcast_Episode extends database_object implements
 
         $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode((string) $media_name)
-            : rawurlencode((string) $media_name);
+        // rawurlencode: a beautiful url puts the name in a path segment, where a '+' is a literal plus
+        $media_name = rawurlencode((string) $media_name);
 
         $url = Stream::get_base_url($local, $streamToken) . "type=podcast_episode&oid=" . $this->id . "&uid=" . $uid . '&format=raw' . $additional_params;
         if ($player !== '') {

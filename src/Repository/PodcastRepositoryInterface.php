@@ -65,6 +65,14 @@ interface PodcastRepositoryInterface
     public function getIdsByCatalog(int $catalogId): array;
 
     /**
+     * Reads whole podcast rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $podcastIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $podcastIds): array;
+
+    /**
      * Persists the podcast-item in the database
      *
      * If the item is new, it will be created. Otherwise, an update will happen

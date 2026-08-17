@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -93,5 +94,31 @@ class UploadTest extends TestCase
     public function testCleanFilenameKeepsOnlyTheName(string $given, string $expected): void
     {
         static::assertSame($expected, Upload::clean_filename($given));
+    }
+
+    /**
+     * `%FILE%` is a client-chosen filename substituted straight into an admin-configured shell command;
+     * unescaped, a filename carrying shell metacharacters runs arbitrary commands as the web server user
+     */
+    public function testUploadScriptEscapesShellMetacharactersInTheFilename(): void
+    {
+        $targetdir = sys_get_temp_dir();
+        $marker    = $targetdir . DIRECTORY_SEPARATOR . 'ampache-upload-script-test-' . bin2hex(random_bytes(8));
+        $payload   = 'song.mp3; touch ' . escapeshellarg($marker) . ' #';
+
+        AmpConfig::set('allow_upload_scripts', true, true);
+        AmpConfig::set('upload_script', 'echo %FILE%', true);
+
+        try {
+            Upload::upload_script($targetdir, $payload);
+
+            static::assertFileDoesNotExist($marker);
+        } finally {
+            AmpConfig::set('allow_upload_scripts', false, true);
+            AmpConfig::set('upload_script', '', true);
+            if (file_exists($marker)) {
+                unlink($marker);
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Folder;
@@ -102,6 +103,34 @@ class FolderRepositoryTest extends TestCase
         );
     }
 
+    /**
+     * folder_map rows carry their own `catalog` column, so a folder listing must honour the opt-in
+     * `catalog_filter` feature the same way every other browse type does -- folders were the one type
+     * this filter never reached
+     */
+    public function testGetChildrenAppliesTheCatalogFilterWhenEnabled(): void
+    {
+        AmpConfig::set('catalog_filter', true, true);
+
+        try {
+            $result = $this->createMock(PDOStatement::class);
+
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    static::stringContains('`folder_map`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map`'),
+                    [666]
+                )
+                ->willReturn($result);
+
+            $result->method('fetch')->willReturn(false);
+
+            $this->subject->getChildren(666, 5);
+        } finally {
+            AmpConfig::set('catalog_filter', false, true);
+        }
+    }
+
     public function testGetChildrenDropsRowsWithAnUnknownObjectType(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -139,6 +168,20 @@ class FolderRepositoryTest extends TestCase
             ->willReturn(false);
 
         static::assertSame([], $this->subject->getChildren(null));
+    }
+
+    public function testGetChildrenSkipsTheCatalogFilterByDefault(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::logicalNot(static::stringContains('catalog_filter_group_map')), [666])
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getChildren(666, 5);
     }
 
     public function testGetItemCountReturnsCount(): void
@@ -239,6 +282,26 @@ class FolderRepositoryTest extends TestCase
             ->willReturn('some-name');
 
         static::assertSame('some-name', $this->subject->getNameById(666));
+    }
+
+    public function testGetObjectsAppliesTheCatalogFilterToTheRootListingWhenEnabled(): void
+    {
+        AmpConfig::set('catalog_filter', true, true);
+
+        try {
+            $result = $this->createMock(PDOStatement::class);
+
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(static::stringContains('`folder`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map`'))
+                ->willReturn($result);
+
+            $result->method('fetch')->willReturn(false);
+
+            $this->subject->getObjects(null, 5);
+        } finally {
+            AmpConfig::set('catalog_filter', false, true);
+        }
     }
 
     public function testGetObjectsListsTopLevelFoldersForTheRoot(): void

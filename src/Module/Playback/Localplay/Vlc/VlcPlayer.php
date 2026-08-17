@@ -447,7 +447,10 @@ class VlcPlayer
                 // The starting of the tag '<tag>'
                 $parent[$level - 1] = &$current;
                 // Insert New tag
-                if (!is_array($current) || (!in_array($tag, array_keys($current)))) {
+                if (
+                    !is_array($current)
+                    || (!in_array($tag, array_keys($current)))
+                ) {
                     $current[$tag] = $result;
                     if ($attributes_data !== []) {
                         $current[$tag . '_attr'] = $attributes_data;

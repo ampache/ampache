@@ -121,8 +121,9 @@ class Art extends database_object
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      * @param array<int|string> $object_ids
+     * @param list<string> $kinds
      */
-    public static function build_cache(array $object_ids, ?string $type = null): bool
+    public static function build_cache(array $object_ids, ?string $type = null, array $kinds = ['default']): bool
     {
         if ($object_ids === []) {
             return false;
@@ -133,8 +134,48 @@ class Art extends database_object
             return false;
         }
 
-        foreach (self::getImageRepository()->getRowsByObjectIds(array_values($object_ids), $type) as $row) {
+        $ids = array_values($object_ids);
+
+        foreach (self::getImageRepository()->getRowsByObjectIds($ids, $type) as $row) {
             parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
+        }
+
+        // also warm has_db_meta()'s per-object cache, so row rendering stops querying once per item
+        if ($type !== null) {
+            $remaining = [];
+            foreach ($ids as $id) {
+                foreach ($kinds as $kind) {
+                    $remaining[$kind][(int) $id] = true;
+                }
+            }
+
+            // has_db()/has_art()'s cache only ever looks at the default-kind original image
+            $has_default_art = (in_array('default', $kinds, true))
+                ? array_fill_keys(array_map(intval(...), $ids), false)
+                : [];
+
+            foreach (self::getImageRepository()->getOriginalRowsByObjectIds($ids, $type, $kinds) as $row) {
+                $kind      = (string) $row['kind'];
+                $object_id = (int) $row['object_id'];
+                parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, $row);
+                unset($remaining[$kind][$object_id]);
+
+                if ($kind === 'default') {
+                    $has_default_art[$object_id] = true;
+                }
+            }
+
+            // objects with no art of a given kind would otherwise keep re-querying on every cache miss
+            foreach ($remaining as $kind => $object_ids_without_art) {
+                foreach (array_keys($object_ids_without_art) as $object_id) {
+                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, [0]);
+                }
+            }
+
+            // also warm has_db()'s per-object cache, read by has_art()-style checks ahead of display()
+            foreach ($has_default_art as $object_id => $hasArt) {
+                parent::add_to_cache('art_has_db_' . $type, $object_id, [(int) $hasArt]);
+            }
         }
 
         return true;
@@ -231,7 +272,7 @@ class Art extends database_object
         }
 
         $art    = new Art($object_id, $object_type, $kind);
-        $has_db = $art->has_db_info();
+        $has_db = $art->has_db_meta();
         // Don't show any image if not available
         if (!$show_default && !$has_db) {
             return false;
@@ -301,8 +342,9 @@ class Art extends database_object
             }
 
             // This to keep browser cache feature but force a refresh in case image just changed
-            if ($art->has_db_info($out_size)) {
-                $imgurl .= '&id=' . $art->id;
+            $thumbRow = self::getImageRepository()->findThumbnail($object_type, $object_id, $out_size, $kind, 0, 0);
+            if ($thumbRow !== []) {
+                $imgurl .= '&id=' . (int) $thumbRow['id'];
             }
         } else {
             // one shared url for every item with no art, so the browser fetches and caches the placeholder once
@@ -532,7 +574,9 @@ class Art extends database_object
             }
         }
 
-        return AmpConfig::get_web_path('/client') . '/images/' . $name . '_' . self::_fallback_size($size) . '.png';
+        $suffix = self::_fallback_size($size);
+
+        return AmpConfig::get_web_path('/client') . '/images/' . $name . $suffix . '.png';
     }
 
     /**
@@ -700,6 +744,11 @@ class Art extends database_object
                 // large 174x174
                 $size['height'] = 174;
                 $size['width']  = 174;
+                break;
+            case 700:
+                // podcast/rss cover art: doubled to 1400x1400, the minimum size directories accept
+                $size['height'] = 700;
+                $size['width']  = 700;
                 break;
             case 300:
                 // extralarge, mega 300x300
@@ -944,15 +993,18 @@ class Art extends database_object
             $wanted = max((int) $matches[1], (int) $matches[2]);
         }
 
+        // the full size image, for 'original' and anything bigger than the largest thumbnail
+        if ($size === 'original') {
+            return '';
+        }
+
         foreach (self::FALLBACK_SIZES as $available) {
             if ($wanted <= $available) {
-                return $available . 'x' . $available;
+                return '_' . $available . 'x' . $available;
             }
         }
 
-        $largest = self::FALLBACK_SIZES[count(self::FALLBACK_SIZES) - 1];
-
-        return $largest . 'x' . $largest;
+        return '';
     }
 
     private static function _hasGD(): bool
@@ -997,17 +1049,11 @@ class Art extends database_object
             return null;
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? null
+            : $image;
     }
 
     /**
@@ -1471,6 +1517,32 @@ class Art extends database_object
     }
 
     /**
+     * Fills id/width/height from the database without reading the file off disk.
+     */
+    public function has_db_meta(): bool
+    {
+        $index = 'art_meta_' . $this->object_type . '_' . $this->kind;
+        if (database_object::is_cached($index, $this->object_id)) {
+            $row = database_object::get_from_cache($index, $this->object_id);
+        } else {
+            $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
+            // [0] marks "no art": add_to_cache() drops empty arrays, so a miss would re-query every time
+            database_object::add_to_cache($index, $this->object_id, ($row === []) ? [0] : $row);
+        }
+
+        if ($row === [] || $row === [0]) {
+            return false;
+        }
+
+        $this->id       = (int) $row['id'];
+        $this->width    = (int) $row['width'];
+        $this->height   = (int) $row['height'];
+        $this->raw_mime = (string) ($row['mime'] ?? '');
+
+        return true;
+    }
+
+    /**
      * insert
      * This takes the string representation of an image and inserts it into
      * the database. You must also pass the mime type.
@@ -1818,17 +1890,11 @@ class Art extends database_object
             return '';
         }
 
-        $image    = '';
-        $filepath = fopen($path, "rb");
-        if ($filepath) {
-            do {
-                $image .= fread($filepath, 2048);
-            } while (!feof($filepath));
+        $image = file_get_contents($path);
 
-            fclose($filepath);
-        }
-
-        return $image;
+        return ($image === false)
+            ? ''
+            : $image;
     }
 
     /**

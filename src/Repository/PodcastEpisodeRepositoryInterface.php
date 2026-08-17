@@ -136,6 +136,14 @@ interface PodcastEpisodeRepositoryInterface
     public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array;
 
     /**
+     * Reads whole podcast_episode rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $episodeIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $episodeIds): array;
+
+    /**
      * Reads a page of the episodes a verify pass walks, newest path first
      *
      * @return list<array{id: int, file: string, min_update_time: int}>

@@ -162,6 +162,7 @@ class Xml3_Data
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
 
+        Album::build_cache($objects);
         Rating::build_cache('album', $objects);
 
         foreach ($objects as $album_id) {
@@ -216,6 +217,7 @@ class Xml3_Data
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
 
+        Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
 
         foreach ($objects as $artist_id) {
@@ -308,6 +310,8 @@ class Xml3_Data
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
 
+        Playlist::build_cache($objects);
+
         // Foreach the playlist ids
         foreach ($objects as $playlist_id) {
             $playlist = new Playlist((int) $playlist_id);
@@ -396,6 +400,7 @@ class Xml3_Data
         $string = "<total_count>" . $this->count . "</total_count>\n";
 
         Song::build_cache($objects);
+        Rating::build_cache('song', $objects);
         Stream::set_session($auth);
 
         // Foreach the ids!
@@ -449,6 +454,8 @@ class Xml3_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
+
+        Tag::build_cache($objects);
 
         foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
@@ -536,6 +543,8 @@ class Xml3_Data
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $string = "<total_count>" . $this->count . "</total_count>\n";
+
+        Video::build_cache($objects);
 
         foreach ($objects as $video_id) {
             $video = new Video((int) $video_id);

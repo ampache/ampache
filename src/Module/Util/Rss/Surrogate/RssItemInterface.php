@@ -30,9 +30,19 @@ use Traversable;
 interface RssItemInterface
 {
     /**
+     * Returns the itunes author of the item
+     */
+    public function getAuthor(): string;
+
+    /**
      * Returns the itunes category of the item
      */
     public function getCategory(): string;
+
+    /**
+     * itunes:explicit value ('true' or 'false')
+     */
+    public function getExplicit(): string;
 
     /**
      * Returns the items image-url
@@ -40,7 +50,8 @@ interface RssItemInterface
     public function getImageUrl(): string;
 
     /**
-     * RSS channel language (RFC 5646), from the installation locale
+     * RSS channel language, a lowercase ISO 639 code with an optional region modifier (e.g. "en-us")
+     * https://help.apple.com/itc/podcasts_connect/#/itcb54353390
      */
     public function getLanguage(): string;
 
@@ -66,7 +77,9 @@ interface RssItemInterface
      *   url: ?string,
      *   season: ?string,
      *   season_name: ?string,
-     *   episode: ?string
+     *   episode: ?string,
+     *   image: string,
+     *   explicit: string
      * }>
      */
     public function getMedias(): Traversable;
@@ -87,6 +100,11 @@ interface RssItemInterface
     public function getRssLink(): string;
 
     /**
+     * Apple sub-category, empty when unset
+     */
+    public function getSubCategory(): string;
+
+    /**
      * Returns the items summary/description text
      */
     public function getSummary(): string;
@@ -97,17 +115,7 @@ interface RssItemInterface
     public function getTitle(): string;
 
     /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool;
-
-    /**
      * Returns `true` if an item-owner is set
      */
     public function hasOwner(): bool;
-
-    /**
-     * Returns `true` if the item provides a summary/description text
-     */
-    public function hasSummary(): bool;
 }

@@ -158,6 +158,8 @@ class Video extends database_object implements
             parent::add_to_cache('video', $row['id'], $row);
         }
 
+        Art::build_cache($ids, 'video', ['default', 'preview']);
+
         return true;
     }
 
@@ -829,9 +831,8 @@ class Video extends database_object implements
 
         $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = (string) preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode($media_name)
-            : rawurlencode($media_name);
+        // rawurlencode: a beautiful url puts the name in a path segment, where a '+' is a literal plus
+        $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . $uid . $additional_params;
         if ($player !== '') {

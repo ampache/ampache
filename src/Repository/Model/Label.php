@@ -94,6 +94,38 @@ class Label extends database_object implements
     }
 
     /**
+     * build_cache
+     * This attempts to reduce # of queries by asking for everything in the
+     * browse all at once and storing it in the cache
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if (empty($ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getLabelRepository()->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('label', (int) $row['id'], $row);
+        }
+
+        // objects with no artists would otherwise keep re-querying on every cache miss
+        $counts = self::getLabelRepository()->getArtistCountsByIds($ids);
+        foreach ($ids as $id) {
+            parent::add_to_cache('label_artist_count', (int) $id, ['count' => $counts[(int) $id] ?? 0]);
+        }
+
+        Art::build_cache($ids, 'label');
+
+        return true;
+    }
+
+    /**
      * create
      */
     public static function create(array $data): ?int
@@ -251,7 +283,9 @@ class Label extends database_object implements
     public function get_artist_count(): int
     {
         if ($this->artist_count === null) {
-            $this->artist_count = count($this->get_artists());
+            $this->artist_count = (self::is_cached('label_artist_count', $this->id))
+                ? (int) self::get_from_cache('label_artist_count', $this->id)['count']
+                : count($this->get_artists());
         }
 
         return $this->artist_count;

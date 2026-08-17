@@ -1012,7 +1012,11 @@ class Preference extends database_object
         }
 
         /* Set the Theme mojo */
-        if (array_key_exists('theme_name', $results) && strlen((string) $results['theme_name']) > 0) {
+        if (
+            array_key_exists('theme_name', $results)
+            && strlen((string) $results['theme_name']) > 0
+            && basename((string) $results['theme_name']) === $results['theme_name']
+        ) {
             // In case the theme was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/client/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
@@ -1039,7 +1043,10 @@ class Preference extends database_object
             $results['theme_color'] = 'dark';
         }
 
-        if (strlen((string) $results['theme_color']) > 0) {
+        if (
+            strlen((string) $results['theme_color']) > 0
+            && basename((string) $results['theme_color']) === $results['theme_color']
+        ) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/client/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);

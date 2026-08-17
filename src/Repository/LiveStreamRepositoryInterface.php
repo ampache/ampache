@@ -57,6 +57,14 @@ interface LiveStreamRepositoryInterface
     public function findById(int $objectId): ?Live_Stream;
 
     /**
+     * Reads whole live_stream rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $liveStreamIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $liveStreamIds): array;
+
+    /**
      * Saves the item, inserting it when it is new
      *
      * Returns the id of a newly created item, null when an existing one was updated
