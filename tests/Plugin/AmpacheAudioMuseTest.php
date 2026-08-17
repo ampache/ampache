@@ -40,34 +40,13 @@ use ReflectionMethod;
 class AmpacheAudioMuseTest extends TestCase
 {
     /**
-     * @param array<int, array<string, mixed>> $rows
-     * @return list<array{'id': int, 'similarity': float}>
-     */
-    private static function toMatches(array $rows): array
-    {
-        $method = new ReflectionMethod(AmpacheAudioMuse::class, '_toMatches');
-
-        $urlValidator = new class implements UrlValidatorInterface {
-            public function isPublicHttpUrl(string $url): bool
-            {
-                return true;
-            }
-        };
-
-        /** @var list<array{'id': int, 'similarity': float}> $result */
-        $result = $method->invoke(new AmpacheAudioMuse($urlValidator), $rows);
-
-        return $result;
-    }
-
-    /**
      * A bare id must not go through getAmpacheId(): the legacy old-style Subsonic ranges read a small integer as a
      * catalog id, which would drop every native-connector row.
      */
     public function testBareIdsAreNotMistakenForOtherObjectTypes(): void
     {
         self::assertSame('catalog', OpenSubsonic_Api::getAmpacheType('1'));
-        self::assertSame([['id' => 1, 'similarity' => 1.0]], self::toMatches([['item_id' => '1', 'distance' => 0.0]]));
+        self::assertSame([['id' => 1, 'similarity' => 1.0]], $this->toMatches([['item_id' => '1', 'distance' => 0.0]]));
     }
 
     /**
@@ -81,7 +60,7 @@ class AmpacheAudioMuseTest extends TestCase
                 ['id' => 1, 'similarity' => 0.9],
                 ['id' => 3001, 'similarity' => 0.9],
             ],
-            self::toMatches([
+            $this->toMatches([
                 ['item_id' => '1', 'distance' => 0.1],
                 ['item_id' => 'so-3001', 'distance' => 0.1],
             ])
@@ -93,7 +72,7 @@ class AmpacheAudioMuseTest extends TestCase
      */
     public function testMatchesClampSimilarityIntoRange(): void
     {
-        $matches = self::toMatches([
+        $matches = $this->toMatches([
             ['item_id' => 'so-2', 'distance' => 1.9],
             ['item_id' => 'so-4', 'distance' => -0.5],
         ]);
@@ -109,7 +88,7 @@ class AmpacheAudioMuseTest extends TestCase
     {
         self::assertSame(
             [],
-            self::toMatches([
+            $this->toMatches([
                 ['item_id' => 'al-7', 'distance' => 0.1],
                 ['item_id' => 'ar-2', 'distance' => 0.1],
                 ['item_id' => '', 'distance' => 0.1],
@@ -125,7 +104,7 @@ class AmpacheAudioMuseTest extends TestCase
                 ['id' => 1, 'similarity' => 1.0],
                 ['id' => 3001, 'similarity' => 0.58],
             ],
-            self::toMatches([
+            $this->toMatches([
                 ['item_id' => 'so-1', 'distance' => 0.0],
                 ['item_id' => 'so-3001', 'distance' => 0.42],
             ])
@@ -152,10 +131,31 @@ class AmpacheAudioMuseTest extends TestCase
                 ['id' => 1, 'similarity' => -1.0],
                 ['id' => 3001, 'similarity' => -1.0],
             ],
-            self::toMatches([
+            $this->toMatches([
                 ['item_id' => 'so-1', 'title' => 'Pasadinha'],
                 ['item_id' => 'so-3001', 'title' => 'Empty Phases'],
             ])
         );
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $rows
+     * @return list<array{'id': int, 'similarity': float}>
+     */
+    private function toMatches(array $rows): array
+    {
+        $method = new ReflectionMethod(AmpacheAudioMuse::class, '_toMatches');
+
+        $urlValidator = new class implements UrlValidatorInterface {
+            public function isPublicHttpUrl(string $url): bool
+            {
+                return true;
+            }
+        };
+
+        /** @var list<array{'id': int, 'similarity': float}> $result */
+        $result = $method->invoke(new AmpacheAudioMuse($urlValidator), $rows);
+
+        return $result;
     }
 }

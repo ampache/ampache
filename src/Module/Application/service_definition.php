@@ -125,9 +125,11 @@ use Ampache\Module\Application\Browse\AlbumArtistAction;
 use Ampache\Module\Application\Browse\ArtistAction;
 use Ampache\Module\Application\Browse\BroadcastAction;
 use Ampache\Module\Application\Browse\CatalogAction;
+use Ampache\Module\Application\Browse\CollectionAction;
 use Ampache\Module\Application\Browse\FileAction;
 use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
+use Ampache\Module\Application\Browse\MoodAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
@@ -136,6 +138,9 @@ use Ampache\Module\Application\Browse\SmartPlaylistAction;
 use Ampache\Module\Application\Browse\SongAction;
 use Ampache\Module\Application\Browse\TagAction;
 use Ampache\Module\Application\Browse\VideoAction;
+use Ampache\Module\Application\Collection\AddObjectAction;
+use Ampache\Module\Application\Collection\DeleteCollectionAction;
+use Ampache\Module\Application\Collection\RemoveObjectAction;
 use Ampache\Module\Application\DemocraticPlayback\CreateAction;
 use Ampache\Module\Application\DemocraticPlayback\ManageAction;
 use Ampache\Module\Application\DemocraticPlayback\ManagePlaylistsAction;
@@ -149,6 +154,7 @@ use Ampache\Module\Application\LocalPlay\EditInstanceAction;
 use Ampache\Module\Application\LocalPlay\ShowAddInstanceAction;
 use Ampache\Module\Application\LocalPlay\ShowInstancesAction;
 use Ampache\Module\Application\LocalPlay\UpdateInstanceAction;
+use Ampache\Module\Application\Login\OidcAction;
 use Ampache\Module\Application\Logout\LogoutAction;
 use Ampache\Module\Application\LostPassword\SendAction;
 use Ampache\Module\Application\Mashup\WrappedAction;
@@ -160,6 +166,7 @@ use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
 use Ampache\Module\Application\Playlist\ShowImportPlaylistAction;
 use Ampache\Module\Application\Playlist\SortTrackAction;
 use Ampache\Module\Application\Podcast\ExportPodcastsAction;
+use Ampache\Module\Application\Podcast\UpdateFromFeedAction;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
@@ -374,7 +381,7 @@ return [
     Podcast\DeleteAction::class => autowire(Podcast\DeleteAction::class),
     Podcast\ConfirmDeleteAction::class => autowire(Podcast\ConfirmDeleteAction::class),
     Podcast\ShowAction::class => autowire(Podcast\ShowAction::class),
-    Podcast\UpdateFromFeedAction::class => autowire(Podcast\UpdateFromFeedAction::class),
+    UpdateFromFeedAction::class => autowire(UpdateFromFeedAction::class),
     ExportPodcastsAction::class => autowire(),
     PodcastEpisode\DeleteAction::class => autowire(PodcastEpisode\DeleteAction::class),
     PodcastEpisode\ConfirmDeleteAction::class => autowire(PodcastEpisode\ConfirmDeleteAction::class),
@@ -415,9 +422,9 @@ return [
     DeletePlaylistAction::class => autowire(DeletePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
     Collection\ShowAction::class => autowire(Collection\ShowAction::class),
-    Collection\AddObjectAction::class => autowire(Collection\AddObjectAction::class),
-    Collection\RemoveObjectAction::class => autowire(Collection\RemoveObjectAction::class),
-    Collection\DeleteCollectionAction::class => autowire(Collection\DeleteCollectionAction::class),
+    AddObjectAction::class => autowire(AddObjectAction::class),
+    RemoveObjectAction::class => autowire(RemoveObjectAction::class),
+    DeleteCollectionAction::class => autowire(DeleteCollectionAction::class),
     Collection\SetTrackNumbersAction::class => autowire(Collection\SetTrackNumbersAction::class),
     Collection\ShowCreateAction::class => autowire(Collection\ShowCreateAction::class),
     Collection\CreateAction::class => autowire(Collection\CreateAction::class),
@@ -440,14 +447,14 @@ return [
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
-    Login\OidcAction::class => autowire(Login\OidcAction::class),
+    OidcAction::class => autowire(OidcAction::class),
     ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),
     LocalPlay\ShowPlaylistAction::class => autowire(LocalPlay\ShowPlaylistAction::class),
     AddInstanceAction::class => autowire(AddInstanceAction::class),
     UpdateInstanceAction::class => autowire(UpdateInstanceAction::class),
     EditInstanceAction::class => autowire(EditInstanceAction::class),
     ShowInstancesAction::class => autowire(ShowInstancesAction::class),
-    Browse\MoodAction::class => autowire(Browse\MoodAction::class),
+    MoodAction::class => autowire(MoodAction::class),
     TagAction::class => autowire(TagAction::class),
     FileAction::class => autowire(FileAction::class),
     AlbumAction::class => autowire(AlbumAction::class),
@@ -456,7 +463,7 @@ return [
     SongAction::class => autowire(SongAction::class),
     PlaylistAction::class => autowire(PlaylistAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
-    Browse\CollectionAction::class => autowire(Browse\CollectionAction::class),
+    CollectionAction::class => autowire(CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),
     CatalogAction::class => autowire(CatalogAction::class),
     PrivateMessageAction::class => autowire(PrivateMessageAction::class),

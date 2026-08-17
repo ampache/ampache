@@ -97,7 +97,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $multi_object_ids = ['' => $object_ids];
             }
 
-            echo (new ArtistPageView(
+            echo new ArtistPageView(
                 $artist,
                 $multi_object_ids,
                 $objectType,
@@ -108,7 +108,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            ))->render();
+            )->render();
         }
 
         $this->ui->showQueryStats();

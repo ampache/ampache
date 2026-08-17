@@ -155,7 +155,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $labelIds));
+        $idList = implode(',', array_map(intval(...), $labelIds));
 
         $result = $this->connection->query(
             'SELECT `label`, COUNT(`artist`) AS `count` FROM `label_asso` WHERE `label` IN (' . $idList . ') AND `artist` IS NOT NULL GROUP BY `label`'
@@ -262,7 +262,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $labelIds));
+        $idList = implode(',', array_map(intval(...), $labelIds));
 
         $result = $this->connection->query('SELECT * FROM `label` WHERE `id` IN (' . $idList . ')');
 

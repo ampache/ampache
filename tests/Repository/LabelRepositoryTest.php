@@ -105,7 +105,7 @@ class LabelRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
-        static::assertSame([1, 2], $this->subject->getAlbums($label));
+        self::assertSame([1, 2], $this->subject->getAlbums($label));
     }
 
     public function testGetAllReturnsData(): void
@@ -149,7 +149,7 @@ class LabelRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
-        static::assertSame([1, 2], $this->subject->getArtists($label));
+        self::assertSame([1, 2], $this->subject->getArtists($label));
     }
 
     public function testGetByArtistReturnsData(): void
@@ -195,7 +195,7 @@ class LabelRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('42', false);
 
-        static::assertSame([42], $this->subject->getIdsByCategory('tag_generated'));
+        self::assertSame([42], $this->subject->getIdsByCategory('tag_generated'));
     }
 
     public function testLookupReturnsNegativeValueOnEmptyName(): void
@@ -277,8 +277,8 @@ class LabelRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::anything(),
-                static::callback(static fn(array $params): bool => $params[8] === 0)
+                self::anything(),
+                self::callback(static fn(array $params): bool => $params[8] === 0)
             );
 
         $this->subject->persist($label);
@@ -296,7 +296,7 @@ class LabelRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('INSERT INTO `label`'),
+                self::stringContains('INSERT INTO `label`'),
                 ['some-name', null, null, null, null, null, null, null, 42, 1, 1234]
             );
 
@@ -304,7 +304,7 @@ class LabelRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(666, $this->subject->persist($label));
+        self::assertSame(666, $this->subject->persist($label));
     }
 
     public function testPersistReturnsNullIfTheInsertYieldedNoId(): void
@@ -320,7 +320,7 @@ class LabelRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(0);
 
-        static::assertNull($this->subject->persist($label));
+        self::assertNull($this->subject->persist($label));
     }
 
     public function testPersistUpdatesAnExistingLabelAndReturnsNull(): void
@@ -335,14 +335,14 @@ class LabelRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                static::stringContains('UPDATE `label` SET `name` = ?'),
+                self::stringContains('UPDATE `label` SET `name` = ?'),
                 ['some-name', null, 'some-category', null, null, null, null, null, 1, 666]
             );
 
         $this->connection->expects(static::never())
             ->method('getLastInsertedId');
 
-        static::assertNull($this->subject->persist($label));
+        self::assertNull($this->subject->persist($label));
     }
 
     public function testRemoveArtistAssocDeletes(): void

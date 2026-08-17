@@ -146,7 +146,7 @@ class ArtExporterTest extends TestCase
 
         $this->subject->export($interactor, $metadataWriter, true);
 
-        static::assertSame(
+        self::assertSame(
             'some-raw-bytes',
             file_get_contents($root->url() . '/album/21/default/art-original.png')
         );

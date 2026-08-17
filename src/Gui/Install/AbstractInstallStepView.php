@@ -55,11 +55,11 @@ abstract class AbstractInstallStepView extends AbstractView
 
     final public function renderFooter(): string
     {
-        return (new InstallFooterView($this->webPath))->render();
+        return new InstallFooterView($this->webPath)->render();
     }
 
     final public function renderHeader(): string
     {
-        return (new InstallHeaderView($this->charset, $this->documentLanguage))->render();
+        return new InstallHeaderView($this->charset, $this->documentLanguage)->render();
     }
 }

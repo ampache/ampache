@@ -80,15 +80,15 @@ final class Stats
     public int $user;
 
     public function __construct(
-        private AlbumRepositoryInterface $albumRepository,
-        private ArtistRepositoryInterface $artistRepository,
-        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        private PodcastRepositoryInterface $podcastRepository,
-        private SongRepositoryInterface $songRepository,
-        private UserActivityPosterInterface $userActivityPoster,
-        private UserActivityRepositoryInterface $userActivityRepository,
-        private VideoRepositoryInterface $videoRepository,
-        private LoggerInterface $logger,
+        private readonly AlbumRepositoryInterface $albumRepository,
+        private readonly ArtistRepositoryInterface $artistRepository,
+        private readonly PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private readonly PodcastRepositoryInterface $podcastRepository,
+        private readonly SongRepositoryInterface $songRepository,
+        private readonly UserActivityPosterInterface $userActivityPoster,
+        private readonly UserActivityRepositoryInterface $userActivityRepository,
+        private readonly VideoRepositoryInterface $videoRepository,
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -509,11 +509,9 @@ final class Stats
             $where[] = $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
 
-        $sql .= 'WHERE ' . implode(' AND ', $where) . ' ' . $group_by . 'ORDER BY `real_atime` DESC ';
-
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
 
-        return $sql;
+        return $sql . ('WHERE ' . implode(' AND ', $where) . ' ' . $group_by . 'ORDER BY `real_atime` DESC ');
     }
 
     /**
@@ -1098,7 +1096,7 @@ final class Stats
 
         Dba::write($sql, $params);
 
-        if ((int) $child_id === 0) {
+        if ($child_id === 0) {
             // move consolidated history as well (merge counts on conflict)
             Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `old_summary`.`object_type`, ?, `old_summary`.`user`, `old_summary`.`count_type`, `old_summary`.`count`, `old_summary`.`date_from`, `old_summary`.`date_to` FROM `object_count_summary` AS `old_summary` WHERE `old_summary`.`object_type` = ? AND `old_summary`.`object_id` = ? ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", [$new_object_id, $object_type, $old_object_id]);
             Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ?;", [$object_type, $old_object_id]);
@@ -1409,6 +1407,7 @@ final class Stats
         // album, album_disk and artist roll up from the songs, so they follow once those are right
         $this->albumRepository->updateAllCounts();
         $this->albumRepository->updateAllSkipCounts();
+
         $this->artistRepository->updateAllCounts();
         $this->artistRepository->updateAllSkipCounts();
     }

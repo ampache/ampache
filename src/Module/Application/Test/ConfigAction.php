@@ -58,7 +58,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         if ((parse_ini_file($configfile) ?: []) === []) {
-            echo (new TestConfigPageView())->render();
+            echo new TestConfigPageView()->render();
 
             return null;
         }
@@ -95,12 +95,12 @@ final readonly class ConfigAction implements ApplicationActionInterface
         }
 
         if (!class_exists(Translations::class)) {
-            echo (new TestErrorPageView())->render();
+            echo new TestErrorPageView()->render();
             throw new Exception('load_gettext()');
         }
 
         load_gettext();
-        echo (new TestPageView($this->environment, __DIR__ . '/../../../../config/ampache.cfg.php'))->render();
+        echo new TestPageView($this->environment, __DIR__ . '/../../../../config/ampache.cfg.php')->render();
 
         return null;
     }

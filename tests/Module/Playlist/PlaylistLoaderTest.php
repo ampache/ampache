@@ -50,7 +50,7 @@ class PlaylistLoaderTest extends TestCase
 
         $result = $this->subject->loadByUserId($userId);
 
-        static::assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     protected function setUp(): void

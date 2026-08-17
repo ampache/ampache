@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -76,7 +77,7 @@ class OpenSubsonicTranscodeTest extends TestCase
         self::assertNull(OpenSubsonic_Transcode::decodeParams($token));
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('malformedTokenProvider')]
+    #[DataProvider('malformedTokenProvider')]
     public function testDecodeParamsRejectsMalformedTokens(string $token): void
     {
         self::assertNull(OpenSubsonic_Transcode::decodeParams($token));

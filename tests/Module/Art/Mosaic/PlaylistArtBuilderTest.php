@@ -58,7 +58,7 @@ class PlaylistArtBuilderTest extends TestCase
     {
         // red banner with a green square dead centre; a centre crop keeps only the green
         $image = imagecreatetruecolor(600, 200);
-        static::assertNotFalse($image);
+        self::assertNotFalse($image);
         imagefill($image, 0, 0, (int) imagecolorallocate($image, 255, 0, 0));
         imagefilledrectangle($image, 200, 0, 399, 199, (int) imagecolorallocate($image, 0, 255, 0));
         ob_start();
@@ -67,8 +67,8 @@ class PlaylistArtBuilderTest extends TestCase
 
         $result = $this->subject->build(array_fill(0, 4, $wide));
 
-        static::assertNotNull($result);
-        static::assertSame([0, 255, 0], $this->tileColors($result, 2)[0]);
+        self::assertNotNull($result);
+        self::assertSame([0, 255, 0], $this->tileColors($result, 2)[0]);
     }
 
     public function testBuildCreatesSquareMosaicFromFourImages(): void
@@ -80,7 +80,7 @@ class PlaylistArtBuilderTest extends TestCase
 
         $this->assertMosaic($result);
         // each source has to land in its own cell, in the order it was handed over
-        static::assertSame($colors, $this->tileColors((string) $result, 2));
+        self::assertSame($colors, $this->tileColors((string) $result, 2));
     }
 
     public function testBuildCreatesSquareMosaicFromNineImages(): void
@@ -90,7 +90,7 @@ class PlaylistArtBuilderTest extends TestCase
         $result = $this->subject->build($images);
 
         $this->assertMosaic($result);
-        static::assertSame(self::COLORS, $this->tileColors((string) $result, 3));
+        self::assertSame(self::COLORS, $this->tileColors((string) $result, 3));
     }
 
     #[DataProvider('partialGridProvider')]
@@ -105,7 +105,7 @@ class PlaylistArtBuilderTest extends TestCase
 
         $this->assertMosaic($result);
         // a count between two grid sizes fills the smaller one and drops the extra covers
-        static::assertSame(array_slice(self::COLORS, 0, $grid * $grid), $this->tileColors((string) $result, $grid));
+        self::assertSame(array_slice(self::COLORS, 0, $grid * $grid), $this->tileColors((string) $result, $grid));
     }
 
     public function testBuildIgnoresUndecodableImagesWhenCountingTiles(): void
@@ -113,7 +113,7 @@ class PlaylistArtBuilderTest extends TestCase
         // Three good covers plus junk isn't enough for a mosaic.
         $images = [$this->createImage(300, 300), 'junk', $this->createImage(300, 300), 'junk', $this->createImage(300, 300)];
 
-        static::assertNull($this->subject->build($images));
+        self::assertNull($this->subject->build($images));
     }
 
     public function testBuildKeepsTransparency(): void
@@ -122,23 +122,23 @@ class PlaylistArtBuilderTest extends TestCase
 
         $result = $this->subject->build($images);
 
-        static::assertNotNull($result);
+        self::assertNotNull($result);
         $image = imagecreatefromstring($result);
-        static::assertNotFalse($image);
+        self::assertNotFalse($image);
         // a truecolor canvas starts opaque black, so a lost alpha channel shows up as a black tile
-        static::assertSame(127, (imagecolorat($image, 150, 150) >> 24) & 0x7F);
+        self::assertSame(127, (imagecolorat($image, 150, 150) >> 24) & 0x7F);
     }
 
     public function testBuildReturnsNullWhenNoImageIsDecodable(): void
     {
-        static::assertNull($this->subject->build(['not-an-image', '', 'still not']));
+        self::assertNull($this->subject->build(['not-an-image', '', 'still not']));
     }
 
     public function testBuildReturnsNullWithFewerThanFourImages(): void
     {
         $images = [$this->createImage(300, 300), $this->createImage(300, 300), $this->createImage(300, 300)];
 
-        static::assertNull($this->subject->build($images));
+        self::assertNull($this->subject->build($images));
     }
 
     protected function setUp(): void
@@ -148,13 +148,13 @@ class PlaylistArtBuilderTest extends TestCase
 
     private function assertMosaic(?string $result): void
     {
-        static::assertNotNull($result);
+        self::assertNotNull($result);
 
         $info = getimagesizefromstring($result);
-        static::assertNotFalse($info);
-        static::assertSame(IMAGETYPE_PNG, $info[2]);
-        static::assertSame(600, $info[0]);
-        static::assertSame(600, $info[1]);
+        self::assertNotFalse($info);
+        self::assertSame(IMAGETYPE_PNG, $info[2]);
+        self::assertSame(600, $info[0]);
+        self::assertSame(600, $info[1]);
     }
 
     /**
@@ -163,7 +163,7 @@ class PlaylistArtBuilderTest extends TestCase
     private function createImage(int $width, int $height, array $rgb = [0, 0, 0]): string
     {
         $image = imagecreatetruecolor($width, $height);
-        static::assertNotFalse($image);
+        self::assertNotFalse($image);
         imagefill($image, 0, 0, (int) imagecolorallocate($image, ...$rgb));
 
         ob_start();
@@ -175,7 +175,7 @@ class PlaylistArtBuilderTest extends TestCase
     private function createTransparentImage(int $width, int $height): string
     {
         $image = imagecreatetruecolor($width, $height);
-        static::assertNotFalse($image);
+        self::assertNotFalse($image);
         imagealphablending($image, false);
         imagesavealpha($image, true);
         imagefill($image, 0, 0, (int) imagecolorallocatealpha($image, 0, 0, 0, 127));
@@ -194,7 +194,7 @@ class PlaylistArtBuilderTest extends TestCase
     private function tileColors(string $png, int $grid): array
     {
         $image = imagecreatefromstring($png);
-        static::assertNotFalse($image);
+        self::assertNotFalse($image);
 
         $size   = intdiv(600, $grid);
         $colors = [];

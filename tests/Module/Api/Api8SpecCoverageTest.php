@@ -48,60 +48,15 @@ class Api8SpecCoverageTest extends TestCase
     private const string SPEC        = __DIR__ . '/../../../docs/openapi.json';
 
     /**
-     * The actions recorded in the "Alternative action" column of docs/REST-to-RPC.md
-     *
-     * @return list<string>
-     */
-    private static function documentedAliases(): array
-    {
-        $rows = (string) file_get_contents(self::REST_TO_RPC);
-
-        // | HTTP | REST | RPC action | Alternative action |
-        preg_match_all('/^\|[^|]*\|[^|]*\|[^|]*\|\s*`([a-z_0-9]+)`\s*\|$/m', $rows, $matches);
-
-        return array_values(array_unique($matches[1]));
-    }
-
-    /**
-     * Every `action=` named by a mapping, whether or not the key carries a verb.
-     *
-     * @param array<string, mixed> $spec
-     * @return list<string>
-     */
-    private static function mappedActions(array $spec): array
-    {
-        $actions = [];
-        foreach ($spec['x-rpc-mappings'] as $mapping) {
-            if (preg_match('/action=([a-z_0-9]+)/', (string) $mapping, $matches) === 1) {
-                $actions[] = $matches[1];
-            }
-        }
-
-        return array_values(array_unique($actions));
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private static function spec(): array
-    {
-        $spec = json_decode((string) file_get_contents(self::SPEC), true);
-
-        self::assertIsArray($spec, 'docs/openapi.json is not valid JSON');
-
-        return $spec;
-    }
-
-    /**
      * A documented action that API8 does not serve is a dead path.
      */
     public function testDocumentedActionsAreServedByApi8(): void
     {
-        $spec     = self::spec();
+        $spec     = $this->spec();
         $served   = array_keys(Api::METHOD_LIST);
         $unserved = [];
 
-        foreach (self::mappedActions($spec) as $action) {
+        foreach ($this->mappedActions($spec) as $action) {
             if (!in_array($action, $served, true)) {
                 $unserved[] = $action;
             }
@@ -117,9 +72,9 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testEveryHandlerIsDocumented(): void
     {
-        $spec     = self::spec();
-        $mapped   = self::mappedActions($spec);
-        $aliases  = self::documentedAliases();
+        $spec     = $this->spec();
+        $mapped   = $this->mappedActions($spec);
+        $aliases  = $this->documentedAliases();
         $reached  = [];
         $handlers = [];
 
@@ -152,7 +107,7 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testEveryMappingHasAPath(): void
     {
-        $spec    = self::spec();
+        $spec    = $this->spec();
         $paths   = $spec['paths'];
         $dangled = [];
 
@@ -177,7 +132,7 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testEveryMappingKeyIsVerbPrefixed(): void
     {
-        $spec       = self::spec();
+        $spec       = $this->spec();
         $unprefixed = [];
 
         foreach (array_keys($spec['x-rpc-mappings']) as $key) {
@@ -194,7 +149,7 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testEveryPathHasAnRpcMapping(): void
     {
-        $spec     = self::spec();
+        $spec     = $this->spec();
         $mappings = $spec['x-rpc-mappings'];
         $unmapped = [];
 
@@ -203,14 +158,7 @@ class Api8SpecCoverageTest extends TestCase
                 continue;
             }
 
-            // a path may instead be covered entirely by verb-prefixed keys
-            $verbed = false;
-            foreach (array_keys($mappings) as $key) {
-                if (preg_match('/^(?:GET|POST|PUT|PATCH|DELETE)\s+' . preg_quote((string) $path, '/') . '$/', (string) $key) === 1) {
-                    $verbed = true;
-                    break;
-                }
-            }
+            $verbed = array_any(array_keys($mappings), fn($key) => preg_match('/^(?:GET|POST|PUT|PATCH|DELETE)\s+' . preg_quote((string) $path, '/') . '$/', (string) $key) === 1);
 
             if (!$verbed) {
                 $unmapped[] = $path;
@@ -225,7 +173,7 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testEverySchemaReferenceResolves(): void
     {
-        $spec       = self::spec();
+        $spec       = $this->spec();
         $schemas    = array_keys($spec['components']['schemas']);
         $responses  = array_keys($spec['components']['responses']);
         $parameters = array_keys($spec['components']['parameters'] ?? []);
@@ -264,7 +212,7 @@ class Api8SpecCoverageTest extends TestCase
      */
     public function testNoOperationKeepsAPlaceholderSchema(): void
     {
-        $spec         = self::spec();
+        $spec         = $this->spec();
         $placeholders = [];
 
         foreach ($spec['paths'] as $path => $operations) {
@@ -277,5 +225,50 @@ class Api8SpecCoverageTest extends TestCase
         }
 
         self::assertSame([], $placeholders, 'docs/openapi.json has operations left on the placeholder {"type": "object"} schema');
+    }
+
+    /**
+     * The actions recorded in the "Alternative action" column of docs/REST-to-RPC.md
+     *
+     * @return list<string>
+     */
+    private function documentedAliases(): array
+    {
+        $rows = (string) file_get_contents(self::REST_TO_RPC);
+
+        // | HTTP | REST | RPC action | Alternative action |
+        preg_match_all('/^\|[^|]*\|[^|]*\|[^|]*\|\s*`([a-z_0-9]+)`\s*\|$/m', $rows, $matches);
+
+        return array_values(array_unique($matches[1]));
+    }
+
+    /**
+     * Every `action=` named by a mapping, whether or not the key carries a verb.
+     *
+     * @param array<string, mixed> $spec
+     * @return list<string>
+     */
+    private function mappedActions(array $spec): array
+    {
+        $actions = [];
+        foreach ($spec['x-rpc-mappings'] as $mapping) {
+            if (preg_match('/action=([a-z_0-9]+)/', (string) $mapping, $matches) === 1) {
+                $actions[] = $matches[1];
+            }
+        }
+
+        return array_values(array_unique($actions));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function spec(): array
+    {
+        $spec = json_decode((string) file_get_contents(self::SPEC), true);
+
+        self::assertIsArray($spec, 'docs/openapi.json is not valid JSON');
+
+        return $spec;
     }
 }

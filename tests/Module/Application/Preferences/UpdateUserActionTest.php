@@ -92,8 +92,8 @@ class UpdateUserActionTest extends MockeryTestCase
             $user->shouldReceive('update')
                 ->once()
                 ->with(Mockery::on(function (array $data): bool {
-                    static::assertArrayNotHasKey('access', $data);
-                    static::assertArrayNotHasKey('catalog_filter_group', $data);
+                    self::assertArrayNotHasKey('access', $data);
+                    self::assertArrayNotHasKey('catalog_filter_group', $data);
 
                     return true;
                 }))

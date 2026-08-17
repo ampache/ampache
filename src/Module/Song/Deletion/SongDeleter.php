@@ -52,7 +52,7 @@ final readonly class SongDeleter implements SongDeleterInterface
 
     public function delete(Song $song, bool $parent = false): bool
     {
-        $deleted = !(!in_array($song->file, [null, '', '0'], true) && file_exists($song->file)) || unlink($song->file);
+        $deleted = in_array($song->file, [null, '', '0'], true) || !file_exists($song->file) || unlink($song->file);
 
         if ($deleted) {
             $songId  = $song->getId();

@@ -39,7 +39,7 @@ class Horde_BrowserTest extends TestCase
 
         $headers = $browser->getDownloadHeaders('Song "Remix".mp3');
 
-        static::assertSame(
+        self::assertSame(
             'attachment; filename="Song Remix.mp3"',
             $headers['Content-Disposition']
         );

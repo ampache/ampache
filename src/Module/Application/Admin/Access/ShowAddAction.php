@@ -61,14 +61,14 @@ final readonly class ShowAddAction implements ApplicationActionInterface
             ? (string) filter_var($_SERVER['REMOTE_ADDR'] ?? '', FILTER_VALIDATE_IP)
             : '';
 
-        echo (new AddAccessFormView(
+        echo new AddAccessFormView(
             $this->configContainer->getWebPath('/admin'),
             $addType,
             $this->requestParser->getFromRequest('name'),
             $currentIp ?: $this->requestParser->getFromRequest('start'),
             $currentIp ?: $this->requestParser->getFromRequest('end'),
             $currentIp
-        ))->render();
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

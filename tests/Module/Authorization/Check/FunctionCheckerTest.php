@@ -51,14 +51,14 @@ class FunctionCheckerTest extends TestCase
                 [ConfigurationKeyEnum::DOWNLOAD, true],
             ]);
 
-        static::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
+        self::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
     }
 
     public function testCheckBatchDownloadReturnsFalseWhenNoGlobalUser(): void
     {
         unset($GLOBALS['user']);
 
-        static::assertFalse($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
+        self::assertFalse($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
     }
 
     public function testCheckBatchDownloadReturnsFalseWhenZipDownloadDisabled(): void
@@ -70,7 +70,7 @@ class FunctionCheckerTest extends TestCase
             ->with(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
             ->willReturn(false);
 
-        static::assertFalse($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
+        self::assertFalse($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
     }
 
     public function testCheckDownloadReturnsFeatureFlag(): void
@@ -80,7 +80,7 @@ class FunctionCheckerTest extends TestCase
             ->with(ConfigurationKeyEnum::DOWNLOAD)
             ->willReturn(true);
 
-        static::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_DOWNLOAD));
+        self::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_DOWNLOAD));
     }
 
     protected function setUp(): void

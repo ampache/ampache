@@ -104,7 +104,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $externalLinks[$configKey] = (bool) AmpConfig::get($configKey);
             }
 
-            echo (new LabelView(
+            echo new LabelView(
                 AmpConfig::get_web_path(),
                 $label,
                 $browse,
@@ -114,7 +114,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                     && (bool) AmpConfig::get('sociable'),
                 $this->isEditable($gatekeeper->getUserId(), $label),
                 Catalog::can_remove($label)
-            ))->render();
+            )->render();
 
             $this->ui->showFooter();
 
@@ -123,7 +123,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         // if you didn't set a label_id or name, show the add label form
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            echo (new AddLabelFormView(
+            echo new AddLabelFormView(
                 $this->configContainer->getWebPath(),
                 $this->requestParser->getFromRequest('name'),
                 $this->requestParser->getFromRequest('mbid'),
@@ -134,7 +134,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $this->requestParser->getFromRequest('website'),
                 $this->requestParser->getFromRequest('country'),
                 $this->requestParser->getFromRequest('active')
-            ))->render();
+            )->render();
         } else {
             throw new AccessDeniedException();
         }

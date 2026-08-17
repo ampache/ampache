@@ -68,7 +68,7 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
             }
 
             $statements[] = sprintf(
-                'DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = \'%s\' AND `valid_maps`.`object_id` IS NULL;',
+                "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = '%s' AND `valid_maps`.`object_id` IS NULL;",
                 $table->value,
                 $table->value,
                 $table->value,
@@ -144,7 +144,7 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
                 SQL,
             CatalogMapTableEnum::PLAYLIST => "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' GROUP BY `song`.`catalog`, 'playlist', `playlist`.`id`;",
             default => sprintf(
-                'INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `%s`.`catalog`, \'%s\', `%s`.`id` FROM `%s` GROUP BY `%s`.`catalog`, \'%s\', `%s`.`id`;',
+                "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `%s`.`catalog`, '%s', `%s`.`id` FROM `%s` GROUP BY `%s`.`catalog`, '%s', `%s`.`id`;",
                 $table->value,
                 $table->value,
                 $table->value,

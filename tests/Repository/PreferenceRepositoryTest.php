@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -58,7 +59,7 @@ class PreferenceRepositoryTest extends TestCase
             ->with("SELECT * FROM `preference` WHERE `category` !='system';")
             ->willReturn($this->emptyResult());
 
-        static::assertSame([], $this->subject->getAllPreferences(false));
+        self::assertSame([], $this->subject->getAllPreferences(false));
     }
 
     public function testGetAllPreferencesKeepsThemForTheSystemUser(): void
@@ -68,14 +69,14 @@ class PreferenceRepositoryTest extends TestCase
             ->with('SELECT * FROM `preference`')
             ->willReturn($this->emptyResult());
 
-        static::assertSame([], $this->subject->getAllPreferences(true));
+        self::assertSame([], $this->subject->getAllPreferences(true));
     }
 
     public function testGetInitRowsSelectsTheDeclaredType(): void
     {
         $statements = [];
         $this->connection->method('query')->willReturnCallback(
-            function (string $sql) use (&$statements): \PDOStatement {
+            function (string $sql) use (&$statements): PDOStatement {
                 $statements[] = $sql;
 
                 return $this->emptyResult();
@@ -85,7 +86,7 @@ class PreferenceRepositoryTest extends TestCase
         $this->subject->getInitRows(42);
 
         // the value column is a varchar, so the type is what tells init() a `10` is an int rather than a string
-        static::assertStringContainsString(
+        self::assertStringContainsString(
             '`preference`.`type`',
             $statements[count($statements) - 1]
         );
@@ -104,7 +105,7 @@ class PreferenceRepositoryTest extends TestCase
 
         $this->subject->getUserPreferenceRow('some-pref', 666, true);
 
-        static::assertStringContainsString("AND `preference`.`category` != 'system'", $sql);
+        self::assertStringContainsString("AND `preference`.`category` != 'system'", $sql);
     }
 
     public function testGetUserPreferenceRowKeepsEveryCategoryForTheSystemUser(): void
@@ -120,8 +121,8 @@ class PreferenceRepositoryTest extends TestCase
 
         $this->subject->getUserPreferenceRow('some-pref', -1, false);
 
-        static::assertStringNotContainsString('`preference`.`category` =', $sql);
-        static::assertStringNotContainsString("!= 'system'", $sql);
+        self::assertStringNotContainsString('`preference`.`category` =', $sql);
+        self::assertStringNotContainsString("!= 'system'", $sql);
     }
 
     public function testRepairLanguagePreferencesFallsBackToEnglish(): void
@@ -130,16 +131,16 @@ class PreferenceRepositoryTest extends TestCase
 
         $bound = [];
         $this->connection->method('query')->willReturnCallback(
-            function (string $sql, array $params) use (&$bound): \PDOStatement {
+            function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;
 
-                return $this->createMock(\PDOStatement::class);
+                return $this->createMock(PDOStatement::class);
             }
         );
 
         $this->subject->repairLanguagePreferences();
 
-        static::assertSame(['en_US'], $bound[1]);
+        self::assertSame(['en_US'], $bound[1]);
     }
 
     public function testRepairLanguagePreferencesSeedsEveryoneFromTheSystemUser(): void
@@ -152,15 +153,15 @@ class PreferenceRepositoryTest extends TestCase
         $bound = [];
         $this->connection->expects(static::exactly(2))
             ->method('query')
-            ->willReturnCallback(function (string $sql, array $params) use (&$bound): \PDOStatement {
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;
 
-                return $this->createMock(\PDOStatement::class);
+                return $this->createMock(PDOStatement::class);
             });
 
         $this->subject->repairLanguagePreferences();
 
-        static::assertSame([[], ['de_DE']], $bound);
+        self::assertSame([[], ['de_DE']], $bound);
     }
 
     protected function setUp(): void
@@ -174,9 +175,9 @@ class PreferenceRepositoryTest extends TestCase
         );
     }
 
-    private function emptyResult(): \PDOStatement&MockObject
+    private function emptyResult(): PDOStatement&MockObject
     {
-        $result = $this->createMock(\PDOStatement::class);
+        $result = $this->createMock(PDOStatement::class);
         $result->method('fetch')->willReturn(false);
 
         return $result;

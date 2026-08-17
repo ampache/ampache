@@ -183,12 +183,12 @@ final class DebugView extends AbstractView
 
     public function getMaxExecutionTime(): string
     {
-        return (string) ini_get('max_execution_time');
+        return ini_get('max_execution_time');
     }
 
     public function getMemoryLimit(): string
     {
-        return (string) ini_get('memory_limit');
+        return ini_get('memory_limit');
     }
 
     public function getOpenBasedir(): string

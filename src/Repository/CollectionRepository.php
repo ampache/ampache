@@ -102,7 +102,7 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
             [$name, $user->getId(), $user->username, $type, $objectType, time(), time()]
         );
 
-        $collectionId = (int) $this->connection->getLastInsertedId();
+        $collectionId = $this->connection->getLastInsertedId();
 
         return ($collectionId > 0) ? $collectionId : null;
     }
@@ -222,7 +222,7 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $collectionIds));
+        $idList = implode(',', array_map(intval(...), $collectionIds));
 
         $result = $this->connection->query('SELECT * FROM `collection` WHERE `id` IN (' . $idList . ')');
 

@@ -151,7 +151,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $podcastIds));
+        $idList = implode(',', array_map(intval(...), $podcastIds));
 
         $result = $this->connection->query('SELECT * FROM `podcast` WHERE `id` IN (' . $idList . ')');
 

@@ -33,7 +33,7 @@ namespace Ampache\Module\Util\Rss;
 final class PodcastGuid
 {
     /** Namespace UUID defined by the podcast namespace spec */
-    private const PODCAST_NAMESPACE = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
+    private const string PODCAST_NAMESPACE = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
 
     public static function fromFeedUrl(string $feedUrl): string
     {

@@ -238,12 +238,6 @@ final readonly class CatalogFilterRepository implements CatalogFilterRepositoryI
     {
         $this->renameGroup($groupId, $name);
 
-        foreach ($enabledByCatalogId as $catalogId => $enabled) {
-            if (!$this->setCatalogEnabled($groupId, (int) $catalogId, $enabled)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all($enabledByCatalogId, fn($enabled, $catalogId) => $this->setCatalogEnabled($groupId, (int) $catalogId, $enabled));
     }
 }

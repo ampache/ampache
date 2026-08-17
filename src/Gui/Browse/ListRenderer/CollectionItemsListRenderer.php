@@ -198,7 +198,7 @@ final class CollectionItemsListRenderer extends AbstractBrowseListRenderer
      */
     public function renderRow(array $row): string
     {
-        return (new CollectionItemRowView(
+        return new CollectionItemRowView(
             $this->configContainer->getWebPath(),
             $row['item'],
             $row['type'],
@@ -216,7 +216,7 @@ final class CollectionItemsListRenderer extends AbstractBrowseListRenderer
             (bool) $this->configContainer->get('download'),
             $this->mayAdd() && (bool) $this->configContainer->get('share'),
             $this->canRemove()
-        ))->render();
+        )->render();
     }
 
     public function showMultiselect(): bool

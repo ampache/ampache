@@ -67,9 +67,9 @@ class FeedLoaderTest extends TestCase
             libxml_use_internal_errors($previousSetting);
         }
 
-        static::assertSame('Some & Broken Title', $result['title']);
-        static::assertNull($result['artUrl']);
-        static::assertNull($result['lastBuildDate']);
+        self::assertSame('Some & Broken Title', $result['title']);
+        self::assertNull($result['artUrl']);
+        self::assertNull($result['lastBuildDate']);
     }
 
     /**
@@ -89,7 +89,7 @@ class FeedLoaderTest extends TestCase
 
         $this->webFetcher->method('fetch')->willReturn($xml);
 
-        static::assertSame(
+        self::assertSame(
             'https://example.com/itunes-art.jpg',
             $this->subject->load('https://example.com/feed.xml')['artUrl']
         );
@@ -127,15 +127,15 @@ class FeedLoaderTest extends TestCase
 
         $result = $this->subject->load($feedUrl);
 
-        static::assertSame('Some & Podcast', $result['title']);
-        static::assertSame('https://example.com', $result['website']);
-        static::assertSame('Some & description', $result['description']);
-        static::assertSame('en-us', $result['language']);
-        static::assertSame('Some & copyright', $result['copyright']);
-        static::assertSame('Some generator', $result['generator']);
-        static::assertSame('https://example.com/art.jpg', $result['artUrl']);
-        static::assertNotNull($result['lastBuildDate']);
-        static::assertCount(1, $result['episodes']);
+        self::assertSame('Some & Podcast', $result['title']);
+        self::assertSame('https://example.com', $result['website']);
+        self::assertSame('Some & description', $result['description']);
+        self::assertSame('en-us', $result['language']);
+        self::assertSame('Some & copyright', $result['copyright']);
+        self::assertSame('Some generator', $result['generator']);
+        self::assertSame('https://example.com/art.jpg', $result['artUrl']);
+        self::assertNotNull($result['lastBuildDate']);
+        self::assertCount(1, $result['episodes']);
     }
 
     /**
@@ -156,7 +156,7 @@ class FeedLoaderTest extends TestCase
 
         $this->webFetcher->method('fetch')->willReturn($xml);
 
-        static::assertSame(
+        self::assertSame(
             'https://example.com/rss-art.jpg',
             $this->subject->load('https://example.com/feed.xml')['artUrl']
         );
@@ -179,7 +179,7 @@ class FeedLoaderTest extends TestCase
 
         $this->webFetcher->method('fetch')->willReturn($xml);
 
-        static::assertSame(
+        self::assertSame(
             'https://example.com/itunes-art.jpg',
             $this->subject->load('https://example.com/feed.xml')['artUrl']
         );

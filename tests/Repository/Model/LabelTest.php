@@ -36,7 +36,7 @@ class LabelTest extends TestCase
 
     public function testANewLabelIsActiveLikeTheColumnDefault(): void
     {
-        static::assertTrue((new Label())->active);
+        self::assertTrue((new Label())->active);
     }
 
     public function testCreateDefaultsToActiveWhenTheCallerOmitsIt(): void
@@ -46,7 +46,7 @@ class LabelTest extends TestCase
 
         $this->labelRepository->expects(static::once())
             ->method('persist')
-            ->with(static::callback(static fn(Label $label): bool => $label->active === true));
+            ->with(self::callback(static fn(Label $label): bool => $label->active));
 
         Label::create(['name' => 'some-name']);
     }
@@ -58,7 +58,7 @@ class LabelTest extends TestCase
 
         $this->labelRepository->expects(static::once())
             ->method('persist')
-            ->with(static::callback(static fn(Label $label): bool => $label->active === false));
+            ->with(self::callback(static fn(Label $label): bool => $label->active === false));
 
         Label::create(['name' => 'some-name', 'active' => '0']);
     }
@@ -73,7 +73,7 @@ class LabelTest extends TestCase
         $this->labelRepository->expects(static::never())
             ->method('persist');
 
-        static::assertNull(Label::create(['name' => 'some-name']));
+        self::assertNull(Label::create(['name' => 'some-name']));
     }
 
     public function testGetArtistsDelegatesToTheRepositoryAndCaches(): void
@@ -87,8 +87,8 @@ class LabelTest extends TestCase
             ->with($subject)
             ->willReturn([1, 2]);
 
-        static::assertSame([1, 2], $subject->get_artists());
-        static::assertSame([1, 2], $subject->get_artists());
+        self::assertSame([1, 2], $subject->get_artists());
+        self::assertSame([1, 2], $subject->get_artists());
     }
 
     public function testMigrateMovesArtistAssociationsOnly(): void
@@ -117,7 +117,7 @@ class LabelTest extends TestCase
             ->method('persist')
             ->with($subject);
 
-        static::assertSame(
+        self::assertSame(
             666,
             $subject->update([
                 'name' => 'some-name',
@@ -128,12 +128,12 @@ class LabelTest extends TestCase
             ])
         );
 
-        static::assertSame('some-name', $subject->name);
-        static::assertSame('some-summary', $subject->summary);
+        self::assertSame('some-name', $subject->name);
+        self::assertSame('some-summary', $subject->summary);
         // the category is stored lower case regardless of how the caller spelled it
-        static::assertSame('some-category', $subject->category);
-        static::assertSame('https://some-site', $subject->website);
-        static::assertTrue($subject->active);
+        self::assertSame('some-category', $subject->category);
+        self::assertSame('https://some-site', $subject->website);
+        self::assertTrue($subject->active);
     }
 
     public function testUpdateDiscardsAnInvalidWebsite(): void
@@ -148,9 +148,9 @@ class LabelTest extends TestCase
 
         $subject->update(['name' => 'some-name', 'website' => 'not-a-url']);
 
-        static::assertNull($subject->website);
+        self::assertNull($subject->website);
         // an absent `active` key leaves the current value alone
-        static::assertTrue($subject->active);
+        self::assertTrue($subject->active);
     }
 
     public function testUpdateRejectsADuplicateName(): void
@@ -166,7 +166,7 @@ class LabelTest extends TestCase
         $this->labelRepository->expects(static::never())
             ->method('persist');
 
-        static::assertNull($subject->update(['name' => 'some-name']));
+        self::assertNull($subject->update(['name' => 'some-name']));
     }
 
     protected function setUp(): void

@@ -45,7 +45,6 @@ class ShowSongActionTest extends MockeryTestCase
     private LoggerInterface|MockInterface|null $logger;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ShowSongAction $subject;
-    private MockInterface|TalFactoryInterface|null $talFactory;
     private UiInterface|MockInterface|null $ui;
 
     public function testRunEchoesErrorIfSongDoesNotExist(): void

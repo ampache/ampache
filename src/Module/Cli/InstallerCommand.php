@@ -189,8 +189,8 @@ final class InstallerCommand extends Command
                 /* HINT: filename (File path) OR table name (podcast, video, etc) */
                 $interactor->info(sprintf(T_('Missing: %s'), $table_name), true);
             }
-        } catch (UpdateFailedException $error) {
-            $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
+        } catch (UpdateFailedException $updateFailedException) {
+            $interactor->error(sprintf(T_('Update failed! %s'), $updateFailedException->getMessage()), true);
 
             return false;
         }

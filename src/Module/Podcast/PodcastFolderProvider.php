@@ -84,7 +84,7 @@ final readonly class PodcastFolderProvider implements PodcastFolderProviderInter
     private function sanitizeFolderName(string $title): string
     {
         $name = str_replace(['/', '\\'], '_', trim($title));
-        if ($name === '' || $name === '.' || $name === '..') {
+        if (in_array($name, ['', '.', '..'], true)) {
             $name = '_' . $name;
         }
 

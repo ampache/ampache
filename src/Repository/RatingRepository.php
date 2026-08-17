@@ -284,16 +284,16 @@ final readonly class RatingRepository implements RatingRepositoryInterface
         $type   = Stats::validate_type($inputType);
         $userId = $userId ?? -1;
         $sql    = "SELECT `rating`.`object_id` AS `id` FROM `rating`";
-        if ($inputType == 'album_artist' || $inputType == 'song_artist') {
+        if ($inputType === 'album_artist' || $inputType === 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
 
-        $sql .= sprintf(' WHERE `object_type` = \'%s\'', $type);
+        $sql .= sprintf(" WHERE `object_type` = '%s'", $type);
         if ($byUser && $userId > 0) {
-            $sql .= sprintf(' AND `rating`.`user` = \'%s\'', $userId);
+            $sql .= sprintf(" AND `rating`.`user` = '%s'", $userId);
         }
 
-        if (AmpConfig::get('catalog_disable') && in_array($inputType, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+        if (AmpConfig::get('catalog_disable') && in_array($inputType, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
             $sql .= " AND " . Catalog::get_enable_filter($inputType, '`object_id`');
         }
 
@@ -309,11 +309,11 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             $sql .= " AND " . $catalog_sql;
         }
 
-        if ($inputType == 'album_artist') {
+        if ($inputType === 'album_artist') {
             $sql .= " AND `artist`.`album_count` > 0";
         }
 
-        if ($inputType == 'song_artist') {
+        if ($inputType === 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
 
@@ -324,14 +324,14 @@ final readonly class RatingRepository implements RatingRepositoryInterface
     {
         $type = Stats::validate_type($inputType);
         $sql  = "SELECT `rating`.`object_id` AS `id` FROM `rating`";
-        if ($inputType == 'album_artist' || $inputType == 'song_artist') {
+        if ($inputType === 'album_artist' || $inputType === 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
 
         $sql .= ($user instanceof User)
             ? " WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`user` = '" . $user->getId() . "'"
             : " WHERE `rating`.`object_type` = '" . $type . "'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
@@ -342,11 +342,11 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             $sql .= " AND" . $user_filter;
         }
 
-        if ($inputType == 'album_artist') {
+        if ($inputType === 'album_artist') {
             $sql .= " AND `artist`.`album_count` > 0";
         }
 
-        if ($inputType == 'song_artist') {
+        if ($inputType === 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
 

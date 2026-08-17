@@ -67,10 +67,10 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
             return null;
         }
 
-        echo (new DisabledSongsView(
+        echo new DisabledSongsView(
             AmpConfig::get_web_path('/admin'),
             $this->songRepository->getDisabled()
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

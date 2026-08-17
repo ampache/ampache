@@ -30,6 +30,7 @@ use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -59,7 +60,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     {
         try {
             $this->connection->query(
-                'UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = \'\')'
+                "UPDATE `broadcast` SET `started` = 0, `song` = 0, `listeners` = 0 WHERE `started` = 1 AND (`key` IS NULL OR `key` = '')"
             );
         } catch (DatabaseException) {
             $this->logger->debug('collectGarbage error', [LegacyLogger::CONTEXT_TYPE => self::class]);
@@ -143,6 +144,30 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     }
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $broadcastIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $broadcastIds): array
+    {
+        if ($broadcastIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT * FROM `broadcast` WHERE `id` IN (' . implode(',', array_map(intval(...), $broadcastIds)) . ')'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
      * Writes the editable properties of an existing broadcast
      */
     /**
@@ -171,7 +196,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     public function resetStartedState(): int
     {
         $result = $this->connection->query(
-            'UPDATE `broadcast` SET `started` = 0, `key` = \'\', `song` = 0, `listeners` = 0 WHERE `started` = 1'
+            "UPDATE `broadcast` SET `started` = 0, `key` = '', `song` = 0, `listeners` = 0 WHERE `started` = 1"
         );
 
         return $result->rowCount();
@@ -215,7 +240,7 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     public function updateState(Broadcast $broadcast, int $started, string $key): void
     {
         $this->connection->query(
-            'UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = \'0\', `listeners` = \'0\' WHERE `id` = ?',
+            "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?",
             [$started, $key, $broadcast->getId()]
         );
     }

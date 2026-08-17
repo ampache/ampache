@@ -180,6 +180,14 @@ interface UserRepositoryInterface
     public function getRow(int $userId): ?array;
 
     /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $userIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $userIds): array;
+
+    /**
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)

@@ -92,7 +92,7 @@ final class GenreListRenderer extends AbstractBrowseListRenderer
     {
         $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
 
-        return (new GenreRowView(
+        return new GenreRowView(
             $this->ajaxUriRetriever->getAjaxUri(),
             $genre,
             $this->showVideo(),
@@ -101,7 +101,7 @@ final class GenreListRenderer extends AbstractBrowseListRenderer
             Stream_Playlist::check_autoplay_append(),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ))->render();
+        )->render();
     }
 
     public function showVideo(): bool

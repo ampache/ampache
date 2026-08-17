@@ -87,7 +87,7 @@ class LabelNameFilterTest extends TestCase
         $this->configContainer->method('get')
             ->willReturn(null);
 
-        static::assertSame(
+        self::assertSame(
             ['Warp Records', 'B.D. Records'],
             $this->subject->filter(['Warp Records', '[no label]', 'B.D. Records', 'Self-Released'])
         );
@@ -96,7 +96,7 @@ class LabelNameFilterTest extends TestCase
     #[DataProvider('placeholderNameDataProvider')]
     public function testIsIgnoredDetectsPlaceholderNames(string $labelName): void
     {
-        static::assertTrue($this->subject->isIgnored($labelName));
+        self::assertTrue($this->subject->isIgnored($labelName));
     }
 
     public function testIsIgnoredKeepsEveryNameWhenThePatternCannotMatch(): void
@@ -105,13 +105,13 @@ class LabelNameFilterTest extends TestCase
             ->with(ConfigurationKeyEnum::LABEL_IGNORE_PATTERN)
             ->willReturn('(?!)');
 
-        static::assertFalse($this->subject->isIgnored('[no label]'));
+        self::assertFalse($this->subject->isIgnored('[no label]'));
     }
 
     #[DataProvider('realNameDataProvider')]
     public function testIsIgnoredKeepsRealNames(string $labelName): void
     {
-        static::assertFalse($this->subject->isIgnored($labelName));
+        self::assertFalse($this->subject->isIgnored($labelName));
     }
 
     public function testIsIgnoredKeepsTheNameWhenThePatternIsBroken(): void
@@ -121,7 +121,7 @@ class LabelNameFilterTest extends TestCase
             ->willReturn('([unclosed');
 
         // dropping a label because the admin mistyped a regex would be silent data loss
-        static::assertFalse(@$this->subject->isIgnored('[no label]'));
+        self::assertFalse(@$this->subject->isIgnored('[no label]'));
     }
 
     public function testIsIgnoredUsesAConfiguredPatternInsteadOfTheDefault(): void
@@ -130,9 +130,9 @@ class LabelNameFilterTest extends TestCase
             ->with(ConfigurationKeyEnum::LABEL_IGNORE_PATTERN)
             ->willReturn('^banned');
 
-        static::assertTrue($this->subject->isIgnored('Banned Records'));
+        self::assertTrue($this->subject->isIgnored('Banned Records'));
         // the configured pattern replaces the default, so the built-in placeholders now pass
-        static::assertFalse($this->subject->isIgnored('[no label]'));
+        self::assertFalse($this->subject->isIgnored('[no label]'));
     }
 
     protected function setUp(): void

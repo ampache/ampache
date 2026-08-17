@@ -69,7 +69,7 @@ class SongRepositoryTest extends TestCase
             ->with('DELETE FROM `song` WHERE `catalog` = ?', [7])
             ->willThrowException(new QueryFailedException('nope'));
 
-        static::assertFalse($this->subject->deleteByCatalog(7));
+        self::assertFalse($this->subject->deleteByCatalog(7));
     }
 
     public function testDeleteByIdsCastsEveryIdAndSkipsAnEmptyList(): void
@@ -101,7 +101,7 @@ class SongRepositoryTest extends TestCase
                 )
             );
 
-        static::assertTrue($this->subject->delete($songId));
+        self::assertTrue($this->subject->delete($songId));
     }
 
     public function testDeleteReturnsFalseWhenTheSongCouldNotBeRemoved(): void
@@ -121,7 +121,7 @@ class SongRepositoryTest extends TestCase
                 return $this->createMock(PDOStatement::class);
             });
 
-        static::assertFalse($this->subject->delete(666));
+        self::assertFalse($this->subject->delete(666));
     }
 
     public function testFindIdByFilePatternTakesTheFirstMatch(): void
@@ -131,7 +131,7 @@ class SongRepositoryTest extends TestCase
             ->with('SELECT `id` FROM `song` WHERE `file` LIKE ? LIMIT 1', ['http://host/play%oid=7&%'])
             ->willReturn('666');
 
-        static::assertSame(666, $this->subject->findIdByFilePattern('http://host/play%oid=7&%'));
+        self::assertSame(666, $this->subject->findIdByFilePattern('http://host/play%oid=7&%'));
     }
 
     public function testFindIdsWithMissingAlbumReadsBothTheStaleMapAndTheMissingRow(): void
@@ -147,14 +147,14 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->findIdsWithMissingAlbum());
+        self::assertSame([666], $this->subject->findIdsWithMissingAlbum());
     }
 
     public function testFindOwnerIdReturnsFalseWhenTheSongDoesNotExist(): void
     {
         $this->connection->method('fetchRow')->willReturn(false);
 
-        static::assertFalse($this->subject->findOwnerId(666));
+        self::assertFalse($this->subject->findOwnerId(666));
     }
 
     public function testFindOwnerIdReturnsNullWhenTheSongWasNotUploaded(): void
@@ -162,7 +162,7 @@ class SongRepositoryTest extends TestCase
         // distinct from the missing-song case below: this row exists, so an owner check may still downgrade
         $this->connection->method('fetchRow')->willReturn(['user_upload' => null]);
 
-        static::assertNull($this->subject->findOwnerId(666));
+        self::assertNull($this->subject->findOwnerId(666));
     }
 
     public function testFindOwnerIdReturnsTheUploader(): void
@@ -172,7 +172,7 @@ class SongRepositoryTest extends TestCase
             ->with('SELECT `user_upload` FROM `song` WHERE `id` = ?', [666])
             ->willReturn(['user_upload' => '42']);
 
-        static::assertSame(42, $this->subject->findOwnerId(666));
+        self::assertSame(42, $this->subject->findOwnerId(666));
     }
 
     public function testGetByCatalogReturnsAllItems(): void
@@ -244,7 +244,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', '33', false);
 
-        static::assertSame(
+        self::assertSame(
             [666, 33],
             $this->subject->getByLicense(42)
         );
@@ -266,7 +266,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn('666', false);
 
-        static::assertSame([666], $this->subject->getEnabledIdsByCatalog(7));
+        self::assertSame([666], $this->subject->getEnabledIdsByCatalog(7));
     }
 
     public function testGetEnabledIdsJoinsTheCatalogOnlyWhenDisabledCatalogsAreHidden(): void
@@ -282,7 +282,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getEnabledIds([1, 'x9'], 10, 0, true));
+        self::assertSame([], $this->subject->getEnabledIds([1, 'x9'], 10, 0, true));
     }
 
     public function testGetFileRowsByCatalogCarriesTheTitleAVerifyCompares(): void
@@ -298,7 +298,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['id' => '1', 'file' => '/a.mp3', 'title' => 'A'], false);
 
-        static::assertSame([['id' => 1, 'file' => '/a.mp3', 'title' => 'A']], $this->subject->getFileRowsByCatalog(7));
+        self::assertSame([['id' => 1, 'file' => '/a.mp3', 'title' => 'A']], $this->subject->getFileRowsByCatalog(7));
     }
 
     public function testGetFilesByCatalogKeysTheFilesBySongId(): void
@@ -317,7 +317,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetch')
             ->willReturn(['id' => '666', 'file' => '/music/song.mp3'], false);
 
-        static::assertSame([666 => '/music/song.mp3'], $this->subject->getFilesByCatalog(7));
+        self::assertSame([666 => '/music/song.mp3'], $this->subject->getFilesByCatalog(7));
     }
 
     public function testGetIdsByFilePrefixBindsTheWildcard(): void
@@ -336,7 +336,7 @@ class SongRepositoryTest extends TestCase
             ->method('fetchColumn')
             ->willReturn(false);
 
-        static::assertSame([], $this->subject->getIdsByFilePrefix("/music/o'brien"));
+        self::assertSame([], $this->subject->getIdsByFilePrefix("/music/o'brien"));
     }
 
     public function testPruneDeletedHistoryDeletesOlderRows(): void
@@ -375,13 +375,13 @@ class SongRepositoryTest extends TestCase
         $this->subject->resetCountsWithoutHistory();
 
         // a rebuild join cannot reach a song whose rows are gone, so this is the only thing that moves it
-        static::assertStringContainsString('`total_count` = 0', $calls[0]);
-        static::assertStringContainsString("`count_type` = 'stream'", $calls[0]);
-        static::assertStringContainsString('`total_skip` = 0', $calls[1]);
-        static::assertStringContainsString("`count_type` = 'skip'", $calls[1]);
-        static::assertSame('UPDATE `song` SET `played` = 0 WHERE `played` = 1 AND `total_count` = 0;', $calls[2]);
+        self::assertStringContainsString('`total_count` = 0', $calls[0]);
+        self::assertStringContainsString("`count_type` = 'stream'", $calls[0]);
+        self::assertStringContainsString('`total_skip` = 0', $calls[1]);
+        self::assertStringContainsString("`count_type` = 'skip'", $calls[1]);
+        self::assertSame('UPDATE `song` SET `played` = 0 WHERE `played` = 1 AND `total_count` = 0;', $calls[2]);
         // and back to played when the history is there, which video and podcast_episode always had
-        static::assertStringContainsString('`played` = 1', $calls[3]);
+        self::assertStringContainsString('`played` = 1', $calls[3]);
     }
 
     public function testSetDataFieldReturnsFalseWhenTheWriteFailed(): void
@@ -390,7 +390,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::LYRICS, 'some-lyrics'));
+        self::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::LYRICS, 'some-lyrics'));
     }
 
     public function testSetDataFieldWritesToSongDataKeyedBySongId(): void
@@ -399,7 +399,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `song_data` SET `comment` = ? WHERE `song_id` = ?', ['some-comment', 666]);
 
-        static::assertTrue($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
+        self::assertTrue($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
     }
 
     public function testSetFieldAcceptsANullValue(): void
@@ -408,7 +408,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `song` SET `license` = ? WHERE `id` = ?', [null, 666]);
 
-        static::assertTrue($this->subject->setField(666, SongFieldEnum::LICENSE, null));
+        self::assertTrue($this->subject->setField(666, SongFieldEnum::LICENSE, null));
     }
 
     public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
@@ -418,7 +418,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertFalse($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+        self::assertFalse($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void
@@ -427,7 +427,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `song` SET `title` = ? WHERE `id` = ?', ['some-title', 666]);
 
-        static::assertTrue($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+        self::assertTrue($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
     }
 
     public function testSetFieldWritesTheFileColumn(): void
@@ -436,7 +436,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `song` SET `file` = ? WHERE `id` = ?', ['/new/path.mp3', 666]);
 
-        static::assertTrue($this->subject->setField(666, SongFieldEnum::FILE, '/new/path.mp3'));
+        self::assertTrue($this->subject->setField(666, SongFieldEnum::FILE, '/new/path.mp3'));
     }
 
     public function testUpdateAllCountsRunsTheThreeSongSweeps(): void
@@ -454,7 +454,7 @@ class SongRepositoryTest extends TestCase
         $this->subject->updateAllCounts();
 
         foreach ($calls as $sql) {
-            static::assertStringStartsWith('UPDATE `song`', $sql);
+            self::assertStringStartsWith('UPDATE `song`', $sql);
         }
     }
 

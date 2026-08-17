@@ -51,7 +51,7 @@ class UserRepositoryTest extends TestCase
             ->with('SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?', [4])
             ->willReturn('3');
 
-        static::assertSame(3, $this->subject->countByCatalogFilterGroup(4));
+        self::assertSame(3, $this->subject->countByCatalogFilterGroup(4));
     }
 
     public function testCreateLeavesOmittedColumnsOutOfTheStatement(): void
@@ -68,7 +68,7 @@ class UserRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn(666);
 
-        static::assertSame(
+        self::assertSame(
             666,
             $this->subject->create(['username' => 'some-user', 'disabled' => 0, 'access' => 25])
         );
@@ -80,7 +80,7 @@ class UserRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        static::assertSame(0, $this->subject->create(['username' => 'some-user']));
+        self::assertSame(0, $this->subject->create(['username' => 'some-user']));
     }
 
     public function testDeleteAlsoDropsAccessRulesAndSessions(): void
@@ -109,14 +109,14 @@ class UserRepositoryTest extends TestCase
             )
             ->willReturn('10.0.0.1');
 
-        static::assertSame('10.0.0.1', $this->subject->findActiveSessionIp('some-user', 123456, true));
+        self::assertSame('10.0.0.1', $this->subject->findActiveSessionIp('some-user', 123456, true));
     }
 
     public function testFindActiveSessionIpReturnsNullWhenNotLoggedIn(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertNull($this->subject->findActiveSessionIp('some-user', 123456, false));
+        self::assertNull($this->subject->findActiveSessionIp('some-user', 123456, false));
     }
 
     public function testFindByApiKeyFallsBackToTheSessionAndThenTheHashedKeys(): void
@@ -138,7 +138,35 @@ class UserRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn(['id' => '1', 'apikey' => 'some-key', 'username' => 'some-user'], false);
 
-        static::assertNull($this->subject->findByApiKey('some-api-key'));
+        self::assertNull($this->subject->findByApiKey('some-api-key'));
+    }
+
+    public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('WHERE `id` IN (1,0,3)'))
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => '1', 'username' => 'foo'], false);
+
+        self::assertSame(
+            [['id' => '1', 'username' => 'foo']],
+            $this->subject->getRowsByIds([1, 'x', 3])
+        );
+    }
+
+    public function testGetRowsByIdsReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getRowsByIds([]));
     }
 
     public function testGetValidationByUsernameReturnsNullForAClearedValidation(): void
@@ -151,7 +179,7 @@ class UserRepositoryTest extends TestCase
             )
             ->willReturn(null);
 
-        static::assertNull($this->subject->getValidationByUsername('some-user'));
+        self::assertNull($this->subject->getValidationByUsername('some-user'));
     }
 
     public function testHasOtherAdminIgnoresDisabledAccountsWhenAsked(): void
@@ -164,14 +192,14 @@ class UserRepositoryTest extends TestCase
             )
             ->willReturn('42');
 
-        static::assertTrue($this->subject->hasOtherAdmin(666, true));
+        self::assertTrue($this->subject->hasOtherAdmin(666, true));
     }
 
     public function testHasOtherAdminReturnsFalseWhenThisIsTheLastOne(): void
     {
         $this->connection->method('fetchOne')->willReturn(false);
 
-        static::assertFalse($this->subject->hasOtherAdmin(666, false));
+        self::assertFalse($this->subject->hasOtherAdmin(666, false));
     }
 
     public function testIdByUsernameReturnsZeroForAnUnknownName(): void
@@ -184,7 +212,7 @@ class UserRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertSame(0, $this->subject->idByUsername('some-user'));
+        self::assertSame(0, $this->subject->idByUsername('some-user'));
     }
 
     public function testResetCatalogFilterGroupPutsThemBackOnDefault(): void
@@ -215,7 +243,7 @@ class UserRepositoryTest extends TestCase
             )
             ->willReturn(false);
 
-        static::assertSame('', $this->subject->retrievePasswordFromUser(666));
+        self::assertSame('', $this->subject->retrievePasswordFromUser(666));
     }
 
     public function testSetFieldClearsATokenWithNull(): void
@@ -224,7 +252,7 @@ class UserRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `user` SET `apikey` = ? WHERE `id` = ?', [null, 666]);
 
-        static::assertTrue($this->subject->setField(666, UserFieldEnum::APIKEY, null));
+        self::assertTrue($this->subject->setField(666, UserFieldEnum::APIKEY, null));
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void
@@ -233,7 +261,7 @@ class UserRepositoryTest extends TestCase
             ->method('query')
             ->with('UPDATE `user` SET `email` = ? WHERE `id` = ?', ['some@example.org', 666]);
 
-        static::assertTrue($this->subject->setField(666, UserFieldEnum::EMAIL, 'some@example.org'));
+        self::assertTrue($this->subject->setField(666, UserFieldEnum::EMAIL, 'some@example.org'));
     }
 
     public function testSetUserDataReplacesTheStoredCounter(): void
@@ -251,7 +279,7 @@ class UserRepositoryTest extends TestCase
             ->method('query')
             ->with("UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?", ['some-key', 666]);
 
-        static::assertTrue($this->subject->setValidation(666, 'some-key'));
+        self::assertTrue($this->subject->setValidation(666, 'some-key'));
     }
 
     protected function setUp(): void

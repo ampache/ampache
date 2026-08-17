@@ -30,7 +30,7 @@ use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
-    private int $_current = 0;
+    private int $_current;
 
     /** @var array<int, array{name: string, link: string}> $_songs */
     private array $_songs = [];

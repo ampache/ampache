@@ -35,6 +35,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -126,6 +127,30 @@ final readonly class ShareRepository implements ShareRepositoryInterface
         }
 
         return $items;
+    }
+
+    /**
+     * Returns the full rows for a set of ids, for the object cache
+     *
+     * @param array<int|string> $shareIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $shareIds): array
+    {
+        if ($shareIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            'SELECT * FROM `share` WHERE `id` IN (' . implode(',', array_map(intval(...), $shareIds)) . ')'
+        );
+
+        $results = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**

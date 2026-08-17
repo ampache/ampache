@@ -104,7 +104,7 @@ final class AccountView extends AbstractView
 
     public function getTab(): string
     {
-        return (string) Core::get_request('tab');
+        return Core::get_request('tab');
     }
 
     public function getUserId(): int

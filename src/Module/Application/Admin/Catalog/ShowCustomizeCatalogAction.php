@@ -63,10 +63,10 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
 
         $this->ui->showHeader();
 
-        echo (new EditCatalogView(
+        echo new EditCatalogView(
             AmpConfig::get_web_path('/admin'),
             $catalog
-        ))->render();
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -176,7 +176,7 @@ final class HeaderView extends AbstractView
 
     public function getUserFullname(): string
     {
-        return (string) ($this->currentUser->fullname ?? '');
+        return $this->currentUser->fullname ?? '';
     }
 
     public function getUserId(): int
@@ -243,13 +243,13 @@ final class HeaderView extends AbstractView
 
     public function renderRightbar(): string
     {
-        return (new RightbarView(
+        return new RightbarView(
             $this->collectionRepository,
             $this->libraryItemLoader,
             $this->playlistLoader,
             $this->zipHandler,
             $this->webPath
-        ))->render();
+        )->render();
     }
 
     public function renderSidebar(): string

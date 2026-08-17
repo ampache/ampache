@@ -70,7 +70,7 @@ final class CollectionEditFormRenderer extends AbstractEditFormRenderer
 
     public function getObjectType(): string
     {
-        return (string) ($this->getItem()->object_type ?? '');
+        return $this->getItem()->object_type ?? '';
     }
 
     /**

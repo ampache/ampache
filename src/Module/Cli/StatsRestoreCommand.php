@@ -28,6 +28,7 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Statistics\Stats;
+use Override;
 
 final class StatsRestoreCommand extends Command
 {
@@ -68,9 +69,10 @@ final class StatsRestoreCommand extends Command
         }
     }
 
+    #[Override]
     protected function defaults(): self
     {
-        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
         $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 

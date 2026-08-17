@@ -328,7 +328,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             return [];
         }
 
-        $idList = implode(',', array_map('intval', $folderIds));
+        $idList = implode(',', array_map(intval(...), $folderIds));
 
         $result = $this->connection->query('SELECT * FROM `folder` WHERE `id` IN (' . $idList . ')');
 
@@ -409,7 +409,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void
     {
         $pathName = dirname($filePath);
-        if ($pathName === '' || $pathName === '.' || $pathName === DIRECTORY_SEPARATOR) {
+        if (in_array($pathName, ['', '.', DIRECTORY_SEPARATOR], true)) {
             return;
         }
 

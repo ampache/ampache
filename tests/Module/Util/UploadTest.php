@@ -56,7 +56,7 @@ class UploadTest extends TestCase
         try {
             $_POST['folder'] = 'sub';
 
-            static::assertSame(realpath($subDir), Upload::check_target_dir($catalogDir));
+            self::assertSame(realpath($subDir), Upload::check_target_dir($catalogDir));
         } finally {
             unset($_POST['folder']);
             rmdir($subDir);
@@ -79,7 +79,7 @@ class UploadTest extends TestCase
         try {
             $_POST['folder'] = '..' . DIRECTORY_SEPARATOR . basename($siblingDir);
 
-            static::assertNull(Upload::check_target_dir($catalogDir));
+            self::assertNull(Upload::check_target_dir($catalogDir));
         } finally {
             unset($_POST['folder']);
             rmdir($catalogDir);
@@ -93,7 +93,7 @@ class UploadTest extends TestCase
     #[DataProvider('filenameDataProvider')]
     public function testCleanFilenameKeepsOnlyTheName(string $given, string $expected): void
     {
-        static::assertSame($expected, Upload::clean_filename($given));
+        self::assertSame($expected, Upload::clean_filename($given));
     }
 
     /**
@@ -112,7 +112,7 @@ class UploadTest extends TestCase
         try {
             Upload::upload_script($targetdir, $payload);
 
-            static::assertFileDoesNotExist($marker);
+            self::assertFileDoesNotExist($marker);
         } finally {
             AmpConfig::set('allow_upload_scripts', false, true);
             AmpConfig::set('upload_script', '', true);

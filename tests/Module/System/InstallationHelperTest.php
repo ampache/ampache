@@ -28,34 +28,18 @@ namespace Ampache\Module\System;
 use Ampache\MockeryTestCase;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Override;
 
 class InstallationHelperTest extends MockeryTestCase
 {
     private string $file = '';
     private InstallationHelper $subject;
 
-    public function setUp(): void
-    {
-        $this->subject = new InstallationHelper(
-            $this->mock(UpdaterInterface::class),
-            $this->mock(UpdateInfoRepositoryInterface::class),
-        );
-    }
-
-    public function tearDown(): void
-    {
-        foreach ([$this->file, $this->file . '.dist'] as $path) {
-            if ($this->file !== '' && file_exists($path)) {
-                unlink($path);
-            }
-        }
-    }
-
     public function testAnAlreadyPrefixedTargetIsNotPrefixedTwice(): void
     {
         $rules = 'RewriteRule ^image\.php$ /ampache/image.php [R=302,L]';
 
-        static::assertSame($rules, $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true));
+        self::assertSame($rules, $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true));
     }
 
     /**
@@ -70,7 +54,7 @@ class InstallationHelperTest extends MockeryTestCase
             'RewriteRule (.*) - [R=400,L]',
         ]);
 
-        static::assertSame(
+        self::assertSame(
             $rules,
             $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true)
         );
@@ -78,7 +62,7 @@ class InstallationHelperTest extends MockeryTestCase
 
     public function testRealTargetsGainTheWebPath(): void
     {
-        static::assertSame(
+        self::assertSame(
             'RewriteRule ^image\.php$ /ampache/image.php?action=show_user_avatar [R=302,L]',
             $this->subject->install_check_rewrite_rules(
                 $this->writeRules('RewriteRule ^image\.php$ /image.php?action=show_user_avatar [R=302,L]'),
@@ -94,7 +78,7 @@ class InstallationHelperTest extends MockeryTestCase
         $file = $this->writeRules((string) file_get_contents($dist));
         copy($dist, $file . '.dist');
 
-        static::assertTrue($this->subject->install_check_rewrite_rules($file, ''));
+        self::assertTrue($this->subject->install_check_rewrite_rules($file, ''));
     }
 
     /**
@@ -112,19 +96,19 @@ class InstallationHelperTest extends MockeryTestCase
             ])
         );
 
-        static::assertFalse($this->subject->install_check_rewrite_rules($file, '/ampache'));
+        self::assertFalse($this->subject->install_check_rewrite_rules($file, '/ampache'));
     }
 
     public function testValidationFailsForAnUnprefixedTarget(): void
     {
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->install_check_rewrite_rules($this->writeRules('RewriteRule ^image\.php$ /image.php [R=302,L]'), '/ampache')
         );
     }
 
     public function testValidationFailsWhenTheFileHasNotBeenWrittenYet(): void
     {
-        static::assertFalse(
+        self::assertFalse(
             $this->subject->install_check_rewrite_rules(sys_get_temp_dir() . '/nonexistent-htaccess', '')
         );
     }
@@ -145,7 +129,7 @@ class InstallationHelperTest extends MockeryTestCase
             ])
         );
 
-        static::assertTrue($this->subject->install_check_rewrite_rules($file, '/ampache'));
+        self::assertTrue($this->subject->install_check_rewrite_rules($file, '/ampache'));
     }
 
     /**
@@ -153,9 +137,28 @@ class InstallationHelperTest extends MockeryTestCase
      */
     public function testValidationPassesForFlagOnlyRules(): void
     {
-        static::assertTrue(
+        self::assertTrue(
             $this->subject->install_check_rewrite_rules($this->writeRules('RewriteRule (.*) - [R=400,L]'), '/ampache')
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new InstallationHelper(
+            $this->mock(UpdaterInterface::class),
+            $this->mock(UpdateInfoRepositoryInterface::class),
+        );
+    }
+
+    #[Override]
+    protected function tearDown(): void
+    {
+        foreach ([$this->file, $this->file . '.dist'] as $path) {
+            if ($this->file !== '' && file_exists($path)) {
+                unlink($path);
+            }
+        }
     }
 
     private function writeRules(string $rules): string

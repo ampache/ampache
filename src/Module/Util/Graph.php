@@ -359,7 +359,10 @@ class Graph
     protected function get_catalog_media_source(?string $object_type, int $object_id): ?array
     {
         if (in_array($object_type, ['song', 'video', 'podcast_episode'], true)) {
-            return [$object_type, ($object_id > 0) ? " AND `" . $object_type . "`.`id` = " . $object_id : ''];
+            return [
+                $object_type,
+                ($object_id > 0) ? " AND `" . $object_type . "`.`id` = " . $object_id : ''
+            ];
         }
 
         // without an id the container is just "everything", which is every song

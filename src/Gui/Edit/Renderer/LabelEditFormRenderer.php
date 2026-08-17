@@ -115,7 +115,7 @@ final class LabelEditFormRenderer extends AbstractEditFormRenderer
 
     public function isActive(): bool
     {
-        return (bool) $this->getItem()->active;
+        return $this->getItem()->active;
     }
 
     public function mayEditMbid(): bool

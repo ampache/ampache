@@ -123,12 +123,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             switch ($_GET['type']) {
                 case 'popup':
                     $typeManaged = true;
-                    echo (new BigArtView(
+                    echo new BigArtView(
                         (string) Art::url((int) Core::get_get('id'), 'album'),
                         str_replace('_', '-', (string) AmpConfig::get('lang', 'en_US')),
                         (string) AmpConfig::get('site_charset', 'UTF-8'),
                         (string) AmpConfig::get('site_title')
-                    ))->render();
+                    )->render();
                     break;
                 case 'session':
                     Session::check();

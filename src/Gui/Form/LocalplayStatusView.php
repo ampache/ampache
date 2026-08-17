@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Form;
 
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Override;
@@ -52,7 +53,7 @@ final class LocalplayStatusView extends AbstractView
         private readonly array $objects,
     ) {}
 
-    public function createBrowse(): \Ampache\Module\Database\Query\Browse
+    public function createBrowse(): Browse
     {
         $browse = $this->browseFactory->create();
         $browse->set_type('playlist_localplay');

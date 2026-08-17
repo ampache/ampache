@@ -56,7 +56,7 @@ final class SongEditFormRenderer extends AbstractEditFormRenderer
 
     public function getAlbumId(): int
     {
-        return (int) $this->getItem()->album;
+        return $this->getItem()->album;
     }
 
     public function getArtistId(): int

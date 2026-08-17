@@ -116,7 +116,7 @@ class Preference extends database_object
         'upload_catalog' => ['-1', 'Destination catalog', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload'],
         'allow_upload' => ['0', 'Allow user uploads', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
         'upload_subdir' => ['1', 'Create a subdirectory per user', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
-        'upload_user_artist' => ['0', 'Consider the user sender as the track\'s artist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
+        'upload_user_artist' => ['0', "Consider the user sender as the track's artist", AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
         'upload_script' => ['', 'Post-upload script (current directory = upload target directory)', AccessLevelEnum::ADMIN->value, 'string', 'system', 'upload'],
         'upload_allow_edit' => ['1', 'Allow users to edit uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
         'daap_backend' => ['0', 'Use DAAP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
@@ -171,8 +171,8 @@ class Preference extends database_object
         'show_playlist_username' => ['1', 'Show playlist owner username in titles', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse'],
         'api_hidden_playlists' => ['', 'Hide playlists in Subsonic and API clients that start with this string', AccessLevelEnum::USER->value, 'string', 'options', 'api'],
         'api_hide_dupe_searches' => ['0', 'Hide smartlists that match playlist names in Subsonic and API clients', AccessLevelEnum::USER->value, 'boolean', 'options', 'api'],
-        'show_album_artist' => ['1', 'Show \'Album Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
-        'show_artist' => ['0', 'Show \'Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'show_album_artist' => ['1', "Show 'Album Artists' link in the main sidebar", AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'show_artist' => ['0', "Show 'Artists' link in the main sidebar", AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'demo_use_search' => ['0', 'Democratic - Use smartlists for base playlist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null],
         'webplayer_removeplayed' => ['0', 'Remove tracks before the current playlist item in the webplayer when played', AccessLevelEnum::USER->value, 'special', 'streaming', 'player'],
         'api_enable_6' => ['1', 'Allow Ampache API6 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api'],
@@ -225,9 +225,9 @@ class Preference extends database_object
         'subsonic_force_album_artist' => ['0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api'],
         'subsonic_single_user_data' => ['1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api'],
         'api_enable_8' => ['1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api'],
-        'show_folder' => ['1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
-        'show_collection' => ['1', 'Show \'Collections\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
-        'show_mood' => ['1', 'Show \'Moods\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'show_folder' => ['1', "Show 'Folders' link in the main sidebar", AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'show_collection' => ['1', "Show 'Collections' link in the main sidebar", AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'show_mood' => ['1', "Show 'Moods' link in the main sidebar", AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'encode_target' => ['', 'Transcode output format - Audio Default', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding'],
         'encode_video_target' => ['', 'Transcode output format - Video Default', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding'],
         'encode_player_webplayer_target' => ['', 'Transcode output format - Web Player (overrides default)', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding'],
@@ -739,7 +739,7 @@ class Preference extends database_object
         }
 
         // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
-        if ($user_id != -1) {
+        if ($user_id !== -1) {
             foreach ($repository->getSystemDefaultPreferences() as $row) {
                 $zero_results[$row['preference']] = [
                     'name' => $row['name'],
@@ -749,7 +749,7 @@ class Preference extends database_object
         } // if not user -1
 
         // get me _EVERYTHING_, minus the system-only rows when this is a real user
-        foreach ($repository->getAllPreferences($user_id == -1) as $row) {
+        foreach ($repository->getAllPreferences($user_id === -1) as $row) {
             $key = $row['id'];
 
             // Check if this preference is set
@@ -780,17 +780,20 @@ class Preference extends database_object
      */
     public static function get(string $pref_name, int $user_id): array
     {
-        $row = self::getPreferenceRepository()->getUserPreferenceRow($pref_name, $user_id, $user_id != -1);
+        $row = self::getPreferenceRepository()->getUserPreferenceRow($pref_name, $user_id, $user_id !== -1);
         if ($row === []) {
             return [];
         }
+
+        // secret-named preferences are write-only, matching the web UI's createPreferenceInput() policy
+        $value = (self::isSecretName($row['name'])) ? '' : $row['value'];
 
         return [[
             'id' => $row['id'],
             'name' => $row['name'],
             'level' => $row['level'],
             'description' => $row['description'],
-            'value' => $row['value'],
+            'value' => $value,
             'type' => $row['type'],
             'category' => $row['category'],
             'subcategory' => $row['subcategory'],
@@ -817,6 +820,7 @@ class Preference extends database_object
             $column_name = 'preference'; // Backward compatibility for Ampache < 7
             $pref_name   = self::id_from_name($pref_name);
         }
+
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- no cache, need to do one', 5);
 
         // Get default preferences from user -1
@@ -871,82 +875,66 @@ class Preference extends database_object
      */
     public static function get_special_values(string $name, User $user): ?array
     {
-        switch ($name) {
-            case 'upload_catalog':
-                return $user->get_catalogs('music');
-            case 'playlist_type':
-                return [
-                    'simple_m3u',
-                    'pls',
-                    'asx',
-                    'ram',
-                    'xspf',
-                    'm3u'
-                ];
-            case 'lang':
-                return array_keys(get_languages());
-            case 'localplay_controller':
-                return array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
-            case 'api_force_version':
-                return [
-                    0,
-                    3,
-                    4,
-                    5,
-                    6
-                ];
-            case 'ratingmatch_stars':
-                return [
-                    '0',
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                ];
-            case 'localplay_level':
-            case 'upload_access_level':
-                return [
-                    '0',
-                    '5',
-                    '25',
-                    '50',
-                    '75',
-                    '100',
-                ];
-            case 'webplayer_removeplayed':
-                return [
-                    '0',
-                    '1',
-                    '2',
-                    '3',
-                    '5',
-                    '10',
-                    '999',
-                ];
-            case 'transcode':
-                return [
-                    'never',
-                    'default',
-                    'always',
-                ];
-            case 'album_sort':
-                return [
-                    'default',
-                    'year_asc',
-                    'year_desc',
-                    'name_asc',
-                    'name_desc',
-                ];
-            case 'encode_target':
-            case 'encode_player_webplayer_target':
-            case 'encode_player_api_target':
-                return array_merge([''], Stream::get_available_encode_formats('audio'));
-            case 'encode_video_target':
-                return array_merge([''], Stream::get_available_encode_formats('video'));
-        }
-
-        return null;
+        return match ($name) {
+            'upload_catalog' => $user->get_catalogs('music'),
+            'playlist_type' => [
+                'simple_m3u',
+                'pls',
+                'asx',
+                'ram',
+                'xspf',
+                'm3u'
+            ],
+            'lang' => array_keys(get_languages()),
+            'localplay_controller' => array_keys(LocalPlayTypeEnum::TYPE_MAPPING),
+            'api_force_version' => [
+                0,
+                3,
+                4,
+                5,
+                6
+            ],
+            'ratingmatch_stars' => [
+                '0',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+            ],
+            'localplay_level', 'upload_access_level' => [
+                '0',
+                '5',
+                '25',
+                '50',
+                '75',
+                '100',
+            ],
+            'webplayer_removeplayed' => [
+                '0',
+                '1',
+                '2',
+                '3',
+                '5',
+                '10',
+                '999',
+            ],
+            'transcode' => [
+                'never',
+                'default',
+                'always',
+            ],
+            'album_sort' => [
+                'default',
+                'year_asc',
+                'year_desc',
+                'name_asc',
+                'name_desc',
+            ],
+            'encode_target', 'encode_player_webplayer_target', 'encode_player_api_target' => array_merge([''], Stream::get_available_encode_formats('audio')),
+            'encode_video_target' => array_merge([''], Stream::get_available_encode_formats('video')),
+            default => null,
+        };
     }
 
     /**
@@ -1014,7 +1002,7 @@ class Preference extends database_object
         /* Set the Theme mojo */
         if (
             array_key_exists('theme_name', $results)
-            && strlen((string) $results['theme_name']) > 0
+            && (string) $results['theme_name'] !== ''
             && basename((string) $results['theme_name']) === $results['theme_name']
         ) {
             // In case the theme was removed
@@ -1044,7 +1032,7 @@ class Preference extends database_object
         }
 
         if (
-            strlen((string) $results['theme_color']) > 0
+            (string) $results['theme_color'] !== ''
             && basename((string) $results['theme_color']) === $results['theme_color']
         ) {
             // In case the color was removed
@@ -1161,6 +1149,7 @@ class Preference extends database_object
             'api_enable_4',
             'api_enable_5',
             'api_enable_6',
+            'api_enable_8',
             'api_hide_dupe_searches',
             'art_zip_add',
             'auth_password_save',
@@ -1204,6 +1193,7 @@ class Preference extends database_object
             'catalog_verify_by_time',
             'catalogfav_compact',
             'catalogfav_gridview',
+            'cli_no_color',
             'composer_no_dev',
             'condPL',
             'cookie_disclaimer',
@@ -1277,8 +1267,10 @@ class Preference extends database_object
             'perpetual_api_session',
             'personalfav_display',
             'playlist_art',
+            'playlist_art_mosaic',
             'podcast',
             'prevent_multiple_logins',
+            'public_images',
             'quarantine',
             'rating_browse_filter',
             'rating_browse_minimum_stars',
@@ -1296,7 +1288,9 @@ class Preference extends database_object
             'share',
             'show_album_artist',
             'show_artist',
+            'show_collection',
             'show_donate',
+            'show_folder',
             'show_footer_statistics',
             'show_header_login',
             'show_license',
@@ -1348,6 +1342,7 @@ class Preference extends database_object
             'use_original_year',
             'use_rss',
             'user_agreement',
+            'user_create_apikey',
             'user_create_streamtoken',
             'user_no_email_confirm',
             'vite_dev',
@@ -1362,7 +1357,7 @@ class Preference extends database_object
             'xml_rpc',
         ];
 
-        return in_array($key, $boolean_array);
+        return in_array($key, $boolean_array, true);
     }
 
     /**
@@ -1524,7 +1519,6 @@ class Preference extends database_object
      */
     public static function translate_db(): void
     {
-        $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
         $pref_array = [
             'album_group' => 'Album - Group multiple disks',
             'album_release_type_sort' => 'Album - Group per release type sort',
@@ -1786,11 +1780,12 @@ class Preference extends database_object
         if ($user_id === 0) {
             return false;
         }
+
         $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
-            $name    = (string) $preference;
+            $name    = $preference;
         } else {
             $pref_id = (int) $preference;
             $name    = self::name_from_id($preference);
@@ -1802,9 +1797,7 @@ class Preference extends database_object
                 || $pref_id === 0
             )
             || (
-                $name === null
-                || $name === ''
-                || $name === '0'
+                in_array($name, [null, '', '0'], true)
             )
         ) {
             return false;
@@ -1830,6 +1823,7 @@ class Preference extends database_object
 
             return true;
         }
+
         debug_event(self::class, (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
 
         return false;
