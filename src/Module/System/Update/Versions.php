@@ -749,7 +749,7 @@ final class Versions
         801001 => Migration801001::class,
         801002 => Migration801002::class,
         801003 => Migration801003::class,
-        801004 => Migration801003::class,
+        801004 => Migration801004::class,
     ];
 
     /**

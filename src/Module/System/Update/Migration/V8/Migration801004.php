@@ -34,7 +34,7 @@ use Generator;
  *
  * Spent proof-of-work answers, so a solved challenge cannot be replayed. Rows expire with `pow_ttl`.
  */
-final class Migration800051 extends AbstractMigration
+final class Migration801004 extends AbstractMigration
 {
     private const string POW_CHALLENGE_TABLE = "CREATE TABLE IF NOT EXISTS `pow_challenge` (`id` char(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL, `expire` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`), KEY `expire_index` (`expire`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;";
 
@@ -48,7 +48,7 @@ final class Migration800051 extends AbstractMigration
     ): Generator {
         yield from parent::getTableMigrations($collation, $charset, $engine, $build);
 
-        if ($build > 800051) {
+        if ($build > 801004) {
             yield 'pow_challenge' => sprintf(self::POW_CHALLENGE_TABLE, $engine, $charset, $collation);
         }
     }
