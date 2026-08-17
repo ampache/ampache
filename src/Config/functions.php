@@ -614,6 +614,14 @@ function catalog_worker(string $action, ?array $catalogs = null, ?array $options
 function return_referer(): string
 {
     $referer = Core::get_server('HTTP_REFERER');
+
+    // client-side navigation rewrites the address bar before its fetch goes out, so the referer can equal this exact request.
+    $refererParts = parse_url($referer) ?: [];
+    $refererUri   = ($refererParts['path'] ?? '') . (isset($refererParts['query']) ? '?' . $refererParts['query'] : '');
+    if ($refererUri !== '' && $refererUri === Core::get_server('REQUEST_URI')) {
+        return 'index.php';
+    }
+
     if (str_ends_with($referer, '/')) {
         $file = 'index.php';
     } else {
