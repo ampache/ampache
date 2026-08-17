@@ -58,7 +58,7 @@ use Throwable;
 final readonly class PowService implements PowServiceInterface
 {
     /** Name of the cookie that tells the interstitial a delivery has begun. */
-    private const string ACK_COOKIE = 'pow_ack';
+    private const string ACK_COOKIE = '_pow_ack';
 
     /**
      * Scopes whose endpoint can echo the acknowledgement.
@@ -103,7 +103,8 @@ final readonly class PowService implements PowServiceInterface
     #[Override]
     public function confirmDelivery(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $token = (string) ($request->getQueryParams()[self::ACK_COOKIE] ?? '');
+        $name  = $this->configContainer->getSessionName() . self::ACK_COOKIE;
+        $token = (string) ($request->getQueryParams()[$name] ?? '');
 
         // The token comes back from the client and is about to be written into a response header, so
         // anything that is not the shape this service hands out is dropped rather than escaped.
@@ -113,7 +114,7 @@ final readonly class PowService implements PowServiceInterface
 
         $cookie = sprintf(
             '%s=%s; Path=/; Max-Age=%d; SameSite=Lax',
-            self::ACK_COOKIE,
+            $name,
             $token,
             self::ACK_TTL
         );
