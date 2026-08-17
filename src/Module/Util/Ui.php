@@ -1652,6 +1652,15 @@ class Ui implements UiInterface
     }
 
     /**
+     * callers pass both absolute urls (which may target a plain web-root page with no `/client` segment on
+     * the client structure) and bare page paths; only the latter need the web path prefixed.
+     */
+    private static function isAbsoluteUrl(string $url): bool
+    {
+        return str_starts_with($url, 'http://') || str_starts_with($url, 'https://');
+    }
+
+    /**
      * shows a confirmation of an action
      */
     public function showConfirmation(
@@ -1663,7 +1672,7 @@ class Ui implements UiInterface
         ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $path    = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
         echo (new ConfirmationView(
             $webPath,
@@ -1687,8 +1696,8 @@ class Ui implements UiInterface
         ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
-        $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+        $return  = self::isAbsoluteUrl($return_url) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = self::isAbsoluteUrl($cancel_url) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
         echo (new ConfirmationWithReturnView(
             $webPath,
@@ -1709,9 +1718,7 @@ class Ui implements UiInterface
         string $next_url,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-
-        // callers pass both absolute urls and bare page paths; only prefix the relative ones
-        $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        $path    = self::isAbsoluteUrl($next_url) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
         echo (new ContinueView(
             $webPath,
