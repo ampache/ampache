@@ -110,15 +110,15 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             'api_format' => 'xml'
         ];
 
-        if ($type !== null && $type !== '') {
-            $parameters['type'] = $type;
-        }
-
         if ($task !== null) {
             $parameters['task'] = $task;
         }
 
         $post = $this->parseRequestBody($request);
+
+        if (($type !== null && $type !== '') && !array_key_exists('type', $post)) {
+            $parameters['type'] = $type;
+        }
 
         $request = $request->withQueryParams(
             array_merge(
