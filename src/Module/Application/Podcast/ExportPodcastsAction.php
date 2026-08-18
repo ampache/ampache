@@ -32,13 +32,15 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exchange\PodcastExporterInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Exports every podcast in the system (unscoped by catalog access), not just the caller's own
+ * Exports the podcast subscriptions the caller can see, bounded by their catalog access
  */
 final readonly class ExportPodcastsAction implements ApplicationActionInterface
 {
@@ -61,6 +63,13 @@ final readonly class ExportPodcastsAction implements ApplicationActionInterface
             return null;
         }
 
+        // the boundary knows who is asking, so the catalog filter is resolved here and the exporter stays a
+        // plain read of whatever it is handed
+        $user       = $gatekeeper->getUser();
+        $catalogIds = ($user instanceof User && $user->getId() > 0)
+            ? Catalog::get_catalogs('podcast', $user->getId(), true)
+            : null;
+
         $fileName = sprintf(
             'ampache_podcast_subscriptions_%s.opml',
             date('Y-m-d_H-i-s')
@@ -78,7 +87,7 @@ final readonly class ExportPodcastsAction implements ApplicationActionInterface
 
         // write the actual export to the body
         $response->getBody()->write(
-            $this->podcastExporter->export()
+            $this->podcastExporter->export($catalogIds)
         );
 
         return $response;

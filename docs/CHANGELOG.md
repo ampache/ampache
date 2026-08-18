@@ -14,6 +14,7 @@
 ### Fixed (8.0.2)
 
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
+* The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
 
 ## Ampache 8.0.1
 
