@@ -54,28 +54,6 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         private LabelRepositoryInterface $labelRepository,
     ) {}
 
-    private static function matchRank(?string $value, string $search): int
-    {
-        return ($value !== null && stripos($value, $search) === 0) ? 0 : 1;
-    }
-
-    /**
-     * Rank already-loaded objects so search-term prefix matches sort first, then trims to $limit.
-     * @template T of object
-     * @param T[] $objects
-     * @param callable(T): ?string $textExtractor
-     * @return T[]
-     */
-    private static function rankBySearchMatch(array $objects, callable $textExtractor, string $search, int $limit): array
-    {
-        usort(
-            $objects,
-            static fn(object $a, object $b): int => self::matchRank($textExtractor($a), $search) <=> self::matchRank($textExtractor($b), $search)
-        );
-
-        return array_slice($objects, 0, $limit);
-    }
-
     public function handle(User $user): void
     {
         $results = [];
@@ -93,21 +71,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'artist',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $artistIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($artistIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($artistIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $artistIds                    = array_unique(array_merge($artistIds, Search::run($searchreq)));
+                    }
+
                     Artist::build_cache($artistIds);
-                    $artists = self::rankBySearchMatch(
-                        array_map(static fn(int $artistid): Artist => new Artist($artistid), $artistIds),
-                        static fn(Artist $artist): ?string => $artist->name,
-                        $search,
-                        $limit
-                    );
+                    $artists = array_map(static fn(int $artistid): Artist => new Artist($artistid), $artistIds);
 
                     foreach ($artists as $artist) {
                         $results[] = [
@@ -124,21 +104,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if (($target == 'anywhere' && $album_group) || $target == 'album') {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'album',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $albumIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($albumIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($albumIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $albumIds                     = array_unique(array_merge($albumIds, Search::run($searchreq)));
+                    }
+
                     Album::build_cache($albumIds);
-                    $albums = self::rankBySearchMatch(
-                        array_map(static fn(int $albumid): Album => new Album($albumid), $albumIds),
-                        static fn(Album $album): ?string => $album->name,
-                        $search,
-                        $limit
-                    );
+                    $albums = array_map(static fn(int $albumid): Album => new Album($albumid), $albumIds);
 
                     foreach ($albums as $album) {
                         $results[] = [
@@ -155,21 +137,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if (($target == 'anywhere' && !$album_group) || $target == 'album_disk') {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'album_disk',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $albumDiskIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($albumDiskIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($albumDiskIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $albumDiskIds                 = array_unique(array_merge($albumDiskIds, Search::run($searchreq)));
+                    }
+
                     AlbumDisk::build_cache($albumDiskIds);
-                    $albumdisks = self::rankBySearchMatch(
-                        array_map(static fn(int $albumdiskid): AlbumDisk => new AlbumDisk($albumdiskid), $albumDiskIds),
-                        static fn(AlbumDisk $albumdisk): ?string => $albumdisk->name,
-                        $search,
-                        $limit
-                    );
+                    $albumdisks = array_map(static fn(int $albumdiskid): AlbumDisk => new AlbumDisk($albumdiskid), $albumDiskIds);
 
                     foreach ($albumdisks as $albumdisk) {
                         $results[] = [
@@ -186,21 +170,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if ($target == 'anywhere' || $target == 'title') {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'song',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $songIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($songIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($songIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $songIds                      = array_unique(array_merge($songIds, Search::run($searchreq)));
+                    }
+
                     Song::build_cache($songIds);
-                    $songs = self::rankBySearchMatch(
-                        array_map(static fn(int $songid): Song => new Song($songid), $songIds),
-                        static fn(Song $song): ?string => $song->title,
-                        $search,
-                        $limit
-                    );
+                    $songs = array_map(static fn(int $songid): Song => new Song($songid), $songIds);
 
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($songs as $song) {
@@ -222,21 +208,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if ($target == 'anywhere' || $target == 'playlist') {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'playlist',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $playlistIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($playlistIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($playlistIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $playlistIds                  = array_unique(array_merge($playlistIds, Search::run($searchreq)));
+                    }
+
                     Playlist::build_cache($playlistIds);
-                    $playlists = self::rankBySearchMatch(
-                        array_map(static fn(int $playlistid): Playlist => new Playlist($playlistid), $playlistIds),
-                        static fn(Playlist $playlist): ?string => $playlist->name,
-                        $search,
-                        $limit
-                    );
+                    $playlists = array_map(static fn(int $playlistid): Playlist => new Playlist($playlistid), $playlistIds);
 
                     foreach ($playlists as $playlist) {
                         $results[] = [
@@ -253,24 +241,26 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if (($target == 'anywhere' || $target == 'label') && AmpConfig::get('label')) {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'label',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'title',
                         'weight' => true,
                     ];
                     $labelIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($labelIds) < $limit) {
+                        $searchreq['limit']            = $limit - count($labelIds);
+                        $searchreq['rule_1_operator']  = '0';
+                        $labelIds                      = array_unique(array_merge($labelIds, Search::run($searchreq)));
+                    }
+
                     Label::build_cache($labelIds);
-                    $labels = self::rankBySearchMatch(
-                        array_filter(array_map(
-                            fn(int $labelid): ?Label => $this->labelRepository->findById($labelid),
-                            $labelIds
-                        )),
-                        static fn(Label $label): ?string => $label->name,
-                        $search,
-                        $limit
-                    );
+                    $labels = array_filter(array_map(
+                        fn(int $labelid): ?Label => $this->labelRepository->findById($labelid),
+                        $labelIds
+                    ));
 
                     foreach ($labels as $label) {
                         $results[] = [
@@ -307,21 +297,23 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 if ($target == 'user' && AmpConfig::get('sociable')) {
                     $searchreq = [
-                        'limit' => $limit * 4,
+                        'limit' => $limit,
                         'type' => 'user',
                         'rule_1_input' => $search,
-                        'rule_1_operator' => '0', // Contains (a superset of 'starts with')
+                        'rule_1_operator' => '2', // Starts with... (index-friendly, try this first)
                         'rule_1' => 'username',
                         'weight' => true,
                     ];
                     $userIds = Search::run($searchreq);
+                    // Limit not reached, fall back to a (slower, non-indexed) contains search
+                    if (count($userIds) < $limit) {
+                        $searchreq['limit']           = $limit - count($userIds);
+                        $searchreq['rule_1_operator'] = '0';
+                        $userIds                      = array_unique(array_merge($userIds, Search::run($searchreq)));
+                    }
+
                     User::build_cache($userIds);
-                    $users = self::rankBySearchMatch(
-                        array_map(static fn(int $user_id): User => new User($user_id), $userIds),
-                        static fn(User $user): ?string => $user->username,
-                        $search,
-                        $limit
-                    );
+                    $users = array_map(static fn(int $user_id): User => new User($user_id), $userIds);
 
                     foreach ($users as $user) {
                         $avatar    = $user->get_avatar();
