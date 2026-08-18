@@ -11,6 +11,10 @@
   * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 
+### Fixed (8.0.2)
+
+* The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
+
 ## Ampache 8.0.1
 
 ### Added (8.0.1)

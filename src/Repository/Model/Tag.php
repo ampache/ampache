@@ -337,6 +337,9 @@ class Tag extends database_object implements library_item, displayable_item, con
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         self::getTagRepository()->migrateMaps($object_type, $old_object_id, $new_object_id);
+
+        self::_forget_object_tags($object_type, $old_object_id);
+        self::_forget_object_tags($object_type, $new_object_id);
     }
 
     /**
@@ -517,7 +520,20 @@ class Tag extends database_object implements library_item, displayable_item, con
             }
         }
 
+        self::_forget_object_tags($type, $item_id);
+
         return $insert_id;
+    }
+
+    /**
+     * Drops an object's cached genre list after its maps changed.
+     *
+     * `build_object_tag_cache()` fills this for a whole page and `get_top_tags()` prefers it over a read, so a write
+     * that leaves it in place has every later read in the same request answering with the genres from before the edit.
+     */
+    private static function _forget_object_tags(string $object_type, int $object_id): void
+    {
+        parent::remove_from_cache('object_tags_' . $object_type, $object_id);
     }
 
     /**
@@ -550,6 +566,8 @@ class Tag extends database_object implements library_item, displayable_item, con
         if ($countType instanceof TagCountTypeEnum) {
             $tagRepository->recountType($countType);
         }
+
+        self::_forget_object_tags($object_type, $object_id);
 
         return true;
     }
@@ -794,6 +812,8 @@ class Tag extends database_object implements library_item, displayable_item, con
         if ($countType instanceof TagCountTypeEnum) {
             $tagRepository->decrementCount($this->id, $countType);
         }
+
+        self::_forget_object_tags($type, $object_id);
 
         return true;
     }

@@ -74,6 +74,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
             [$albumId, $objectType, $objectId]
         );
+
+        $this->forgetCachedArtists([$albumId]);
     }
 
     /**
@@ -123,6 +125,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN ($idList);");
         $this->connection->query("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN ($idList);");
+
+        $this->forgetCachedArtists(array_map(intval(...), $albumIds));
     }
 
     /**
@@ -147,6 +151,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
                 );
             }
         }
+
+        $this->forgetCachedArtists();
     }
 
     /**
@@ -206,6 +212,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ['DELETE FROM `album_map` WHERE `album_id` = ?', [$albumId]],
             ["DELETE FROM `artist_map` WHERE `object_id` = ? AND `object_type` = 'album'", [$albumId]],
         ];
+
+        $this->forgetCachedArtists([$albumId]);
 
         // a map that cannot be cleaned is not worth abandoning the rest of the sweep over
         foreach ($statements as $statement) {
@@ -920,6 +928,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
             [$albumId, $objectType, $objectId]
         );
+
+        $this->forgetCachedArtists([$albumId]);
     }
 
     /**
@@ -1029,6 +1039,27 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         foreach ($statements as [$sql, $params]) {
             $this->runMaintenance($sql, $params);
+        }
+    }
+
+    /**
+     * Drops an album's cached artist list after its maps changed.
+     *
+     * `Album::build_cache()` fills this for a whole page and `get_parent_ids()` prefers it over a read, so a write
+     * that leaves it in place has every later read in the same request answering with the artists from before it.
+     *
+     * @param list<int>|null $albumIds Null forgets every album, for the sweeps that cannot name the rows they touched
+     */
+    private function forgetCachedArtists(?array $albumIds = null): void
+    {
+        if ($albumIds === null) {
+            Album::remove_from_cache('album_artists');
+
+            return;
+        }
+
+        foreach ($albumIds as $albumId) {
+            Album::remove_from_cache('album_artists', $albumId);
         }
     }
 
