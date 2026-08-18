@@ -261,8 +261,8 @@ class Api
     ];
 
     public static ?Browse $browse         = null;
-    public static string $version         = '8.0.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '800000'; // AMPACHE_VERSION
+    public static string $version         = '8.0.1'; // AMPACHE_VERSION
+    public static string $version_numeric = '801000'; // AMPACHE_VERSION
 
     /**
      * check_access
