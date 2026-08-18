@@ -32,6 +32,7 @@ use Ampache\Gui\Register\RegistrationView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\User\Registration\RegistrationAgreementRendererInterface;
 use Ampache\Module\Util\Mailer;
 use Psr\Http\Message\ResponseInterface;
@@ -44,6 +45,7 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private RegistrationAgreementRendererInterface $registrationAgreementRenderer,
+        private PowServiceInterface $powService,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,10 +65,11 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        echo new RegistrationView(
+        echo (new RegistrationView(
             AmpConfig::get_web_path(),
-            $this->registrationAgreementRenderer
-        )->render();
+            $this->registrationAgreementRenderer,
+            $this->powService
+        ))->render();
 
         return null;
     }
