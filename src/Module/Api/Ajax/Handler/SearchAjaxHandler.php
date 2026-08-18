@@ -83,7 +83,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($artistIds) < $limit) {
                         $searchreq['limit']           = $limit - count($artistIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $artistIds                    = array_unique(array_merge($artistIds, Search::run($searchreq)));
+                        $artistIds                    = array_values(array_unique(array_merge($artistIds, Search::run($searchreq))));
                     }
 
                     Artist::build_cache($artistIds);
@@ -116,7 +116,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($albumIds) < $limit) {
                         $searchreq['limit']           = $limit - count($albumIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $albumIds                     = array_unique(array_merge($albumIds, Search::run($searchreq)));
+                        $albumIds                     = array_values(array_unique(array_merge($albumIds, Search::run($searchreq))));
                     }
 
                     Album::build_cache($albumIds);
@@ -149,7 +149,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($albumDiskIds) < $limit) {
                         $searchreq['limit']           = $limit - count($albumDiskIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $albumDiskIds                 = array_unique(array_merge($albumDiskIds, Search::run($searchreq)));
+                        $albumDiskIds                 = array_values(array_unique(array_merge($albumDiskIds, Search::run($searchreq))));
                     }
 
                     AlbumDisk::build_cache($albumDiskIds);
@@ -182,7 +182,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($songIds) < $limit) {
                         $searchreq['limit']           = $limit - count($songIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $songIds                      = array_unique(array_merge($songIds, Search::run($searchreq)));
+                        $songIds                      = array_values(array_unique(array_merge($songIds, Search::run($searchreq))));
                     }
 
                     Song::build_cache($songIds);
@@ -220,7 +220,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($playlistIds) < $limit) {
                         $searchreq['limit']           = $limit - count($playlistIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $playlistIds                  = array_unique(array_merge($playlistIds, Search::run($searchreq)));
+                        $playlistIds                  = array_values(array_unique(array_merge($playlistIds, Search::run($searchreq))));
                     }
 
                     Playlist::build_cache($playlistIds);
@@ -253,7 +253,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($labelIds) < $limit) {
                         $searchreq['limit']            = $limit - count($labelIds);
                         $searchreq['rule_1_operator']  = '0';
-                        $labelIds                      = array_unique(array_merge($labelIds, Search::run($searchreq)));
+                        $labelIds                      = array_values(array_unique(array_merge($labelIds, Search::run($searchreq))));
                     }
 
                     Label::build_cache($labelIds);
@@ -309,7 +309,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     if (count($userIds) < $limit) {
                         $searchreq['limit']           = $limit - count($userIds);
                         $searchreq['rule_1_operator'] = '0';
-                        $userIds                      = array_unique(array_merge($userIds, Search::run($searchreq)));
+                        $userIds                      = array_values(array_unique(array_merge($userIds, Search::run($searchreq))));
                     }
 
                     User::build_cache($userIds);
