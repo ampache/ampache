@@ -177,6 +177,7 @@ interface GuiFactoryInterface
         bool $isAlbumGroup,
         bool $isShowTrack,
         bool $isShowLicense,
+        bool $isShowComposer,
         bool $isHideGenre,
         bool $isHideMood,
         bool $isHideArtist,

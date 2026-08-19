@@ -29,6 +29,7 @@ use Ampache\Gui\View\AbstractView;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Song;
 use Override;
 
 /**
@@ -49,6 +50,7 @@ final class PlaylistMediaRowView extends AbstractView
         private readonly bool $gridView,
         private readonly bool $showRatings,
         private readonly bool $showParent,
+        private readonly bool $showComposer,
         private readonly bool $extendedLinks,
         private readonly bool $canMultiselect,
         private readonly bool $showMultiselect,
@@ -77,6 +79,14 @@ final class PlaylistMediaRowView extends AbstractView
     public function getBrowseId(): int
     {
         return $this->browseId;
+    }
+
+    /**
+     * Composer is a plain `song`.`composer` text field, so anything else in a mixed playlist has none.
+     */
+    public function getComposer(): string
+    {
+        return ($this->item instanceof Song) ? (string) $this->item->composer : '';
     }
 
     public function getCoverClass(): string
@@ -179,6 +189,11 @@ final class PlaylistMediaRowView extends AbstractView
     public function mayShare(): bool
     {
         return $this->mayShare;
+    }
+
+    public function showComposer(): bool
+    {
+        return $this->showComposer;
     }
 
     public function showMultiselect(): bool
