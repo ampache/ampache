@@ -669,10 +669,33 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
         $this->connection->query('UPDATE `folder` SET `total_count` = 0, `total_skip` = 0 WHERE `total_count` > 0 OR `total_skip` > 0;');
 
-        foreach ($totals as $folderId => [$count, $skip]) {
+        foreach (array_chunk($totals, 1000, true) as $chunk) {
+            $countCases = [];
+            $skipCases  = [];
+            $params     = [];
+            foreach ($chunk as $folderId => [$count, $skip]) {
+                $countCases[] = 'WHEN ? THEN ?';
+                $params[]     = $folderId;
+                $params[]     = $count;
+            }
+
+            foreach ($chunk as $folderId => [$count, $skip]) {
+                $skipCases[] = 'WHEN ? THEN ?';
+                $params[]    = $folderId;
+                $params[]    = $skip;
+            }
+
+            $ids = array_keys($chunk);
+            array_push($params, ...$ids);
+
             $this->connection->query(
-                'UPDATE `folder` SET `total_count` = ?, `total_skip` = ? WHERE `id` = ?;',
-                [$count, $skip, $folderId]
+                sprintf(
+                    'UPDATE `folder` SET `total_count` = CASE `id` %s ELSE `total_count` END, `total_skip` = CASE `id` %s ELSE `total_skip` END WHERE `id` IN (%s);',
+                    implode(' ', $countCases),
+                    implode(' ', $skipCases),
+                    implode(',', array_fill(0, count($ids), '?'))
+                ),
+                $params
             );
         }
     }
