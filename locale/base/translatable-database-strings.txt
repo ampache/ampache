@@ -449,6 +449,10 @@ msgid "Show 'Collections' link in the main sidebar"
 msgstr ""
 
 #: Ampache preference description
+msgid "Show Composer column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
 msgid "Show donate button in footer"
 msgstr ""
 

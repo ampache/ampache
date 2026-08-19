@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-08-11 12:55+1000\n"
+"POT-Creation-Date: 2026-08-19 18:52+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2043,6 +2043,45 @@ msgstr ""
 msgid "Episodes"
 msgstr ""
 
+msgid "Checking your browser"
+msgstr ""
+
+msgid "This link is rate limited. Your download will start on its own."
+msgstr ""
+
+msgid "Return to the previous page"
+msgstr ""
+
+msgid "Checking your browser..."
+msgstr ""
+
+#. HINT: %d is how far along the check is, as a percentage
+#, php-format
+msgid "Checking your browser... %d%%"
+msgstr ""
+
+msgid "Check passed."
+msgstr ""
+
+msgid "Your browser is too old to pass this check."
+msgstr ""
+
+msgid "The browser check failed to run. Please reload the page."
+msgstr ""
+
+msgid "Your download has started."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript and Web Workers, and this browser is not running "
+"them."
+msgstr ""
+
+msgid ""
+"Enable them and reload the page, or ask the administrator of this server for "
+"another way in."
+msgstr ""
+
 msgid "Confirm Subsonic Password"
 msgstr ""
 
@@ -2262,10 +2301,13 @@ msgstr ""
 msgid "The last cron was completed"
 msgstr ""
 
-msgid "PHP Settings"
+msgid "Invalid configuration settings"
 msgstr ""
 
 msgid "Setting"
+msgstr ""
+
+msgid "PHP Settings"
 msgstr ""
 
 msgid "Version"
@@ -2833,10 +2875,10 @@ msgstr ""
 msgid "Allow Localplay Set to False"
 msgstr ""
 
-msgid "Localplay Controller Not Defined"
+msgid "Access Denied"
 msgstr ""
 
-msgid "Access Denied"
+msgid "Localplay Controller Not Defined"
 msgstr ""
 
 msgid "Account"
@@ -3696,6 +3738,9 @@ msgstr ""
 msgid "Captcha failed"
 msgstr ""
 
+msgid "Browser check failed. Please reload the page and try again"
+msgstr ""
+
 msgid "You must accept the user agreement"
 msgstr ""
 
@@ -4173,6 +4218,9 @@ msgstr ""
 
 #, php-format
 msgid "Reading Catalog: \"%s\""
+msgstr ""
+
+msgid "Skipping catalog, already being processed"
 msgstr ""
 
 msgid "Look for missing file media entries"
@@ -5347,9 +5395,6 @@ msgid ""
 "Unable to run the update: the PHP exec() function is disabled on this server"
 msgstr ""
 
-msgid "Invalid configuration settings"
-msgstr ""
-
 msgid "Unable to connect to the database, check your Ampache config"
 msgstr ""
 
@@ -5549,6 +5594,10 @@ msgid "File copy failed. Not deleting source file"
 msgstr ""
 
 msgid "File moved..."
+msgstr ""
+
+#, php-format
+msgid "%1$s on %2$s"
 msgstr ""
 
 #, php-format
@@ -7174,6 +7223,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Show 'Collections' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Composer column on playlist media rows"
 msgstr ""
 
 #: Ampache preference description

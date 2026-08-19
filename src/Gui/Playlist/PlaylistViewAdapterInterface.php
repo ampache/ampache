@@ -71,6 +71,8 @@ interface PlaylistViewAdapterInterface
 
     public function getMediaCount(): int;
 
+    public function getPlayDuration(): string;
+
     public function getPlaylistLink(): string;
 
     public function getPlaylistUrl(): string;
