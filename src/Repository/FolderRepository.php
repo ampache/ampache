@@ -53,6 +53,9 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         try {
             $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
+            $this->connection->query("DELETE FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%';");
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
