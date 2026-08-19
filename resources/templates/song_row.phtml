@@ -70,6 +70,9 @@ $songId = $song->getId(); ?>
     if (!$this->isHideArtist()) { ?>
         <td class="cel_artist"><?php echo $this->raw($song->getArtistLink()); ?></td>
 <?php   }
+    if ($this->isShowComposer()) { ?>
+        <td class="cel_composer"><?php echo $this->e($song->getComposer()); ?></td>
+<?php   }
     if (!$this->isHideAlbum()) {
         if ($this->isAlbumGroup()) { ?>
         <td class="cel_album"><?php echo $this->raw($song->getAlbumLink()); ?></td>
@@ -79,7 +82,10 @@ $songId = $song->getId(); ?>
     }
 } else { ?>
         <td class="mash_artist"><?php echo $this->raw($song->getArtistLink()); ?></td>
-<?php   if (!$this->isHideAlbum()) {
+<?php   if ($this->isShowComposer()) { ?>
+        <td class="mash_composer"><?php echo $this->e($song->getComposer()); ?></td>
+<?php   }
+    if (!$this->isHideAlbum()) {
     if ($this->isAlbumGroup()) { ?>
         <td class="mash_album"><?php echo $this->raw($song->getAlbumLink()); ?></td>
 <?php       } else { ?>

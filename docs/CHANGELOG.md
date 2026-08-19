@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## Ampache 8.0.2
+## Ampache 8.1.0
 
-### Added (8.0.2)
+### Added (8.1.0)
 
 * Proof of work checks in front of the endpoints bots hammer
   * Off by default; set `pow_mode` to `guest` or `all` to enable it
@@ -10,6 +10,7 @@
   * The browser solves a sha256 puzzle before it is let through, tuned with `pow_difficulty` (8-26) and `pow_ttl`
   * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
+* New `show_composer` preference (off by default): adds an optional Composer column next to Artist on playlist media rows and every song browse/panel (song list, top tracks, similar songs) that shows one. Composer is a plain `song`.`composer` text field, so anything else in a mixed playlist shows blank. Database 810001
 
 ### Fixed (8.0.2)
 
