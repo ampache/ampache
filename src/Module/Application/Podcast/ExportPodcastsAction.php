@@ -67,7 +67,7 @@ final readonly class ExportPodcastsAction implements ApplicationActionInterface
         // plain read of whatever it is handed
         $user       = $gatekeeper->getUser();
         $catalogIds = ($user instanceof User && $user->getId() > 0)
-            ? Catalog::get_catalogs('podcast', $user->getId(), true)
+            ? array_values(Catalog::get_catalogs('podcast', $user->getId(), true))
             : null;
 
         $fileName = sprintf(

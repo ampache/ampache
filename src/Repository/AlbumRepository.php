@@ -126,7 +126,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN ($idList);");
         $this->connection->query("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN ($idList);");
 
-        $this->forgetCachedArtists(array_map(intval(...), $albumIds));
+        $this->forgetCachedArtists(array_values(array_map(intval(...), $albumIds)));
     }
 
     /**
