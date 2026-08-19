@@ -401,6 +401,20 @@ class Playlist extends playlist_object
     }
 
     /**
+     * Get item f_time, from the cached last_duration rather than summing the songs on every call
+     */
+    #[Override]
+    public function get_f_time(): string
+    {
+        $duration = (int) $this->last_duration;
+        $min      = sprintf("%02d", (floor($duration / 60) % 60));
+        $sec      = sprintf("%02d", ($duration % 60));
+        $hours    = floor($duration / 3600);
+
+        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
+    }
+
+    /**
      * get_items
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
@@ -536,20 +550,6 @@ class Playlist extends playlist_object
         }
 
         return $total;
-    }
-
-    /**
-     * Get item f_time, from the cached last_duration rather than summing the songs on every call
-     */
-    #[Override]
-    public function get_f_time(): string
-    {
-        $duration = (int) $this->last_duration;
-        $min      = sprintf("%02d", (floor($duration / 60) % 60));
-        $sec      = sprintf("%02d", ($duration % 60));
-        $hours    = floor($duration / 3600);
-
-        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
     }
 
     public function getMediaType(): LibraryItemEnum
