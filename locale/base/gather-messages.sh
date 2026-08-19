@@ -20,6 +20,9 @@
 
 PATH=$PATH:/bin:/usr/bin:/usr/local/bin
 
+# every relative path below assumes locale/base as cwd, so run from wherever this script lives
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
 # gettext package test
 if ! which xgettext &>/dev/null ; then
     echo "Xgettext was not found. Do you need to install gettext?"

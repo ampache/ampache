@@ -147,13 +147,6 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function getRowsByIds(array $playlistIds): array;
 
     /**
-     * Sums the running time of a set of songs
-     *
-     * @param list<int> $songIds
-     */
-    public function getTotalDuration(array $songIds): int;
-
-    /**
      * Entry ids in their stored order, for renumbering
      *
      * @return int[]

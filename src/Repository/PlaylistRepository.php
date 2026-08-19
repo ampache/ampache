@@ -497,22 +497,6 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
-     * Sums the running time of a set of songs
-     *
-     * @param list<int> $songIds
-     */
-    public function getTotalDuration(array $songIds): int
-    {
-        if ($songIds === []) {
-            return 0;
-        }
-
-        return (int) $this->connection->fetchOne(
-            sprintf('SELECT SUM(`time`) FROM `song` WHERE `id` IN (%s)', implode(',', $songIds))
-        );
-    }
-
-    /**
      * Entry ids in their stored order, for renumbering
      *
      * @return int[]
