@@ -131,6 +131,14 @@ interface FolderRepositoryInterface
     public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): bool;
 
     /**
+     * Maps a whole catalog's worth of objects under a folder named after the catalog itself, using each file's directory only from where the catalog's own files actually diverge
+     *
+     * @param array<int, string> $filesByObjectId
+     * Returns the number of objects (re)mapped
+     */
+    public function mapObjectsUnderCatalogRoot(string $objectType, array $filesByObjectId, string $catalogName, int $catalogId): int;
+
+    /**
      * Moves every folder_map row of the given type from one object onto another
      */
     public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void;
