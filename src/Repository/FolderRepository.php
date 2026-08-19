@@ -62,7 +62,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'video' AND `folder_map`.`object_id` NOT IN (SELECT `video`.`id` FROM `video`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'folder' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);");
             $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
-            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
+            $this->pruneEmptyFolders();
             $this->update_folder_counts();
         } catch (DatabaseException) {
             $this->logger->debug(
@@ -432,28 +432,33 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      *
      * The folder chain is created when it is missing, because a podcast writes its episodes into directories that no
      * catalog scan has walked.
+     *
+     * Returns whether a new folder_map row was actually inserted, so a caller counting "updated" items
+     * doesn't count files it skipped or that were already mapped
      */
-    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): bool
     {
         // the old pre-path streaming URL format (e.g. stream.view?id=...&filename=...) isn't a real path to map
         if (filter_var($filePath, FILTER_VALIDATE_URL)) {
-            return;
+            return false;
         }
 
         $pathName = dirname($filePath);
         if (in_array($pathName, ['', '.', DIRECTORY_SEPARATOR], true)) {
-            return;
+            return false;
         }
 
         $folderId = $this->findOrCreateByPathName($pathName, $catalogId);
         if ($folderId <= 0) {
-            return;
+            return false;
         }
 
-        $this->connection->query(
+        $statement = $this->connection->query(
             "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?);",
             [$folderId, $objectId, $objectType, basename($filePath), $catalogId, $pathName, $objectId, $objectType]
         );
+
+        return $statement->rowCount() > 0;
     }
 
     /**
@@ -628,6 +633,35 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
+     *
+     * One pass only catches a leaf with no children; a folder whose only content was subfolders that
+     * just got pruned is caught by the next pass, hence the loop. Root folders and user folders are
+     * left alone, matching the rest of this class's convention.
+     */
+    private function pruneEmptyFolders(): void
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $result = $this->connection->query(
+                'SELECT `id` FROM `folder` WHERE `parent` IS NOT NULL AND `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL);'
+            );
+
+            $emptyIds = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $emptyIds[] = (int) $row['id'];
+            }
+
+            if ($emptyIds === []) {
+                return;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($emptyIds), '?'));
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN ($placeholders);", $emptyIds);
+            $this->connection->query("DELETE FROM `folder` WHERE `id` IN ($placeholders);", $emptyIds);
+        }
     }
 
     /**

@@ -546,8 +546,9 @@ class Catalog_subsonic extends Catalog
         $folderRepository = self::getFolderRepository();
         $count            = 0;
         foreach (self::getSongRepository()->getFilesByCatalog($this->getId()) as $songId => $songFile) {
-            $folderRepository->mapObject('song', $songId, $songFile, $this->getId());
-            $count++;
+            if ($folderRepository->mapObject('song', $songId, $songFile, $this->getId())) {
+                $count++;
+            }
         }
 
         if (!$skipCounts) {

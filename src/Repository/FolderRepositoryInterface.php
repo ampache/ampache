@@ -125,8 +125,10 @@ interface FolderRepositoryInterface
 
     /**
      * Maps a media file into the folder its path names, creating the folder chain when it is missing
+     *
+     * Returns whether a new folder_map row was actually inserted
      */
-    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void;
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): bool;
 
     /**
      * Moves every folder_map row of the given type from one object onto another
