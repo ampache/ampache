@@ -16,17 +16,23 @@ The Subsonic API now fully implements folder browsing.
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 * Database 810001
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
+* Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
+* A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
 
 ### Changed (8.1.0)
 
 * Database 810002
   * Covering index on `image` for the art cache lookup, so it can be answered from the index alone; drops the now-redundant `object_id` key it replaces
+* Folder garbage collection now also removes folders with nothing left inside them, including root folders
+* Folder play-count rollups now write in bulk instead of one query per folder, and a scan skips garbage collection when nothing changed
 
 ### Fixed (8.1.0)
 
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
+* A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
+* Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 
 ## Ampache 8.0.1
 
