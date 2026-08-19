@@ -45,7 +45,7 @@ e.g. `sort=name,DESC`
 | `date`             | When the playlist was created.                                                                                           |
 | `id`               | The playlist id, which is the order they were created in.                                                                |
 | `last_count`       | How many items the playlist held when it was last counted.                                                               |
-| `last_duration`    | The total play time of the playlist's songs, as of when it was last counted.                                             |
+| `last_duration`    | The playlist's total duration, as of when it was last counted.                                                           |
 | `last_update`      | When it was last updated.                                                                                                |
 | `name`             | Playlist name, then id, so playlists with the same name keep a stable order.                                             |
 | `rand`             | Random order, applied per request. Paging through it repeats and skips playlists, so ask for everything in one call.     |

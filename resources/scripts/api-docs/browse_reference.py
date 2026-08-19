@@ -631,6 +631,7 @@ SORT_OVERRIDES: dict[str, dict[str, str]] = {
         "name": "Playlist name, then id, so playlists with the same name keep a stable order.",
         "date": "When the playlist was created.",
         "last_count": "How many items the playlist held when it was last counted.",
+        "last_duration": "The playlist's total duration, as of when it was last counted.",
     },
     "playlist_search": {
         "name": "List name, then id, so lists with the same name keep a stable order.",
