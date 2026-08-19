@@ -474,8 +474,15 @@ class FolderRepositoryTest extends TestCase
                     return $tree;
                 }
 
-                if (str_contains($sql, 'SET `total_count` = ?, `total_skip` = ?')) {
-                    $writes[(int) $params[2]] = [(int) $params[0], (int) $params[1]];
+                if (str_contains($sql, 'CASE `id`')) {
+                    // params are N (id, count) pairs, then N (id, skip) pairs, then N ids for the WHERE IN
+                    $n = intdiv(count($params), 5);
+                    for ($i = 0; $i < $n; $i++) {
+                        $folderId          = (int) $params[$i * 2];
+                        $count             = (int) $params[$i * 2 + 1];
+                        $skip              = (int) $params[2 * $n + $i * 2 + 1];
+                        $writes[$folderId] = [$count, $skip];
+                    }
                 }
 
                 return $this->createMock(PDOStatement::class);

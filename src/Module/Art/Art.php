@@ -663,15 +663,12 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle = fopen($data['file'], 'rb');
-            $size   = Core::get_filesize($data['file']);
-            if (
-                $handle
-                && $size > 0
-            ) {
-                $image_data = (string) fread($handle, $size);
-                fclose($handle);
-
+            $image_data = (Core::is_readable($data['file']))
+                ? file_get_contents($data['file'])
+                : false;
+            if ($image_data === false || $image_data === '') {
+                debug_event(self::class, 'Cannot read art file ' . $data['file'], 2);
+            } else {
                 return $image_data;
             }
         }
@@ -1077,7 +1074,7 @@ class Art extends database_object
             return false;
         }
 
-        if (!Core::is_readable($path)) {
+        if (!is_dir($path)) {
             debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
 
             return false;
@@ -1099,10 +1096,11 @@ class Art extends database_object
             unlink($path);
         }
 
-        $filepath = fopen($path, "wb");
-        if ($filepath) {
-            fwrite($filepath, $source);
-            fclose($filepath);
+        // insert() drops the blob from the database when this returns true, so a failed write must say so
+        if (file_put_contents($path, $source) === false) {
+            debug_event(self::class, 'Local image art ' . $path . ' cannot be written.', 1);
+
+            return false;
         }
 
         return true;

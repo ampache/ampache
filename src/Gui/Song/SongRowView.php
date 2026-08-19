@@ -46,6 +46,7 @@ final class SongRowView extends AbstractView
         private readonly bool $isAlbumGroup,
         private readonly bool $isShowTrack,
         private readonly bool $isShowLicense,
+        private readonly bool $isShowComposer,
         private readonly bool $isHideGenre,
         private readonly bool $isHideMood,
         private readonly bool $isHideArtist,
@@ -102,6 +103,11 @@ final class SongRowView extends AbstractView
     public function isHideYear(): bool
     {
         return $this->isHideYear;
+    }
+
+    public function isShowComposer(): bool
+    {
+        return $this->isShowComposer;
     }
 
     public function isShowLicense(): bool

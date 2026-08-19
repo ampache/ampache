@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## Ampache 8.1.0
+
+**Subsonic Users** Populate your catalog folders using the cli (`php bin/cli run:updateCatalog -s`) or the "Scan All Folders" command in the UI.
+
+The Subsonic API now fully implements folder browsing.
+
+### Added (8.1.0)
+
+* Proof of work checks in front of the endpoints bots hammer
+  * Off by default; set `pow_mode` to `guest` or `all` to enable it
+  * `pow_protected` picks the endpoints: the registration form, batch (zip) downloads and single track downloads
+  * The browser solves a sha256 puzzle before it is let through, tuned with `pow_difficulty` (8-26) and `pow_ttl`
+  * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
+  * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
+* Database 810001
+  * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
+
+### Changed (8.1.0)
+
+* Database 810002
+  * Covering index on `image` for the art cache lookup, so it can be answered from the index alone; drops the now-redundant `object_id` key it replaces
+
+### Fixed (8.1.0)
+
+* The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
+* The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
+* Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
+
 ## Ampache 8.0.1
 
 ### Added (8.0.1)

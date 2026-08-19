@@ -45,8 +45,9 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Adds an object and its songs to a playlist
  *
- * The two live api versions only differ in whether `type` is mandatory: version 6 insists on it,
- * version 8 defaults it to `song`. The version classes supply that flag; everything else is shared.
+ * The two live api versions only differ in whether an object type is mandatory: version 6 insists
+ * on it, version 8 defaults it to `song`. The version classes supply that flag; everything else is
+ * shared.
  */
 abstract class AbstractPlaylistAddMethod implements MethodInterface
 {
@@ -54,7 +55,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
 
     public const string REST_ACTION = 'playlist_add_edit';
 
-    // whether the version insists on a `type`; overridden per version
+    // whether the version insists on an object type; overridden per version
     protected const bool TYPE_REQUIRED = false;
 
     private ModelFactoryInterface $modelFactory;
@@ -70,14 +71,23 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
      *
      * This adds a song to a playlist, allowing different song parent types
      *
-     * filter = (string) UID of playlist
-     * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist'
+     * filter      = (string) UID of playlist
+     * id          = (string) $object_id
+     * object_type = (string) 'song', 'album', 'artist', 'playlist' (Default: song)
+     * type        = (string) DEPRECATED, use `object_type` instead. Will be removed in API9
+     *
+     * `object_type` is read first, falling back to the deprecated `type` for older callers. Prefer
+     * `object_type` when calling over REST: the path `playlists/{playlist_id}/add` already binds
+     * `type` to the path's own resource name (`playlist`), so a REST call sending `type` in the body
+     * only reaches this method via JsonRestApiApplication's/XmlRestApiApplication's explicit
+     * body-over-path precedence rule. `object_type` was added to sidestep that collision outright,
+     * matching the naming `collection_add` already uses for the same reason
      *
      * @param array{
      *     filter?: string,
      *     id?: string,
      *     song?: string,
+     *     object_type?: string,
      *     type?: string,
      *     api_format: string,
      *     auth: string,
@@ -105,14 +115,14 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
             );
         }
 
-        if (static::TYPE_REQUIRED && !array_key_exists('type', $input)) {
+        if (static::TYPE_REQUIRED && !array_key_exists('object_type', $input) && !array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf('Bad Request: %s', 'type')
+                sprintf('Bad Request: %s', 'object_type')
             );
         }
 
         $playlist   = $this->modelFactory->createPlaylist((int) $input['filter']);
-        $objectType = $input['type'] ?? 'song';
+        $objectType = $input['object_type'] ?? $input['type'] ?? 'song';
 
         // confirm the correct data
         if (!$playlist->has_collaborate($user)) {
@@ -128,7 +138,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
                     ErrorCodeEnum::BAD_REQUEST,
                     sprintf('Bad Request: %s', $objectType),
                     static::ACTION,
-                    'type'
+                    'object_type'
                 )
             );
 

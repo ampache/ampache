@@ -189,6 +189,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return (string) $rating->get_average_rating();
     }
 
+    public function getComposer(): string
+    {
+        return (string) $this->song->composer;
+    }
+
     public function getConfig(): ConfigViewAdapterInterface
     {
         return $this->config;

@@ -660,6 +660,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             (bool) AmpConfig::get('hide_moods'),
             (bool) AmpConfig::get('album_group'),
             (bool) AmpConfig::get('licensing') && (bool) AmpConfig::get('show_license'),
+            (bool) AmpConfig::get('show_composer'),
             (bool) AmpConfig::get('show_played_times'),
             (bool) AmpConfig::get('show_skipped_times'),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),

@@ -2010,14 +2010,17 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'scan_catalog_folders':
                 if ($catalogs) {
+                    $count = 0;
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        $catalog?->scan_catalog_folders(null, true);
+                        $count   = $count + $catalog?->scan_catalog_folders(null, true);
                     }
 
                     self::getFolderRepository()->update_folder_map();
                     self::getFolderRepository()->update_folder_counts();
-                    self::getFolderRepository()->collectGarbage();
+                    if ($count > 0) {
+                        self::getFolderRepository()->collectGarbage();
+                    }
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                         echo AmpError::display('catalog_scan');

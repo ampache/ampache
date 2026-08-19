@@ -138,6 +138,14 @@ interface TagRepositoryInterface
     public function getTopTags(string $objectType, int $objectId, int $limit): array;
 
     /**
+     * The same rows getTopTags() returns, for a whole page of objects at once.
+     *
+     * @param list<int> $objectIds
+     * @return array<int, list<array{id: int, name: string, is_hidden: int, user: int, count: int}>>
+     */
+    public function getTopTagsBulk(string $objectType, array $objectIds): array;
+
+    /**
      * Steps a counter column up
      */
     public function incrementCount(int $tagId, TagCountTypeEnum $type): void;

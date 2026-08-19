@@ -156,7 +156,7 @@ class Folder extends database_object implements
         $path          = '';
         $user          = null;
         $addition_time = time();
-        $update_time   = filemtime($data['path_name']) ?: time();
+        $update_time   = is_dir($data['path_name']) ? (filemtime($data['path_name']) ?: time()) : time();
 
         // Build the folder paths
         if ($parent) {
@@ -172,7 +172,9 @@ class Folder extends database_object implements
         }
 
         if (!$parent && $path_name) {
-            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
+            // lookup() returns -1 for a blank name and 0 when nothing matches; only a positive id is a real parent
+            $found  = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog);
+            $parent = ($found > 0) ? $found : null;
         }
 
         $folder                = new Folder();

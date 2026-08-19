@@ -109,15 +109,15 @@ final class JsonRestApiApplication implements ApiApplicationInterface
             'api_format' => 'json'
         ];
 
-        if ($type !== null && $type !== '') {
-            $parameters['type'] = $type;
-        }
-
         if ($task !== null) {
             $parameters['task'] = $task;
         }
 
         $post = $this->parseRequestBody($request);
+
+        if (($type !== null && $type !== '') && !array_key_exists('type', $post)) {
+            $parameters['type'] = $type;
+        }
 
         $request = $request->withQueryParams(
             array_merge(

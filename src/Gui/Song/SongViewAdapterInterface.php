@@ -64,6 +64,11 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getAverageRating(): string;
 
+    /**
+     * Composer is a plain `song`.`composer` text field.
+     */
+    public function getComposer(): string;
+
     public function getConfig(): ConfigViewAdapterInterface;
 
     public function getCustomPlayActions(): string;

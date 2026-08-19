@@ -4407,6 +4407,16 @@
             "type": "string",
             "description": "UID of the object to add to playlist"
           },
+          "object_type": {
+            "enum": [
+              "song",
+              "album",
+              "artist",
+              "playlist"
+            ],
+            "type": "string",
+            "description": "Default: song"
+          },
           "type": {
             "enum": [
               "song",
@@ -4414,7 +4424,8 @@
               "artist",
               "playlist"
             ],
-            "type": "string"
+            "type": "string",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9"
           }
         },
         "required": [
@@ -4430,7 +4441,7 @@
             "type": "string",
             "description": "Object id"
           },
-          "type": {
+          "object_type": {
             "enum": [
               "song",
               "album",
@@ -4439,6 +4450,17 @@
             ],
             "type": "string",
             "default": "song"
+          },
+          "type": {
+            "enum": [
+              "song",
+              "album",
+              "artist",
+              "playlist"
+            ],
+            "type": "string",
+            "default": "song",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9"
           },
           "track": {
             "type": "string",
@@ -22097,6 +22119,23 @@
             }
           },
           {
+            "description": "Default: song",
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9",
+            "deprecated": true,
             "in": "query",
             "name": "type",
             "required": false,
@@ -22574,7 +22613,24 @@
           },
           {
             "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
             "name": "type",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9",
+            "deprecated": true,
             "required": false,
             "schema": {
               "enum": [
