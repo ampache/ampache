@@ -61,7 +61,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 
                 $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                    $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
@@ -80,7 +80,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 
                 $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                    $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
@@ -95,7 +95,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 
                 $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                    $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
@@ -112,7 +112,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 
                 $user->load_playlist();
                 foreach ($items as $item) {
-                    $user->playlist?->add_object((int) $item['object_id'], $item['object_type']);
+                    $user->getPlaylist()->add_object((int) $item['object_id'], $item['object_type']);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();

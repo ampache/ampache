@@ -70,7 +70,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
             case 'current_playlist':
                 if ($request_type === 'delete') {
                     $user->load_playlist();
-                    $user->playlist?->delete_track($request_id);
+                    $user->getPlaylist()->delete_track($request_id);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
@@ -103,7 +103,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         }
 
                         $user->load_playlist();
-                        $user->playlist?->add_medias($medias);
+                        $user->getPlaylist()->add_medias($medias);
                     }
                 } else {
                     switch ($request_type) {
@@ -139,7 +139,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             }
 
                             foreach ($songs as $object) {
-                                $user->playlist?->add_object(
+                                $user->getPlaylist()->add_object(
                                     (is_array($object) && isset($object['object_id'])) ? $object['object_id'] : (int) $object,
                                     LibraryItemEnum::SONG
                                 );
@@ -149,27 +149,27 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'album_random':
                             $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
                         case 'album_disk_random':
                             $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
                         case 'folder_random':
                             $medias = (new Folder($request_id))->get_medias();
                             shuffle($medias);
-                            $user->playlist?->add_medias($medias);
+                            $user->getPlaylist()->add_medias($medias);
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
                             $songs  = $this->songRepository->getRandomByGenre($object);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
@@ -177,7 +177,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             $object = new Artist($request_id);
                             $songs  = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
@@ -185,12 +185,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             $playlist = new Playlist($request_id);
                             $items    = $playlist->get_random_items();
                             foreach ($items as $item) {
-                                $user->playlist?->add_object($item['object_id'], $item['object_type']);
+                                $user->getPlaylist()->add_object($item['object_id'], $item['object_type']);
                             }
 
                             break;
                         case 'clear_all':
-                            $user->playlist?->clear();
+                            $user->getPlaylist()->clear();
                             break;
                     }
                 }

@@ -62,7 +62,7 @@ final class BasketAction extends AbstractStreamAction
             array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear'
             || $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
         ) {
-            $user->playlist?->clear() ?? [];
+            $user->getPlaylist()->clear() ?? [];
         }
 
         return $this->stream(
