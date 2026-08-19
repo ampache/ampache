@@ -105,6 +105,27 @@ if ($invalidSettings !== []) {
     <?php Ui::show_box_bottom();
 }
 
+$staleFolderCatalogs = $this->getCatalogsMissingFolderData();
+if ($staleFolderCatalogs !== []) {
+    Ui::show_box_top(T_('Catalogs needing a rescan for folder browsing'), 'box box_debug_invalid'); ?>
+    <div><?php echo $this->e(T_('These local catalogs have no folder data yet, so folder browsing (webUI or Subsonic) has nothing to show for them until the next rescan.')); ?></div>
+    <table class="tabledata striped-rows">
+        <thead>
+        <tr class="th-top">
+            <th class="cel_catalog"><?php echo $this->e(T_('Catalog')); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($staleFolderCatalogs as $catalog) { ?>
+        <tr>
+            <td><?php echo $this->e($catalog['name']); ?></td>
+        </tr>
+    <?php } ?>
+        </tbody>
+    </table>
+    <?php Ui::show_box_bottom();
+}
+
 Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
     <table class="tabledata striped-rows">
         <colgroup>
