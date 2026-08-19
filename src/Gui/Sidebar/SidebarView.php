@@ -156,7 +156,8 @@ final class SidebarView extends AbstractSidebarView
             $this->moodRepository,
             $this->mayUse,
             $this->mayManage,
-            $this->allowUpload
+            $this->allowUpload,
+            $this->localplayAvailable
         )->render();
     }
 }

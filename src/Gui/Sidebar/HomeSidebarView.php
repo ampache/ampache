@@ -48,6 +48,7 @@ final class HomeSidebarView extends AbstractSidebarView
         private readonly bool $mayUse,
         private readonly bool $mayManage,
         private readonly bool $allowUpload,
+        private readonly bool $localplayAvailable,
     ) {}
 
     /**
@@ -158,7 +159,9 @@ final class HomeSidebarView extends AbstractSidebarView
             }
         }
 
-        $items[] = ['id' => 'sb_home_information_statistic', 'url' => '/stats.php?action=show', 'label' => T_('Statistics')];
+        if ($this->mayManage) {
+            $items[] = ['id' => 'sb_home_information_statistic', 'url' => '/stats.php?action=show', 'label' => T_('Statistics')];
+        }
 
         return $items;
     }
@@ -181,7 +184,7 @@ final class HomeSidebarView extends AbstractSidebarView
             $items[] = ['id' => 'sb_home_playlist_democratic', 'url' => '/democratic.php?action=show_playlist', 'label' => T_('Democratic')];
         }
 
-        if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller')) {
+        if ($this->localplayAvailable) {
             $items[] = ['id' => 'sb_home_playlist_show', 'url' => '/localplay.php?action=show_playlist', 'label' => T_('Localplay')];
         }
 
