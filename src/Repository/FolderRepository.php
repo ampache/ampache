@@ -469,7 +469,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function mapObjectsUnderCatalogRoot(string $objectType, array $filesByObjectId, string $catalogName, int $catalogId): int
     {
-        $realFiles = array_filter($filesByObjectId, fn (string $file): bool => !filter_var($file, FILTER_VALIDATE_URL));
+        $realFiles = array_filter($filesByObjectId, fn(string $file): bool => !filter_var($file, FILTER_VALIDATE_URL));
         if ($realFiles === []) {
             return 0;
         }
@@ -635,6 +635,24 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * The longest directory prefix every given directory starts under, empty when there is none
+     *
+     * @param string[] $dirs
+     */
+    private function findCommonDirectory(array $dirs): string
+    {
+        $prefix = array_shift($dirs) ?? '';
+        foreach ($dirs as $dir) {
+            while ($prefix !== '' && !str_starts_with($dir . '/', rtrim($prefix, '/') . '/')) {
+                $parent = dirname($prefix);
+                $prefix = ($parent === $prefix) ? '' : $parent;
+            }
+        }
+
+        return in_array($prefix, ['.', '/', ''], true) ? '' : $prefix;
+    }
+
+    /**
      * The id of the folder holding this path, created along with any missing parent when it does not exist yet
      *
      * Local catalogs stop at their own directory; other catalog types have no such boundary, so the tree is built from the path as given.
@@ -670,24 +688,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return ($folder instanceof Folder)
             ? $folder->getId()
             : 0;
-    }
-
-    /**
-     * The longest directory prefix every given directory starts under, empty when there is none
-     *
-     * @param string[] $dirs
-     */
-    private function findCommonDirectory(array $dirs): string
-    {
-        $prefix = array_shift($dirs) ?? '';
-        foreach ($dirs as $dir) {
-            while ($prefix !== '' && !str_starts_with($dir . '/', rtrim($prefix, '/') . '/')) {
-                $parent = dirname($prefix);
-                $prefix = ($parent === $prefix) ? '' : $parent;
-            }
-        }
-
-        return in_array($prefix, ['.', '/', ''], true) ? '' : $prefix;
     }
 
     /**
