@@ -172,7 +172,9 @@ class Folder extends database_object implements
         }
 
         if (!$parent && $path_name) {
-            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
+            // lookup() returns -1 for a blank name and 0 when nothing matches; only a positive id is a real parent
+            $found  = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog);
+            $parent = ($found > 0) ? $found : null;
         }
 
         $folder                = new Folder();

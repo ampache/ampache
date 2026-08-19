@@ -431,6 +431,11 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void
     {
+        // the old pre-path streaming URL format (e.g. stream.view?id=...&filename=...) isn't a real path to map
+        if (filter_var($filePath, FILTER_VALIDATE_URL)) {
+            return;
+        }
+
         $pathName = dirname($filePath);
         if (in_array($pathName, ['', '.', DIRECTORY_SEPARATOR], true)) {
             return;
