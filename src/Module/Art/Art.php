@@ -344,11 +344,8 @@ class Art extends database_object
                 $imgurl .= '&kind=' . $kind;
             }
 
-            // This to keep browser cache feature but force a refresh in case image just changed
-            $thumbRow = self::getImageRepository()->findThumbnail($object_type, $object_id, $out_size, $kind, 0, 0);
-            if ($thumbRow !== []) {
-                $imgurl .= '&id=' . (int) $thumbRow['id'];
-            }
+            // Keeps the browser cache feature but forces a refresh once the art changes: the original row's id and changes on every replace and thumbs are deleted
+            $imgurl .= '&id=' . $art->id;
         } else {
             // one shared url for every item with no art, so the browser fetches and caches the placeholder once
             $imgurl = self::get_fallback_url($object_type, $out_size);
