@@ -53,9 +53,9 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         try {
             $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
-            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
-            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
-            $this->connection->query("DELETE FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%';");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http:%' OR `path_name` LIKE 'https:%');");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http:%' OR `path_name` LIKE 'https:%');");
+            $this->connection->query("DELETE FROM `folder` WHERE `path_name` LIKE 'http:%' OR `path_name` LIKE 'https:%';");
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
@@ -462,6 +462,64 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Maps a whole catalog's worth of objects under a folder named after the catalog itself, using each file's directory only from where the catalog's own files actually diverge
+     *
+     * @param array<int, string> $filesByObjectId
+     * Returns the number of objects (re)mapped
+     */
+    public function mapObjectsUnderCatalogRoot(string $objectType, array $filesByObjectId, string $catalogName, int $catalogId): int
+    {
+        $realFiles = array_filter($filesByObjectId, fn (string $file): bool => !filter_var($file, FILTER_VALIDATE_URL));
+        if ($realFiles === []) {
+            return 0;
+        }
+
+        $commonDir = $this->findCommonDirectory(array_map(dirname(...), $realFiles));
+
+        $expected = [];
+        foreach ($realFiles as $objectId => $file) {
+            $relative = ($commonDir !== '')
+                ? ltrim(substr($file, strlen($commonDir)), '/')
+                : ltrim($file, '/');
+
+            $expected[$objectId] = $catalogName . '/' . $relative;
+        }
+
+        $ids          = array_keys($expected);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $result = $this->connection->query(
+            "SELECT `object_id`, `path_name`, `name` FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($placeholders);",
+            [$objectType, ...$ids]
+        );
+
+        $current = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $current[(int) $row['object_id']] = $row['path_name'] . '/' . $row['name'];
+        }
+
+        $count = 0;
+        foreach ($expected as $objectId => $virtualPath) {
+            if (($current[$objectId] ?? null) === $virtualPath) {
+                continue;
+            }
+
+            if (isset($current[$objectId])) {
+                $this->connection->query(
+                    'DELETE FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?;',
+                    [$objectId, $objectType]
+                );
+            }
+
+            if ($this->mapObject($objectType, $objectId, $virtualPath, $catalogId)) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * Moves every folder_map row of the given type from one object onto another
      */
     public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void
@@ -615,6 +673,24 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * The longest directory prefix every given directory starts under, empty when there is none
+     *
+     * @param string[] $dirs
+     */
+    private function findCommonDirectory(array $dirs): string
+    {
+        $prefix = array_shift($dirs) ?? '';
+        foreach ($dirs as $dir) {
+            while ($prefix !== '' && !str_starts_with($dir . '/', rtrim($prefix, '/') . '/')) {
+                $parent = dirname($prefix);
+                $prefix = ($parent === $prefix) ? '' : $parent;
+            }
+        }
+
+        return in_array($prefix, ['.', '/', ''], true) ? '' : $prefix;
+    }
+
+    /**
      * Rows whose object_type is not a known library item are dropped rather than surfaced as null
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
@@ -639,14 +715,16 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
      *
      * One pass only catches a leaf with no children; a folder whose only content was subfolders that
-     * just got pruned is caught by the next pass, hence the loop. Root folders and user folders are
-     * left alone, matching the rest of this class's convention.
+     * just got pruned is caught by the next pass, hence the loop. Root folders are included: a remote
+     * or subsonic catalog re-anchored under its own name (see mapObjectsUnderCatalogRoot()) leaves its
+     * old root folder (e.g. a bare `/mnt`) with nothing under it, and that has to go too. User folders
+     * are left alone regardless.
      */
     private function pruneEmptyFolders(): void
     {
         for ($i = 0; $i < 10; $i++) {
             $result = $this->connection->query(
-                'SELECT `id` FROM `folder` WHERE `parent` IS NOT NULL AND `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL);'
+                'SELECT `id` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL);'
             );
 
             $emptyIds = [];

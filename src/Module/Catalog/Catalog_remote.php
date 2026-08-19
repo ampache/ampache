@@ -632,13 +632,12 @@ class Catalog_remote extends Catalog
         );
         debug_event('remote.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
 
-        $folderRepository = self::getFolderRepository();
-        $this->count      = 0;
-        foreach (self::getSongRepository()->getFilesByCatalog($this->getId()) as $songId => $songFile) {
-            if ($folderRepository->mapObject('song', $songId, $songFile, $this->getId())) {
-                $this->count++;
-            }
-        }
+        $this->count = self::getFolderRepository()->mapObjectsUnderCatalogRoot(
+            'song',
+            self::getSongRepository()->getFilesByCatalog($this->getId()),
+            (string) $this->name,
+            $this->getId()
+        );
 
         if (!$skipCounts) {
             $this->count_scan_folders($interactor);
