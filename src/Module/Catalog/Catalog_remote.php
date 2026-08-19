@@ -71,6 +71,7 @@ class Catalog_remote extends Catalog
     public string $password;
     public string $uri = '';
     public string $username;
+    private int $count                 = 0;
     private string $description        = 'Ampache Remote Catalog';
     private ?AmpacheApi $remote_handle = null;
 
@@ -404,7 +405,36 @@ class Catalog_remote extends Catalog
         return $dead;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void {}
+    /**
+     * count_scan_folders
+     */
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+        // insert object mapping after scanning new folders
+        $interactor?->info(
+            'remote.catalog: update_folder_map',
+            true
+        );
+        debug_event('remote.catalog', 'update_folder_map', 5);
+        self::getFolderRepository()->update_folder_map();
+
+        // update counts after update has finished
+        $interactor?->info(
+            'remote.catalog: update_folder_counts',
+            true
+        );
+        debug_event('remote.catalog', 'update_folder_counts', 5);
+        self::getFolderRepository()->update_folder_counts();
+
+        if ($this->count > 0) {
+            $interactor?->info(
+                'remote.catalog: collectGarbage',
+                true
+            );
+            debug_event('remote.catalog', 'collectGarbage', 5);
+            self::getFolderRepository()->collectGarbage();
+        }
+    }
 
     /**
      * get_create_help
@@ -589,10 +619,38 @@ class Catalog_remote extends Catalog
 
     /**
      * scan_catalog_folders
+     *
+     * No directory to walk, so this maps the catalog's existing songs to their folders instead
      */
     public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
     {
-        return 0;
+        set_time_limit(0);
+
+        $interactor?->info(
+            'Scan starting on ' . $this->name,
+            true
+        );
+        debug_event('remote.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
+
+        $folderRepository = self::getFolderRepository();
+        $this->count      = 0;
+        foreach (self::getSongRepository()->getFilesByCatalog($this->getId()) as $songId => $songFile) {
+            if ($folderRepository->mapObject('song', $songId, $songFile, $this->getId())) {
+                $this->count++;
+            }
+        }
+
+        if (!$skipCounts) {
+            $this->count_scan_folders($interactor);
+        }
+
+        $interactor?->info(
+            sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
+            true
+        );
+        debug_event('remote.catalog', sprintf('Scan finished, %d updated in ', $this->count) . $this->name, 5);
+
+        return $this->count;
     }
 
     /**

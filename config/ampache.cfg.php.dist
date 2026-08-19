@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 97
+config_version = 98
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -1274,6 +1274,77 @@ site_charset = "UTF-8"
 ; Never enable this outside of a development environment.
 ; DEFAULT: "false"
 ;oidc_disable_ssl_verify = "true"
+
+;#########################################################
+; Proof of work                                          #
+;#########################################################
+
+; Ampache can make a browser solve a small computational puzzle before it is
+; allowed through certain endpoints. The puzzle is trivial for one visitor and
+; expensive for a bot doing it thousands of times, which is what makes it worth
+; having in front of registration and batch downloads.
+;
+; It needs JavaScript and Web Workers: a client without them cannot get through
+; a protected endpoint at all. Do not protect anything you want indexed.
+;
+; It stops crawlers, not a determined attacker: native SHA-256 outruns the
+; browser solver by orders of magnitude. Pair it with a rate limit.
+
+; Who has to solve a challenge.
+; POSSIBLE VALUES: off, guest, all
+;   off   - disabled entirely, nothing is issued or checked
+;   guest - only visitors who are not logged in
+;   all   - everybody, logged in or not
+; DEFAULT: "off"
+;pow_mode = "guest"
+
+; Which endpoints are protected, as a comma separated list of scopes.
+;   register - the public registration form
+;   batch    - zip downloads of an album, artist, playlist and so on
+;   download - single track downloads through stream.php
+; `download` is off by default and worth thinking about before enabling: it
+; guards the link the interface hands out, not the file itself, which
+; play/index.php still serves to anything holding a valid session. It also sits
+; in front of a one click action, so every download pays the wait.
+; Leave it out entirely and "register, batch" applies; set it to "" to protect
+; nothing while keeping pow_mode on.
+; POSSIBLE VALUES: register, batch, download
+; DEFAULT: "register, batch"
+;pow_protected = "register, batch"
+
+; How hard the puzzle is, counted in leading zero bits of the hash.
+; Each extra bit doubles the work. 21 is roughly two to eight seconds on a
+; current desktop and noticeably longer on an old phone. Drop to 18 if your
+; visitors are mostly on mobile, raise to 23 if you are being hammered.
+; 26 is the ceiling and already means about a minute of solving on ordinary
+; hardware, several on an old phone: treat it as a siege setting, not a default.
+; Values outside 8-26 are clamped.
+; DEFAULT: 21
+;pow_difficulty = 21
+
+; How long an issued challenge stays valid, in seconds. Long enough to fill in
+; a registration form without rushing, short enough that a harvested challenge
+; is not worth keeping. It also bounds how long a solved answer has to be
+; remembered, and therefore the size of the `pow_challenge` table, which only
+; ever holds answers still inside this window.
+; DEFAULT: 1800
+;pow_ttl = 1800
+
+; Access level waved through when pow_mode is "all", so admins and scripted
+; maintenance are not made to solve a puzzle on every download.
+; POSSIBLE VALUES: 0 (nobody exempt), 25 (user), 50 (content manager),
+;                  75 (manager), 100 (admin)
+; DEFAULT: 0
+;pow_exempt_level = 100
+
+; Log every attempt the check blocks: which scope, why, which user if they were
+; logged in, and from which address and browser. The line is timestamped by the
+; logger like any other Ampache log entry.
+; Off by default because a site being crawled produces one line per bot hit,
+; which is most of the traffic. Turn it on to tune pow_difficulty or to find out
+; who is getting caught, rather than leaving it running.
+; DEFAULT: "false"
+;pow_log_failures = "true"
 
 ;#########################################################
 ; Public Registration settings, defaults to disabled     #

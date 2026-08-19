@@ -133,6 +133,13 @@ echo $this->raw(AmpError::display('duplicate_user')); ?>
                     </div>
                     <?php } ?>
 
+                    <?php if ($this->showPow()) { ?>
+                    <div class="registerfield center">
+                        <?php echo $this->raw($this->renderPowWidget()); ?>
+                        <?php echo $this->raw(AmpError::display('pow')); ?>
+                    </div>
+                    <?php } ?>
+
                     <div class="submit-registration">
                         <?php if ($this->showAgreement()) { ?>
                             <div id="agreementCheckbox">

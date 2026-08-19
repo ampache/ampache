@@ -43,6 +43,23 @@ class AlbumRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private AlbumRepository $subject;
 
+    /**
+     * `Album::build_cache()` fills the artist list for a whole page and `get_parent_ids()` prefers it over a read,
+     * so a map write that leaves it in place has every later read in the same request answering with stale artists
+     */
+    public function testAddAlbumMapForgetsTheCachedArtistList(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1, 2, 3]);
+        self::assertTrue(Album::is_cached('album_artists', 666));
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->addAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+    }
+
     public function testAddAlbumMapInsertsIgnoringDuplicates(): void
     {
         $this->connection->expects(static::once())
@@ -214,6 +231,20 @@ class AlbumRepositoryTest extends TestCase
             ],
             $this->subject->findEmpty()
         );
+    }
+
+    public function testForgettingOneAlbumLeavesTheOthersCached(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1]);
+        Album::add_to_cache('album_artists', 667, [2]);
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->addAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+        self::assertTrue(Album::is_cached('album_artists', 667));
     }
 
     public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
@@ -518,6 +549,18 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->removeAlbumMap(666, 'song', 42);
     }
 
+    public function testRemoveAlbumMapForgetsTheCachedArtistList(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1, 2, 3]);
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->removeAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+    }
+
     public function testRemoveUnusedAlbumMapKeepsTheRowWhileTheArtistMapBacksIt(): void
     {
         $this->connection->expects(static::once())
@@ -656,6 +699,9 @@ class AlbumRepositoryTest extends TestCase
             $this->connection,
             $this->logger,
         );
+
+        // the object cache is a process-wide static, so a leftover entry would leak between tests
+        Album::clear_cache();
     }
 
     /**

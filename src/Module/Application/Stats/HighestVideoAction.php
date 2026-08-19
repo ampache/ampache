@@ -55,7 +55,6 @@ final readonly class HighestVideoAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo $this->statsFormViewFactory->createHighest($by_user)->render();
-        $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
 

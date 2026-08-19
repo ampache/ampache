@@ -349,6 +349,9 @@ final readonly class TagRepository implements TagRepositoryInterface
         return $tags;
     }
 
+    /**
+     * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
+     */
     public function getTopTags(string $objectType, int $objectId, int $limit): array
     {
         $limitClause = ($limit === 0)
@@ -367,6 +370,47 @@ final readonly class TagRepository implements TagRepositoryInterface
         $tags = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $tags[] = [
+                'id' => (int) $row['id'],
+                'name' => (string) $row['name'],
+                'is_hidden' => (int) $row['is_hidden'],
+                'user' => (int) $row['user'],
+                'count' => (int) $row['count'],
+            ];
+        }
+
+        return $tags;
+    }
+
+    /**
+     * The same rows getTopTags() returns, for a whole page of objects at once.
+     *
+     * @param list<int> $objectIds
+     * @return array<int, list<array{id: int, name: string, is_hidden: int, user: int, count: int}>>
+     */
+    public function getTopTagsBulk(string $objectType, array $objectIds): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+
+        $countType = TagCountTypeEnum::tryFrom($objectType);
+        $count     = ($countType instanceof TagCountTypeEnum)
+            ? sprintf('`tag`.`%s`', $countType->value)
+            : '(`tag`.`artist`+`tag`.`album`+`tag`.`song`)';
+        $holders = implode(',', array_fill(0, count($objectIds), '?'));
+
+        $sql = sprintf(
+            'SELECT `tag_map`.`object_id` AS `owner_id`, `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, MAX(`tag_map`.`user`) AS `user`, %s AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` IN (%s) GROUP BY `tag_map`.`object_id`, `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, %s ORDER BY `count` DESC, `tag`.`id`',
+            $count,
+            $holders,
+            $count
+        );
+
+        $result = $this->connection->query($sql, array_merge([$objectType], $objectIds));
+
+        $tags = array_fill_keys($objectIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $tags[(int) $row['owner_id']][] = [
                 'id' => (int) $row['id'],
                 'name' => (string) $row['name'],
                 'is_hidden' => (int) $row['is_hidden'],

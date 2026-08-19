@@ -1,5 +1,27 @@
 # API CHANGELOG
 
+## API 8.0.1
+
+### Added (801000)
+
+* `playlist_add` (API6 and API8), `playlist_remove` (API8)
+  * New `object_type` parameter (alias of `type`)
+  * Use it instead of `type` when calling over REST: `playlists/{playlist_id}/{add|remove}/` already bind `type` to the path's own resource name
+
+### Changed (801000)
+
+* API6, API8
+  * Deprecated parameters that will be removed in **API9**
+    * playlist_add: parameter `type`, use `object_type`
+    * playlist_remove: parameter `type`, use `object_type`
+
+### Fixed (801000)
+
+* `search_group` (ALL)
+  * The REST route `search/{search_type}/groups` delivers `{search_type}` as `filter`, but the method only read `type`, so it always searched `all` regardless of the path
+* `playlist_add` (API6 and API8), `playlist_remove` (API8)
+  * A REST call's path-derived `type` (e.g. `playlist`, from `playlists/{playlist_id}/{add|remove}/`) always overwrote a `type` sent in the request body
+
 ## API 8.0.0
 
 This version is being developed for Ampache8 **only**
@@ -143,7 +165,6 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `wanted` dropped its `username` sort, which named a column the table does not have
 * API5, API6
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
-  * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
 * API8
   * `Json8_Data`/`Xml8_Data` skip an object that no longer exists rather than returning it as an entry of empty fields, and a missing object no longer ends the list it appeared in. **NOTE** the same fix landed in Ampache7 for API3-6, which it serves as well
 * `preference_edit` (API6 and API8)

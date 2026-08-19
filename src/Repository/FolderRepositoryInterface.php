@@ -63,6 +63,14 @@ interface FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
+     * Returns the direct children of the given catalogs' own top-level folders, merged into one list
+     *
+     * @param int[] $catalogIds
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getCatalogRootChildren(array $catalogIds, int $userId = -1): array;
+
+    /**
      * Returns the direct children of a folder. Pass null for the virtual root.
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
@@ -117,8 +125,10 @@ interface FolderRepositoryInterface
 
     /**
      * Maps a media file into the folder its path names, creating the folder chain when it is missing
+     *
+     * Returns whether a new folder_map row was actually inserted
      */
-    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void;
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): bool;
 
     /**
      * Moves every folder_map row of the given type from one object onto another

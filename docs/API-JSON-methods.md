@@ -3500,13 +3500,19 @@ Returns a single object.
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
-**NOTE** `type` is optional from Ampache8+
+**NOTE** `object_type` is optional from Ampache8+
 
-| Input    | Type   | Description                                           | Optional |
-|----------|--------|-------------------------------------------------------|---------:|
-| 'filter' | string | UID of Playlist                                       |       NO |
-| 'id'     | string | UID of the object to add to playlist                  |       NO |
-| 'type'   | string | 'song', 'album', 'artist', 'playlist' (Default: song) |      YES |
+**NOTE** `type` is **DEPRECATED**, use `object_type` instead. Will be removed in API9. REST callers
+should always use `object_type`: the path `playlists/{playlist_id}/add` already binds `type` to the
+resource name (`playlist`), so `type` sent in the request body only works via an explicit
+body-over-path precedence rule in the REST dispatcher
+
+| Input         | Type   | Description                                           | Optional |
+|---------------|--------|-------------------------------------------------------|---------:|
+| 'filter'      | string | UID of Playlist                                       |       NO |
+| 'id'          | string | UID of the object to add to playlist                  |       NO |
+| 'object_type' | string | 'song', 'album', 'artist', 'playlist' (Default: song) |      YES |
+| 'type'        | string | DEPRECATED alias of `object_type`                     |      YES |
 
 * return object
 
@@ -3761,13 +3767,19 @@ Using clear will empty the entire list.
 
 **NOTE** this replaces `playlist_remove_song` in API8
 
-| Input    | Type    | Description                                           | Optional |
-|----------|---------|-------------------------------------------------------|---------:|
-| 'filter' | string  | UID of Playlist                                       |       NO |
-| 'id'     | string  | UID of object to remove from playlist                 |      YES |
-| 'type'   | string  | 'song', 'album', 'artist', 'playlist', default = song |      YES |
-| 'track'  | integer | Track number to remove from playlist                  |      YES |
-| 'clear'  | integer | 0,1 Clear the whole playlist                          |      YES |
+**NOTE** `type` is **DEPRECATED**, use `object_type` instead. Will be removed in API9. REST callers
+should always use `object_type`: the path `playlists/{playlist_id}/remove` already binds `type` to
+the resource name (`playlist`), so `type` sent in the request body only works via an explicit
+body-over-path precedence rule in the REST dispatcher
+
+| Input         | Type    | Description                                           | Optional |
+|---------------|---------|-------------------------------------------------------|---------:|
+| 'filter'      | string  | UID of Playlist                                       |       NO |
+| 'id'          | string  | UID of object to remove from playlist                 |      YES |
+| 'object_type' | string  | 'song', 'album', 'artist', 'playlist', default = song |      YES |
+| 'type'        | string  | DEPRECATED alias of `object_type`                     |      YES |
+| 'track'       | integer | Track number to remove from playlist                  |      YES |
+| 'clear'       | integer | 0,1 Clear the whole playlist                          |      YES |
 
 * return object
 

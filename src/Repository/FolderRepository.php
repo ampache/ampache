@@ -52,13 +52,17 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function collectGarbage(): void
     {
         try {
+            $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN (SELECT `id` FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%');");
+            $this->connection->query("DELETE FROM `folder` WHERE `path_name` LIKE 'http://%' OR `path_name` LIKE 'https://%';");
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'video' AND `folder_map`.`object_id` NOT IN (SELECT `video`.`id` FROM `video`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'folder' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);");
             $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
-            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
+            $this->pruneEmptyFolders();
             $this->update_folder_counts();
         } catch (DatabaseException) {
             $this->logger->debug(
@@ -215,6 +219,29 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return new Folder((int) $rowId);
+    }
+
+    /**
+     * Returns the direct children of the given catalogs' own top-level folders, merged into one list
+     *
+     * @param int[] $catalogIds
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getCatalogRootChildren(array $catalogIds, int $userId = -1): array
+    {
+        if ($catalogIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($catalogIds), '?'));
+        $filterSql    = $this->catalogFilterSql('folder_map', $userId);
+
+        $result = $this->connection->query(
+            "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder`.`parent` IS NULL AND `folder`.`catalog` IN ({$placeholders}){$filterSql} ORDER BY `folder_map`.`name`;",
+            array_values(array_map(intval(...), $catalogIds))
+        );
+
+        return $this->mapObjectRows($result);
     }
 
     /**
@@ -405,23 +432,33 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      *
      * The folder chain is created when it is missing, because a podcast writes its episodes into directories that no
      * catalog scan has walked.
+     *
+     * Returns whether a new folder_map row was actually inserted, so a caller counting "updated" items
+     * doesn't count files it skipped or that were already mapped
      */
-    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): void
+    public function mapObject(string $objectType, int $objectId, string $filePath, int $catalogId): bool
     {
+        // the old pre-path streaming URL format (e.g. stream.view?id=...&filename=...) isn't a real path to map
+        if (filter_var($filePath, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
         $pathName = dirname($filePath);
         if (in_array($pathName, ['', '.', DIRECTORY_SEPARATOR], true)) {
-            return;
+            return false;
         }
 
         $folderId = $this->findOrCreateByPathName($pathName, $catalogId);
         if ($folderId <= 0) {
-            return;
+            return false;
         }
 
-        $this->connection->query(
+        $statement = $this->connection->query(
             "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?);",
             [$folderId, $objectId, $objectType, basename($filePath), $catalogId, $pathName, $objectId, $objectType]
         );
+
+        return $statement->rowCount() > 0;
     }
 
     /**
@@ -495,13 +532,16 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function update_folder_map(): void
     {
+        $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
+
         // folder
         $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
+        // the old pre-path streaming URL format (e.g. https://host/rest/stream.view?...) isn't a real path to map
         foreach (['song', 'podcast_episode', 'video'] as $objectType) {
             $this->connection->query(
                 sprintf(
-                    "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `f`.`id`, `s`.`id`, '%s', SUBSTRING_INDEX(`s`.`file`, '/', -1), `s`.`catalog`, REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') FROM `%s` AS `s` INNER JOIN `folder` AS `f` ON `f`.`catalog` = `s`.`catalog` AND `f`.`path_name` = REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = '%s' WHERE `fm`.`object_id` IS NULL;",
+                    "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `f`.`id`, `s`.`id`, '%s', SUBSTRING_INDEX(`s`.`file`, '/', -1), `s`.`catalog`, REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') FROM `%s` AS `s` INNER JOIN `folder` AS `f` ON `f`.`catalog` = `s`.`catalog` AND `f`.`path_name` = REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = '%s' WHERE `fm`.`object_id` IS NULL AND `s`.`file` NOT LIKE 'http://%%' AND `s`.`file` NOT LIKE 'https://%%';",
                     $objectType,
                     $objectType,
                     $objectType
@@ -539,7 +579,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     /**
      * The id of the folder holding this path, created along with any missing parent when it does not exist yet
      *
-     * Nothing above the catalog's own directory is ever created, so a stray path cannot walk up and map the filesystem.
+     * Local catalogs stop at their own directory; other catalog types have no such boundary, so the tree is built from the path as given.
      */
     private function findOrCreateByPathName(string $pathName, int $catalogId): int
     {
@@ -553,15 +593,19 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             [$catalogId]
         );
 
-        if ($catalogPath === '' || !str_starts_with($pathName . DIRECTORY_SEPARATOR, rtrim($catalogPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+        if ($catalogPath !== '' && !str_starts_with($pathName . DIRECTORY_SEPARATOR, rtrim($catalogPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
             return 0;
         }
 
-        $parentId   = null;
         $parentPath = dirname($pathName);
-        if ($pathName !== rtrim($catalogPath, DIRECTORY_SEPARATOR) && $parentPath !== $pathName) {
-            $parentId = $this->findOrCreateByPathName($parentPath, $catalogId) ?: null;
-        }
+        // without a catalog directory to stop at, avoid creating a spurious root folder for '.' or '/'
+        $isTopLevel = ($catalogPath !== '')
+            ? $pathName === rtrim($catalogPath, DIRECTORY_SEPARATOR)
+            : ($parentPath === $pathName || in_array($parentPath, ['', '.', DIRECTORY_SEPARATOR], true));
+
+        $parentId = ($isTopLevel)
+            ? null
+            : ($this->findOrCreateByPathName($parentPath, $catalogId) ?: null);
 
         $folder = $this->create(basename($pathName), $catalogId, $pathName, $parentId);
 
@@ -589,6 +633,35 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
+     *
+     * One pass only catches a leaf with no children; a folder whose only content was subfolders that
+     * just got pruned is caught by the next pass, hence the loop. Root folders and user folders are
+     * left alone, matching the rest of this class's convention.
+     */
+    private function pruneEmptyFolders(): void
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $result = $this->connection->query(
+                'SELECT `id` FROM `folder` WHERE `parent` IS NOT NULL AND `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL);'
+            );
+
+            $emptyIds = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $emptyIds[] = (int) $row['id'];
+            }
+
+            if ($emptyIds === []) {
+                return;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($emptyIds), '?'));
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN ($placeholders);", $emptyIds);
+            $this->connection->query("DELETE FROM `folder` WHERE `id` IN ($placeholders);", $emptyIds);
+        }
     }
 
     /**
@@ -630,10 +703,33 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
         $this->connection->query('UPDATE `folder` SET `total_count` = 0, `total_skip` = 0 WHERE `total_count` > 0 OR `total_skip` > 0;');
 
-        foreach ($totals as $folderId => [$count, $skip]) {
+        foreach (array_chunk($totals, 1000, true) as $chunk) {
+            $countCases = [];
+            $skipCases  = [];
+            $params     = [];
+            foreach ($chunk as $folderId => [$count, $skip]) {
+                $countCases[] = 'WHEN ? THEN ?';
+                $params[]     = $folderId;
+                $params[]     = $count;
+            }
+
+            foreach ($chunk as $folderId => [$count, $skip]) {
+                $skipCases[] = 'WHEN ? THEN ?';
+                $params[]    = $folderId;
+                $params[]    = $skip;
+            }
+
+            $ids = array_keys($chunk);
+            array_push($params, ...$ids);
+
             $this->connection->query(
-                'UPDATE `folder` SET `total_count` = ?, `total_skip` = ? WHERE `id` = ?;',
-                [$count, $skip, $folderId]
+                sprintf(
+                    'UPDATE `folder` SET `total_count` = CASE `id` %s ELSE `total_count` END, `total_skip` = CASE `id` %s ELSE `total_skip` END WHERE `id` IN (%s);',
+                    implode(' ', $countCases),
+                    implode(' ', $skipCases),
+                    implode(',', array_fill(0, count($ids), '?'))
+                ),
+                $params
             );
         }
     }

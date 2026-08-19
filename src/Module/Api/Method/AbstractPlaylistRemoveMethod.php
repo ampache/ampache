@@ -69,14 +69,25 @@ abstract class AbstractPlaylistRemoveMethod implements MethodInterface
      * Removes an item from a playlist using its id or its track number in the list.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
-     * filter = (string) UID of playlist
-     * track  = (string) track number to remove from the playlist //optional
-     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * filter      = (string) UID of playlist
+     * track       = (string) track number to remove from the playlist //optional
+     * clear       = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * object_type = (string) the type of the `id` being removed (API8 only, see
+     *               PlaylistRemove8Method), Default: song
+     * type        = (string) DEPRECATED alias of `object_type`. Will be removed in API9
+     *
+     * `object_type` is read first, falling back to the deprecated `type` for older callers. Prefer
+     * `object_type` when calling over REST: the path `playlists/{playlist_id}/remove` already binds
+     * `type` to the path's own resource name (`playlist`), so a REST call sending `type` in the body
+     * only reaches this method via JsonRestApiApplication's/XmlRestApiApplication's explicit
+     * body-over-path precedence rule. `object_type` was added to sidestep that collision outright,
+     * matching the naming `collection_add` already uses for the same reason
      *
      * @param array{
      *     filter?: string,
      *     song?: string,
      *     id?: string,
+     *     object_type?: string,
      *     type?: string,
      *     track?: string,
      *     clear?: int,

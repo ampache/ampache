@@ -1027,12 +1027,14 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        $interactor?->info(
-            'local.catalog: collectGarbage',
-            true
-        );
-        debug_event('local.catalog', 'collectGarbage', 5);
-        self::getFolderRepository()->collectGarbage();
+        if ($this->count > 0) {
+            $interactor?->info(
+                'local.catalog: collectGarbage',
+                true
+            );
+            debug_event('local.catalog', 'collectGarbage', 5);
+            self::getFolderRepository()->collectGarbage();
+        }
     }
 
     /**

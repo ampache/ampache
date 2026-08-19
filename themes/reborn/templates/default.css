@@ -1646,7 +1646,8 @@ div.box.box_rules {
 
 .cel_song,
 .cel_album,
-.cel_artist {
+.cel_artist,
+.cel_composer {
     width: 15%;
     text-align: left;
 }
@@ -1665,6 +1666,7 @@ div.box.box_rules {
 .cel_song,
 .cel_album,
 .cel_artist,
+.cel_composer,
 .cel_counter,
 .cel_songs,
 .cel_albums,
