@@ -52,6 +52,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function collectGarbage(): void
     {
         try {
+            $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
             $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
@@ -523,6 +524,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function update_folder_map(): void
     {
+        $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
+
         // folder
         $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
