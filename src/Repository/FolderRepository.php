@@ -529,10 +529,11 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         // folder
         $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
+        // the old pre-path streaming URL format (e.g. https://host/rest/stream.view?...) isn't a real path to map
         foreach (['song', 'podcast_episode', 'video'] as $objectType) {
             $this->connection->query(
                 sprintf(
-                    "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `f`.`id`, `s`.`id`, '%s', SUBSTRING_INDEX(`s`.`file`, '/', -1), `s`.`catalog`, REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') FROM `%s` AS `s` INNER JOIN `folder` AS `f` ON `f`.`catalog` = `s`.`catalog` AND `f`.`path_name` = REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = '%s' WHERE `fm`.`object_id` IS NULL;",
+                    "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `f`.`id`, `s`.`id`, '%s', SUBSTRING_INDEX(`s`.`file`, '/', -1), `s`.`catalog`, REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') FROM `%s` AS `s` INNER JOIN `folder` AS `f` ON `f`.`catalog` = `s`.`catalog` AND `f`.`path_name` = REGEXP_REPLACE(`s`.`file`, '/[^/]+$', '') LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = '%s' WHERE `fm`.`object_id` IS NULL AND `s`.`file` NOT LIKE 'http://%%' AND `s`.`file` NOT LIKE 'https://%%';",
                     $objectType,
                     $objectType,
                     $objectType
