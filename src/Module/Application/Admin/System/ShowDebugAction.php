@@ -38,7 +38,6 @@ use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +53,6 @@ final readonly class ShowDebugAction implements ApplicationActionInterface
         private UiInterface $ui,
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private EnvironmentInterface $environment,
-        private FolderRepositoryInterface $folderRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,8 +74,7 @@ final readonly class ShowDebugAction implements ApplicationActionInterface
             $this->environment,
             $configuration,
             $latest_version,
-            (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE),
-            $this->folderRepository
+            (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE)
         )->render();
 
         $this->ui->showQueryStats();

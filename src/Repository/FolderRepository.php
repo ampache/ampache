@@ -241,29 +241,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
-     * Local catalogs with no folder data at all, so an admin upgrading can see they still need a rescan
-     * before folder browsing (webUI or Subsonic) has anything to show for them
-     *
-     * @return array<int, array{id: int, name: string}>
-     */
-    public function getCatalogsMissingFolderData(): array
-    {
-        $result = $this->connection->query(
-            "SELECT `catalog`.`id`, `catalog`.`name` FROM `catalog` WHERE `catalog`.`catalog_type` = 'local' AND `catalog`.`id` NOT IN (SELECT DISTINCT `catalog` FROM `folder`) ORDER BY `catalog`.`name`;"
-        );
-
-        $catalogs = [];
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $catalogs[] = [
-                'id' => (int) $row['id'],
-                'name' => (string) $row['name'],
-            ];
-        }
-
-        return $catalogs;
-    }
-
-    /**
      * Returns the direct children of a folder. Pass null for the virtual root, whose children are
      * the unparented folder_map rows.
      *

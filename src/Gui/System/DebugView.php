@@ -31,7 +31,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
-use Ampache\Repository\FolderRepositoryInterface;
 use Override;
 
 /**
@@ -85,23 +84,11 @@ final class DebugView extends AbstractView
         private readonly array $configuration,
         private readonly string $latestVersion,
         private readonly int $lastCronDate,
-        private readonly FolderRepositoryInterface $folderRepository,
     ) {}
 
     public function getAdminPath(): string
     {
         return $this->adminPath;
-    }
-
-    /**
-     * Local catalogs with no folder data yet, so folder browsing (webUI or Subsonic) has nothing to show
-     * for them until the next rescan
-     *
-     * @return array<int, array{id: int, name: string}>
-     */
-    public function getCatalogsMissingFolderData(): array
-    {
-        return $this->folderRepository->getCatalogsMissingFolderData();
     }
 
     /**

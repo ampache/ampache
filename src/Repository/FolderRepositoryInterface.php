@@ -71,14 +71,6 @@ interface FolderRepositoryInterface
     public function getCatalogRootChildren(array $catalogIds, int $userId = -1): array;
 
     /**
-     * Local catalogs with no folder data at all, so an admin upgrading can see they still need a rescan
-     * before folder browsing (webUI or Subsonic) has anything to show for them
-     *
-     * @return array<int, array{id: int, name: string}>
-     */
-    public function getCatalogsMissingFolderData(): array;
-
-    /**
      * Returns the direct children of a folder. Pass null for the virtual root.
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
