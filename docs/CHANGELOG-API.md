@@ -1,5 +1,12 @@
 # API CHANGELOG
 
+## API 8.1.0
+
+### Added (810000)
+
+* `playlists`, `user_playlists`
+  * New `last_duration` sort, the playlist's total duration as of when it was last counted
+
 ## API 8.0.1
 
 ### Added (801000)
