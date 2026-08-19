@@ -73,6 +73,49 @@ class PodcastRepositoryTest extends TestCase
         $this->subject->delete($podcast);
     }
 
+    public function testFindAllByCatalogsBindsOnePlaceholderPerCatalog(): void
+    {
+        $result  = $this->createMock(PDOStatement::class);
+        $podcast = $this->createMock(Podcast::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `podcast` WHERE `catalog` IN (?,?)',
+                [3, 7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with(666)
+            ->willReturn($podcast);
+
+        self::assertSame(
+            [$podcast],
+            iterator_to_array($this->subject->findAllByCatalogs([3, 7]))
+        );
+    }
+
+    /**
+     * No catalog means no read at all; an empty `IN ()` would be a syntax error and an unfiltered read would
+     * hand back the whole system, which is the thing being prevented
+     */
+    public function testFindAllByCatalogsWithoutCatalogsQueriesNothing(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame(
+            [],
+            iterator_to_array($this->subject->findAllByCatalogs([]))
+        );
+    }
+
     public function testFindAllReturnsAllItems(): void
     {
         $result  = $this->createMock(PDOStatement::class);

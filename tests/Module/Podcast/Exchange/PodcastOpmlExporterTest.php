@@ -38,6 +38,23 @@ class PodcastOpmlExporterTest extends TestCase
     private PodcastOpmlExporter $subject;
 
     /**
+     * An export is a read of the library like any other; a user whose catalog filter hides a catalog must not be
+     * able to enumerate the subscriptions living in it
+     */
+    public function testExportBoundsTheReadToTheGivenCatalogs(): void
+    {
+        $this->podcastRepository->expects(static::never())
+            ->method('findAll');
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findAllByCatalogs')
+            ->with([3, 7])
+            ->willReturn(new ArrayIterator([]));
+
+        $this->subject->export([3, 7]);
+    }
+
+    /**
      * A title carrying markup must not be able to close the attribute it is written into.
      */
     public function testExportEscapesPodcastValues(): void
@@ -96,6 +113,37 @@ class PodcastOpmlExporterTest extends TestCase
         self::assertSame($description, (string) $outline['description']);
         self::assertSame($feedUrl, (string) $outline['xmlUrl']);
         self::assertSame($website, (string) $outline['htmlUrl']);
+    }
+
+    /**
+     * A user who can see no catalog at all gets an empty export, not the whole system
+     */
+    public function testExportWithAnEmptyCatalogListReadsNothing(): void
+    {
+        $this->podcastRepository->expects(static::never())
+            ->method('findAll');
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findAllByCatalogs')
+            ->with([])
+            ->willReturn(new ArrayIterator([]));
+
+        self::assertStringNotContainsString('<outline', $this->subject->export([]));
+    }
+
+    /**
+     * Without a catalog list there is nobody to filter for, so the whole system is exported as before
+     */
+    public function testExportWithoutACatalogListReadsEverything(): void
+    {
+        $this->podcastRepository->expects(static::once())
+            ->method('findAll')
+            ->willReturn(new ArrayIterator([]));
+
+        $this->podcastRepository->expects(static::never())
+            ->method('findAllByCatalogs');
+
+        $this->subject->export();
     }
 
     public function testGetContentTypeReturnsValue(): void
