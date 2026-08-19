@@ -562,7 +562,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     /**
      * The id of the folder holding this path, created along with any missing parent when it does not exist yet
      *
-     * Nothing above the catalog's own directory is ever created, so a stray path cannot walk up and map the filesystem.
+     * Local catalogs stop at their own directory; other catalog types have no such boundary, so the tree is built from the path as given.
      */
     private function findOrCreateByPathName(string $pathName, int $catalogId): int
     {
@@ -576,15 +576,19 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             [$catalogId]
         );
 
-        if ($catalogPath === '' || !str_starts_with($pathName . DIRECTORY_SEPARATOR, rtrim($catalogPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
+        if ($catalogPath !== '' && !str_starts_with($pathName . DIRECTORY_SEPARATOR, rtrim($catalogPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)) {
             return 0;
         }
 
-        $parentId   = null;
         $parentPath = dirname($pathName);
-        if ($pathName !== rtrim($catalogPath, DIRECTORY_SEPARATOR) && $parentPath !== $pathName) {
-            $parentId = $this->findOrCreateByPathName($parentPath, $catalogId) ?: null;
-        }
+        // without a catalog directory to stop at, avoid creating a spurious root folder for '.' or '/'
+        $isTopLevel = ($catalogPath !== '')
+            ? $pathName === rtrim($catalogPath, DIRECTORY_SEPARATOR)
+            : ($parentPath === $pathName || in_array($parentPath, ['', '.', DIRECTORY_SEPARATOR], true));
+
+        $parentId = ($isTopLevel)
+            ? null
+            : ($this->findOrCreateByPathName($parentPath, $catalogId) ?: null);
 
         $folder = $this->create(basename($pathName), $catalogId, $pathName, $parentId);
 

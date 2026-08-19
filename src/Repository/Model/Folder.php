@@ -156,7 +156,7 @@ class Folder extends database_object implements
         $path          = '';
         $user          = null;
         $addition_time = time();
-        $update_time   = filemtime($data['path_name']) ?: time();
+        $update_time   = (is_dir($data['path_name']) && filemtime($data['path_name'])) ?: time();
 
         // Build the folder paths
         if ($parent) {
