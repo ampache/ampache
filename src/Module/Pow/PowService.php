@@ -143,7 +143,7 @@ final readonly class PowService implements PowServiceInterface
         $view = new PowChallengeView(
             $this->issue($scope),
             (string) $request->getUri(),
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $request->getHeaderLine('Referer'),
             in_array($scope, self::ACK_SCOPES, true),
             $this->ackParamName()
