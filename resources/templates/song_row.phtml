@@ -86,12 +86,12 @@ $songId = $song->getId(); ?>
         <td class="mash_composer"><?php echo $this->e($song->getComposer()); ?></td>
 <?php   }
     if (!$this->isHideAlbum()) {
-    if ($this->isAlbumGroup()) { ?>
+        if ($this->isAlbumGroup()) { ?>
         <td class="mash_album"><?php echo $this->raw($song->getAlbumLink()); ?></td>
 <?php       } else { ?>
         <td class="mash_album"><?php echo $this->raw($song->getAlbumDiskLink()); ?></td>
 <?php       }
-}
+    }
 }
 if (!$this->isHideYear()) { ?>
     <td class="cel_year"><?php echo $this->e($song->getYear()); ?></td>
