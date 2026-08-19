@@ -14,31 +14,12 @@ use Psr\Container\ContainerInterface;
  */
 class TmpPlaylistLazyTest extends TestCase
 {
-    private TmpPlaylistRepositoryInterface&MockObject $repository;
-
     private ContainerInterface&MockObject $dic;
 
-    /** @var mixed */
+    /**  */
     private $oldDic;
 
-    protected function setUp(): void
-    {
-        $this->repository = $this->createMock(TmpPlaylistRepositoryInterface::class);
-        $this->dic        = $this->createMock(ContainerInterface::class);
-        $this->dic->method('get')
-            ->willReturnCallback(fn (string $id) => ($id === TmpPlaylistRepositoryInterface::class)
-                ? $this->repository
-                : null);
-
-        // the model reaches its repository through the `global $dic` bridge
-        $this->oldDic   = $GLOBALS['dic'] ?? null;
-        $GLOBALS['dic'] = $this->dic;
-    }
-
-    protected function tearDown(): void
-    {
-        $GLOBALS['dic'] = $this->oldDic;
-    }
+    private TmpPlaylistRepositoryInterface&MockObject $repository;
 
     public function testFindFromSessionReturnsNullAndCreatesNothingWhenTheSessionHasNoQueue(): void
     {
@@ -102,5 +83,24 @@ class TmpPlaylistLazyTest extends TestCase
             ]);
 
         static::assertSame(7, Tmp_Playlist::get_from_session('a-session')->id);
+    }
+
+    protected function setUp(): void
+    {
+        $this->repository = $this->createMock(TmpPlaylistRepositoryInterface::class);
+        $this->dic        = $this->createMock(ContainerInterface::class);
+        $this->dic->method('get')
+            ->willReturnCallback(fn(string $id) => ($id === TmpPlaylistRepositoryInterface::class)
+                ? $this->repository
+                : null);
+
+        // the model reaches its repository through the `global $dic` bridge
+        $this->oldDic   = $GLOBALS['dic'] ?? null;
+        $GLOBALS['dic'] = $this->dic;
+    }
+
+    protected function tearDown(): void
+    {
+        $GLOBALS['dic'] = $this->oldDic;
     }
 }

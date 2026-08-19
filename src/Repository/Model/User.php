@@ -873,6 +873,19 @@ class User extends database_object
     }
 
     /**
+     * The play queue, created on first use. Callers that only read it should
+     * use the playlist property, which stays null until something is queued.
+     */
+    public function getPlaylist(): Tmp_Playlist
+    {
+        if ($this->playlist === null) {
+            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+        }
+
+        return $this->playlist;
+    }
+
+    /**
      * Returns the value of a certain user-preference
      */
     public function getPreferenceValue(string $preferenceName): int|string|null
@@ -963,19 +976,6 @@ class User extends database_object
         if ($this->playlist === null && session_id()) {
             $this->playlist = Tmp_Playlist::find_from_session(session_id());
         }
-    }
-
-    /**
-     * The play queue, created on first use. Callers that only read it should
-     * use the playlist property, which stays null until something is queued.
-     */
-    public function getPlaylist(): Tmp_Playlist
-    {
-        if ($this->playlist === null) {
-            $this->playlist = Tmp_Playlist::get_from_session(session_id());
-        }
-
-        return $this->playlist;
     }
 
     /**

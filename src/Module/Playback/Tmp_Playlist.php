@@ -96,16 +96,6 @@ class Tmp_Playlist extends database_object
     }
 
     /**
-     * garbage_collection
-     * This cleans up old data
-     */
-    public static function garbage_collection(): void
-    {
-        // one call sweeps both orphaned playlists and orphaned rows, so asking twice repeats two full table scans
-        self::getTmpPlaylistRepository()->collectGarbage();
-    }
-
-    /**
      * The session's playlist if it has one, without creating an empty row for
      * visitors who never queue anything
      */
@@ -116,6 +106,16 @@ class Tmp_Playlist extends database_object
         return ($playlistId === null)
             ? null
             : new Tmp_Playlist($playlistId);
+    }
+
+    /**
+     * garbage_collection
+     * This cleans up old data
+     */
+    public static function garbage_collection(): void
+    {
+        // one call sweeps both orphaned playlists and orphaned rows, so asking twice repeats two full table scans
+        self::getTmpPlaylistRepository()->collectGarbage();
     }
 
     /**
