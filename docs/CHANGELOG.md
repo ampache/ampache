@@ -11,7 +11,12 @@
   * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 * Database 810001
-  * New `show_composer` preference (off by default): adds an optional Composer column next to Artist on playlist media and Song rows
+  * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
+
+### Changed (8.1.0)
+
+* Database 810002
+  * Covering index on `image` for the art cache lookup, so it can be answered from the index alone; drops the now-redundant `object_id` key it replaces
 
 ### Fixed (8.1.0)
 
