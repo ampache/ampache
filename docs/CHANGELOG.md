@@ -2,6 +2,10 @@
 
 ## Ampache 8.1.0
 
+**Subsonic Users** Populate your catalog folders using the cli (`php bin/cli run:updateCatalog -s`) or the "Scan All Folders" command in the UI.
+
+The Subsonic API now fully implements folder browsing.
+
 ### Added (8.1.0)
 
 * Proof of work checks in front of the endpoints bots hammer
@@ -22,6 +26,7 @@
 
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
+* Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 
 ## Ampache 8.0.1
 

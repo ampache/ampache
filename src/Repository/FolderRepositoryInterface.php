@@ -63,6 +63,14 @@ interface FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
+     * Returns the direct children of the given catalogs' own top-level folders, merged into one list
+     *
+     * @param int[] $catalogIds
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getCatalogRootChildren(array $catalogIds, int $userId = -1): array;
+
+    /**
      * Returns the direct children of a folder. Pass null for the virtual root.
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>

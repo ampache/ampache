@@ -38,10 +38,13 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -66,15 +69,18 @@ use Exception;
 class OpenSubsonic_Json_Data
 {
     private AlbumRepositoryInterface $albumRepository;
+    private FolderRepositoryInterface $folderRepository;
     private OpenSubsonic_Fields $openSubsonicFields;
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
+        FolderRepositoryInterface $folderRepository,
         OpenSubsonic_Fields $openSubsonicFields,
         SongRepositoryInterface $songRepository,
     ) {
         $this->albumRepository    = $albumRepository;
+        $this->folderRepository   = $folderRepository;
         $this->openSubsonicFields = $openSubsonicFields;
         $this->songRepository     = $songRepository;
     }
@@ -427,7 +433,7 @@ class OpenSubsonic_Json_Data
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public function addDirectory(array $response, Artist|Album|Catalog $object): array
+    public function addDirectory(array $response, Artist|Album|Catalog|Folder $object, int $userId = -1): array
     {
         $json = [];
         if ($object instanceof Artist) {
@@ -436,6 +442,8 @@ class OpenSubsonic_Json_Data
             $json = $this->_getDirectory_Album($object);
         } elseif ($object instanceof Catalog) {
             $json = $this->_getDirectory_Catalog($object);
+        } elseif ($object instanceof Folder) {
+            $json = $this->_getDirectory_Folder($object, $userId);
         }
 
         $response['subsonic-response']['directory'] = $json;
@@ -521,6 +529,51 @@ class OpenSubsonic_Json_Data
         }
 
         return $error;
+    }
+
+    /**
+     * addFolderIndexes
+     *
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public function addFolderIndexes(array $response, array $children, int $lastModified = 0): array
+    {
+        $folders = [];
+        $media   = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $entry = $this->_getChildObject($child);
+            if ($entry !== null) {
+                $media[] = $entry;
+            }
+        }
+
+        $json = [
+            'index' => $this->_getFolderIndex($folders),
+            'lastModified' => $lastModified * 1000,
+        ];
+        if (!empty($media)) {
+            $json['child'] = $media;
+        }
+
+        $ignored = $this->_getIgnoredArticles();
+        if (!empty($ignored)) {
+            $json['ignoredArticles'] = $ignored;
+        }
+
+        $response['subsonic-response']['indexes'] = $json;
+
+        return $response;
     }
 
     /**
@@ -2713,6 +2766,56 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * A sub-folder shown as a `Child` directory stub, inside a `Directory` response
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'isDir': bool,
+     *     'title': string,
+     *     'coverArt'?: string
+     * }
+     */
+    private function _getChildFolder(Folder $folder): array
+    {
+        $sub_id = OpenSubsonic_Api::getFolderSubId($folder->getId());
+        $json   = [
+            'id' => $sub_id,
+            'parent' => OpenSubsonic_Api::getFolderSubId($folder->parent ?? -1),
+            'isDir' => true,
+            'title' => (string) $folder->name,
+        ];
+        if ($folder->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        return $json;
+    }
+
+    /**
+     * @param array{object_type: LibraryItemEnum, object_id: int} $child
+     * @return array<string, mixed>|null
+     */
+    private function _getChildObject(array $child): ?array
+    {
+        switch ($child['object_type']) {
+            case LibraryItemEnum::SONG:
+                $song = new Song($child['object_id']);
+
+                return (!$song->isNew() && $song->enabled) ? $this->_getChildSong($song) : null;
+            case LibraryItemEnum::VIDEO:
+                $video = new Video($child['object_id']);
+
+                return ($video->isNew()) ? null : $this->_getChildVideo($video);
+            case LibraryItemEnum::PODCAST_EPISODE:
+                $episode = new Podcast_Episode($child['object_id']);
+
+                return ($episode->isNew()) ? null : $this->_getPodcastEpisode($episode);
+        }
+
+        return null;
+    }
+
+    /**
      * _getChildSong
      *
      * Child media.
@@ -3261,6 +3364,135 @@ class OpenSubsonic_Json_Data
         $json['child'] = [];
         foreach ($allartists as $artist) {
             $json['child'][] = $this->_getChildArray($artist);
+        }
+
+        return $json;
+    }
+
+    /**
+     * _getDirectory_Folder for a real filesystem folder; -1 is the virtual root above every catalog
+     * @return array{
+     *     'id': string,
+     *     'parent'?: string,
+     *     'name': string,
+     *     'child': array<int, array<string, mixed>>
+     * }
+     */
+    private function _getDirectory_Folder(Folder $folder, int $userId = -1): array
+    {
+        $json = [
+            'id' => OpenSubsonic_Api::getFolderSubId($folder->getId()),
+        ];
+
+        if ($folder->parent !== null) {
+            $json['parent'] = OpenSubsonic_Api::getFolderSubId($folder->parent);
+        } elseif ($folder->getId() !== -1) {
+            $json['parent'] = OpenSubsonic_Api::getCatalogSubId($folder->catalog);
+        }
+
+        $json['name']  = (string) $folder->name;
+        $json['child'] = [];
+
+        $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
+        foreach ($this->folderRepository->getObjects($childFolderId, $userId) as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $childFolder = new Folder($child['object_id']);
+                if (!$childFolder->isNew()) {
+                    $json['child'][] = $this->_getChildFolder($childFolder);
+                }
+
+                continue;
+            }
+
+            $entry = $this->_getChildObject($child);
+            if ($entry !== null) {
+                $json['child'][] = $entry;
+            }
+        }
+
+        return $json;
+    }
+
+    /**
+     * A sub-folder shown as the `Artist` type inside an `Index`, exactly like `_getArtistArray`
+     * @param array<int, array{
+     *     'id': string,
+     *     'name': string,
+     *     'coverArt'?: string
+     * }> $folder_list
+     * @return array<int, array{
+     *     'id': string,
+     *     'name': string,
+     *     'coverArt'?: string
+     * }>
+     */
+    private function _getFolderArray(array $folder_list, Folder $folder): array
+    {
+        $sub_id = OpenSubsonic_Api::getFolderSubId($folder->getId());
+
+        $json = [
+            'id' => $sub_id,
+            'name' => (string) $folder->name,
+        ];
+        if ($folder->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $folder_list[] = $json;
+
+        return $folder_list;
+    }
+
+    /**
+     * Buckets folders by the first letter of their name, same rule `_getIndex` uses for artists
+     *
+     * @param Folder[] $folders
+     * @return array<int, mixed>
+     */
+    private function _getFolderIndex(array $folders): array
+    {
+        $sharpfolders = [];
+        $json         = [];
+        $index        = [];
+        foreach ($folders as $folder) {
+            $name = (string) $folder->name;
+            if (strlen($name) > 0) {
+                $letter = strtoupper($name[0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpfolders[] = $folder;
+                    continue;
+                }
+
+                if (!isset($index[$letter])) {
+                    $index[$letter] = [];
+                }
+
+                $index[$letter] = $this->_getFolderArray($index[$letter], $folder);
+            }
+        }
+
+        foreach ($index as $letter => $folder) {
+            $json[] = [
+                'name' => $letter,
+                'artist' => $folder,
+            ];
+        }
+
+        // Always add # index at the end
+        if (count($sharpfolders) > 0) {
+            $index = [];
+            foreach ($sharpfolders as $folder) {
+                $index = $this->_getFolderArray($index, $folder);
+            }
+
+            if (!empty($index)) {
+                $json[] = [
+                    'name' => '#',
+                    'artist' => $index,
+                ];
+            }
         }
 
         return $json;

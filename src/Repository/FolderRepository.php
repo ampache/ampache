@@ -218,6 +218,29 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Returns the direct children of the given catalogs' own top-level folders, merged into one list
+     *
+     * @param int[] $catalogIds
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getCatalogRootChildren(array $catalogIds, int $userId = -1): array
+    {
+        if ($catalogIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($catalogIds), '?'));
+        $filterSql    = $this->catalogFilterSql('folder_map', $userId);
+
+        $result = $this->connection->query(
+            "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder`.`parent` IS NULL AND `folder`.`catalog` IN ({$placeholders}){$filterSql} ORDER BY `folder_map`.`name`;",
+            array_values(array_map(intval(...), $catalogIds))
+        );
+
+        return $this->mapObjectRows($result);
+    }
+
+    /**
      * Returns the direct children of a folder. Pass null for the virtual root, whose children are
      * the unparented folder_map rows.
      *

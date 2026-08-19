@@ -62,10 +62,12 @@ use Ampache\Plugin\PluginSonicAnalysisInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
@@ -156,6 +158,8 @@ class OpenSubsonic_Api
 
     public const string SUBID_CHAT = 'pm-';
 
+    public const string SUBID_FOLDER = 'fo-';
+
     public const string SUBID_GENRE = 'ta-';
 
     public const string SUBID_LIVESTREAM = 'li-';
@@ -209,6 +213,7 @@ class OpenSubsonic_Api
         'getBookmarkSubId',
         'getCatalogSubId',
         'getChatSubId',
+        'getFolderSubId',
         'getGenreSubId',
         'getLiveStreamSubId',
         'getPlaylistSubId',
@@ -224,6 +229,7 @@ class OpenSubsonic_Api
     private AlbumRepositoryInterface $albumRepository;
     private ArtistRepositoryInterface $artistRepository;
     private BookmarkRepositoryInterface $bookmarkRepository;
+    private FolderRepositoryInterface $folderRepository;
     private LiveStreamRepositoryInterface $liveStreamRepository;
     private OpenSubsonic_Json_Data $openSubsonicJsonData;
     private OpenSubsonic_Xml_Data $openSubsonicXmlData;
@@ -243,6 +249,7 @@ class OpenSubsonic_Api
         AlbumRepositoryInterface $albumRepository,
         ArtistRepositoryInterface $artistRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
+        FolderRepositoryInterface $folderRepository,
         LiveStreamRepositoryInterface $liveStreamRepository,
         PasswordGeneratorInterface $passwordGenerator,
         PodcastCreatorInterface $podcastCreator,
@@ -261,6 +268,7 @@ class OpenSubsonic_Api
         $this->albumRepository          = $albumRepository;
         $this->artistRepository         = $artistRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
+        $this->folderRepository         = $folderRepository;
         $this->liveStreamRepository     = $liveStreamRepository;
         $this->passwordGenerator        = $passwordGenerator;
         $this->podcastCreator           = $podcastCreator;
@@ -330,6 +338,7 @@ class OpenSubsonic_Api
             case self::SUBID_BOOKMARK:
             case self::SUBID_CATALOG:
             case self::SUBID_CHAT:
+            case self::SUBID_FOLDER:
             case self::SUBID_GENRE:
             case self::SUBID_LIVESTREAM:
             case self::SUBID_PLAYLIST:
@@ -401,6 +410,8 @@ class OpenSubsonic_Api
                 return Catalog::create_from_id($ampache_id);
             case self::SUBID_CHAT:
                 return new PrivateMsg($ampache_id);
+            case self::SUBID_FOLDER:
+                return new Folder($ampache_id);
             case self::SUBID_GENRE:
                 return new Tag($ampache_id);
             case self::SUBID_LIVESTREAM:
@@ -492,6 +503,8 @@ class OpenSubsonic_Api
                 return "catalog";
             case self::SUBID_CHAT:
                 return "private_message";
+            case self::SUBID_FOLDER:
+                return "folder";
             case self::SUBID_GENRE:
                 return "genre";
             case self::SUBID_LIVESTREAM:
@@ -523,6 +536,11 @@ class OpenSubsonic_Api
     public static function getChatSubId(int $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
+    }
+
+    public static function getFolderSubId(int $ampache_id): string
+    {
+        return self::SUBID_FOLDER . $ampache_id;
     }
 
     public static function getGenreSubId(int $ampache_id): string
@@ -1901,14 +1919,14 @@ class OpenSubsonic_Api
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
-                $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = $this->openSubsonicXmlData->addIndexes($response, $artists, $lastmodified);
+                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
+                $response = $this->openSubsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
-                $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = $this->openSubsonicJsonData->addIndexes($response, $artists, $lastmodified);
+                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
+                $response = $this->openSubsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
             }
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -2058,7 +2076,6 @@ class OpenSubsonic_Api
      */
     public function getmusicdirectory(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -2078,14 +2095,14 @@ class OpenSubsonic_Api
             return;
         }
 
-        if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog) {
+        if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog || $object instanceof Folder) {
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = $this->openSubsonicXmlData->addDirectory($response, $object);
+                $response = $this->openSubsonicXmlData->addDirectory($response, $object, $user->getId());
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = $this->openSubsonicJsonData->addDirectory($response, $object);
+                $response = $this->openSubsonicJsonData->addDirectory($response, $object, $user->getId());
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         } else {

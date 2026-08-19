@@ -39,10 +39,13 @@ use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -68,15 +71,18 @@ use SimpleXMLElement;
 class OpenSubsonic_Xml_Data
 {
     private AlbumRepositoryInterface $albumRepository;
+    private FolderRepositoryInterface $folderRepository;
     private OpenSubsonic_Fields $openSubsonicFields;
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
+        FolderRepositoryInterface $folderRepository,
         OpenSubsonic_Fields $openSubsonicFields,
         SongRepositoryInterface $songRepository,
     ) {
         $this->albumRepository      = $albumRepository;
+        $this->folderRepository     = $folderRepository;
         $this->openSubsonicFields   = $openSubsonicFields;
         $this->songRepository       = $songRepository;
     }
@@ -579,7 +585,7 @@ class OpenSubsonic_Xml_Data
      * Create the directory element based on the type
      * https://opensubsonic.netlify.app/docs/responses/directory/
      */
-    public function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
+    public function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog|Folder $object, int $userId = -1): SimpleXMLElement
     {
         if ($object instanceof Artist) {
             $this->_addDirectory_Artist($xml, $object);
@@ -587,6 +593,8 @@ class OpenSubsonic_Xml_Data
             $this->_addDirectory_Album($xml, $object);
         } elseif ($object instanceof Catalog) {
             $this->_addDirectory_Catalog($xml, $object);
+        } elseif ($object instanceof Folder) {
+            $this->_addDirectory_Folder($xml, $object, $userId);
         }
 
         return $xml;
@@ -641,6 +649,36 @@ class OpenSubsonic_Xml_Data
         }
         $xerr->addAttribute('message', $message);
         $xerr->addAttribute('helpUrl', 'https://ampache.org/api/subsonic');
+
+        return $xml;
+    }
+
+    /**
+     * addFolderIndexes
+     *
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    public function addFolderIndexes(SimpleXMLElement $xml, array $children, ?int $lastModified = 0): SimpleXMLElement
+    {
+        $xindexes = $this->_addChildToResultXml($xml, 'indexes');
+        $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
+        $this->_addIgnoredArticles($xindexes);
+
+        $folders = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $this->_addChildObject($xindexes, $child);
+        }
+
+        $this->_addFolderIndex($xindexes, $folders);
 
         return $xml;
     }
@@ -1750,6 +1788,44 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * A sub-folder shown as a `Child` directory stub, inside a `Directory` response
+     */
+    private function _addChildFolder(SimpleXMLElement $xml, Folder $folder): void
+    {
+        $sub_id = OpenSubsonic_Api::getFolderSubId($folder->getId());
+        $xchild = $this->_addChildToResultXml($xml, 'child');
+        $xchild->addAttribute('id', $sub_id);
+        $xchild->addAttribute('parent', OpenSubsonic_Api::getFolderSubId($folder->parent ?? -1));
+        $xchild->addAttribute('isDir', 'true');
+        $xchild->addAttribute('title', (string) $folder->name);
+        if ($folder->has_art()) {
+            $xchild->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * @param array{object_type: LibraryItemEnum, object_id: int} $child
+     */
+    private function _addChildObject(SimpleXMLElement $xml, array $child): void
+    {
+        switch ($child['object_type']) {
+            case LibraryItemEnum::SONG:
+                $song = new Song($child['object_id']);
+                if (!$song->isNew() && $song->enabled) {
+                    $this->addSong($xml, $song, 'child');
+                }
+
+                break;
+            case LibraryItemEnum::VIDEO:
+                $this->_addVideo($xml, new Video($child['object_id']), 'child');
+                break;
+            case LibraryItemEnum::PODCAST_EPISODE:
+                $this->_addPodcastEpisode($xml, new Podcast_Episode($child['object_id']), 'child');
+                break;
+        }
+    }
+
+    /**
      * addChildSong
      *
      * https://opensubsonic.netlify.app/docs/responses/child/
@@ -1989,6 +2065,93 @@ class OpenSubsonic_Xml_Data
         $allartists = Catalog::get_artist_arrays([$catalog_id]);
         foreach ($allartists as $artist) {
             $this->_addChildArray($xdir, $artist);
+        }
+    }
+
+    /**
+     * addDirectory_Folder for a real filesystem folder; -1 is the virtual root above every catalog
+     */
+    private function _addDirectory_Folder(SimpleXMLElement $xml, Folder $folder, int $userId = -1): void
+    {
+        $xdir = $this->_addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getFolderSubId($folder->getId()));
+        if ($folder->parent !== null) {
+            $xdir->addAttribute('parent', OpenSubsonic_Api::getFolderSubId($folder->parent));
+        } elseif ($folder->getId() !== -1) {
+            $xdir->addAttribute('parent', OpenSubsonic_Api::getCatalogSubId($folder->catalog));
+        }
+        $xdir->addAttribute('name', (string) $folder->name);
+
+        $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
+        foreach ($this->folderRepository->getObjects($childFolderId, $userId) as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $childFolder = new Folder($child['object_id']);
+                if (!$childFolder->isNew()) {
+                    $this->_addChildFolder($xdir, $childFolder);
+                }
+
+                continue;
+            }
+
+            $this->_addChildObject($xdir, $child);
+        }
+    }
+
+    /**
+     * A sub-folder shown as the `Artist` type inside an `Index`, exactly like `_addArtistArray`
+     */
+    private function _addFolderArray(SimpleXMLElement $xml, Folder $folder): void
+    {
+        $sub_id  = OpenSubsonic_Api::getFolderSubId($folder->getId());
+        $xartist = $this->_addChildToResultXml($xml, 'artist');
+        $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('name', (string) $folder->name);
+        if ($folder->has_art()) {
+            $xartist->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * Buckets folders by the first letter of their name, same rule `_addIndex` uses for artists
+     *
+     * @param Folder[] $folders
+     */
+    private function _addFolderIndex(SimpleXMLElement $xml, array $folders): void
+    {
+        $xlastcat    = null;
+        $sharpletter = [];
+        $xlastletter = '';
+        foreach ($folders as $folder) {
+            $name = (string) $folder->name;
+            if (strlen($name) > 0) {
+                $letter = strtoupper($name[0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpletter[] = $folder;
+                    continue;
+                }
+
+                if ($letter != $xlastletter) {
+                    $xlastletter = $letter;
+                    $xlastcat    = $this->_addChildToResultXml($xml, 'index');
+                    $xlastcat->addAttribute('name', $xlastletter);
+                }
+            }
+
+            if ($xlastcat != null) {
+                $this->_addFolderArray($xlastcat, $folder);
+            }
+        }
+
+        // Always add # index at the end
+        if (count($sharpletter) > 0) {
+            $xsharpcat = $this->_addChildToResultXml($xml, 'index');
+            $xsharpcat->addAttribute('name', '#');
+
+            foreach ($sharpletter as $folder) {
+                $this->_addFolderArray($xsharpcat, $folder);
+            }
         }
     }
 
