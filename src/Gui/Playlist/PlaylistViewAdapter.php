@@ -224,6 +224,11 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return (int) $this->playlist->last_count;
     }
 
+    public function getPlayDuration(): string
+    {
+        return $this->playlist->get_f_time();
+    }
+
     public function getPlaylistLink(): string
     {
         return $this->playlist->get_f_link();

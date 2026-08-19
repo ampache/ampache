@@ -65,6 +65,7 @@ final class PlaylistListRenderer extends AbstractBrowseListRenderer
         $columns[] = ['class' => 'cel_add essential', 'label' => '', 'sort' => null, 'footer' => false];
         $columns[] = ['class' => 'cel_last_update optional', 'label' => T_('Last Update'), 'sort' => 'last_update', 'footer' => false];
         $columns[] = ['class' => 'cel_type optional', 'label' => T_('Type'), 'sort' => 'type', 'footer' => false];
+        $columns[] = ['class' => 'cel_time optional', 'label' => T_('Time'), 'sort' => 'last_duration', 'footer' => true];
         /* HINT: Number of items in a playlist */
         $columns[] = ['class' => 'cel_medias optional', 'label' => T_('# Items'), 'sort' => 'last_count', 'footer' => true];
 

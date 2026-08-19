@@ -37,6 +37,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Override;
 
 /**
  * This class handles playlists in ampache. it references the playlist* tables
@@ -518,11 +519,37 @@ class Playlist extends playlist_object
 
     /**
      * get_total_duration
-     * Get the total duration of all songs.
+     * Get the total duration of every item in the playlist that has a duration (songs, videos, podcast episodes).
      */
     public function get_total_duration(): int
     {
-        return self::getPlaylistRepository()->getTotalDuration(array_values($this->get_songs()));
+        $user          = Core::get_global('user');
+        $userId        = $user->id ?? -1;
+        $repository    = self::getPlaylistRepository();
+        $catalogFilter = (bool) AmpConfig::get('catalog_filter');
+
+        $total = 0;
+        foreach ($repository->getObjectTypes($this->id) as $type) {
+            foreach ($repository->getItemsOfType($this->id, $type, $userId, $catalogFilter, true, false) as $row) {
+                $total += (int) $row['time'];
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get item f_time, from the cached last_duration rather than summing the songs on every call
+     */
+    #[Override]
+    public function get_f_time(): string
+    {
+        $duration = (int) $this->last_duration;
+        $min      = sprintf("%02d", (floor($duration / 60) % 60));
+        $sec      = sprintf("%02d", ($duration % 60));
+        $hours    = floor($duration / 3600);
+
+        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
     }
 
     public function getMediaType(): LibraryItemEnum
