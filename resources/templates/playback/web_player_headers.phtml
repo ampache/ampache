@@ -683,8 +683,11 @@ if ($this->isIframed()) { ?>
         $('.jp-seek-bar').css('pointer-events', 'none');
 
         brconn.onopen = function(e) {
-            sendBroadcastMessage('AUTH_SID', <?php echo $this->raw($this->getStreamSessionJs()); ?>);
-            sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
+            // fetched on connect: rendering it inline created a stream session on every page view
+            $.getJSON(jsAjaxUrl + '?page=player&action=stream_session', function(data) {
+                sendBroadcastMessage('AUTH_SID', data.session);
+                sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
+            });
         };
     }
 
