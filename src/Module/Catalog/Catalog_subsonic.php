@@ -47,6 +47,7 @@ class Catalog_subsonic extends Catalog
     public string $password;
     public string $uri = '';
     public string $username;
+    private int $count                = 0;
     private string $description       = 'Subsonic Remote Catalog';
     private ?SubsonicClient $subsonic = null;
     private string $type              = 'subsonic';
@@ -331,12 +332,14 @@ class Catalog_subsonic extends Catalog
         debug_event('subsonic.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        $interactor?->info(
-            'subsonic.catalog: collectGarbage',
-            true
-        );
-        debug_event('subsonic.catalog', 'collectGarbage', 5);
-        self::getFolderRepository()->collectGarbage();
+        if ($this->count > 0) {
+            $interactor?->info(
+                'subsonic.catalog: collectGarbage',
+                true
+            );
+            debug_event('subsonic.catalog', 'collectGarbage', 5);
+            self::getFolderRepository()->collectGarbage();
+        }
     }
 
     /**
@@ -544,10 +547,10 @@ class Catalog_subsonic extends Catalog
         debug_event('subsonic.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
 
         $folderRepository = self::getFolderRepository();
-        $count            = 0;
+        $this->count      = 0;
         foreach (self::getSongRepository()->getFilesByCatalog($this->getId()) as $songId => $songFile) {
             if ($folderRepository->mapObject('song', $songId, $songFile, $this->getId())) {
-                $count++;
+                $this->count++;
             }
         }
 
@@ -556,12 +559,12 @@ class Catalog_subsonic extends Catalog
         }
 
         $interactor?->info(
-            sprintf('Scan finished, %d updated in ', $count) . $this->name,
+            sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
             true
         );
-        debug_event('subsonic.catalog', sprintf('Scan finished, %d updated in ', $count) . $this->name, 5);
+        debug_event('subsonic.catalog', sprintf('Scan finished, %d updated in ', $this->count) . $this->name, 5);
 
-        return $count;
+        return $this->count;
     }
 
     public function url_to_songid(string $url): int
