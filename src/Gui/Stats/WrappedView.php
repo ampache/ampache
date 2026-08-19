@@ -81,7 +81,8 @@ final class WrappedView extends AbstractView
      */
     public function renderSection(array $section): string
     {
-        $browse = $this->browseFactory->create();
+        // only the section that stores its browse needs a tmp_browse row
+        $browse = $this->browseFactory->create(null, $section['store']);
         $browse->set_type($section['type']);
         $browse->set_use_filters(false);
         $browse->set_show_header(false);
