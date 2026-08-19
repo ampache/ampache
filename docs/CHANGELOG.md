@@ -10,9 +10,10 @@
   * The browser solves a sha256 puzzle before it is let through, tuned with `pow_difficulty` (8-26) and `pow_ttl`
   * `pow_exempt_level` waves trusted users through in `all` mode; `pow_log_failures` records what gets blocked
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
-* New `show_composer` preference (off by default): adds an optional Composer column next to Artist on playlist media rows and every song browse/panel (song list, top tracks, similar songs) that shows one. Composer is a plain `song`.`composer` text field, so anything else in a mixed playlist shows blank. Database 810001
+* Database 810001
+  * New `show_composer` preference (off by default): adds an optional Composer column next to Artist on playlist media and Song rows
 
-### Fixed (8.0.2)
+### Fixed (8.1.0)
 
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
