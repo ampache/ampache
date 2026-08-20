@@ -403,6 +403,24 @@ class Browse extends Query
     }
 
     /**
+     * Columns a page opts into. They ride the browse state, so an ajax page or sort keeps them.
+     *
+     * @param string[] $columns
+     */
+    public function set_show_columns(array $columns): void
+    {
+        $this->_state['show_columns'] = $columns;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function get_show_columns(): array
+    {
+        return $this->_state['show_columns'] ?? [];
+    }
+
+    /**
      * set_title
      */
     public function set_title(string $title): void

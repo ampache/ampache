@@ -54,6 +54,7 @@ final class ShowAction extends AbstractUploadAction
             Catalog::get_uploads_sql('song')
         );
         $browse->set_sort('title', 'ASC', false);
+        $browse->set_show_columns(['cel_add_date']);
         $browse->set_simple_browse(true);
         $browse->show_objects();
         $browse->store();

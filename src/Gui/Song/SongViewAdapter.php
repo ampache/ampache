@@ -162,6 +162,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         );
     }
 
+    public function getAdditionTime(): string
+    {
+        return get_datetime($this->song->getAdditionTime());
+    }
+
     public function getArtistLink(): string
     {
         return (string) $this->song->get_f_parent_link();

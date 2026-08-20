@@ -184,6 +184,7 @@ interface GuiFactoryInterface
         bool $isHideAlbum,
         bool $isHideYear,
         bool $isHideDrag,
+        bool $isShowAddDate = false,
     ): SongRowView;
 
     public function createSongViewAdapter(

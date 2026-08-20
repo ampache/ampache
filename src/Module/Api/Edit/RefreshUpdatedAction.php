@@ -166,7 +166,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     $hide_artist,
                     $hide_album,
                     $hide_year,
-                    $hide_drag
+                    $hide_drag,
+                    in_array('cel_add_date', $this->browse->get_show_columns(), true)
                 )->render();
                 break;
             case 'playlist_row':

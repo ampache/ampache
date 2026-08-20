@@ -89,6 +89,7 @@ class Query
         'offset' => 0,
         'params' => [], // parameters for custom sql
         'select' => [],
+        'show_columns' => [], // opt-in columns a page asked for, e.g. the upload date
         'simple' => false,
         'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
         'sort' => [

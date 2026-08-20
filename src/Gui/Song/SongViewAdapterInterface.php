@@ -58,6 +58,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getAppendNextButton(): string;
 
+    public function getAdditionTime(): string;
+
     public function getArtistLink(): string;
 
     public function getAutoplayNextButton(): string;
