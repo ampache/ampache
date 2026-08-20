@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
@@ -39,10 +40,20 @@ use Psr\Log\LoggerInterface;
 final readonly class AlbumRepository implements AlbumRepositoryInterface
 {
     /**
-     * The optional half of an album's identity: each is matched exactly when set and must be NULL when not, so a
-     * partially tagged release can never be mistaken for a fully tagged one. Order decides the bound-parameter order.
+     * The full set of album-identity columns an admin can select via the `album_grouping_fields` config setting
+     * (see `getIdentityColumns()`); this is also the default when it's unset. Order decides the bound-parameter
+     * order. `name` and `year` get their own clause in `findByProperties()` (both are NOT NULL columns, always
+     * matched by equality when included; `name` also carries the prefix-concatenation dupe check). Every other column is
+     * nullable and matched exactly when set, NULL when not, so a partially tagged release isn't mistaken for a
+     * fully tagged one - unless the admin drops it from the list, which is allowed even when it merges albums
+     * that a stricter set would have kept apart. A column dropped this way is also never stored: `create()`
+     * writes NULL for it rather than fixing the new album to whichever song happened to create it. `catalog`
+     * is not on this list: albums are always scoped to their catalog, since the row itself is unique per
+     * catalog rather than shared.
      */
     private const array IDENTITY_COLUMNS = [
+        'name',
+        'year',
         'prefix',
         'mbid',
         'mbid_group',
@@ -162,6 +173,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function create(array $properties, int $additionTime): int
     {
+        // a field dropped from `album_grouping_fields` isn't stored at all, rather than fixing the new album to
+        // whichever song happened to create it - `name`/`year` are excluded from this since neither column is
+        // nullable, and the scanned value they'd still get is a better default than a placeholder like 0
+        foreach (array_diff(self::IDENTITY_COLUMNS, ['name', 'year'], $this->getIdentityColumns()) as $droppedColumn) {
+            $properties[$droppedColumn] = null;
+        }
+
         try {
             $this->connection->query(
                 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -235,31 +253,48 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function findByProperties(array $properties): ?int
     {
-        $sql = "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? ";
+        $clauses = [];
+        $params  = [];
 
-        $params = [
-            $properties['name'],
-            $properties['name'],
-            $properties['year'],
-        ];
+        foreach ($this->getIdentityColumns() as $column) {
+            if ($column === 'name') {
+                $clauses[] = "(`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
+                $params[]  = $properties['name'];
+                $params[]  = $properties['name'];
 
-        foreach (self::IDENTITY_COLUMNS as $column) {
+                continue;
+            }
+
+            if ($column === 'year') {
+                $clauses[] = '`album`.`year` = ?';
+                $params[]  = $properties['year'];
+
+                continue;
+            }
+
             if ($properties[$column]) {
-                $sql .= sprintf('AND `album`.`%s` = ? ', $column);
-                $params[] = $properties[$column];
+                $clauses[] = sprintf('`album`.`%s` = ?', $column);
+                $params[]  = $properties[$column];
             } else {
-                $sql .= sprintf('AND `album`.`%s` IS NULL ', $column);
+                $clauses[] = sprintf('`album`.`%s` IS NULL', $column);
             }
         }
 
-        $sql .= 'AND `album`.`catalog` = ?;';
-        $params[] = $properties['catalog'];
+        $clauses[] = '`album`.`catalog` = ?';
+        $params[]  = $properties['catalog'];
+
+        $sql = 'SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE ' . implode(' AND ', $clauses) . ';';
 
         $albumId = $this->connection->fetchOne($sql, $params);
+        if ($albumId === false) {
+            return null;
+        }
 
-        return ($albumId === false)
-            ? null
-            : (int) $albumId;
+        $albumId = (int) $albumId;
+
+        $this->logDroppedFieldDrift($albumId);
+
+        return $albumId;
     }
 
     /**
@@ -1064,6 +1099,26 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
+     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
+     * Unset/empty config keeps the default behavior and matches all columns
+     */
+    /**
+     * @return list<string>
+     */
+    private function getIdentityColumns(): array
+    {
+        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
+        if (!is_string($configured) || trim($configured) === '') {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        $requested = array_map('trim', explode(',', $configured));
+
+        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
+    }
+
+    /**
      * Builds the LIMIT clause for a paged read, where an offset with no size runs to the end of the result
      */
     private function limitClause(int $size, int $offset): string
@@ -1080,6 +1135,27 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return ($offset > 0)
             ? sprintf('LIMIT %d, 18446744073709551615', $offset)
             : '';
+    }
+
+    /**
+     * Warns once per match that `album_grouping_fields` dropped some columns.
+     * We will never store a value for a dropped column and this log line is the only notification that grouping is narrowed.
+     */
+    private function logDroppedFieldDrift(int $albumId): void
+    {
+        $dropped = array_diff(self::IDENTITY_COLUMNS, $this->getIdentityColumns());
+        if ($dropped === []) {
+            return;
+        }
+
+        $this->logger->warning(
+            sprintf(
+                'album %d: matched with `album_grouping_fields` narrowed (dropped: %s) - not recommended, dropped fields are never stored on the album',
+                $albumId,
+                implode(', ', $dropped)
+            ),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
     }
 
     /**

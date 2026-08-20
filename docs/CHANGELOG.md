@@ -2,9 +2,15 @@
 
 ## Ampache 8.1.0
 
-**Subsonic Users** Populate your catalog folders using the cli (`php bin/cli run:updateCatalog -s`) or the "Scan All Folders" command in the UI.
+**Subsonic Users** The Subsonic API now fully implements folder browsing.
 
-The Subsonic API now fully implements folder browsing.
+Populate your catalog folders using the cli (`php bin/cli run:updateCatalog -s`) or the "Scan All Folders" command in the UI.
+
+**Album database grouping** Allow custom grouping using the new config option `album_grouping_fields`.
+
+ Run a Catalog verify after changing this setting to update your Albums. **NOTE** Using `album_grouping_fields` is not recommended.
+
+Name and Year are recorded but all other dropped columns are not kept. Year will be recorded as the first Song it reads on create even if other years differ.
 
 ### Added (8.1.0)
 
@@ -18,6 +24,12 @@ The Subsonic API now fully implements folder browsing.
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
 * A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
+* Config version 99
+  * New `album_grouping_fields` option controlling which fields decide whether two songs share an album row, so pressings that only differ by `barcode`/`catalog_number`/`version` (or any other field) can be grouped together instead of split into separate albums
+  * Not recommended: a dropped field is written as NULL rather than stored from whichever song scanned first, so albums it merges together lose that value entirely; every such match logs a warning (not shown in the UI)
+  * `name` and `year` can be dropped from the list too, though doing so can merge albums you didn't mean to merge
+  * `catalog` is always matched and isn't part of the list; an album is always scoped to its catalog
+  * Server-wide, not a user preference; defaults to today's full field set (`name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version`)
 
 ### Changed (8.1.0)
 

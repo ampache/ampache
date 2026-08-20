@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
@@ -65,6 +66,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     private int $order        = 0;
     private string $playlist  = '';
     private string $smartlist = '';
+    private User $user;
 
     /**
      * Constructor
@@ -96,6 +98,17 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                     $list_array[] = [$smartlist, 'search'];
                 }
             }
+
+            $playlist_ids = array_map(fn(array $item) => $item[0]->id, array_filter($list_array, fn(array $item) => $item[1] === 'playlist'));
+            $search_ids   = array_map(fn(array $item) => $item[0]->id, array_filter($list_array, fn(array $item) => $item[1] === 'search'));
+            Rating::build_cache('playlist', $playlist_ids, $this->user->getId());
+            Rating::build_cache('search', $search_ids, $this->user->getId());
+
+            usort(
+                $list_array,
+                fn(array $a, array $b): int => (new Rating($b[0]->id, $b[1]))->get_user_rating($this->user->getId())
+                    <=> (new Rating($a[0]->id, $a[1]))->get_user_rating($this->user->getId())
+            );
 
             if ($list_array !== []) {
                 $divString = ($this->order > 0)
@@ -182,6 +195,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
      */
     public function load(User $user): bool
     {
+        $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
 
