@@ -361,7 +361,7 @@ class Art extends database_object
             echo $item_art_play;
             echo Ajax::text(
                 '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . "' + getPagePlaySettings() + '",
-                '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
+                '<span class="item_art_play_icon" title="' . T_('Play') . '"></span>',
                 'directplay_art_' . $object_type . '_' . $object_id
             );
             echo "</div>";
