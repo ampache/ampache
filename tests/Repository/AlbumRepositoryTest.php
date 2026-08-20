@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
@@ -136,6 +138,57 @@ class AlbumRepositoryTest extends TestCase
         self::assertSame(0, $this->subject->create($this->createProperties(), 123456));
     }
 
+    public function testCreateStillWritesTheScannedNameAndYearWhenBothAreDroppedFromGroupingConfig(): void
+    {
+        // name/year aren't nullable, so dropping them from grouping doesn't null them out on create() - the
+        // scanned value they're written with is a better default than a placeholder like 0
+        AmpConfig::set('album_grouping_fields', 'album_artist', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    ['some-album', null, 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+                );
+
+            $this->connection->expects(static::once())
+                ->method('getLastInsertedId')
+                ->willReturn(666);
+
+            self::assertSame(666, $this->subject->create($this->createProperties(), 123456));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testCreateWritesNullForFieldsDroppedFromGroupingConfig(): void
+    {
+        // a column dropped from album_grouping_fields is never stored at all, rather than fixing the new
+        // album to whichever song happened to create it
+        AmpConfig::set('album_grouping_fields', 'name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,catalog_number,version', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    ['some-album', 'The', 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+                );
+
+            $this->connection->expects(static::once())
+                ->method('getLastInsertedId')
+                ->willReturn(666);
+
+            $properties            = $this->createProperties();
+            $properties['barcode'] = '111';
+
+            self::assertSame(666, $this->subject->create($properties, 123456));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
     public function testDeleteDeletes(): void
     {
         $album = $this->createMock(Album::class);
@@ -186,6 +239,97 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testFindByPropertiesCanDisableNameAndYearMatching(): void
+    {
+        // every column is configurable, including name/year - the admin can choose a value that merges albums
+        // a stricter set would have kept apart, and nothing here stops that
+        AmpConfig::set('album_grouping_fields', 'album_artist', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    'SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE `album`.`album_artist` = ? AND `album`.`catalog` = ?;',
+                    [42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesDoesNotLogWhenNothingIsDropped(): void
+    {
+        $this->connection->method('fetchOne')->willReturn('666');
+
+        $this->logger->expects(static::never())->method('warning');
+
+        self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesFallsBackToAllColumnsWhenConfigIsEmpty(): void
+    {
+        // an empty configured value keeps today's full-field behaviour rather than matching nothing
+        AmpConfig::set('album_grouping_fields', '', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 'The', 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesIgnoresUnknownConfiguredColumns(): void
+    {
+        // config content reaches a SQL identifier, so an unrecognised name must be dropped, not just left unbound
+        AmpConfig::set('album_grouping_fields', 'name, year, album_artist, nonexistent_column', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`album_artist` = ? AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesLogsWhenConfigDropsFields(): void
+    {
+        // dropped fields are never stored, so every narrowed match gets a warning
+        AmpConfig::set('album_grouping_fields', 'name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,catalog_number,version', true);
+
+        try {
+            $this->connection->method('fetchOne')->willReturn('666');
+
+            $this->logger->expects(static::once())
+                ->method('warning')
+                ->with(
+                    'album 666: matched with `album_grouping_fields` narrowed (dropped: barcode) - not recommended, dropped fields are never stored on the album',
+                    [LegacyLogger::CONTEXT_TYPE => AlbumRepository::class]
+                );
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
     public function testFindByPropertiesMatchesUnsetPropertiesAgainstNull(): void
     {
         // an unset property has to be matched as NULL, or a partially tagged release collides with a fully tagged one
@@ -198,6 +342,27 @@ class AlbumRepositoryTest extends TestCase
             ->willReturn('666');
 
         self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesNarrowsIdentityColumnsFromConfig(): void
+    {
+        // a column left out of `album_grouping_fields` is dropped entirely, not matched as NULL either,
+        // so albums differing only there merge into one instead of staying split
+        AmpConfig::set('album_grouping_fields', 'name,year,album_artist,mbid', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`mbid` IS NULL AND `album`.`album_artist` = ? AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
     }
 
     public function testFindByPropertiesReturnsNullWhenNothingMatched(): void

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 98
+config_version = 99
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -362,6 +362,23 @@ catalog_playlist_pattern = "m3u|m3u8|pls|asx|xspf"
 ; your music. You may add any prefix you want separating them with a |
 ; DEFAULT: The|An|A|Die|Das|Ein|Eine|Les|Le|La
 catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
+
+; Album Grouping Fields
+; NOT RECOMMENDED. Which fields must agree for two songs to land on the same album row (`catalog` is
+; always matched separately - an album is always scoped to its catalog and this can't be turned off).
+; Drop a field to merge more loosely, e.g. remove barcode/catalog_number/version to stop different
+; pressings of the same release from splitting into separate albums. You can even drop `name` or `year`
+; if you really want to - nothing here stops you from choosing a value that merges albums you didn't
+; mean to merge, so choose carefully.
+; A dropped field is never stored on the album row at all (it's written as NULL, not kept from whichever
+; song was scanned first), so any album it merges together loses that value entirely - with no UI
+; indication, only a log warning on each such match.
+; This is server-wide, not a user preference: it changes what rows get created during a scan, so it can't be
+; a per-viewer setting. It only affects albums scanned/re-verified after the change; existing rows keep
+; whatever grouping they were created with until their tags are re-read.
+; POSSIBLE VALUES: name, year, prefix, mbid, mbid_group, album_artist, release_type, release_status, original_year, barcode, catalog_number, version
+; DEFAULT: name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version
+;album_grouping_fields = "name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version"
 
 ; List Header Alphabetical String Pattern
 ; This defines the string used in the list header when you check "Alphabet"
