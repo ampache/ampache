@@ -222,6 +222,14 @@ class Browse extends Query
     }
 
     /**
+     * @return string[]
+     */
+    public function get_show_columns(): array
+    {
+        return $this->_state['show_columns'] ?? [];
+    }
+
+    /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
      * @return array<string, Playlist|Search|Folder|Collection>
@@ -379,6 +387,16 @@ class Browse extends Query
     }
 
     /**
+     * Columns a page opts into. They ride the browse state, so an ajax page or sort keeps them.
+     *
+     * @param string[] $columns
+     */
+    public function set_show_columns(array $columns): void
+    {
+        $this->_state['show_columns'] = $columns;
+    }
+
+    /**
      * set_show_header
      */
     public function set_show_header(bool $show_header): void
@@ -400,24 +418,6 @@ class Browse extends Query
     public function set_threshold(string $threshold): void
     {
         $this->_state['threshold'] = $threshold;
-    }
-
-    /**
-     * Columns a page opts into. They ride the browse state, so an ajax page or sort keeps them.
-     *
-     * @param string[] $columns
-     */
-    public function set_show_columns(array $columns): void
-    {
-        $this->_state['show_columns'] = $columns;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function get_show_columns(): array
-    {
-        return $this->_state['show_columns'] ?? [];
     }
 
     /**

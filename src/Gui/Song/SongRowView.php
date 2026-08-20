@@ -56,11 +56,6 @@ final class SongRowView extends AbstractView
         private readonly bool $isShowAddDate = false,
     ) {}
 
-    public function isShowAddDate(): bool
-    {
-        return $this->isShowAddDate;
-    }
-
     public function getArgumentParam(): string
     {
         return $this->argumentParam;
@@ -109,6 +104,11 @@ final class SongRowView extends AbstractView
     public function isHideYear(): bool
     {
         return $this->isHideYear;
+    }
+
+    public function isShowAddDate(): bool
+    {
+        return $this->isShowAddDate;
     }
 
     public function isShowComposer(): bool

@@ -69,14 +69,6 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     }
 
     /**
-     * An opt-in column: off unless the page asked for it.
-     */
-    final public function isShown(string $column): bool
-    {
-        return in_array($column, $this->getBrowse()->get_show_columns(), true);
-    }
-
-    /**
      * @return list<int>
      */
     final public function getObjectIds(): array
@@ -113,6 +105,14 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
         $argument = $this->getContext()->argument;
 
         return !is_array($argument) && (bool) $argument;
+    }
+
+    /**
+     * An opt-in column: off unless the page asked for it.
+     */
+    final public function isShown(string $column): bool
+    {
+        return in_array($column, $this->getBrowse()->get_show_columns(), true);
     }
 
     #[Override]

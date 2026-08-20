@@ -50,6 +50,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function canToggleState(): bool;
 
+    public function getAdditionTime(): string;
+
     public function getAddToPlaylistIcon(): string;
 
     public function getAlbumDiskLink(): string;
@@ -57,8 +59,6 @@ interface SongViewAdapterInterface extends TemplateInterface
     public function getAlbumLink(): string;
 
     public function getAppendNextButton(): string;
-
-    public function getAdditionTime(): string;
 
     public function getArtistLink(): string;
 
