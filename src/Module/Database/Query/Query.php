@@ -79,6 +79,7 @@ class Query
     protected array $_state = [
         'base' => null,
         'custom' => false,
+        'custom_sql' => '', // an id-yielding query the browse is restricted to, joined as a derived table
         'filter' => [],
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
@@ -1054,6 +1055,22 @@ class Query
     }
 
     /**
+     * _get_custom_join_sql
+     *
+     * A custom base is a query yielding ids. Joining it as a derived table keeps its scope separate, so an
+     * unqualified column inside it cannot bind to the outer query and silently correlate.
+     */
+    private function _get_custom_join_sql(): string
+    {
+        $custom = (string) ($this->_state['custom_sql'] ?? '');
+        if ($custom === '' || $this->queryType === null) {
+            return '';
+        }
+
+        return sprintf('JOIN (%s) AS `custom_base` ON `custom_base`.`id` = %s ', $custom, $this->queryType->get_select());
+    }
+
+    /**
      * _get_filter_sql
      * This returns the filter part of the sql statement
      */
@@ -1231,8 +1248,8 @@ class Query
      */
     private function _get_sql(?bool $limit = true, bool $sort = true): string
     {
-        if ($this->_state['custom']) {
-            // custom queries are set by base and should not be added to
+        // a browse stored before custom_sql existed still holds its custom query in base
+        if ($this->_state['custom'] && empty($this->_state['custom_sql'])) {
             $final_sql = $this->_get_base_sql();
         } else {
             // filter and sort set joins as well as group so make sure you run those first
@@ -1240,6 +1257,7 @@ class Query
             $sort_sql   = $this->_get_sort_sql();
             // regular queries need to be joined with all the other parts
             $final_sql = $this->_get_base_sql()
+                . $this->_get_custom_join_sql()
                 . $this->_get_join_sql()
                 . $filter_sql
                 . $this->_get_having_sql();
@@ -1399,30 +1417,30 @@ class Query
             return;
         }
 
-        // Custom sql base
+        // Custom sql restricts the normal base to the ids it yields, so the base itself stays intact
         if ($force && !empty($custom_base)) {
-            $this->_state['custom'] = true;
-            $this->_state['base']   = $custom_base;
-            $this->_state['params'] = $parameters;
-        } else {
-            // TODO we should remove this default fallback and rely on set_type()
-            if ($this->queryType === null) {
-                $this->queryType = new SongQuery();
-            }
-
-            $this->set_select($this->queryType->get_select());
-
-            // tag state should be set as they aren't really separate objects
-            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'], true)) {
-                $this->set_filter('hidden', 1);
-            }
-
-            if (in_array($this->get_type(), ['genre', 'license', 'tag'], true)) {
-                $this->set_filter('hidden', 0);
-            }
-
-            $this->_state['base'] = $this->queryType?->get_base_sql();
+            $this->_state['custom']     = true;
+            $this->_state['custom_sql'] = $custom_base;
+            $this->_state['params']     = $parameters;
         }
+
+        // TODO we should remove this default fallback and rely on set_type()
+        if ($this->queryType === null) {
+            $this->queryType = new SongQuery();
+        }
+
+        $this->set_select($this->queryType->get_select());
+
+        // tag state should be set as they aren't really separate objects
+        if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'], true)) {
+            $this->set_filter('hidden', 1);
+        }
+
+        if (in_array($this->get_type(), ['genre', 'license', 'tag'], true)) {
+            $this->set_filter('hidden', 0);
+        }
+
+        $this->_state['base'] = $this->queryType?->get_base_sql();
     }
 
     /**
