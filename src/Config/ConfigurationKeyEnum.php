@@ -41,6 +41,7 @@ final class ConfigurationKeyEnum
     public const string ALBUM_ART_PREFERRED_FILENAME          = 'album_art_preferred_filename';
     public const string ALBUM_ART_STORE_DISK                  = 'album_art_store_disk';
     public const string ALBUM_GROUP                           = 'album_group';
+    public const string ALBUM_GROUPING_FIELDS                 = 'album_grouping_fields';
     public const string ALBUM_RELEASE_TYPE                    = 'album_release_type';
     public const string ALBUM_RELEASE_TYPE_SORT               = 'album_release_type_sort';
     public const string ALBUM_SORT                            = 'album_sort';
