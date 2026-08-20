@@ -45,6 +45,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
+* Missing close box on a few template phtml files
 
 ## Ampache 8.0.1
 
