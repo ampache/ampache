@@ -450,12 +450,10 @@ class User extends database_object
                 'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
-            foreach ($user_list as $user_id) {
-                debug_event(self::class, 'Update counts for ' . $user_id, 5);
-                foreach ($server_counts as $table => $count) {
-                    if (in_array($table, $count_array)) {
-                        self::set_user_data($user_id, $table, $count);
-                    }
+            debug_event(self::class, 'Update counts for all users', 5);
+            foreach ($server_counts as $table => $count) {
+                if (in_array($table, $count_array)) {
+                    $userRepository->setUserDataForAll($table, $count);
                 }
             }
 

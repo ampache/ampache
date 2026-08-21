@@ -858,6 +858,15 @@ final readonly class UserRepository implements UserRepositoryInterface
         );
     }
 
+    public function setUserDataForAll(string $key, float|int|string $value): void
+    {
+        // Same value for every user: one statement instead of one per user.
+        $this->connection->query(
+            'REPLACE INTO `user_data` (`user`, `key`, `value`) SELECT `id`, ?, ? FROM `user`;',
+            [$key, $value]
+        );
+    }
+
     /**
      * Writes a fresh validation key and disables the account until it is used
      */
