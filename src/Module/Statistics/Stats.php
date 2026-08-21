@@ -70,6 +70,9 @@ final class Stats
      */
     private const array DERIVED_TYPES = ['album', 'album_disk', 'artist', 'podcast'];
 
+    /** @var array<string, ?string> Memoized lookups for the current request, keyed by coordinate pair */
+    private static array $place_name_cache = [];
+
     public ?string $agent = null;
     public int $date;
 
@@ -299,6 +302,12 @@ final class Stats
      */
     public static function get_cached_place_name(float $latitude, float $longitude): ?string
     {
+        // The lookup scans object_count and rows share coordinates: run it once per pair.
+        $cache_key = $latitude . '/' . $longitude;
+        if (array_key_exists($cache_key, self::$place_name_cache)) {
+            return self::$place_name_cache[$cache_key];
+        }
+
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
         $db_results = Dba::read($sql, [$latitude, $longitude]);
@@ -306,6 +315,8 @@ final class Stats
         if ($results !== []) {
             $name = $results['geo_name'];
         }
+
+        self::$place_name_cache[$cache_key] = $name;
 
         return $name;
     }
@@ -793,8 +804,8 @@ final class Stats
             if (
                 $geolocation
                 && empty($row['geo_name'])
-                && !empty($row['geo_latitude'])
-                && !empty($row['geo_longitude'])
+                && (float) $row['geo_latitude'] !== 0.0
+                && (float) $row['geo_longitude'] !== 0.0
             ) {
                 $row['geo_name'] = Stats::get_cached_place_name((float) $row['geo_latitude'], (float) $row['geo_longitude']);
             }
