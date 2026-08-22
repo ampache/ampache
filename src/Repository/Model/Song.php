@@ -267,6 +267,9 @@ class Song extends database_object implements
             parent::add_to_cache('song_data', $row['song_id'], $row);
         }
 
+        // one tag read for the page instead of one per song
+        Tag::build_object_tag_cache('song', array_values(array_map(intval(...), $song_ids)));
+
         return true;
     }
 

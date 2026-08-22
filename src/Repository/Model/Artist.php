@@ -172,6 +172,9 @@ class Artist extends database_object implements
             }
         }
 
+        // one tag read for the page instead of one per artist
+        Tag::build_object_tag_cache('artist', array_values(array_map(intval(...), $ids)));
+
         return true;
     }
 
@@ -503,12 +506,25 @@ class Artist extends database_object implements
             ];
         }
 
-        return self::getArtistRepository()->getNameArrayById((int) $artist_id) ?? [
+        $cache_id = (int) $artist_id;
+        if (parent::is_cached('artist_name_array', $cache_id)) {
+            /** @var array{id: string, name: string, prefix: string, basename: string} $cached */
+            $cached = parent::get_from_cache('artist_name_array', $cache_id);
+
+            return $cached;
+        }
+
+        $row = self::getArtistRepository()->getNameArrayById($cache_id) ?? [
             "id" => '',
             "name" => '',
             "prefix" => '',
             "basename" => '',
         ];
+
+        // a listing resolves the same artist for every track it renders
+        parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+        return $row;
     }
 
     public static function is_upload(int $artist_id): bool
