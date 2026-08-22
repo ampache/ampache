@@ -39,6 +39,7 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
@@ -52,6 +53,44 @@ use Override;
  */
 final class HeaderView extends AbstractView
 {
+    /**
+     * Pages showing one library item: the script name, then each type it can show with the id parameters
+     * it may be called with. The first match wins, so a more specific type comes first.
+     */
+    private const array OBJECT_PAGES = [
+        'albums' => [
+            ['album_disk', ['album_disk']],
+            ['album', ['album']],
+        ],
+        'artists' => [['artist', ['artist']]],
+        'song' => [['song', ['song_id']]],
+        'playlist' => [['playlist', ['playlist_id']]],
+        'smartplaylist' => [['search', ['playlist_id']]],
+        'podcast' => [['podcast', ['podcast']]],
+        'podcast_episode' => [['podcast_episode', ['podcast_episode', 'podcast']]],
+        'video' => [['video', ['video_id', 'video']]],
+        'radio' => [['live_stream', ['radio', 'live_stream']]],
+        'labels' => [['label', ['label']]],
+    ];
+
+    /**
+     * An icon per object type, so a tab is recognisable when its title is cut short.
+     */
+    private const array TYPE_ICONS = [
+        'album' => "\u{1F4BF}",
+        'album_disk' => "\u{1F4BF}",
+        'artist' => "\u{1F3A4}",
+        'song' => "\u{1F3B5}",
+        'playlist' => "\u{1F4C3}",
+        'search' => "\u{26A1}",
+        'tag' => "\u{1F3BC}",
+        'podcast' => "\u{1F399}\u{FE0F}",
+        'podcast_episode' => "\u{1F399}\u{FE0F}",
+        'video' => "\u{1F3AC}",
+        'live_stream' => "\u{1F4FB}",
+        'label' => "\u{1F3E2}",
+    ];
+
     public function __construct(
         private readonly string $webPath,
         private readonly string $adminPath,
@@ -119,6 +158,20 @@ final class HeaderView extends AbstractView
         return ($this->currentUser instanceof User && $this->currentUser->getId() > 0 && $this->hasCustomLogo())
             ? $this->currentUser->get_avatar()['url_medium'] ?? Ui::get_logo_url()
             : Ui::get_logo_url();
+    }
+
+    /**
+     * The browser tab title: what the page shows, then the site title, so several open tabs stay apart.
+     */
+    public function getPageTitle(): string
+    {
+        $site    = $this->getSiteTitle();
+        $script  = basename((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '.php');
+        $context = $this->getPageContext($script);
+
+        return ($context === null)
+            ? $site
+            : $context . ' - ' . $site;
     }
 
     /**
@@ -305,8 +358,73 @@ final class HeaderView extends AbstractView
         return $this->findTemplate('partial/header.phtml');
     }
 
+    /**
+     * The leading part of the tab title, or null for a page that has nothing of its own to say.
+     */
+    private function getPageContext(string $script): ?string
+    {
+        foreach (self::OBJECT_PAGES[$script] ?? [] as [$type, $params]) {
+            foreach ($params as $param) {
+                $object_id = (int) ($_GET[$param] ?? 0);
+                if ($object_id <= 0) {
+                    continue;
+                }
+
+                $item = $this->libraryItemLoader->load(LibraryItemEnum::from($type), $object_id);
+                $name = $item?->get_fullname();
+                if ($name !== null && $name !== '') {
+                    return $this->withIcon(self::TYPE_ICONS[$type], $name);
+                }
+            }
+        }
+
+        // pages that list rather than show, where the browsed type is the only context there is
+        if ($script === 'browse') {
+            $labels = [
+                'song' => T_('Songs'),
+                'album' => T_('Albums'),
+                'album_artist' => T_('Album Artists'),
+                'artist' => T_('Artists'),
+                'playlist' => T_('Playlists'),
+                'smartplaylist' => T_('Smart Playlists'),
+                'tag' => T_('Genres'),
+                'label' => T_('Labels'),
+                'live_stream' => T_('Radio Stations'),
+                'podcast' => T_('Podcasts'),
+                'video' => T_('Videos'),
+                'catalog' => T_('Catalogs'),
+            ];
+            $action = (string) ($_GET['action'] ?? '');
+            if (isset($labels[$action])) {
+                return $this->withIcon(self::TYPE_ICONS[$action] ?? "\u{1F4DA}", $labels[$action]);
+            }
+
+            return $this->withIcon("\u{1F4DA}", T_('Browse'));
+        }
+
+        return match ($script) {
+            'search' => $this->withIcon("\u{1F50D}", T_('Search')),
+            'stats' => $this->withIcon("\u{1F4CA}", T_('Statistics')),
+            'preferences' => $this->withIcon("\u{2699}\u{FE0F}", T_('Preferences')),
+            'upload' => $this->withIcon("\u{1F4E4}", T_('Upload')),
+            'shout' => $this->withIcon("\u{1F4AC}", T_('Shoutbox')),
+            'pvmsg' => $this->withIcon("\u{2709}\u{FE0F}", T_('Private Messages')),
+            default => null,
+        };
+    }
+
     private function hasCustomLogo(): bool
     {
         return (bool) Preference::get_by_user($this->getUserId(), 'custom_logo_user');
+    }
+
+    /**
+     * The icon is a per-user choice, so a title reads the same with or without it.
+     */
+    private function withIcon(string $icon, string $label): string
+    {
+        return (AmpConfig::get('page_title_icons'))
+            ? $icon . ' ' . $label
+            : $label;
     }
 }

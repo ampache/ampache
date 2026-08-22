@@ -112,7 +112,9 @@ if ($this->isIframed()) { ?>
 
         <?php
         if ($this->showSongPageTitle()) {
-            echo 'window.parent.document.title = ' . $this->raw($this->getSiteTitleJs()) . ';';
+            // the page set its own tab title, so stopping playback gives that back rather than the bare site name
+            echo 'window.parent.AmpacheNowPlayingTitle = null;';
+            echo 'window.parent.document.title = window.parent.AmpachePageTitle || ' . $this->raw($this->getSiteTitleJs()) . ';';
         } ?>
         document.onbeforeunload = null;
     }

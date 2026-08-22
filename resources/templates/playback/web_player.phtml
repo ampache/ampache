@@ -412,7 +412,10 @@ $labels = $this->getLabels(); ?>
 if ($this->showSongPageTitle()) {
     echo "var mediaTitle = obj.title;\n";
     echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
-    echo "document.title = mediaTitle + ' | " . $this->raw($this->jsText($this->getSiteTitle())) . "';";
+    // the player owns the tab title while it plays; the flag tells client side navigation to leave it alone
+    echo "var titleOwner = window.parent || window;\n";
+    echo "titleOwner.AmpacheNowPlayingTitle = mediaTitle + ' | " . $this->raw($this->jsText($this->getSiteTitle())) . "';\n";
+    echo "titleOwner.document.title = titleOwner.AmpacheNowPlayingTitle;";
 } ?>
                 }
             });
@@ -463,6 +466,15 @@ if ($this->showSongPageTitle()) {
             container.find('.jp-duration').text(jpFormatDuration(known));
         }
 
+<?php if ($this->showSongPageTitle()) { ?>
+        // Stopping is the point where the player gives the tab title back to the page. Pausing keeps the
+        // track on show, and ExitPlayer() is never called, so neither of those can carry this.
+        $(document).on("click", ".jp-stop", function () {
+            var titleOwner = window.parent || window;
+            titleOwner.AmpacheNowPlayingTitle = null;
+            titleOwner.document.title = titleOwner.AmpachePageTitle || '<?php echo $this->raw($this->jsText($this->getSiteTitle())); ?>';
+        });
+<?php } ?>
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, correctPlayerTimeline);
         $("#jquery_jplayer_1").bind($.jPlayer.event.progress, correctPlayerTimeline);
         $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
