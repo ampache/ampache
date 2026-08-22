@@ -631,7 +631,15 @@ class Browse extends Query
         $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
         if ($renderer === null) {
-            debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            if ($type === '') {
+                // An unknown browse id leaves the type empty, which is what a crawler replaying an expired
+                // url looks like. Reporting that as a missing renderer filled the log with level 1 lines
+                // for something entirely routine.
+                debug_event(self::class, 'show_objects: browse {' . $this->id . '} not found or expired', 5);
+            } else {
+                // a type that is set but has no renderer is a real gap, and worth the severity
+                debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            }
         }
 
         // an album list may be titled and grouped by whatever asked for it
