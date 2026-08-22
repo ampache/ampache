@@ -378,11 +378,12 @@ final class HeaderView extends AbstractView
             }
         }
 
-        // pages that list rather than show, where the browsed type is the only context there is
-        if ($script === 'browse') {
+        // pages that list rather than show, where the listed type is the only context there is
+        if ($script === 'browse' || $script === 'mashup') {
             $labels = [
                 'song' => T_('Songs'),
                 'album' => T_('Albums'),
+                'album_disk' => T_('Albums'),
                 'album_artist' => T_('Album Artists'),
                 'artist' => T_('Artists'),
                 'playlist' => T_('Playlists'),
@@ -399,7 +400,9 @@ final class HeaderView extends AbstractView
                 return $this->withIcon(self::TYPE_ICONS[$action] ?? "\u{1F4DA}", $labels[$action]);
             }
 
-            return $this->withIcon("\u{1F4DA}", T_('Browse'));
+            return ($script === 'mashup')
+                ? $this->withIcon("\u{1F4DA}", T_('Dashboards'))
+                : $this->withIcon("\u{1F4DA}", T_('Browse'));
         }
 
         return match ($script) {
