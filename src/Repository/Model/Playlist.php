@@ -247,6 +247,27 @@ class Playlist extends playlist_object
     }
 
     /**
+     * Splits the id list of a playlist_search browse, which mixes playlist ids with `smart_` prefixed search ids
+     *
+     * @param array<int|string> $object_ids
+     *
+     * @return array{playlist: list<int>, search: list<int>}
+     */
+    public static function split_mixed_ids(array $object_ids): array
+    {
+        $split = ['playlist' => [], 'search' => []];
+        foreach ($object_ids as $object_id) {
+            if (is_string($object_id) && str_starts_with($object_id, 'smart_')) {
+                $split['search'][] = (int) substr($object_id, 6);
+            } else {
+                $split['playlist'][] = (int) $object_id;
+            }
+        }
+
+        return $split;
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private static function getCatalogCounter(): CatalogCounterInterface
@@ -576,10 +597,23 @@ class Playlist extends playlist_object
      */
     public function has_search(int $playlist_user): int
     {
-        $repository = self::getPlaylistRepository();
+        $repository  = self::getPlaylistRepository();
+        $global_user = (int) (Core::get_global('user')?->getId());
+
+        // the name lists are the same for every row of a page, so read them once
+        $cache_key = $playlist_user . '/' . $global_user;
+        if (parent::is_cached('playlist_search_names', $cache_key)) {
+            $name_lists = parent::get_from_cache('playlist_search_names', $cache_key);
+        } else {
+            $name_lists = [
+                $repository->findSearchNames($playlist_user, true),
+                $repository->findSearchNames($global_user, false),
+            ];
+            parent::add_to_cache('playlist_search_names', $cache_key, $name_lists);
+        }
 
         // search for your own playlist, then for the public ones
-        foreach ([$repository->findSearchNames($playlist_user, true), $repository->findSearchNames((int) (Core::get_global('user')?->getId()), false)] as $names) {
+        foreach ($name_lists as $names) {
             $searchId = array_search($this->name, $names, true);
             if ($searchId !== false) {
                 return (int) $searchId;
