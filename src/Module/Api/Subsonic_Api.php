@@ -1765,7 +1765,11 @@ class Subsonic_Api
             return;
         }
 
-        $size = (isset($input['size']) && is_numeric($input['size'])) ? (int) $input['size'] : 'original';
+        // clients each pick their own pixel count, and every distinct one is stored and kept, so snap
+        // onto a size the interface already makes. Larger than anything we make serves the original.
+        $size = (isset($input['size']) && is_numeric($input['size']))
+            ? (Art::canonical_size((int) $input['size']) ?? 'original')
+            : 'original';
 
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");

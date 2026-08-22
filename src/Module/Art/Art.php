@@ -59,9 +59,12 @@ use RuntimeException;
  */
 class Art extends database_object
 {
+    /** @var int[] The square sizes the interface already generates, smallest first */
+    public const array CANONICAL_SIZES = [64, 128, 200, 256, 300, 400, 512, 768, 1400];
     /** @var int[] The placeholder sizes shipped in public/images, smallest first */
     public const array FALLBACK_SIZES = [128, 200, 256, 384, 768];
-    public const array VALID_TYPES    = [
+
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -72,6 +75,12 @@ class Art extends database_object
     ];
 
     protected const string DB_TABLENAME = 'image';
+
+    /**
+     * Aspect derived output sizes are rounded up to this step. display() scales the width by each
+     * image's own ratio, so without rounding one stored size is generated per distinct ratio.
+     */
+    private const int EXPAND_STEP = 32;
 
     /** @var string The placeholder every type without one of its own falls back to */
     private const string FALLBACK_IMAGE = 'blankalbum';
@@ -182,6 +191,24 @@ class Art extends database_object
     }
 
     /**
+     * canonical_size
+     *
+     * Snaps a client requested square size up onto the set the interface already generates, so a client
+     * picking its own pixel count reuses a thumbnail instead of storing one of its own for good.
+     * Null when the request is larger than anything generated, leaving the caller to serve the original.
+     */
+    public static function canonical_size(int $wanted): ?int
+    {
+        foreach (self::CANONICAL_SIZES as $available) {
+            if ($wanted <= $available) {
+                return $available;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * check_dimensions
      * @param array{width: int, height: int} $dimensions
      */
@@ -281,6 +308,7 @@ class Art extends database_object
         }
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
+        $expanded = false;
         if (!$thumb_link && $art->width && $art->height) {
             $src_ratio  = $art->width / $art->height;
             $dst_ratio  = $size['width'] / $size['height'];
@@ -288,19 +316,26 @@ class Art extends database_object
             if ($difference > 0.3) {
                 // keep original height and widen a bit
                 $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
+                $expanded      = true;
             }
 
             if ($difference < -0.1) {
                 // extend the height a little bit and thin it out
                 $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
                 $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
+                $expanded       = true;
             }
         }
 
         // double the image output size for display scaling
-        $out_size = (AmpConfig::get('upscale_images', true))
-            ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
-            : $size['width'] . 'x' . $size['height'];
+        $scale  = (AmpConfig::get('upscale_images', true)) ? 2 : 1;
+        $out_w  = $size['width'] * $scale;
+        $out_h  = $size['height'] * $scale;
+        // the size above came from this image's own ratio, so asking for it verbatim stores a derivative
+        // per ratio. Only the file we request is rounded, the markup below keeps the exact size.
+        $out_size = ($expanded)
+            ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
+            : $out_w . 'x' . $out_h;
 
         $web_path = AmpConfig::get_web_path();
         $use_auth = !self::isPublic();
@@ -1053,6 +1088,16 @@ class Art extends database_object
         return ($image === false)
             ? null
             : $image;
+    }
+
+    /**
+     * _snap_expanded
+     *
+     * Rounds up to EXPAND_STEP. Only ever applied to a dimension the aspect expansion computed.
+     */
+    private static function _snap_expanded(int $value): int
+    {
+        return (int) (ceil($value / self::EXPAND_STEP) * self::EXPAND_STEP);
     }
 
     /**
