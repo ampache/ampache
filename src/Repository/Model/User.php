@@ -877,7 +877,7 @@ class User extends database_object
     public function getPlaylist(): Tmp_Playlist
     {
         if ($this->playlist === null) {
-            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+            $this->playlist = Tmp_Playlist::get_from_session((string) session_id());
         }
 
         return $this->playlist;

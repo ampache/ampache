@@ -530,9 +530,9 @@ final readonly class Session implements SessionInterface
         if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
             $expire = 0;
         } elseif ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length', 7200);
+            $expire = $time + AmpConfig::get_int('stream_length', 7200);
         } else {
-            $expire = $time + AmpConfig::get('session_length', 3600);
+            $expire = $time + AmpConfig::get_int('session_length', 3600);
         }
 
         $sql    = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
