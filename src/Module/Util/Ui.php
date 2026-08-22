@@ -462,8 +462,7 @@ class Ui implements UiInterface
 
         $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
         $tag .= '<title>' . scrub_out($title) . '</title>';
-        $tag .= '<desc>' . scrub_out($title) . '</desc>';
-        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '" xlink:href="#ms-' . scrub_out($symbol_key) . '"></use>';
+        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '"></use>';
 
         return $tag . '</svg>';
     }
@@ -541,7 +540,6 @@ class Ui implements UiInterface
             return $html;
         }
 
-        // one match per <use> even though the tag carries both href and xlink:href
         if (!preg_match_all('/<use\s[^>]*href="#ms-([^"]+)"/', $html, $used)) {
             return $html;
         }
@@ -891,7 +889,9 @@ class Ui implements UiInterface
                     ? $vb_match[1]
                     : '';
                 self::$_symbol_cache[$symbol_key] = [
-                    'attrs' => rtrim((string) preg_replace('/\sviewBox="[^"]*"/', '', $matches[1])),
+                    // xmlns is implied for inline svg in an html document, and this markup repeats
+                    // thousands of times on a large listing
+                    'attrs' => rtrim((string) preg_replace(['/\sviewBox="[^"]*"/', '/\sxmlns="[^"]*"/'], '', $matches[1])),
                     'viewbox' => $viewbox,
                     'inner' => trim($matches[2]),
                 ];
