@@ -758,3 +758,55 @@ a.option-list:hover {
         background-color: #000;
     }
 }
+
+/* The confirm dialog is plain text and two buttons, so it owns its whole surface here. Reusing the
+   edit dialog's selectors left the title bar and the button pane on jQuery UI's own light palette,
+   which stacked three different backgrounds. Structure lives in default.css, colours only here. */
+.confirmdialogstyle.ui-dialog {
+    background-color: hsl(0, 0%, 13%);
+    border-color: hsl(0, 0%, 30%);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-titlebar {
+    background: hsl(0, 0%, 18%);
+    border-bottom-color: hsl(0, 0%, 28%);
+    color: #fff;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-content {
+    background-color: hsl(0, 0%, 13%);
+    color: #ddd;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonpane {
+    background-color: hsl(0, 0%, 13%);
+    border-top-color: hsl(0, 0%, 28%);
+}
+
+/* Both buttons are set outright rather than left to whatever jQuery UI puts on them: the cancel
+   button was picking up a pale background while keeping white text, which made it unreadable. */
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    background: hsl(0, 0%, 26%);
+    background-image: none;
+    border: 1px solid hsl(0, 0%, 38%);
+    color: #fff;
+    text-shadow: none;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:hover,
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:focus {
+    background: hsl(0, 0%, 33%);
+    border-color: hsl(0, 0%, 48%);
+}
+
+/* accept is the primary action, so it keeps the theme's orange */
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child {
+    background-image: linear-gradient(to top, #ff9d00, #cc6200);
+    border-color: #cc6200;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:hover,
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:focus {
+    background-image: linear-gradient(to top, #ffad20, #d96900);
+    border-color: #ff9d00;
+}

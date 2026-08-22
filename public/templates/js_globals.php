@@ -87,7 +87,8 @@ $web_path = AmpConfig::get_web_path();
     var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
     var jsSaveTitle = "<?php echo addslashes(T_('Save')); ?>";
     var jsCancelTitle = "<?php echo addslashes(T_('Cancel')); ?>";
-    var jsConfirmTitle = "<?php echo addslashes(T_('Are you sure?')); ?>";
+    // the title bar of the confirm dialog, whose body already carries the question
+    var jsConfirmTitle = "<?php echo addslashes(T_('Confirm')); ?>";
     var jsConfirmOkTitle = "<?php echo addslashes(T_('OK')); ?>";
     var jsPlay = "<?php echo addslashes(T_('Play')); ?>";
     var jsPlayNext = "<?php echo addslashes(T_('Play next')); ?>";
