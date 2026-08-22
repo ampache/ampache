@@ -170,19 +170,25 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $mime       = 'image/png';
                 $defaultimg = ($type === 'folder') ? '' : $this->configContainer->get('custom_blankalbum');
                 if (
-                    empty($defaultimg)
-                    || (!str_starts_with($defaultimg, "http://") && !str_starts_with($defaultimg, "https://"))
+                    !empty($defaultimg)
+                    && (str_starts_with($defaultimg, "http://") || str_starts_with($defaultimg, "https://"))
                 ) {
-                    $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
-                    $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                        ? $rootimg . $filename . "_" . $size . ".png"
-                        : $rootimg . $filename . ".png";
+                    // A remote placeholder was being fetched server side on every miss, then passed through.
+                    // Hand the browser the url instead: one image it can cache, rather than one per object.
+                    // The redirect carries the same expiry as an image, or every page view would ask again.
+                    return $this->responseFactory
+                        ->createResponse(302)
+                        ->withHeader('Location', $defaultimg)
+                        ->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60 * 24 * 7)))
+                        ->withHeader('Cache-Control', 'private, max-age=604800');
                 }
 
-                $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                    ? "EmptyMediaAlbum" . $size
-                    : "EmptyMediaAlbum";
-                $image = file_get_contents($defaultimg);
+                // the closest pre-rendered file, so a 200x200 slot is not handed the 1400x1400 original
+                $suffix     = ($has_size) ? Art::fallback_size($size) : '';
+                $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
+                $defaultimg = $rootimg . $filename . $suffix . ".png";
+                $etag       = "EmptyMediaAlbum" . $suffix;
+                $image      = file_get_contents($defaultimg);
             } else {
                 // show the original image or thumbnail
                 $etag       = $type . '_' . $art->id . '_' . $size;

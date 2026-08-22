@@ -453,6 +453,33 @@ class Art extends database_object
     }
 
     /**
+     * fallback_size
+     *
+     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
+     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
+     */
+    public static function fallback_size(?string $size): string
+    {
+        $wanted = 0;
+        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
+            $wanted = max((int) $matches[1], (int) $matches[2]);
+        }
+
+        // the full size image, for 'original' and anything bigger than the largest thumbnail
+        if ($size === 'original') {
+            return '';
+        }
+
+        foreach (self::FALLBACK_SIZES as $available) {
+            if ($wanted <= $available) {
+                return '_' . $available . 'x' . $available;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Gather metadata from plugin.
      * @param array<string, mixed> $options
      * @return array<int, array{
@@ -574,7 +601,7 @@ class Art extends database_object
             }
         }
 
-        $suffix = self::_fallback_size($size);
+        $suffix = self::fallback_size($size);
 
         return AmpConfig::get_web_path() . '/images/' . $name . $suffix . '.png';
     }
@@ -976,33 +1003,6 @@ class Art extends database_object
                 rmdir($path);
             }
         }
-    }
-
-    /**
-     * _fallback_size
-     *
-     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
-     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
-     */
-    private static function _fallback_size(?string $size): string
-    {
-        $wanted = 0;
-        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
-            $wanted = max((int) $matches[1], (int) $matches[2]);
-        }
-
-        // the full size image, for 'original' and anything bigger than the largest thumbnail
-        if ($size === 'original') {
-            return '';
-        }
-
-        foreach (self::FALLBACK_SIZES as $available) {
-            if ($wanted <= $available) {
-                return '_' . $available . 'x' . $available;
-            }
-        }
-
-        return '';
     }
 
     private static function _hasGD(): bool
@@ -1862,32 +1862,12 @@ class Art extends database_object
     private function _get_blankalbum(?string $size = null): string
     {
         $defaultimg = self::FALLBACK_IMAGES[$this->object_type] ?? self::FALLBACK_IMAGE;
-        switch ($size) {
-            case '128x128':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_128x128.png';
-                $this->width  = 128;
-                $this->height = 128;
-                break;
-            case '256x256':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_256x256.png';
-                $this->width  = 256;
-                $this->height = 256;
-                break;
-            case '384x384':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_384x384.png';
-                $this->width  = 384;
-                $this->height = 384;
-                break;
-            case '768x768':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_768x768.png';
-                $this->width  = 768;
-                $this->height = 768;
-                break;
-            default:
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '.png';
-                $this->width  = 1400;
-                $this->height = 1400;
-        }
+        // fallback_size() already picks the closest pre-rendered file; the switch here knew only four of them
+        // no size asked for keeps the full image, as the old switch did on its default branch
+        $suffix       = ($size === null || $size === '') ? '' : self::fallback_size($size);
+        $path         = __DIR__ . '/../../../public/images/' . $defaultimg . $suffix . '.png';
+        $this->width  = ($suffix === '') ? 1400 : (int) ltrim($suffix, '_');
+        $this->height = $this->width;
 
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);
