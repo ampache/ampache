@@ -38,15 +38,13 @@ foreach ($this->getSections() as $section => $objectIds) {
     }
 
     $url   = $this->getSectionUrl($section);
-    $title = $this->getSectionTitle($section) . '&nbsp' . Ajax::button($this->getRefreshAction($section), 'refresh', T_('Refresh'), $section, 'dashboard_' . $section);
-    if ($url !== null) {
-        echo '<a href="' . $this->e($url) . '">';
-    }
+    // the link belongs to the heading; wrapping show_box_top() closed the anchor inside the box
+    $label = ($url !== null)
+        ? '<a href="' . $this->e($url) . '">' . $this->getSectionTitle($section) . '</a>'
+        : $this->getSectionTitle($section);
+    $title = $label . '&nbsp' . Ajax::button($this->getRefreshAction($section), 'refresh', T_('Refresh'), $section, 'dashboard_' . $section);
 
-    Ui::show_box_top($title, $section);
-    if ($url !== null) {
-        echo '</a>';
-    } ?>
+    Ui::show_box_top($title, $section); ?>
 <div id="dashboard_<?php echo $this->e($section); ?>">
 <?php $browse = $this->createBrowse();
     $browse->set_type($this->getObjectType());

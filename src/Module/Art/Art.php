@@ -59,9 +59,12 @@ use RuntimeException;
  */
 class Art extends database_object
 {
+    /** @var int[] The square sizes the interface already generates, smallest first */
+    public const array CANONICAL_SIZES = [64, 128, 200, 256, 300, 400, 512, 768, 1400];
     /** @var int[] The placeholder sizes shipped in public/images, smallest first */
     public const array FALLBACK_SIZES = [128, 200, 256, 384, 768];
-    public const array VALID_TYPES    = [
+
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -72,6 +75,12 @@ class Art extends database_object
     ];
 
     protected const string DB_TABLENAME = 'image';
+
+    /**
+     * Aspect derived output sizes are rounded up to this step. display() scales the width by each
+     * image's own ratio, so without rounding one stored size is generated per distinct ratio.
+     */
+    private const int EXPAND_STEP = 32;
 
     /** @var string The placeholder every type without one of its own falls back to */
     private const string FALLBACK_IMAGE = 'blankalbum';
@@ -182,6 +191,24 @@ class Art extends database_object
     }
 
     /**
+     * canonical_size
+     *
+     * Snaps a client requested square size up onto the set the interface already generates, so a client
+     * picking its own pixel count reuses a thumbnail instead of storing one of its own for good.
+     * Null when the request is larger than anything generated, leaving the caller to serve the original.
+     */
+    public static function canonical_size(int $wanted): ?int
+    {
+        foreach (self::CANONICAL_SIZES as $available) {
+            if ($wanted <= $available) {
+                return $available;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * check_dimensions
      * @param array{width: int, height: int} $dimensions
      */
@@ -281,6 +308,7 @@ class Art extends database_object
         }
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
+        $expanded = false;
         if (!$thumb_link && $art->width && $art->height) {
             $src_ratio  = $art->width / $art->height;
             $dst_ratio  = $size['width'] / $size['height'];
@@ -288,19 +316,26 @@ class Art extends database_object
             if ($difference > 0.3) {
                 // keep original height and widen a bit
                 $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
+                $expanded      = true;
             }
 
             if ($difference < -0.1) {
                 // extend the height a little bit and thin it out
                 $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
                 $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
+                $expanded       = true;
             }
         }
 
         // double the image output size for display scaling
-        $out_size = (AmpConfig::get('upscale_images', true))
-            ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
-            : $size['width'] . 'x' . $size['height'];
+        $scale  = (AmpConfig::get('upscale_images', true)) ? 2 : 1;
+        $out_w  = $size['width'] * $scale;
+        $out_h  = $size['height'] * $scale;
+        // the size above came from this image's own ratio, so asking for it verbatim stores a derivative
+        // per ratio. Only the file we request is rounded, the markup below keeps the exact size.
+        $out_size = ($expanded)
+            ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
+            : $out_w . 'x' . $out_h;
 
         $web_path = AmpConfig::get_web_path();
         $use_auth = !self::isPublic();
@@ -361,7 +396,7 @@ class Art extends database_object
             echo $item_art_play;
             echo Ajax::text(
                 '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . "' + getPagePlaySettings() + '",
-                '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
+                '<span class="item_art_play_icon" title="' . T_('Play') . '"></span>',
                 'directplay_art_' . $object_type . '_' . $object_id
             );
             echo "</div>";
@@ -450,6 +485,33 @@ class Art extends database_object
         }
 
         return $extension;
+    }
+
+    /**
+     * fallback_size
+     *
+     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
+     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
+     */
+    public static function fallback_size(?string $size): string
+    {
+        $wanted = 0;
+        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
+            $wanted = max((int) $matches[1], (int) $matches[2]);
+        }
+
+        // the full size image, for 'original' and anything bigger than the largest thumbnail
+        if ($size === 'original') {
+            return '';
+        }
+
+        foreach (self::FALLBACK_SIZES as $available) {
+            if ($wanted <= $available) {
+                return '_' . $available . 'x' . $available;
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -574,7 +636,7 @@ class Art extends database_object
             }
         }
 
-        $suffix = self::_fallback_size($size);
+        $suffix = self::fallback_size($size);
 
         return AmpConfig::get_web_path() . '/images/' . $name . $suffix . '.png';
     }
@@ -978,33 +1040,6 @@ class Art extends database_object
         }
     }
 
-    /**
-     * _fallback_size
-     *
-     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
-     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
-     */
-    private static function _fallback_size(?string $size): string
-    {
-        $wanted = 0;
-        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
-            $wanted = max((int) $matches[1], (int) $matches[2]);
-        }
-
-        // the full size image, for 'original' and anything bigger than the largest thumbnail
-        if ($size === 'original') {
-            return '';
-        }
-
-        foreach (self::FALLBACK_SIZES as $available) {
-            if ($wanted <= $available) {
-                return '_' . $available . 'x' . $available;
-            }
-        }
-
-        return '';
-    }
-
     private static function _hasGD(): bool
     {
         return (
@@ -1053,6 +1088,16 @@ class Art extends database_object
         return ($image === false)
             ? null
             : $image;
+    }
+
+    /**
+     * _snap_expanded
+     *
+     * Rounds up to EXPAND_STEP. Only ever applied to a dimension the aspect expansion computed.
+     */
+    private static function _snap_expanded(int $value): int
+    {
+        return (int) (ceil($value / self::EXPAND_STEP) * self::EXPAND_STEP);
     }
 
     /**
@@ -1862,32 +1907,12 @@ class Art extends database_object
     private function _get_blankalbum(?string $size = null): string
     {
         $defaultimg = self::FALLBACK_IMAGES[$this->object_type] ?? self::FALLBACK_IMAGE;
-        switch ($size) {
-            case '128x128':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_128x128.png';
-                $this->width  = 128;
-                $this->height = 128;
-                break;
-            case '256x256':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_256x256.png';
-                $this->width  = 256;
-                $this->height = 256;
-                break;
-            case '384x384':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_384x384.png';
-                $this->width  = 384;
-                $this->height = 384;
-                break;
-            case '768x768':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_768x768.png';
-                $this->width  = 768;
-                $this->height = 768;
-                break;
-            default:
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '.png';
-                $this->width  = 1400;
-                $this->height = 1400;
-        }
+        // fallback_size() already picks the closest pre-rendered file; the switch here knew only four of them
+        // no size asked for keeps the full image, as the old switch did on its default branch
+        $suffix       = ($size === null || $size === '') ? '' : self::fallback_size($size);
+        $path         = __DIR__ . '/../../../public/images/' . $defaultimg . $suffix . '.png';
+        $this->width  = ($suffix === '') ? 1400 : (int) ltrim($suffix, '_');
+        $this->height = $this->width;
 
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);

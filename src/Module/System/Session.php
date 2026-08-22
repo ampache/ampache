@@ -530,13 +530,23 @@ final readonly class Session implements SessionInterface
         if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
             $expire = 0;
         } elseif ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length', 7200);
+            $expire = $time + AmpConfig::get_int('stream_length', 7200);
         } else {
-            $expire = $time + AmpConfig::get('session_length', 3600);
+            $expire = $time + AmpConfig::get_int('session_length', 3600);
         }
 
-        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
-        if (($db_results = Dba::write($sql, [$expire, $sid])) instanceof PDOStatement) {
+        $sql    = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
+        $params = [$expire, $sid];
+        if ($expire > 0) {
+            // every request would rewrite the row for a few seconds of drift
+            $sql .= ' AND `expire` < ?';
+            $params[] = $expire - 60;
+        } else {
+            // a perpetual session only needs the write that makes it perpetual
+            $sql .= ' AND `expire` != 0';
+        }
+
+        if (($db_results = Dba::write($sql, $params)) instanceof PDOStatement) {
             if ($expire !== 0) {
                 debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
             }

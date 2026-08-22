@@ -450,12 +450,10 @@ class User extends database_object
                 'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
-            foreach ($user_list as $user_id) {
-                debug_event(self::class, 'Update counts for ' . $user_id, 5);
-                foreach ($server_counts as $table => $count) {
-                    if (in_array($table, $count_array)) {
-                        self::set_user_data($user_id, $table, $count);
-                    }
+            debug_event(self::class, 'Update counts for all users', 5);
+            foreach ($server_counts as $table => $count) {
+                if (in_array($table, $count_array)) {
+                    $userRepository->setUserDataForAll($table, $count);
                 }
             }
 
@@ -873,6 +871,19 @@ class User extends database_object
     }
 
     /**
+     * The play queue, created on first use. Callers that only read it should
+     * use the playlist property, which stays null until something is queued.
+     */
+    public function getPlaylist(): Tmp_Playlist
+    {
+        if ($this->playlist === null) {
+            $this->playlist = Tmp_Playlist::get_from_session((string) session_id());
+        }
+
+        return $this->playlist;
+    }
+
+    /**
      * Returns the value of a certain user-preference
      */
     public function getPreferenceValue(string $preferenceName): int|string|null
@@ -961,7 +972,7 @@ class User extends database_object
     public function load_playlist(): void
     {
         if ($this->playlist === null && session_id()) {
-            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+            $this->playlist = Tmp_Playlist::find_from_session(session_id());
         }
     }
 

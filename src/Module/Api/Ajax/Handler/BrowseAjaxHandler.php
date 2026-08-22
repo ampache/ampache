@@ -158,10 +158,11 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 $browse->set_catalog($_SESSION['catalog']);
 
-                // when you filter the results you need the new objects
+                // a filter yields new objects; without one, null keeps the browse's saved list
+                // (an empty array would overwrite it, emptying a browse that was handed its ids)
                 $object_ids = ($filter)
                     ? $browse->get_objects()
-                    : [];
+                    : null;
 
                 ob_start();
                 $browse->show_objects($object_ids, $argument, true);
@@ -319,10 +320,11 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         break;
                 }
 
-                // when you filter the results you need the new objects
+                // a filter yields new objects; without one, null keeps the browse's saved list
+                // (an empty array would overwrite it, emptying a browse that was handed its ids)
                 $object_ids = ($filter)
                     ? $browse->get_objects()
-                    : [];
+                    : null;
 
                 ob_start();
                 $browse->show_objects($object_ids, $argument, true);

@@ -1540,6 +1540,10 @@ class Subsonic_Api
         $artists = ($catalogs === [])
             ? []
             : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+
+        // one flag read for the whole index instead of one per artist
+        Userflag::build_cache('artist', array_column($artists, 'id'));
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -1761,7 +1765,11 @@ class Subsonic_Api
             return;
         }
 
-        $size = (isset($input['size']) && is_numeric($input['size'])) ? (int) $input['size'] : 'original';
+        // clients each pick their own pixel count, and every distinct one is stored and kept, so snap
+        // onto a size the interface already makes. Larger than anything we make serves the original.
+        $size = (isset($input['size']) && is_numeric($input['size']))
+            ? (Art::canonical_size((int) $input['size']) ?? 'original')
+            : 'original';
 
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -2169,6 +2177,10 @@ class Subsonic_Api
         }
 
         $results = $browse->get_objects();
+
+        // the serializer reads each playlist row and its art, so warm both in one pass
+        Playlist::build_cache(Playlist::split_mixed_ids($results)['playlist']);
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);

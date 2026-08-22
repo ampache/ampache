@@ -264,6 +264,19 @@ class UserRepositoryTest extends TestCase
         self::assertTrue($this->subject->setField(666, UserFieldEnum::EMAIL, 'some@example.org'));
     }
 
+    public function testSetUserDataForAllWritesEveryUserInOneStatement(): void
+    {
+        // a server-wide counter holds the same value for everyone, so it must not run one statement per user
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'REPLACE INTO `user_data` (`user`, `key`, `value`) SELECT `id`, ?, ? FROM `user`;',
+                ['song', 42]
+            );
+
+        $this->subject->setUserDataForAll('song', 42);
+    }
+
     public function testSetUserDataReplacesTheStoredCounter(): void
     {
         $this->connection->expects(static::once())

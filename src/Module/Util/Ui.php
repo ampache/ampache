@@ -462,8 +462,7 @@ class Ui implements UiInterface
 
         $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
         $tag .= '<title>' . scrub_out($title) . '</title>';
-        $tag .= '<desc>' . scrub_out($title) . '</desc>';
-        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '" xlink:href="#ms-' . scrub_out($symbol_key) . '"></use>';
+        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '"></use>';
 
         return $tag . '</svg>';
     }
@@ -541,7 +540,6 @@ class Ui implements UiInterface
             return $html;
         }
 
-        // one match per <use> even though the tag carries both href and xlink:href
         if (!preg_match_all('/<use\s[^>]*href="#ms-([^"]+)"/', $html, $used)) {
             return $html;
         }
@@ -891,7 +889,9 @@ class Ui implements UiInterface
                     ? $vb_match[1]
                     : '';
                 self::$_symbol_cache[$symbol_key] = [
-                    'attrs' => rtrim((string) preg_replace('/\sviewBox="[^"]*"/', '', $matches[1])),
+                    // xmlns is implied for inline svg in an html document, and this markup repeats
+                    // thousands of times on a large listing
+                    'attrs' => rtrim((string) preg_replace(['/\sviewBox="[^"]*"/', '/\sxmlns="[^"]*"/'], '', $matches[1])),
                     'viewbox' => $viewbox,
                     'inner' => trim($matches[2]),
                 ];
@@ -963,6 +963,14 @@ class Ui implements UiInterface
             }
 
             echo "</select>\n";
+
+            return;
+        }
+
+        // The stored type settles a plain on/off preference, so a new one renders right without also
+        // having to be listed in the name switch below.
+        if ($type === 'boolean') {
+            $this->createBooleanPreferenceInput($name, $value);
 
             return;
         }
@@ -1120,18 +1128,7 @@ class Ui implements UiInterface
             case 'webplayer_confirmclose':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
-                $is_true  = '';
-                $is_false = '';
-                if ($value == '1') {
-                    $is_true = 'selected="selected"';
-                } else {
-                    $is_false = 'selected="selected"';
-                }
-
-                echo "<select name=\"{$name}\">\n";
-                echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
-                echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
-                echo "</select>\n";
+                $this->createBooleanPreferenceInput($name, $value);
                 break;
             case 'upload_catalog':
                 show_catalog_select('upload_catalog', (int) $value, '', true, 'music', 'local');
@@ -1847,6 +1844,25 @@ class Ui implements UiInterface
             (bool) AmpConfig::get('demo_mode'),
             $detail
         );
+    }
+
+    /**
+     * The on/off widget shared by every boolean preference
+     */
+    private function createBooleanPreferenceInput(string $name, mixed $value): void
+    {
+        $is_true  = '';
+        $is_false = '';
+        if ($value == '1') {
+            $is_true = 'selected="selected"';
+        } else {
+            $is_false = 'selected="selected"';
+        }
+
+        echo "<select name=\"{$name}\">\n";
+        echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
+        echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
+        echo "</select>\n";
     }
 
     /**

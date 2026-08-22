@@ -20,32 +20,22 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Playlist;
+namespace Ampache\Module\System\Update\Migration\V8;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-final readonly class PlaylistLoader implements PlaylistLoaderInterface
+/**
+ * Add user preference to show an icon for the page type in the browser tab title.
+ */
+final class Migration810004 extends AbstractMigration
 {
-    public function __construct(
-        private ModelFactoryInterface $modelFactory,
-        private PlaylistRepositoryInterface $playlistRepository,
-    ) {}
+    protected array $changelog = ['Add user preference to show an icon for the page type in the browser tab title.'];
 
-    public function loadByUserId(int $userId): array
+    public function migrate(): void
     {
-        $playlistIds = $this->playlistRepository->findEditableIds($userId);
-        Playlist::build_cache($playlistIds);
-
-        $result = [];
-        foreach ($playlistIds as $playlistId) {
-            $result[] = $this->modelFactory->createPlaylist($playlistId);
-        }
-
-        return $result;
+        $this->updatePreferences('page_title_icons', 'Show an icon for the page type in the browser tab title', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme');
     }
 }

@@ -1332,6 +1332,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE,
   KEY `album_disk_IDX` (`album_disk`) USING BTREE,
   KEY `song_last_played_IDX` (`last_played`),
+  KEY `user_upload` (`user_upload`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

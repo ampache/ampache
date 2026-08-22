@@ -96,6 +96,19 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * The session's playlist if it has one, without creating an empty row for
+     * visitors who never queue anything
+     */
+    public static function find_from_session(string $session_id): ?Tmp_Playlist
+    {
+        $playlistId = self::getTmpPlaylistRepository()->findBySession($session_id);
+
+        return ($playlistId === null)
+            ? null
+            : new Tmp_Playlist($playlistId);
+    }
+
+    /**
      * garbage_collection
      * This cleans up old data
      */

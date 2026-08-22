@@ -67,6 +67,15 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function deleteTrackByObjectId(Playlist $playlist, int $objectId): void;
 
     /**
+     * Reads the playlists a user may add items to: the ones they own, plus the ones naming them as a
+     * collaborator. Access level plays no part, so an admin gets a usable list rather than every playlist
+     * on the server.
+     *
+     * @return list<int>
+     */
+    public function findEditableIds(int $userId): array;
+
+    /**
      * Reads the id of a user's playlist with this exact name and type, or `null` when they have none
      */
     public function findIdByName(string $name, int $userId, string $type): ?int;

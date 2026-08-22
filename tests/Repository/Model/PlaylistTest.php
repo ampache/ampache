@@ -23,29 +23,34 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Playlist;
+namespace Ampache\Repository\Model;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\PlaylistRepositoryInterface;
+use PHPUnit\Framework\TestCase;
 
-final readonly class PlaylistLoader implements PlaylistLoaderInterface
+class PlaylistTest extends TestCase
 {
-    public function __construct(
-        private ModelFactoryInterface $modelFactory,
-        private PlaylistRepositoryInterface $playlistRepository,
-    ) {}
-
-    public function loadByUserId(int $userId): array
+    public function testSplitMixedIdsKeepsANumericStringOnThePlaylistSide(): void
     {
-        $playlistIds = $this->playlistRepository->findEditableIds($userId);
-        Playlist::build_cache($playlistIds);
+        // a browse hands its ids back as strings, and only the `smart_` prefix marks a smartlist
+        self::assertSame(
+            ['playlist' => [3], 'search' => []],
+            Playlist::split_mixed_ids(['3'])
+        );
+    }
 
-        $result = [];
-        foreach ($playlistIds as $playlistId) {
-            $result[] = $this->modelFactory->createPlaylist($playlistId);
-        }
+    public function testSplitMixedIdsReturnsBothHalvesEmptyForAnEmptyList(): void
+    {
+        self::assertSame(
+            ['playlist' => [], 'search' => []],
+            Playlist::split_mixed_ids([])
+        );
+    }
 
-        return $result;
+    public function testSplitMixedIdsSeparatesSmartlistsFromPlaylists(): void
+    {
+        self::assertSame(
+            ['playlist' => [1, 2], 'search' => [6, 7]],
+            Playlist::split_mixed_ids([1, 'smart_6', 2, 'smart_7'])
+        );
     }
 }
