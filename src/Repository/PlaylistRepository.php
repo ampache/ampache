@@ -181,6 +181,27 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
+     * Reads the playlists a user may add items to: the ones they own, plus the ones naming them as a
+     * collaborator. `collaborate` holds a comma separated list of user ids, which is what FIND_IN_SET reads.
+     *
+     * @return list<int>
+     */
+    public function findEditableIds(int $userId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `playlist` WHERE `user` = ? OR FIND_IN_SET(?, `collaborate`) ORDER BY `name`',
+            [$userId, $userId]
+        );
+
+        $playlistIds = [];
+        while ($playlistId = $result->fetchColumn()) {
+            $playlistIds[] = (int) $playlistId;
+        }
+
+        return $playlistIds;
+    }
+
+    /**
      * Reads the id of a user's playlist with this exact name and type, or `null` when they have none
      */
     public function findIdByName(string $name, int $userId, string $type): ?int

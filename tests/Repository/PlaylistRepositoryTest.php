@@ -126,6 +126,24 @@ class PlaylistRepositoryTest extends TestCase
         $this->subject->deleteTrackByNumber($this->playlist(666), 3);
     }
 
+    public function testFindEditableIdsAsksForOwnedAndCollaboratedRows(): void
+    {
+        // access level plays no part: an admin must get a usable list, not every playlist on the server
+        $result = $this->createMock(PDOStatement::class);
+        $result->method('fetchColumn')
+            ->willReturn('7', '42', false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `playlist` WHERE `user` = ? OR FIND_IN_SET(?, `collaborate`) ORDER BY `name`',
+                [666, 666]
+            )
+            ->willReturn($result);
+
+        self::assertSame([7, 42], $this->subject->findEditableIds(666));
+    }
+
     public function testGetIdsByCatalogRepeatsTheCatalogForEveryMediaType(): void
     {
         $result = $this->createMock(PDOStatement::class);
