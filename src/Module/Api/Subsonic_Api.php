@@ -1540,6 +1540,10 @@ class Subsonic_Api
         $artists = ($catalogs === [])
             ? []
             : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+
+        // one flag read for the whole index instead of one per artist
+        Userflag::build_cache('artist', array_column($artists, 'id'));
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -2169,6 +2173,10 @@ class Subsonic_Api
         }
 
         $results = $browse->get_objects();
+
+        // the serializer reads each playlist row and its art, so warm both in one pass
+        Playlist::build_cache(Playlist::split_mixed_ids($results)['playlist']);
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
