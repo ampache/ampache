@@ -85,6 +85,44 @@ class QueryTest extends MockeryTestCase
     }
 
     /**
+     * An uncached query keeps its state in memory and never reaches the database.
+     */
+    public function testRebuildingAFilterDoesNotReplayTheChildTypeSetup(): void
+    {
+        // A browse restored from tmp_browse carries its type in state but no query object yet.
+        // Browse::set_type() replays the view cookies, and restoring the alpha one sets a filter,
+        // which needs the query object, which used to go back through the virtual set_type():
+        // an infinite recursion that took the whole page down. The filter path has to resolve
+        // the type without handing control back to the child override.
+        $query = new class (0, false) extends Query {
+            public int $overrideCalls = 0;
+
+            public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
+            {
+                $this->overrideCalls++;
+                if ($this->overrideCalls > 3) {
+                    throw new \RuntimeException('recursed through the child set_type override');
+                }
+
+                // what Browse does when the alpha view cookie says false
+                $this->set_filter('regex_not_match', '');
+                parent::set_type($type, $custom_base, $parameters);
+            }
+        };
+
+        // the state a rebuilt browse is in: a type on record, no query object resolved yet
+        $state           = new \ReflectionProperty(Query::class, '_state');
+        $rebuilt         = $state->getValue($query);
+        $rebuilt['type'] = 'song';
+        $state->setValue($query, $rebuilt);
+
+        $query->set_type('song');
+
+        $this->assertSame('song', $query->get_type());
+        $this->assertSame(1, $query->overrideCalls);
+    }
+
+    /**
      * A regex_match/regex_not_match value reaches SQL REGEXP verbatim, so an unbounded one is a
      * catastrophic-backtracking DoS risk; it must be refused rather than silently truncated
      */
@@ -101,9 +139,6 @@ class QueryTest extends MockeryTestCase
         $this->assertNull($query->get_filter('regex_not_match'));
     }
 
-    /**
-     * An uncached query keeps its state in memory and never reaches the database.
-     */
     private function subject(): Query
     {
         return new Query(0, false);
