@@ -654,8 +654,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
-        echo '<link rel="icon" href="' . $favicon . "\">\n";
+        echo self::branding_tags();
     }
 
     /**
@@ -902,6 +901,62 @@ class Ui implements UiInterface
         }
 
         return self::$_symbol_cache[$symbol_key];
+    }
+
+    /**
+     * The icon and link-preview tags, from whatever the administrator supplied
+     *
+     * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
+     * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
+     * works; where a raster is required and only a vector was given, the tag is left out rather
+     * than filled with somebody else's logo.
+     */
+    private static function branding_tags(): string
+    {
+        $webPath = AmpConfig::get_web_path();
+        $custom  = trim((string) AmpConfig::get('custom_favicon', ''));
+        $vector  = str_ends_with(strtolower(parse_url($custom, PHP_URL_PATH) ?? ''), '.svg');
+
+        $tags = [];
+        if ($custom === '') {
+            $tags[] = '<link rel="icon" href="' . $webPath . '/favicon.svg" type="image/svg+xml">';
+            $tags[] = '<link rel="icon" href="' . $webPath . '/favicon.ico" sizes="48x48">';
+        } elseif ($vector) {
+            $tags[] = '<link rel="icon" href="' . self::esc($custom) . '" type="image/svg+xml">';
+        } else {
+            $tags[] = '<link rel="icon" href="' . self::esc($custom) . '">';
+        }
+
+        // a phone home screen and a shared link both refuse svg, so each falls back to its own
+        // setting, then to the raster favicon, and is dropped when only a vector is on offer
+        $touch = trim((string) AmpConfig::get('custom_apple_touch_icon', ''))
+            ?: (($custom !== '' && !$vector) ? $custom : '')
+            ?: (($custom === '') ? $webPath . '/images/apple-touch-icon.png' : '');
+        if ($touch !== '') {
+            $tags[] = '<link rel="apple-touch-icon" href="' . self::esc($touch) . '">';
+        }
+
+        $share = trim((string) AmpConfig::get('custom_share_image', ''))
+            ?: (($custom !== '' && !$vector) ? $custom : '')
+            ?: (($custom === '') ? $webPath . '/images/ampache-card.png' : '');
+        if ($share !== '') {
+            $tags[] = '<meta property="og:image" content="' . self::esc($share) . '">';
+            $tags[] = '<meta name="twitter:card" content="summary">';
+        }
+
+        $title = trim((string) AmpConfig::get('site_title', ''));
+        if ($title !== '') {
+            $tags[] = '<meta property="og:site_name" content="' . self::esc($title) . '">';
+        }
+
+        $tags[] = '<meta property="og:type" content="website">';
+
+        return implode("\n", $tags) . "\n";
+    }
+
+    private static function esc(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     public function accessDenied(string $error = 'Access Denied'): void
