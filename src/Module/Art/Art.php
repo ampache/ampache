@@ -1967,7 +1967,7 @@ class Art extends database_object
     }
 
     /**
-     * check_for_duplicate
+     * _check_for_duplicate
      * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
      * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
      * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int} $new_pic
@@ -2040,7 +2040,7 @@ class Art extends database_object
     }
 
     /**
-     * test_image
+     * _test_image
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */
@@ -2065,7 +2065,7 @@ class Art extends database_object
     }
 
     /**
-     * test_size
+     * _test_size
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */

@@ -351,9 +351,6 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     }
 
     /**
-     * stream
-     */
-    /**
      * The provider url to stream from, resolved fresh because a signed preview url expires within minutes.
      */
     public function getStreamUrl(): ?string

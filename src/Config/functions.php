@@ -862,9 +862,9 @@ function show_catalog_select(string $name, int $catalog_id, string $style = '', 
 }
 
 /**
- * show_album_select
- * This displays a select of every album that we've got in Ampache (which can be hella long).
- * It's used by the Edit page and takes a $name and an $album_id
+ * show_license_select
+ * This displays a select of every license we've got in Ampache.
+ * It's used by the Edit page and takes a $name and a $license_id
  */
 function show_license_select(string $name, ?int $license_id = 0, ?int $song_id = 0): void
 {

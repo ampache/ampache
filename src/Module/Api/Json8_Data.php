@@ -201,7 +201,7 @@ final class Json8_Data
     }
 
     /**
-     * genre_array
+     * _genre_array
      *
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array<int, array{id: string, name: string}>
@@ -1683,7 +1683,7 @@ final class Json8_Data
     }
 
     /**
-     * genres_string
+     * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
@@ -1982,7 +1982,7 @@ final class Json8_Data
     }
 
     /**
-     * labels_string
+     * labels
      *
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
@@ -2391,7 +2391,7 @@ final class Json8_Data
     }
 
     /**
-     * playlists_string
+     * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
@@ -3193,7 +3193,7 @@ final class Json8_Data
     }
 
     /**
-     * songs_string
+     * songs
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
@@ -3663,7 +3663,7 @@ final class Json8_Data
     }
 
     /**
-     * videos_string
+     * videos
      *
      * @param array<int|string> $objects Video id's to include
      * @param bool $object (whether to return as a named object array or regular array)

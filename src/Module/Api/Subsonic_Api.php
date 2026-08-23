@@ -3734,7 +3734,7 @@ class Subsonic_Api
     }
 
     /**
-     * check_parameter
+     * _check_parameter
      * @param array<string, mixed> $input
      * @return false|mixed
      */

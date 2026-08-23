@@ -1591,7 +1591,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_name
+     * getName
      * Returns the name of the catalog matching the given ID
      */
     public static function getName(int $catalog_id): string
@@ -3154,7 +3154,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_length
+     * _check_length
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      */
@@ -3171,7 +3171,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_title
+     * _check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
      * filename and tries to set the title based on that
@@ -3186,7 +3186,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_track
+     * _check_track
      * Check to make sure the track number fits into the database: max 32767, min -32767
      */
     private static function _check_track(string $track): int
@@ -3200,7 +3200,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_catalog
+     * _count_catalog
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @return array{items: int, time: int, size: int}
@@ -3220,7 +3220,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_tags
+     * _count_tags
      *
      * This returns the current number of unique tags in the database.
      */

@@ -821,7 +821,7 @@ final class Json6_Data
     }
 
     /**
-     * genres_string
+     * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
@@ -1101,7 +1101,7 @@ final class Json6_Data
     }
 
     /**
-     * labels_string
+     * labels
      *
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
@@ -1360,7 +1360,7 @@ final class Json6_Data
     }
 
     /**
-     * playlists_string
+     * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
@@ -2028,7 +2028,7 @@ final class Json6_Data
     }
 
     /**
-     * songs_string
+     * songs
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
@@ -2402,7 +2402,7 @@ final class Json6_Data
     }
 
     /**
-     * videos_string
+     * videos
      *
      * @param array<int|string> $objects Video id's to include
      * @param bool $object (whether to return as a named object array or regular array)

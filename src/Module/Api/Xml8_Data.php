@@ -162,7 +162,7 @@ final class Xml8_Data
     }
 
     /**
-     * genre_string
+     * _genre_string
      *
      * This returns the formatted 'genre' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
@@ -193,7 +193,7 @@ final class Xml8_Data
     }
 
     /**
-     * mood_string
+     * _mood_string
      *
      * This returns the formatted 'mood' string for an xml document
      *
@@ -862,7 +862,7 @@ final class Xml8_Data
     }
 
     /**
-     * indexes
+     * index
      *
      * This takes an array of object_ids and return XML based on the type of object
      * we want

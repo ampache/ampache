@@ -314,7 +314,7 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * addArtistsID3
+     * addArtists
      *
      * A list of indexed Artists.
      * https://opensubsonic.netlify.app/docs/responses/artistsid3/
@@ -931,7 +931,7 @@ class OpenSubsonic_Json_Data
      */
 
     /**
-     * addOpenSubsonicExtension
+     * addOpenSubsonicExtensions
      *
      * A supported OpenSubsonic API extension.
      * https://opensubsonic.netlify.app/docs/responses/opensubsonicextensions/
@@ -3520,7 +3520,7 @@ class OpenSubsonic_Json_Data
     }
 
     /**
-     * _addIgnoredArticles
+     * _getIgnoredArticles
      */
     private function _getIgnoredArticles(): string
     {

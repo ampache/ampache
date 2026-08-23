@@ -687,7 +687,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _set_basetypes
+     * get_basetypes
      *
      * Function called during construction to set the different types and rules for search
      * @return array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>>
@@ -819,7 +819,7 @@ class Search extends playlist_object
     }
 
     /**
-     * get_rule_type
+     * get_rule_type_by_name
      *
      * Validate the rule name and return the rule type (text, date, etc)
      *
@@ -2061,7 +2061,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _get_rule_name
+     * _set_rule_name
      *
      * Validate the rule name
      */

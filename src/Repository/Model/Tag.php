@@ -456,7 +456,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag
+     * _add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      */
     private static function _add_tag(string $value): ?int
@@ -473,7 +473,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag_map
+     * _add_tag_map
      * This adds a specific tag to the map for specified object
      */
     private static function _add_tag_map(string $type, int|string $object_id, int|string $tag_id, int $user_id = self::NO_USER): int
@@ -549,7 +549,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * remove_all_maps
+     * _remove_all_maps
      * Clear all the tags from an object when there isn't anything there
      */
     private static function _remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
@@ -573,7 +573,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * tag_map_exists
+     * _tag_map_exists
      * This looks to see if the current mapping of the current object exists
      */
     private static function _tag_map_exists(string $type, int $object_id, int $tag_id, int $user_id = self::NO_USER): bool

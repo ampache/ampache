@@ -1102,8 +1102,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
      * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
      * Unset/empty config keeps the default behavior and matches all columns
-     */
-    /**
+     *
      * @return list<string>
      */
     private function getIdentityColumns(): array

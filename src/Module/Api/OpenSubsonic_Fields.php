@@ -139,7 +139,7 @@ final class OpenSubsonic_Fields
     }
 
     /**
-     * parseEnhancedCues
+     * _parseEnhancedCues
      *
      * Split one Enhanced LRC line into its tag-free text and the word cues pointing into it. Returns an empty array
      * when the line carries no `<mm:ss.xx>` tags at all, so a plain LRC line stays a plain line.

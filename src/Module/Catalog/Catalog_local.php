@@ -1228,7 +1228,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * scan_catalog_folder
+     * scan_catalog
      * This is the clean function and is broken into chunks to try to save a little memory
      */
     public function scan_catalog(?Interactor $interactor = null): void
@@ -1559,7 +1559,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * get_catalog_id_from_file
+     * _get_catalog_id_from_file
      *
      * Get catalog id from the file path.
      */
@@ -1569,7 +1569,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * insert_local_song
+     * _insert_local_song
      *
      * Insert a song that isn't already in the database.
      * @param array<string, mixed> $options
@@ -1725,7 +1725,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * insert_local_video
+     * _insert_local_video
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here

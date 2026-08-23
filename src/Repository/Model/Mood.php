@@ -349,7 +349,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
-     * add_mood
+     * _add_mood
      * Creates the mood row itself
      */
     private static function _add_mood(string $value): ?int
@@ -366,7 +366,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
-     * add_mood_map
+     * _add_mood_map
      * Maps an existing mood onto an object
      */
     private static function _add_mood_map(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): int
@@ -434,7 +434,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
-     * mood_map_exists
+     * _mood_map_exists
      * Whether this object already carries this mood for this owner
      */
     private static function _mood_map_exists(string $type, int $object_id, int $mood_id, int $user_id = self::NO_USER): bool
@@ -447,7 +447,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
-     * remove_all_maps
+     * _remove_all_maps
      * Drops every mood from an object. A null user removes them whoever set them.
      */
     private static function _remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool

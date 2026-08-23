@@ -323,7 +323,7 @@ class Browse extends Query
     }
 
     /**
-     * is_mashup
+     * is_use_filters
      */
     public function is_use_filters(): bool
     {

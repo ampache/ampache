@@ -239,7 +239,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addAlbumListSubsoni
+     * addAlbumList
      * @param int[] $albums
      */
     public function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
@@ -697,7 +697,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addLyricsListSubsoni
+     * addLyricsList
      */
     public function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
     {
@@ -826,7 +826,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylistSubsoniSubsoni
+     * addPlaylist
      */
     public function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
@@ -1474,7 +1474,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addArtistArray
+     * _addArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1501,7 +1501,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addBookmark
+     * _addBookmark
      */
     private function _addBookmark(SimpleXMLElement $xml, Bookmark $bookmark): void
     {
@@ -1524,7 +1524,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addChildArray
+     * _addChildArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1756,7 +1756,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addIgnoredArticles
+     * _addIgnoredArticles
      */
     private function _addIgnoredArticles(SimpleXMLElement $xml): void
     {
@@ -1768,7 +1768,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addIndex
+     * _addIndex
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -1817,7 +1817,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addInternetRadioStation
+     * _addInternetRadioStation
      */
     private function _addInternetRadioStation(SimpleXMLElement $xml, Live_Stream $radio): void
     {
@@ -1829,7 +1829,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addMessage
+     * _addMessage
      */
     private function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
     {
@@ -1849,7 +1849,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Playlist
+     * _addPlaylist_Playlist
      */
     private function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): SimpleXMLElement
     {
@@ -1884,7 +1884,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Search
+     * _addPlaylist_Search
      */
     private function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
     {
@@ -1921,7 +1921,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPodcastEpisode
+     * _addPodcastEpisode
      */
     private function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
@@ -1961,7 +1961,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addShare
+     * _addShare
      */
     private function _addShare(SimpleXMLElement $xml, Share $share): void
     {
@@ -2008,7 +2008,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addVideo
+     * _addVideo
      */
     private function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {

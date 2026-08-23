@@ -983,7 +983,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addOpenSubsonicExtension
+     * addOpenSubsonicExtensions
      *
      * https://opensubsonic.netlify.app/docs/responses/opensubsonicextensions/
      * @param array<string, int[]> $extensions
@@ -1690,7 +1690,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addArtistArray
+     * _addArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1738,7 +1738,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addBookmark
+     * _addBookmark
      *
      * https://opensubsonic.netlify.app/docs/responses/bookmark/
      */
@@ -1763,7 +1763,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addChildArray
+     * _addChildArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1826,7 +1826,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addChildSong
+     * _addChildSong
      *
      * https://opensubsonic.netlify.app/docs/responses/child/
      * @param array<string, string> $attributes
@@ -2156,7 +2156,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addIgnoredArticles
+     * _addIgnoredArticles
      */
     private function _addIgnoredArticles(SimpleXMLElement $xml): void
     {
@@ -2168,7 +2168,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addIndex
+     * _addIndex
      *
      * https://opensubsonic.netlify.app/docs/responses/index_/
      * @param array<int, array{
@@ -2220,7 +2220,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addInternetRadioStation
+     * _addInternetRadioStation
      *
      * https://opensubsonic.netlify.app/docs/responses/internetradiostation/
      */
@@ -2238,7 +2238,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addMessage
+     * _addMessage
      *
      * A chatMessage.
      * https://opensubsonic.netlify.app/docs/responses/chatmessage/
@@ -2261,7 +2261,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Playlist
+     * _addPlaylist_Playlist
      *
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
@@ -2312,7 +2312,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Search
+     * _addPlaylist_Search
      *
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
@@ -2362,7 +2362,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addPodcastEpisode
+     * _addPodcastEpisode
      *
      * A Child plus `channelId`, `description`, `publishDate`, `status` and `streamId`.
      *
@@ -2439,7 +2439,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addShare
+     * _addShare
      *
      * https://opensubsonic.netlify.app/docs/responses/share/
      */
@@ -2488,7 +2488,7 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addVideo
+     * _addVideo
      *
      * https://opensubsonic.netlify.app/docs/responses/child/
      */

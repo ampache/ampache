@@ -298,7 +298,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addArtistsID3
+     * addArtists
      *
      * A list of indexed Artists.
      * https://opensubsonic.netlify.app/docs/responses/artistsid3/
@@ -635,7 +635,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addJukeboxPlaylistSubsonic
+     * addJukeboxPlaylist
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -662,7 +662,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addJukeboxStatusSubsonic
+     * addJukeboxStatus
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -1046,7 +1046,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addPodcastEpside
+     * addPodcastEpisode
      *
      * Podcasts.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
@@ -1094,7 +1094,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addRandomSongsSubsonic
+     * addRandomSongs
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1428,7 +1428,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addSongsByGenreSubsonic
+     * addSongsByGenre
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -2251,7 +2251,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildArray
+     * _getChildArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -2338,7 +2338,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildPodcastEpisodeSubsonic
+     * _getChildPodcastEpisode
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2556,7 +2556,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildVideoSubsonic
+     * _getChildVideo
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2927,7 +2927,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _addIgnoredArticles
+     * _getIgnoredArticles
      */
     private function _getIgnoredArticles(): string
     {
@@ -3356,7 +3356,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addStructuredLyrics
+     * _getStructuredLyrics
      *
      * Structured lyricsSubsonic
      * @return array{

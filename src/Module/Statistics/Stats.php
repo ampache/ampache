@@ -590,7 +590,7 @@ final class Stats
     }
 
     /**
-     * get_play_data
+     * get_object_data
      * Get data about object history and play data from object_count
      */
     public static function get_object_data(string $dataType, int $startTime, int $endTime, User $user): string

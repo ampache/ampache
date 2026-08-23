@@ -619,7 +619,7 @@ class Preference extends database_object
     protected const string DB_TABLENAME = 'preference';
 
     /**
-     * __constructor
+     * __construct
      * This does nothing... amazing isn't it!
      */
     private function __construct() {}

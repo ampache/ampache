@@ -45,7 +45,7 @@ class Ldap
     }
 
     /**
-     * ldap_auth
+     * auth
      *
      * This handles authentication against a LDAP server.
      *
@@ -155,7 +155,7 @@ class Ldap
     }
 
     /**
-     * array_filter_key
+     * _array_filter_key
      *
      * @param callable-string $callback
      */
@@ -183,7 +183,7 @@ class Ldap
     }
 
     /**
-     * clean_search_results
+     * _clean_search_results
      *
      * This function is here to return a real array {number} => {field} => {value array}
      * instead of the custom LDAP search results provided by the ldap_* library.

@@ -1161,7 +1161,7 @@ class Song extends database_object implements
     }
 
     /**
-     * clean_string_field_value
+     * _clean_string_field_value
      * Accepts anything the compare loop lets through (string, numeric or bool) so let it through too if it gets here
      */
     private static function _clean_string_field_value(string|int|float|bool|null $value = null): string
