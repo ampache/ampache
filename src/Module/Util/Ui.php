@@ -915,7 +915,7 @@ class Ui implements UiInterface
     {
         $webPath = AmpConfig::get_web_path();
         $custom  = trim((string) AmpConfig::get('custom_favicon', ''));
-        $vector  = str_ends_with(strtolower(parse_url($custom, PHP_URL_PATH) ?? ''), '.svg');
+        $vector  = str_ends_with(strtolower((string) parse_url($custom, PHP_URL_PATH)), '.svg');
 
         $tags = [];
         if ($custom === '') {
