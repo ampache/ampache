@@ -30,6 +30,12 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * `name` and `year` can be dropped from the list too, though doing so can merge albums you didn't mean to merge
   * `catalog` is always matched and isn't part of the list; an album is always scoped to its catalog
   * Server-wide, not a user preference; defaults to today's full field set (`name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version`)
+* Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, behind an admin gate, with a precedence toggle over `custom_blankalbum`, an optional template lock, and per-user opt-in
+* Dynamic page titles carrying the artist or album in context, with a user preference to show a page-type icon in the tab title
+* A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customises them
+* A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place
+* An `Uploaded` column on the upload browses, sortable
+* A browser-measured HTTP compression check on the test page
 
 ### Changed (8.1.0)
 
@@ -37,6 +43,14 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * Covering index on `image` for the art cache lookup, so it can be answered from the index alone; drops the now-redundant `object_id` key it replaces
 * Folder garbage collection now also removes folders with nothing left inside them, including root folders
 * Folder play-count rollups now write in bulk instead of one query per folder, and a scan skips garbage collection when nothing changed
+* Serving a cover no longer opens a full session: no `last_seen` write, no serialized-session rewrite, and a cookie-less request (a crawler, a link preview) no longer leaves a session row behind
+* `Session::extend` no longer rewrites the expire column on every request
+* Visitors who never queue anything no longer get a `tmp_playlist` row, dashboard and mashup boxes no longer write a `tmp_browse` row they never store, and a page view no longer creates a broadcast stream session
+* Gettext loads the catalogue only when something is translated, and reads a prebuilt PHP array the opcache holds rather than parsing the `.mo` each request
+* The Subsonic artist and playlist lists, the genre and artist-name lookups, the smartlist name lists and reverse-geocoding all warm their caches once per page instead of once per row
+* Server-wide user counters are batched into one statement per key
+* The set of generated art sizes is bounded, and a missing cover is served the placeholder that fits rather than the full-size original
+* A remote `custom_blankalbum` is handed to the browser as a url it caches once, rather than fetched server-side on every miss
 
 ### Fixed (8.1.0)
 
@@ -46,6 +60,13 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 * Missing close box on a few template phtml files
+* A custom browse base skipped every filter, group and sort; it is now joined as a derived table that restricts the normal query instead of replacing it
+* Toggling a browse option emptied a browse that had been handed its ids
+* An expired browse replayed by a crawler filled the log with level 1 "no renderer" lines
+* Missing close box on a few template phtml files, and an anchor that closed inside the mashup heading box
+* Grid view lost its row actions, and the delete confirm dialog ignored the theme
+* The album page fell back to a blank cover instead of the album artist's art
+* The add-to-playlist menu offered playlists the user could not add to
 
 ## Ampache 8.0.1
 
