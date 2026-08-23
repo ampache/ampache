@@ -41,6 +41,7 @@ use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -967,6 +968,14 @@ class Ui implements UiInterface
             return;
         }
 
+        // Picking a design out of a list of names tells you nothing, so each option carries a drawing of
+        // an invented album beside it. The previews need no library behind them.
+        if ($name === 'generated_art_template' || $name === 'generated_art_template_lock') {
+            $this->createGeneratedArtTemplateInput($name, (string) $value);
+
+            return;
+        }
+
         // The stored type settles a plain on/off preference, so a new one renders right without also
         // having to be listed in the name switch below.
         if ($type === 'boolean') {
@@ -1016,6 +1025,7 @@ class Ui implements UiInterface
             case 'autoupdate':
             case 'bookmark_latest':
             case 'broadcast_by_default':
+            case 'broadcast_private':
             case 'browse_album_disk_grid_view':
             case 'browse_album_grid_view':
             case 'browse_artist_grid_view':
@@ -1032,6 +1042,7 @@ class Ui implements UiInterface
             case 'catalogfav_compact':
             case 'condPL':
             case 'cron_cache':
+            case 'cron_cache_live_count':
             case 'custom_logo_user':
             case 'daap_backend':
             case 'demo_clear_sessions':
@@ -1083,6 +1094,7 @@ class Ui implements UiInterface
             case 'show_album_artist':
             case 'show_artist':
             case 'show_collection':
+            case 'show_composer':
             case 'show_donate':
             case 'show_header_login':
             case 'show_folder':
@@ -1713,6 +1725,9 @@ class Ui implements UiInterface
         )->render();
     }
 
+    /**
+     * Displays the default error page
+     */
     public function showErrorPage(): void
     {
         // the error usually arrives part way through a page, so throw away whatever has been written so far
@@ -1824,9 +1839,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * Displays the default error page
-     */
-    /**
      * The three standalone error pages carry their own chrome, so each needs the logo and title the
      * normal header would otherwise have supplied.
      */
@@ -1863,6 +1875,46 @@ class Ui implements UiInterface
         echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
         echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
         echo "</select>\n";
+    }
+
+    /**
+     * Radio buttons with a drawing beside each, for the two template preferences.
+     *
+     * The lock offers an extra empty choice meaning every listener picks for themselves; the listener's
+     * own preference offers an extra automatic choice that follows whichever theme they are using.
+     */
+    private function createGeneratedArtTemplateInput(string $name, string $value): void
+    {
+        global $dic;
+
+        $service   = $dic->get(GeneratedArtServiceInterface::class);
+        $isLock    = ($name === 'generated_art_template_lock');
+        $webPath   = AmpConfig::get_web_path();
+        $choices   = [];
+        $choices[] = $isLock
+            ? ['', T_('Let each user choose'), null]
+            : ['auto', T_('Match my theme'), null];
+
+        foreach ($service->getTemplates() as $template) {
+            $choices[] = [$template->getId(), $template->getLabel(), $template->getId()];
+        }
+
+        echo '<div class="generated-art-templates">';
+        foreach ($choices as [$id, $label, $preview]) {
+            $checked = ($value === $id) ? ' checked="checked"' : '';
+            $field   = $name . '_' . ($id === '' ? 'none' : $id);
+            echo '<label class="generated-art-choice" for="' . $field . '">';
+            echo '<input type="radio" id="' . $field . '" name="' . $name . '" value="' . scrub_out($id) . '"' . $checked . ' />';
+            if ($preview !== null) {
+                echo '<img src="' . $webPath . '/image.php?generate=1&amp;preview=record&amp;size=200x200&amp;template='
+                    . rawurlencode($preview) . '" alt="" width="72" height="72" loading="lazy" decoding="async" />';
+            }
+
+            echo '<span>' . scrub_out($label) . '</span>';
+            echo '</label>';
+        }
+
+        echo '</div>';
     }
 
     /**

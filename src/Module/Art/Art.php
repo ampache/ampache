@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\database_object;
@@ -358,12 +359,18 @@ class Art extends database_object
             if ($has_db) {
                 $link .= '&id=' . $art->id;
             }
+
+            // the full size view of a drawn tile has to be the same drawing as the thumbnail
+            $link .= self::generated_art_query();
         }
 
         echo '<div class="item_art">';
+        // A drawn tile is not the cover, and nothing on screen says so. The hover text does, while the
+        // alt text stays the plain name so a listing is not read out as a paragraph per row.
         // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
-        $name = scrub_out($name);
-        echo '<a href="' . $link . '" title="' . $name . '"';
+        $name  = scrub_out($name);
+        $hover = self::drawn_hover_title($name, $object_type, !$has_db);
+        echo '<a href="' . $link . '" title="' . $hover . '"';
         if ($prettyPhoto) {
             echo ' rel="prettyPhoto"';
         }
@@ -381,9 +388,19 @@ class Art extends database_object
 
             // Keeps the browser cache feature but forces a refresh once the art changes: the original row's id and changes on every replace and thumbs are deleted
             $imgurl .= '&id=' . $art->id;
+            $imgurl .= self::generated_art_query();
         } else {
-            // one shared url for every item with no art, so the browser fetches and caches the placeholder once
-            $imgurl = self::get_fallback_url($object_type, $out_size);
+            $suffix = self::generated_art_query();
+            if ($suffix !== '') {
+                $imgurl = $web_path . '/image.php?object_id=' . $object_id . '&object_type=' . $object_type
+                    . '&size=' . $out_size . $suffix;
+                if ($use_auth) {
+                    $imgurl .= '&auth=' . session_id();
+                }
+            } else {
+                // one shared url for every item with no art, so the browser fetches and caches the placeholder once
+                $imgurl = self::get_fallback_url($object_type, $out_size);
+            }
         }
 
         echo '<img src="' . $imgurl . '" alt="' . $name . '" height="' . $size['height'] . '" width="' . $size['width'] . '" loading="lazy" decoding="async" />';
@@ -485,6 +502,21 @@ class Art extends database_object
         }
 
         return $extension;
+    }
+
+    /**
+     * fallback_edge
+     *
+     * The longest side a size string asks for, or 0 when it asks for none. Callers that draw rather than
+     * resize need the number, not the nearest shipped file.
+     */
+    public static function fallback_edge(?string $size): int
+    {
+        if ($size !== null && preg_match('/^(\\d+)x(\\d+)$/', $size, $matches)) {
+            return max((int) $matches[1], (int) $matches[2]);
+        }
+
+        return 0;
     }
 
     /**
@@ -1149,6 +1181,56 @@ class Art extends database_object
     }
 
     /**
+     * The hover text, telling the listener a tile was drawn and what it was drawn from.
+     *
+     * Only claimed when the item holds no art row at all, which is the only case display() can be sure
+     * about: finding out whether an existing row still has its data behind it means loading the image,
+     * and a browse page would load fifty of them just to write its html. So this understates rather
+     * than risks calling a real cover a drawing.
+     */
+    private static function drawn_hover_title(string $escapedName, string $type, bool $missing): string
+    {
+        if (!$missing || self::generated_art_query() === '') {
+            return $escapedName;
+        }
+
+        $reason = match ($type) {
+            'artist' => T_('no picture yet, drawn from the name'),
+            'playlist' => T_('no cover yet, drawn from the artists it holds'),
+            'song' => T_('no cover yet, drawn from the artist name'),
+            default => T_('no cover yet, drawn from the artist name'),
+        };
+
+        /* HINT: %1$s is the item name, %2$s says what the drawing was made from */
+        // the name arrives escaped, so only the translated half is escaped here
+        return sprintf(T_('%1$s — %2$s'), $escapedName, scrub_out($reason));
+    }
+
+    /**
+     * The query string that pins a drawn tile, or an empty string when nothing would be drawn.
+     *
+     * It goes on every image url, not only the ones we expect to fall back. An item can hold an image
+     * row whose data has gone missing, and display() only knows the row is there while image.php is the
+     * one that finds out the data is not: those urls end up drawn too. Naming the template on all of
+     * them also means switching template changes the url, so the browser fetches the new tile instead
+     * of handing back the one it already had.
+     */
+    private static function generated_art_query(): string
+    {
+        $generated = self::getGeneratedArt();
+        if (!$generated->isEnabled()) {
+            return '';
+        }
+
+        $custom = (string) AmpConfig::get('custom_blankalbum', '');
+        if ($custom !== '' && !$generated->takesPrecedenceOverCustom()) {
+            return '';
+        }
+
+        return '&generate=1&template=' . rawurlencode($generated->resolveTemplate()->getId());
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private static function getConfigContainer(): ConfigContainerInterface
@@ -1156,6 +1238,13 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(ConfigContainerInterface::class);
+    }
+
+    private static function getGeneratedArt(): GeneratedArtServiceInterface
+    {
+        global $dic;
+
+        return $dic->get(GeneratedArtServiceInterface::class);
     }
 
     /**
