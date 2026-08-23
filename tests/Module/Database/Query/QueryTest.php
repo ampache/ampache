@@ -44,6 +44,43 @@ class QueryTest extends MockeryTestCase
         ];
     }
 
+    public function testABrowseStoredBeforeCustomSqlStillServesItsBaseAsIs(): void
+    {
+        // an old serialized browse holds its custom query in `base` with the `custom` flag set;
+        // that stored shape has to keep working after the upgrade
+        $query = $this->subject();
+        $state = new \ReflectionProperty(Query::class, '_state');
+
+        $rebuilt           = $state->getValue($query);
+        $rebuilt['type']   = 'song';
+        $rebuilt['custom'] = true;
+        $rebuilt['base']   = 'SELECT `id` FROM `legacy_view` ';
+        $state->setValue($query, $rebuilt);
+
+        $sql = (string) new \ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
+
+        self::assertSame('SELECT `id` FROM `legacy_view`', trim($sql));
+    }
+
+    public function testACustomBaseRestrictsTheQueryInsteadOfReplacingIt(): void
+    {
+        // a custom base used to overwrite the whole base query, which silently dropped every
+        // filter, group and sort the browse carried. It now joins as a derived table, so the
+        // normal query survives around it.
+        $query = $this->subject();
+        $query->set_type('song', 'SELECT `id` FROM `song` WHERE `user_upload` = 42', []);
+        $query->set_filter('license', 3);
+
+        $sql = (string) new \ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
+
+        self::assertStringContainsString(
+            'JOIN (SELECT `id` FROM `song` WHERE `user_upload` = 42) AS `custom_base` ON `custom_base`.`id` = `song`.`id`',
+            $sql
+        );
+        self::assertStringContainsString("`song`.`license` = '3'", $sql, 'the filter has to survive the custom base');
+        self::assertStringStartsWith('SELECT `song`.`id` FROM `song`', $sql, 'the normal base has to stay intact');
+    }
+
     public function testClearFilterIgnoresAFilterThatWasNeverSet(): void
     {
         $query = $this->subject();
