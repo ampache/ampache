@@ -1241,7 +1241,6 @@ class User extends database_object
                 'access' => 25,
                 'disabled' => 0,
                 'catalog_filter_group' => 0,
-                'catalogs' => self::get_user_catalogs(-1),
                 'apikey' => null,
                 'rsstoken' => null,
                 'streamtoken' => null,

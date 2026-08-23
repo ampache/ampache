@@ -901,6 +901,11 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function updateLastSeen(
         int $userId,
     ): void {
+        // the anonymous user is a php object with no row behind it, so this would match nothing
+        if ($userId < 1) {
+            return;
+        }
+
         $this->connection->query(
             'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
             [time(), $userId]
