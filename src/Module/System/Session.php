@@ -827,7 +827,7 @@ final readonly class Session implements SessionInterface
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
             $auth['access']       = ($defaultAuthLevel) ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
-            $hasSession = array_key_exists((string) $sessionName, $_COOKIE)
+            $hasSession           = array_key_exists((string) $sessionName, $_COOKIE)
                 && self::exists('interface', $_COOKIE[$sessionName]);
             if (!$hasSession && defined('NO_SESSION_UPDATE')) {
                 // a request forbidden from touching session state has no business minting one either:

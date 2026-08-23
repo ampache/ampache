@@ -295,18 +295,6 @@ class UserRepositoryTest extends TestCase
         self::assertTrue($this->subject->setValidation(666, 'some-key'));
     }
 
-    public function testUpdateLastSeenStampsTheRow(): void
-    {
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
-                static::callback(static fn (array $params): bool => is_int($params[0]) && $params[1] === 666)
-            );
-
-        $this->subject->updateLastSeen(666);
-    }
-
     public function testUpdateLastSeenSkipsTheAnonymousUser(): void
     {
         // the anonymous user is a php object with no row behind it, so the statement would match nothing
@@ -315,6 +303,18 @@ class UserRepositoryTest extends TestCase
 
         $this->subject->updateLastSeen(-1);
         $this->subject->updateLastSeen(0);
+    }
+
+    public function testUpdateLastSeenStampsTheRow(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
+                static::callback(static fn(array $params): bool => is_int($params[0]) && $params[1] === 666)
+            );
+
+        $this->subject->updateLastSeen(666);
     }
 
     protected function setUp(): void
