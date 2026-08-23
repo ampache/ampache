@@ -200,15 +200,15 @@ abstract class AbstractSvgTemplate implements TemplateInterface
             $angle = deg2rad($i * 360 / 44);
             $from  = 23.8;
             $len   = 19.5 * (0.28 + $next(0, 62) / 100) * 0.55;
-            $out .= '<line x1="' . round(50 + cos($angle) * $from, 2) . '" y1="' . round(45.5 + sin($angle) * $from, 2)
-                . '" x2="' . round(50 + cos($angle) * ($from + $len), 2) . '" y2="' . round(45.5 + sin($angle) * ($from + $len), 2)
+            $out .= '<line x1="' . round(50 + cos($angle) * $from, 2) . '" y1="' . round(50 + sin($angle) * $from, 2)
+                . '" x2="' . round(50 + cos($angle) * ($from + $len), 2) . '" y2="' . round(50 + sin($angle) * ($from + $len), 2)
                 . '" stroke="' . $accent . '" stroke-opacity="' . $this->weight(0.45 + $next(0, 45) / 100)
                 . '" stroke-width="1.3" stroke-linecap="round"/>';
         }
 
         return $out
-            . '<circle cx="50" cy="45.5" r="19.5" fill="none" stroke="' . $accent . '" stroke-width="1.4"/>'
-            . '<text x="50" y="52" text-anchor="middle" font-family="' . self::FONT_STACK
+            . '<circle cx="50" cy="50" r="19.5" fill="none" stroke="' . $accent . '" stroke-width="1.4"/>'
+            . '<text x="50" y="56.5" text-anchor="middle" font-family="' . self::FONT_STACK
             . '" font-size="17" fill="' . $this->face($recipe) . '">' . $this->esc($this->initials($recipe->name)) . '</text>';
     }
 
