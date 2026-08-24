@@ -51,6 +51,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Server-wide user counters are batched into one statement per key
 * The set of generated art sizes is bounded, and a missing cover is served the placeholder that fits rather than the full-size original
 * A remote `custom_blankalbum` is handed to the browser as a url it caches once, rather than fetched server-side on every miss
+* The Subsonic, OpenSubsonic and API 6/8 playlist listings now serve the stored `last_count`/`last_duration`, the way their smartlist branch always has, instead of recounting each row with two joined queries
 
 ### Fixed (8.1.0)
 
@@ -67,6 +68,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Grid view lost its row actions, and the delete confirm dialog ignored the theme
 * The album page fell back to a blank cover instead of the album artist's art
 * The add-to-playlist menu offered playlists the user could not add to
+* Migration700005 filled `last_count` with its two parameters swapped, writing the playlist id in place of the count; upgrades from Ampache 6 now backfill correctly, and database 810007 repairs the installs that already ran it
 
 ## Ampache 8.0.1
 
