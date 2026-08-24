@@ -1123,7 +1123,7 @@ final class Xml8_Data
                         $playitem_total = $playlist->last_count;
                     } else {
                         $playlist       = new Playlist((int) $object_id);
-                        $playitem_total = $playlist->get_media_count('song');
+                        $playitem_total = $playlist->last_count;
                     }
 
                     if ($playlist->isNew()) {
@@ -1425,7 +1425,7 @@ final class Xml8_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $playitem_total = $playlist->get_media_count('song');
+                $playitem_total = (int) $playlist->last_count;
             }
 
             $duration = 0;
@@ -1632,7 +1632,7 @@ final class Xml8_Data
                             $playitem_total = $playlist->last_count;
                         } else {
                             $playlist       = new Playlist((int) $object_id);
-                            $playitem_total = $playlist->get_media_count('song');
+                            $playitem_total = $playlist->last_count;
                         }
 
                         if ($playlist->isNew()) {

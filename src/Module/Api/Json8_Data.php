@@ -2476,7 +2476,7 @@ final class Json8_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $playitem_total = $playlist->get_media_count('song');
+                $playitem_total = $playlist->last_count;
             }
             $art_url           = Art::url($playlist->id, $object_type, $auth);
             $playlist_name     = $playlist->get_fullname();

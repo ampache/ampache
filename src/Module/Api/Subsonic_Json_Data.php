@@ -3084,8 +3084,10 @@ class Subsonic_Json_Data
     private function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
         $sub_id    = Subsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        // the stored totals, the same source the smartlists in this class already serve: a page of
+        // playlists used to pay two joined queries per row for these two numbers
+        $songcount = (int) $playlist->last_count;
+        $duration  = (int) $playlist->last_duration;
 
         $json = [
             'id' => $sub_id,

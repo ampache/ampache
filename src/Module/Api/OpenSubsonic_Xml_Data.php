@@ -2269,8 +2269,10 @@ class OpenSubsonic_Xml_Data
     private function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, User $user, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        // the stored totals, the same source the smartlists in this class already serve: a page of
+        // playlists used to pay two joined queries per row for these two numbers
+        $songcount = (int) $playlist->last_count;
+        $duration  = (int) $playlist->last_duration;
         $xplaylist = $this->_addChildToResultXml($xml, 'playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string) $playlist->get_fullname());

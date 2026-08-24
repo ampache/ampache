@@ -80,6 +80,34 @@ class PlaylistRepositoryTest extends TestCase
         self::assertNotEmpty(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'playlist_data')));
     }
 
+    public function testCollectGarbageRecomputesTheStoredTotalsAfterDeleting(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbage();
+
+        // last_count and last_duration feed the web sort and the API listings, and the deletes above
+        // change what they should say, so the sweep has to end by refreshing both
+        $updates = array_values(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `playlist`')));
+
+        self::assertCount(2, $updates);
+        self::assertStringContainsString('SET `p`.`last_count` = COALESCE(`pd`.`total`, 0)', $updates[0]);
+        self::assertStringContainsString('SET `p`.`last_duration` = COALESCE(`pd`.`total`, 0)', $updates[1]);
+
+        // and only after every delete already ran, or the totals would still count the removed rows
+        $lastDelete = max(array_keys(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE'))));
+        $firstTotal = min(array_keys(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `playlist`'))));
+
+        self::assertGreaterThan($lastDelete, $firstTotal);
+    }
+
     public function testDeleteAllTracksEmptiesTheList(): void
     {
         $this->connection->expects(static::once())

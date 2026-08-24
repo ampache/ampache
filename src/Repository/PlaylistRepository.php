@@ -114,6 +114,27 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
 
         // clamp the max id
         $this->connection->query('ALTER TABLE `playlist_data` AUTO_INCREMENT = 1');
+
+        // the deletes above shrink lists without going through the model, and `last_count`/`last_duration`
+        // are what the web sort and the API listings serve, so they have to be recomputed here or they
+        // drift a little further at every catalog clean
+        $this->connection->query(
+            'UPDATE `playlist` AS `p` '
+            . 'LEFT JOIN (SELECT `playlist`, COUNT(`id`) AS `total` FROM `playlist_data` '
+            . 'WHERE `object_type` IS NOT NULL GROUP BY `playlist`) AS `pd` ON `pd`.`playlist` = `p`.`id` '
+            . 'SET `p`.`last_count` = COALESCE(`pd`.`total`, 0);'
+        );
+        $this->connection->query(
+            'UPDATE `playlist` AS `p` '
+            . 'LEFT JOIN (SELECT `pd`.`playlist`, '
+            . 'SUM(COALESCE(`song`.`time`, 0) + COALESCE(`video`.`time`, 0) + COALESCE(`podcast_episode`.`time`, 0)) AS `total` '
+            . 'FROM `playlist_data` AS `pd` '
+            . "LEFT JOIN `song` ON `pd`.`object_type` = 'song' AND `pd`.`object_id` = `song`.`id` "
+            . "LEFT JOIN `video` ON `pd`.`object_type` = 'video' AND `pd`.`object_id` = `video`.`id` "
+            . "LEFT JOIN `podcast_episode` ON `pd`.`object_type` = 'podcast_episode' AND `pd`.`object_id` = `podcast_episode`.`id` "
+            . 'GROUP BY `pd`.`playlist`) AS `pd` ON `pd`.`playlist` = `p`.`id` '
+            . 'SET `p`.`last_duration` = COALESCE(`pd`.`total`, 0);'
+        );
     }
 
     /**
