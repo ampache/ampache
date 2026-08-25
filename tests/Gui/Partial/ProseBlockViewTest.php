@@ -22,30 +22,26 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-// live_stream.phtml -- rendered by Ampache\Gui\LiveStream\LiveStreamView
 
-use Ampache\Module\Util\Ui;
+namespace Ampache\Gui\Partial;
 
-/** @var Ampache\Gui\LiveStream\LiveStreamView $this */
+use PHPUnit\Framework\TestCase;
 
-Ui::show_box_top('', 'box box_live_stream_details'); ?>
-<div class="object-page">
-<?php echo $this->raw($this->getHeader()->render()); ?>
-<div class="object-groups">
-<?php foreach ($this->getPropertyGroups() as $group) {
-    if ($group['properties'] === []) {
-        continue;
-    } ?>
-    <div class="object-group">
-        <p class="object-group-head"><?php echo $this->e($group['label']); ?></p>
-        <dl>
-<?php foreach ($group['properties'] as $label => $value) { ?>
-            <dt><?php echo $this->e($label); ?></dt>
-            <dd><?php echo $this->raw((string) $value); ?></dd>
-<?php } ?>
-        </dl>
-    </div>
-<?php } ?>
-</div>
-</div>
-<?php Ui::show_box_bottom(); ?>
+class ProseBlockViewTest extends TestCase
+{
+    public function testFoldsOnVisibleTextOnly(): void
+    {
+        $short = str_repeat('a', 600);
+
+        static::assertFalse(new ProseBlockView($short, 'fold')->isFolded());
+        static::assertFalse(new ProseBlockView('<b>' . $short . '</b>', 'fold')->isFolded());
+        static::assertTrue(new ProseBlockView($short . 'a', 'fold')->isFolded());
+    }
+
+    public function testFromTextDecodesThenEscapesAndKeepsLineBreaks(): void
+    {
+        $view = ProseBlockView::fromText("a &ndash; b\n<script>", 'fold');
+
+        static::assertSame("a – b<br />\n&lt;script&gt;", $view->getHtml());
+    }
+}

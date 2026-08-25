@@ -116,7 +116,6 @@ class ShowSongActionTest extends MockeryTestCase
         $songViewAdapter = $this->mock(SongViewAdapterInterface::class);
 
         $song_id = 666;
-        $title   = 'some-song-title';
         $content = 'some-content';
 
         $song->id      = $song_id;
@@ -149,10 +148,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->andReturn(false);
 
         $this->ui->shouldReceive('showBoxTop')
-            ->with(
-                $title,
-                'box box_song_details'
-            )
+            ->with('', 'box box_song_details')
             ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->withNoArgs()
@@ -163,11 +159,6 @@ class ShowSongActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-
-        $song->shouldReceive('get_fullname')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($title);
 
         $this->guiFactory->shouldReceive('createSongViewAdapter')
             ->with($gatekeeper, $song)

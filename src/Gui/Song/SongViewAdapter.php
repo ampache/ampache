@@ -27,10 +27,13 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -162,6 +165,14 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         );
     }
 
+    public function getArt(): string
+    {
+        ob_start();
+        Art::display('album', (int) $this->song->album, (string) $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
+
+        return (string) ob_get_clean();
+    }
+
     public function getArtistLink(): string
     {
         return (string) $this->song->get_f_parent_link();
@@ -281,6 +292,34 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
+    public function getExternalLinks(): string
+    {
+        $links = '';
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
+            $links .= '<a href="https://www.google.com/search?q=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22+%22" . rawurlencode((string) $this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('google', sprintf(T_('Search on %s ...'), 'Google')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_DUCKDUCKGO)) {
+            $links .= '&nbsp;<a href="https://www.duckduckgo.com/?q=' . rawurlencode($this->song->get_parent_fullname()) . "+" . rawurlencode((string) $this->song->get_fullname()) . '" target="_blank">' . Ui::get_icon('duckduckgo', sprintf(T_('Search on %s ...'), 'DuckDuckGo')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_LASTFM)) {
+            $links .= '&nbsp;<a href="https://www.last.fm/search?q=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22+%22" . rawurlencode((string) $this->song->get_fullname()) . '%22&type=track" target="_blank">' . Ui::get_icon('lastfm', sprintf(T_('Search on %s ...'), 'Last.fm')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_BANDCAMP)) {
+            $links .= '&nbsp;<a href="https://bandcamp.com/search?q=' . rawurlencode($this->song->get_parent_fullname()) . "+" . rawurlencode((string) $this->song->get_fullname()) . '&item_type=t" target="_blank">' . Ui::get_icon('bandcamp', sprintf(T_('Search on %s ...'), 'Bandcamp')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_MUSICBRAINZ)) {
+            $links .= ($this->song->mbid)
+                ? '&nbsp;<a href="https://musicbrainz.org/recording/' . $this->song->mbid . '" target="_blank">' . Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')) . "</a>"
+                : '&nbsp;<a href="https://musicbrainz.org/taglookup?tag-lookup.artist=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22&tag-lookup.track=%22" . rawurlencode((string) $this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')) . "</a>";
+        }
+
+        return $links;
+    }
+
     public function getExternalPlayIcon(): string
     {
         return Ui::get_material_symbol('link', T_('Link'));
@@ -301,9 +340,109 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return $this->song->get_f_tags();
     }
 
+    public function getHeader(): ObjectHeaderView
+    {
+        $bitrate = (int) ($this->song->bitrate / 1024);
+
+        return new ObjectHeaderView(
+            kind: T_('Song'),
+            title: $this->e((string) $this->song->get_fullname()),
+            art: $this->getArt(),
+            breadcrumb: implode(' &middot; ', array_filter([
+                $this->getArtistLink(),
+                $this->getAlbumLink(),
+                ($this->song->track > 0) ? $this->e(sprintf(T_('Track %d'), $this->song->track)) : '',
+            ])),
+            chips: HeaderChip::listOf(
+                ($this->song->year > 0) ? (string) $this->song->year : null,
+                new HeaderChip($this->getPlayDuration(), true),
+                ($bitrate > 0) ? new HeaderChip(sprintf('%d kbps', $bitrate), true) : null,
+                $this->getLicenseChip(),
+            ),
+            tags: HeaderChip::genres($this->song->get_tags(), $this->configContainer->getWebPath() . '/browse.php?action=tag&type=song&show_tag='),
+            rating: $this->getRating() . $this->getUserFlags(),
+            links: $this->getExternalLinks(),
+            note: $this->getPlayNote(),
+            primaryAction: $this->getPrimaryHeaderAction(),
+            actions: $this->getHeaderActions(),
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getHeaderActions(): array
+    {
+        $songId  = $this->song->getId();
+        $actions = [];
+
+        if ($this->config->isDirectplayEnabled()) {
+            if ($this->canAutoplayNext()) {
+                $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $songId);
+            }
+
+            if ($this->canAppendNext()) {
+                $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true', 'low_priority', T_('Play last'), 'addplay_song_' . $songId);
+            }
+        }
+
+        $actions[] = Ajax::button_with_text('?action=basket&type=song&id=' . $songId, 'new_window', T_('Add to Temporary Playlist'), 'add_song_' . $songId);
+        $actions[] = sprintf(
+            '<a id="add_to_playlist_%d" onclick="showPlaylistDialog(event, \'song\', \'%d\')">%s %s</a>',
+            $songId,
+            $songId,
+            Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()),
+            Ui::get_add_to_list_label()
+        );
+
+        if ($this->canPostShout()) {
+            $actions[] = $this->link($this->getPostShoutUrl(), 'comment', T_('Post Shout'));
+        }
+
+        if ($this->canShare()) {
+            $actions[] = Share::display_ui('song', $songId);
+        }
+
+        if ($this->canDownload()) {
+            $actions[] = $this->link($this->getExternalPlayUrl(), 'play_arrow', T_('Play on the current player'), true);
+            $actions[] = $this->link($this->getDownloadUrl(), 'download', T_('Download'), true);
+        }
+
+        if ($this->canDisplayStats()) {
+            $actions[] = $this->link($this->getDisplayStatsUrl(), 'bar_chart', T_('Graphs'));
+        }
+
+        if ($this->isEditable()) {
+            $actions[] = $this->link($this->getUpdateFromTagsUrl(), 'sync_alt', T_('Update from tags'));
+            $actions[] = sprintf(
+                '<a onclick="showEditDialog(\'song_row\', \'%d\', \'edit_song_%d\', \'%s\', \'\')">%s %s</a>',
+                $songId,
+                $songId,
+                $this->e($this->getEditButtonTitle()),
+                Ui::get_material_symbol('edit', T_('Edit')),
+                T_('Edit')
+            );
+        }
+
+        if ($this->canBeDeleted()) {
+            $actions[] = $this->link($this->getDeletionUrl(), 'close', T_('Delete'));
+        }
+
+        return $actions;
+    }
+
     public function getId(): int
     {
         return $this->song->getId();
+    }
+
+    public function getLicenseChip(): ?HeaderChip
+    {
+        $license = $this->song->getLicense();
+
+        return ($license === null)
+            ? null
+            : new HeaderChip($license->getName(), url: $license->getExternalLink(), accent: true, external: true);
     }
 
     public function getLicenseLink(): string
@@ -337,6 +476,17 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return $this->song->get_f_time();
     }
 
+    public function getPlayNote(): string
+    {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
+            return '';
+        }
+
+        $played = $this->getNumberPlayed();
+
+        return sprintf(nT_('Played %d time', 'Played %d times', $played), $played);
+    }
+
     public function getPostShoutIcon(): string
     {
         return Ui::get_material_symbol('comment', T_('Post Shout'));
@@ -354,6 +504,15 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     public function getPreferencesIcon(): string
     {
         return Ui::get_material_symbol('page_info', T_('Song Information'));
+    }
+
+    public function getPrimaryHeaderAction(): string
+    {
+        $songId = $this->song->getId();
+
+        return ($this->config->isDirectplayEnabled())
+            ? Ajax::button_with_text('?page=stream&action=directplay&object_type=song&object_id=' . $songId, 'play_circle', T_('Play'), 'play_song_' . $songId)
+            : '';
     }
 
     /**
@@ -382,36 +541,13 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Disk Subtitle')] = scrub_out($this->song->disksubtitle ?? '');
-        $songprops[T_('Year')]          = $this->song->year;
+        $songprops[T_('Year')]          = ($this->song->year > 0) ? $this->song->year : '';
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->get_f_time());
-        $songprops[T_('Links')]         = "";
-        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
-            $songprops[T_('Links')] .= '<a href="https://www.google.com/search?q=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22+%22" . rawurlencode((string) $this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('google', sprintf(T_('Search on %s ...'), 'Google')) . "</a>";
-        }
-
-        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_DUCKDUCKGO)) {
-            $songprops[T_('Links')] .= '&nbsp;<a href="https://www.duckduckgo.com/?q=' . rawurlencode($this->song->get_parent_fullname()) . "+" . rawurlencode((string) $this->song->get_fullname()) . '" target="_blank">' . Ui::get_icon('duckduckgo', sprintf(T_('Search on %s ...'), 'DuckDuckGo')) . "</a>";
-        }
-
-        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_LASTFM)) {
-            $songprops[T_('Links')] .= '&nbsp;<a href="https://www.last.fm/search?q=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22+%22" . rawurlencode((string) $this->song->get_fullname()) . '%22&type=track" target="_blank">' . Ui::get_icon('lastfm', sprintf(T_('Search on %s ...'), 'Last.fm')) . "</a>";
-        }
-
-        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_BANDCAMP)) {
-            $songprops[T_('Links')] .= '&nbsp;<a href="https://bandcamp.com/search?q=' . rawurlencode($this->song->get_parent_fullname()) . "+" . rawurlencode((string) $this->song->get_fullname()) . '&item_type=t" target="_blank">' . Ui::get_icon('bandcamp', sprintf(T_('Search on %s ...'), 'Bandcamp')) . "</a>";
-        }
-
-        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_MUSICBRAINZ)) {
-            $songprops[T_('Links')] .= ($this->song->mbid)
-                ? '&nbsp;<a href="https://musicbrainz.org/recording/' . $this->song->mbid . '" target="_blank">' . Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')) . "</a>"
-                : '&nbsp;<a href="https://musicbrainz.org/taglookup?tag-lookup.artist=%22' . rawurlencode($this->song->get_parent_fullname()) . "%22&tag-lookup.track=%22" . rawurlencode((string) $this->song->get_fullname()) . '%22" target="_blank">' . Ui::get_icon('musicbrainz', sprintf(T_('Search on %s ...'), 'Musicbrainz')) . "</a>";
-        }
-
-        $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');
+        $songprops[T_('Comment')]       = scrub_out($this->song->comment ?? '');
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
             $label_string = '';
-            foreach (array_map(trim(...), explode(';', (string) $this->song->label)) as $label_name) {
+            foreach (array_filter(array_map(trim(...), explode(';', (string) $this->song->label))) as $label_name) {
                 $label_string .= '<a href="' . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . '">' . scrub_out($label_name) . "</a>, ";
             }
 
@@ -492,6 +628,85 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         }
 
         return $songprops;
+    }
+
+    /**
+     * @return list<array{label: string, properties: array<string, string>}>
+     */
+    public function getPropertyGroups(): array
+    {
+        $properties = array_map(
+            strval(...),
+            array_filter(
+                $this->getProperties(),
+                static fn($value): bool => trim((string) $value) !== ''
+            )
+        );
+        unset($properties[T_('Title')]);
+
+        $technical = [
+            T_('Bitrate'),
+            T_('Channels'),
+            T_('BPM'),
+            T_('Catalog Number'),
+            T_('Barcode'),
+            T_('ISRC'),
+            T_('Song MBID'),
+            T_('Album MBID'),
+            T_('Artist MBID'),
+            T_('ReplayGain Track Gain'),
+            T_('ReplayGain Album Gain'),
+            T_('R128 Track Gain'),
+            T_('R128 Album Gain'),
+        ];
+        $file = [
+            T_('Path'),
+            T_('Filename'),
+            T_('Size'),
+            T_('Catalog'),
+            T_('Uploaded by'),
+            T_('Added'),
+            T_('Last Updated'),
+            T_('Played'),
+            T_('Skipped'),
+        ];
+
+        $information = [
+            T_('Song Artist'),
+            T_('Album Artist'),
+            T_('Album'),
+            T_('Disk'),
+            T_('Disk Subtitle'),
+            T_('Track'),
+            T_('Composer'),
+            T_('Genres'),
+            T_('Moods'),
+            T_('Year'),
+            T_('Original Year'),
+            T_('Length'),
+            T_('Song Language'),
+            T_('Comment'),
+            T_('Label'),
+            T_('Licensing'),
+            T_('Lyrics'),
+        ];
+
+        $rest = array_diff_key($properties, array_flip([...$technical, ...$file]));
+
+        return [
+            [
+                'label' => T_('Information'),
+                'properties' => $this->ordered($rest, $information) + $rest,
+            ],
+            [
+                'label' => T_('Technical'),
+                'properties' => $this->ordered($properties, $technical),
+            ],
+            [
+                'label' => T_('File'),
+                'properties' => $this->ordered($properties, $file),
+            ],
+        ];
     }
 
     public function getRating(): string
@@ -612,5 +827,33 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     protected function templateFile(): string
     {
         return $this->findTemplate('song.phtml');
+    }
+
+    private function link(string $url, string $icon, string $label, bool $external = false): string
+    {
+        return sprintf(
+            '<a %shref="%s">%s %s</a>',
+            ($external) ? 'class="nohtml" rel="nofollow" ' : '',
+            $this->e($url),
+            Ui::get_material_symbol($icon, $label),
+            $this->e($label)
+        );
+    }
+
+    /**
+     * @param array<string, string> $properties
+     * @param list<string> $order
+     * @return array<string, string>
+     */
+    private function ordered(array $properties, array $order): array
+    {
+        $result = [];
+        foreach ($order as $key) {
+            if (array_key_exists($key, $properties)) {
+                $result[$key] = $properties[$key];
+            }
+        }
+
+        return $result;
     }
 }

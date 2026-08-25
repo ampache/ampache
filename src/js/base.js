@@ -20,6 +20,10 @@
 
 $(document).ready(function () {
     initTabs();
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        social_tools: false,
+        deeplinking: false
+    });
     $.ajaxSetup({
         // Enable caching of AJAX responses, including script and jsonp
         cache: true
@@ -120,11 +124,27 @@ export function displayNotification(message, timeout) {
     }
 }
 
+// Filtering from the genre cloud swaps the listing further down the page, where the reader is not
+// looking.
+export function scrollToBrowse()
+{
+    var target = document.querySelector('[id^="browse_content"]');
+    if (target) {
+        target.scrollIntoView();
+    }
+}
+
 export function initTabs()
 {
     $(".default_hidden").hide();
 
     $("#tabs li").click(function() {
+        var href = $(this).find("a").attr("href");
+        // a tab pointing at another page is a link, not a panel to reveal
+        if (typeof href === "undefined" || href.charAt(0) !== "#") {
+            return;
+        }
+
         $("#tabs li").removeClass("tab_active");
         $(this).addClass("tab_active");
         $(".tab_content").hide();

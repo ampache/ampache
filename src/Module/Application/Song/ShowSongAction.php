@@ -64,10 +64,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showBoxTop(
-                scrub_out($song->get_fullname()),
-                'box box_song_details'
-            );
+            $this->ui->showBoxTop('', 'box box_song_details');
 
             echo $this->guiFactory->createSongViewAdapter($gatekeeper, $song)->render();
 

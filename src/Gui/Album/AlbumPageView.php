@@ -27,12 +27,16 @@ namespace Ampache\Gui\Album;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\ExternalLinksView;
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Album;
@@ -144,6 +148,32 @@ final class AlbumPageView extends AbstractView
     public function getFullname(): string
     {
         return $this->album->get_fullname(false, true);
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $album = $this->album;
+
+        return new ObjectHeaderView(
+            kind: ($album instanceof AlbumDisk) ? T_('Album Disk') : T_('Album'),
+            title: $this->e($this->getFullname()),
+            art: ($this->showArt()) ? $this->getArt() : '',
+            breadcrumb: $this->getParentLink(),
+            chips: HeaderChip::listOf(
+                ($album->year > 0) ? (string) $album->year : null,
+                ($album->song_count > 0) ? new HeaderChip(sprintf(nT_('%d song', '%d songs', $album->song_count), $album->song_count), true) : null,
+                ($album->time > 0) ? new HeaderChip($this->e((string) $album->get_f_time()), true) : null,
+            ),
+            tags: HeaderChip::genres($album->get_tags(), $this->webPath . '/browse.php?action=tag&type=album&show_tag='),
+            rating: ($this->showRatings())
+                ? Rating::show($this->getAlbumId(), $this->getObjectType(), true) . Userflag::show($this->getAlbumId(), $this->getObjectType())
+                : '',
+            links: $this->getExternalLinks()->render(),
+            wideArt: true,
+            note: ($this->showPlayedTimes())
+                ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
+                : '',
+        );
     }
 
     /**

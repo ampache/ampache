@@ -25,25 +25,19 @@ declare(strict_types=1);
 
 // playlist/playlist.phtml -- rendered by Ampache\Gui\Playlist\PlaylistPageView
 
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Database\Query\Search;
-use Ampache\Module\Statistics\Rating;
-use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Playlist\PlaylistPageView $this */
 
 $playlistId = $this->getPlaylistId();
 $webPath    = $this->getWebPath();
-Ui::show_box_top('<div id="playlist_row_' . $playlistId . '">' . $this->getFullname() . '</div>', 'info-box'); ?>
-<div class="item_right_info">
-    <?php echo $this->raw($this->getArt()); ?>
-</div>
-<?php if ($this->showRatings()) { ?>
-<span id="rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw(Rating::show($playlistId, 'playlist')); ?></span>
-<span id="userflag_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw(Userflag::show($playlistId, 'playlist')); ?></span>
-<?php } ?>
+Ui::show_box_top('', 'info-box'); ?>
+<div class="object-page" id="playlist_row_<?php echo $playlistId; ?>">
+<?php echo $this->raw($this->getHeader()->render()); ?>
 <div id="information_actions">
     <ul>
         <?php if ($this->mayReorder()) { ?>
@@ -87,7 +81,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlistId . '">' . $this->getFulln
             </a>
         </li>
         <?php if ($this->isDirectPlay()) { ?>
-        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId, 'play_circle', T_('Play All'), 'directplay_full_' . $playlistId)); ?></li>
+        <li class="primary"><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId, 'play_circle', T_('Play All'), 'directplay_full_' . $playlistId)); ?></li>
         <?php } ?>
         <?php if ($this->isAutoplayNext()) { ?>
         <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_playlist_' . $playlistId)); ?></li>
@@ -121,7 +115,9 @@ Ui::show_box_top('<div id="playlist_row_' . $playlistId . '">' . $this->getFulln
             </a>
         </li>
         <?php } ?>
+        <?php echo $this->raw(ObjectHeaderView::actionsHelp()); ?>
     </ul>
+</div>
 </div>
 <?php Ui::show_box_bottom(); ?>
 <div id="reordered_list_<?php echo $playlistId; ?>">

@@ -2263,9 +2263,10 @@ a.option-list:hover {
    the player looked stuck to the bottom of the content.
    Scoped to <=768px (portrait phones) plus short landscape viewports (phones rotated: wider than 768px but
    only ~400-500px tall, which would otherwise fall back to the desktop min-width:1024px and re-trigger the zoom).
-   Tablets/desktop in landscape are >540px tall, so they stay on the desktop layout.
+   The landscape arm is capped at 1024px wide: a window that short but wider than that is a desktop one someone
+   resized (docked devtools, say), and it has room for the sidebar.
    @see //REBORN_MEDIA and keep in sync with dark.css light.css */
-@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) and (max-width: 1024px) {
     /* Fit the device width instead of forcing a 1024px page (kills the zoom). */
     body#main-page {
         min-width: 0;
@@ -2617,11 +2618,6 @@ a.option-list:hover {
         text-align: end;
     }
 
-    /* hide artist summary on mobile */
-    #item_summary {
-        display: none;
-    }
-
     /* art floats right by default. Pull it to the left edge  when collapsed. */
     #content .info-box .box-content .item_art {
         float: left;
@@ -2688,4 +2684,455 @@ a.option-list:hover {
     .multiselect-actions {
         position: static;
     }
+}
+
+/* --------------------------
+    Content (object header)
+   -------------------------- */
+.object-page {
+    container-type: inline-size;
+}
+
+/* The header is fixed at 64px, so an anchored jump has to stop short of it. */
+:target,
+.tab_content {
+    scroll-margin-top: 80px;
+}
+
+/* Anchored jumps glide instead of cutting, so the reader keeps their bearings. */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+.object-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.object-header-art {
+    max-width: 168px;
+}
+
+.object-header-art a {
+    display: block;
+}
+
+.object-header-art img,
+.object-header-art svg {
+    border: 1px solid var(--amp-border);
+    border-radius: 6px;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+.object-header-id {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 62em;
+    min-width: 0;
+}
+
+.object-header-kind {
+    color: var(--amp-muted);
+    font-size: 11px;
+    letter-spacing: 0.11em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.object-header-title {
+    font-size: 22px;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.object-header-crumb {
+    color: var(--amp-muted);
+    margin: 0;
+}
+
+.object-header-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.object-header-chips li {
+    background-color: var(--amp-raised);
+    border-radius: 20px;
+    color: var(--amp-muted);
+    font-size: 12px;
+    padding: 2px 10px;
+    white-space: nowrap;
+}
+
+.object-header-chips li.numeric {
+    font-family: monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+.object-header-chips li.genre {
+    background-color: transparent;
+    border: 1px solid var(--amp-border);
+    padding: 1px 9px;
+}
+
+.object-header-chips li.accent {
+    background-color: color-mix(in srgb, var(--amp-accent) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--amp-accent) 50%, transparent);
+    padding: 1px 9px;
+}
+
+.object-header-chips li a {
+    color: inherit;
+    display: block;
+    margin: -2px -10px;
+    padding: 2px 10px;
+}
+
+.object-header-chips li:has(a):hover {
+    background-color: var(--amp-accent);
+}
+
+.object-header-chips li:has(a):hover a {
+    color: var(--amp-accent-ink);
+}
+
+.object-header-chips li.accent,
+.object-header-chips li.accent a {
+    color: var(--amp-accent);
+}
+
+.object-header-chips li.accent:hover a {
+    color: var(--amp-accent-ink);
+}
+
+/* The legacy 150px star-rating cap made the stars spill over the heart. */
+#content .info-box .box-content .object-page div.star-rating {
+    max-width: none;
+    width: auto;
+}
+
+.object-header-meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+}
+
+.object-header-meta > span,
+.object-header-meta > div,
+.object-header-meta .star-rating,
+.object-header-meta .userflag {
+    display: inline-flex;
+    margin: 0;
+}
+
+.object-header-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.object-header-note {
+    color: var(--amp-muted);
+    font-size: 12px;
+}
+
+.object-page #information_actions {
+    margin: 8px 0 24px;
+    width: auto;
+}
+
+.object-page #information_actions ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.object-page #information_actions li {
+    background-color: var(--amp-raised);
+    border-radius: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+.object-page #information_actions li.primary {
+    background-color: var(--amp-accent);
+}
+
+.object-page #information_actions li.primary a {
+    color: var(--amp-accent-ink);
+}
+
+.object-page #information_actions li a {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.object-page #information_actions li .material-symbol {
+    height: 18px;
+    width: 18px;
+}
+
+/* Wide enough for three columns: art, identity and actions sit together on the left rather than the
+   identity stretching to the edge and pushing the actions away from it. */
+@media (min-width: 1280px) {
+    .object-page {
+        align-items: start;
+        column-gap: 24px;
+        display: grid;
+        grid-template-columns: 224px minmax(0, 44em) 15em;
+        justify-content: start;
+    }
+
+    .object-page:has(> .object-header.wide-art) {
+        grid-template-columns: 320px minmax(0, 44em) 15em;
+    }
+
+    .object-page > * {
+        grid-column: 1 / 3;
+        margin-top: 32px;
+    }
+
+    .object-page > .object-header {
+        margin-top: 0;
+    }
+
+    .object-page > .object-header {
+        display: contents;
+    }
+
+    .object-page > .object-header > .object-header-art {
+        grid-column: 1;
+        grid-row: 1;
+        max-width: none;
+    }
+
+    .object-page > .object-header > .object-header-id {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .object-page > #information_actions {
+        grid-column: 3;
+        grid-row: 1 / span 99;
+        margin: 0;
+    }
+
+    .object-page > #information_actions ul {
+        flex-direction: column;
+    }
+}
+
+@container (min-width: 460px) {
+    .object-header {
+        grid-template-columns: 180px minmax(0, 1fr);
+    }
+
+    .object-header-art {
+        max-width: none;
+    }
+}
+
+@container (min-width: 900px) {
+    .object-header {
+        grid-template-columns: 224px minmax(0, 1fr);
+    }
+
+    .object-header.wide-art {
+        grid-template-columns: 320px minmax(0, 1fr);
+    }
+}
+
+#information_actions .actions-help {
+    display: none;
+}
+
+#information_actions .actions-help input {
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+}
+
+/* Narrow screens keep the icons only; the help button brings the labels back. */
+@container (max-width: 459px) {
+    .object-page #information_actions ul:not(:has(.actions-help input:checked)) li a,
+    .object-page #information_actions ul:not(:has(.actions-help input:checked)) li label {
+        font-size: 0;
+        gap: 0;
+        padding: 7px 9px;
+    }
+
+    .object-page #information_actions .actions-help {
+        display: block;
+    }
+
+    /* Finger-sized ratings and favourite. */
+    .object-header-meta a {
+        padding: 2px;
+    }
+
+    .object-header-meta .material-symbol {
+        height: 22px;
+        width: 22px;
+    }
+
+    /* Finger-sized external links. */
+    .object-header-links a {
+        padding: 4px;
+    }
+
+    .object-header-links a svg,
+    .object-header-links a img {
+        height: 22px;
+        width: 22px;
+    }
+
+    /* No text node inside, so no line-height strut: fill the row to stay centred. */
+    .object-page #information_actions .actions-help label {
+        align-items: center;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        gap: 4px;
+        height: 100%;
+        justify-content: center;
+        padding: 5px 10px;
+    }
+
+    .object-page #information_actions .actions-help:has(input:checked) {
+        background-color: var(--amp-accent);
+    }
+
+    .object-page #information_actions .actions-help:has(input:checked) label {
+        color: var(--amp-accent-ink);
+    }
+
+    .object-page #information_actions .actions-help input:focus-visible + label {
+        outline: 2px solid var(--amp-accent);
+        outline-offset: 2px;
+    }
+}
+
+/* Metadata groups below the header: two columns at most, left aligned rather than stretched. */
+/* Multi-column rather than grid: the browser balances the blocks by height, so a long first group
+   pushes the others into the second column instead of leaving a gap under itself. */
+.object-groups {
+    column-gap: 12px;
+    columns: 22em 2;
+    max-width: 70em;
+}
+
+.object-group {
+    border: 1px solid var(--amp-border);
+    border-radius: 6px;
+    break-inside: avoid;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.object-group > summary,
+.object-group-head {
+    background-color: var(--amp-surface);
+    font-weight: bold;
+    padding: 6px 10px;
+}
+
+.object-group > summary {
+    cursor: pointer;
+}
+
+.object-group dl {
+    display: grid;
+    grid-template-columns: minmax(90px, 38%) 1fr;
+    margin: 0;
+}
+
+.object-group dt,
+.object-group dd {
+    border-top: 1px solid var(--amp-border);
+    margin: 0;
+    min-height: 0;
+    padding: 5px 10px;
+}
+
+.object-group dt {
+    color: var(--amp-muted);
+    float: none;
+    text-align: left;
+    width: auto;
+}
+
+.item-prose {
+    background-color: var(--amp-surface);
+    border: 1px solid var(--amp-border);
+    border-radius: 6px;
+    margin-bottom: 24px;
+    max-width: 70em;
+}
+
+.item-prose-body {
+    overflow-wrap: anywhere;
+    padding: 14px 16px 18px;
+}
+
+/* Folded by default when the text is long: the checkbox is the only state a stylesheet can hold on its
+   own, so it stands in for a toggle rather than asking for a script. */
+.item-prose-toggle {
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+}
+
+.item-prose-toggle:not(:checked) ~ .item-prose-body {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 8;
+    display: -webkit-box;
+    line-clamp: 8;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+.item-prose-more {
+    color: var(--amp-accent);
+    cursor: pointer;
+    display: block;
+    padding: 0 16px 16px;
+}
+
+.item-prose-toggle ~ .item-prose-body {
+    padding-bottom: 6px;
+}
+
+.item-prose-more .less,
+.item-prose-toggle:checked ~ .item-prose-more .more {
+    display: none;
+}
+
+.item-prose-toggle:checked ~ .item-prose-more .less {
+    display: inline;
+}
+
+.item-prose-toggle:focus-visible ~ .item-prose-more {
+    outline: 2px solid var(--amp-accent);
+    outline-offset: 2px;
 }
