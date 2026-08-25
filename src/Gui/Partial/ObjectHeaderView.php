@@ -47,6 +47,8 @@ final class ObjectHeaderView extends AbstractView
         private readonly array $chips = [],
         private readonly array $tags = [],
         private readonly string $rating = '',
+        private readonly string $userflag = '',
+        private readonly string $ratingKey = '',
         private readonly string $note = '',
         private readonly string $links = '',
         private readonly string $primaryAction = '',
@@ -115,6 +117,14 @@ final class ObjectHeaderView extends AbstractView
     }
 
     /**
+     * `<id>_<type>`, the suffix the ajax reply targets when a vote is cast.
+     */
+    public function getRatingKey(): string
+    {
+        return $this->ratingKey;
+    }
+
+    /**
      * @return list<HeaderChip>
      */
     public function getTags(): array
@@ -125,6 +135,11 @@ final class ObjectHeaderView extends AbstractView
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getUserflag(): string
+    {
+        return $this->userflag;
     }
 
     public function hasWideArt(): bool

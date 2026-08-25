@@ -112,9 +112,9 @@ final class VideoView extends AbstractView
                 new HeaderChip((string) $video->get_f_time(), true, title: T_('Length')),
                 new HeaderChip((string) $video->get_f_resolution(), true, title: T_('Resolution')),
             ),
-            rating: ($this->showRatings)
-                ? Rating::show($video->getId(), 'video') . Userflag::show($video->getId(), 'video')
-                : '',
+            rating: ($this->showRatings) ? Rating::show($video->getId(), 'video') : '',
+            userflag: ($this->showRatings) ? Userflag::show($video->getId(), 'video') : '',
+            ratingKey: $video->getId() . '_video',
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
         );

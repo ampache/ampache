@@ -27,15 +27,17 @@ declare(strict_types=1);
 
 /** @var Ampache\Gui\Partial\ObjectHeaderView $this */
 
-$chips   = $this->getChips();
-$actions = $this->getActions();
-$primary = $this->getPrimaryAction();
-$art     = $this->getArt();
-$crumb   = $this->getBreadcrumb();
-$rating  = $this->getRating();
-$note    = $this->getNote();
-$links   = $this->getLinks();
-$tags    = $this->getTags(); ?>
+$chips     = $this->getChips();
+$actions   = $this->getActions();
+$primary   = $this->getPrimaryAction();
+$art       = $this->getArt();
+$crumb     = $this->getBreadcrumb();
+$rating    = $this->getRating();
+$userflag  = $this->getUserflag();
+$ratingKey = $this->getRatingKey();
+$note      = $this->getNote();
+$links     = $this->getLinks();
+$tags      = $this->getTags(); ?>
 <div class="object-header<?php echo ($this->hasWideArt()) ? ' wide-art' : ''; ?>">
 <?php if ($art !== '') { ?>
     <div class="object-header-art"><?php echo $this->raw($art); ?></div>
@@ -72,9 +74,14 @@ $tags    = $this->getTags(); ?>
 <?php } ?>
         </ul>
 <?php } ?>
-<?php if ($rating !== '' || $note !== '') { ?>
+<?php if ($rating !== '' || $userflag !== '' || $note !== '') { ?>
         <div class="object-header-meta">
-            <?php echo $this->raw($rating); ?>
+<?php if ($rating !== '') { ?>
+            <div id="rating_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($rating); ?></div>
+<?php } ?>
+<?php if ($userflag !== '') { ?>
+            <div id="userflag_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($userflag); ?></div>
+<?php } ?>
 <?php if ($note !== '') { ?>
             <span class="object-header-note"><?php echo $this->e($note); ?></span>
 <?php } ?>

@@ -165,9 +165,9 @@ final class AlbumPageView extends AbstractView
                 ($album->time > 0) ? new HeaderChip($this->e((string) $album->get_f_time()), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($album->get_tags(), $this->webPath . '/browse.php?action=tag&type=album&show_tag='),
-            rating: ($this->showRatings())
-                ? Rating::show($this->getAlbumId(), $this->getObjectType(), true) . Userflag::show($this->getAlbumId(), $this->getObjectType())
-                : '',
+            rating: ($this->showRatings()) ? Rating::show($this->getAlbumId(), $this->getObjectType(), true) : '',
+            userflag: ($this->showRatings()) ? Userflag::show($this->getAlbumId(), $this->getObjectType()) : '',
+            ratingKey: $this->getAlbumId() . '_' . $this->getObjectType(),
             links: $this->getExternalLinks()->render(),
             wideArt: true,
             note: ($this->showPlayedTimes())

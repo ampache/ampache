@@ -125,9 +125,9 @@ final class PodcastView extends AbstractView
             chips: HeaderChip::listOf(
                 ($episodes > 0) ? new HeaderChip(sprintf(nT_('%d episode', '%d episodes', $episodes), $episodes), true) : null,
             ),
-            rating: ($this->areRatingsShown())
-                ? Rating::show($podcast->getId(), 'podcast') . Userflag::show($podcast->getId(), 'podcast')
-                : '',
+            rating: ($this->areRatingsShown()) ? Rating::show($podcast->getId(), 'podcast') : '',
+            userflag: ($this->areRatingsShown()) ? Userflag::show($podcast->getId(), 'podcast') : '',
+            ratingKey: $podcast->getId() . '_podcast',
         );
     }
 

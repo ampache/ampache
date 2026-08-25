@@ -106,9 +106,9 @@ final class PodcastEpisodeView extends AbstractView
                 ($episode->time > 0) ? new HeaderChip($episode->get_f_time(), true, title: T_('Length')) : null,
                 $this->e($episode->getState()->toDescription()),
             ),
-            rating: ($this->showRatings)
-                ? Rating::show($episode->id, 'podcast_episode') . Userflag::show($episode->id, 'podcast_episode')
-                : '',
+            rating: ($this->showRatings) ? Rating::show($episode->id, 'podcast_episode') : '',
+            userflag: ($this->showRatings) ? Userflag::show($episode->id, 'podcast_episode') : '',
+            ratingKey: $episode->id . '_podcast_episode',
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
         );
