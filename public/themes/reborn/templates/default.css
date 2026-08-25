@@ -1359,13 +1359,51 @@ table.gridview thead {
     display: none;
 }
 
+/* The row keeps whatever space it cannot fill: centred, that space sits either side rather than
+   leaving the covers hanging off to the left. */
+table.gridview tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, max(170px, 15%));
+    justify-content: center;
+    row-gap: 24px;
+}
+
+/* The legacy percentage width fought the track it sits in, piling the slack into the last column. */
+table.gridview tbody tr {
+    max-width: none;
+    width: auto;
+}
+
+/* Between the mobile breakpoint and the theme's 1024px floor the page was laid out wider than the
+   window, so anything centred in it ran off screen. Let it follow the window instead. */
+@media (min-width: 769px) and (max-width: 1023px) {
+    body#main-page {
+        min-width: 0;
+    }
+}
+
 table.gridview tr {
-    float: left;
     max-width: 15%;
     min-width: 170px;
     padding: 0.5%;
     text-align: center;
     width: 15%;
+}
+
+/* Six per row is right up to a point; past it the cell keeps growing around a cover that does not,
+   which is how a wide screen ends up with postage stamps adrift in empty boxes. */
+@media (min-width: 2400px) {
+    table.gridview tbody {
+        display: grid;
+        gap: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    table.gridview tbody tr {
+        float: none;
+        max-width: none;
+        width: auto;
+    }
 }
 
 table.gridview tr {
@@ -1574,13 +1612,18 @@ table.gridview td.cel_ratings {
     margin-bottom: 20px;
 }
 
+/* The cover is 100px or 150px depending on the grid preference, so the tile takes its size from what
+   it holds rather than from a percentage that only ever suited one of them. */
+.box_random_albums .box-content,
+.box_random_videos .box-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 26px 40px;
+    justify-content: center;
+}
+
 .random_selection .random_album,
 .random_selection .random_video {
-    float: left;
-    min-width: 110px;
-    max-width: 16%;
-    margin-bottom: 1%;
-    margin-right: 3%;
     text-align: center;
 }
 
