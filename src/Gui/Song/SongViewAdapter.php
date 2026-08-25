@@ -45,6 +45,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Waveform;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -540,8 +541,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             $songprops[T_('Moods')] = $this->song->get_f_moods();
         }
 
-        $songprops[T_('Track')]         = $this->song->track;
-        $songprops[T_('Disk')]          = $this->song->disk;
+        $album                          = new Album($this->song->album);
+        $songprops[T_('Track')]         = $this->position($this->song->track, $album->song_count);
+        $songprops[T_('Disk')]          = ($album->disk_count > 1)
+            ? $this->position($this->song->disk, $album->disk_count)
+            : '';
         $songprops[T_('Disk Subtitle')] = scrub_out($this->song->disksubtitle ?? '');
         $songprops[T_('Year')]          = ($this->song->year > 0) ? $this->song->year : '';
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
@@ -857,5 +861,19 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         }
 
         return $result;
+    }
+
+    /**
+     * `4 / 14` when the total is known, `4` otherwise, nothing when the number itself is unset.
+     */
+    private function position(?int $number, int $total): string
+    {
+        if ($number === null || $number < 1) {
+            return '';
+        }
+
+        return ($total > 1)
+            ? sprintf('%d <span class="of-total">/ %d</span>', $number, $total)
+            : (string) $number;
     }
 }

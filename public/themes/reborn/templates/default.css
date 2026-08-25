@@ -3082,6 +3082,10 @@ a.option-list:hover {
     padding: 5px 10px;
 }
 
+.object-group .of-total {
+    color: var(--amp-muted);
+}
+
 .object-group dt {
     color: var(--amp-muted);
     float: none;
