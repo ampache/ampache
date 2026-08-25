@@ -2766,13 +2766,15 @@ a.option-list:hover {
     padding: 0;
 }
 
+/* A chip only wraps when it alone is wider than the column: flex puts it on its own line first. */
 .object-header-chips li {
     background-color: var(--amp-raised);
     border-radius: 20px;
     color: var(--amp-muted);
     font-size: 12px;
+    max-width: 100%;
+    overflow-wrap: break-word;
     padding: 2px 10px;
-    white-space: nowrap;
 }
 
 .object-header-chips li.numeric {
