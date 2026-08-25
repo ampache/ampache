@@ -354,9 +354,9 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
                 ($this->song->track > 0) ? $this->e(sprintf(T_('Track %d'), $this->song->track)) : '',
             ])),
             chips: HeaderChip::listOf(
-                ($this->song->year > 0) ? (string) $this->song->year : null,
-                new HeaderChip($this->getPlayDuration(), true),
-                ($bitrate > 0) ? new HeaderChip(sprintf('%d kbps', $bitrate), true) : null,
+                ($this->song->year > 0) ? new HeaderChip((string) $this->song->year, title: T_('Year')) : null,
+                new HeaderChip($this->getPlayDuration(), true, title: T_('Length')),
+                ($bitrate > 0) ? new HeaderChip(sprintf('%d kbps', $bitrate), true, title: T_('Bitrate')) : null,
                 $this->getLicenseChip(),
             ),
             tags: HeaderChip::genres($this->song->get_tags(), $this->configContainer->getWebPath() . '/browse.php?action=tag&type=song&show_tag='),

@@ -49,7 +49,7 @@ $tags    = $this->getTags(); ?>
 <?php if ($chips !== []) { ?>
         <ul class="object-header-chips">
 <?php foreach ($chips as $chip) { ?>
-            <li class="<?php echo $this->e(trim((($chip->numeric) ? 'numeric ' : '') . (($chip->accent) ? 'accent ' : '') . (($chip->genre) ? 'genre' : ''))); ?>">
+            <li class="<?php echo $this->e(trim((($chip->numeric) ? 'numeric ' : '') . (($chip->accent) ? 'accent ' : '') . (($chip->genre) ? 'genre' : ''))); ?>"<?php echo ($chip->title !== '') ? ' title="' . $this->e($chip->title) . '"' : ''; ?>>
 <?php if ($chip->url !== '') { ?>
                 <a href="<?php echo $this->e($chip->url); ?>"<?php echo ($chip->external) ? ' target="_blank" rel="nofollow noopener"' : ''; ?>><?php echo $this->e($chip->text); ?></a>
 <?php } else {

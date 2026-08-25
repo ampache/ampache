@@ -102,8 +102,8 @@ final class PodcastEpisodeView extends AbstractView
             art: $this->getArt(),
             breadcrumb: $episode->getPodcastLink(),
             chips: HeaderChip::listOf(
-                $this->e($episode->getCategory()),
-                ($episode->time > 0) ? new HeaderChip($episode->get_f_time(), true) : null,
+                new HeaderChip($this->e($episode->getCategory()), title: T_('Category')),
+                ($episode->time > 0) ? new HeaderChip($episode->get_f_time(), true, title: T_('Length')) : null,
                 $this->e($episode->getState()->toDescription()),
             ),
             rating: ($this->showRatings)

@@ -145,11 +145,11 @@ final class LabelView extends AbstractView
             title: $this->e($this->getName()),
             art: $this->getArt(),
             chips: HeaderChip::listOf(
-                trim(preg_replace('/\s+/', ' ', (string) $label->address) ?? ''),
-                (string) $label->category,
-                (string) $label->country,
+                new HeaderChip(trim(preg_replace('/\s+/', ' ', (string) $label->address) ?? ''), title: T_('Address')),
+                new HeaderChip((string) $label->category, title: T_('Category')),
+                new HeaderChip((string) $label->country, title: T_('Country')),
                 ($label->creation_date !== null && $label->creation_date > 0)
-                    ? new HeaderChip(get_datetime($label->creation_date, 'short', 'none'), true)
+                    ? new HeaderChip(get_datetime($label->creation_date, 'short', 'none'), true, title: T_('Creation Date'))
                     : null,
                 ($this->getWebsiteUrl() !== null)
                     ? new HeaderChip((string) parse_url($this->getWebsiteUrl(), PHP_URL_HOST), url: $this->getWebsiteUrl(), external: true)

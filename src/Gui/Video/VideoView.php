@@ -108,9 +108,9 @@ final class VideoView extends AbstractView
             title: $this->e($this->getName()),
             art: $this->getArt(),
             chips: HeaderChip::listOf(
-                ($video->release_date) ? $this->e(get_datetime((int) $video->release_date, 'short', 'none')) : null,
-                new HeaderChip((string) $video->get_f_time(), true),
-                new HeaderChip((string) $video->get_f_resolution(), true),
+                ($video->release_date) ? new HeaderChip($this->e(get_datetime((int) $video->release_date, 'short', 'none')), title: T_('Release Date')) : null,
+                new HeaderChip((string) $video->get_f_time(), true, title: T_('Length')),
+                new HeaderChip((string) $video->get_f_resolution(), true, title: T_('Resolution')),
             ),
             rating: ($this->showRatings)
                 ? Rating::show($video->getId(), 'video') . Userflag::show($video->getId(), 'video')

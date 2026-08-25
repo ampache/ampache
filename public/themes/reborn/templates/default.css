@@ -2841,7 +2841,13 @@ a.option-list:hover {
 .object-header-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
+}
+
+.object-header-links a svg,
+.object-header-links a img {
+    height: 20px;
+    width: 20px;
 }
 
 .object-header-note {

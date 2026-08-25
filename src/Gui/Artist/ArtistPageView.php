@@ -114,8 +114,8 @@ final class ArtistPageView extends AbstractView
             title: $this->e($this->getFullname()),
             art: $this->getArt(),
             chips: HeaderChip::listOf(
-                (string) $artist->placeformed,
-                ($artist->yearformed !== null && $artist->yearformed > 0) ? new HeaderChip((string) $artist->yearformed, true) : null,
+                new HeaderChip((string) $artist->placeformed, title: T_('Place Formed')),
+                ($artist->yearformed !== null && $artist->yearformed > 0) ? new HeaderChip((string) $artist->yearformed, true, title: T_('Year Formed')) : null,
                 ($artist->album_count > 0)
                     ? new HeaderChip(
                         sprintf(nT_('%d album', '%d albums', $artist->album_count), $artist->album_count),
@@ -130,7 +130,7 @@ final class ArtistPageView extends AbstractView
                         ($listed) ? $base . '&action=show_songs#albums' : '#albums'
                     )
                     : null,
-                ($artist->time > 0) ? new HeaderChip((string) $artist->get_f_time(), true) : null,
+                ($artist->time > 0) ? new HeaderChip((string) $artist->get_f_time(), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath() . '/browse.php?action=tag&type=artist&show_tag='),
             rating: ($this->showRatings())

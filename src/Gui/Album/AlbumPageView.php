@@ -160,9 +160,9 @@ final class AlbumPageView extends AbstractView
             art: ($this->showArt()) ? $this->getArt() : '',
             breadcrumb: $this->getParentLink(),
             chips: HeaderChip::listOf(
-                ($album->year > 0) ? (string) $album->year : null,
+                ($album->year > 0) ? new HeaderChip((string) $album->year, title: T_('Year')) : null,
                 ($album->song_count > 0) ? new HeaderChip(sprintf(nT_('%d song', '%d songs', $album->song_count), $album->song_count), true) : null,
-                ($album->time > 0) ? new HeaderChip($this->e((string) $album->get_f_time()), true) : null,
+                ($album->time > 0) ? new HeaderChip($this->e((string) $album->get_f_time()), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($album->get_tags(), $this->webPath . '/browse.php?action=tag&type=album&show_tag='),
             rating: ($this->showRatings())

@@ -39,6 +39,7 @@ final readonly class HeaderChip
         public bool $accent = false,
         public bool $external = false,
         public bool $genre = false,
+        public string $title = '',
     ) {
         $this->text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }

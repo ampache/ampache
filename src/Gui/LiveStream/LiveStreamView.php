@@ -75,7 +75,7 @@ final class LiveStreamView extends AbstractView
             title: $this->e($this->getName()),
             art: $this->getArt(),
             chips: HeaderChip::listOf(
-                $this->e((string) $radio->codec),
+                new HeaderChip($this->e((string) $radio->codec), title: T_('Codec')),
             ),
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
