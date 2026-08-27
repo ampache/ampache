@@ -147,6 +147,18 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
+        // the head metadata reads the song before the page starts
+        $song->year  = 2008;
+        $song->time  = 236;
+        $song->album = 55;
+        $song->shouldReceive('getLicense')->withNoArgs()->once()->andReturnNull();
+        $song->shouldReceive('get_parent_fullname')->withNoArgs()->twice()->andReturn('Some Artist');
+        $song->shouldReceive('get_album_fullname')->withNoArgs()->twice()->andReturn('Some Album');
+        $song->shouldReceive('get_fullname')->withNoArgs()->twice()->andReturn('Some Song');
+        $song->shouldReceive('get_f_tags')->withNoArgs()->once()->andReturn('');
+        $song->shouldReceive('get_f_time')->withNoArgs()->once()->andReturn('3:56');
+        $song->shouldReceive('getId')->withNoArgs()->andReturn($song_id);
+
         $this->ui->shouldReceive('showBoxTop')
             ->with('', 'box box_song_details')
             ->once();

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Podcast;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Podcast\PodcastView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -65,13 +66,34 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $user      = $gatekeeper->getUser() ?? new User(-1);
         $catalogs  = $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id);
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
-        if ($podcast === null || !in_array($podcast->getCatalogId(), $catalogs)) {
+        $shown     = $podcast !== null && in_array($podcast->getCatalogId(), $catalogs);
+
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/podcast.php?action=show&podcast=' . $podcastId;
+            PageMeta::set(
+                [$podcast->getDescription()],
+                'website',
+                (string) $podcast->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $podcastId . '&object_type=podcast&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'PodcastSeries',
+                    'name' => (string) $podcast->get_fullname(),
+                    'url' => $url,
+                    'webFeed' => $podcast->getFeedUrl(),
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

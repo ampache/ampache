@@ -75,7 +75,7 @@ Ui::show_box_top('', 'info-box'); ?>
         </li>
         <?php } ?>
         <li>
-            <a class="nohtml" href="<?php echo $this->e($webPath); ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlistId; ?>&name=<?php echo $this->e($this->getDownloadName()); ?>">
+            <a class="nohtml" rel="nofollow" href="<?php echo $this->e($webPath); ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlistId; ?>&name=<?php echo $this->e($this->getDownloadName()); ?>">
                 <?php echo $this->raw(Ui::get_material_symbol('download', T_('Download Playlist'))); ?>
                 <?php echo T_('Download Playlist'); ?>
             </a>

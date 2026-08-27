@@ -56,6 +56,7 @@ $web_path         = $this->getWebPath(); ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo $this->e($this->getSiteCharset()); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $this->e($this->getSiteTitle()); ?></title>
+<?php echo $this->raw(\Ampache\Gui\Partial\PageMeta::render()); ?>
 
         <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
 echo $this->raw((new ScriptsView($this->getEnvironment(), $this->getWebPath(), $ajaxUriRetriever))->render());

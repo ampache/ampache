@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\LiveStream\LiveStreamView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
@@ -64,13 +65,26 @@ final readonly class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = User::get_user_catalogs($user->id);
         $radio_id = (int) $this->requestParser->getFromRequest('radio');
         $radio    = $this->modelFactory->createLiveStream($radio_id);
-        if ($radio->isNew() || !in_array($radio->catalog, $catalogs)) {
+        $shown    = !$radio->isNew() && in_array($radio->catalog, $catalogs);
+
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            PageMeta::set(
+                [(string) $radio->site_url, (string) $radio->codec],
+                'music.radio_station',
+                (string) $radio->get_fullname(),
+                $webPath . '/radio.php?action=show&radio=' . $radio_id,
+                $webPath . '/image.php?object_id=' . $radio_id . '&object_type=live_stream&size=600x600'
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
                 'Requested a live_stream that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Artist\ArtistPageView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -62,8 +63,6 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $queryParams = $request->getQueryParams();
 
         $artistId  = (int) ($queryParams['artist'] ?? 0);
@@ -74,7 +73,36 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $artist = $this->modelFactory->createArtist($artistId);
 
-        if ($artist->isNew()) {
+        $shown = !$artist->isNew();
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/artists.php?action=show&artist=' . $artistId;
+            PageMeta::set(
+                [
+                    (string) $artist->placeformed,
+                    ($artist->album_count > 0) ? sprintf(nT_('%d album', '%d albums', $artist->album_count), $artist->album_count) : null,
+                    ($artist->song_count > 0) ? sprintf(nT_('%d song', '%d songs', $artist->song_count), $artist->song_count) : null,
+                    $artist->get_f_tags(),
+                ],
+                'profile',
+                (string) $artist->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $artistId . '&object_type=artist&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MusicGroup',
+                    'name' => (string) $artist->get_fullname(),
+                    'url' => $url,
+                    'genre' => array_values(array_filter(array_map(static fn(array $tag): string => (string) $tag['name'], $artist->get_tags()))),
+                    'foundingDate' => ($artist->yearformed !== null && $artist->yearformed > 0) ? (string) $artist->yearformed : null,
+                    'foundingLocation' => ((string) $artist->placeformed !== '') ? ['@type' => 'Place', 'name' => (string) $artist->placeformed] : null,
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
                 'Requested an artist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
