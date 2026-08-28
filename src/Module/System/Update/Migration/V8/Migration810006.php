@@ -30,7 +30,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration810006 extends AbstractMigration
 {
-    protected array $changelog = ['Group the branding settings together and add the icons a phone or a link preview asks for.'];
+    protected array $changelog = ['Group the branding settings together and add the icons, the share image and the description a link preview asks for.'];
 
     public function migrate(): void
     {
@@ -53,11 +53,29 @@ final class Migration810006 extends AbstractMigration
             'branding'
         );
 
+        $this->updatePreferences(
+            'site_description',
+            'Website Description - shown when a link to this server is shared',
+            '',
+            AccessLevelEnum::ADMIN->value,
+            'string',
+            'system',
+            'branding'
+        );
+
         // the settings that dress an instance were split between the interface page and the system
         // one, sitting next to a timezone and a footer string. They now share a section of their own.
         $this->updateDatabase(
             "UPDATE `preference` SET `subcategory` = 'branding' WHERE `name` IN "
-            . "('custom_favicon', 'custom_login_logo', 'custom_login_background');"
+            . "('custom_favicon', 'custom_login_logo', 'custom_login_background', 'custom_text_footer', 'site_title');"
+        );
+
+        // only an administrator ever sets the site title, so it does not need a row per user
+        $this->updateDatabase("UPDATE `preference` SET `category` = 'system' WHERE `name` = 'site_title';");
+        $this->updateDatabase(
+            "DELETE `user_preference` FROM `user_preference` "
+            . "JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` "
+            . "WHERE `preference`.`name` = 'site_title' AND `user_preference`.`user` != -1;"
         );
 
         $this->updateDatabase(

@@ -31,6 +31,13 @@ use ReflectionMethod;
 
 class BrandingTagsTest extends TestCase
 {
+    private const array KEYS = ['custom_favicon', 'custom_apple_touch_icon', 'custom_share_image', 'site_title', 'site_description', 'web_path'];
+
+    private ?string $host = null;
+
+    /** @var array<string, mixed> */
+    private array $saved = [];
+
     public function testACustomRasterFillsEverySlotOnItsOwn(): void
     {
         $tags = $this->tags('https://example.org/logo.png');
@@ -41,16 +48,17 @@ class BrandingTagsTest extends TestCase
         self::assertStringNotContainsString('favicon.svg', $tags);
     }
 
-    public function testACustomVectorIsUsedAloneAndNothingShippedFillsTheGaps(): void
+    public function testACustomVectorLeavesTheHomeScreenIconOutButStillGetsAPreview(): void
     {
-        // an instance that dresses itself must never show Ampache's logo beside its own, so the
-        // slots a vector cannot fill are left empty rather than filled with somebody else's icon
+        // an instance that dresses itself must never show Ampache's logo where a visitor reads it
+        // as theirs, which a home screen icon is; a link preview would otherwise show nothing at
+        // all, and a scraper left to itself settles on whatever image the page happened to hold
         $tags = $this->tags('https://example.org/logo.svg');
 
         self::assertStringContainsString('href="https://example.org/logo.svg" type="image/svg+xml"', $tags);
         self::assertStringNotContainsString('favicon.ico', $tags);
         self::assertStringNotContainsString('apple-touch-icon', $tags);
-        self::assertStringNotContainsString('og:image', $tags);
+        self::assertStringContainsString('og:image" content="/ampache-card.png"', $tags);
     }
 
     public function testAnUncustomisedInstanceGetsEverythingItShips(): void
@@ -59,8 +67,8 @@ class BrandingTagsTest extends TestCase
 
         self::assertStringContainsString('/favicon.svg" type="image/svg+xml"', $tags);
         self::assertStringContainsString('/favicon.ico"', $tags);
-        self::assertStringContainsString('rel="apple-touch-icon" href="/images/apple-touch-icon.png"', $tags);
-        self::assertStringContainsString('og:image" content="/images/ampache-card.png"', $tags);
+        self::assertStringContainsString('rel="apple-touch-icon" href="/apple-touch-icon.png"', $tags);
+        self::assertStringContainsString('og:image" content="/ampache-card.png"', $tags);
     }
 
     public function testAQuotedUrlCannotBreakOutOfTheAttribute(): void
@@ -80,6 +88,18 @@ class BrandingTagsTest extends TestCase
         self::assertStringNotContainsString('apple-touch-icon', $tags);
     }
 
+    public function testNothingIsSaidWithoutADescription(): void
+    {
+        self::assertStringNotContainsString('description', $this->tags());
+    }
+
+    public function testOnlyTheWideArtworkEarnsTheBanner(): void
+    {
+        self::assertStringContainsString('twitter:card" content="summary_large_image"', $this->tags('', '', 'https://example.org/card.png'));
+        self::assertStringContainsString('twitter:card" content="summary_large_image"', $this->tags('https://example.org/logo.svg'));
+        self::assertStringContainsString('twitter:card" content="summary"', $this->tags('https://example.org/logo.png'));
+    }
+
     public function testTheDedicatedSettingsWinOverTheFavicon(): void
     {
         $tags = $this->tags(
@@ -90,6 +110,51 @@ class BrandingTagsTest extends TestCase
 
         self::assertStringContainsString('rel="apple-touch-icon" href="https://example.org/touch.png"', $tags);
         self::assertStringContainsString('og:image" content="https://example.org/share.png"', $tags);
+    }
+
+    public function testTheDescriptionIsSaidOnceForTheReaderAndOnceForTheScraper(): void
+    {
+        AmpConfig::set('site_description', 'Free music, freely licensed.', true);
+
+        $tags = $this->tags();
+
+        self::assertStringContainsString('<meta name="description" content="Free music, freely licensed.">', $tags);
+        self::assertStringContainsString('og:description" content="Free music, freely licensed.">', $tags);
+    }
+
+    public function testTheShareImageIsMadeAbsolute(): void
+    {
+        // whoever renders the preview fetches it from their own server, where a bare path means nothing
+        $_SERVER['HTTP_HOST'] = 'music.example';
+
+        self::assertStringContainsString(
+            'og:image" content="http://music.example/images/card.png"',
+            $this->tags('', '', '/images/card.png')
+        );
+    }
+
+    protected function setUp(): void
+    {
+        foreach (self::KEYS as $key) {
+            $this->saved[$key] = AmpConfig::get($key);
+            AmpConfig::set($key, '', true);
+        }
+
+        $this->host = $_SERVER['HTTP_HOST'] ?? null;
+        unset($_SERVER['HTTP_HOST']);
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->saved as $key => $value) {
+            AmpConfig::set($key, $value, true);
+        }
+
+        if ($this->host === null) {
+            unset($_SERVER['HTTP_HOST']);
+        } else {
+            $_SERVER['HTTP_HOST'] = $this->host;
+        }
     }
 
     private function tags(string $favicon = '', string $touch = '', string $share = ''): string

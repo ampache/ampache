@@ -904,6 +904,21 @@ class Ui implements UiInterface
     }
 
     /**
+     * A link preview is fetched by somebody else's server, so a relative image never resolves
+     */
+    private static function absolute(string $url): string
+    {
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+        if ($url === '' || $host === '' || preg_match('#^(?:[a-z][a-z0-9+.-]*:)?//#i', $url) === 1) {
+            return $url;
+        }
+
+        $ssl = (Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https' || Core::get_server('HTTPS') === 'on');
+
+        return (($ssl) ? 'https://' : 'http://') . $host . '/' . ltrim($url, '/');
+    }
+
+    /**
      * The icon and link-preview tags, from whatever the administrator supplied
      *
      * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
@@ -931,22 +946,30 @@ class Ui implements UiInterface
         // setting, then to the raster favicon, and is dropped when only a vector is on offer
         $touch = trim((string) AmpConfig::get('custom_apple_touch_icon', ''))
             ?: (($custom !== '' && !$vector) ? $custom : '')
-            ?: (($custom === '') ? $webPath . '/images/apple-touch-icon.png' : '');
+            ?: (($custom === '') ? $webPath . '/apple-touch-icon.png' : '');
         if ($touch !== '') {
             $tags[] = '<link rel="apple-touch-icon" href="' . self::esc($touch) . '">';
         }
 
-        $share = trim((string) AmpConfig::get('custom_share_image', ''))
-            ?: (($custom !== '' && !$vector) ? $custom : '')
-            ?: (($custom === '') ? $webPath . '/images/ampache-card.png' : '');
-        if ($share !== '') {
-            $tags[] = '<meta property="og:image" content="' . self::esc($share) . '">';
-            $tags[] = '<meta name="twitter:card" content="summary">';
-        }
+        // a shared link always shows something: the shipped card stands in when nothing usable was
+        // supplied, since Ampache's artwork beats the stray page image a scraper settles on
+        $supplied = trim((string) AmpConfig::get('custom_share_image', ''));
+        $square   = ($supplied === '' && $custom !== '' && !$vector);
+        $share    = $supplied ?: (($square) ? $custom : $webPath . '/ampache-card.png');
+
+        $tags[] = '<meta property="og:image" content="' . self::esc(self::absolute($share)) . '">';
+        // a favicon standing in for the wide artwork would be cropped by the banner card
+        $tags[] = '<meta name="twitter:card" content="' . (($square) ? 'summary' : 'summary_large_image') . '">';
 
         $title = trim((string) AmpConfig::get('site_title', ''));
         if ($title !== '') {
             $tags[] = '<meta property="og:site_name" content="' . self::esc($title) . '">';
+        }
+
+        $description = trim((string) AmpConfig::get('site_description', ''));
+        if ($description !== '') {
+            $tags[] = '<meta name="description" content="' . self::esc($description) . '">';
+            $tags[] = '<meta property="og:description" content="' . self::esc($description) . '">';
         }
 
         $tags[] = '<meta property="og:type" content="website">';
