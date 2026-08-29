@@ -639,7 +639,9 @@ class Dba
 
         $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'));
         $charset = $charset['charset'];
-        if ($dbh->exec('SET NAMES ' . $charset) === false) {
+        try {
+            $dbh->exec('SET NAMES ' . $charset);
+        } catch (PDOException) {
             debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
         }
 
@@ -651,9 +653,14 @@ class Dba
         }
 
         if (AmpConfig::get('sql_profiling')) {
-            $dbh->exec('SET profiling=1');
-            $dbh->exec('SET profiling_history_size=50');
-            $dbh->exec('SET query_cache_type=0');
+            try {
+                $dbh->exec('SET profiling=1');
+                $dbh->exec('SET profiling_history_size=50');
+                // gone in mysql 8, still there in mariadb
+                $dbh->exec('SET query_cache_type=0');
+            } catch (PDOException $pdoException) {
+                debug_event(self::class, 'Unable to enable sql profiling: ' . $pdoException->getMessage(), 1);
+            }
         }
 
         return true;
