@@ -167,13 +167,13 @@ class Label extends database_object implements
         $results = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {
+            // only when emitting html: the plain form feeds the edit input and the ajax autocomplete, where an
+            // entity would be shown and typed back verbatim
             if ($link) {
-                $results .= '<a href="' . $web_path . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
-            }
-
-            $results .= $value;
-            if ($link) {
-                $results .= '</a>';
+                $name = scrub_out($value);
+                $results .= '<a href="' . $web_path . '/labels.php?action=show&label=' . $label_id . '" title="' . $name . '">' . $name . '</a>';
+            } else {
+                $results .= $value;
             }
 
             $results .= ', ';

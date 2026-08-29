@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\LabelRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -89,6 +90,25 @@ class LabelTest extends TestCase
 
         self::assertSame([1, 2], $subject->get_artists());
         self::assertSame([1, 2], $subject->get_artists());
+    }
+
+    public function testGetDisplayEscapesTheNameInTheLink(): void
+    {
+        // a label name comes from a media file `label` tag, and it lands in html here
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame(
+            '<a href="https://music.example/labels.php?action=show&label=7" title="a&quot;b">a&quot;b</a>',
+            Label::get_display([7 => 'a"b'], true)
+        );
+    }
+
+    public function testGetDisplayLeavesThePlainFormUnescaped(): void
+    {
+        // the plain form feeds an input value and the ajax autocomplete, where an entity would be shown verbatim
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame('Éditions & Co', Label::get_display([7 => 'Éditions & Co']));
     }
 
     public function testMigrateMovesArtistAssociationsOnly(): void
