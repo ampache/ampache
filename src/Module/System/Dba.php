@@ -519,10 +519,24 @@ class Dba
             $dsn .= ';port=' . (int) ($port);
         }
 
+        // PDO::quote() and the emulated prepares escape with the charset the dsn names; the later `SET NAMES` never
+        // reaches them, so a connection charset whose trail bytes include 0x5c would let an escaped quote break out.
+        $charset  = (string) self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'))['charset'];
+        $base_dsn = $dsn;
+        $dsn .= (preg_match('/^[a-zA-Z0-9_]+$/', $charset) === 1) ? ';charset=' . $charset : '';
+
         try {
             debug_event(self::class, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $pdoException) {
+            // A charset valid for `SET NAMES` is not always valid in a dsn (utf8mb3, ucs2, utf16). Retry without it
+            // rather than break a working install; credentials come from config, so the extra attempt is harmless.
+            if ($dsn !== $base_dsn) {
+                try {
+                    return new PDO($base_dsn, $username, $password);
+                } catch (PDOException $pdoException) {
+                }
+            }
             self::$_error = $pdoException->getMessage();
             debug_event(self::class, 'Connection failed: ' . $pdoException->getMessage(), 1);
 
