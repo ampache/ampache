@@ -198,7 +198,7 @@ abstract class AbstractHandshakeMethod implements MethodInterface
                     );
                 }
 
-                if (hash('sha256', $timestamp . $realpwd) !== $passphrase) {
+                if (!hash_equals(hash('sha256', $timestamp . $realpwd), $passphrase)) {
                     $client = null;
                 }
             }
