@@ -118,6 +118,11 @@ final class Handshake3Method implements MethodInterface
         } else {
             $client = User::get_from_username($username);
         }
+        if ($client instanceof User && $client->disabled) {
+            debug_event(static::class, 'Login Failed: account is disabled', 1);
+            $client = null;
+        }
+
         if ($client instanceof User) {
             $user_id = $client->id;
         }
