@@ -273,7 +273,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             }
 
             echo '<td class="optional">';
-            echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
+            echo '<div style="white-space: normal;">' . scrub_out($item->get_description()) . '</div>';
             echo '</div>';
             echo '</td></tr>';
         }
