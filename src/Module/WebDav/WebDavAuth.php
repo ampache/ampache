@@ -28,6 +28,7 @@ namespace Ampache\Module\WebDav;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Override;
 use Sabre\DAV\Auth\Backend\AbstractBasic;
 
@@ -39,7 +40,10 @@ final class WebDavAuth extends AbstractBasic
     #[Override]
     protected $realm = 'Ampache';
 
-    public function __construct(private readonly AuthenticationManagerInterface $authenticationManager) {}
+    public function __construct(
+        private readonly AuthenticationManagerInterface $authenticationManager,
+        private readonly UserRepositoryInterface $userRepository,
+    ) {}
 
     /**
      * @param string $username
@@ -53,7 +57,7 @@ final class WebDavAuth extends AbstractBasic
         }
 
         // Reject disabled accounts and bind the user so per-user catalog filtering applies.
-        $user = User::get_from_username((string) $username);
+        $user = $this->userRepository->findByUsername((string) $username);
         if (!$user instanceof User || $user->disabled) {
             return false;
         }
