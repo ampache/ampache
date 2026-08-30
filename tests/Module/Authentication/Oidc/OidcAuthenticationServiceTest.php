@@ -43,6 +43,28 @@ class OidcAuthenticationServiceTest extends MockeryTestCase
     private MockInterface|LoggerInterface|null $logger;
     private ?OidcAuthenticationService $subject;
 
+    public function testHandleCallbackDropsUnverifiedEmail(): void
+    {
+        $this->mockClient(
+            (object) [
+                'preferred_username' => 'some-username',
+                'email' => 'some-user@example.com',
+                'email_verified' => false,
+            ]
+        );
+
+        $this->logger->shouldReceive('warning')->once();
+
+        $this->configureWith([
+            ConfigurationKeyEnum::OIDC_EMAIL_CLAIM => 'email',
+        ]);
+
+        $result = $this->subject->handleCallback();
+
+        self::assertTrue($result['success']);
+        self::assertArrayNotHasKey('email', $result);
+    }
+
     public function testHandleCallbackFailsIfNotConfigured(): void
     {
         $this->clientFactory->shouldReceive('create')
