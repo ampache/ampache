@@ -70,7 +70,7 @@ final readonly class Session implements SessionInterface
         $cname = AmpConfig::get('session_name', 'ampache') . '_remember';
         if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', (string) $_COOKIE[$cname]);
-            if ($mac === hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key'))) {
+            if (hash_equals(hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key')), (string) $mac)) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
                 if (Dba::num_rows($db_results) > 0) {
