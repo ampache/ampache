@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 use Override;
 use Sabre\DAV\Auth\Backend\AbstractBasic;
 
@@ -46,7 +48,22 @@ final class WebDavAuth extends AbstractBasic
     protected function validateUserPass($username, $password): bool
     {
         $auth = $this->authenticationManager->login($username, $password, true);
+        if (empty($auth['success'])) {
+            return false;
+        }
 
-        return (bool) $auth['success'];
+        // The webdav entrypoint runs with NO_SESSION, so no global user is set.
+        // Load the authenticated account to (1) reject disabled users, as the
+        // interactive login does, and (2) bind the user so the per-user
+        // catalog_filter_group is applied to catalog queries instead of the
+        // default (system) group.
+        $user = User::get_from_username((string) $username);
+        if (!$user instanceof User || $user->disabled) {
+            return false;
+        }
+
+        Session::createGlobalUser($user);
+
+        return true;
     }
 }
