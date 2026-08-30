@@ -34,6 +34,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\PlaylistRepositoryInterface;
@@ -102,6 +103,11 @@ class Playlist extends playlist_object
         }
 
         Art::build_cache($ids, 'playlist');
+
+        // the rating widget on every row reads the average: one bulk read instead of one query per row
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('playlist', $ids);
+        }
 
         return true;
     }

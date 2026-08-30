@@ -172,6 +172,11 @@ class Artist extends database_object implements
             }
         }
 
+        // the rating widget on every row reads the average: one bulk read instead of one query per row
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('artist', $ids);
+        }
+
         return true;
     }
 

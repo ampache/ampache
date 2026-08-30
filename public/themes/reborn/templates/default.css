@@ -2074,8 +2074,15 @@ span.fatalerror {
 .star-rating .global-rating {
     bottom: 2px;
     font-size: 0.95em;
+    margin-left: 0.45em;
     position: relative;
     top: 0.9px;
+    white-space: nowrap;
+}
+
+/* a table cell has no room for the wording, and its title carries the count instead */
+.cel_rating .global-rating-count {
+    display: none;
 }
 
 .star-rating .current-rating {

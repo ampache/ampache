@@ -215,6 +215,11 @@ class Album extends database_object implements
             Artist::build_cache(array_values($artist_ids));
         }
 
+        // the rating widget on every row reads the average: one bulk read instead of one query per row
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('album', $ids);
+        }
+
         return true;
     }
 

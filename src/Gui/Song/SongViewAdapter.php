@@ -717,7 +717,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getRating(): string
     {
-        return Rating::show($this->song->getId(), 'song');
+        return Rating::show($this->song->getId(), 'song', true);
     }
 
     public function getRefreshIcon(): string

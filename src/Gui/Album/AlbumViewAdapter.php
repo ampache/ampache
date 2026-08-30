@@ -294,7 +294,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getRating(): string
     {
-        return Rating::show($this->album->getId(), 'album');
+        return Rating::show($this->album->getId(), 'album', true);
     }
 
     public function getShareUi(): string

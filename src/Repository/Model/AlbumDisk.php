@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -178,6 +179,11 @@ class AlbumDisk extends database_object implements
         // warm parent albums so the constructor's new Album() hits cache
         if ($album_ids !== []) {
             Album::build_cache(array_values($album_ids));
+        }
+
+        // the rating widget on every row reads the average: one bulk read instead of one query per row
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('album_disk', $ids);
         }
 
         return true;
