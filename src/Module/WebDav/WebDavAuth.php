@@ -52,11 +52,7 @@ final class WebDavAuth extends AbstractBasic
             return false;
         }
 
-        // The webdav entrypoint runs with NO_SESSION, so no global user is set.
-        // Load the authenticated account to (1) reject disabled users, as the
-        // interactive login does, and (2) bind the user so the per-user
-        // catalog_filter_group is applied to catalog queries instead of the
-        // default (system) group.
+        // Reject disabled accounts and bind the user so per-user catalog filtering applies.
         $user = User::get_from_username((string) $username);
         if (!$user instanceof User || $user->disabled) {
             return false;

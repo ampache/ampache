@@ -655,8 +655,6 @@ final readonly class Session implements SessionInterface
      * remove_remember_token
      *
      * Invalidate a user's persistent "remember me" tokens server-side.
-     * Clearing the cookie alone leaves the DB token valid until expiry, so a
-     * captured token would survive an explicit logout.
      */
     public static function remove_remember_token(string $username): void
     {
