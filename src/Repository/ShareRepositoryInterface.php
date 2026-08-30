@@ -73,9 +73,9 @@ interface ShareRepositoryInterface
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     /**
-     * Sets the last access-date and raises the counter
+     * Atomically raise the counter while below max_counter. Returns false when the limit is reached.
      */
-    public function registerAccess(Share $share, DateTimeInterface $date): void;
+    public function registerAccess(Share $share, DateTimeInterface $date): bool;
 
     /**
      * Writes the editable properties of an existing share
