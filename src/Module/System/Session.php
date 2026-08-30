@@ -652,16 +652,6 @@ final readonly class Session implements SessionInterface
     }
 
     /**
-     * storeTokenForUser
-     */
-    public static function storeTokenForUser(string $username, string $token, int $remember_length): void
-    {
-        $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
-
-        Dba::write($sql, [$username, $token, $remember_length]);
-    }
-
-    /**
      * remove_remember_token
      *
      * Invalidate a user's persistent "remember me" tokens server-side.
@@ -676,6 +666,16 @@ final readonly class Session implements SessionInterface
 
         $sql = 'DELETE FROM `session_remember` WHERE `username` = ?';
         Dba::write($sql, [$username]);
+    }
+
+    /**
+     * storeTokenForUser
+     */
+    public static function storeTokenForUser(string $username, string $token, int $remember_length): void
+    {
+        $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+
+        Dba::write($sql, [$username, $token, $remember_length]);
     }
 
     /**
