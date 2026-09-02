@@ -37,7 +37,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
-use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
@@ -163,7 +162,6 @@ class DeleteActionTest extends MockeryTestCase
         );
     }
 
-    #[Override]
     public function testRunThrowsIfFormTokenIsInvalid(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);

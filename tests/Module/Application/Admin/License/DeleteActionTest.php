@@ -37,7 +37,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
-use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
@@ -164,7 +163,6 @@ class DeleteActionTest extends MockeryTestCase
         );
     }
 
-    #[Override]
     public function testRunThrowsIfFormTokenIsInvalid(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
@@ -193,6 +191,7 @@ class DeleteActionTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
+        $this->requestParser     = $this->mock(RequestParserInterface::class);
         $this->configContainer   = $this->mock(ConfigContainerInterface::class);
         $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
