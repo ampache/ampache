@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
@@ -43,6 +44,7 @@ class DeleteActionTest extends MockeryTestCase
 {
     private MockInterface&ConfigContainerInterface $configContainer;
     private MockInterface&LicenseRepositoryInterface $licenseRepository;
+    private MockInterface&RequestParserInterface $requestParser;
     private DeleteAction $subject;
     private MockInterface&UiInterface $ui;
 
@@ -62,6 +64,11 @@ class DeleteActionTest extends MockeryTestCase
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with('delete_license')
             ->once()
             ->andReturnTrue();
 
@@ -118,6 +125,11 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with('delete_license')
+            ->once()
+            ->andReturnTrue();
+
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -153,6 +165,31 @@ class DeleteActionTest extends MockeryTestCase
     }
 
     #[Override]
+    public function testRunThrowsIfFormTokenIsInvalid(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        static::expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with('delete_license')
+            ->once()
+            ->andReturnFalse();
+
+        $this->licenseRepository->shouldNotReceive('delete');
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
@@ -161,6 +198,7 @@ class DeleteActionTest extends MockeryTestCase
 
         $this->subject = new DeleteAction(
             $this->ui,
+            $this->requestParser,
             $this->configContainer,
             $this->licenseRepository
         );

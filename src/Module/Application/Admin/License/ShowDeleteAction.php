@@ -23,60 +23,64 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Admin\Shout;
+namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class DeleteAction implements ApplicationActionInterface
+final readonly class ShowDeleteAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'delete';
+    public const string REQUEST_KEY = 'show_delete';
 
     public function __construct(
         private UiInterface $ui,
-        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
-        private ShoutRepositoryInterface $shoutRepository,
+        private LicenseRepositoryInterface $licenseRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
-
-        if ($this->requestParser->verifyForm('delete_shout') === false) {
-            throw new AccessDeniedException();
-        }
-
-        $shoutId = (int) ($request->getQueryParams()['shout_id'] ?? 0);
-
-        $shout = $this->shoutRepository->findById($shoutId);
-        if ($shout === null) {
-            throw new ObjectNotFoundException($shoutId);
-        }
-
-        $this->shoutRepository->delete($shout);
-
-        $webPath = $this->configContainer->getWebPath('/admin');
 
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
-            T_('No Problem'),
-            T_('Shoutbox post has been deleted'),
-            sprintf('%s/shout.php', $webPath)
-        );
 
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
+        }
+
+        $licenseId = (int) ($request->getQueryParams()['license_id'] ?? 0);
+
+        $license = $this->licenseRepository->findById($licenseId);
+        if ($license === null) {
+            throw new ObjectNotFoundException($licenseId);
+        }
+
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            sprintf(T_('This will permanently delete the license "%s"'), scrub_out($license->getName())),
+            sprintf(
+                '%s/license.php?action=delete&license_id=%d',
+                $this->configContainer->getWebPath('/admin'),
+                $licenseId
+            ),
+            1,
+            'delete_license'
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -26,25 +26,24 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class DeleteAction implements ApplicationActionInterface
+final readonly class ShowDeleteAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'delete';
+    public const string REQUEST_KEY = 'show_delete';
 
     public function __construct(
         private UiInterface $ui,
-        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private ShoutRepositoryInterface $shoutRepository,
     ) {}
@@ -55,8 +54,13 @@ final readonly class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if ($this->requestParser->verifyForm('delete_shout') === false) {
-            throw new AccessDeniedException();
+        $this->ui->showHeader();
+
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
 
         $shoutId = (int) ($request->getQueryParams()['shout_id'] ?? 0);
@@ -66,17 +70,17 @@ final readonly class DeleteAction implements ApplicationActionInterface
             throw new ObjectNotFoundException($shoutId);
         }
 
-        $this->shoutRepository->delete($shout);
-
-        $webPath = $this->configContainer->getWebPath('/admin');
-
-        $this->ui->showHeader();
         $this->ui->showConfirmation(
-            T_('No Problem'),
-            T_('Shoutbox post has been deleted'),
-            sprintf('%s/shout.php', $webPath)
+            T_('Are You Sure?'),
+            sprintf(T_('This will permanently delete the shoutbox post "%s"'), scrub_out($shout->getText())),
+            sprintf(
+                '%s/shout.php?action=delete&shout_id=%d',
+                $this->configContainer->getWebPath('/admin'),
+                $shoutId
+            ),
+            1,
+            'delete_shout'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
