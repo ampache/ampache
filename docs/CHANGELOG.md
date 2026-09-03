@@ -46,6 +46,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 * Missing close box on a few template phtml files
+* Downloading a file the server could not open answered with an empty file and a success status rather than an error
 
 ## Ampache 8.0.1
 
