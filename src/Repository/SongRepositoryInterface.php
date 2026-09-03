@@ -241,6 +241,22 @@ interface SongRepositoryInterface
     public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array;
 
     /**
+     * The song ids of a set of albums, for warming a page that lists them
+     *
+     * @param array<int|string> $albumIds
+     * @return list<int>
+     */
+    public function getIdsByAlbums(array $albumIds): array;
+
+    /**
+     * The song ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array;
+
+    /**
      * Reads the ids of every song of one catalog, enabled or not
      *
      * @return list<int>

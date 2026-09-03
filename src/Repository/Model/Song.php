@@ -211,6 +211,12 @@ class Song extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($song_ids, static fn(int|string $id): bool => !parent::is_cached('song_warm', (int) $id));
+        if ($cold === []) {
+            return true;
+        }
+
         $artists    = [];
         $albums     = [];
         $repository = self::getSongRepository();
@@ -278,6 +284,10 @@ class Song extends database_object implements
         }
 
         // one tag read for the page instead of one per song
+
+        foreach ($song_ids as $id) {
+            parent::add_to_cache('song_warm', (int) $id, [true]);
+        }
 
         return true;
     }

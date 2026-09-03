@@ -530,6 +530,28 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The album ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array
+    {
+        if ($artistIds === []) {
+            return [];
+        }
+
+        $userId = Core::get_global('user')?->getId();
+        $sql    = sprintf(
+            'SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` IN (%s) AND `album`.`catalog` IN (%s)',
+            implode(',', array_map(intval(...), $artistIds)),
+            implode(',', Catalog::get_catalogs('', $userId, true))
+        );
+
+        return array_values(array_map(intval(...), $this->connection->query($sql)->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
+    /**
      * Reads the albums of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>

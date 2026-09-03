@@ -190,6 +190,12 @@ class Album extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($ids, static fn(int|string $id): bool => !parent::is_cached('album_warm', (int) $id));
+        if ($cold === []) {
+            return true;
+        }
+
         $artist_ids = [];
         foreach (self::getAlbumRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('album', $row['id'], $row);
@@ -223,6 +229,10 @@ class Album extends database_object implements
         Art::build_cache($ids, 'album');
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
+        }
+
+        foreach ($ids as $id) {
+            parent::add_to_cache('album_warm', (int) $id, [true]);
         }
 
         return true;
