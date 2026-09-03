@@ -32,6 +32,7 @@ use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use PDO;
 
 /**
  * Provides database access to album-disks
@@ -115,6 +116,34 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Every disk row of a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByAlbums(array $albumIds): array
+    {
+        if ($albumIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `album_disk` WHERE `album_id` IN (%s) ORDER BY `disk`',
+                implode(',', array_fill(0, count($albumIds), '?'))
+            ),
+            $albumIds
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**

@@ -39,6 +39,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
@@ -222,6 +223,31 @@ class Album extends database_object implements
         Art::build_cache($ids, 'album');
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
+        }
+
+        return true;
+    }
+
+    /**
+     * Warms what a full album entry reads on top of build_cache(): moods, disks and labels, one read each
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_detail_cache(array $ids): bool
+    {
+        if ($ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $intIds = array_values(array_map(intval(...), $ids));
+        Mood::build_object_mood_cache('album', $intIds);
+
+        AlbumDisk::build_cache_by_albums($intIds);
+
+        global $dic;
+        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($intIds) as $albumId => $labels) {
+            parent::add_to_cache('album_labels', $albumId, $labels);
+            parent::add_to_cache('album_labels_warm', $albumId, [true]);
         }
 
         return true;
@@ -911,6 +937,10 @@ class Album extends database_object implements
      */
     public function getDisks(): iterable
     {
+        if (parent::is_cached('album_disk_ids_warm', $this->id)) {
+            return array_map(static fn(int $id): AlbumDisk => new AlbumDisk($id), parent::get_from_cache('album_disk_ids', $this->id));
+        }
+
         return $this->getAlbumDiskRepository()->getByAlbum($this);
     }
 

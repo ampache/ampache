@@ -333,6 +333,7 @@ class OpenSubsonic_Xml_Data
     public function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList'));
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -355,6 +356,7 @@ class OpenSubsonic_Xml_Data
     public function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList2'));
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1029,6 +1031,7 @@ class OpenSubsonic_Xml_Data
     public function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
     {
         $xplaylists = $this->_addChildToResultXml($xml, 'playlists');
+        $this->openSubsonicFields->warmPlaylists($playlists);
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -1186,6 +1189,7 @@ class OpenSubsonic_Xml_Data
     public function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'randomSongs');
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1235,6 +1239,7 @@ class OpenSubsonic_Xml_Data
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult'));
         $xresult->addAttribute('offset', (string) $offset);
         $xresult->addAttribute('totalHits', (string) $total);
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1257,6 +1262,7 @@ class OpenSubsonic_Xml_Data
     public function addSearchResult2(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult2'));
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1265,6 +1271,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addArtist($xresult, $artist);
         }
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1273,6 +1280,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addAlbum($xresult, $album);
         }
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1295,6 +1303,7 @@ class OpenSubsonic_Xml_Data
     public function addSearchResult3(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult3'));
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1303,6 +1312,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addArtistID3($xresult, $artist);
         }
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1311,6 +1321,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addAlbumID3($xresult, $album);
         }
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1420,6 +1431,7 @@ class OpenSubsonic_Xml_Data
     public function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'songsByGenre');
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1468,6 +1480,7 @@ class OpenSubsonic_Xml_Data
     {
         $xstarred = $this->_addChildToResultXml($xml, htmlspecialchars('starred'));
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1477,6 +1490,7 @@ class OpenSubsonic_Xml_Data
             $this->addArtist($xstarred, $artist);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1487,6 +1501,7 @@ class OpenSubsonic_Xml_Data
             $this->addAlbum($xstarred, $album);
         }
 
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1510,6 +1525,7 @@ class OpenSubsonic_Xml_Data
     {
         $xstarred = $this->_addChildToResultXml($xml, htmlspecialchars('starred2'));
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1519,6 +1535,7 @@ class OpenSubsonic_Xml_Data
             $this->addArtistID3($xstarred, $artist);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1528,6 +1545,7 @@ class OpenSubsonic_Xml_Data
             $this->addAlbumID3($xstarred, $album);
         }
 
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1562,6 +1580,7 @@ class OpenSubsonic_Xml_Data
     public function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'topSongs');
+        $this->openSubsonicFields->warmSongs($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -2301,6 +2320,7 @@ class OpenSubsonic_Xml_Data
         }
         if ($songs) {
             $allsongs = $playlist->get_songs();
+            $this->openSubsonicFields->warmSongs($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -2470,6 +2490,7 @@ class OpenSubsonic_Xml_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
+            $this->openSubsonicFields->warmSongs($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -2479,6 +2500,7 @@ class OpenSubsonic_Xml_Data
             }
         } elseif ($share->object_type == 'album') {
             $songs = $this->songRepository->getByAlbum($share->object_id);
+            $this->openSubsonicFields->warmSongs($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {

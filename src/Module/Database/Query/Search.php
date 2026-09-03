@@ -26,10 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Search\AlbumDiskSearch;
 use Ampache\Module\Database\Search\AlbumSearch;
 use Ampache\Module\Database\Search\ArtistSearch;
@@ -339,6 +341,32 @@ class Search extends playlist_object
                 $this->order_by   = '`video`.`file`';
                 break;
         }
+    }
+
+    /**
+     * Caches a page of smartlists, their owners and their art in three reads instead of three per list
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        global $dic;
+        $owners = [];
+        foreach ($dic->get(SearchRepositoryInterface::class)->getRowsByIds(array_values(array_map(intval(...), $ids))) as $row) {
+            parent::add_to_cache('search', (int) $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
+        }
+
+        User::build_cache(array_values($owners));
+        Art::build_cache($ids, 'search');
+
+        return true;
     }
 
     /**

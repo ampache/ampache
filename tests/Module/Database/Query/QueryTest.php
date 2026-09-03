@@ -176,6 +176,9 @@ class QueryTest extends MockeryTestCase
         $this->assertNull($query->get_filter('regex_not_match'));
     }
 
+    /**
+     * An uncached query keeps its state in memory and never reaches the database.
+     */
     private function subject(): Query
     {
         return new Query(0, false);

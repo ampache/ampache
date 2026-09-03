@@ -275,6 +275,22 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
+        // the page warm holds the same rows, heaviest first; this read lists them by id like the query does
+        if ($object_id !== null && parent::is_cached('object_tags_warm_' . $type, $object_id)) {
+            $tags = [];
+            foreach (parent::get_from_cache('object_tags_' . $type, $object_id) as $tag) {
+                $tags[(int) $tag['id']] = [
+                    'id' => (int) $tag['id'],
+                    'name' => (string) $tag['name'],
+                    'is_hidden' => (int) $tag['is_hidden'],
+                    'user' => (int) $tag['user'],
+                ];
+            }
+            ksort($tags);
+
+            return array_values($tags);
+        }
+
         return self::getTagRepository()->getObjectTags($type, $object_id);
     }
 

@@ -971,6 +971,34 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * The song_map values of a set of songs, read in one go
+     *
+     * @param list<int> $songIds
+     * @return array<int, list<string>>
+     */
+    public function getSongMapValuesBulk(array $songIds, string $objectType): array
+    {
+        if ($songIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT DISTINCT `song_id`, `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` IN (%s)',
+                implode(',', array_fill(0, count($songIds), '?'))
+            ),
+            array_merge([$objectType], $songIds)
+        );
+
+        $values = array_fill_keys($songIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $values[(int) $row['song_id']][] = (string) $row['object_id'];
+        }
+
+        return $values;
+    }
+
+    /**
      * gets the songs for this artist
 
      * @return int[]

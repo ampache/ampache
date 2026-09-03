@@ -34,6 +34,35 @@ class AlbumDiskTest extends TestCase
     private AlbumDiskRepositoryInterface&MockObject $albumDiskRepository;
     private ContainerInterface&MockObject $dic;
 
+    public function testBuildCacheByAlbumsDoesNothingForNoAlbums(): void
+    {
+        $this->albumDiskRepository->expects(static::never())
+            ->method('getRowsByAlbums');
+
+        self::assertFalse(AlbumDisk::build_cache_by_albums([]));
+    }
+
+    public function testBuildCacheByAlbumsWarmsTheRowsAndTheDiskListOfEveryAlbum(): void
+    {
+        $this->albumDiskRepository->expects(static::once())
+            ->method('getRowsByAlbums')
+            ->with([21, 22])
+            ->willReturn([
+                ['id' => 1, 'album_id' => 21, 'disk' => 1],
+                ['id' => 2, 'album_id' => 21, 'disk' => 2],
+            ]);
+
+        self::assertTrue(AlbumDisk::build_cache_by_albums([21, 22]));
+
+        self::assertSame(['id' => 1, 'album_id' => 21, 'disk' => 1], AlbumDisk::get_from_cache('album_disk', 1));
+        self::assertSame([1, 2], AlbumDisk::get_from_cache('album_disk_ids', 21));
+        // an album with no disk row is warm too, or it is read again one by one
+        self::assertTrue(AlbumDisk::is_cached('album_disk_ids_warm', 22));
+        self::assertSame([], AlbumDisk::get_from_cache('album_disk_ids', 22));
+
+        AlbumDisk::clear_cache();
+    }
+
     public function testCheckDelegatesToTheRepository(): void
     {
         $this->albumDiskRepository->expects(static::once())

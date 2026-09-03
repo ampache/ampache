@@ -261,6 +261,10 @@ class Song extends database_object implements
         $intIds = array_map(intval(...), array_values($song_ids));
         Tag::build_object_tag_cache('song', $intIds);
         Mood::build_object_mood_cache('song', $intIds);
+        foreach ($repository->getSongMapValuesBulk($intIds, 'isrc') as $songId => $values) {
+            parent::add_to_cache('song_map_isrc', $songId, $values);
+            parent::add_to_cache('song_map_warm_isrc', $songId, [true]);
+        }
 
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
@@ -274,7 +278,6 @@ class Song extends database_object implements
         }
 
         // one tag read for the page instead of one per song
-        Tag::build_object_tag_cache('song', array_values(array_map(intval(...), $song_ids)));
 
         return true;
     }
@@ -573,6 +576,10 @@ class Song extends database_object implements
     {
         if (!$song_id) {
             return [];
+        }
+
+        if (parent::is_cached('song_map_warm_' . $type, $song_id)) {
+            return parent::get_from_cache('song_map_' . $type, $song_id);
         }
 
         return self::getSongRepository()->getSongMapValues($song_id, (string) $type);
@@ -2524,12 +2531,13 @@ class Song extends database_object implements
             return $repository->getWaveformRow($this->id);
         }
 
-        if ($select !== '') {
-            return $repository->getPartialDataRow($this->id);
-        }
-
+        // a page warm already holds the whole row, which answers a partial read as well
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
+        }
+
+        if ($select !== '') {
+            return $repository->getPartialDataRow($this->id);
         }
 
         $results = $repository->getDataRow($this->id);

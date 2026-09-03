@@ -100,6 +100,26 @@ class TagCacheInvalidationTest extends MockeryTestCase
         self::assertFalse(Tag::is_cached('object_tags_warm_album', 42));
     }
 
+    public function testTheObjectTagsAreReadFromTheWarmPageInTheOrderTheQueryGives(): void
+    {
+        $this->repository->shouldNotReceive('getObjectTags');
+
+        // the warm list is heaviest first; the plain read lists by id and carries no count
+        Tag::add_to_cache('object_tags_song', 1, [
+            ['id' => 9, 'name' => 'rock', 'is_hidden' => 0, 'user' => 0, 'count' => 5],
+            ['id' => 3, 'name' => 'jazz', 'is_hidden' => 0, 'user' => 2, 'count' => 1],
+        ]);
+        Tag::add_to_cache('object_tags_warm_song', 1, [true]);
+
+        self::assertSame(
+            [
+                ['id' => 3, 'name' => 'jazz', 'is_hidden' => 0, 'user' => 2],
+                ['id' => 9, 'name' => 'rock', 'is_hidden' => 0, 'user' => 0],
+            ],
+            Tag::get_object_tags('song', 1)
+        );
+    }
+
     #[Override]
     protected function setUp(): void
     {

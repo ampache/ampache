@@ -81,6 +81,14 @@ interface LabelRepositoryInterface
     public function getByAlbum(int $albumId): array;
 
     /**
+     * The labels of a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, array<int, string>>
+     */
+    public function getByAlbums(array $albumIds): array;
+
+    /**
      * @return string[]
      */
     public function getByArtist(int $artistId): array;

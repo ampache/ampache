@@ -2299,8 +2299,6 @@ class OpenSubsonic_Api
 
         $results = $browse->get_objects();
 
-        // the serializer reads each playlist row and its art, so warm both in one pass
-        Playlist::build_cache(Playlist::split_mixed_ids($results)['playlist']);
 
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {

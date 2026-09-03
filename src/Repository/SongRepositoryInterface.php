@@ -327,6 +327,14 @@ interface SongRepositoryInterface
     public function getSongMapValues(int $songId, string $objectType): array;
 
     /**
+     * The song_map values of a set of songs, read in one go
+     *
+     * @param list<int> $songIds
+     * @return array<int, list<string>>
+     */
+    public function getSongMapValuesBulk(array $songIds, string $objectType): array;
+
+    /**
      * gets the songs for this artist
      *
      * @return list<int>

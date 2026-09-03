@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Art\Art;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -590,5 +593,50 @@ final class OpenSubsonic_Fields
         }
 
         return (int) round($bitrate / 1000);
+    }
+
+    /**
+     * @param array<int|string> $ids
+     */
+    public function warmAlbums(array $ids): void
+    {
+        $ids = array_values(array_map(intval(...), $ids));
+        Album::build_cache($ids);
+        Album::build_detail_cache($ids);
+        Rating::build_cache('album', $ids);
+        Userflag::build_cache('album', $ids);
+    }
+
+    /**
+     * @param array<int|string> $ids
+     */
+    public function warmArtists(array $ids): void
+    {
+        $ids = array_values(array_map(intval(...), $ids));
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
+    }
+
+    /**
+     * Playlists and smartlists come mixed (`smart_12`), each kind has its own cache
+     *
+     * @param array<int|string> $ids
+     */
+    public function warmPlaylists(array $ids): void
+    {
+        $split = Playlist::split_mixed_ids($ids);
+        Playlist::build_cache($split['playlist']);
+        Search::build_cache($split['search']);
+    }
+
+    /**
+     * Warms every cache a page of songs reads, so the serializer stops asking once per song
+     *
+     * @param array<int|string> $ids
+     */
+    public function warmSongs(array $ids): void
+    {
+        Song::build_cache(array_values(array_map(intval(...), $ids)));
     }
 }
