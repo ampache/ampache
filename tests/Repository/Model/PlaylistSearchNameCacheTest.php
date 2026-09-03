@@ -64,6 +64,31 @@ class PlaylistSearchNameCacheTest extends MockeryTestCase
         self::assertSame(21, $playlist->has_search(8));
     }
 
+    public function testAWarmPageAnswersHasSearchWithoutAnotherRead(): void
+    {
+        $repository = $this->mock(PlaylistRepositoryInterface::class);
+        $repository->shouldReceive('findSearchNames')
+            ->with(0, false)
+            ->once()
+            ->andReturn([]);
+        $repository->shouldReceive('findOwnedSearchNamesBulk')
+            ->with([7, 8])
+            ->once()
+            ->andReturn([7 => [], 8 => [21 => 'Some name']]);
+
+        $this->setDic($repository);
+
+        Playlist::add_to_cache('playlist', 1, ['id' => 1, 'user' => 7]);
+        Playlist::add_to_cache('playlist', 2, ['id' => 2, 'user' => 8]);
+        self::assertTrue(Playlist::build_search_name_cache([1, 2]));
+
+        $playlist       = new Playlist(0);
+        $playlist->name = 'Some name';
+
+        self::assertSame(0, $playlist->has_search(7));
+        self::assertSame(21, $playlist->has_search(8));
+    }
+
     public function testTheNameListsAreReadOncePerUserPair(): void
     {
         $repository = $this->mock(PlaylistRepositoryInterface::class);

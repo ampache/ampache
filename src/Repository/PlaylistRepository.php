@@ -314,6 +314,31 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
+     * Reads the saved smartlists a set of users own, as user => (id => name)
+     *
+     * @param list<int> $userIds
+     * @return array<int, array<int, string>>
+     */
+    public function findOwnedSearchNamesBulk(array $userIds): array
+    {
+        if ($userIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf('SELECT `id`, `name`, `user` FROM `search` WHERE `user` IN (%s)', implode(',', array_fill(0, count($userIds), '?'))),
+            $userIds
+        );
+
+        $names = array_fill_keys($userIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $names[(int) $row['user']][(int) $row['id']] = (string) $row['name'];
+        }
+
+        return $names;
+    }
+
+    /**
      * Reads the saved smartlists a user can reach, as id => name
      *
      * @return array<int, string>

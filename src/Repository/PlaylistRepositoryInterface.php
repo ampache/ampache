@@ -102,6 +102,14 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function findNames(int $userId, bool $isAdmin): array;
 
     /**
+     * Reads the saved smartlists a set of users own, as user => (id => name)
+     *
+     * @param list<int> $userIds
+     * @return array<int, array<int, string>>
+     */
+    public function findOwnedSearchNamesBulk(array $userIds): array;
+
+    /**
      * Reads the saved smartlists a user can reach, as id => name
      *
      * @return array<int, string>

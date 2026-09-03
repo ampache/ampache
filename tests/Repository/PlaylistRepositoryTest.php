@@ -172,6 +172,34 @@ class PlaylistRepositoryTest extends TestCase
         self::assertSame([7, 42], $this->subject->findEditableIds(666));
     }
 
+    public function testFindOwnedSearchNamesBulkDoesNothingForNoUsers(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->findOwnedSearchNamesBulk([]));
+    }
+
+    public function testFindOwnedSearchNamesBulkGroupsByOwnerAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `name`, `user` FROM `search` WHERE `user` IN (?,?)', [7, 8])
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['id' => '21', 'name' => 'Some name', 'user' => '8'],
+            false
+        );
+
+        self::assertSame(
+            [7 => [], 8 => [21 => 'Some name']],
+            $this->subject->findOwnedSearchNamesBulk([7, 8])
+        );
+    }
+
     public function testGetIdsByCatalogRepeatsTheCatalogForEveryMediaType(): void
     {
         $result = $this->createMock(PDOStatement::class);

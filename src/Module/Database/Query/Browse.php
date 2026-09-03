@@ -910,7 +910,7 @@ class Browse extends Query
                 'album' => Album::build_cache($ids),
                 'artist' => Artist::build_cache($ids),
                 'video' => Video::build_cache($ids),
-                'playlist' => Playlist::build_cache($ids),
+                'playlist' => Playlist::build_cache($ids) && Playlist::build_search_name_cache($ids),
                 'podcast_episode' => Podcast_Episode::build_cache($ids),
                 default => null,
             };
@@ -930,7 +930,7 @@ class Browse extends Query
             'album' => Album::build_cache($this->_squashList($object_ids)),
             'album_disk' => AlbumDisk::build_cache($this->_squashList($object_ids)),
             'artist' => Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold),
-            'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
+            'playlist' => Playlist::build_cache($this->_squashList($object_ids)) && Playlist::build_search_name_cache($this->_squashList($object_ids)),
             'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
             'video' => Video::build_cache($this->_squashList($object_ids)),
             'podcast' => Podcast::build_cache($this->_squashList($object_ids)),

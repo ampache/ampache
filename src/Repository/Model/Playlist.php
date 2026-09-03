@@ -107,6 +107,38 @@ class Playlist extends playlist_object
     }
 
     /**
+     * Warms has_search() for a page of playlists: one read for the owners' smartlists, one for the public ones
+     *
+     * @param array<int|string> $ids Playlist ids already cached by build_cache()
+     */
+    public static function build_search_name_cache(array $ids): bool
+    {
+        if ($ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $owners = [];
+        foreach ($ids as $id) {
+            $owner = (int) (parent::get_from_cache('playlist', (int) $id)['user'] ?? 0);
+            if ($owner > 0) {
+                $owners[$owner] = $owner;
+            }
+        }
+        if ($owners === []) {
+            return false;
+        }
+
+        $repository  = self::getPlaylistRepository();
+        $global_user = (int) (Core::get_global('user')?->getId());
+        $public      = $repository->findSearchNames($global_user, false);
+        foreach ($repository->findOwnedSearchNamesBulk(array_values($owners)) as $owner => $owned) {
+            parent::add_to_cache('playlist_search_names', $owner . '/' . $global_user, [$owned, $public]);
+        }
+
+        return true;
+    }
+
+    /**
      * check
      * This function creates an empty playlist, gives it a name and type
      */
