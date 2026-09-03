@@ -156,8 +156,6 @@ class Mood extends database_object implements GarbageCollectibleInterface
 
         foreach (self::getMoodRepository()->getTopMoodsBulk($type, $object_ids) as $object_id => $moods) {
             parent::add_to_cache('object_moods_' . $type, (int) $object_id, $moods);
-            // an object with no mood is warm too, or it is read again one by one
-            parent::add_to_cache('object_moods_warm_' . $type, (int) $object_id, [true]);
         }
 
         return true;
@@ -264,7 +262,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
 
         // build_object_mood_cache() fills this for a whole page; the limit is applied here
         $key = 'object_moods_' . $type;
-        if (parent::is_cached('object_moods_warm_' . $type, $object_id)) {
+        if (parent::is_cached($key, $object_id)) {
             $cached = array_values(parent::get_from_cache($key, $object_id));
 
             return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
@@ -443,7 +441,6 @@ class Mood extends database_object implements GarbageCollectibleInterface
     private static function _forget_object_moods(string $object_type, int $object_id): void
     {
         parent::remove_from_cache('object_moods_' . $object_type, $object_id);
-        parent::remove_from_cache('object_moods_warm_' . $object_type, $object_id);
     }
 
     /**

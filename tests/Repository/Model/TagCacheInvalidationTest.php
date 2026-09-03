@@ -89,17 +89,6 @@ class TagCacheInvalidationTest extends MockeryTestCase
         self::assertFalse(Tag::is_cached('object_tags_album', 42));
     }
 
-    public function testRemoveMapForgetsTheWarmMarkerToo(): void
-    {
-        Tag::add_to_cache('object_tags_album', 42, [['id' => 7, 'name' => 'rock']]);
-        Tag::add_to_cache('object_tags_warm_album', 42, [true]);
-
-        $tag = new Tag(0);
-        $tag->remove_map('album', 42);
-
-        self::assertFalse(Tag::is_cached('object_tags_warm_album', 42));
-    }
-
     public function testTheObjectTagsAreReadFromTheWarmPageInTheOrderTheQueryGives(): void
     {
         $this->repository->shouldNotReceive('getObjectTags');
@@ -109,7 +98,6 @@ class TagCacheInvalidationTest extends MockeryTestCase
             ['id' => 9, 'name' => 'rock', 'is_hidden' => 0, 'user' => 0, 'count' => 5],
             ['id' => 3, 'name' => 'jazz', 'is_hidden' => 0, 'user' => 2, 'count' => 1],
         ]);
-        Tag::add_to_cache('object_tags_warm_song', 1, [true]);
 
         self::assertSame(
             [

@@ -198,7 +198,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
      */
     public function getByAlbum(int $albumId): array
     {
-        if (database_object::is_cached('album_labels_warm', $albumId)) {
+        if (database_object::is_cached('album_labels', $albumId)) {
             return database_object::get_from_cache('album_labels', $albumId);
         }
 

@@ -156,7 +156,6 @@ class LabelRepositoryTest extends TestCase
     public function testGetByAlbumReadsTheWarmPageInsteadOfTheDatabase(): void
     {
         database_object::add_to_cache('album_labels', 666, [7 => 'Some Label']);
-        database_object::add_to_cache('album_labels_warm', 666, [true]);
 
         $this->connection->expects(static::never())
             ->method('query');

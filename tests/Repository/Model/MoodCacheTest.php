@@ -62,13 +62,11 @@ class MoodCacheTest extends MockeryTestCase
     public function testRemoveMapForgetsTheObject(): void
     {
         Mood::add_to_cache('object_moods_song', 42, [['id' => 7, 'name' => 'calm', 'user' => 0, 'count' => 3]]);
-        Mood::add_to_cache('object_moods_warm_song', 42, [true]);
 
         $mood = new Mood(0);
         $mood->remove_map('song', 42);
 
         self::assertFalse(Mood::is_cached('object_moods_song', 42));
-        self::assertFalse(Mood::is_cached('object_moods_warm_song', 42));
     }
 
     public function testTheLimitIsAppliedOnTheWarmList(): void

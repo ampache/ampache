@@ -209,8 +209,6 @@ class Album extends database_object implements
         global $dic;
         foreach ($dic->get(SongRepositoryInterface::class)->getParentIdsBulk($ids, true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
-            // an album with no mapped artist is warm too, or it is read again one by one
-            parent::add_to_cache('album_artists_warm', $albumId, [true]);
             foreach ($parentIds as $parentId) {
                 $artist_ids[$parentId] = $parentId;
             }
@@ -220,7 +218,6 @@ class Album extends database_object implements
         $songMapIds = (count($ids) > 1) ? array_map(intval(...), array_values($ids)) : [];
         foreach (self::getAlbumRepository()->getMappedObjectIdsBulk($songMapIds, 'song') as $albumId => $objectIds) {
             parent::add_to_cache('album_map_song', $albumId, $objectIds);
-            parent::add_to_cache('album_map_song_warm', $albumId, [true]);
         }
 
         // warm grouped caches the row render would otherwise hit per album
@@ -257,7 +254,6 @@ class Album extends database_object implements
         global $dic;
         foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($intIds) as $albumId => $labels) {
             parent::add_to_cache('album_labels', $albumId, $labels);
-            parent::add_to_cache('album_labels_warm', $albumId, [true]);
         }
 
         return true;
@@ -410,7 +406,7 @@ class Album extends database_object implements
     public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
         $key     = ($object_type === 'album') ? 'album_artists' : 'album_map_' . $object_type;
-        $results = (parent::is_cached($key . '_warm', $album_id))
+        $results = (parent::is_cached($key, $album_id))
             ? parent::get_from_cache($key, $album_id)
             : self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
         $primary = ((int) $primary_id > 0)
@@ -947,7 +943,7 @@ class Album extends database_object implements
      */
     public function getDisks(): iterable
     {
-        if (parent::is_cached('album_disk_ids_warm', $this->id)) {
+        if (parent::is_cached('album_disk_ids', $this->id)) {
             return array_map(static fn(int $id): AlbumDisk => new AlbumDisk($id), parent::get_from_cache('album_disk_ids', $this->id));
         }
 

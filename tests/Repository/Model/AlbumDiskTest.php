@@ -57,7 +57,7 @@ class AlbumDiskTest extends TestCase
         self::assertSame(['id' => 1, 'album_id' => 21, 'disk' => 1], AlbumDisk::get_from_cache('album_disk', 1));
         self::assertSame([1, 2], AlbumDisk::get_from_cache('album_disk_ids', 21));
         // an album with no disk row is warm too, or it is read again one by one
-        self::assertTrue(AlbumDisk::is_cached('album_disk_ids_warm', 22));
+        self::assertTrue(AlbumDisk::is_cached('album_disk_ids', 22));
         self::assertSame([], AlbumDisk::get_from_cache('album_disk_ids', 22));
 
         AlbumDisk::clear_cache();

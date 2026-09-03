@@ -202,7 +202,6 @@ class AlbumDisk extends database_object implements
 
         foreach ($diskIds as $albumId => $rowIds) {
             parent::add_to_cache('album_disk_ids', $albumId, $rowIds);
-            parent::add_to_cache('album_disk_ids_warm', $albumId, [true]);
         }
 
         return true;

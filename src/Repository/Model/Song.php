@@ -260,7 +260,6 @@ class Song extends database_object implements
 
         foreach ($repository->getParentIdsBulk(array_values(array_unique($albums)), true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
-            parent::add_to_cache('album_artists_warm', $albumId, [true]);
         }
 
         // one read for the whole page instead of one per song
@@ -269,7 +268,6 @@ class Song extends database_object implements
         Mood::build_object_mood_cache('song', $intIds);
         foreach ($repository->getSongMapValuesBulk($intIds, 'isrc') as $songId => $values) {
             parent::add_to_cache('song_map_isrc', $songId, $values);
-            parent::add_to_cache('song_map_warm_isrc', $songId, [true]);
         }
 
         // If we're rating this then cache them as well
@@ -588,7 +586,7 @@ class Song extends database_object implements
             return [];
         }
 
-        if (parent::is_cached('song_map_warm_' . $type, $song_id)) {
+        if (parent::is_cached('song_map_' . $type, $song_id)) {
             return parent::get_from_cache('song_map_' . $type, $song_id);
         }
 
