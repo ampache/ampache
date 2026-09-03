@@ -37,6 +37,21 @@ class ArtistNameCacheTest extends MockeryTestCase
 {
     private ?object $previousDic = null;
 
+    public function testACachedRowIsDerivedInsteadOfRead(): void
+    {
+        $repository = $this->mock(ArtistRepositoryInterface::class);
+        $repository->shouldNotReceive('getNameArrayById');
+
+        $this->setDic($repository);
+
+        Artist::add_to_cache('artist', 42, ['id' => 42, 'prefix' => 'The', 'name' => 'Band']);
+
+        self::assertSame(
+            ['id' => '42', 'name' => 'The Band', 'prefix' => 'The', 'basename' => 'Band'],
+            Artist::get_name_array_by_id(42)
+        );
+    }
+
     public function testAMissingArtistIsCachedAsWell(): void
     {
         // a row that no longer exists must not be looked up again for every remaining track
@@ -52,6 +67,19 @@ class ArtistNameCacheTest extends MockeryTestCase
 
         self::assertSame($expected, Artist::get_name_array_by_id(999));
         self::assertSame($expected, Artist::get_name_array_by_id(999));
+    }
+
+    public function testARowWithoutPrefixHasNoLeadingSpace(): void
+    {
+        $repository = $this->mock(ArtistRepositoryInterface::class);
+        $repository->shouldNotReceive('getNameArrayById');
+
+        $this->setDic($repository);
+
+        Artist::add_to_cache('artist', 42, ['id' => 42, 'prefix' => null, 'name' => 'Band']);
+
+        self::assertSame('Band', Artist::get_name_array_by_id(42)['name']);
+        self::assertSame('', Artist::get_name_array_by_id(42)['prefix']);
     }
 
     public function testTheNameIsReadOncePerRequest(): void

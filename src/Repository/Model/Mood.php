@@ -144,6 +144,26 @@ class Mood extends database_object implements GarbageCollectibleInterface
     }
 
     /**
+     * Warm get_top_moods() for a whole page with one read
+     *
+     * @param list<int> $object_ids
+     */
+    public static function build_object_mood_cache(string $type, array $object_ids): bool
+    {
+        if ($object_ids === [] || !self::_is_mappable($type) || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getMoodRepository()->getTopMoodsBulk($type, $object_ids) as $object_id => $moods) {
+            parent::add_to_cache('object_moods_' . $type, (int) $object_id, $moods);
+            // an object with no mood is warm too, or it is read again one by one
+            parent::add_to_cache('object_moods_warm_' . $type, (int) $object_id, [true]);
+        }
+
+        return true;
+    }
+
+    /**
      * clean_to_existing
      * Narrows a list to the moods that already exist, so an uploader editing their own item cannot coin new ones
      */
@@ -240,6 +260,14 @@ class Mood extends database_object implements GarbageCollectibleInterface
     {
         if (!self::_is_mappable($type)) {
             return [];
+        }
+
+        // build_object_mood_cache() fills this for a whole page; the limit is applied here
+        $key = 'object_moods_' . $type;
+        if (parent::is_cached('object_moods_warm_' . $type, $object_id)) {
+            $cached = array_values(parent::get_from_cache($key, $object_id));
+
+            return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
         }
 
         return self::getMoodRepository()->getTopMoods($type, $object_id, (int) $limit);
@@ -384,6 +412,8 @@ class Mood extends database_object implements GarbageCollectibleInterface
             $moodRepository->incrementCount($mood_id, $countType);
         }
 
+        self::_forget_object_moods($type, $object_id);
+
         return $insert_id;
     }
 
@@ -405,6 +435,15 @@ class Mood extends database_object implements GarbageCollectibleInterface
         }
 
         return $moods;
+    }
+
+    /**
+     * Drops an object's cached mood list after its maps changed.
+     */
+    private static function _forget_object_moods(string $object_type, int $object_id): void
+    {
+        parent::remove_from_cache('object_moods_' . $object_type, $object_id);
+        parent::remove_from_cache('object_moods_warm_' . $object_type, $object_id);
     }
 
     /**
@@ -467,6 +506,8 @@ class Mood extends database_object implements GarbageCollectibleInterface
             $moodRepository->recountType($countType);
         }
 
+        self::_forget_object_moods($object_type, $object_id);
+
         return true;
     }
 
@@ -512,6 +553,8 @@ class Mood extends database_object implements GarbageCollectibleInterface
         if ($countType instanceof MoodCountTypeEnum) {
             $moodRepository->decrementCount($this->id, $countType);
         }
+
+        self::_forget_object_moods($type, $object_id);
 
         return true;
     }

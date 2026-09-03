@@ -151,6 +151,10 @@ class Artist extends database_object implements
 
         Art::build_cache($ids, 'artist');
 
+        $intIds = array_map(intval(...), array_values($ids));
+        Tag::build_object_tag_cache('artist', $intIds);
+        Mood::build_object_mood_cache('artist', $intIds);
+
         // Preload full names so get_fullname_by_id() stops querying one row at a time.
         foreach ($artistRepository->getFullNamesByIds($ids) as $artist_id => $fullName) {
             parent::add_to_cache('artist_fullname_by_id', $artist_id, [$fullName]);
@@ -512,6 +516,22 @@ class Artist extends database_object implements
             $cached = parent::get_from_cache('artist_name_array', $cache_id);
 
             return $cached;
+        }
+
+        // build_cache() already holds the row, so the name is derived instead of read again
+        if (parent::is_cached('artist', $cache_id)) {
+            $artist   = parent::get_from_cache('artist', $cache_id);
+            $prefix   = (string) ($artist['prefix'] ?? '');
+            $basename = (string) ($artist['name'] ?? '');
+            $row      = [
+                "id" => (string) $cache_id,
+                "name" => ltrim($prefix . ' ' . $basename),
+                "prefix" => $prefix,
+                "basename" => $basename,
+            ];
+            parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+            return $row;
         }
 
         $row = self::getArtistRepository()->getNameArrayById($cache_id) ?? [

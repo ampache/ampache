@@ -144,10 +144,21 @@ class Art extends database_object
             return false;
         }
 
-        $ids = array_values($object_ids);
+        $ids      = array_values($object_ids);
+        $with_art = [];
 
         foreach (self::getImageRepository()->getRowsByObjectIds($ids, $type) as $row) {
             parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
+            $with_art[(int) $row['object_id']] = true;
+        }
+
+        // an object with no image row at all is warm too, or url() reads it back one by one
+        if ($type !== null) {
+            foreach ($ids as $id) {
+                if (!isset($with_art[(int) $id])) {
+                    parent::add_to_cache('art_none_' . $type, (int) $id, [true]);
+                }
+            }
         }
 
         // also warm has_db_meta()'s per-object cache, so row rendering stops querying once per item
@@ -965,6 +976,10 @@ class Art extends database_object
             $size       = $size_array['width'] . 'x' . $size_array['height'];
         }
 
+        if (parent::is_cached('art_none_' . $type, $uid)) {
+            return self::get_fallback_url($type, $size);
+        }
+
         $key = $type . $uid . $size;
         if (parent::is_cached('art', $key)) {
             $row    = parent::get_from_cache('art', $key);
@@ -980,6 +995,9 @@ class Art extends database_object
                 parent::add_to_cache('art', $key, $row);
                 $mime   = $row['mime'];
                 $art_id = $row['id'];
+            } elseif ($size === 'original') {
+                // the fallback read below asks the very same question
+                return self::get_fallback_url($type, $size);
             } else {
                 $row = $repository->findByObjectAndSize($type, $uid, 'original');
 

@@ -254,7 +254,13 @@ class Song extends database_object implements
 
         foreach ($repository->getParentIdsBulk(array_values(array_unique($albums)), true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
+            parent::add_to_cache('album_artists_warm', $albumId, [true]);
         }
+
+        // one read for the whole page instead of one per song
+        $intIds = array_map(intval(...), array_values($song_ids));
+        Tag::build_object_tag_cache('song', $intIds);
+        Mood::build_object_mood_cache('song', $intIds);
 
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
@@ -1447,7 +1453,9 @@ class Song extends database_object implements
     public function get_album_artist(): ?int
     {
         if ($this->albumartist === null) {
-            $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
+            $this->albumartist = (database_object::is_cached('album', $this->album))
+                ? (int) (database_object::get_from_cache('album', $this->album)['album_artist'] ?? 0)
+                : $this->getAlbumRepository()->getAlbumArtistId($this->album);
         }
 
         return $this->albumartist;

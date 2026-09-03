@@ -94,6 +94,42 @@ class MoodRepositoryTest extends TestCase
         );
     }
 
+    public function testGetTopMoodsBulkDoesNothingForNoObjects(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getTopMoodsBulk('song', []));
+    }
+
+    public function testGetTopMoodsBulkKeysTheRowsByObjectAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::callback(
+                    static fn(string $sql): bool => str_contains($sql, '`mood_map`.`object_id` AS `owner_id`') && str_contains($sql, '`mood_map`.`object_id` IN (?,?)')
+                ),
+                ['song', 42, 43]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['owner_id' => '43', 'id' => '7', 'name' => 'calm', 'user' => '0', 'count' => '3'],
+            false
+        );
+
+        self::assertSame(
+            [
+                42 => [],
+                43 => [['id' => 7, 'name' => 'calm', 'user' => 0, 'count' => 3]],
+            ],
+            $this->subject->getTopMoodsBulk('song', [42, 43])
+        );
+    }
+
     public function testGetTopMoodsGroupsTheMapsOfOneMoodIntoASingleRow(): void
     {
         $result = $this->createMock(PDOStatement::class);

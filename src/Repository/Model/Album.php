@@ -202,9 +202,18 @@ class Album extends database_object implements
         global $dic;
         foreach ($dic->get(SongRepositoryInterface::class)->getParentIdsBulk($ids, true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
+            // an album with no mapped artist is warm too, or it is read again one by one
+            parent::add_to_cache('album_artists_warm', $albumId, [true]);
             foreach ($parentIds as $parentId) {
                 $artist_ids[$parentId] = $parentId;
             }
+        }
+
+        // the song artists of an album are asked for the same way; one album is not worth a second read
+        $songMapIds = (count($ids) > 1) ? array_map(intval(...), array_values($ids)) : [];
+        foreach (self::getAlbumRepository()->getMappedObjectIdsBulk($songMapIds, 'song') as $albumId => $objectIds) {
+            parent::add_to_cache('album_map_song', $albumId, $objectIds);
+            parent::add_to_cache('album_map_song_warm', $albumId, [true]);
         }
 
         // warm grouped caches the row render would otherwise hit per album
@@ -364,8 +373,9 @@ class Album extends database_object implements
      */
     public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
-        $results = ($object_type === 'album' && parent::is_cached('album_artists', $album_id))
-            ? parent::get_from_cache('album_artists', $album_id)
+        $key     = ($object_type === 'album') ? 'album_artists' : 'album_map_' . $object_type;
+        $results = (parent::is_cached($key . '_warm', $album_id))
+            ? parent::get_from_cache($key, $album_id)
             : self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
         $primary = ((int) $primary_id > 0)
             ? [(int) $primary_id]

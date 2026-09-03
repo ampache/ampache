@@ -186,6 +186,14 @@ interface AlbumRepositoryInterface
     public function getMappedObjectIds(int $albumId, string $objectType): array;
 
     /**
+     * The objects mapped onto a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, list<int>>
+     */
+    public function getMappedObjectIdsBulk(array $albumIds, string $objectType): array;
+
+    /**
      * Get item prefix, basename and name by the album id
      *
      * @return array{prefix: string, basename: string, name: string}

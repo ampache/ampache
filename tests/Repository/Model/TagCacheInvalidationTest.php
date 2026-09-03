@@ -38,6 +38,22 @@ use Override;
 class TagCacheInvalidationTest extends MockeryTestCase
 {
     private ?object $previousDic = null;
+    private object $repository;
+
+    public function testAnObjectWithNoGenreIsWarmToo(): void
+    {
+        $this->repository->shouldReceive('getTopTagsBulk')
+            ->with('song', [1, 2])
+            ->once()
+            ->andReturn([1 => [['id' => 7, 'name' => 'rock']], 2 => []]);
+        // the whole point: no second read for the object the bulk read found nothing for
+        $this->repository->shouldNotReceive('getTopTags');
+
+        Tag::build_object_tag_cache('song', [1, 2]);
+
+        self::assertSame([['id' => 7, 'name' => 'rock']], Tag::get_top_tags('song', 1));
+        self::assertSame([], Tag::get_top_tags('song', 2));
+    }
 
     public function testAnUnknownObjectTypeIsLeftAlone(): void
     {
@@ -73,6 +89,17 @@ class TagCacheInvalidationTest extends MockeryTestCase
         self::assertFalse(Tag::is_cached('object_tags_album', 42));
     }
 
+    public function testRemoveMapForgetsTheWarmMarkerToo(): void
+    {
+        Tag::add_to_cache('object_tags_album', 42, [['id' => 7, 'name' => 'rock']]);
+        Tag::add_to_cache('object_tags_warm_album', 42, [true]);
+
+        $tag = new Tag(0);
+        $tag->remove_map('album', 42);
+
+        self::assertFalse(Tag::is_cached('object_tags_warm_album', 42));
+    }
+
     #[Override]
     protected function setUp(): void
     {
@@ -82,6 +109,7 @@ class TagCacheInvalidationTest extends MockeryTestCase
 
         $repository = $this->mock(TagRepositoryInterface::class);
         $repository->shouldIgnoreMissing();
+        $this->repository = $repository;
 
         $container = $this->mock(Container::class);
         $container->shouldReceive('get')

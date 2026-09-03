@@ -152,6 +152,8 @@ class Tag extends database_object implements library_item, displayable_item, con
 
         foreach (self::getTagRepository()->getTopTagsBulk($type, $object_ids) as $object_id => $tags) {
             parent::add_to_cache('object_tags_' . $type, (int) $object_id, $tags);
+            // an object with no genre is warm too, or it is read again one by one
+            parent::add_to_cache('object_tags_warm_' . $type, (int) $object_id, [true]);
         }
 
         return true;
@@ -322,7 +324,7 @@ class Tag extends database_object implements library_item, displayable_item, con
 
         // build_cache() fills this for a whole page; the limit is applied here
         $key = 'object_tags_' . $type;
-        if (parent::is_cached($key, $object_id)) {
+        if (parent::is_cached('object_tags_warm_' . $type, $object_id)) {
             $cached = array_values(parent::get_from_cache($key, $object_id));
 
             return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
@@ -534,6 +536,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     private static function _forget_object_tags(string $object_type, int $object_id): void
     {
         parent::remove_from_cache('object_tags_' . $object_type, $object_id);
+        parent::remove_from_cache('object_tags_warm_' . $object_type, $object_id);
     }
 
     /**
