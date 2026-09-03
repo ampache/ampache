@@ -52,6 +52,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The set of generated art sizes is bounded, and a missing cover is served the placeholder that fits rather than the full-size original
 * A remote `custom_blankalbum` is handed to the browser as a url it caches once, rather than fetched server-side on every miss
 * The Subsonic, OpenSubsonic and API 6/8 playlist listings now serve the stored `last_count`/`last_duration`, the way their smartlist branch always has, instead of recounting each row with two joined queries
+* The API song, album, artist and playlist pages, the Subsonic and OpenSubsonic lists, and the UPnP browse lists read a fixed number of queries whatever the page size. Genres, moods, ratings, art, labels, disks and smartlist owners are read once for the page
+* The XML API output reads the page's song art rows once instead of once per song
 
 ### Fixed (8.1.0)
 
@@ -60,6 +62,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
+* The UPnP backend no longer answer every browse with a fatal error on PHP 8.5
 * Missing close box on a few template phtml files
 * A custom browse base skipped every filter, group and sort; it is now joined as a derived table that restricts the normal query instead of replacing it
 * Toggling a browse option emptied a browse that had been handed its ids
