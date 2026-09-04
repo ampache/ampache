@@ -33,7 +33,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, behind an admin gate, with a precedence toggle over `custom_blankalbum`, an optional template lock, and per-user opt-in
 * Dynamic page titles carrying the artist or album in context, with a user preference to show a page-type icon in the tab title
 * A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customises them
-* A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place
+* A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place, plus a site description for link previews
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
 
@@ -54,6 +54,10 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The Subsonic, OpenSubsonic and API 6/8 playlist listings now serve the stored `last_count`/`last_duration`, the way their smartlist branch always has, instead of recounting each row with two joined queries
 * The API song, album, artist and playlist pages, the Subsonic and OpenSubsonic lists, and the UPnP browse lists read a fixed number of queries whatever the page size. Genres, moods, ratings, art, labels, disks and smartlist owners are read once for the page
 * The XML API output reads the page's song art rows once instead of once per song
+* The home page reads its highlighted songs from the page-wide cache, and cover metadata is read without the image blob nor file
+* A request looks a user up once by API key or username, however many times it asks
+* The recently played lists use more cache, speed improvement
+* The preferences rebuild that follows a database update repairs the install once instead of once per user, and the garbage collector only rewrites the preference names that changed. Test on 500 users, went from 248s to 6s
 
 ### Fixed (8.1.0)
 
@@ -63,7 +67,6 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 * The UPnP backend no longer answer every browse with a fatal error on PHP 8.5
-* Missing close box on a few template phtml files
 * A custom browse base skipped every filter, group and sort; it is now joined as a derived table that restricts the normal query instead of replacing it
 * Toggling a browse option emptied a browse that had been handed its ids
 * An expired browse replayed by a crawler filled the log with level 1 "no renderer" lines
@@ -72,6 +75,9 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The album page fell back to a blank cover instead of the album artist's art
 * The add-to-playlist menu offered playlists the user could not add to
 * Migration700005 filled `last_count` with its two parameters swapped, writing the playlist id in place of the count; upgrades from Ampache 6 now backfill correctly, and database 810007 repairs the installs that already ran it
+* Saving the server Interface preferences wiped `custom_favicon`, `custom_login_logo` and `custom_login_background`, three system preferences that tab never shows
+* The login page sent its redirect back with a literal `&amp;` in the url
+* The RSS feed url kept html entities in its slug and had no length limit
 
 ## Ampache 8.0.1
 
