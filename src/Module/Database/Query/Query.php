@@ -1397,6 +1397,19 @@ class Query
     }
 
     /**
+     * Only the query object is missing after a stored browse was rebuilt. Going through the virtual
+     * set_type() would replay Browse's view cookies, and restoring the alpha one calls set_filter(),
+     * which lands right back here before queryType is set: an infinite recursion. self:: pins the
+     * plain type resolution this spot actually needs.
+     */
+    private function _restoreQueryType(): void
+    {
+        if ($this->queryType === null) {
+            self::set_type($this->_state['type']);
+        }
+    }
+
+    /**
      * _serialize
      *
      * Attempts to produce a more compact representation for large result
@@ -1452,13 +1465,7 @@ class Query
      */
     private function _sql_filter(string $filter, mixed $value): string
     {
-        if ($this->queryType === null) {
-            // Only the query object is missing here, after a stored browse was rebuilt. Going through
-            // the virtual set_type() would replay Browse's view cookies, and restoring the alpha one
-            // calls set_filter(), which lands right back here before queryType is set: an infinite
-            // recursion. self:: pins the plain type resolution this spot actually needs.
-            self::set_type($this->_state['type']);
-        }
+        $this->_restoreQueryType();
 
         if ($this->queryType === null) {
             return '';
@@ -1485,13 +1492,7 @@ class Query
             return "RAND()";
         }
 
-        if ($this->queryType === null) {
-            // Only the query object is missing here, after a stored browse was rebuilt. Going through
-            // the virtual set_type() would replay Browse's view cookies, and restoring the alpha one
-            // calls set_filter(), which lands right back here before queryType is set: an infinite
-            // recursion. self:: pins the plain type resolution this spot actually needs.
-            self::set_type($this->_state['type']);
-        }
+        $this->_restoreQueryType();
 
         if ($this->queryType === null) {
             return '';

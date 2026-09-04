@@ -538,16 +538,12 @@ class Art extends database_object
      */
     public static function fallback_size(?string $size): string
     {
-        $wanted = 0;
-        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
-            $wanted = max((int) $matches[1], (int) $matches[2]);
-        }
-
         // the full size image, for 'original' and anything bigger than the largest thumbnail
         if ($size === 'original') {
             return '';
         }
 
+        $wanted = self::fallback_edge($size);
         foreach (self::FALLBACK_SIZES as $available) {
             if ($wanted <= $available) {
                 return '_' . $available . 'x' . $available;
