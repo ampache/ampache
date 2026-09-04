@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\UserFieldEnum;
 use PDO;
 use PDOStatement;
@@ -43,6 +44,35 @@ class UserRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
     private UserRepository $subject;
+
+    /**
+     * A whole user row, the way the constructor expects it out of the cache
+     *
+     * @return array<string, mixed>
+     */
+    private static function userRow(int $id, string $username): array
+    {
+        return [
+            'id' => $id,
+            'username' => $username,
+            'fullname' => $username,
+            'email' => '',
+            'website' => '',
+            'apikey' => '',
+            'access' => 25,
+            'disabled' => 0,
+            'last_seen' => 0,
+            'create_date' => 0,
+            'validation' => '',
+            'state' => '',
+            'city' => '',
+            'fullname_public' => 0,
+            'rsstoken' => '',
+            'streamtoken' => '',
+            'subsonic_secret' => '',
+            'catalog_filter_group' => 0,
+        ];
+    }
 
     public function testCountByCatalogFilterGroupCountsTheAssignedUsers(): void
     {
@@ -139,6 +169,37 @@ class UserRepositoryTest extends TestCase
             ->willReturn(['id' => '1', 'apikey' => 'some-key', 'username' => 'some-user'], false);
 
         self::assertNull($this->subject->findByApiKey('some-api-key'));
+    }
+
+    public function testFindByApiKeyResolvesTheCallerOncePerRequest(): void
+    {
+        // the row itself is cached too, so the second lookup never reaches the database
+        User::add_to_cache('user', 42, self::userRow(42, 'some-user'));
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `user` WHERE `apikey` = ?', ['some-key'])
+            ->willReturn('42');
+
+        self::assertSame(42, $this->subject->findByApiKey('some-key')?->getId());
+        self::assertSame(42, $this->subject->findByApiKey('some-key')?->getId());
+
+        User::clear_cache();
+    }
+
+    public function testFindByUsernameResolvesTheNameOncePerRequest(): void
+    {
+        User::add_to_cache('user', 42, self::userRow(42, 'some-user'));
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `id` FROM `user` WHERE `username` = ?', ['some-user'])
+            ->willReturn('42');
+
+        self::assertSame(42, $this->subject->findByUsername('some-user')?->getId());
+        self::assertSame(42, $this->subject->findByUsername('some-user')?->getId());
+
+        User::clear_cache();
     }
 
     public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
