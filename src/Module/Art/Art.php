@@ -186,10 +186,10 @@ class Art extends database_object
                 }
             }
 
-            // objects with no art of a given kind would otherwise keep re-querying on every cache miss
+            // an object with no art of a given kind is cached as such, so it is not read again on every miss
             foreach ($remaining as $kind => $object_ids_without_art) {
                 foreach (array_keys($object_ids_without_art) as $object_id) {
-                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, [0]);
+                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, []);
                 }
             }
 
@@ -1674,12 +1674,12 @@ class Art extends database_object
         if (database_object::is_cached($index, $this->object_id)) {
             $row = database_object::get_from_cache($index, $this->object_id);
         } else {
-            $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
-            // [0] marks "no art": add_to_cache() drops empty arrays, so a miss would re-query every time
-            database_object::add_to_cache($index, $this->object_id, ($row === []) ? [0] : $row);
+            // the meta reader, not the one that carries the image itself
+            $row = self::getImageRepository()->getOriginalRowsByObjectIds([$this->object_id], $this->object_type, [$this->kind])[0] ?? [];
+            database_object::add_to_cache($index, $this->object_id, $row);
         }
 
-        if ($row === [] || $row === [0]) {
+        if ($row === []) {
             return false;
         }
 

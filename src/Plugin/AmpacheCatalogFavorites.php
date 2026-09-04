@@ -90,6 +90,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         }
 
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
+        Song::build_cache($userflags);
         if (
             AmpConfig::get('ratings')
             && $userflags !== []
