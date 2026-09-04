@@ -729,19 +729,7 @@ class Preference extends database_object
      */
     public static function fix_user_preferences(int $user_id): void
     {
-        $repository       = self::getPreferenceRepository();
-        $filterRepository = self::getCatalogFilterRepository();
-
-        // Check default group (autoincrement starts at 1 so force it to be 0)
-        if ($filterRepository->repairDefaultGroup()) {
-            debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
-        }
-
-        // Make sure the language a user has is valid
-        $repository->repairLanguagePreferences();
-
-        // Make sure all current catalogs are in the default group map
-        $filterRepository->addMissingCatalogsToDefaultGroup();
+        $repository = self::getPreferenceRepository();
 
         /* Get All Preferences for the current user */
         $results      = [];
@@ -1431,7 +1419,22 @@ class Preference extends database_object
      */
     public static function rebuild_all_preferences(): void
     {
-        $repository = self::getPreferenceRepository();
+        $repository       = self::getPreferenceRepository();
+        $filterRepository = self::getCatalogFilterRepository();
+
+        // These repair the install rather than one listener, and each reads the whole table: running them
+        // once per user turned a rebuild on a large database into hours of the same three statements.
+
+        // Check default group (autoincrement starts at 1 so force it to be 0)
+        if ($filterRepository->repairDefaultGroup()) {
+            debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
+        }
+
+        // Make sure the language every user has is valid
+        $repository->repairLanguagePreferences();
+
+        // Make sure all current catalogs are in the default group map
+        $filterRepository->addMissingCatalogsToDefaultGroup();
 
         // Garbage collection, then drop the system prefs that leaked onto users and resync the stored names
         $repository->collectPreferenceGarbage();
