@@ -207,10 +207,17 @@ final class DefaultAction implements ApplicationActionInterface
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                        if ($download_htaccess_rest) {
+                            // the rules have already been sent as a file download; rendering the page would append it
+                            return null;
+                        }
                     }
 
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
+                        if ($download_htaccess_play) {
+                            return null;
+                        }
                     }
 
                     if ($write || $download || $all) {
