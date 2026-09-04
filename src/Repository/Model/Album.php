@@ -222,7 +222,7 @@ class Album extends database_object implements
 
         // warm grouped caches the row render would otherwise hit per album
         // (an album_disk row asks for its parent album's genres, so this covers both)
-        Tag::build_object_tag_cache('album', array_values(array_map(intval(...), $ids)));
+        Tag::build_object_tag_cache('album', $ids);
         Art::build_cache($ids, 'album');
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
@@ -246,13 +246,12 @@ class Album extends database_object implements
             return false;
         }
 
-        $intIds = array_values(array_map(intval(...), $ids));
-        Mood::build_object_mood_cache('album', $intIds);
+        Mood::build_object_mood_cache('album', $ids);
 
-        AlbumDisk::build_cache_by_albums($intIds);
+        AlbumDisk::build_cache_by_albums($ids);
 
         global $dic;
-        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($intIds) as $albumId => $labels) {
+        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($ids) as $albumId => $labels) {
             parent::add_to_cache('album_labels', $albumId, $labels);
         }
 

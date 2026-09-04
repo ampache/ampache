@@ -142,7 +142,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     /**
      * Warm get_top_tags() for a whole page with one read
      *
-     * @param list<int> $object_ids
+     * @param array<int|string> $object_ids
      */
     public static function build_object_tag_cache(string $type, array $object_ids): bool
     {

@@ -186,7 +186,7 @@ class AlbumDisk extends database_object implements
     /**
      * Caches every disk of a set of albums in one read, and the disk list each album answers getDisks() with
      *
-     * @param list<int> $albumIds
+     * @param array<int|string> $albumIds
      */
     public static function build_cache_by_albums(array $albumIds): bool
     {

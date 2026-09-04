@@ -307,7 +307,7 @@ final readonly class MoodRepository implements MoodRepositoryInterface
     /**
      * The moods mapped onto a set of objects, read in one go
      *
-     * @param list<int> $objectIds
+     * @param array<int|string> $objectIds
      * @return array<int, list<array{id: int, name: string, user: int, count: int}>>
      */
     public function getTopMoodsBulk(string $objectType, array $objectIds): array
@@ -315,6 +315,9 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         if ($objectIds === []) {
             return [];
         }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $objectIds = array_map(intval(...), array_values($objectIds));
 
         $countType = MoodCountTypeEnum::tryFrom($objectType);
         $count     = ($countType instanceof MoodCountTypeEnum)

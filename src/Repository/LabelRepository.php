@@ -219,7 +219,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     /**
      * The labels of a set of albums, read in one go
      *
-     * @param list<int> $albumIds
+     * @param array<int|string> $albumIds
      * @return array<int, array<int, string>>
      */
     public function getByAlbums(array $albumIds): array
@@ -227,6 +227,9 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         if ($albumIds === []) {
             return [];
         }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $albumIds = array_map(intval(...), array_values($albumIds));
 
         $result = $this->connection->query(
             sprintf(

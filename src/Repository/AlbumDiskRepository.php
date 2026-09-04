@@ -121,7 +121,7 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
     /**
      * Every disk row of a set of albums, read in one go
      *
-     * @param list<int> $albumIds
+     * @param array<int|string> $albumIds
      * @return list<array<string, mixed>>
      */
     public function getRowsByAlbums(array $albumIds): array
@@ -129,6 +129,9 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
         if ($albumIds === []) {
             return [];
         }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $albumIds = array_map(intval(...), array_values($albumIds));
 
         $result = $this->connection->query(
             sprintf(

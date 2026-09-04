@@ -146,7 +146,7 @@ class Mood extends database_object implements GarbageCollectibleInterface
     /**
      * Warm get_top_moods() for a whole page with one read
      *
-     * @param list<int> $object_ids
+     * @param array<int|string> $object_ids
      */
     public static function build_object_mood_cache(string $type, array $object_ids): bool
     {

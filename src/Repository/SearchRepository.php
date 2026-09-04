@@ -64,7 +64,7 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
     /**
      * Reads whole search rows for the in-request cache
      *
-     * @param list<int> $searchIds
+     * @param array<int|string> $searchIds
      * @return list<array<string, mixed>>
      */
     public function getRowsByIds(array $searchIds): array
@@ -72,6 +72,9 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
         if ($searchIds === []) {
             return [];
         }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $searchIds = array_map(intval(...), array_values($searchIds));
 
         $result = $this->connection->query(
             sprintf(

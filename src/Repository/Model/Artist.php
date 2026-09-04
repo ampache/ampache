@@ -183,7 +183,7 @@ class Artist extends database_object implements
         }
 
         // one tag read for the page instead of one per artist
-        Tag::build_object_tag_cache('artist', array_values(array_map(intval(...), $ids)));
+        Tag::build_object_tag_cache('artist', $ids);
 
         foreach ($ids as $id) {
             parent::add_to_cache('artist_warm', (int) $id, [true]);

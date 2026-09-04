@@ -1189,7 +1189,7 @@ class OpenSubsonic_Xml_Data
     public function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'randomSongs');
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1239,7 +1239,7 @@ class OpenSubsonic_Xml_Data
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult'));
         $xresult->addAttribute('offset', (string) $offset);
         $xresult->addAttribute('totalHits', (string) $total);
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1280,7 +1280,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addAlbum($xresult, $album);
         }
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1321,7 +1321,7 @@ class OpenSubsonic_Xml_Data
 
             $this->addAlbumID3($xresult, $album);
         }
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1431,7 +1431,7 @@ class OpenSubsonic_Xml_Data
     public function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'songsByGenre');
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1501,7 +1501,7 @@ class OpenSubsonic_Xml_Data
             $this->addAlbum($xstarred, $album);
         }
 
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1545,7 +1545,7 @@ class OpenSubsonic_Xml_Data
             $this->addAlbumID3($xstarred, $album);
         }
 
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1580,7 +1580,7 @@ class OpenSubsonic_Xml_Data
     public function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'topSongs');
-        $this->openSubsonicFields->warmSongs($songs);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -2320,7 +2320,7 @@ class OpenSubsonic_Xml_Data
         }
         if ($songs) {
             $allsongs = $playlist->get_songs();
-            $this->openSubsonicFields->warmSongs($allsongs);
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -2490,7 +2490,7 @@ class OpenSubsonic_Xml_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
-            $this->openSubsonicFields->warmSongs($songs);
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -2500,7 +2500,7 @@ class OpenSubsonic_Xml_Data
             }
         } elseif ($share->object_type == 'album') {
             $songs = $this->songRepository->getByAlbum($share->object_id);
-            $this->openSubsonicFields->warmSongs($songs);
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {

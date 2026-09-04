@@ -356,7 +356,7 @@ class Search extends playlist_object
 
         global $dic;
         $owners = [];
-        foreach ($dic->get(SearchRepositoryInterface::class)->getRowsByIds(array_values(array_map(intval(...), $ids))) as $row) {
+        foreach ($dic->get(SearchRepositoryInterface::class)->getRowsByIds($ids) as $row) {
             parent::add_to_cache('search', (int) $row['id'], $row);
             if (!empty($row['user'])) {
                 $owners[(int) $row['user']] = (int) $row['user'];

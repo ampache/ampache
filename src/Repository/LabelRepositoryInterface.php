@@ -83,7 +83,7 @@ interface LabelRepositoryInterface
     /**
      * The labels of a set of albums, read in one go
      *
-     * @param list<int> $albumIds
+     * @param array<int|string> $albumIds
      * @return array<int, array<int, string>>
      */
     public function getByAlbums(array $albumIds): array;

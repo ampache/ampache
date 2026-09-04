@@ -122,7 +122,7 @@ interface MoodRepositoryInterface
     /**
      * The moods mapped onto a set of objects, read in one go
      *
-     * @param list<int> $objectIds
+     * @param array<int|string> $objectIds
      * @return array<int, list<array{id: int, name: string, user: int, count: int}>>
      */
     public function getTopMoodsBulk(string $objectType, array $objectIds): array;

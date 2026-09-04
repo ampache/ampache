@@ -43,7 +43,7 @@ interface SearchRepositoryInterface extends PlaylistObjectRepositoryInterface
     /**
      * Reads whole search rows for the in-request cache
      *
-     * @param list<int> $searchIds
+     * @param array<int|string> $searchIds
      * @return list<array<string, mixed>>
      */
     public function getRowsByIds(array $searchIds): array;

@@ -600,7 +600,6 @@ final class OpenSubsonic_Fields
      */
     public function warmAlbums(array $ids): void
     {
-        $ids = array_values(array_map(intval(...), $ids));
         Album::build_cache($ids);
         Album::build_detail_cache($ids);
         Rating::build_cache('album', $ids);
@@ -612,7 +611,6 @@ final class OpenSubsonic_Fields
      */
     public function warmArtists(array $ids): void
     {
-        $ids = array_values(array_map(intval(...), $ids));
         Artist::build_cache($ids);
         Rating::build_cache('artist', $ids);
         Userflag::build_cache('artist', $ids);
@@ -628,15 +626,5 @@ final class OpenSubsonic_Fields
         $split = Playlist::split_mixed_ids($ids);
         Playlist::build_cache($split['playlist']);
         Search::build_cache($split['search']);
-    }
-
-    /**
-     * Warms every cache a page of songs reads, so the serializer stops asking once per song
-     *
-     * @param array<int|string> $ids
-     */
-    public function warmSongs(array $ids): void
-    {
-        Song::build_cache(array_values(array_map(intval(...), $ids)));
     }
 }
