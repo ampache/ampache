@@ -214,45 +214,26 @@ class Album extends database_object implements
             }
         }
 
-        // the song artists of an album are asked for the same way; one album is not worth a second read
-        $songMapIds = (count($ids) > 1) ? array_map(intval(...), array_values($ids)) : [];
-        foreach (self::getAlbumRepository()->getMappedObjectIdsBulk($songMapIds, 'song') as $albumId => $objectIds) {
+        // the song artists of an album are asked for the same way
+        foreach (self::getAlbumRepository()->getMappedObjectIdsBulk(array_map(intval(...), array_values($ids)), 'song') as $albumId => $objectIds) {
             parent::add_to_cache('album_map_song', $albumId, $objectIds);
         }
 
         // warm grouped caches the row render would otherwise hit per album
         // (an album_disk row asks for its parent album's genres, so this covers both)
         Tag::build_object_tag_cache('album', $ids);
+        Mood::build_object_mood_cache('album', $ids);
         Art::build_cache($ids, 'album');
+        AlbumDisk::build_cache_by_albums($ids);
+        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($ids) as $albumId => $labels) {
+            parent::add_to_cache('album_labels', $albumId, $labels);
+        }
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
         }
 
         foreach ($ids as $id) {
             parent::add_to_cache('album_warm', (int) $id, [true]);
-        }
-
-        return true;
-    }
-
-    /**
-     * Warms what a full album entry reads on top of build_cache(): moods, disks and labels, one read each
-     *
-     * @param array<int|string> $ids
-     */
-    public static function build_detail_cache(array $ids): bool
-    {
-        if ($ids === [] || !database_object::isCacheEnabled()) {
-            return false;
-        }
-
-        Mood::build_object_mood_cache('album', $ids);
-
-        AlbumDisk::build_cache_by_albums($ids);
-
-        global $dic;
-        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($ids) as $albumId => $labels) {
-            parent::add_to_cache('album_labels', $albumId, $labels);
         }
 
         return true;

@@ -97,42 +97,24 @@ class Playlist extends playlist_object
             return false;
         }
 
-        foreach (self::getPlaylistRepository()->getRowsByIds(array_values($ids)) as $row) {
+        $repository = self::getPlaylistRepository();
+        $owners     = [];
+        foreach ($repository->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('playlist', $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
         }
 
         Art::build_cache($ids, 'playlist');
 
-        return true;
-    }
-
-    /**
-     * Warms has_search() for a page of playlists: one read for the owners' smartlists, one for the public ones
-     *
-     * @param array<int|string> $ids Playlist ids already cached by build_cache()
-     */
-    public static function build_search_name_cache(array $ids): bool
-    {
-        if ($ids === [] || !database_object::isCacheEnabled()) {
-            return false;
-        }
-
-        $owners = [];
-        foreach ($ids as $id) {
-            $owner = (int) (parent::get_from_cache('playlist', (int) $id)['user'] ?? 0);
-            if ($owner > 0) {
-                $owners[$owner] = $owner;
+        // has_search() compares every row against the owner's smartlists and the public ones: read once per page
+        if ($owners !== []) {
+            $global_user = (int) (Core::get_global('user')?->getId());
+            $public      = $repository->findSearchNames($global_user, false);
+            foreach ($repository->findOwnedSearchNamesBulk(array_values($owners)) as $owner => $owned) {
+                parent::add_to_cache('playlist_search_names', $owner . '/' . $global_user, [$owned, $public]);
             }
-        }
-        if ($owners === []) {
-            return false;
-        }
-
-        $repository  = self::getPlaylistRepository();
-        $global_user = (int) (Core::get_global('user')?->getId());
-        $public      = $repository->findSearchNames($global_user, false);
-        foreach ($repository->findOwnedSearchNamesBulk(array_values($owners)) as $owner => $owned) {
-            parent::add_to_cache('playlist_search_names', $owner . '/' . $global_user, [$owned, $public]);
         }
 
         return true;

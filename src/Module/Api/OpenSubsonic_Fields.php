@@ -601,7 +601,6 @@ final class OpenSubsonic_Fields
     public function warmAlbums(array $ids): void
     {
         Album::build_cache($ids);
-        Album::build_detail_cache($ids);
         Rating::build_cache('album', $ids);
         Userflag::build_cache('album', $ids);
     }

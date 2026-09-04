@@ -30,7 +30,6 @@ use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Catalog\Catalog;
-use Ampache\Module\Database\database_object;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -186,28 +185,6 @@ class Browse extends Query
     public static function is_valid_type(string $type): bool
     {
         return in_array($type, self::BROWSE_TYPES, true);
-    }
-
-    /**
-     * A song row also renders its disk, which the api never asks for, so the disks are warmed here only
-     *
-     * @param array<int|string> $ids
-     */
-    private static function _buildSongPageCache(array $ids, string $limit_threshold = ''): bool
-    {
-        if (!Song::build_cache($ids, $limit_threshold)) {
-            return false;
-        }
-
-        $albums = [];
-        foreach ($ids as $id) {
-            $album = (int) (database_object::get_from_cache('song', (int) $id)['album'] ?? 0);
-            if ($album > 0) {
-                $albums[$album] = $album;
-            }
-        }
-
-        return AlbumDisk::build_cache_by_albums(array_values($albums));
     }
 
     /**
@@ -906,11 +883,11 @@ class Browse extends Query
         foreach ($grouped as $entryType => $ids) {
             match ($entryType) {
                 'folder' => Folder::build_cache($ids),
-                'song' => self::_buildSongPageCache($ids),
+                'song' => Song::build_cache($ids),
                 'album' => Album::build_cache($ids),
                 'artist' => Artist::build_cache($ids),
                 'video' => Video::build_cache($ids),
-                'playlist' => Playlist::build_cache($ids) && Playlist::build_search_name_cache($ids),
+                'playlist' => Playlist::build_cache($ids),
                 'podcast_episode' => Podcast_Episode::build_cache($ids),
                 default => null,
             };
@@ -926,11 +903,11 @@ class Browse extends Query
     {
         /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
         match ($type) {
-            'song' => self::_buildSongPageCache($this->_squashList($object_ids), $limit_threshold),
+            'song' => Song::build_cache($this->_squashList($object_ids), $limit_threshold),
             'album' => Album::build_cache($this->_squashList($object_ids)),
             'album_disk' => AlbumDisk::build_cache($this->_squashList($object_ids)),
             'artist' => Artist::build_cache($this->_squashList($object_ids), true, $limit_threshold),
-            'playlist' => Playlist::build_cache($this->_squashList($object_ids)) && Playlist::build_search_name_cache($this->_squashList($object_ids)),
+            'playlist' => Playlist::build_cache($this->_squashList($object_ids)),
             'genre', 'tag', 'tag_hidden' => Tag::build_cache($this->_squashList($object_ids)),
             'video' => Video::build_cache($this->_squashList($object_ids)),
             'podcast' => Podcast::build_cache($this->_squashList($object_ids)),

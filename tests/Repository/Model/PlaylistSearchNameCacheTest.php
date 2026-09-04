@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\MockeryTestCase;
+use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use DI\Container;
 use Override;
@@ -76,11 +77,14 @@ class PlaylistSearchNameCacheTest extends MockeryTestCase
             ->once()
             ->andReturn([7 => [], 8 => [21 => 'Some name']]);
 
+        $repository->shouldReceive('getRowsByIds')
+            ->with([1, 2])
+            ->once()
+            ->andReturn([['id' => 1, 'user' => 7], ['id' => 2, 'user' => 8]]);
+
         $this->setDic($repository);
 
-        Playlist::add_to_cache('playlist', 1, ['id' => 1, 'user' => 7]);
-        Playlist::add_to_cache('playlist', 2, ['id' => 2, 'user' => 8]);
-        self::assertTrue(Playlist::build_search_name_cache([1, 2]));
+        self::assertTrue(Playlist::build_cache([1, 2]));
 
         $playlist       = new Playlist(0);
         $playlist->name = 'Some name';
@@ -136,10 +140,18 @@ class PlaylistSearchNameCacheTest extends MockeryTestCase
     {
         global $dic;
 
+        // build_cache() also warms the art of the page, which has nothing to say here
+        $images = $this->mock(ImageRepositoryInterface::class);
+        $images->shouldReceive('getRowsByObjectIds')->andReturn([]);
+        $images->shouldReceive('getOriginalRowsByObjectIds')->andReturn([]);
+
         $container = $this->mock(Container::class);
         $container->shouldReceive('get')
             ->with(PlaylistRepositoryInterface::class)
             ->andReturn($repository);
+        $container->shouldReceive('get')
+            ->with(ImageRepositoryInterface::class)
+            ->andReturn($images);
 
         $dic = $container;
     }
