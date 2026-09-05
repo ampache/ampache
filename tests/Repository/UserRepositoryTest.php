@@ -160,7 +160,7 @@ class UserRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id`, `apikey`, `username` FROM `user`')
+            ->with("SELECT `id`, `apikey`, `username` FROM `user` WHERE `apikey` IS NOT NULL AND `apikey` != '' AND `username` != ''")
             ->willReturn($result);
 
         $result->expects(static::exactly(2))

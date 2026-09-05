@@ -1564,7 +1564,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `catalog_filter_group` int(11) unsigned NOT NULL DEFAULT 0,
   `subsonic_secret` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username` (`username`),
+  KEY `apikey` (`apikey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

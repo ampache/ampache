@@ -282,14 +282,15 @@ final readonly class UserRepository implements UserRepositoryInterface
 
             // check for sha256 hashed apikey for client
             // https://ampache.org/api/
-            $dbResults = $this->connection->query('SELECT `id`, `apikey`, `username` FROM `user`');
+            // only a user holding a key can match one, and every other row costs a read and two hashes
+            $dbResults = $this->connection->query(
+                "SELECT `id`, `apikey`, `username` FROM `user` WHERE `apikey` IS NOT NULL AND `apikey` != '' AND `username` != ''"
+            );
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
-                if ($row['apikey'] && $row['username']) {
-                    $key        = hash('sha256', (string) $row['apikey']);
-                    $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $apikey) {
-                        return new User((int) $row['id']);
-                    }
+                $key        = hash('sha256', (string) $row['apikey']);
+                $passphrase = hash('sha256', $row['username'] . $key);
+                if ($passphrase === $apikey) {
+                    return new User((int) $row['id']);
                 }
             }
         }
