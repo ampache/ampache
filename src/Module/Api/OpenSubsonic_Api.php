@@ -3582,6 +3582,8 @@ class OpenSubsonic_Api
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
+            // long pauses might cause your now_playing to hide, and the sweep is the same for every id
+            Stream::garbage_collection();
             foreach ($valid_media as list($media, $type)) {
                 $time = (isset($input['time']))
                     ? (int) (((int) $input['time']) / 1000)
@@ -3590,8 +3592,6 @@ class OpenSubsonic_Api
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
 
-                // long pauses might cause your now_playing to hide
-                Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
                 // submission is true: stream finished. Record the play locally
                 // (set_played is dedup-guarded) and notify scrobble plugins.

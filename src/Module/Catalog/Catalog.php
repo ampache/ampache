@@ -1715,7 +1715,11 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->add_to_catalog($options)) {
+                            if (
+                                $catalog !== null
+                                && $catalog->add_to_catalog($options)
+                                && !in_array($catalog->gather_types, $catalog_media_types, true)
+                            ) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
