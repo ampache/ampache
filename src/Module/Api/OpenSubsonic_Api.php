@@ -3155,6 +3155,16 @@ class OpenSubsonic_Api
             return;
         }
 
+        // driving the server's own playback is gated like the native localplay method, nothing checked it here
+        if (
+            !AmpConfig::get('allow_localplay_playback')
+            || $user->access < (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        ) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
         $object_id  = $input['id'] ?? [];
         $controller = AmpConfig::get('localplay_controller', '');
         $localplay  = ($controller) ? new LocalPlay($controller) : null;
