@@ -58,6 +58,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A request looks a user up once by API key or username, however many times it asks
 * The recently played lists use more cache, speed improvement
 * The preferences rebuild that follows a database update repairs the install once instead of once per user, and the garbage collector only rewrites the preference names that changed. Test on 500 users, went from 248s to 6s
+* `user`.`apikey` carries an index, and the hashed-key fallback only reads the users holding a key
 
 ### Fixed (8.1.0)
 
@@ -78,6 +79,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Saving the server Interface preferences wiped `custom_favicon`, `custom_login_logo` and `custom_login_background`, three system preferences that tab never shows
 * The login page sent its redirect back with a literal `&amp;` in the url
 * The RSS feed url kept html entities in its slug and had no length limit
+* The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 
 ## Ampache 8.0.1
 
