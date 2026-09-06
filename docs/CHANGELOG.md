@@ -97,6 +97,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
 * Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
 * On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
+* Setting api_force_version reopened an api version the admin had disabled because it bypassed the enable checks
 
 ## Ampache 8.0.1
 
