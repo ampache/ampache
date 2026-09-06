@@ -94,6 +94,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.
 * Reordering a track checked only the row id, so any user could reorder another user's playlist or collection
 * Rating an object 0 repeatedly drained its weight, and api3 accepted out-of-range stars like 127
+* An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
 
 ## Ampache 8.0.1
 
