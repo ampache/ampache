@@ -1557,8 +1557,11 @@ final class Stats
             return false;
         }
 
-        if ($date == null) {
-            $date = time();
+        // a play cannot have happened later than now. A client with a wrong clock used to pin itself to
+        // the top of every recently played list, and poison `last_played` with a date that never ages
+        $now = time();
+        if (!$date || $date > $now) {
+            $date = $now;
         }
 
         $type = self::validate_type($input_type);
