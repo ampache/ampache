@@ -70,6 +70,22 @@ final class Stats
      */
     private const array DERIVED_TYPES = ['album', 'album_disk', 'artist', 'podcast'];
 
+    /**
+     * The table carrying an indexed `last_played`, keyed by the type asked for
+     *
+     * @var array<string, string>
+     */
+    private const array LAST_PLAYED_TABLES = [
+        'album' => 'album',
+        'album_artist' => 'artist',
+        'album_disk' => 'album_disk',
+        'artist' => 'artist',
+        'podcast_episode' => 'podcast_episode',
+        'song' => 'song',
+        'song_artist' => 'artist',
+        'video' => 'video',
+    ];
+
     /** @var array<string, ?string> Memoized lookups for the current request, keyed by coordinate pair */
     private static array $place_name_cache = [];
 
@@ -685,6 +701,12 @@ final class Stats
      */
     public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true, int $catalog_id = 0, int $limit = 0): string
     {
+        // `object_count` keeps one row per play and is pruned as it ages, so grouping it reads half a million
+        // rows to rebuild a date each of these tables already stores, indexed, and keeps when the history goes
+        if ($user === null && array_key_exists($input_type, self::LAST_PLAYED_TABLES)) {
+            return self::_get_last_played_sql($input_type, $newest, $catalog_id);
+        }
+
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest) ? 'DESC' : 'ASC';
         $user_sql       = ($user !== null) ? " AND `object_count`.`user` = '" . $user->getId() . "'" : '';
@@ -1325,6 +1347,52 @@ final class Stats
     private static function _derivedTypeList(): string
     {
         return "'" . implode("', '", self::DERIVED_TYPES) . "'";
+    }
+
+    /**
+     * Reads what a whole server played last, from the column each play already updates
+     */
+    private static function _get_last_played_sql(string $input_type, bool $newest, int $catalog_id): string
+    {
+        $type     = self::validate_type($input_type);
+        $table    = self::LAST_PLAYED_TABLES[$input_type];
+        $column   = sprintf('`%s`.`last_played`', $table);
+        $idColumn = sprintf('`%s`.`id`', $table);
+        $where    = [$column . ' > 0'];
+
+        // an album artist is an artist credited on an album, the same guard the play history carries
+        if ($input_type === 'album_artist') {
+            $where[] = '`artist`.`album_count` > 0';
+        }
+
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
+            $where[] = Catalog::get_enable_filter($type, $idColumn);
+        }
+
+        $filter_user = Core::get_global('user');
+        if (
+            AmpConfig::get('catalog_filter')
+            && in_array($type, ['video', 'artist', 'album', 'album_disk', 'song'], true)
+            && $filter_user instanceof User
+        ) {
+            $where[] = Catalog::get_user_filter($type, $filter_user->getId());
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, $idColumn, $catalog_id);
+        if ($catalog_sql !== '') {
+            $where[] = $catalog_sql;
+        }
+
+        return sprintf(
+            'SELECT %s AS `id`, %s AS `date` FROM `%s` WHERE %s ORDER BY %s %s, %s',
+            $idColumn,
+            $column,
+            $table,
+            implode(' AND ', $where),
+            $column,
+            ($newest) ? 'DESC' : 'ASC',
+            $idColumn
+        );
     }
 
     /**
