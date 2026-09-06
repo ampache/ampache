@@ -872,7 +872,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
   KEY `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`) USING BTREE,
   KEY `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`) USING BTREE,
-  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`)
+  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`),
+  KEY `object_count_history_IDX` (`count_type`, `user`, `object_type`, `object_id`, `date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
