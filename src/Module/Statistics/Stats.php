@@ -63,6 +63,13 @@ final class Stats
      * Tables carrying a `weight` column; playing, rating and flagging bump it, other types must not be handed to it.
      */
     public const array WEIGHT_TYPES = ['album', 'album_disk', 'artist', 'podcast', 'podcast_episode', 'song', 'video'];
+
+    /**
+     * Slack allowed on a client-supplied play date. A device without ntp runs a few seconds off, and rewriting
+     * those dates would make the exact-match duplicate guard miss every play such a client sends.
+     */
+    private const int CLOCK_DRIFT = 60;
+
     /**
      * Types written by the Song/Podcast_Episode::set_played fan-out. They duplicate the date, user, agent and
      * location of the media row that triggered them, so consolidation drops them instead of archiving them and
@@ -194,7 +201,7 @@ final class Stats
         $skip           = ($count_type === 'down') ? ', `total_skip` = `total_skip` + 1' : '';
         $played         = ($takesAPlayBack)
             ? ''
-            : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', $date ?? time());
+            : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', self::_clampDate($date));
 
         switch ($type) {
             case 'podcast_episode':
@@ -1212,6 +1219,8 @@ final class Stats
      */
     public static function shift_last_play(int $user_id, string $agent, int $original_date, int $new_date): void
     {
+        $new_date = self::_clampDate($new_date);
+
         // update the object_count table
         $sql = "UPDATE `object_count` SET `object_count`.`date` = ? WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
         Dba::write($sql, [$new_date, $user_id, $agent, $original_date]);
@@ -1279,6 +1288,14 @@ final class Stats
             'genre' => 'tag',
             default => 'song',
         };
+    }
+
+    // A play cannot have happened later than now, past the slack a client's clock is allowed.
+    private static function _clampDate(?int $date): int
+    {
+        $now = time();
+
+        return ($date === null || $date < 1 || $date > $now + self::CLOCK_DRIFT) ? $now : $date;
     }
 
     /**
@@ -1557,12 +1574,7 @@ final class Stats
             return false;
         }
 
-        // a play cannot have happened later than now. A client with a wrong clock used to pin itself to
-        // the top of every recently played list, and poison `last_played` with a date that never ages
-        $now = time();
-        if (!$date || $date > $now) {
-            $date = $now;
-        }
+        $date = self::_clampDate($date);
 
         $type = self::validate_type($input_type);
         if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {
