@@ -2118,7 +2118,6 @@ class Subsonic_Api
      */
     public function getplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -2130,6 +2129,13 @@ class Subsonic_Api
             || $playlist->isNew()
         ) {
             $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // a private list you neither own nor collaborate on is not yours to read
+        if ($playlist->type !== 'public' && !$playlist->has_collaborate($user)) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
@@ -2155,7 +2161,8 @@ class Subsonic_Api
      */
     public function getplaylists(array $input, User $user): void
     {
-        $user = (isset($input['username']))
+        // only an admin may list another user's playlists; their private ones are not public
+        $user = (isset($input['username']) && $user->access >= AccessLevelEnum::ADMIN->value)
             ? User::get_from_username($input['username']) ?? $user
             : $user;
 

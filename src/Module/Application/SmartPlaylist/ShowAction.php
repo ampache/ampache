@@ -61,7 +61,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
         $this->ui->showHeader();
-        if ($playlist->isNew()) {
+        if ($playlist->isNew() || (!$playlist->has_collaborate() && $playlist->type === 'private')) {
             $this->logger->warning(
                 'Requested a search that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
