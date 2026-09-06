@@ -80,6 +80,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The login page sent its redirect back with a literal `&amp;` in the url
 * The RSS feed url kept html entities in its slug and had no length limit
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
+* `stats.php?action=show` now say "access denied" when access is denied
 
 ## Ampache 8.0.1
 
