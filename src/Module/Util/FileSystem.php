@@ -50,10 +50,12 @@ class FileSystem
      * @return array{id: string}
      * @throws Exception
      */
-    public function copy(string $fs_id, string $par): array
+    public function copy(string $fs_id, string $par, User $user): array
     {
         $dir = $this->path($fs_id);
+        $this->check($dir, $user);
         $par = $this->path($par);
+        $this->check($par, $user);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
@@ -64,7 +66,7 @@ class FileSystem
         if (is_dir($dir)) {
             mkdir($new, 0775);
             foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
-                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
+                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new), $user);
             }
         }
 
@@ -207,6 +209,7 @@ class FileSystem
         $dir = $this->path($fs_id);
         $this->check($dir, $user);
         $par = $this->path($par);
+        $this->check($par, $user);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
@@ -294,7 +297,7 @@ class FileSystem
     {
         if (is_dir($dir)) {
             foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
-                $this->check($this->id($dir . DIRECTORY_SEPARATOR . $file), $user);
+                $this->check($dir . DIRECTORY_SEPARATOR . $file, $user);
             }
         }
 
@@ -346,7 +349,11 @@ class FileSystem
             throw new Exception('Path does not exist');
         }
 
-        if (!in_array($this->base, [null, '', '0'], true) && !str_starts_with($temp, $this->base)) {
+        if (
+            !in_array($this->base, [null, '', '0'], true)
+            && $temp !== $this->base
+            && !str_starts_with($temp, $this->base . DIRECTORY_SEPARATOR)
+        ) {
             throw new Exception('Path is not inside base');
         }
 
