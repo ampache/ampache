@@ -332,6 +332,19 @@ class PlaylistRepositoryTest extends TestCase
         $this->subject->setLastUpdate($this->playlist(666), 1234);
     }
 
+    public function testSetTrackNumberIsScopedToTheOwnPlaylist(): void
+    {
+        // the row id alone used to be enough to reorder another user's list, so the playlist id is part of the where
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?',
+                [1, 491963, 666]
+            );
+
+        $this->subject->setTrackNumber(491963, 1, 666);
+    }
+
     public function testSetTrackNumbersDoesNothingForAnEmptySet(): void
     {
         $this->connection->expects(static::never())

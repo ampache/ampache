@@ -706,7 +706,7 @@ class Playlist extends playlist_object
      */
     public function update_track_number(int $track_id, int $index): void
     {
-        self::getPlaylistRepository()->setTrackNumber($track_id, $index);
+        self::getPlaylistRepository()->setTrackNumber($track_id, $index, $this->id);
     }
 
     /**

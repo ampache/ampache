@@ -492,7 +492,7 @@ class Collection extends playlist_object
      */
     public function update_track_number(int $mapId, int $track): void
     {
-        $this->getCollectionRepository()->setTrackNumber($mapId, $track);
+        $this->getCollectionRepository()->setTrackNumber($mapId, $track, $this->id);
     }
 
     /**

@@ -200,7 +200,7 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     /**
      * Stores the position of one entry
      */
-    public function setTrackNumber(int $trackId, int $track): void;
+    public function setTrackNumber(int $trackId, int $track, int $playlistId): void;
 
     /**
      * Writes new positions for a set of entries in one statement

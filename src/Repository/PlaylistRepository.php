@@ -656,11 +656,12 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     /**
      * Stores the position of one entry
      */
-    public function setTrackNumber(int $trackId, int $track): void
+    public function setTrackNumber(int $trackId, int $track, int $playlistId): void
     {
+        // scope to the caller's own playlist, so a row id alone can't reorder someone else's list
         $this->connection->query(
-            'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?',
-            [$track, $trackId]
+            'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?',
+            [$track, $trackId, $playlistId]
         );
     }
 
