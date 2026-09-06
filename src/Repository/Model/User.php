@@ -157,6 +157,11 @@ class User extends database_object
         ?bool $disabled = false,
         ?bool $encrypted = false,
     ): int {
+        // the name is used as a filesystem path for uploads, so it must not carry a path segment
+        if (str_contains($username, '/') || str_contains($username, '\\') || in_array($username, ['.', '..'], true)) {
+            return 0;
+        }
+
         // don't try to overwrite users that already exist
         if (
             in_array(strtolower($username), [strtolower(T_('System')), 'system'])
