@@ -59,6 +59,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The recently played lists use more cache, speed improvement
 * The preferences rebuild that follows a database update repairs the install once instead of once per user, and the garbage collector only rewrites the preference names that changed. Test on 500 users, went from 248s to 6s
 * `user`.`apikey` carries an index, and the hashed-key fallback only reads the users holding a key
+* Play history search rules had no index
+* Whole-table sweeps moved out of the loops (subsonic scrobble, catalog add)
 
 ### Fixed (8.1.0)
 
