@@ -68,11 +68,13 @@ final readonly class RatingRepository implements RatingRepositoryInterface
             return;
         }
 
+        // a decrement floors at 0, so an unbalanced sequence can never push the weight negative
         $this->connection->query(
             sprintf(
-                'UPDATE `%s` SET `weight` = `weight` %s 1 WHERE `id` = ?;',
-                $objectType,
-                ($delta < 0) ? '-' : '+'
+                ($delta < 0)
+                    ? 'UPDATE `%s` SET `weight` = GREATEST(`weight` - 1, 0) WHERE `id` = ?;'
+                    : 'UPDATE `%s` SET `weight` = `weight` + 1 WHERE `id` = ?;',
+                $objectType
             ),
             [$objectId]
         );

@@ -92,6 +92,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists, api3. Added check like the modern api
 * Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.
 * Reordering a track checked only the row id, so any user could reorder another user's playlist or collection
+* Rating an object 0 repeatedly drained its weight, and api3 accepted out-of-range stars like 127
 
 ## Ampache 8.0.1
 

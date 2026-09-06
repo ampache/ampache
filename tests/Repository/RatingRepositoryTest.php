@@ -38,6 +38,19 @@ class RatingRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private RatingRepository $subject;
 
+    public function testAdjustWeightFloorsTheDecrementAtZero(): void
+    {
+        // an unbalanced sequence of removals must never push the weight below zero
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `song` SET `weight` = GREATEST(`weight` - 1, 0) WHERE `id` = ?;',
+                [666]
+            );
+
+        $this->subject->adjustWeight('song', 666, -1);
+    }
+
     public function testAdjustWeightIgnoresATypeWithoutTheColumn(): void
     {
         $this->connection->expects(static::never())
@@ -46,16 +59,16 @@ class RatingRepositoryTest extends TestCase
         $this->subject->adjustWeight('playlist', 666, 1);
     }
 
-    public function testAdjustWeightMovesTheCounterOnTheRatedTable(): void
+    public function testAdjustWeightRaisesTheCounterOnTheRatedTable(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `song` SET `weight` = `weight` - 1 WHERE `id` = ?;',
+                'UPDATE `song` SET `weight` = `weight` + 1 WHERE `id` = ?;',
                 [666]
             );
 
-        $this->subject->adjustWeight('song', 666, -1);
+        $this->subject->adjustWeight('song', 666, 1);
     }
 
     public function testCollectGarbageRefusesAnUnsupportedType(): void
