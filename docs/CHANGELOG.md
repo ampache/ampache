@@ -84,7 +84,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 * `stats.php?action=show` now say "access denied" when access is denied
 * Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue
-* A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack.
+* A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack. 
+* Similar issue: a favourite could be dated in the future through the flag api, pinning it to the top of newest lists for years
 * A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
 * Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
 * The stats api ignored the "Share Recently Played" opt-out when you named a user. It now renders nothing for a user who keeps recent activity private.
