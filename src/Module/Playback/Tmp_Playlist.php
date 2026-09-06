@@ -187,6 +187,16 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * Adds a whole selection of one type to this tmp playlist
+     *
+     * @param list<int> $object_ids
+     */
+    public function add_objects(array $object_ids, LibraryItemEnum $object_type): void
+    {
+        self::getTmpPlaylistRepository()->addItems($this->id, $object_ids, $object_type->value);
+    }
+
+    /**
      * clear
      * This clears all the objects out of a single playlist
      */

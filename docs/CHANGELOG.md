@@ -81,6 +81,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS feed url kept html entities in its slug and had no length limit
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 * `stats.php?action=show` now say "access denied" when access is denied
+* Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue:x
 
 ## Ampache 8.0.1
 

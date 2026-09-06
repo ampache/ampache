@@ -47,6 +47,26 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         );
     }
 
+    /**
+     * @param list<int> $objectIds
+     */
+    public function addItems(int $playlistId, array $objectIds, string $objectType): void
+    {
+        // queueing a random selection used to cost one statement per song
+        foreach (array_chunk($objectIds, 500) as $chunk) {
+            $params = [];
+            foreach ($chunk as $objectId) {
+                array_push($params, $objectId, $playlistId, $objectType);
+            }
+
+            $this->connection->query(
+                'INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES '
+                . implode(', ', array_fill(0, count($chunk), '(?, ?, ?)')),
+                $params
+            );
+        }
+    }
+
     public function collectGarbage(): void
     {
         $statements = [

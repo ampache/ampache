@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\TmpPlaylistRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +21,22 @@ class TmpPlaylistLazyTest extends TestCase
     private $oldDic;
 
     private TmpPlaylistRepositoryInterface&MockObject $repository;
+
+    public function testAddObjectsQueuesTheSelectionInOneCall(): void
+    {
+        $this->repository->method('getRow')
+            ->willReturn(['id' => 42, 'session' => 'a-session', 'type' => 'user', 'object_type' => 'song']);
+
+        // one statement for the whole selection, not one per song
+        $this->repository->expects(static::once())
+            ->method('addItems')
+            ->with(42, [21, 33], 'song');
+
+        $this->repository->expects(static::never())
+            ->method('addItem');
+
+        new Tmp_Playlist(42)->add_objects([21, 33], LibraryItemEnum::SONG);
+    }
 
     public function testFindFromSessionReturnsNullAndCreatesNothingWhenTheSessionHasNoQueue(): void
     {

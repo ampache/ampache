@@ -39,6 +39,13 @@ interface TmpPlaylistRepositoryInterface
     public function addItem(int $playlistId, int $objectId, string $objectType): void;
 
     /**
+     * Adds several items in one statement
+     *
+     * @param list<int> $objectIds
+     */
+    public function addItems(int $playlistId, array $objectIds, string $objectType): void;
+
+    /**
      * Drops the queues whose session is gone, and any data rows left without a queue
      */
     public function collectGarbage(): void;
