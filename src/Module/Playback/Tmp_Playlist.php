@@ -224,7 +224,7 @@ class Tmp_Playlist extends database_object
     public function delete_track(int $object_id): bool
     {
         /* delete the track its self */
-        self::getTmpPlaylistRepository()->deleteItemByRowId($object_id);
+        self::getTmpPlaylistRepository()->deleteItemByRowId($object_id, $this->id);
 
         return true;
     }

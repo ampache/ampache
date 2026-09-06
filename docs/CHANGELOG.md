@@ -90,6 +90,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The stats api ignored the "Share Recently Played" opt-out when you named a user. It now renders nothing for a user who keeps recent activity private.
 * localplay access was never actually checked (any user passed) and Subsonic jukeboxControl checked nothing. Now they are gated on the user's access level
 * Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists, api3. Added check like the modern api
+* Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.
 
 ## Ampache 8.0.1
 

@@ -63,7 +63,7 @@ interface TmpPlaylistRepositoryInterface
     /**
      * Drops one item by the id of its data row
      */
-    public function deleteItemByRowId(int $rowId): void;
+    public function deleteItemByRowId(int $rowId, int $playlistId): void;
 
     /**
      * Drops every item from a queue

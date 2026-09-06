@@ -112,9 +112,13 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         }
     }
 
-    public function deleteItemByRowId(int $rowId): void
+    public function deleteItemByRowId(int $rowId, int $playlistId): void
     {
-        $this->connection->query('DELETE FROM `tmp_playlist_data` WHERE `id` = ?', [$rowId]);
+        // scope the delete to the caller's own queue, so a row id alone can't drop someone else's track
+        $this->connection->query(
+            'DELETE FROM `tmp_playlist_data` WHERE `id` = ? AND `tmp_playlist` = ?',
+            [$rowId, $playlistId]
+        );
     }
 
     public function deleteItems(int $playlistId): void

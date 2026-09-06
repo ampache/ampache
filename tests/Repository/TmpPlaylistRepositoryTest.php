@@ -73,6 +73,19 @@ class TmpPlaylistRepositoryTest extends TestCase
         $this->subject->addItems(666, range(1, 501), 'song');
     }
 
+    public function testDeleteItemByRowIdIsScopedToTheOwnQueue(): void
+    {
+        // the row id alone used to be enough to drop another user's track, so the queue id is part of the where
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `tmp_playlist_data` WHERE `id` = ? AND `tmp_playlist` = ?',
+                [601, 7]
+            );
+
+        $this->subject->deleteItemByRowId(601, 7);
+    }
+
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
