@@ -96,6 +96,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Rating an object 0 repeatedly drained its weight, and api3 accepted out-of-range stars like 127
 * An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
 * Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
+* On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
 
 ## Ampache 8.0.1
 

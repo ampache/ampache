@@ -260,7 +260,7 @@ class Search extends playlist_object
                             $this->limit = (int) $value;
                             break;
                         case 'logic_operator':
-                            $this->logic_operator = ($value === null) ? null : (string) $value;
+                            $this->logic_operator = ($value === null) ? null : self::normalizeLogicOperator($value);
                             break;
                         case 'random':
                             $this->random = ($value === null) ? null : (int) $value;
@@ -1088,7 +1088,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = strtolower($data['operator'] ?? 'and');
+        $this->logic_operator = self::normalizeLogicOperator($data['operator'] ?? 'and');
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
