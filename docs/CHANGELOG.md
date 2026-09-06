@@ -84,6 +84,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 * `stats.php?action=show` now say "access denied" when access is denied
 * Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue:x
+* A scrobble carrying a future date was stored as-is, pinning that client to the top of every recently played list until the date caught up. Now clamped.
 
 ## Ampache 8.0.1
 
