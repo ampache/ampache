@@ -82,6 +82,56 @@ class InstallationHelperTest extends MockeryTestCase
         self::assertSame(['native', 'transcode'], Stream::get_stream_types_for_type('flac', 'webplayer'));
     }
 
+    /**
+     * Invalid database settings must fail before anything is echoed, the same as an unwritable rewrite file,
+     * so a download request that never actually downloads still leaves the caller able to show the error.
+     */
+    public function testInstallCreateConfigEchoesNothingWhenValidationFails(): void
+    {
+        AmpConfig::set('database_username', '', true);
+        AmpConfig::set('database_password', '', true);
+        AmpConfig::set('database_hostname', 'localhost', true);
+
+        ob_start();
+        $result = $this->subject->install_create_config(true);
+        $output = ob_get_clean();
+
+        self::assertFalse($result);
+        self::assertSame('', $output);
+    }
+
+    /**
+     * A failed validation must echo nothing, so the caller can safely fall through to the normal error page
+     * instead of returning a blank response as though a file had already been streamed to the browser.
+     */
+    public function testInstallRewriteRulesEchoesNothingWhenValidationFails(): void
+    {
+        ob_start();
+        $result = $this->subject->install_rewrite_rules(sys_get_temp_dir() . '/nonexistent-htaccess', '/ampache', true);
+        $output = ob_get_clean();
+
+        self::assertFalse($result);
+        self::assertSame('', $output);
+    }
+
+    /**
+     * A download that actually streamed the file must report success, not just "not a write failure". The
+     * install page used the return value to decide whether to render itself afterwards; a false here would
+     * make it treat an already-sent download the same as a validation failure that echoed nothing at all.
+     */
+    public function testInstallRewriteRulesReportsSuccessAfterStreamingADownload(): void
+    {
+        $file = $this->writeRules('RewriteRule ^image\.php$ /image.php [R=302,L]');
+        copy($file, $file . '.dist');
+
+        ob_start();
+        $result = $this->subject->install_rewrite_rules($file, '/ampache', true);
+        $output = ob_get_clean();
+
+        self::assertTrue($result);
+        self::assertStringContainsString('/ampache/image.php', $output);
+    }
+
     public function testRealTargetsGainTheWebPath(): void
     {
         self::assertSame(
@@ -171,6 +221,10 @@ class InstallationHelperTest extends MockeryTestCase
             $this->mock(UpdaterInterface::class),
             $this->mock(UpdateInfoRepositoryInterface::class),
         );
+
+        // AmpError::$errors is static and outlives a test, so a prior test's 'general' error (if any) makes
+        // AmpError::add() append rather than set; seed the session key it would append onto either way.
+        $_SESSION = ['errors' => ['general' => '']];
     }
 
     #[Override]

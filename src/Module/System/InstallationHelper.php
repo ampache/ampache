@@ -454,8 +454,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             }
 
             echo $final;
-
-            return false;
         }
 
         return true;
@@ -666,8 +664,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             }
 
             echo $final;
-
-            return false;
         }
 
         return true;
