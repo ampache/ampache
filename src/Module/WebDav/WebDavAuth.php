@@ -58,11 +58,7 @@ final class WebDavAuth extends AbstractBasic
 
         // Reject disabled accounts and bind the user so per-user catalog filtering applies.
         $user = $this->userRepository->findByUsername((string) $username);
-        if (
-            !$user instanceof User
-            || $user->isNew()
-            || $user->disabled
-        ) {
+        if (!$user instanceof User || $user->disabled) {
             return false;
         }
 
