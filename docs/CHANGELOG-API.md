@@ -6,6 +6,10 @@
 
 * `playlists`, `user_playlists`
   * New `last_duration` sort, the playlist's total duration as of when it was last counted
+* `catalog_action` (ALL)
+  * New `scan_catalog_folders` task
+* REST
+  * `catalogs/{catalog_id}/scan` as an alias of `catalog_action` with `task=scan_catalog_folders`
 
 ### Fixed (810000)
 

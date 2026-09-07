@@ -85,6 +85,7 @@ class ApiHandlerTest extends TestCase
         return [
             'add => add_to_catalog' => ['add'],
             'clean => clean_catalog' => ['clean'],
+            'scan => scan_catalog_folders' => ['scan'],
             'update => update_catalog' => ['update'],
             'verify => verify_catalog' => ['verify'],
         ];

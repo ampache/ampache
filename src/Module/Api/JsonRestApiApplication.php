@@ -81,6 +81,7 @@ final class JsonRestApiApplication implements ApiApplicationInterface
             ? match ((string) ($input['action'] ?? '')) {
                 'add' => 'add_to_catalog',
                 'clean' => 'clean_catalog',
+                'scan' => 'scan_catalog_folders',
                 'update' => 'update_catalog',
                 'verify' => 'verify_catalog',
                 default => null,
