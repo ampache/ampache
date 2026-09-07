@@ -685,6 +685,12 @@ class Api
      */
     public static function server_details(string $token = ''): array
     {
+        // Now we need to quickly get the totals
+        $client = self::getUserRepository()->findByApiKey(trim($token));
+        if (!$client instanceof User || $client->isNew()) {
+            return [];
+        }
+
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql = <<<SQL
             SELECT `catalog`.`update`, `catalog`.`add`, `catalog`.`clean`, `maxid`.`max_song`, `maxid`.`max_album`, `maxid`.`max_artist`, `maxid`.`max_video`, `maxid`.`max_podcast`, `maxid`.`max_podcast_episode`
@@ -705,15 +711,8 @@ class Api
             SQL;
         $db_results = Dba::read($sql);
         $details    = Dba::fetch_assoc($db_results);
-
-        // Now we need to quickly get the totals
-        $client = self::getUserRepository()->findByApiKey(trim($token));
-        if (!$client instanceof User || $client->isNew()) {
-            return [];
-        }
-
-        $counts    = Catalog::get_server_counts($client->id);
-        $playlists = (AmpConfig::get('hide_search', false))
+        $counts     = Catalog::get_server_counts($client->id);
+        $playlists  = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
         $autharray = (!empty($token))
