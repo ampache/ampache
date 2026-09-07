@@ -191,11 +191,13 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
     private function voices(int $playlistId): array
     {
         $rows = $this->connection->query(
-            'SELECT DISTINCT `artist`.`name` FROM `playlist_data` '
+            'SELECT `artist`.`name` FROM `playlist_data` '
             . 'INNER JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` '
             . 'INNER JOIN `artist` ON `artist`.`id` = `song`.`artist` '
             . "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song' "
-            . "AND `artist`.`name` <> '' ORDER BY `playlist_data`.`track` LIMIT " . self::VOICES,
+            . "AND `artist`.`name` <> '' "
+            // group + order by MIN(track) instead of DISTINCT + ORDER BY a non-selected column, which MySQL rejects
+            . 'GROUP BY `artist`.`name` ORDER BY MIN(`playlist_data`.`track`) LIMIT ' . self::VOICES,
             [$playlistId]
         );
 

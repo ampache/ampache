@@ -1383,7 +1383,9 @@ final class Stats
         }
 
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
-            $where[] = Catalog::get_enable_filter($type, $idColumn);
+            // the album_disk enable filter correlates on the parent album id, not the disk id
+            $enableColumn = ($type === 'album_disk') ? '`album_disk`.`album_id`' : $idColumn;
+            $where[]      = Catalog::get_enable_filter($type, $enableColumn);
         }
 
         $filter_user = Core::get_global('user');

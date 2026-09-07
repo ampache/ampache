@@ -302,10 +302,9 @@ class FileSystem
         }
 
         if (is_file($dir)) {
+            // only a catalogued song carries ownership; art and not-yet-scanned files are no one's to guard
             $object_id = Catalog::get_id_from_file($dir, 'song');
-            $song      = new Song($object_id);
-
-            if ($user->getId() !== $song->get_user_owner()) {
+            if ($object_id > 0 && (new Song($object_id))->get_user_owner() !== $user->getId()) {
                 throw new Exception('You do not have permission to manage this folder');
             }
         }
