@@ -279,7 +279,11 @@ class Api5
     {
         // Now we need to quickly get the totals
         $client    = self::getUserRepository()->findByApiKey(trim($token));
-        if (!$client instanceof User || $client->isNew()) {
+        if (
+            !$client instanceof User
+            || $client->isNew()
+            || $client->disabled
+        ) {
             return [];
         }
 
@@ -287,7 +291,7 @@ class Api5
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
         $db_results = Dba::read($sql);
         $details    = Dba::fetch_assoc($db_results);
-        $counts     = Catalog::get_server_counts($client->id ?? 0);
+        $counts     = Catalog::get_server_counts($client->id);
         $playlists  = (AmpConfig::get('hide_search', false))
             ? ($counts['playlist'])
             : ($counts['playlist'] + $counts['search']);

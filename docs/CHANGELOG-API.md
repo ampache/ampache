@@ -7,6 +7,13 @@
 * `playlists`, `user_playlists`
   * New `last_duration` sort, the playlist's total duration as of when it was last counted
 
+### Fixed (810000)
+
+* ALL
+  * `handshake`: A disabled user account could still complete the handshake and receive a valid session
+* API5
+  * `ping`: `server_details` returned server-wide catalog counts scoped to user id `0` when the auth token didn't resolve to a real user, instead of being rejected like API8 already was
+
 ## API 8.0.1
 
 ### Added (801000)
