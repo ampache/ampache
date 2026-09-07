@@ -49,5 +49,6 @@ final class CatalogAction8Method extends AbstractCatalogActionMethod
         'update_catalog',
         'gather_art',
         'garbage_collect',
+        'scan_catalog_folders',
     ];
 }

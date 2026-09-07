@@ -760,12 +760,12 @@ final class ApiHandler implements ApiHandlerInterface
                     $action = 'catalog_create';
                 }
 
-                // `catalogs/{catalog_id}/(add|clean|update|verify)` are undocumented aliases of
+                // `catalogs/{catalog_id}/(add|clean|scan|update|verify)` are undocumented aliases of
                 // `catalogs/{catalog_id}/action`; the matching task is derived from the path by
                 // the REST applications. (`add` without a filter keeps its `catalog_create` meaning)
                 if (
                     $hasFilter
-                    && ($action === 'add' || $action === 'clean' || $action === 'update' || $action === 'verify')
+                    && ($action === 'add' || $action === 'clean' || $action === 'scan' || $action === 'update' || $action === 'verify')
                 ) {
                     $action = 'catalog_action';
                 }
