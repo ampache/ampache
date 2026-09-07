@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
+use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Override;
@@ -58,6 +60,26 @@ class InstallationHelperTest extends MockeryTestCase
             $rules,
             $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true)
         );
+    }
+
+    /**
+     * The 'transcode' preference (the opt-in switch for transcoding) defaults to 'default' for every user,
+     * not 'never', so a template that marks common lossless formats 'required' would forbid native streaming
+     * of them for everyone the moment a transcoder is picked during install, without any further opt-in.
+     */
+    public function testInstallConfigTranscodeModeKeepsNativeStreamingAvailable(): void
+    {
+        $this->subject->install_config_transcode_mode('ffmpeg');
+
+        self::assertSame('allowed', AmpConfig::get('transcode_flac'));
+        self::assertSame('allowed', AmpConfig::get('transcode_m4a'));
+        self::assertSame('allowed', AmpConfig::get('transcode_mpc'));
+        self::assertSame('allowed', AmpConfig::get('transcode_wav'));
+
+        AmpConfig::set('transcode_player_webplayer_flac', '', true);
+        AmpConfig::set('encode_player_webplayer_target', '', true);
+
+        self::assertSame(['native', 'transcode'], Stream::get_stream_types_for_type('flac', 'webplayer'));
     }
 
     public function testRealTargetsGainTheWebPath(): void
