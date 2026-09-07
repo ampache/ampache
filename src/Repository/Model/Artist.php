@@ -157,9 +157,8 @@ class Artist extends database_object implements
 
         Art::build_cache($ids, 'artist');
 
-        $intIds = array_map(intval(...), array_values($ids));
-        Tag::build_object_tag_cache('artist', $intIds);
-        Mood::build_object_mood_cache('artist', $intIds);
+        Tag::build_object_tag_cache('artist', $ids);
+        Mood::build_object_mood_cache('artist', $ids);
 
         // Preload full names so get_fullname_by_id() stops querying one row at a time.
         foreach ($artistRepository->getFullNamesByIds($ids) as $artist_id => $fullName) {
@@ -181,9 +180,6 @@ class Artist extends database_object implements
                 parent::add_to_cache('artist_extra', $row['artist'], $row);
             }
         }
-
-        // one tag read for the page instead of one per artist
-        Tag::build_object_tag_cache('artist', $ids);
 
         foreach ($ids as $id) {
             parent::add_to_cache('artist_warm', (int) $id, [true]);
