@@ -822,12 +822,21 @@ abstract class Catalog extends database_object
             ? self::_check_length($results['albumartist'])
             : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
-        if (empty($results['albumartist'])) {
+        if (empty($results['albumartist']) && !isset($results['albumartist_id'])) {
             $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
 
-            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album'])))
-                ? $song->get_album_artist()
-                : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+            if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
+                $results['albumartist_id'] = $song->get_album_artist();
+            } elseif (empty($results['album'])) {
+                // nothing to group under, so an orphaned song still needs an album artist of its own
+                $results['albumartist_id'] = Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+            } else {
+                // One file cannot tell whether a named album has one artist or many. Taking the song artist
+                // here gave every artist on a compilation an album of the same name, because album_artist is
+                // part of an album's identity. update_album_artist() decides once every track is in, and only
+                // when they all agree on one artist.
+                $results['albumartist_id'] = null;
+            }
         }
 
         if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {

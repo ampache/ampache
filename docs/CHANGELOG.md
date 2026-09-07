@@ -98,6 +98,9 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
 * On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
 * Setting api_force_version reopened an api version the admin had disabled because it bypassed the enable checks
+* Missing close box on a few template phtml files
+* Downloading a file the server could not open answered with an empty file and a success status rather than an error
+* Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
 
 ## Ampache 8.0.1
 
