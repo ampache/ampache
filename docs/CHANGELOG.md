@@ -47,6 +47,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 * Missing close box on a few template phtml files
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
+* Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
 
 ## Ampache 8.0.1
 
