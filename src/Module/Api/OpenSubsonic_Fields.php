@@ -360,7 +360,11 @@ final class OpenSubsonic_Fields
     public function songBookmarkPosition(Song $song): ?int
     {
         $user = Core::get_global('user');
-        if (!$user instanceof User || $user->id === 0) {
+        if (
+            !$user instanceof User
+            || $user->isNew()
+            || $user->disabled
+        ) {
             return null;
         }
 

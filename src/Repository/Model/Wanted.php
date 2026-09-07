@@ -216,7 +216,7 @@ class Wanted extends database_object
                         }
 
                         $wanted->f_user = Core::get_global('user')?->get_fullname() ?? '';
-                        $wanted->f_link = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
+                        $wanted->f_link = "<a href=\"" . scrub_out($wanted->link) . "\" title=\"" . scrub_out($wanted->name) . "\">" . scrub_out($wanted->name) . "</a>";
 
                         if (
                             $user instanceof User
@@ -315,10 +315,10 @@ class Wanted extends database_object
             $this->f_link = sprintf(
                 '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
                 AmpConfig::get_web_path(),
-                $this->mbid,
+                scrub_out($this->mbid),
                 $this->artist,
-                $this->artist_mbid,
-                $this->name,
+                scrub_out($this->artist_mbid),
+                scrub_out($this->name),
                 scrub_out($title ?? $this->name)
             );
         }

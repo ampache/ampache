@@ -2075,6 +2075,19 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Neutralises path traversal in a sort/rename pattern once the tag values have been substituted in.
+     *
+     * A tag value can be exactly `..` (or `.`), which with the pattern's own `/` separators would climb out
+     * of the catalog. Any segment made only of dots becomes `_`; every other character, unicode included, is
+     * left untouched so international names sort unchanged. Null bytes are stripped so they cannot truncate
+     * the path handed to the filesystem.
+     */
+    public static function sort_clean_path(string $path): string
+    {
+        return (string) preg_replace('~(^|/)\\.+(?=/|$)~', '$1_', str_replace("\0", '', $path));
+    }
+
+    /**
      * trim_featuring
      * Splits artists featuring from the string
      * @return string[]
@@ -4263,7 +4276,7 @@ abstract class Catalog extends database_object
         $version        = self::sort_clean_name($album->version, '%s');
         $genre          = ($album->get_tags() === [])
             ? '%b'
-            : Tag::get_display($album->get_tags());
+            : self::sort_clean_name(Tag::get_display($album->get_tags()), '%g', $windowsCompat);
 
         // Replace everything we can find
         $replace_array = [
@@ -4302,8 +4315,7 @@ abstract class Catalog extends database_object
         ];
         $sort_pattern = str_replace($replace_array, $content_array, $sort_pattern);
 
-        // Remove non A-Z0-9 chars
-        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
+        $sort_pattern = self::sort_clean_path((string) $sort_pattern);
 
         // Replace non-critical search patterns
         $post_replace_array = [

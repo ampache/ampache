@@ -130,9 +130,21 @@ final readonly class OidcAuthenticationService implements OidcAuthenticationServ
             }
 
             $value = $this->readClaim($claims, $claimName);
-            if ($value !== '') {
-                $result[$field] = $value;
+            if ($value === '') {
+                continue;
             }
+
+            // Never copy an email the provider explicitly flags as unverified.
+            if ($field === 'email' && !$this->isEmailVerified($claims)) {
+                $this->logger->warning(
+                    'OpenID Connect: ignoring unverified email claim',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                continue;
+            }
+
+            $result[$field] = $value;
         }
 
         return $result;
@@ -177,6 +189,22 @@ final readonly class OidcAuthenticationService implements OidcAuthenticationServ
         }
 
         return $claims;
+    }
+
+    /**
+     * Treat the email as unverified only when the provider says so explicitly;
+     * a missing email_verified claim is left as-is for provider compatibility.
+     *
+     * @param array<string, mixed> $claims
+     */
+    private function isEmailVerified(array $claims): bool
+    {
+        $verified = $claims['email_verified'] ?? null;
+        if ($verified === null) {
+            return true;
+        }
+
+        return !in_array($verified, [false, 'false', 0, '0', ''], true);
     }
 
     /**

@@ -26,144 +26,108 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DeleteActionTest extends MockeryTestCase
+class ShowDeleteActionTest extends MockeryTestCase
 {
     private MockInterface&ConfigContainerInterface $configContainer;
     private MockInterface&LicenseRepositoryInterface $licenseRepository;
-    private MockInterface&RequestParserInterface $requestParser;
-    private DeleteAction $subject;
+    private ShowDeleteAction $subject;
     private MockInterface&UiInterface $ui;
 
-    public function testRunDeletesAndReturnsNull(): void
+    public function testRunShowsConfirmationWithFormToken(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $license    = $this->mock(License::class);
+        $item       = $this->mock(License::class);
 
-        $licenseId = 666;
-        $webPath   = '/admin';
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->with($webPath)
-            ->once()
-            ->andReturn($webPath);
+        $itemId = 666;
+        $label  = 'some-label';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
-        $this->requestParser->shouldReceive('verifyForm')
-            ->with('delete_license')
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['license_id' => (string) $licenseId]);
-
-        $this->licenseRepository->shouldReceive('findById')
-            ->with($licenseId)
-            ->once()
-            ->andReturn($license);
-
-        $this->licenseRepository->shouldReceive('delete')
-            ->with($license)
-            ->once();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showConfirmation')
-            ->with(
-                'No Problem',
-                'The License has been deleted',
-                sprintf('%s/license.php', $webPath)
-            )
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
-    }
-
-    public function testRunErrorsIfLicenseWasNotFound(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $licenseId = 666;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $this->requestParser->shouldReceive('verifyForm')
-            ->with('delete_license')
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['license_id' => (string) $licenseId]);
-
-        $this->licenseRepository->shouldReceive('findById')
-            ->with($licenseId)
-            ->once()
-            ->andReturnNull();
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/admin')
+            ->once()
+            ->andReturn('/admin');
 
-        $this->subject->run(
-            $request,
-            $gatekeeper
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['license_id' => (string) $itemId]);
+
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($itemId)
+            ->once()
+            ->andReturn($item);
+
+        $item->shouldReceive('getName')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($label);
+
+        $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
+        $this->ui->shouldReceive('showConfirmation')
+            ->with(
+                'Are You Sure?',
+                sprintf('This will permanently delete the license "%s"', $label),
+                sprintf('/admin/license.php?action=delete&license_id=%d', $itemId),
+                1,
+                'delete_license'
+            )
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
+        $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
+
+        static::assertNull(
+            $this->subject->run($request, $gatekeeper)
         );
     }
 
-    public function testRunThrowsIfFormTokenIsInvalid(): void
+    public function testRunShowsNothingInDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
+        $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
+        $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
+        $this->ui->shouldNotReceive('showConfirmation');
+
+        static::assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsIfAccessIsDenied(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
@@ -173,31 +137,53 @@ class DeleteActionTest extends MockeryTestCase
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsIfItemWasNotFound(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $itemId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
             ->andReturnTrue();
 
-        $this->requestParser->shouldReceive('verifyForm')
-            ->with('delete_license')
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
 
-        $this->licenseRepository->shouldNotReceive('delete');
+        $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
 
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['license_id' => (string) $itemId]);
+
+        $this->licenseRepository->shouldReceive('findById')
+            ->with($itemId)
+            ->once()
+            ->andReturnNull();
+
+        $this->subject->run($request, $gatekeeper);
     }
 
     protected function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
-        $this->requestParser     = $this->mock(RequestParserInterface::class);
         $this->configContainer   = $this->mock(ConfigContainerInterface::class);
         $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
-        $this->subject = new DeleteAction(
+        $this->subject = new ShowDeleteAction(
             $this->ui,
-            $this->requestParser,
             $this->configContainer,
             $this->licenseRepository
         );
