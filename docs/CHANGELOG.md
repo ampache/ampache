@@ -46,6 +46,17 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
 * Missing close box on a few template phtml files
+* A disabled user account could still authenticate through the API handshake (v3-v6/v8), Subsonic, and an RSS feed token
+* Password/token comparisons in the API handshake, the `session_remember` cookie MAC, and API key/stream token lookups used `===`/`!=` instead of `hash_equals()`
+* `Ldap::auth()` concatenated the raw username into the LDAP search filter and group-membership regex with no escaping
+* OpenID Connect login copied an `email` claim even when the provider explicitly marked it `email_verified: false`
+* `bin/cli run:catalog -s` (sort/rename) could write outside the catalog when a tag value was exactly `..`
+* A server configured with `site_charset` `sjis`/`gbk`/`big5`/`cp932` could have its escaping backslash eaten by a crafted string's lead byte, enabling SQL injection
+* WebDAV login accepted a disabled account and never bound the authenticated user, so `catalog_filter_group` wasn't applied to WebDAV browsing
+* Logging out only cleared the `_remember` cookie client-side; the server-side token stayed valid and replayable
+* Deleting a license, shout, album, folder, label, podcast episode or share via `action=delete` didn't check the CSRF confirmation token
+* A share's access counter could exceed `max_counter` under concurrent access
+* The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 
 ## Ampache 8.0.1
 
