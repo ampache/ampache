@@ -42,6 +42,23 @@ class CatalogRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private CatalogRepository $subject;
 
+    public function testActionLockNameStaysWithinTheLimitMysqlEnforces(): void
+    {
+        $lockName = null;
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->willReturnCallback(function (string $sql, array $params) use (&$lockName): string {
+                $lockName = $params[0];
+
+                return '1';
+            });
+
+        $this->subject->tryAcquireActionLock(str_repeat('a', 200));
+
+        static::assertLessThanOrEqual(64, strlen((string) $lockName));
+    }
+
     public function testCreateSubTypeTableRefusesAColumnNoBackendDeclares(): void
     {
         $this->configContainer->method('get')->willReturn('utf8mb4');
@@ -277,7 +294,7 @@ class CatalogRepositoryTest extends TestCase
     {
         $this->connection->expects(static::exactly(2))
             ->method('fetchOne')
-            ->with('SELECT IS_USED_LOCK(?)', ['ampache_sse_action_some-key'])
+            ->with('SELECT IS_USED_LOCK(?)', ['ampache_sse_action_' . md5('some-key')])
             ->willReturn('42', null);
 
         self::assertTrue($this->subject->isActionProcessing('some-key'));
@@ -288,7 +305,7 @@ class CatalogRepositoryTest extends TestCase
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT RELEASE_LOCK(?)', ['ampache_sse_action_some-key']);
+            ->with('SELECT RELEASE_LOCK(?)', ['ampache_sse_action_' . md5('some-key')]);
 
         $this->subject->releaseActionLock('some-key');
     }
@@ -336,7 +353,7 @@ class CatalogRepositoryTest extends TestCase
     {
         $this->connection->expects(static::exactly(2))
             ->method('fetchOne')
-            ->with('SELECT GET_LOCK(?, 0)', ['ampache_sse_action_some-key'])
+            ->with('SELECT GET_LOCK(?, 0)', ['ampache_sse_action_' . md5('some-key')])
             ->willReturn('1', '0');
 
         self::assertTrue($this->subject->tryAcquireActionLock('some-key'));
