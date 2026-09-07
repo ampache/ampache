@@ -3048,6 +3048,8 @@ class Subsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {

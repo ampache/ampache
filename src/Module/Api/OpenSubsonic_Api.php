@@ -3364,6 +3364,10 @@ class OpenSubsonic_Api
 
         // The reported position is stored verbatim: the spec derives `positionMs` from the last report received
         $position_ms = (array_key_exists('positionMs', $input)) ? (int) $input['positionMs'] : null;
+        if ($position_ms !== null) {
+            // an out-of-range position would pin a stuck now_playing row, so keep it within the track
+            $position_ms = max(0, min($position_ms, (int) $media->time * 1000));
+        }
         $position    = (int) round(($position_ms ?? 0) / 1000);
         $started     = time() - $position;
         $rate        = (array_key_exists('playbackRate', $input)) ? (float) $input['playbackRate'] : null;
@@ -3413,6 +3417,8 @@ class OpenSubsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
@@ -3505,6 +3511,8 @@ class OpenSubsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
