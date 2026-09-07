@@ -29,6 +29,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,14 +42,12 @@ final class UploadArtAction extends AbstractArtAction
     public function __construct(
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UiInterface $ui,
+        private readonly DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
+        $burl = $this->deletionUrlResolver->resolveBurl(Core::get_get('burl'));
 
         $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
