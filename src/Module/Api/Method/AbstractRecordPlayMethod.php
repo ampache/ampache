@@ -33,6 +33,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -147,6 +148,14 @@ abstract class AbstractRecordPlayMethod implements MethodInterface
 
         $media = $this->modelFactory->createSong($objectId);
         if ($media->isNew()) {
+            throw new ResultEmptyException(
+                (string) $objectId,
+                'id'
+            );
+        }
+
+        // a catalog you are filtered from is not yours to record against
+        if (!Catalog::has_access($media->getCatalogId(), $user->getId())) {
             throw new ResultEmptyException(
                 (string) $objectId,
                 'id'
