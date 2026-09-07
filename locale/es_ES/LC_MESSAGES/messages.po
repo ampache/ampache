@@ -585,7 +585,7 @@ msgid "Folder Pattern"
 msgstr "Patrón de carpeta"
 
 msgid "(no leading or ending '/')"
-msgstr "(sin inicio ni final en '/')"
+msgstr "(sin '/' inicial ni final)"
 
 msgid "Gather Art"
 msgstr "Conseguir portadas"

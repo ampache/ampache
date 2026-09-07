@@ -201,7 +201,11 @@ msgid "Custom datetime"
 msgstr ""
 
 #: Ampache preference description
-msgid "Custom URL - Favicon"
+msgid "Custom URL - Touch icon for phone home screens (PNG, 180x180, no transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
 msgstr ""
 
 #: Ampache preference description
@@ -210,6 +214,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Image shown when a link to this server is shared (PNG or JPEG, 1200x630)"
 msgstr ""
 
 #: Ampache preference description
@@ -313,6 +321,14 @@ msgid "Force HTTP playback regardless of port"
 msgstr ""
 
 #: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
 msgid "Allow Geolocation"
 msgstr ""
 
@@ -394,6 +410,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
 msgstr ""
 
 #: Ampache preference description
@@ -561,6 +581,10 @@ msgid "Custom CSS Order - Video"
 msgstr ""
 
 #: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
+msgstr ""
+
+#: Ampache preference description
 msgid "Website Title"
 msgstr ""
 
@@ -694,6 +718,10 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
 msgstr ""
 
 #: Ampache preference subcategory
