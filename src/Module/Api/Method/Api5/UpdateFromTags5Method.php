@@ -27,10 +27,14 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
@@ -51,6 +55,7 @@ final class UpdateFromTags5Method implements MethodInterface
 
     public function __construct(
         private StreamFactoryInterface $streamFactory,
+        private readonly PrivilegeCheckerInterface $privilegeChecker,
     ) {}
 
     /**
@@ -69,7 +74,7 @@ final class UpdateFromTags5Method implements MethodInterface
      *     auth: string,
      * } $input
      * @param 5 $apiVersion
-     * @throws RequestParamMissingException|ResultEmptyException
+     * @throws AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -79,6 +84,18 @@ final class UpdateFromTags5Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
+        if (
+            !$this->privilegeChecker->check(
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER,
+                $user->getId()
+            )
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
+            );
+        }
+
         foreach (['type', 'id'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
