@@ -66,17 +66,14 @@ final readonly class GeneratedArtService implements GeneratedArtServiceInterface
 
     public function isEnabled(): bool
     {
-        return AmpConfig::get('generated_art_enabled', false) && AmpConfig::get('generated_art', false);
+        return (bool) AmpConfig::get('generated_art', false);
     }
 
     public function render(string $objectType, int $objectId, int $edge, ?string $forceTemplate = null, bool $force = false): ?array
     {
         // `generate=1` in the url draws the tile whatever the viewer's own preference says, so one link
-        // shows the same picture to everyone. The instance switch still decides whether we draw at all.
-        $allowed = $force
-            ? (bool) AmpConfig::get('generated_art_enabled', false)
-            : $this->isEnabled();
-        if (!$allowed) {
+        // shows the same picture to everyone; an explicit request always draws regardless of anyone's opt-in.
+        if (!$force && !$this->isEnabled()) {
             return null;
         }
 
@@ -121,10 +118,7 @@ final readonly class GeneratedArtService implements GeneratedArtServiceInterface
     public function resolveTemplate(): TemplateInterface
     {
         $available = $this->getTemplates();
-        $wanted    = (string) AmpConfig::get('generated_art_template_lock', '');
-        if ($wanted === '') {
-            $wanted = (string) AmpConfig::get('generated_art_template', 'auto');
-        }
+        $wanted    = (string) AmpConfig::get('generated_art_template', 'auto');
 
         if ($wanted === 'auto' || $wanted === '') {
             // follow the interface the listener is already looking at
@@ -138,11 +132,6 @@ final readonly class GeneratedArtService implements GeneratedArtServiceInterface
         }
 
         return $available[0];
-    }
-
-    public function takesPrecedenceOverCustom(): bool
-    {
-        return (bool) AmpConfig::get('generated_art_over_custom', false);
     }
 
     /**

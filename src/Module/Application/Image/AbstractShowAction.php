@@ -197,7 +197,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 // turns a whole grid into the same picture. Nothing is stored: the svg is rebuilt per request.
                 $generated = (
                     ($forceGenerated || $this->generatedArt->isEnabled())
-                    && (empty($defaultimg) || $forceGenerated || $this->generatedArt->takesPrecedenceOverCustom())
+                    && (empty($defaultimg) || $forceGenerated)
                 )
                     ? $this->generatedArt->render(
                         $type,

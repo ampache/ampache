@@ -55,9 +55,4 @@ interface GeneratedArtServiceInterface
     public function renderPreview(string $motif, ?string $templateId, int $edge): ?array;
 
     public function resolveTemplate(): TemplateInterface;
-
-    /**
-     * Whether a drawn tile is shown even when the administrator has set a custom_blankalbum.
-     */
-    public function takesPrecedenceOverCustom(): bool;
 }

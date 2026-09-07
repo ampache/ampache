@@ -40,7 +40,7 @@ final class DarkTemplate extends AbstractSvgTemplate
 
     public function getLabel(): string
     {
-        return T_('Illustrated, dark');
+        return T_('Dark');
     }
 
     protected function isDark(): bool

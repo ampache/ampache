@@ -1237,7 +1237,7 @@ class Art extends database_object
         }
 
         $custom = (string) AmpConfig::get('custom_blankalbum', '');
-        if ($custom !== '' && !$generated->takesPrecedenceOverCustom()) {
+        if ($custom !== '') {
             return '';
         }
 

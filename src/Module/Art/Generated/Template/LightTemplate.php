@@ -40,7 +40,7 @@ final class LightTemplate extends AbstractSvgTemplate
 
     public function getLabel(): string
     {
-        return T_('Illustrated, light');
+        return T_('Light');
     }
 
     protected function isDark(): bool

@@ -2733,37 +2733,3 @@ a.option-list:hover {
     font-size: 14px;
     border-radius: 3px;
 }
-
-/* Template picker in the preferences: each option carries a drawing of an invented album, because a
-   list of names says nothing about what a design looks like. */
-.generated-art-templates {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.generated-art-choice {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px 6px 6px;
-    border: 1px solid rgba(128, 128, 128, 0.35);
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.generated-art-choice:hover,
-.generated-art-choice:focus-within {
-    border-color: #ff9d00;
-}
-
-.generated-art-choice img {
-    display: block;
-    width: 72px;
-    height: 72px;
-    border-radius: 3px;
-}
-
-.generated-art-choice input {
-    margin: 0;
-}

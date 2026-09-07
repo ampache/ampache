@@ -34,9 +34,6 @@ final class Migration810005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('generated_art_enabled', 'Allow drawn artwork for items that have no cover', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface');
-        $this->updatePreferences('generated_art_over_custom', 'Drawn artwork replaces the custom blank album image', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface');
-        $this->updatePreferences('generated_art_template_lock', 'Force one drawn artwork template for every user', '', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface');
         $this->updatePreferences('generated_art', 'Draw artwork for items that have no cover', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme');
         $this->updatePreferences('generated_art_template', 'Drawn artwork template', 'auto', AccessLevelEnum::USER->value, 'string', 'interface', 'theme');
     }

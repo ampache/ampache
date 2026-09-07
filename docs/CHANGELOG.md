@@ -30,7 +30,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * `name` and `year` can be dropped from the list too, though doing so can merge albums you didn't mean to merge
   * `catalog` is always matched and isn't part of the list; an album is always scoped to its catalog
   * Server-wide, not a user preference; defaults to today's full field set (`name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version`)
-* Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, behind an admin gate, with a precedence toggle over `custom_blankalbum`, an optional template lock, and per-user opt-in
+* Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, per-user opt-in; a configured `custom_blankalbum` always takes precedence when present
 * Dynamic page titles carrying the artist or album in context, with a user preference to show a page-type icon in the tab title
 * A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customises them
 * A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place, plus a site description for link previews

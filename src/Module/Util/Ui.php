@@ -1048,7 +1048,7 @@ class Ui implements UiInterface
 
         // Picking a design out of a list of names tells you nothing, so each option carries a drawing of
         // an invented album beside it. The previews need no library behind them.
-        if ($name === 'generated_art_template' || $name === 'generated_art_template_lock') {
+        if ($name === 'generated_art_template') {
             $this->createGeneratedArtTemplateInput($name, (string) $value);
 
             return;
@@ -1956,43 +1956,25 @@ class Ui implements UiInterface
     }
 
     /**
-     * Radio buttons with a drawing beside each, for the two template preferences.
-     *
-     * The lock offers an extra empty choice meaning every listener picks for themselves; the listener's
-     * own preference offers an extra automatic choice that follows whichever theme they are using.
+     * The drawn-art template preference: `auto` follows whichever theme the listener is using.
      */
     private function createGeneratedArtTemplateInput(string $name, string $value): void
     {
         global $dic;
 
-        $service   = $dic->get(GeneratedArtServiceInterface::class);
-        $isLock    = ($name === 'generated_art_template_lock');
-        $webPath   = AmpConfig::get_web_path();
-        $choices   = [];
-        $choices[] = $isLock
-            ? ['', T_('Let each user choose'), null]
-            : ['auto', T_('Match my theme'), null];
-
+        $service = $dic->get(GeneratedArtServiceInterface::class);
+        $choices = [['auto', T_('Match my theme')]];
         foreach ($service->getTemplates() as $template) {
-            $choices[] = [$template->getId(), $template->getLabel(), $template->getId()];
+            $choices[] = [$template->getId(), $template->getLabel()];
         }
 
-        echo '<div class="generated-art-templates">';
-        foreach ($choices as [$id, $label, $preview]) {
-            $checked = ($value === $id) ? ' checked="checked"' : '';
-            $field   = $name . '_' . ($id === '' ? 'none' : $id);
-            echo '<label class="generated-art-choice" for="' . $field . '">';
-            echo '<input type="radio" id="' . $field . '" name="' . $name . '" value="' . scrub_out($id) . '"' . $checked . ' />';
-            if ($preview !== null) {
-                echo '<img src="' . $webPath . '/image.php?generate=1&amp;preview=record&amp;size=200x200&amp;template='
-                    . rawurlencode($preview) . '" alt="" width="72" height="72" loading="lazy" decoding="async" />';
-            }
-
-            echo '<span>' . scrub_out($label) . '</span>';
-            echo '</label>';
+        echo '<select name="' . $name . '">' . "\n";
+        foreach ($choices as [$id, $label]) {
+            $selected = ($value === $id) ? ' selected="selected"' : '';
+            echo '<option value="' . scrub_out($id) . '"' . $selected . '>' . scrub_out($label) . "</option>\n";
         }
 
-        echo '</div>';
+        echo "</select>\n";
     }
 
     /**
