@@ -85,21 +85,18 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * `stats.php?action=show` now say "access denied" when access is denied
 * Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue
 * A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack. 
-* Similar issue: a favourite could be dated in the future through the flag api, pinning it to the top of newest lists for years
 * A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
 * Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
-* The stats api ignored the "Share Recently Played" opt-out when you named a user. It now renders nothing for a user who keeps recent activity private.
 * localplay access was never actually checked (any user passed) and Subsonic jukeboxControl checked nothing. Now they are gated on the user's access level
-* Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists, api3. Added check like the modern api
+* Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists
 * Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.
 * Reordering a track checked only the row id, so any user could reorder another user's playlist or collection
-* Rating an object 0 repeatedly drained its weight, and api3 accepted out-of-range stars like 127
+* Rating an object 0 repeatedly drained its weight
 * An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
 * Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
 * On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
-* Setting api_force_version reopened an api version the admin had disabled because it bypassed the enable checks
 * Missing close box on a few template phtml files
-* A disabled user account could still authenticate through the API handshake (v3-v6/v8), Subsonic, and an RSS feed token
+* A disabled user account could still authenticate through Subsonic and an RSS feed token
 * Password/token comparisons in the API handshake, the `session_remember` cookie MAC, and API key/stream token lookups used `===`/`!=` instead of `hash_equals()`
 * `Ldap::auth()` concatenated the raw username into the LDAP search filter and group-membership regex with no escaping
 * OpenID Connect login copied an `email` claim even when the provider explicitly marked it `email_verified: false`
