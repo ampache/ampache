@@ -324,7 +324,7 @@ class Label extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;

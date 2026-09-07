@@ -111,6 +111,20 @@ class LabelTest extends TestCase
         self::assertSame('Éditions & Co', Label::get_display([7 => 'Éditions & Co']));
     }
 
+    public function testGetFLinkClosesTheAnchorTag(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject       = new Label();
+        $subject->id   = 7;
+        $subject->name = 'a"b';
+
+        self::assertSame(
+            '<a href="https://music.example/labels.php?action=show&label=7" title="a&quot;b">a&quot;b</a>',
+            $subject->get_f_link()
+        );
+    }
+
     public function testMigrateMovesArtistAssociationsOnly(): void
     {
         $this->labelRepository->expects(static::once())
