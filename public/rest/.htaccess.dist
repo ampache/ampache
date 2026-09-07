@@ -36,8 +36,8 @@
     # /{version}/{format} with no resource at all (e.g. opening the api url in a browser); the handler pings
     RewriteRule ^(3|4|5|6|8)/(json|xml)/?$ /server/$2.rest.php?version=$1 [L,QSA]
     # subsonic clients using *.view
-    RewriteRule ^([^/]+)\.view$ index.php?ssaction=$1 [L,QSA]
+    RewriteRule ^([^/]+)\.view$ /rest/index.php?ssaction=$1 [L,QSA]
     # some subsonic clients don't use *.view
-    RewriteRule ^([^/]+)/?$ index.php?ssaction=$1 [L,QSA]
+    RewriteRule ^([^/]+)/?$ /rest/index.php?ssaction=$1 [L,QSA]
     RewriteRule ^fake/(.+)$ /play/$1 [L,QSA]
 </IfModule>

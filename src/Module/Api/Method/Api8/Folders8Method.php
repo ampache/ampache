@@ -109,6 +109,7 @@ final class Folders8Method implements MethodInterface
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
         $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
         $results = $browse->get_objects();
         if (empty($results)) {

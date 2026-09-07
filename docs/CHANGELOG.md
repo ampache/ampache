@@ -57,6 +57,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Deleting a license, shout, album, folder, label, podcast episode or share via `action=delete` didn't check the CSRF confirmation token
 * A share's access counter could exceed `max_counter` under concurrent access
 * The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
+* Downloading a file the server could not open answered with an empty file and a success status rather than an error
+* Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
 
 ## Ampache 8.0.1
 

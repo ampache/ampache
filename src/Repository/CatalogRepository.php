@@ -312,13 +312,13 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
     {
         return $this->connection->fetchOne(
             'SELECT IS_USED_LOCK(?)',
-            ['ampache_sse_action_' . $lockKey]
+            [$this->actionLockName($lockKey)]
         ) !== null;
     }
 
     public function releaseActionLock(string $lockKey): void
     {
-        $this->connection->query('SELECT RELEASE_LOCK(?)', ['ampache_sse_action_' . $lockKey]);
+        $this->connection->query('SELECT RELEASE_LOCK(?)', [$this->actionLockName($lockKey)]);
     }
 
     public function releaseProcessingLock(int $catalogId): void
@@ -370,7 +370,7 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
     {
         return (int) $this->connection->fetchOne(
             'SELECT GET_LOCK(?, 0)',
-            ['ampache_sse_action_' . $lockKey]
+            [$this->actionLockName($lockKey)]
         ) === 1;
     }
 
@@ -404,5 +404,15 @@ final readonly class CatalogRepository implements CatalogRepositoryInterface
             sprintf('UPDATE `%s` SET `path` = ? WHERE `catalog_id` = ?', $type->tableName()),
             [$path, $catalogId]
         );
+    }
+
+    /**
+     * Names the lock for one SSE action call
+     *
+     * MySQL rejects a user-level lock name longer than 64 characters, so the key is hashed instead of pasted in.
+     */
+    private function actionLockName(string $lockKey): string
+    {
+        return 'ampache_sse_action_' . md5($lockKey);
     }
 }
