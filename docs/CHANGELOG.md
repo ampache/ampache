@@ -99,6 +99,17 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
 * Setting api_force_version reopened an api version the admin had disabled because it bypassed the enable checks
 * Missing close box on a few template phtml files
+* A disabled user account could still authenticate through the API handshake (v3-v6/v8), Subsonic, and an RSS feed token
+* Password/token comparisons in the API handshake, the `session_remember` cookie MAC, and API key/stream token lookups used `===`/`!=` instead of `hash_equals()`
+* `Ldap::auth()` concatenated the raw username into the LDAP search filter and group-membership regex with no escaping
+* OpenID Connect login copied an `email` claim even when the provider explicitly marked it `email_verified: false`
+* `bin/cli run:catalog -s` (sort/rename) could write outside the catalog when a tag value was exactly `..`
+* A server configured with `site_charset` `sjis`/`gbk`/`big5`/`cp932` could have its escaping backslash eaten by a crafted string's lead byte, enabling SQL injection
+* WebDAV login accepted a disabled account and never bound the authenticated user, so `catalog_filter_group` wasn't applied to WebDAV browsing
+* Logging out only cleared the `_remember` cookie client-side; the server-side token stayed valid and replayable
+* Deleting a license, shout, album, folder, label, podcast episode or share via `action=delete` didn't check the CSRF confirmation token
+* A share's access counter could exceed `max_counter` under concurrent access
+* The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
 * Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
 

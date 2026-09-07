@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
@@ -35,7 +36,10 @@ use Sabre\DAV\Server;
 
 final readonly class WebDavFactory implements WebDavFactoryInterface
 {
-    public function __construct(private AuthenticationManagerInterface $authenticationManager) {}
+    public function __construct(
+        private AuthenticationManagerInterface $authenticationManager,
+        private UserRepositoryInterface $userRepository,
+    ) {}
 
     public function createBrowserPlugin(bool $enablePost): BrowserPlugin
     {
@@ -58,7 +62,8 @@ final readonly class WebDavFactory implements WebDavFactoryInterface
     public function createWebDavAuth(): WebDavAuth
     {
         return new WebDavAuth(
-            $this->authenticationManager
+            $this->authenticationManager,
+            $this->userRepository
         );
     }
 

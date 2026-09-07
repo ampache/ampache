@@ -89,8 +89,7 @@ $ownerId  = $this->getOwnerId(); ?>
             <?php if ($this->showLabels()) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels'); ?></td>
-                <?php // Label::get_display() escapes each name itself?>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo $this->raw($this->getLabels()); ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo $this->e($this->getLabels()); ?>" /></td>
             </tr>
             <?php } ?>
             <tr>

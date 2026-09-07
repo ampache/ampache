@@ -206,13 +206,12 @@ class Folder extends database_object implements
         $results = '';
         // Iterate through the folders, format them according to type and element id
         foreach ($folders as $folder_id => $value) {
+            // only when emitting html, so the plain form stays usable as an input value
             if ($link) {
-                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $value . '">';
-            }
-
-            $results .= $value;
-            if ($link) {
-                $results .= '</a>';
+                $name = scrub_out($value);
+                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $name . '">' . $name . '</a>';
+            } else {
+                $results .= $value;
             }
 
             $results .= ', ';

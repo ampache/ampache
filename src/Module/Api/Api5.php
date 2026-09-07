@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -276,15 +277,22 @@ class Api5
      */
     public static function server_details(string $token = ''): array
     {
+        // Now we need to quickly get the totals
+        $client    = self::getUserRepository()->findByApiKey(trim($token));
+        if (
+            !$client instanceof User
+            || $client->isNew()
+            || $client->disabled
+        ) {
+            return [];
+        }
+
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
         $db_results = Dba::read($sql);
         $details    = Dba::fetch_assoc($db_results);
-
-        // Now we need to quickly get the totals
-        $client    = self::getUserRepository()->findByApiKey(trim($token));
-        $counts    = Catalog::get_server_counts($client->id ?? 0);
-        $playlists = (AmpConfig::get('hide_search', false))
+        $counts     = Catalog::get_server_counts($client->id);
+        $playlists  = (AmpConfig::get('hide_search', false))
             ? ($counts['playlist'])
             : ($counts['playlist'] + $counts['search']);
         $autharray = (!empty($token)) ? ['auth' => $token] : [];

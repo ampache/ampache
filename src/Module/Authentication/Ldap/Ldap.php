@@ -70,17 +70,11 @@ class Ldap
                 throw new LdapException('Required configuration value missing: ldap_filter');
             }
 
-            if (str_contains((string) $filter, '%v')) {
-                $filter = str_replace('%v', $username, $filter);
-            } else {
-                $filter = sprintf('(%s=%s)', $filter, $username); // Backward compatibility
-            }
-
             if (!$objectclass = AmpConfig::get('ldap_objectclass')) {
                 throw new LdapException('Required configuration value missing: ldap_objectclass');
             }
 
-            $search = sprintf('(&(objectclass=%s)%s)', $objectclass, $filter);
+            $search = self::build_search((string) $filter, (string) $objectclass, $username);
             debug_event(self::class, 'search: ' . $search, 5);
 
             if (!$base_dn = AmpConfig::get('ldap_search_dn')) {
@@ -100,7 +94,9 @@ class Ldap
                 $group_infos = self::_read($link, $group_dn, [$member_attribute]);
 
                 // check username and full distinguished name for membership
-                if (!preg_grep(sprintf('/^%s$/i', $username), $group_infos[$member_attribute]) && !preg_grep(sprintf('/^%s$/i', $user_dn), $group_infos[$member_attribute])) {
+                $usernamePattern = sprintf('/^%s$/i', preg_quote($username, '/'));
+                $userDnPattern   = sprintf('/^%s$/i', preg_quote((string) $user_dn, '/'));
+                if (!preg_grep($usernamePattern, $group_infos[$member_attribute]) && !preg_grep($userDnPattern, $group_infos[$member_attribute])) {
                     throw new LdapException(sprintf('`%s` is not member of the group `%s`', $username, $group_dn));
                 }
             }
@@ -155,7 +151,24 @@ class Ldap
     }
 
     /**
-     * _array_filter_key
+     * Builds the LDAP search filter, escaping the untrusted username so it cannot alter the filter.
+     *
+     * `%v` in the configured filter is replaced with the escaped username; the legacy form treats the whole
+     * configured value as an attribute name and builds `(attr=username)`. Either way the username is passed
+     * through ldap_escape() first, so filter metacharacters like `*`, `(`, `)` and `\\` are inert.
+     */
+    public static function build_search(string $filter, string $objectclass, string $username): string
+    {
+        $escaped = ldap_escape($username, '', LDAP_ESCAPE_FILTER);
+        $filter  = (str_contains($filter, '%v'))
+            ? str_replace('%v', $escaped, $filter)
+            : sprintf('(%s=%s)', $filter, $escaped);
+
+        return sprintf('(&(objectclass=%s)%s)', $objectclass, $filter);
+    }
+
+    /**
+     * array_filter_key
      *
      * @param callable-string $callback
      */

@@ -39,7 +39,7 @@ $license   = $this->getLicense(); ?>
         <a href="<?php echo $this->e($adminPath); ?>/license.php?action=show_edit&license_id=<?php echo $this->e($license->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
         </a>
-        <a href="<?php echo $this->e($adminPath); ?>/license.php?action=delete&license_id=<?php echo $this->e($license->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/license.php?action=show_delete&license_id=<?php echo $this->e($license->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
         </a>
     </td>

@@ -74,6 +74,10 @@ class DeleteActionTest extends TestCase
             ->willReturn($user);
 
         $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_share')
+            ->willReturn(true);
+        $this->requestParser->expects(static::once())
             ->method('getFromRequest')
             ->with('id')
             ->willReturn((string) $shareId);
@@ -106,6 +110,30 @@ class DeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+    public function testRunThrowsIfFormTokenIsInvalid(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::SHARE],
+                [ConfigurationKeyEnum::DEMO_MODE]
+            ))
+            ->willReturn(true, false);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_share')
+            ->willReturn(false);
+        $this->requestParser->expects(static::never())
+            ->method('getFromRequest');
+        $this->shareRepository->expects(static::never())
+            ->method('delete');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testRunThrowsIfItemIsNotAccessible(): void
     {
         static::expectException(AccessDeniedException::class);
@@ -127,6 +155,10 @@ class DeleteActionTest extends TestCase
             ->method('getUser')
             ->willReturn($user);
 
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_share')
+            ->willReturn(true);
         $this->requestParser->expects(static::once())
             ->method('getFromRequest')
             ->with('id')
@@ -163,6 +195,10 @@ class DeleteActionTest extends TestCase
             ->method('getUser')
             ->willReturn($this->createMock(User::class));
 
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_share')
+            ->willReturn(true);
         $this->requestParser->expects(static::once())
             ->method('getFromRequest')
             ->with('id')

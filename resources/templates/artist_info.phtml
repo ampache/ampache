@@ -41,7 +41,7 @@ if ($artistId !== null) {
 </div>
 <div id="item_summary">
     <?php if ($summary !== null) {
-        echo $this->raw(nl2br($summary));
+        echo $this->raw(nl2br($this->e($summary)));
     } ?>
 </div>
 <script>

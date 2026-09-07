@@ -70,7 +70,7 @@ final readonly class Session implements SessionInterface
         $cname = AmpConfig::get('session_name', 'ampache') . '_remember';
         if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', (string) $_COOKIE[$cname]);
-            if ($mac === hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key'))) {
+            if (hash_equals(hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key')), (string) $mac)) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
                 if (Dba::num_rows($db_results) > 0) {
@@ -659,6 +659,21 @@ final readonly class Session implements SessionInterface
     public static function read(string $key): string
     {
         return self::_read($key, 'value');
+    }
+
+    /**
+     * remove_remember_token
+     *
+     * Invalidate a user's persistent "remember me" tokens server-side.
+     */
+    public static function remove_remember_token(string $username): void
+    {
+        if ($username === '') {
+            return;
+        }
+
+        $sql = 'DELETE FROM `session_remember` WHERE `username` = ?';
+        Dba::write($sql, [$username]);
     }
 
     /**

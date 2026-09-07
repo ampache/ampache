@@ -287,10 +287,12 @@ final readonly class UserRepository implements UserRepositoryInterface
                 "SELECT `id`, `apikey`, `username` FROM `user` WHERE `apikey` IS NOT NULL AND `apikey` != '' AND `username` != ''"
             );
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
-                $key        = hash('sha256', (string) $row['apikey']);
-                $passphrase = hash('sha256', $row['username'] . $key);
-                if ($passphrase === $apikey) {
-                    return new User((int) $row['id']);
+                if ($row['apikey'] && $row['username']) {
+                    $key        = hash('sha256', (string) $row['apikey']);
+                    $passphrase = hash('sha256', $row['username'] . $key);
+                    if (hash_equals($passphrase, $apikey)) {
+                        return new User((int) $row['id']);
+                    }
                 }
             }
         }
@@ -349,7 +351,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 if ($row['streamtoken'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['streamtoken']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $streamToken) {
+                    if (hash_equals($passphrase, $streamToken)) {
                         return new User((int) $row['id']);
                     }
                 }

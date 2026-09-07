@@ -352,6 +352,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $user  = User::get_from_username($userName);
         }
 
+        if ($user instanceof User && $user->disabled) {
+            $this->logger->warning(
+                'Disabled account attempted to use the Subsonic API [' . $userName . ']',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+            $login = false;
+        }
+
         if ($user === null || $login === false) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
