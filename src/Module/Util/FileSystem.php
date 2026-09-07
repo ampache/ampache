@@ -85,7 +85,7 @@ class FileSystem
     {
         $dir = $this->path($fs_id);
         debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
-        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
+        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name) || preg_match('/^\.+$/', $name)) {
             throw new Exception('Invalid name: ' . $name);
         }
 
@@ -272,7 +272,7 @@ class FileSystem
             throw new Exception('Cannot rename root');
         }
 
-        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
+        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name) || preg_match('/^\.+$/', $name)) {
             throw new Exception('Invalid name: ' . $name);
         }
 

@@ -156,6 +156,7 @@ final class Stats5Method implements MethodInterface
         }
 
         $userId = $user->id;
+        $viewer = $user;
         // override your user if you're looking at others
         if (
             array_key_exists('username', $input)
@@ -169,6 +170,18 @@ final class Stats5Method implements MethodInterface
                 $user   = $requestedUser;
                 $userId = $requestedUser->id;
             }
+        }
+
+        // a user who keeps their recent activity private is not exposed through someone else's request
+        if (
+            $userId !== $viewer->id
+            && !Preference::get_by_user($userId, 'allow_personal_info_recent')
+        ) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
         }
 
         $results = [];

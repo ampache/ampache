@@ -32,6 +32,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -75,10 +76,20 @@ final class Stats3Method implements MethodInterface
         $offset   = $input['offset'] ?? 0;
         $limit    = $input['limit'] ?? 0;
         $username = $input['username'] ?? '';
+        $viewer   = $user;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user = User::get_from_username($input['username']);
         }
+
+        // a user who keeps their recent activity private is not exposed through someone else's request
+        if (
+            $user->getId() !== $viewer->getId()
+            && !Preference::get_by_user($user->getId(), 'allow_personal_info_recent')
+        ) {
+            return $response;
+        }
+
         $results = [];
         if ($type == "newest") {
             $results = Stats::get_newest("album", $limit, $offset);

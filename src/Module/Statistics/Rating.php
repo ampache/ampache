@@ -376,7 +376,7 @@ class Rating extends database_object
         $rating = max(0, min(5, $rating));
 
         // an absent rating is 0, so setting 0 on an unrated object is a no-op, not a weight decrement
-        if ((int) (self::get_user_rating($user_id) ?? 0) === $rating) {
+        if ((self::get_user_rating($user_id) ?? 0) === $rating) {
             return true;
         }
 

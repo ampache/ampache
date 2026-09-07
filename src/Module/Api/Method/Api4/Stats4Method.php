@@ -34,6 +34,7 @@ use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\User;
@@ -93,6 +94,7 @@ final class Stats4Method implements MethodInterface
         }
 
         $user_id = $user->id;
+        $viewer  = $user;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user    = User::get_from_username($input['username']);
@@ -103,6 +105,16 @@ final class Stats4Method implements MethodInterface
                 $user_id = (int) $input['user_id'];
                 $user    = new User($user_id);
             }
+        }
+
+        // a user who keeps their recent activity private is not exposed through someone else's request
+        if (
+            $user_id !== $viewer->id
+            && !Preference::get_by_user($user_id, 'allow_personal_info_recent')
+        ) {
+            Api4::message('error', 'No Results', '404', $input['api_format']);
+
+            return $response;
         }
 
         $type   = $input['type'];

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Repository\Model\User;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -54,6 +55,28 @@ class FileSystemTest extends TestCase
 
         $this->expectException(Exception::class);
         $this->real($fs, $this->root . '/base_evil');
+    }
+
+    public function testCreateRejectsADotOnlyName(): void
+    {
+        // a name of `..` would otherwise pass the charset check below and reach mkdir()/file_put_contents();
+        // asserting the specific message proves it is rejected up front rather than merely failing later when
+        // the computed id turns out to be outside base (which is a warning-noisy, not-guaranteed-safe path)
+        $fs = new FileSystem($this->root . '/base');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Invalid name');
+        $fs->create('/', '..', true);
+    }
+
+    public function testRenameRejectsADotOnlyName(): void
+    {
+        mkdir($this->root . '/base/sub');
+        $fs = new FileSystem($this->root . '/base');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Invalid name');
+        $fs->rename('sub', '..', new User());
     }
 
     public function testTheBaseItselfIsInside(): void
