@@ -896,6 +896,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
+                if (!headers_sent()) {
+                    header('HTTP/1.1 500 Failed to open file');
+                }
+
                 return null;
             }
 
