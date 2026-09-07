@@ -31,6 +31,9 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -62,6 +65,16 @@ final class Localplay3Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
+        // localplay is meant to be behind permissions
+        $level = AccessLevelEnum::from(
+            (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        );
+        if (!Access::check(AccessTypeEnum::LOCALPLAY, $level, $user->id)) {
+            echo Xml3_Data::error(400, 'User does not have access to this function');
+
+            return $response;
+        }
+
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {

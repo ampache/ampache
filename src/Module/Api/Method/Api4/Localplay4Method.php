@@ -31,6 +31,8 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -74,7 +76,15 @@ final class Localplay4Method implements MethodInterface
         if (!Api4::check_parameter($input, ['command'], self::ACTION)) {
             return $response;
         }
-        unset($user);
+
+        // localplay is meant to be behind permissions
+        $level = AccessLevelEnum::from(
+            (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        );
+        if (!Api4::check_access(AccessTypeEnum::LOCALPLAY, $level, $user->id, self::ACTION, $input['api_format'])) {
+            return $response;
+        }
+
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
