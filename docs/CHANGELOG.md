@@ -36,6 +36,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place, plus a site description for link previews
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
+* Folder and collection pages describe themselves in a shared link, like the other object pages do
 
 ### Changed (8.1.0)
 
@@ -118,6 +119,10 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * `admin/catalog.php?action=clear_stats`, `system.php?action=reset_db_charset`, `action=clear_cache` and `action=clear_now_playing` didn't check the CSRF confirmation token either
 * The `set_rating`/`set_userflag` ajax actions had no CSRF check at all
 * Disabling a user, or changing their password, didn't revoke their `session_remember` cookie, so the old session could keep authenticating with it
+* Link previews described the site instead of the page: the metadata each object page already built was never emitted, so a shared album or artist showed the generic card
+* A share link announced every object as a song, so an album, artist or playlist preview claimed to be one
+* A folder was served no cover at all: the image action asked for a placeholder file that was never shipped
+* A shared link showed no image for an item without a cover while generated art was on: the drawn tile is an svg, which no preview scraper renders
 
 ## Ampache 8.0.1
 

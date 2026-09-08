@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Folder\FolderView;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -67,8 +68,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: folder features are not enabled.');
         }
 
-        $this->ui->showHeader();
-
         $input = $request->getQueryParams();
 
         // lookup by ID
@@ -77,6 +76,25 @@ final readonly class ShowAction implements ApplicationActionInterface
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
             : new Folder(-1);
+
+        // a folder in a catalog you are filtered from is not yours to browse, and the check has to
+        // come before the header so nothing about it reaches the page
+        if ($folder instanceof Folder && $folder->id > 0) {
+            if (!Catalog::has_access($folder->getCatalogId(), $user->getId())) {
+                throw new AccessDeniedException('Access Denied: catalog filter');
+            }
+
+            $webPath = AmpConfig::get_web_path();
+            PageMeta::set(
+                [],
+                'website',
+                (string) $folder->get_fullname(),
+                $webPath . '/folders.php?action=show&folder=' . $folder->getId(),
+                $webPath . '/image.php?object_id=' . $folder->getId() . '&object_type=folder&size=600x600'
+            );
+        }
+
+        $this->ui->showHeader();
 
         if (!$folder_id && $folder === null) {
             $this->logger->warning(
@@ -88,11 +106,6 @@ final readonly class ShowAction implements ApplicationActionInterface
 
             return null;
         } elseif ($folder instanceof Folder) {
-            // a folder in a catalog you are filtered from is not yours to browse
-            if ($folder->id > 0 && !Catalog::has_access($folder->getCatalogId(), $user->getId())) {
-                throw new AccessDeniedException('Access Denied: catalog filter');
-            }
-
             $browse = $this->browseFactory->create();
             $browse->set_type('folder');
             $browse->set_use_pages(true);

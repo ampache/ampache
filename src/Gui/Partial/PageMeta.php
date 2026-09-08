@@ -85,7 +85,10 @@ final class PageMeta
         }
 
         if ($meta->image !== '') {
-            $out[] = '<meta property="og:image" content="' . $e($meta->image) . '">';
+            // whoever draws the preview renders no svg, so art is told to hand over a raster
+            $image = (str_contains($meta->image, 'image.php?')) ? $meta->image . '&nosvg=1' : $meta->image;
+
+            $out[] = '<meta property="og:image" content="' . $e($image) . '">';
             $out[] = '<meta name="twitter:card" content="summary">';
         }
 

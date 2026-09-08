@@ -43,6 +43,16 @@ class PageMetaTest extends TestCase
         ];
     }
 
+    public function testAsksArtForTheRasterSinceAScraperRendersNoSvg(): void
+    {
+        PageMeta::set([], 'music.album', 'An album', 'https://x/albums.php?album=1', 'https://x/image.php?object_id=1&object_type=album&size=600x600');
+
+        static::assertStringContainsString(
+            'og:image" content="https://x/image.php?object_id=1&amp;object_type=album&amp;size=600x600&amp;nosvg=1"',
+            PageMeta::render()
+        );
+    }
+
     #[DataProvider('durations')]
     public function testDurationSpeaksIso8601(int $seconds, string $expected): void
     {
@@ -67,6 +77,13 @@ class PageMetaTest extends TestCase
         static::assertStringContainsString('content="https://x/song.php?a=1&amp;b=2"', $html);
         static::assertStringNotContainsString('</script><script>', substr($html, (int) strpos($html, 'ld+json')));
         static::assertStringContainsString('twitter:card', $html);
+    }
+
+    public function testLeavesAnImageThatIsNotServedByArtAlone(): void
+    {
+        PageMeta::set([], 'music.album', 'An album', 'https://x/albums.php?album=1', 'https://x/themes/reborn/images/logo.png');
+
+        static::assertStringContainsString('og:image" content="https://x/themes/reborn/images/logo.png"', PageMeta::render());
     }
 
     public function testRendersNothingWhenNoPageSetAnything(): void

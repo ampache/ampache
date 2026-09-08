@@ -26,12 +26,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\PageMeta;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
 class BrandingTagsTest extends TestCase
 {
-    private const array KEYS = ['custom_favicon', 'custom_apple_touch_icon', 'custom_share_image', 'site_title', 'site_description', 'web_path'];
+    private const array KEYS = ['custom_favicon', 'custom_apple_touch_icon', 'custom_share_image', 'custom_login_background', 'custom_login_logo', 'site_title', 'site_description', 'web_path'];
 
     private ?string $host = null;
 
@@ -61,6 +62,19 @@ class BrandingTagsTest extends TestCase
         self::assertStringContainsString('og:image" content="/ampache-card.png"', $tags);
     }
 
+    public function testAnObjectPageEmitsItsOwnPreviewAndSilencesTheGenericOne(): void
+    {
+        PageMeta::set(['Some artist'], 'music.album', 'Some album', 'https://music.example/albums.php?album=1', 'https://music.example/image.php?object_id=1');
+
+        $head = $this->head();
+
+        self::assertSame(1, substr_count($head, 'og:image'));
+        self::assertSame(1, substr_count($head, 'og:type'));
+        self::assertStringContainsString('og:type" content="music.album"', $head);
+        self::assertStringContainsString('og:image" content="https://music.example/image.php?object_id=1&amp;nosvg=1"', $head);
+        self::assertStringNotContainsString('ampache-card.png', $head);
+    }
+
     public function testAnUncustomisedInstanceGetsEverythingItShips(): void
     {
         $tags = $this->tags();
@@ -69,6 +83,15 @@ class BrandingTagsTest extends TestCase
         self::assertStringContainsString('/favicon.ico"', $tags);
         self::assertStringContainsString('rel="apple-touch-icon" href="/apple-touch-icon.png"', $tags);
         self::assertStringContainsString('og:image" content="/ampache-card.png"', $tags);
+    }
+
+    public function testAPageWithNothingToSayKeepsTheGenericPreview(): void
+    {
+        $head = $this->head();
+
+        self::assertSame(1, substr_count($head, 'og:image'));
+        self::assertStringContainsString('og:image" content="/ampache-card.png"', $head);
+        self::assertStringContainsString('og:type" content="website"', $head);
     }
 
     public function testAQuotedUrlCannotBreakOutOfTheAttribute(): void
@@ -122,6 +145,22 @@ class BrandingTagsTest extends TestCase
         self::assertStringContainsString('og:description" content="Free music, freely licensed.">', $tags);
     }
 
+    public function testTheGenericCardStandsDownForAPageThatSpeaksForItself(): void
+    {
+        AmpConfig::set('site_title', 'Dogmazic', true);
+        AmpConfig::set('site_description', 'Free music, freely licensed.', true);
+
+        $tags = $this->tags('', '', '', false);
+
+        // the icons and the site name belong to the instance, not to whatever the page shows
+        self::assertStringContainsString('rel="icon"', $tags);
+        self::assertStringContainsString('og:site_name" content="Dogmazic"', $tags);
+        self::assertStringNotContainsString('og:image', $tags);
+        self::assertStringNotContainsString('og:type', $tags);
+        self::assertStringNotContainsString('twitter:card', $tags);
+        self::assertStringNotContainsString('description', $tags);
+    }
+
     public function testTheShareImageIsMadeAbsolute(): void
     {
         // whoever renders the preview fetches it from their own server, where a bare path means nothing
@@ -146,6 +185,7 @@ class BrandingTagsTest extends TestCase
 
     protected function tearDown(): void
     {
+        PageMeta::render();
         foreach ($this->saved as $key => $value) {
             AmpConfig::set($key, $value, true);
         }
@@ -157,12 +197,20 @@ class BrandingTagsTest extends TestCase
         }
     }
 
-    private function tags(string $favicon = '', string $touch = '', string $share = ''): string
+    private function head(): string
+    {
+        ob_start();
+        Ui::show_custom_style();
+
+        return (string) ob_get_clean();
+    }
+
+    private function tags(string $favicon = '', string $touch = '', string $share = '', bool $withSocialCard = true): string
     {
         AmpConfig::set('custom_favicon', $favicon, true);
         AmpConfig::set('custom_apple_touch_icon', $touch, true);
         AmpConfig::set('custom_share_image', $share, true);
 
-        return (string) new ReflectionMethod(Ui::class, 'branding_tags')->invoke(null);
+        return (string) new ReflectionMethod(Ui::class, 'branding_tags')->invoke(null, $withSocialCard);
     }
 }

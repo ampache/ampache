@@ -531,6 +531,16 @@ class Art extends database_object
     }
 
     /**
+     * fallback_image_name
+     *
+     * The placeholder file a type falls back to, so a caller cannot name one that was never shipped.
+     */
+    public static function fallback_image_name(string $type): string
+    {
+        return self::FALLBACK_IMAGES[$type] ?? self::FALLBACK_IMAGE;
+    }
+
+    /**
      * fallback_size
      *
      * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
@@ -665,7 +675,7 @@ class Art extends database_object
      */
     public static function get_fallback_url(string $type, ?string $size = null): string
     {
-        $name = self::FALLBACK_IMAGES[$type] ?? self::FALLBACK_IMAGE;
+        $name = self::fallback_image_name($type);
 
         // a custom blank album is already a url of its own, and a type with its own placeholder keeps it
         if ($name === self::FALLBACK_IMAGE) {
