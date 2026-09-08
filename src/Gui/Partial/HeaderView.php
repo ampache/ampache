@@ -28,6 +28,7 @@ namespace Ampache\Gui\Partial;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Plugin\Plugin;
@@ -41,6 +42,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Override;
@@ -371,6 +373,15 @@ final class HeaderView extends AbstractView
                 }
 
                 $item = $this->libraryItemLoader->load(LibraryItemEnum::from($type), $object_id);
+                // a private list you cannot see must not name itself in the tab title either
+                if (
+                    ($item instanceof Playlist || $item instanceof Search)
+                    && $item->type !== 'public'
+                    && !$item->has_collaborate($this->currentUser)
+                ) {
+                    continue;
+                }
+
                 $name = $item?->get_fullname();
                 if ($name !== null && $name !== '') {
                     return $this->withIcon(self::TYPE_ICONS[$type], $name);
