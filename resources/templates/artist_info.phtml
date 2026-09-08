@@ -36,4 +36,4 @@ if ($summary === null) {
 }
 
 ?>
-<?php echo $this->raw(new ProseBlockView(nl2br($summary), 'artist_summary_fold')->render()); ?>
+<?php echo $this->raw(ProseBlockView::fromText($summary, 'artist_summary_fold')->render()); ?>
