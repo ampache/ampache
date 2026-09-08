@@ -34,7 +34,6 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\database_object;
-use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\PlaylistRepositoryInterface;
