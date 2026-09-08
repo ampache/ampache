@@ -41,20 +41,20 @@ Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
                 <a href="<?php echo $this->e($adminPath); ?>/system.php?action=write_config"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Write New Config'))) . ' ' . $this->e(T_('Write New Config')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=reset_db_charset"><?php echo $this->raw(Ui::get_material_symbol('dns', T_('Set Database Charset'))) . ' ' . $this->e(T_('Set Database Charset')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_reset_db_charset"><?php echo $this->raw(Ui::get_material_symbol('dns', T_('Set Database Charset'))) . ' ' . $this->e(T_('Set Database Charset')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=song"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Songs Cache'))) . ' ' . $this->e(T_('Clear Songs Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_clear_cache&type=song"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Songs Cache'))) . ' ' . $this->e(T_('Clear Songs Cache')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=artist"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Artists Cache'))) . ' ' . $this->e(T_('Clear Artists Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_clear_cache&type=artist"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Artists Cache'))) . ' ' . $this->e(T_('Clear Artists Cache')); ?></a>
             </li>
             <li>
-                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=album"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Albums Cache'))) . ' ' . $this->e(T_('Clear Albums Cache')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_clear_cache&type=album"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Albums Cache'))) . ' ' . $this->e(T_('Clear Albums Cache')); ?></a>
             </li>
 <?php if ($this->showPerpetualApiSession()) { ?>
             <li>
-                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=clear_cache&type=perpetual_api_session"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions'))) . ' ' . $this->e(T_('Clear Perpetual API Sessions')); ?></a>
+                <a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_clear_cache&type=perpetual_api_session"><?php echo $this->raw(Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions'))) . ' ' . $this->e(T_('Clear Perpetual API Sessions')); ?></a>
             </li>
 <?php } ?>
         </ul>

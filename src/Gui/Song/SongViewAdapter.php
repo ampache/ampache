@@ -135,6 +135,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         );
     }
 
+    public function getAdditionTime(): string
+    {
+        return get_datetime($this->song->getAdditionTime());
+    }
+
     public function getAddToPlaylistIcon(): string
     {
         return Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label());

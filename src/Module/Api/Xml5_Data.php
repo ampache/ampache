@@ -122,7 +122,7 @@ final class Xml5_Data
     }
 
     /**
-     * genre_string
+     * _genre_string
      *
      * This returns the formatted 'genre' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags

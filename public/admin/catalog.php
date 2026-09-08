@@ -40,6 +40,8 @@ use Ampache\Module\Application\Admin\Catalog\ScanAllCatalogFoldersActions;
 use Ampache\Module\Application\Admin\Catalog\ScanCatalogFoldersAction;
 use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCatalogsAction;
+use Ampache\Module\Application\Admin\Catalog\ShowClearNowPlayingAction;
+use Ampache\Module\Application\Admin\Catalog\ShowClearStatsAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDisabledAction;
@@ -63,8 +65,10 @@ $dic->get(ApplicationRunner::class)->run(
         ShowCustomizeCatalogAction::REQUEST_KEY => ShowCustomizeCatalogAction::class,
         ShowDisabledAction::REQUEST_KEY => ShowDisabledAction::class,
         ClearNowPlayingAction::REQUEST_KEY => ClearNowPlayingAction::class,
+        ShowClearNowPlayingAction::REQUEST_KEY => ShowClearNowPlayingAction::class,
         ShowAddCatalogAction::REQUEST_KEY => ShowAddCatalogAction::class,
         ClearStatsAction::REQUEST_KEY => ClearStatsAction::class,
+        ShowClearStatsAction::REQUEST_KEY => ShowClearStatsAction::class,
         DeleteCatalogAction::REQUEST_KEY => DeleteCatalogAction::class,
         ShowDeleteCatalogAction::REQUEST_KEY => ShowDeleteCatalogAction::class,
         AddToAllCatalogsAction::REQUEST_KEY => AddToAllCatalogsAction::class,

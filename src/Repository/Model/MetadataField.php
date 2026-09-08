@@ -34,9 +34,6 @@ use Ampache\Repository\MetadataFieldRepositoryInterface;
 class MetadataField extends BaseModel
 {
     /**
-     * Database ID
-     */
-    /**
      * Tag name
      */
     private string $name = '';

@@ -339,6 +339,37 @@ class SongRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getIdsByFilePrefix("/music/o'brien"));
     }
 
+    public function testGetSongMapValuesBulkDoesNothingForNoSongs(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getSongMapValuesBulk([], 'isrc'));
+    }
+
+    public function testGetSongMapValuesBulkKeysTheValuesBySongAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT DISTINCT `song_id`, `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` IN (?,?)',
+                ['isrc', 1, 2]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['song_id' => '2', 'object_id' => 'FRXXX0000001'],
+            false
+        );
+
+        self::assertSame(
+            [1 => [], 2 => ['FRXXX0000001']],
+            $this->subject->getSongMapValuesBulk([1, 2], 'isrc')
+        );
+    }
+
     public function testPruneDeletedHistoryDeletesOlderRows(): void
     {
         $this->connection->expects(static::once())

@@ -872,7 +872,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
   KEY `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`) USING BTREE,
   KEY `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`) USING BTREE,
-  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`)
+  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`),
+  KEY `object_count_history_IDX` (`count_type`, `user`, `object_type`, `object_id`, `date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1332,6 +1333,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE,
   KEY `album_disk_IDX` (`album_disk`) USING BTREE,
   KEY `song_last_played_IDX` (`last_played`),
+  KEY `user_upload` (`user_upload`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1563,7 +1565,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `catalog_filter_group` int(11) unsigned NOT NULL DEFAULT 0,
   `subsonic_secret` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username` (`username`),
+  KEY `apikey` (`apikey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

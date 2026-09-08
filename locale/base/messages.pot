@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-08-19 18:52+1000\n"
+"POT-Creation-Date: 2026-09-08 15:11+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Are you sure?"
+msgid "Confirm"
 msgstr ""
 
 msgid "OK"
@@ -1084,9 +1084,6 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-msgid "Confirm"
-msgstr ""
-
 msgid "Top Rated"
 msgstr ""
 
@@ -1124,6 +1121,9 @@ msgid "Show Localplay Instances"
 msgstr ""
 
 msgid "Edit Instance"
+msgstr ""
+
+msgid "Are you sure?"
 msgstr ""
 
 msgid "Localplay Control"
@@ -1729,6 +1729,32 @@ msgstr ""
 msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly "
 "necessary, but may result in a better experience (zip download)."
+msgstr ""
+
+msgid "WARNING"
+msgstr ""
+
+msgid "UNKNOWN"
+msgstr ""
+
+msgid "HTTP compression"
+msgstr ""
+
+msgid ""
+"This measures the page you are reading: your browser reports both the bytes "
+"it received and the bytes after decoding, so a smaller received size means "
+"the server compressed it. Compression is not required, but it makes a large "
+"difference to page and API response sizes."
+msgstr ""
+
+msgid ""
+"Enable gzip or brotli in your web server for html, css, javascript, json and "
+"xml. Do not compress audio streams: they are already compressed, so it only "
+"costs CPU on every listen."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript, which is why it reads as unknown right now."
 msgstr ""
 
 msgid "PHP SimpleXML extension"
@@ -2373,9 +2399,6 @@ msgstr ""
 msgid "Leave the artist and album fields blank to read file tags"
 msgstr ""
 
-msgid "WARNING"
-msgstr ""
-
 msgid ""
 "The music license you choose may give away some rights in an irrevocable "
 "manner."
@@ -2599,6 +2622,9 @@ msgstr ""
 msgid "License"
 msgstr ""
 
+msgid "Added"
+msgstr ""
+
 msgid "Registration Date"
 msgstr ""
 
@@ -2700,6 +2726,12 @@ msgid "Newest Songs"
 msgstr ""
 
 msgid "Newest Shouts"
+msgstr ""
+
+msgid "Smart Playlists"
+msgstr ""
+
+msgid "Private Messages"
 msgstr ""
 
 msgid "Smartlists"
@@ -2869,9 +2901,6 @@ msgstr ""
 msgid "Shares"
 msgstr ""
 
-msgid "Smart Playlists"
-msgstr ""
-
 msgid "Allow Localplay Set to False"
 msgstr ""
 
@@ -2927,9 +2956,6 @@ msgid "ISRC"
 msgstr ""
 
 msgid "Last Updated"
-msgstr ""
-
-msgid "Added"
 msgstr ""
 
 msgid "Lyrics"
@@ -3239,6 +3265,12 @@ msgstr ""
 msgid "The Catalog folder scan has started"
 msgstr ""
 
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr ""
 
@@ -3308,6 +3340,10 @@ msgstr ""
 msgid "Create license"
 msgstr ""
 
+#, php-format
+msgid "This will permanently delete the license \"%s\""
+msgstr ""
+
 msgid "Edit license"
 msgstr ""
 
@@ -3362,12 +3398,24 @@ msgstr ""
 msgid "Shoutbox post has been updated"
 msgstr ""
 
+#, php-format
+msgid "This will permanently delete the shoutbox post \"%s\""
+msgstr ""
+
 msgid "Your cache has been cleared successfully"
 msgstr ""
 
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
+msgstr ""
+
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
 msgstr ""
 
 msgid "Your Passwords don't match"
@@ -3823,6 +3871,15 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
+#. HINT: %1$s is the item name, %2$s says what the drawing was made from
+#. the name arrives escaped, so only the translated half is escaped here
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
+msgstr ""
+
 msgid "Unable to open"
 msgstr ""
 
@@ -3830,6 +3887,30 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
 
 msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
+msgid "ALBUM"
+msgstr ""
+
+msgid "ARTIST"
+msgstr ""
+
+#, php-format
+msgid "%d track"
+msgid_plural "%d tracks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "PLAYLIST"
+msgstr ""
+
+msgid "SONG"
+msgstr ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Light"
 msgstr ""
 
 msgid "OpenID Connect requires an interactive browser login"
@@ -4980,9 +5061,6 @@ msgstr ""
 msgid "Playlist Items"
 msgstr ""
 
-msgid "Private Messages"
-msgstr ""
-
 msgid "Shoutbox Records"
 msgstr ""
 
@@ -5699,6 +5777,9 @@ msgstr ""
 #. HINT: Plugin Name
 #, php-format
 msgid "Click to grant %s access to Ampache"
+msgstr ""
+
+msgid "Match my theme"
 msgstr ""
 
 msgid "Unknown Artist"
@@ -6978,7 +7059,11 @@ msgid "Custom datetime"
 msgstr ""
 
 #: Ampache preference description
-msgid "Custom URL - Favicon"
+msgid "Custom URL - Touch icon for phone home screens (PNG, 180x180, no transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
 msgstr ""
 
 #: Ampache preference description
@@ -6987,6 +7072,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Image shown when a link to this server is shared (PNG or JPEG, 1200x630)"
 msgstr ""
 
 #: Ampache preference description
@@ -7090,6 +7179,14 @@ msgid "Force HTTP playback regardless of port"
 msgstr ""
 
 #: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
 msgid "Allow Geolocation"
 msgstr ""
 
@@ -7171,6 +7268,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
 msgstr ""
 
 #: Ampache preference description
@@ -7338,6 +7439,10 @@ msgid "Custom CSS Order - Video"
 msgstr ""
 
 #: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
+msgstr ""
+
+#: Ampache preference description
 msgid "Website Title"
 msgstr ""
 
@@ -7471,6 +7576,10 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
 msgstr ""
 
 #: Ampache preference subcategory

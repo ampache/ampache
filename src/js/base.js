@@ -321,6 +321,8 @@ export function ampacheConfirm(message) {
 
         $dialog.dialog({
             title: titleLabel,
+            // the themes style dialogs by this class, and without one this fell back to jQuery UI's own
+            dialogClass: "confirmdialogstyle",
             modal: true,
             resizable: false,
             draggable: false,

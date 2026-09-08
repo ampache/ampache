@@ -267,6 +267,11 @@ interface UserRepositoryInterface
     public function setUserData(int $userId, string $key, float|int|string $value): void;
 
     /**
+     * Writes the same free-form counter against every user in a single statement
+     */
+    public function setUserDataForAll(string $key, float|int|string $value): void;
+
+    /**
      * Writes a fresh validation key and disables the account until it is used
      */
     public function setValidation(int $userId, string $validation): bool;

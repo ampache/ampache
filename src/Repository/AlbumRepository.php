@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
@@ -529,6 +530,28 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The album ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array
+    {
+        if ($artistIds === []) {
+            return [];
+        }
+
+        $userId = Core::get_global('user')?->getId();
+        $sql    = sprintf(
+            'SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` IN (%s) AND `album`.`catalog` IN (%s)',
+            implode(',', array_map(intval(...), $artistIds)),
+            implode(',', Catalog::get_catalogs('', $userId, true))
+        );
+
+        return array_values(array_map(intval(...), $this->connection->query($sql)->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
+    /**
      * Reads the albums of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>
@@ -646,12 +669,51 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The objects mapped onto a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, list<int>>
+     */
+    public function getMappedObjectIdsBulk(array $albumIds, string $objectType): array
+    {
+        if ($albumIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT `album_id`, `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` IN (%s)',
+                implode(',', array_fill(0, count($albumIds), '?'))
+            ),
+            array_merge([$objectType], $albumIds)
+        );
+
+        $mapped = array_fill_keys($albumIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $mapped[(int) $row['album_id']][] = (int) $row['object_id'];
+        }
+
+        return $mapped;
+    }
+
+    /**
      * Get item prefix, basename and name by the album id
      *
      * @return array{prefix: string, basename: string, name: string}
      */
     public function getNames(int $albumId): array
     {
+        if (database_object::is_cached('album', $albumId)) {
+            $row      = database_object::get_from_cache('album', $albumId);
+            $basename = (string) ($row['name'] ?? '');
+
+            return [
+                'prefix' => $row['prefix'] ?? null,
+                'basename' => $basename,
+                'name' => ltrim(((string) ($row['prefix'] ?? '')) . ' ' . $basename),
+            ];
+        }
+
         /** @var false|array{prefix: string, basename: string, name: string} $result */
         $result = $this->connection->fetchRow(
             "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?",
@@ -1102,8 +1164,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
      * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
      * Unset/empty config keeps the default behavior and matches all columns
-     */
-    /**
+     *
      * @return list<string>
      */
     private function getIdentityColumns(): array

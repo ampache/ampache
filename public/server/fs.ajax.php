@@ -106,7 +106,7 @@ if (isset($_GET['operation'])) {
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
                     ? (string) $_GET['parent']
                     : '/';
-                $rslt = $fs->copy($node, $parn);
+                $rslt = $fs->copy($node, $parn, $current_user);
                 break;
             default:
                 throw new Exception('Unsupported operation: ' . Core::get_get('operation'));

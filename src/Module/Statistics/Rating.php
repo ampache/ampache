@@ -372,7 +372,11 @@ class Rating extends database_object
             return false;
         }
 
-        if (self::get_user_rating($user_id) === $rating) {
+        // a rating is 0 to 5; this is the one door every writer passes through, so bound it here
+        $rating = max(0, min(5, $rating));
+
+        // an absent rating is 0, so setting 0 on an unrated object is a no-op, not a weight decrement
+        if ((self::get_user_rating($user_id) ?? 0) === $rating) {
             return true;
         }
 

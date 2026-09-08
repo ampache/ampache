@@ -1388,7 +1388,6 @@ table.gridview td.cel_cover {
     height: auto !important;
 }
 
-table.gridview td.cel_action,
 table.gridview td.cel_year,
 table.gridview td.cel_drag {
     display: none !important;
@@ -1419,9 +1418,15 @@ table.gridview td.cel_ratings {
     order: 3;
 }
 
+/* the actions cell was hidden outright, and grid view has no other way to reach edit or delete */
+table.gridview td.cel_action {
+    order: 4;
+}
+
 table.gridview td.cel_play,
 table.gridview td.cel_add,
-table.gridview td.cel_add_list {
+table.gridview td.cel_add_list,
+table.gridview td.cel_action {
     display: flex !important;
     flex: 0 0 auto;
     width: auto !important;
@@ -2688,4 +2693,43 @@ a.option-list:hover {
     .multiselect-actions {
         position: static;
     }
+}
+
+/* Structure of the confirm dialog opened by ampacheConfirm(). jQuery UI's own metrics left the
+   buttons cramped and the panes flush against the edges; colours are set per theme. */
+.confirmdialogstyle.ui-dialog {
+    padding: 0;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-titlebar {
+    background-image: none;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    padding: 10px 14px;
+    font-size: 16px;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-content {
+    padding: 18px 14px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonpane {
+    background-image: none;
+    border: 0;
+    border-top: 1px solid transparent;
+    border-radius: 0 0 4px 4px;
+    margin: 0;
+    padding: 10px 14px;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    margin-left: 8px;
+    padding: 6px 16px;
+    font-size: 14px;
+    border-radius: 3px;
 }

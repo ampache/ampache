@@ -110,6 +110,13 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 echo json_encode($data);
 
                 return;
+            case 'stream_session':
+                // the broadcast listener asks for this when it connects, so a
+                // plain page view no longer creates a stream session row
+                header('Content-Type: application/json');
+                echo json_encode(['session' => Stream::get_session()]);
+
+                return;
             case 'show_broadcasts':
                 $broadcasts = [];
                 foreach (Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0) as $broadcastId) {

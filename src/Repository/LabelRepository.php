@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\LegacyLogger;
@@ -197,6 +198,10 @@ final readonly class LabelRepository implements LabelRepositoryInterface
      */
     public function getByAlbum(int $albumId): array
     {
+        if (database_object::is_cached('album_labels', $albumId)) {
+            return database_object::get_from_cache('album_labels', $albumId);
+        }
+
         $labels = [];
 
         $result = $this->connection->query(
@@ -206,6 +211,37 @@ final readonly class LabelRepository implements LabelRepositoryInterface
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $labels[(int) $row['id']] = $row['name'];
+        }
+
+        return $labels;
+    }
+
+    /**
+     * The labels of a set of albums, read in one go
+     *
+     * @param array<int|string> $albumIds
+     * @return array<int, array<int, string>>
+     */
+    public function getByAlbums(array $albumIds): array
+    {
+        if ($albumIds === []) {
+            return [];
+        }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $albumIds = array_map(intval(...), array_values($albumIds));
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT `label_asso`.`album`, `label`.`id`, `label`.`name` FROM `label` INNER JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`album` IN (%s)',
+                implode(',', array_fill(0, count($albumIds), '?'))
+            ),
+            $albumIds
+        );
+
+        $labels = array_fill_keys($albumIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $labels[(int) $row['album']][(int) $row['id']] = $row['name'];
         }
 
         return $labels;

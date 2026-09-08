@@ -248,6 +248,11 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function findByApiKey(string $apikey): ?User
     {
         if ($apikey !== '' && $apikey !== '0') {
+            // a request resolves its caller several times over, and the key does not change in between
+            if (User::is_cached('user_apikey', $apikey)) {
+                return new User((int) User::get_from_cache('user_apikey', $apikey)[0]);
+            }
+
             // check for legacy unencrypted apikey
             $userId = $this->connection->fetchOne(
                 'SELECT `id` FROM `user` WHERE `apikey` = ?',
@@ -255,6 +260,8 @@ final readonly class UserRepository implements UserRepositoryInterface
             );
 
             if ($userId !== false) {
+                User::add_to_cache('user_apikey', $apikey, [(int) $userId]);
+
                 return new User((int) $userId);
             }
 
@@ -265,12 +272,20 @@ final readonly class UserRepository implements UserRepositoryInterface
             $userName = $this->connection->fetchOne($sql, [$apikey, time()]);
 
             if ($userName !== false) {
-                return User::get_from_username((string) $userName);
+                $user = User::get_from_username((string) $userName);
+                if ($user instanceof User) {
+                    User::add_to_cache('user_apikey', $apikey, [$user->getId()]);
+                }
+
+                return $user;
             }
 
             // check for sha256 hashed apikey for client
             // https://ampache.org/api/
-            $dbResults = $this->connection->query('SELECT `id`, `apikey`, `username` FROM `user`');
+            // only a user holding a key can match one, and every other row costs a read and two hashes
+            $dbResults = $this->connection->query(
+                "SELECT `id`, `apikey`, `username` FROM `user` WHERE `apikey` IS NOT NULL AND `apikey` != '' AND `username` != ''"
+            );
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 if ($row['apikey'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['apikey']);
@@ -355,14 +370,21 @@ final readonly class UserRepository implements UserRepositoryInterface
             return new User(-1);
         }
 
+        if (User::is_cached('user_username', $username)) {
+            return new User((int) User::get_from_cache('user_username', $username)[0]);
+        }
+
         $userId = $this->connection->fetchOne(
             'SELECT `id` FROM `user` WHERE `username` = ?',
             [$username]
         );
+        if ($userId === false) {
+            return null;
+        }
 
-        return ($userId === false)
-            ? null
-            : new User((int) $userId);
+        User::add_to_cache('user_username', $username, [(int) $userId]);
+
+        return new User((int) $userId);
     }
 
     /**
@@ -858,6 +880,15 @@ final readonly class UserRepository implements UserRepositoryInterface
         );
     }
 
+    public function setUserDataForAll(string $key, float|int|string $value): void
+    {
+        // Same value for every user: one statement instead of one per user.
+        $this->connection->query(
+            'REPLACE INTO `user_data` (`user`, `key`, `value`) SELECT `id`, ?, ? FROM `user`;',
+            [$key, $value]
+        );
+    }
+
     /**
      * Writes a fresh validation key and disables the account until it is used
      */
@@ -892,6 +923,11 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function updateLastSeen(
         int $userId,
     ): void {
+        // the anonymous user is a php object with no row behind it, so this would match nothing
+        if ($userId < 1) {
+            return;
+        }
+
         $this->connection->query(
             'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
             [time(), $userId]

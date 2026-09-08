@@ -11,6 +11,14 @@ Version 7 is the only version undergoing new development
 | 5.x.x   | :x:                |
 | <= 4.0  | :x:                |
 
+## Scope
+
+A report is out of scope if reproducing it requires an Administrator (access level 100) account —
+whether as the attacker or as the account being targeted — or requires prior access to the
+server/host itself (shell access, direct database access, etc). An already-admin account performing
+an admin-only action, or an attack that only works once you already control the server, is not a
+vulnerability.
+
 ## Reporting a Vulnerability
 
 Report all security issues directly to me security \[at] ampache \[dot] dev

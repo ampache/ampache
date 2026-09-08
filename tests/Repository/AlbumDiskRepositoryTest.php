@@ -255,6 +255,38 @@ class AlbumDiskRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getByAlbum($album));
     }
 
+    public function testGetRowsByAlbumsDoesNothingForNoAlbums(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getRowsByAlbums([]));
+    }
+
+    public function testGetRowsByAlbumsReadsEveryDiskOfThePage(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `album_disk` WHERE `album_id` IN (?,?) ORDER BY `disk`',
+                [21, 22]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['id' => '1', 'album_id' => '21', 'disk' => '1'],
+            ['id' => '2', 'album_id' => '21', 'disk' => '2'],
+            false
+        );
+
+        self::assertSame(
+            [['id' => '1', 'album_id' => '21', 'disk' => '1'], ['id' => '2', 'album_id' => '21', 'disk' => '2']],
+            $this->subject->getRowsByAlbums([21, 22])
+        );
+    }
+
     public function testGetSongsFiltersDisabledCatalogsWhenConfigured(): void
     {
         $albumDisk = new AlbumDisk();

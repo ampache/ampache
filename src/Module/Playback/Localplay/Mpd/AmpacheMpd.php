@@ -167,7 +167,7 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * get_songs
+     * get
      * This functions returns an array containing information about
      * the songs that MPD currently has in its playlist. This must be
      * done in a standardized fashion
@@ -548,7 +548,7 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * get_status
+     * status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      */
     public function status(): array

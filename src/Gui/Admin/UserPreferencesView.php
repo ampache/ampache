@@ -72,10 +72,10 @@ final class UserPreferencesView extends AbstractView
     /**
      * The input widget is built by the ui helper, which echoes rather than returns.
      */
-    public function renderInput(string $name, mixed $value): string
+    public function renderInput(string $name, mixed $value, ?string $type = null): string
     {
         ob_start();
-        $this->ui->createPreferenceInput($name, $value);
+        $this->ui->createPreferenceInput($name, $value, $type);
 
         return (string) ob_get_clean();
     }

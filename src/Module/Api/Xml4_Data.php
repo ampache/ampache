@@ -105,7 +105,7 @@ class Xml4_Data
     }
 
     /**
-     * tags_string
+     * _tags_string
      *
      * This returns the formatted 'tags' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags

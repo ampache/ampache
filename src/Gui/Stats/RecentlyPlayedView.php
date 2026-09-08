@@ -61,6 +61,23 @@ final class RecentlyPlayedView extends AbstractView
         private readonly string $webPath,
     ) {}
 
+    /**
+     * Warms what every row reads: the media by type, and the listener who played it
+     *
+     * @param array<int, array<string, mixed>> $data The rows get_recently_played() returns
+     */
+    public static function warm(array $data): void
+    {
+        foreach (['song' => Song::class, 'video' => Video::class, 'podcast_episode' => Podcast_Episode::class] as $type => $class) {
+            $ids = array_column(array_filter($data, static fn(array $row): bool => $row['object_type'] === $type), 'object_id');
+            if ($ids !== []) {
+                $class::build_cache($ids);
+            }
+        }
+
+        User::build_cache(array_column($data, 'user'));
+    }
+
     public function getBoxClass(): string
     {
         return ($this->mode === RecentlyPlayedMode::SKIPPED) ? 'box box_recently_skipped' : 'box_recently_played';

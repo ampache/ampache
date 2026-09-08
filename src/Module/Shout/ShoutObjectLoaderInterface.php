@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Shoutbox;
 interface ShoutObjectLoaderInterface
 {
     /**
-     * get_object
+     * loadByObjectType
      * This takes a type and an ID and returns a created object
      */
     public function loadByObjectType(LibraryItemEnum $type, int $object_id): ?library_item;
