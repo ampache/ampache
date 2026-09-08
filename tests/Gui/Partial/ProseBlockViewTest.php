@@ -23,17 +23,25 @@ declare(strict_types=1);
  *
  */
 
-// artist_info.phtml -- rendered by Ampache\Gui\Artist\ArtistInfoView
+namespace Ampache\Gui\Partial;
 
-use Ampache\Gui\Partial\ProseBlockView;
+use PHPUnit\Framework\TestCase;
 
-/** @var Ampache\Gui\Artist\ArtistInfoView $this */
+class ProseBlockViewTest extends TestCase
+{
+    public function testFoldsOnVisibleTextOnly(): void
+    {
+        $short = str_repeat('a', 600);
 
-$summary = $this->getSummary();
+        static::assertFalse(new ProseBlockView($short, 'fold')->isFolded());
+        static::assertFalse(new ProseBlockView('<b>' . $short . '</b>', 'fold')->isFolded());
+        static::assertTrue(new ProseBlockView($short . 'a', 'fold')->isFolded());
+    }
 
-if ($summary === null) {
-    return;
+    public function testFromTextDecodesThenEscapesAndKeepsLineBreaks(): void
+    {
+        $view = ProseBlockView::fromText("a &ndash; b\n<script>", 'fold');
+
+        static::assertSame("a – b<br />\n&lt;script&gt;", $view->getHtml());
+    }
 }
-
-?>
-<?php echo $this->raw(ProseBlockView::fromText($summary, 'artist_summary_fold')->render()); ?>

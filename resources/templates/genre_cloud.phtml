@@ -40,14 +40,14 @@ Ajax::start_container('tag_filter'); ?>
 <div class="tag_container">
     <div class="tag_button">
         <span id="click_tag_no_genre"><?php echo $this->e('[' . T_('No Genre') . ']'); ?></span>
-        <?php echo $this->raw(Ajax::observe('click_tag_no_genre', 'click', Ajax::action('?page=browse&action=browse' . $browseArgument . '&key=no_genre&tag=-1', ''))); ?>
+        <?php echo $this->raw(Ajax::observe('click_tag_no_genre', 'click', Ajax::action('?page=browse&action=browse' . $browseArgument . '&key=no_genre&tag=-1', '') . ' window.scrollToBrowse();')); ?>
     </div>
 </div>
 <?php foreach ($genres as $genre) { ?>
 <div class="tag_container">
     <div class="tag_button">
         <span id="click_tag_<?php echo $this->e($genre['id']); ?>"><?php echo $this->e($genre['name'] . ' (' . $genre['count'] . ')'); ?></span>
-        <?php echo $this->raw(Ajax::observe('click_tag_' . $genre['id'], 'click', Ajax::action('?page=browse&action=browse' . $browseArgument . '&key=tag&tag=' . $genre['id'], ''))); ?>
+        <?php echo $this->raw(Ajax::observe('click_tag_' . $genre['id'], 'click', Ajax::action('?page=browse&action=browse' . $browseArgument . '&key=tag&tag=' . $genre['id'], '') . ' window.scrollToBrowse();')); ?>
     </div>
     <?php if ($this->mayEdit()) { ?>
     <div class="tag_actions">

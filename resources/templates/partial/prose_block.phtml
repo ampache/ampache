@@ -23,17 +23,21 @@ declare(strict_types=1);
  *
  */
 
-// artist_info.phtml -- rendered by Ampache\Gui\Artist\ArtistInfoView
 
-use Ampache\Gui\Partial\ProseBlockView;
+// partial/prose_block.phtml -- rendered by Ampache\Gui\Partial\ProseBlockView
 
-/** @var Ampache\Gui\Artist\ArtistInfoView $this */
+/** @var Ampache\Gui\Partial\ProseBlockView $this */
 
-$summary = $this->getSummary();
-
-if ($summary === null) {
-    return;
-}
-
-?>
-<?php echo $this->raw(ProseBlockView::fromText($summary, 'artist_summary_fold')->render()); ?>
+$id = $this->getId(); ?>
+<div class="item-prose">
+<?php if ($this->isFolded()) { ?>
+    <input class="item-prose-toggle" id="<?php echo $this->e($id); ?>" type="checkbox">
+<?php } ?>
+    <div class="item-prose-body"><?php echo $this->raw($this->getHtml()); ?></div>
+<?php if ($this->isFolded()) { ?>
+    <label class="item-prose-more" for="<?php echo $this->e($id); ?>">
+        <span class="more"><?php echo T_('Show more'); ?></span>
+        <span class="less"><?php echo T_('Show less'); ?></span>
+    </label>
+<?php } ?>
+</div>

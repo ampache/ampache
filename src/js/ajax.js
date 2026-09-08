@@ -126,7 +126,7 @@ $(function() {
 
     $("body").delegate("a", "click", function() {
         var link = $(this).attr("href");
-        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
+        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link.charAt(0) !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (ampacheUrl(link)) {
@@ -371,6 +371,20 @@ export function loadContentData(data, status, jqXHR)
         deeplinking: false
     });
     initTabs();
+    scrollToHash();
+}
+
+// The browser scrolls to a fragment on a real navigation, but an ajax swap replaces the content after
+// it would have happened.
+function scrollToHash()
+{
+    if (window.location.hash.length < 2) {
+        return;
+    }
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (target) {
+        target.scrollIntoView();
+    }
 }
 
 export function loadContentPage(url)

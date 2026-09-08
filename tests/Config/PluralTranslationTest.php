@@ -23,17 +23,33 @@ declare(strict_types=1);
  *
  */
 
-// artist_info.phtml -- rendered by Ampache\Gui\Artist\ArtistInfoView
+namespace Ampache\Config;
 
-use Ampache\Gui\Partial\ProseBlockView;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-/** @var Ampache\Gui\Artist\ArtistInfoView $this */
+class PluralTranslationTest extends TestCase
+{
+    /**
+     * @return list<array{0: int, 1: string}>
+     */
+    public static function countDataProvider(): array
+    {
+        return [
+            [0, '%d albums'],
+            [1, '%d album'],
+            [2, '%d albums'],
+            [11, '%d albums'],
+        ];
+    }
 
-$summary = $this->getSummary();
+    #[DataProvider('countDataProvider')]
+    public function testFallsBackOnTheFormThatMatchesTheCount(int $count, string $expected): void
+    {
+        if (function_exists('n__')) {
+            self::markTestSkipped('gettext is loaded, so the fallback is not the code under test');
+        }
 
-if ($summary === null) {
-    return;
+        self::assertSame($expected, nT_('%d album', '%d albums', $count));
+    }
 }
-
-?>
-<?php echo $this->raw(ProseBlockView::fromText($summary, 'artist_summary_fold')->render()); ?>

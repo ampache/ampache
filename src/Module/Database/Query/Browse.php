@@ -886,6 +886,7 @@ class Browse extends Query
                 'song' => Song::build_cache($ids),
                 'album' => Album::build_cache($ids),
                 'artist' => Artist::build_cache($ids),
+                'album_disk' => AlbumDisk::build_cache($ids),
                 'video' => Video::build_cache($ids),
                 'playlist' => Playlist::build_cache($ids),
                 'podcast_episode' => Podcast_Episode::build_cache($ids),

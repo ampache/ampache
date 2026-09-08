@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playlist;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -33,6 +35,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -93,6 +97,28 @@ final class PlaylistPageView extends AbstractView
         echo $this->playlist->getFullname();
 
         return (string) ob_get_clean();
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $playlist = $this->playlist;
+        $count    = $playlist->get_media_count('song');
+        $duration = $playlist->get_total_duration();
+
+        return new ObjectHeaderView(
+            kind: T_('Playlist'),
+            title: $this->e((string) $playlist->name),
+            art: $this->getArt(),
+            breadcrumb: $this->e((string) $playlist->username),
+            chips: HeaderChip::listOf(
+                ($count > 0) ? new HeaderChip(sprintf(nT_('%d song', '%d songs', $count), $count), true) : null,
+                ($duration > 0) ? new HeaderChip((string) $playlist->get_f_time(), true, title: T_('Time')) : null,
+                ($playlist->type === 'private') ? T_('Private') : T_('Public'),
+            ),
+            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'playlist', true) : '',
+            userflag: ($this->showRatings()) ? Userflag::show($this->getPlaylistId(), 'playlist') : '',
+            ratingKey: $this->getPlaylistId() . '_playlist',
+        );
     }
 
     /**
