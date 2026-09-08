@@ -32,6 +32,9 @@ use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -44,6 +47,7 @@ use Psr\Http\Message\StreamInterface;
 class PlaylistEditMethodTest extends MockeryTestCase
 {
     private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private PrivilegeCheckerInterface|MockInterface|null $privilegeChecker;
     private ?PlaylistEditMethod $subject;
 
     /**
@@ -57,6 +61,88 @@ class PlaylistEditMethodTest extends MockeryTestCase
             'api6' => [6],
             'api8' => [8],
         ];
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleLetsAnAdminHandThePlaylistOver(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $playlist   = $this->mock(Playlist::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $objectId = 666;
+
+        $this->mockPlaylist($playlist, $user, $objectId, true, false);
+        $playlist->name = 'some-name';
+        $playlist->type = 'private';
+        $playlist->user = 42;
+
+        $user->shouldReceive('getId')->andReturn(7);
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, 7)
+            ->once()
+            ->andReturnTrue();
+
+        $playlist->shouldReceive('update')
+            ->with([
+                'name' => 'some-name',
+                'playlist_type' => 'private',
+                'playlist_user' => 1,
+            ])
+            ->once();
+
+        $output->shouldReceive('success')->andReturn('ok');
+        $response->shouldReceive('getBody')->andReturn($stream);
+        $stream->shouldReceive('write');
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $objectId, 'owner' => '1', 'api_format' => 'json', 'auth' => 'some-auth'],
+            $user,
+            $apiVersion
+        );
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleRefusesToHandThePlaylistToSomebodyElse(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $playlist   = $this->mock(Playlist::class);
+
+        $objectId = 666;
+
+        $this->mockPlaylist($playlist, $user, $objectId, true, false);
+        $playlist->name = 'some-name';
+        $playlist->type = 'private';
+        $playlist->user = 42;
+
+        $user->shouldReceive('getId')->andReturn(7);
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, 7)
+            ->once()
+            ->andReturnFalse();
+
+        // the tell that the guard fired: the playlist is never written to
+        $playlist->shouldReceive('update')->never();
+
+        $this->expectException(AccessFailedException::class);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $objectId, 'owner' => '1', 'api_format' => 'json', 'auth' => 'some-auth'],
+            $user,
+            $apiVersion
+        );
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]
@@ -253,10 +339,12 @@ class PlaylistEditMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
 
         $this->subject = new PlaylistEditMethod(
-            $this->modelFactory
+            $this->modelFactory,
+            $this->privilegeChecker
         );
     }
 

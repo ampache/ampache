@@ -32,6 +32,9 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -49,6 +52,7 @@ final class PlaylistEdit5Method implements MethodInterface
 
     public function __construct(
         private ModelFactoryInterface $modelFactory,
+        private PrivilegeCheckerInterface $privilegeChecker,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -128,6 +132,16 @@ final class PlaylistEdit5Method implements MethodInterface
         if ((int) $owner === 0) {
             $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
+        }
+
+        // handing a list to somebody else is an admin's call, the way setting a play for them is
+        if (
+            (int) $owner !== (int) $playlist->user
+            && !$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->getId())
+        ) {
+            throw new AccessFailedException(
+                'Require: 100'
+            );
         }
 
         // update name/type
