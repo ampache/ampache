@@ -62,7 +62,7 @@ final class ObjectHeaderView extends AbstractView
     public static function actionsHelp(): string
     {
         return '<li class="actions-help"><input id="actions_help" type="checkbox">'
-            . '<label for="actions_help">' . Ui::get_material_symbol('help', T_('Help')) . '</label></li>';
+            . '<label for="actions_help">' . Ui::get_material_symbol('expand_circle_down', T_('Expand/Collapse')) . '</label></li>';
     }
 
     /**
