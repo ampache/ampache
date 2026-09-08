@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -127,9 +128,18 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         $className = ObjectTypeToClassNameMapper::map($item_type);
                         /** @var container_item $libitem */
                         $libitem = new $className((int) $iid);
-                        if ($libitem->isNew() === false) {
-                            $medias = array_merge($medias, $libitem->get_medias());
+                        if ($libitem->isNew()) {
+                            continue;
                         }
+                        // a private list you cannot see is not yours to expand into a playlist
+                        if (
+                            ($libitem instanceof Playlist || $libitem instanceof Search)
+                            && $libitem->type !== 'public'
+                            && !$libitem->has_collaborate($user)
+                        ) {
+                            continue;
+                        }
+                        $medias = array_merge($medias, $libitem->get_medias());
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
