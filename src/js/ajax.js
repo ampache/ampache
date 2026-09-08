@@ -329,10 +329,20 @@ export function processContents(data) {
 export function loadContentData(data, status, jqXHR)
 {
     var $response = $(data);
+    var incoming  = new DOMParser().parseFromString(data, "text/html");
+
+    // the swapped page carries its own tab title, and pushState navigation never applies it.
+    // The web player wins while it is playing, so we only remember the page title in that case.
+    if (incoming.title) {
+        window.AmpachePageTitle = incoming.title;
+        if (!window.AmpacheNowPlayingTitle) {
+            document.title = incoming.title;
+        }
+    }
 
     // data needs a full document here (e.g. the login page after a session expired mid-navigation).
     if ($response.find("#guts").length === 0) {
-        var incomingBody = new DOMParser().parseFromString(data, "text/html").body;
+        var incomingBody = incoming.body;
 
         $("body").undelegate("a");
         $("body").undelegate("form");

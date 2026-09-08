@@ -34,4 +34,16 @@ interface UrlValidatorInterface
      * Whether the url is http(s) and resolves only to public addresses
      */
     public function isPublicHttpUrl(string $url): bool;
+
+    /**
+     * The host, port and one address a fetch may pin its connection to, or null when the url may not be fetched
+     *
+     * Validating a hostname and then handing the same hostname to curl lets it resolve a second time at connect,
+     * which a DNS answer that changes between the two lookups (a low TTL, or an attacker's authoritative server)
+     * can turn into a request to an address the check never saw. Pinning the connection to the address that was
+     * actually checked closes that gap.
+     *
+     * @return array{host: string, port: int, address: string}|null
+     */
+    public function resolvePinnedTarget(string $url): ?array;
 }

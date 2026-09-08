@@ -41,6 +41,7 @@ use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -462,8 +463,7 @@ class Ui implements UiInterface
 
         $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string) $class_attrib) . '">';
         $tag .= '<title>' . scrub_out($title) . '</title>';
-        $tag .= '<desc>' . scrub_out($title) . '</desc>';
-        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '" xlink:href="#ms-' . scrub_out($symbol_key) . '"></use>';
+        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '"></use>';
 
         return $tag . '</svg>';
     }
@@ -541,7 +541,6 @@ class Ui implements UiInterface
             return $html;
         }
 
-        // one match per <use> even though the tag carries both href and xlink:href
         if (!preg_match_all('/<use\s[^>]*href="#ms-([^"]+)"/', $html, $used)) {
             return $html;
         }
@@ -655,8 +654,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
-        echo '<link rel="icon" href="' . $favicon . "\">\n";
+        echo self::branding_tags();
     }
 
     /**
@@ -891,7 +889,9 @@ class Ui implements UiInterface
                     ? $vb_match[1]
                     : '';
                 self::$_symbol_cache[$symbol_key] = [
-                    'attrs' => rtrim((string) preg_replace('/\sviewBox="[^"]*"/', '', $matches[1])),
+                    // xmlns is implied for inline svg in an html document, and this markup repeats
+                    // thousands of times on a large listing
+                    'attrs' => rtrim((string) preg_replace(['/\sviewBox="[^"]*"/', '/\sxmlns="[^"]*"/'], '', $matches[1])),
                     'viewbox' => $viewbox,
                     'inner' => trim($matches[2]),
                 ];
@@ -901,6 +901,85 @@ class Ui implements UiInterface
         }
 
         return self::$_symbol_cache[$symbol_key];
+    }
+
+    /**
+     * A link preview is fetched by somebody else's server, so a relative image never resolves
+     */
+    private static function absolute(string $url): string
+    {
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+        if ($url === '' || $host === '' || preg_match('#^(?:[a-z][a-z0-9+.-]*:)?//#i', $url) === 1) {
+            return $url;
+        }
+
+        $ssl = (Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https' || Core::get_server('HTTPS') === 'on');
+
+        return (($ssl) ? 'https://' : 'http://') . $host . '/' . ltrim($url, '/');
+    }
+
+    /**
+     * The icon and link-preview tags, from whatever the administrator supplied
+     *
+     * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
+     * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
+     * works; where a raster is required and only a vector was given, the tag is left out rather
+     * than filled with somebody else's logo.
+     */
+    private static function branding_tags(): string
+    {
+        $webPath = AmpConfig::get_web_path();
+        $custom  = trim((string) AmpConfig::get('custom_favicon', ''));
+        $vector  = str_ends_with(strtolower((string) parse_url($custom, PHP_URL_PATH)), '.svg');
+
+        $tags = [];
+        if ($custom === '') {
+            $tags[] = '<link rel="icon" href="' . $webPath . '/favicon.svg" type="image/svg+xml">';
+            $tags[] = '<link rel="icon" href="' . $webPath . '/favicon.ico" sizes="48x48">';
+        } elseif ($vector) {
+            $tags[] = '<link rel="icon" href="' . self::esc($custom) . '" type="image/svg+xml">';
+        } else {
+            $tags[] = '<link rel="icon" href="' . self::esc($custom) . '">';
+        }
+
+        // a phone home screen and a shared link both refuse svg, so each falls back to its own
+        // setting, then to the raster favicon, and is dropped when only a vector is on offer
+        $touch = trim((string) AmpConfig::get('custom_apple_touch_icon', ''))
+            ?: (($custom !== '' && !$vector) ? $custom : '')
+            ?: (($custom === '') ? $webPath . '/apple-touch-icon.png' : '');
+        if ($touch !== '') {
+            $tags[] = '<link rel="apple-touch-icon" href="' . self::esc($touch) . '">';
+        }
+
+        // a shared link always shows something: the shipped card stands in when nothing usable was
+        // supplied, since Ampache's artwork beats the stray page image a scraper settles on
+        $supplied = trim((string) AmpConfig::get('custom_share_image', ''));
+        $square   = ($supplied === '' && $custom !== '' && !$vector);
+        $share    = $supplied ?: (($square) ? $custom : $webPath . '/ampache-card.png');
+
+        $tags[] = '<meta property="og:image" content="' . self::esc(self::absolute($share)) . '">';
+        // a favicon standing in for the wide artwork would be cropped by the banner card
+        $tags[] = '<meta name="twitter:card" content="' . (($square) ? 'summary' : 'summary_large_image') . '">';
+
+        $title = trim((string) AmpConfig::get('site_title', ''));
+        if ($title !== '') {
+            $tags[] = '<meta property="og:site_name" content="' . self::esc($title) . '">';
+        }
+
+        $description = trim((string) AmpConfig::get('site_description', ''));
+        if ($description !== '') {
+            $tags[] = '<meta name="description" content="' . self::esc($description) . '">';
+            $tags[] = '<meta property="og:description" content="' . self::esc($description) . '">';
+        }
+
+        $tags[] = '<meta property="og:type" content="website">';
+
+        return implode("\n", $tags) . "\n";
+    }
+
+    private static function esc(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     public function accessDenied(string $error = 'Access Denied'): void
@@ -935,7 +1014,7 @@ class Ui implements UiInterface
             } elseif ($value == '0') {
                 echo T_("Disabled");
             } else {
-                echo $value;
+                echo htmlspecialchars((string) $value, ENT_QUOTES);
             }
 
             return;
@@ -963,6 +1042,22 @@ class Ui implements UiInterface
             }
 
             echo "</select>\n";
+
+            return;
+        }
+
+        // Picking a design out of a list of names tells you nothing, so each option carries a drawing of
+        // an invented album beside it. The previews need no library behind them.
+        if ($name === 'generated_art_template') {
+            $this->createGeneratedArtTemplateInput($name, (string) $value);
+
+            return;
+        }
+
+        // The stored type settles a plain on/off preference, so a new one renders right without also
+        // having to be listed in the name switch below.
+        if ($type === 'boolean') {
+            $this->createBooleanPreferenceInput($name, $value);
 
             return;
         }
@@ -1008,6 +1103,7 @@ class Ui implements UiInterface
             case 'autoupdate':
             case 'bookmark_latest':
             case 'broadcast_by_default':
+            case 'broadcast_private':
             case 'browse_album_disk_grid_view':
             case 'browse_album_grid_view':
             case 'browse_artist_grid_view':
@@ -1024,6 +1120,7 @@ class Ui implements UiInterface
             case 'catalogfav_compact':
             case 'condPL':
             case 'cron_cache':
+            case 'cron_cache_live_count':
             case 'custom_logo_user':
             case 'daap_backend':
             case 'demo_clear_sessions':
@@ -1075,6 +1172,7 @@ class Ui implements UiInterface
             case 'show_album_artist':
             case 'show_artist':
             case 'show_collection':
+            case 'show_composer':
             case 'show_donate':
             case 'show_header_login':
             case 'show_folder':
@@ -1120,18 +1218,7 @@ class Ui implements UiInterface
             case 'webplayer_confirmclose':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
-                $is_true  = '';
-                $is_false = '';
-                if ($value == '1') {
-                    $is_true = 'selected="selected"';
-                } else {
-                    $is_false = 'selected="selected"';
-                }
-
-                echo "<select name=\"{$name}\">\n";
-                echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
-                echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
-                echo "</select>\n";
+                $this->createBooleanPreferenceInput($name, $value);
                 break;
             case 'upload_catalog':
                 show_catalog_select('upload_catalog', (int) $value, '', true, 'music', 'local');
@@ -1589,7 +1676,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
-                echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
+                echo '<input type="text" name="' . $name . '" value="' . htmlspecialchars((string) $value, ENT_QUOTES) . '" />';
 
                 break;
         }
@@ -1716,6 +1803,9 @@ class Ui implements UiInterface
         )->render();
     }
 
+    /**
+     * Displays the default error page
+     */
     public function showErrorPage(): void
     {
         // the error usually arrives part way through a page, so throw away whatever has been written so far
@@ -1827,9 +1917,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * Displays the default error page
-     */
-    /**
      * The three standalone error pages carry their own chrome, so each needs the logo and title the
      * normal header would otherwise have supplied.
      */
@@ -1847,6 +1934,47 @@ class Ui implements UiInterface
             (bool) AmpConfig::get('demo_mode'),
             $detail
         );
+    }
+
+    /**
+     * The on/off widget shared by every boolean preference
+     */
+    private function createBooleanPreferenceInput(string $name, mixed $value): void
+    {
+        $is_true  = '';
+        $is_false = '';
+        if ($value == '1') {
+            $is_true = 'selected="selected"';
+        } else {
+            $is_false = 'selected="selected"';
+        }
+
+        echo "<select name=\"{$name}\">\n";
+        echo sprintf('	<option value="1" %s>', $is_true) . T_('On') . "</option>\n";
+        echo sprintf('	<option value="0" %s>', $is_false) . T_('Off') . "</option>\n";
+        echo "</select>\n";
+    }
+
+    /**
+     * The drawn-art template preference: `auto` follows whichever theme the listener is using.
+     */
+    private function createGeneratedArtTemplateInput(string $name, string $value): void
+    {
+        global $dic;
+
+        $service = $dic->get(GeneratedArtServiceInterface::class);
+        $choices = [['auto', T_('Match my theme')]];
+        foreach ($service->getTemplates() as $template) {
+            $choices[] = [$template->getId(), $template->getLabel()];
+        }
+
+        echo '<select name="' . $name . '">' . "\n";
+        foreach ($choices as [$id, $label]) {
+            $selected = ($value === $id) ? ' selected="selected"' : '';
+            echo '<option value="' . scrub_out($id) . '"' . $selected . '>' . scrub_out($label) . "</option>\n";
+        }
+
+        echo "</select>\n";
     }
 
     /**

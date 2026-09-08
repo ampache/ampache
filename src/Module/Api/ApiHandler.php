@@ -173,7 +173,11 @@ final class ApiHandler implements ApiHandlerInterface
             : null;
         $userId      = $user->id ?? -1;
         $api_version = (int) Preference::get_by_user($userId, 'api_force_version');
-        if (!in_array($api_version, Api::API_VERSIONS)) {
+        // a forced version must still be enabled, or any user could reopen an api the admin turned off
+        if (
+            !in_array($api_version, Api::API_VERSIONS)
+            || !Preference::get_by_user($userId, 'api_enable_' . $api_version)
+        ) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
                 ? (int) substr((string) $version, 0, 1)

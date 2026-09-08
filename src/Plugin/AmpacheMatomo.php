@@ -69,7 +69,7 @@ class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterf
     }
 
     /**
-     * display_user_field
+     * display_on_footer
      * This display the module in user page
      */
     public function display_on_footer(): void

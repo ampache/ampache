@@ -667,7 +667,7 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * _insert_local_song
+     * insert_song
      *
      * Insert a song that isn't already in the database.
      */

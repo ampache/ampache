@@ -144,12 +144,21 @@ class Artist extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($ids, static fn(int|string $id): bool => !parent::is_cached('artist_warm', (int) $id));
+        if (!$extra && $cold === []) {
+            return true;
+        }
+
         $artistRepository = self::getArtistRepository();
         foreach ($artistRepository->getRowsByIds($ids) as $row) {
             parent::add_to_cache('artist', $row['id'], $row);
         }
 
         Art::build_cache($ids, 'artist');
+
+        Tag::build_object_tag_cache('artist', $ids);
+        Mood::build_object_mood_cache('artist', $ids);
 
         // Preload full names so get_fullname_by_id() stops querying one row at a time.
         foreach ($artistRepository->getFullNamesByIds($ids) as $artist_id => $fullName) {
@@ -172,9 +181,8 @@ class Artist extends database_object implements
             }
         }
 
-        // the rating widget on every row reads the average: one bulk read instead of one query per row
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('artist', $ids);
+        foreach ($ids as $id) {
+            parent::add_to_cache('artist_warm', (int) $id, [true]);
         }
 
         return true;
@@ -508,12 +516,41 @@ class Artist extends database_object implements
             ];
         }
 
-        return self::getArtistRepository()->getNameArrayById((int) $artist_id) ?? [
+        $cache_id = (int) $artist_id;
+        if (parent::is_cached('artist_name_array', $cache_id)) {
+            /** @var array{id: string, name: string, prefix: string, basename: string} $cached */
+            $cached = parent::get_from_cache('artist_name_array', $cache_id);
+
+            return $cached;
+        }
+
+        // build_cache() already holds the row, so the name is derived instead of read again
+        if (parent::is_cached('artist', $cache_id)) {
+            $artist   = parent::get_from_cache('artist', $cache_id);
+            $prefix   = (string) ($artist['prefix'] ?? '');
+            $basename = (string) ($artist['name'] ?? '');
+            $row      = [
+                "id" => (string) $cache_id,
+                "name" => ltrim($prefix . ' ' . $basename),
+                "prefix" => $prefix,
+                "basename" => $basename,
+            ];
+            parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+            return $row;
+        }
+
+        $row = self::getArtistRepository()->getNameArrayById($cache_id) ?? [
             "id" => '',
             "name" => '',
             "prefix" => '',
             "basename" => '',
         ];
+
+        // a listing resolves the same artist for every track it renders
+        parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+        return $row;
     }
 
     public static function is_upload(int $artist_id): bool

@@ -190,6 +190,30 @@ class AlbumDisk extends database_object implements
     }
 
     /**
+     * Caches every disk of a set of albums in one read, and the disk list each album answers getDisks() with
+     *
+     * @param array<int|string> $albumIds
+     */
+    public static function build_cache_by_albums(array $albumIds): bool
+    {
+        if ($albumIds === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $diskIds = array_fill_keys($albumIds, []);
+        foreach (self::getAlbumDiskRepository()->getRowsByAlbums($albumIds) as $row) {
+            parent::add_to_cache('album_disk', (int) $row['id'], $row);
+            $diskIds[(int) $row['album_id']][] = (int) $row['id'];
+        }
+
+        foreach ($diskIds as $albumId => $rowIds) {
+            parent::add_to_cache('album_disk_ids', $albumId, $rowIds);
+        }
+
+        return true;
+    }
+
+    /**
      * check
      *
      * Insert album_disk and do additional steps for data on insert

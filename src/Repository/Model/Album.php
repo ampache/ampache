@@ -39,6 +39,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
@@ -189,6 +190,12 @@ class Album extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($ids, static fn(int|string $id): bool => !parent::is_cached('album_warm', (int) $id));
+        if ($cold === []) {
+            return true;
+        }
+
         $artist_ids = [];
         foreach (self::getAlbumRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('album', $row['id'], $row);
@@ -207,17 +214,26 @@ class Album extends database_object implements
             }
         }
 
+        // the song artists of an album are asked for the same way
+        foreach (self::getAlbumRepository()->getMappedObjectIdsBulk(array_map(intval(...), array_values($ids)), 'song') as $albumId => $objectIds) {
+            parent::add_to_cache('album_map_song', $albumId, $objectIds);
+        }
+
         // warm grouped caches the row render would otherwise hit per album
         // (an album_disk row asks for its parent album's genres, so this covers both)
-        Tag::build_object_tag_cache('album', array_values(array_map(intval(...), $ids)));
+        Tag::build_object_tag_cache('album', $ids);
+        Mood::build_object_mood_cache('album', $ids);
         Art::build_cache($ids, 'album');
+        AlbumDisk::build_cache_by_albums($ids);
+        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($ids) as $albumId => $labels) {
+            parent::add_to_cache('album_labels', $albumId, $labels);
+        }
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
         }
 
-        // the rating widget on every row reads the average: one bulk read instead of one query per row
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $ids);
+        foreach ($ids as $id) {
+            parent::add_to_cache('album_warm', (int) $id, [true]);
         }
 
         return true;
@@ -369,8 +385,9 @@ class Album extends database_object implements
      */
     public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
-        $results = ($object_type === 'album' && parent::is_cached('album_artists', $album_id))
-            ? parent::get_from_cache('album_artists', $album_id)
+        $key     = ($object_type === 'album') ? 'album_artists' : 'album_map_' . $object_type;
+        $results = (parent::is_cached($key, $album_id))
+            ? parent::get_from_cache($key, $album_id)
             : self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
         $primary = ((int) $primary_id > 0)
             ? [(int) $primary_id]
@@ -910,6 +927,10 @@ class Album extends database_object implements
      */
     public function getDisks(): iterable
     {
+        if (parent::is_cached('album_disk_ids', $this->id)) {
+            return array_map(static fn(int $id): AlbumDisk => new AlbumDisk($id), parent::get_from_cache('album_disk_ids', $this->id));
+        }
+
         return $this->getAlbumDiskRepository()->getByAlbum($this);
     }
 

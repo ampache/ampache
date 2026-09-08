@@ -67,7 +67,11 @@ final class PlaylistSongs3Method implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         $playlist = new Playlist((int) $input['filter']);
-        $items    = $playlist->get_items();
+
+        // a private list you neither own nor collaborate on is not yours to read
+        $items = ($playlist->isNew() || $playlist->type === 'public' || $playlist->has_collaborate($user))
+            ? $playlist->get_items()
+            : [];
 
         $results = [];
         foreach ($items as $object) {

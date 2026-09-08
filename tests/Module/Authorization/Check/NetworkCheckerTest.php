@@ -50,6 +50,22 @@ class NetworkCheckerTest extends TestCase
         self::assertFalse($this->subject->check(AccessTypeEnum::API));
     }
 
+    public function testCheckAsksTheRepositoryOncePerUserAndLevel(): void
+    {
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ACCESS_CONTROL)
+            ->willReturn(true);
+
+        // a page of songs asks once per song; the answer cannot change while the request runs
+        $this->accessRepository->expects(static::exactly(2))
+            ->method('findByIp')
+            ->willReturnCallback(static fn(string $ip, AccessLevelEnum $level, AccessTypeEnum $type, ?int $userId): bool => $userId === 21);
+
+        self::assertTrue($this->subject->check(AccessTypeEnum::NETWORK, 21));
+        self::assertTrue($this->subject->check(AccessTypeEnum::NETWORK, 21));
+        self::assertFalse($this->subject->check(AccessTypeEnum::NETWORK, 22));
+    }
+
     public function testCheckDelegatesToAccessRepositoryWhenAccessControlEnabled(): void
     {
         $this->configContainer->method('isFeatureEnabled')

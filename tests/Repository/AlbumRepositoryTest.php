@@ -597,6 +597,57 @@ class AlbumRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getIdsByCatalogs(null, 0, 5));
     }
 
+    public function testGetMappedObjectIdsBulkDoesNothingForNoAlbums(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getMappedObjectIdsBulk([], 'song'));
+    }
+
+    public function testGetMappedObjectIdsBulkKeysTheRowsByAlbumAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `album_id`, `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` IN (?,?)',
+                ['song', 1, 2]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['album_id' => '2', 'object_id' => '10'],
+            ['album_id' => '2', 'object_id' => '11'],
+            false
+        );
+
+        self::assertSame(
+            [1 => [], 2 => [10, 11]],
+            $this->subject->getMappedObjectIdsBulk([1, 2], 'song')
+        );
+    }
+
+    public function testGetNamesReadsTheCachedRowInsteadOfTheDatabase(): void
+    {
+        Album::add_to_cache('album', 666, ['id' => 666, 'prefix' => null, 'name' => 'Some Album']);
+
+        $this->connection->expects(static::never())
+            ->method('fetchRow');
+
+        self::assertSame(
+            [
+                'prefix' => null,
+                'basename' => 'Some Album',
+                'name' => 'Some Album',
+            ],
+            $this->subject->getNames(666)
+        );
+
+        Album::clear_cache();
+    }
+
     public function testGetNamesReturnsArrayWithDefaultsIfEmpty(): void
     {
         $albumId = 666;

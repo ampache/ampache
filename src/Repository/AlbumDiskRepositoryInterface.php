@@ -61,6 +61,14 @@ interface AlbumDiskRepositoryInterface
     public function getByAlbum(Album $album): array;
 
     /**
+     * Every disk row of a set of albums, read in one go
+     *
+     * @param array<int|string> $albumIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByAlbums(array $albumIds): array;
+
+    /**
      * Returns the ids of every song on the disk
      *
      * @return int[]

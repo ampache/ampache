@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Art\Art;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -139,7 +142,7 @@ final class OpenSubsonic_Fields
     }
 
     /**
-     * parseEnhancedCues
+     * _parseEnhancedCues
      *
      * Split one Enhanced LRC line into its tag-free text and the word cues pointing into it. Returns an empty array
      * when the line carries no `<mm:ss.xx>` tags at all, so a plain LRC line stays a plain line.
@@ -594,5 +597,37 @@ final class OpenSubsonic_Fields
         }
 
         return (int) round($bitrate / 1000);
+    }
+
+    /**
+     * @param array<int|string> $ids
+     */
+    public function warmAlbums(array $ids): void
+    {
+        Album::build_cache($ids);
+        Rating::build_cache('album', $ids);
+        Userflag::build_cache('album', $ids);
+    }
+
+    /**
+     * @param array<int|string> $ids
+     */
+    public function warmArtists(array $ids): void
+    {
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
+    }
+
+    /**
+     * Playlists and smartlists come mixed (`smart_12`), each kind has its own cache
+     *
+     * @param array<int|string> $ids
+     */
+    public function warmPlaylists(array $ids): void
+    {
+        $split = Playlist::split_mixed_ids($ids);
+        Playlist::build_cache($split['playlist']);
+        Search::build_cache($split['search']);
     }
 }

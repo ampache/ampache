@@ -40,6 +40,9 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class StreamProxy implements StreamProxyInterface
 {
+    /** @var int How many redirects a proxied stream will follow, each one checked before it is connected to */
+    private const int MAX_REDIRECTS = 10;
+
     public function __construct(
         private LoggerInterface $logger,
         private UrlValidatorInterface $urlValidator,
@@ -51,54 +54,124 @@ final readonly class StreamProxy implements StreamProxyInterface
             return false;
         }
 
-        // The url comes from a stored live_stream/remote row, so it is refetched from the network on every
-        // play; curl still follows redirects server-side (see outputHeader()), each one checked in turn.
-        if (!$this->urlValidator->isPublicHttpUrl($url)) {
-            $this->logger->warning(
-                'Stream proxy refusing url: ' . $url,
+        // the url comes from a stored live_stream/remote row, so it is refetched from the network on every
+        // play; each hop is followed by hand below rather than left to curl, so its own address can be
+        // validated and pinned before connecting instead of curl re-resolving the hostname unchecked
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $target = $this->urlValidator->resolvePinnedTarget($url);
+            if ($target === null) {
+                $this->logger->warning(
+                    'Stream proxy refusing url: ' . $url,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return false;
+            }
+
+            $curl = curl_init($url);
+            if (!$curl) {
+                return false;
+            }
+
+            $this->logger->debug(
+                'Stream proxy: ' . $url,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            return false;
+            // a mutable holder rather than a by-reference closure capture, so the write callback's read of
+            // a value the header callback assigns later is typed by its declared property, not narrowed to
+            // the literal null it holds at the point the closures are defined
+            $redirect = new StreamRedirect();
+
+            curl_setopt_array(
+                $curl,
+                [
+                    CURLOPT_FAILONERROR => true,
+                    CURLOPT_HTTPHEADER => $this->getRequestHeaders(),
+                    CURLOPT_HEADER => false,
+                    CURLOPT_RETURNTRANSFER => false,
+                    CURLOPT_FOLLOWLOCATION => false,
+                    CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
+                    CURLOPT_WRITEFUNCTION => function (CurlHandle $curl, string $data) use ($redirect): int {
+                        unset($curl);
+
+                        // a redirect response's own body, if it has one, is never the media the client asked for
+                        if ($redirect->location !== null) {
+                            return strlen($data);
+                        }
+
+                        echo $data;
+                        ob_flush();
+                        flush();
+
+                        return strlen($data);
+                    },
+                    CURLOPT_HEADERFUNCTION => function (CurlHandle $curl, string $header) use ($redirect): int {
+                        return $this->captureHeader($curl, $header, $redirect);
+                    },
+                    // Default trusted chain is crap anyway and currently no custom CA option
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    // a radio station never ends, so the transfer must not time out
+                    CURLOPT_TIMEOUT => 0,
+                ]
+            );
+
+            $success = curl_exec($curl) !== false;
+            $error   = curl_error($curl);
+            curl_close($curl);
+
+            if ($redirect->location !== null) {
+                $url = $redirect->location;
+
+                continue;
+            }
+
+            if (!$success) {
+                $this->logger->error(
+                    'Stream proxy error: ' . $error,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+
+            return $success;
         }
 
-        $curl = curl_init($url);
-        if (!$curl) {
-            return false;
-        }
-
-        $this->logger->debug(
-            'Stream proxy: ' . $url,
+        $this->logger->warning(
+            'Stream proxy: too many redirects fetching ' . $url,
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_FAILONERROR => true,
-                CURLOPT_HTTPHEADER => $this->getRequestHeaders(),
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => false,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_WRITEFUNCTION => $this->outputBody(...),
-                CURLOPT_HEADERFUNCTION => $this->outputHeader(...),
-                // Default trusted chain is crap anyway and currently no custom CA option
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                // a radio station never ends, so the transfer must not time out
-                CURLOPT_TIMEOUT => 0,
-            ]
-        );
+        return false;
+    }
 
-        $success = curl_exec($curl) !== false;
-        if (!$success) {
-            $this->logger->error(
-                'Stream proxy error: ' . curl_error($curl),
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+    /**
+     * Reads one response header line; a Location is recorded rather than followed, so the caller can validate
+     * and pin the next hop itself instead of curl reconnecting to a hostname nobody re-checked
+     */
+    private function captureHeader(CurlHandle $curl, string $header, StreamRedirect $redirect): int
+    {
+        $rheader = trim($header);
+        $rhpart  = explode(':', $rheader);
+        // the status line carries no colon, and a range request has to keep its 206 rather than fall back to 200
+        if (preg_match('~^HTTP/[\d.]+\s+(\d{3})~', $rheader, $matches) === 1) {
+            http_response_code((int) $matches[1]);
+
+            return strlen($header);
         }
 
-        return $success;
+        if (strcasecmp($rhpart[0], 'Location') === 0 && count($rhpart) > 1) {
+            $redirect->location = $this->resolveRedirectLocation($curl, trim(substr($rheader, strlen($rhpart[0]) + 1)));
+
+            return strlen($header);
+        }
+
+        // this server decides the transfer encoding, so passing the remote one on would corrupt the response
+        if ($rheader !== '' && count($rhpart) > 1 && $rhpart[0] !== 'Transfer-Encoding') {
+            header($rheader);
+        }
+
+        return strlen($header);
     }
 
     /**
@@ -121,50 +194,6 @@ final readonly class StreamProxy implements StreamProxyInterface
         $reqheaders[] = 'X-Forwarded-For: ' . Core::get_user_ip();
 
         return $reqheaders;
-    }
-
-    private function outputBody(CurlHandle $curl, string $data): int
-    {
-        unset($curl);
-
-        echo $data;
-        ob_flush();
-        flush();
-
-        return strlen($data);
-    }
-
-    private function outputHeader(CurlHandle $curl, string $header): int
-    {
-        $rheader = trim($header);
-        $rhpart  = explode(':', $rheader);
-        // the status line carries no colon, and a range request has to keep its 206 rather than fall back to 200
-        if (preg_match('~^HTTP/[\d.]+\s+(\d{3})~', $rheader, $matches) === 1) {
-            http_response_code((int) $matches[1]);
-
-            return strlen($header);
-        }
-
-        // curl follows this redirect itself; refuse the hop rather than let it reach a private address
-        if (strcasecmp($rhpart[0], 'Location') === 0 && count($rhpart) > 1) {
-            $location = $this->resolveRedirectLocation($curl, trim(substr($rheader, strlen($rhpart[0]) + 1)));
-            if (!$this->urlValidator->isPublicHttpUrl($location)) {
-                $this->logger->warning(
-                    'Stream proxy refusing redirect to: ' . $location,
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-
-                // any return value other than the header's own length aborts the transfer
-                return 0;
-            }
-        }
-
-        // this server decides the transfer encoding, so passing the remote one on would corrupt the response
-        if ($rheader !== '' && count($rhpart) > 1 && $rhpart[0] !== 'Transfer-Encoding') {
-            header($rheader);
-        }
-
-        return strlen($header);
     }
 
     /**

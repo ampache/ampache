@@ -98,15 +98,24 @@ class Playlist extends playlist_object
             return false;
         }
 
-        foreach (self::getPlaylistRepository()->getRowsByIds(array_values($ids)) as $row) {
+        $repository = self::getPlaylistRepository();
+        $owners     = [];
+        foreach ($repository->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('playlist', $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
         }
 
         Art::build_cache($ids, 'playlist');
 
-        // the rating widget on every row reads the average: one bulk read instead of one query per row
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('playlist', $ids);
+        // has_search() compares every row against the owner's smartlists and the public ones: read once per page
+        if ($owners !== []) {
+            $global_user = (int) (Core::get_global('user')?->getId());
+            $public      = $repository->findSearchNames($global_user, false);
+            foreach ($repository->findOwnedSearchNamesBulk(array_values($owners)) as $owner => $owned) {
+                parent::add_to_cache('playlist_search_names', $owner . '/' . $global_user, [$owned, $public]);
+            }
         }
 
         return true;
@@ -250,6 +259,27 @@ class Playlist extends playlist_object
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         self::getPlaylistRepository()->migrateObject($object_type, $old_object_id, $new_object_id);
+    }
+
+    /**
+     * Splits the id list of a playlist_search browse, which mixes playlist ids with `smart_` prefixed search ids
+     *
+     * @param array<int|string> $object_ids
+     *
+     * @return array{playlist: list<int>, search: list<int>}
+     */
+    public static function split_mixed_ids(array $object_ids): array
+    {
+        $split = ['playlist' => [], 'search' => []];
+        foreach ($object_ids as $object_id) {
+            if (is_string($object_id) && str_starts_with($object_id, 'smart_')) {
+                $split['search'][] = (int) substr($object_id, 6);
+            } else {
+                $split['playlist'][] = (int) $object_id;
+            }
+        }
+
+        return $split;
     }
 
     /**
@@ -582,10 +612,23 @@ class Playlist extends playlist_object
      */
     public function has_search(int $playlist_user): int
     {
-        $repository = self::getPlaylistRepository();
+        $repository  = self::getPlaylistRepository();
+        $global_user = (int) (Core::get_global('user')?->getId());
+
+        // the name lists are the same for every row of a page, so read them once
+        $cache_key = $playlist_user . '/' . $global_user;
+        if (parent::is_cached('playlist_search_names', $cache_key)) {
+            $name_lists = parent::get_from_cache('playlist_search_names', $cache_key);
+        } else {
+            $name_lists = [
+                $repository->findSearchNames($playlist_user, true),
+                $repository->findSearchNames($global_user, false),
+            ];
+            parent::add_to_cache('playlist_search_names', $cache_key, $name_lists);
+        }
 
         // search for your own playlist, then for the public ones
-        foreach ([$repository->findSearchNames($playlist_user, true), $repository->findSearchNames((int) (Core::get_global('user')?->getId()), false)] as $names) {
+        foreach ($name_lists as $names) {
             $searchId = array_search($this->name, $names, true);
             if ($searchId !== false) {
                 return (int) $searchId;
@@ -664,7 +707,7 @@ class Playlist extends playlist_object
      */
     public function update_track_number(int $track_id, int $index): void
     {
-        self::getPlaylistRepository()->setTrackNumber($track_id, $index);
+        self::getPlaylistRepository()->setTrackNumber($track_id, $index, $this->id);
     }
 
     /**

@@ -58,7 +58,8 @@ final class MashupView extends AbstractView
 
     public function createBrowse(): Browse
     {
-        return $this->browseFactory->create();
+        // these boxes are never stored, so they need no tmp_browse row
+        return $this->browseFactory->create(null, false);
     }
 
     public function getDashboardForm(): DashboardFormView

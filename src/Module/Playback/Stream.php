@@ -1084,7 +1084,7 @@ class Stream
     }
 
     /**
-     * start_process
+     * _start_process
      * @param array{format?: string} $settings
      * @return array{
      *     handle: resource|null,

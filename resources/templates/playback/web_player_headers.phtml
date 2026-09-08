@@ -112,7 +112,9 @@ if ($this->isIframed()) { ?>
 
         <?php
         if ($this->showSongPageTitle()) {
-            echo 'window.parent.document.title = ' . $this->raw($this->getSiteTitleJs()) . ';';
+            // the page set its own tab title, so stopping playback gives that back rather than the bare site name
+            echo 'window.parent.AmpacheNowPlayingTitle = null;';
+            echo 'window.parent.document.title = window.parent.AmpachePageTitle || ' . $this->raw($this->getSiteTitleJs()) . ';';
         } ?>
         document.onbeforeunload = null;
     }
@@ -683,8 +685,11 @@ if ($this->isIframed()) { ?>
         $('.jp-seek-bar').css('pointer-events', 'none');
 
         brconn.onopen = function(e) {
-            sendBroadcastMessage('AUTH_SID', <?php echo $this->raw($this->getStreamSessionJs()); ?>);
-            sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
+            // fetched on connect: rendering it inline created a stream session on every page view
+            $.getJSON(jsAjaxUrl + '?page=player&action=stream_session', function(data) {
+                sendBroadcastMessage('AUTH_SID', data.session);
+                sendBroadcastMessage('REGISTER_LISTENER', broadcast_id);
+            });
         };
     }
 

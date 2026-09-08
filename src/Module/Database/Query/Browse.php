@@ -222,6 +222,14 @@ class Browse extends Query
     }
 
     /**
+     * @return string[]
+     */
+    public function get_show_columns(): array
+    {
+        return $this->_state['show_columns'] ?? [];
+    }
+
+    /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
      * @return array<string, Playlist|Search|Folder|Collection>
@@ -315,7 +323,7 @@ class Browse extends Query
     }
 
     /**
-     * is_mashup
+     * is_use_filters
      */
     public function is_use_filters(): bool
     {
@@ -376,6 +384,16 @@ class Browse extends Query
     public function set_mashup(bool $mashup): void
     {
         $this->_state['mashup'] = $mashup;
+    }
+
+    /**
+     * Columns a page opts into. They ride the browse state, so an ajax page or sort keeps them.
+     *
+     * @param string[] $columns
+     */
+    public function set_show_columns(array $columns): void
+    {
+        $this->_state['show_columns'] = $columns;
     }
 
     /**
@@ -613,7 +631,15 @@ class Browse extends Query
         $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
         if ($renderer === null) {
-            debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            if ($type === '') {
+                // An unknown browse id leaves the type empty, which is what a crawler replaying an expired
+                // url looks like. Reporting that as a missing renderer filled the log with level 1 lines
+                // for something entirely routine.
+                debug_event(self::class, 'show_objects: browse {' . $this->id . '} not found or expired', 5);
+            } else {
+                // a type that is set but has no renderer is a real gap, and worth the severity
+                debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            }
         }
 
         // an album list may be titled and grouped by whatever asked for it

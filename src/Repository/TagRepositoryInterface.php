@@ -140,7 +140,7 @@ interface TagRepositoryInterface
     /**
      * The same rows getTopTags() returns, for a whole page of objects at once.
      *
-     * @param list<int> $objectIds
+     * @param array<int|string> $objectIds
      * @return array<int, list<array{id: int, name: string, is_hidden: int, user: int, count: int}>>
      */
     public function getTopTagsBulk(string $objectType, array $objectIds): array;

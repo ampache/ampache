@@ -269,17 +269,19 @@ class Ajax
             // Avoid duplicate id
             $source .= '_' . time() . '_' . self::$counter++;
 
-            // Format the string we wanna use
-            $ajax_string = self::action($action, $source, $post);
-
             // If they passed a span class
             if ($class) {
                 $class = ' class="' . $class . '"';
             }
 
-            $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+            // Same as button(): carry the action in data-* attributes rather than one inline <script>
+            // observer per link, and let the delegated handler in src/js/ajax.js replay it.
+            $attributes = ' data-ajax="1" data-ajax-url="' . scrub_out(self::url($action)) . '"';
+            if ($post !== null && $post !== '') {
+                $attributes .= ' data-ajax-post="' . scrub_out($post) . '"';
+            }
 
-            $string .= self::observe($source, 'click', $ajax_string);
+            $string = "<a href=\"javascript:void(0);\" id=\"$source\"$attributes $class>$text</a>\n";
         } else {
             $string = $text;
         }

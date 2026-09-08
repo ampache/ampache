@@ -70,16 +70,19 @@ class Subsonic_Json_Data
 {
     private AlbumRepositoryInterface $albumRepository;
     private FolderRepositoryInterface $folderRepository;
+    private OpenSubsonic_Fields $openSubsonicFields;
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         FolderRepositoryInterface $folderRepository,
         SongRepositoryInterface $songRepository,
+        OpenSubsonic_Fields $openSubsonicFields,
     ) {
-        $this->albumRepository  = $albumRepository;
-        $this->folderRepository = $folderRepository;
-        $this->songRepository   = $songRepository;
+        $this->albumRepository    = $albumRepository;
+        $this->folderRepository   = $folderRepository;
+        $this->songRepository     = $songRepository;
+        $this->openSubsonicFields = $openSubsonicFields;
     }
 
     /**
@@ -141,6 +144,7 @@ class Subsonic_Json_Data
     public function addAlbumList(array $response, array $albums): array
     {
         $json = ['album' => []];
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -166,6 +170,7 @@ class Subsonic_Json_Data
     public function addAlbumList2(array $response, array $albums): array
     {
         $json = ['album' => []];
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -298,7 +303,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addArtistsID3
+     * addArtists
      *
      * A list of indexed Artists.
      * https://opensubsonic.netlify.app/docs/responses/artistsid3/
@@ -635,7 +640,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addJukeboxPlaylistSubsonic
+     * addJukeboxPlaylist
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -662,7 +667,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addJukeboxStatusSubsonic
+     * addJukeboxStatus
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -893,6 +898,7 @@ class Subsonic_Json_Data
     public function addPlaylists(array $response, User $user, array $playlists): array
     {
         $json = ['playlist' => []];
+        $this->openSubsonicFields->warmPlaylists($playlists);
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -1046,7 +1052,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addPodcastEpside
+     * addPodcastEpisode
      *
      * Podcasts.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
@@ -1094,7 +1100,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addRandomSongsSubsonic
+     * addRandomSongs
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1102,6 +1108,7 @@ class Subsonic_Json_Data
     public function addRandomSongs(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1181,6 +1188,7 @@ class Subsonic_Json_Data
         $json = [];
 
         if (!empty($songs)) {
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1214,6 +1222,7 @@ class Subsonic_Json_Data
 
         if (!empty($artists)) {
             $json['artist'] = [];
+            $this->openSubsonicFields->warmArtists($artists);
             foreach ($artists as $artist_id) {
                 $artist = new Artist($artist_id);
                 if ($artist->isNew()) {
@@ -1225,6 +1234,7 @@ class Subsonic_Json_Data
         }
         if (!empty($albums)) {
             $json['album'] = [];
+            $this->openSubsonicFields->warmAlbums($albums);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -1235,6 +1245,7 @@ class Subsonic_Json_Data
         }
         if (!empty($songs)) {
             $json['song'] = [];
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1266,6 +1277,7 @@ class Subsonic_Json_Data
 
         if (!empty($artists)) {
             $output_artists = [];
+            $this->openSubsonicFields->warmArtists($artists);
             foreach ($artists as $artist_id) {
                 $artist = new Artist($artist_id);
                 if ($artist->isNew()) {
@@ -1277,6 +1289,7 @@ class Subsonic_Json_Data
         }
         if (!empty($albums)) {
             $output_albums = [];
+            $this->openSubsonicFields->warmAlbums($albums);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -1288,6 +1301,7 @@ class Subsonic_Json_Data
         }
         if (!empty($songs)) {
             $json['song'] = [];
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1428,7 +1442,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addSongsByGenreSubsonic
+     * addSongsByGenre
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1436,6 +1450,7 @@ class Subsonic_Json_Data
     public function addSongsByGenre(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1467,6 +1482,7 @@ class Subsonic_Json_Data
             'song' => [],
         ];
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1479,6 +1495,7 @@ class Subsonic_Json_Data
             unset($json['artist']);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1490,6 +1507,7 @@ class Subsonic_Json_Data
             unset($json['album']);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1526,6 +1544,7 @@ class Subsonic_Json_Data
             'song' => [],
         ];
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1538,6 +1557,7 @@ class Subsonic_Json_Data
             unset($json['artist']);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1550,6 +1570,7 @@ class Subsonic_Json_Data
             unset($json['album']);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1594,6 +1615,7 @@ class Subsonic_Json_Data
     public function addTopSongs(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1815,6 +1837,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $allsongs = $this->albumRepository->getSongs($album->getId());
             $entries  = [];
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1880,6 +1903,7 @@ class Subsonic_Json_Data
         if ($AlbumID3) {
             $allalbums = $this->albumRepository->getAlbumByArtist($artist->id);
             $albumJson = [];
+            $this->openSubsonicFields->warmAlbums($allalbums);
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -2251,7 +2275,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildArray
+     * _getChildArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -2338,7 +2362,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildPodcastEpisodeSubsonic
+     * _getChildPodcastEpisode
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2556,7 +2580,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildVideoSubsonic
+     * _getChildVideo
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2695,6 +2719,7 @@ class Subsonic_Json_Data
 
         $media_ids     = $this->albumRepository->getSongs($album_id);
         $json['child'] = [];
+        Song::build_cache($media_ids);
         foreach ($media_ids as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -2740,6 +2765,7 @@ class Subsonic_Json_Data
 
         $allalbums     = $this->albumRepository->getAlbumByArtist($artist_id);
         $json['child'] = [];
+        $this->openSubsonicFields->warmAlbums($allalbums);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -2927,7 +2953,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _addIgnoredArticles
+     * _getIgnoredArticles
      */
     private function _getIgnoredArticles(): string
     {
@@ -3084,8 +3110,10 @@ class Subsonic_Json_Data
     private function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
         $sub_id    = Subsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        // the stored totals, the same source the smartlists in this class already serve: a page of
+        // playlists used to pay two joined queries per row for these two numbers
+        $songcount = (int) $playlist->last_count;
+        $duration  = (int) $playlist->last_duration;
 
         $json = [
             'id' => $sub_id,
@@ -3105,6 +3133,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $json['entry'] = [];
             $allsongs      = $playlist->get_songs();
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3155,6 +3184,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $allsongs = $search->get_songs();
             $entries  = [];
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3334,6 +3364,7 @@ class Subsonic_Json_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3343,6 +3374,7 @@ class Subsonic_Json_Data
             }
         } elseif ($share->object_type == 'album') {
             $songs = $this->songRepository->getByAlbum($share->object_id);
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3356,7 +3388,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addStructuredLyrics
+     * _getStructuredLyrics
      *
      * Structured lyricsSubsonic
      * @return array{

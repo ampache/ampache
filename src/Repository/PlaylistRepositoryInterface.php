@@ -67,6 +67,15 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function deleteTrackByObjectId(Playlist $playlist, int $objectId): void;
 
     /**
+     * Reads the playlists a user may add items to: the ones they own, plus the ones naming them as a
+     * collaborator. Access level plays no part, so an admin gets a usable list rather than every playlist
+     * on the server.
+     *
+     * @return list<int>
+     */
+    public function findEditableIds(int $userId): array;
+
+    /**
      * Reads the id of a user's playlist with this exact name and type, or `null` when they have none
      */
     public function findIdByName(string $name, int $userId, string $type): ?int;
@@ -91,6 +100,14 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
      * @return array<int, string>
      */
     public function findNames(int $userId, bool $isAdmin): array;
+
+    /**
+     * Reads the saved smartlists a set of users own, as user => (id => name)
+     *
+     * @param list<int> $userIds
+     * @return array<int, array<int, string>>
+     */
+    public function findOwnedSearchNamesBulk(array $userIds): array;
 
     /**
      * Reads the saved smartlists a user can reach, as id => name
@@ -183,7 +200,7 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     /**
      * Stores the position of one entry
      */
-    public function setTrackNumber(int $trackId, int $track): void;
+    public function setTrackNumber(int $trackId, int $track, int $playlistId): void;
 
     /**
      * Writes new positions for a set of entries in one statement

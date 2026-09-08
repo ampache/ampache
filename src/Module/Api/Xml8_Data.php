@@ -162,7 +162,7 @@ final class Xml8_Data
     }
 
     /**
-     * genre_string
+     * _genre_string
      *
      * This returns the formatted 'genre' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
@@ -193,7 +193,7 @@ final class Xml8_Data
     }
 
     /**
-     * mood_string
+     * _mood_string
      *
      * This returns the formatted 'mood' string for an xml document
      *
@@ -320,6 +320,10 @@ final class Xml8_Data
         Album::build_cache($objects);
         Rating::build_cache('album', $objects);
         Userflag::build_cache('album', $objects);
+        // the songs of every album on the page, read once instead of once per album
+        if (count($objects) > 1 && in_array('songs', $include, true)) {
+            Song::build_cache($this->songRepository->getIdsByAlbums($objects));
+        }
 
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -385,6 +389,15 @@ final class Xml8_Data
         Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
         Userflag::build_cache('artist', $objects);
+        // the albums and songs of every artist on the page, read once instead of once per artist
+        if (count($objects) > 1) {
+            if (in_array('albums', $include, true)) {
+                Album::build_cache($this->albumRepository->getIdsByArtists($objects));
+            }
+            if (in_array('songs', $include, true)) {
+                Song::build_cache($this->songRepository->getIdsByArtists($objects));
+            }
+        }
 
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -862,7 +875,7 @@ final class Xml8_Data
     }
 
     /**
-     * indexes
+     * index
      *
      * This takes an array of object_ids and return XML based on the type of object
      * we want
@@ -1032,6 +1045,27 @@ final class Xml8_Data
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
+        // the page's objects, and the children an include renders under each of them, read once
+        switch ($object_type) {
+            case 'song':
+                Song::build_cache($objects);
+                break;
+            case 'album':
+                Album::build_cache($objects);
+                if ($include && count($objects) > 1) {
+                    Song::build_cache($this->songRepository->getIdsByAlbums($objects));
+                }
+                break;
+            case 'artist':
+            case 'album_artist':
+            case 'song_artist':
+                Artist::build_cache($objects);
+                if ($include && count($objects) > 1) {
+                    Album::build_cache($this->albumRepository->getIdsByArtists($objects));
+                    Song::build_cache($this->songRepository->getIdsByArtists($objects));
+                }
+                break;
+        }
 
         // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
@@ -1123,7 +1157,7 @@ final class Xml8_Data
                         $playitem_total = $playlist->last_count;
                     } else {
                         $playlist       = new Playlist((int) $object_id);
-                        $playitem_total = $playlist->get_media_count('song');
+                        $playitem_total = $playlist->last_count;
                     }
 
                     if ($playlist->isNew()) {
@@ -1425,7 +1459,7 @@ final class Xml8_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $playitem_total = $playlist->get_media_count('song');
+                $playitem_total = (int) $playlist->last_count;
             }
 
             $duration = 0;
@@ -1573,6 +1607,7 @@ final class Xml8_Data
             switch ($object_type) {
                 case 'artist':
                     $objects = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+                    Artist::build_cache($objects);
                     foreach ($objects as $object_id) {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
@@ -1583,6 +1618,7 @@ final class Xml8_Data
                     break;
                 case 'album':
                     $objects = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+                    Album::build_cache($objects);
                     foreach ($objects as $object_id) {
                         $album = new Album((int) $object_id);
                         if ($album->isNew()) {
@@ -1604,6 +1640,7 @@ final class Xml8_Data
                     break;
                 case 'song':
                     $objects = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
+                    Song::build_cache($objects);
                     foreach ($objects as $object_id) {
                         $song = new Song((int) $object_id);
                         if ($song->isNew()) {
@@ -1632,7 +1669,7 @@ final class Xml8_Data
                             $playitem_total = $playlist->last_count;
                         } else {
                             $playlist       = new Playlist((int) $object_id);
-                            $playitem_total = $playlist->get_media_count('song');
+                            $playitem_total = $playlist->last_count;
                         }
 
                         if ($playlist->isNew()) {
@@ -1841,6 +1878,10 @@ final class Xml8_Data
             'track',
             'year',
         ];
+        // one song is not worth the page warm
+        if (count($objects) > 1) {
+            Song::build_cache($objects);
+        }
         foreach ($objects as $song_id) {
             $song = new Song((int) $song_id);
             if ($song->isNew()) {
@@ -1888,6 +1929,7 @@ final class Xml8_Data
         Song::build_cache($objects);
         Rating::build_cache('song', $objects);
         Userflag::build_cache('song', $objects);
+        Art::build_cache($objects, 'song');
         Stream::set_session($auth);
 
         $playlist_track = 0;

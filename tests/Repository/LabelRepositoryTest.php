@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Label;
 use DateTime;
@@ -150,6 +151,49 @@ class LabelRepositoryTest extends TestCase
             ->willReturnOnConsecutiveCalls(1, 2, false);
 
         self::assertSame([1, 2], $this->subject->getArtists($label));
+    }
+
+    public function testGetByAlbumReadsTheWarmPageInsteadOfTheDatabase(): void
+    {
+        database_object::add_to_cache('album_labels', 666, [7 => 'Some Label']);
+
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([7 => 'Some Label'], $this->subject->getByAlbum(666));
+
+        database_object::clear_cache();
+    }
+
+    public function testGetByAlbumsDoesNothingForNoAlbums(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getByAlbums([]));
+    }
+
+    public function testGetByAlbumsGroupsTheLabelsByAlbumAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `label_asso`.`album`, `label`.`id`, `label`.`name` FROM `label` INNER JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`album` IN (?,?)',
+                [1, 2]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['album' => '2', 'id' => '7', 'name' => 'Some Label'],
+            false
+        );
+
+        self::assertSame(
+            [1 => [], 2 => [7 => 'Some Label']],
+            $this->subject->getByAlbums([1, 2])
+        );
     }
 
     public function testGetByArtistReturnsData(): void

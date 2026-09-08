@@ -15,6 +15,14 @@
 
 * ALL
   * `handshake`: A disabled user account could still complete the handshake and receive a valid session
+  * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honoured it
+  * `stats`: The `user_id`/`username` override handed back another user's `streamtoken` embedded in each item's play url; the response now carries the caller's own token
+  * `rate`: An out-of-range value (e.g. `127`) was stored as-is instead of being clamped to 0-5, and repeatedly rating `0` could drain an object's popularity weight below `0`
+  * Setting `api_force_version` reopened an API version the admin had disabled, bypassing the `api_enable_3`..`api_enable_8` check
+* `flag` (API4, API5, API6, API8)
+  * A future `date` parameter pinned a favourite to the top of every newest list until real time caught up
+* API3
+  * `playlist`, `playlist_songs`: A private playlist or smartlist you neither own nor collaborate on was readable by anyone who guessed its id
 * API5
   * `ping`: `server_details` returned server-wide catalog counts scoped to user id `0` when the auth token didn't resolve to a real user, instead of being rejected like API8 already was
 

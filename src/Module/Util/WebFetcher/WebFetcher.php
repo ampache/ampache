@@ -60,9 +60,9 @@ final readonly class WebFetcher implements WebFetcherInterface
     public function fetch(string $uri): string
     {
         for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
-            $this->assertFetchable($uri);
+            $target = $this->assertFetchable($uri);
 
-            $curl = $this->setupCurl();
+            $curl = $this->setupCurl($target);
 
             $this->logger->debug(
                 sprintf('Fetching url: %s', $uri),
@@ -104,9 +104,9 @@ final readonly class WebFetcher implements WebFetcherInterface
         string $destinationFilePath,
     ): void {
         for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
-            $this->assertFetchable($uri);
+            $target = $this->assertFetchable($uri);
 
-            $curl = $this->setupCurl();
+            $curl = $this->setupCurl($target);
             $curl->setReferer($uri);
 
             $result       = $curl->download($uri, $destinationFilePath);
@@ -143,13 +143,17 @@ final readonly class WebFetcher implements WebFetcherInterface
     }
 
     /**
-     * Refuses a url the server must not request on someone else's behalf
+     * Refuses a url the server must not request on someone else's behalf, and returns the address to pin the
+     * connection to, so a name that resolves differently between this check and curl's own lookup can't slip
+     * a private address past it
      *
+     * @return array{host: string, port: int, address: string}
      * @throws FetchFailedException
      */
-    private function assertFetchable(string $uri): void
+    private function assertFetchable(string $uri): array
     {
-        if (!$this->urlValidator->isPublicHttpUrl($uri)) {
+        $target = $this->urlValidator->resolvePinnedTarget($uri);
+        if ($target === null) {
             $this->logger->warning(
                 sprintf('Refusing to fetch url: %s', $uri),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -159,6 +163,8 @@ final readonly class WebFetcher implements WebFetcherInterface
                 sprintf('Refusing to fetch url: %s', $uri)
             );
         }
+
+        return $target;
     }
 
     /**
@@ -199,8 +205,10 @@ final readonly class WebFetcher implements WebFetcherInterface
 
     /**
      * Sets up the curl session with configured defaults
+     *
+     * @param array{host: string, port: int, address: string} $target
      */
-    private function setupCurl(): Curl
+    private function setupCurl(array $target): Curl
     {
         $proxyHost = $this->config->get(ConfigurationKeyEnum::PROXY_HOST);
         $proxyPort = $this->config->get(ConfigurationKeyEnum::PROXY_PORT);
@@ -213,6 +221,9 @@ final readonly class WebFetcher implements WebFetcherInterface
         $curl->setRedirectProtocols(CURLPROTO_HTTP | CURLPROTO_HTTPS);
         $curl->setTimeout(self::TIMEOUT);
         $curl->setUserAgent(sprintf('Ampache/%s', $this->config->getVersion()));
+        // pins the connection to the address assertFetchable() already validated, so curl's own DNS lookup
+        // at connect time can't be answered differently than the check just above it was
+        $curl->setOpt(CURLOPT_RESOLVE, [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])]);
 
         if ($proxyHost && $proxyPort) {
             if ($proxyUser === '') {

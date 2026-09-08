@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Image;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
@@ -48,6 +49,7 @@ final readonly class ShowUserAvatarAction extends AbstractShowAction
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
+        GeneratedArtServiceInterface $generatedArt,
     ) {
         parent::__construct(
             $requestParser,
@@ -56,7 +58,8 @@ final readonly class ShowUserAvatarAction extends AbstractShowAction
             $horde_browser,
             $responseFactory,
             $streamFactory,
-            $logger
+            $logger,
+            $generatedArt
         );
     }
 

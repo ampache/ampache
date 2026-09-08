@@ -120,6 +120,14 @@ interface MoodRepositoryInterface
     public function getTopMoods(string $objectType, int $objectId, int $limit): array;
 
     /**
+     * The moods mapped onto a set of objects, read in one go
+     *
+     * @param array<int|string> $objectIds
+     * @return array<int, list<array{id: int, name: string, user: int, count: int}>>
+     */
+    public function getTopMoodsBulk(string $objectType, array $objectIds): array;
+
+    /**
      * Steps the per-type counter up
      */
     public function incrementCount(int $moodId, MoodCountTypeEnum $type): void;

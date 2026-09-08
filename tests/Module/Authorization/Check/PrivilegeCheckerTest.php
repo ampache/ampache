@@ -65,6 +65,24 @@ class PrivilegeCheckerTest extends TestCase
         self::assertTrue($this->subject->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, 21));
     }
 
+    public function testCheckLocalplayComparesUserAccessToRequiredLevel(): void
+    {
+        // the old predicate compared the config to itself, so every user passed
+        $this->configContainer->method('isFeatureEnabled')
+            ->willReturn(false);
+
+        $user         = $this->createMock(User::class);
+        $user->id     = 21;
+        $user->access = AccessLevelEnum::USER->value;
+
+        $this->modelFactory->method('createUser')
+            ->with(21)
+            ->willReturn($user);
+
+        self::assertTrue($this->subject->check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::USER, 21));
+        self::assertFalse($this->subject->check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER, 21));
+    }
+
     public function testCheckReturnsFalseForUnsupportedType(): void
     {
         $this->configContainer->method('isFeatureEnabled')

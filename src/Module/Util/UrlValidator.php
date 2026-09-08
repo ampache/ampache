@@ -38,21 +38,37 @@ final readonly class UrlValidator implements UrlValidatorInterface
 
     public function isPublicHttpUrl(string $url): bool
     {
+        return $this->resolvePinnedTarget($url) !== null;
+    }
+
+    public function resolvePinnedTarget(string $url): ?array
+    {
         $parts = parse_url($url);
-        if (
-            $parts === false
-            || empty($parts['host'])
-            || !in_array(strtolower((string) ($parts['scheme'] ?? '')), self::SCHEMES, true)
-        ) {
-            return false;
+        if ($parts === false || empty($parts['host'])) {
+            return null;
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        if (!in_array($scheme, self::SCHEMES, true)) {
+            return null;
         }
 
         $addresses = $this->resolve($parts['host']);
         if ($addresses === []) {
-            return false;
+            return null;
         }
 
-        return array_all($addresses, fn($address) => filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false);
+        $allPublic = array_all($addresses, fn($address) => filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false);
+        if (!$allPublic) {
+            return null;
+        }
+
+        return [
+            // bracketed in a url, but CURLOPT_RESOLVE (and gethostbynamel above) both want it bare
+            'host' => trim($parts['host'], '[]'),
+            'port' => $parts['port'] ?? ($scheme === 'https' ? 443 : 80),
+            'address' => $addresses[0],
+        ];
     }
 
     /**
