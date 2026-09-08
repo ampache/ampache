@@ -1208,16 +1208,9 @@ class Art extends database_object
             return $escapedName;
         }
 
-        $reason = match ($type) {
-            'artist' => T_('no picture yet, drawn from the name'),
-            'playlist' => T_('no cover yet, drawn from the artists it holds'),
-            'song' => T_('no cover yet, drawn from the artist name'),
-            default => T_('no cover yet, drawn from the artist name'),
-        };
-
         /* HINT: %1$s is the item name, %2$s says what the drawing was made from */
         // the name arrives escaped, so only the translated half is escaped here
-        return sprintf(T_('%1$s — %2$s'), $escapedName, scrub_out($reason));
+        return sprintf(T_('%1$s — %2$s'), $escapedName, scrub_out(T_('no cover yet')));
     }
 
     /**

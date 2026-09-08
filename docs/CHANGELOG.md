@@ -61,6 +61,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * `user`.`apikey` carries an index, and the hashed-key fallback only reads the users holding a key
 * Play history search rules had no index
 * Whole-table sweeps moved out of the loops (subsonic scrobble, catalog add)
+* `docs/examples/nginx-site.conf` and `apache-site.conf` gained example per-IP rate limiting for `/login.php`, the API handshake and Subsonic
 
 ### Fixed (8.1.0)
 
@@ -109,6 +110,12 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
 * Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
+* A free-text user preference (e.g. `custom_datetime`) rendered unescaped into the admin preference-edit page (XSS)
+* `PlaylistUrlResolver` (radio station playback) fetched a station's playlist url without checking it was a public address first
+* `UrlValidator`'s check and the later curl fetch could resolve a hostname to different addresses (DNS rebinding); the fetch is now pinned to the address that was actually checked
+* `admin/catalog.php?action=clear_stats`, `system.php?action=reset_db_charset`, `action=clear_cache` and `action=clear_now_playing` didn't check the CSRF confirmation token either
+* The `set_rating`/`set_userflag` ajax actions had no CSRF check at all
+* Disabling a user, or changing their password, didn't revoke their `session_remember` cookie, so the old session could keep authenticating with it
 
 ## Ampache 8.0.1
 
