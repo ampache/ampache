@@ -239,7 +239,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     echo "</span>";
                 }
 
-                $results['action_buttons'] = ob_get_contents();
+                $results['action_buttons_' . $rating_id . '_' . $rating_type] = ob_get_contents();
                 ob_end_clean();
         }
 
