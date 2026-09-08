@@ -96,8 +96,6 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getExternalLinks(): string;
 
-    public function getExternalPlayIcon(): string;
-
     public function getExternalPlayUrl(): string;
 
     public function getGenre(): string;

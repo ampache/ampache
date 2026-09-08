@@ -2942,10 +2942,16 @@ a.option-list:hover {
 }
 
 .object-page #information_actions li.primary {
+    transition: background-color 0.1s;
+}
+
+.object-page #information_actions li.primary:hover,
+.object-page #information_actions li.primary:focus-within {
     background-color: var(--amp-accent);
 }
 
-.object-page #information_actions li.primary a {
+.object-page #information_actions li.primary:hover a,
+.object-page #information_actions li.primary:focus-within a {
     color: var(--amp-accent-ink);
 }
 

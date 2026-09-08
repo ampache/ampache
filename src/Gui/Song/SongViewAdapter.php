@@ -321,11 +321,6 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return $links;
     }
 
-    public function getExternalPlayIcon(): string
-    {
-        return Ui::get_material_symbol('link', T_('Link'));
-    }
-
     public function getExternalPlayUrl(): string
     {
         return $this->song->play_url(
