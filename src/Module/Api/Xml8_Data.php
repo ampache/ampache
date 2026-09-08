@@ -1448,14 +1448,15 @@ final class Xml8_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($playlist->isNew()) {
+                // a private list is only exposed to its owner or a collaborator, whatever route reached it
+                if ($playlist->isNew() || ($playlist->type !== 'public' && !$playlist->has_collaborate($user))) {
                     continue;
                 }
                 $object_type    = 'search';
                 $playitem_total = (int) $playlist->last_count;
             } else {
                 $playlist = new Playlist((int) $playlist_id);
-                if ($playlist->isNew()) {
+                if ($playlist->isNew() || ($playlist->type !== 'public' && !$playlist->has_collaborate($user))) {
                     continue;
                 }
                 $object_type    = 'playlist';
