@@ -39,6 +39,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
+use Ampache\Module\System\Session;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginGetAvatarUrlInterface;
@@ -617,8 +618,9 @@ class User extends database_object
         $this->disabled = true;
         self::remove_from_cache('user', $this->id);
 
-        // Delete any sessions they may have
+        // Delete any sessions they may have, including a persistent remember-me token
         $userRepository->deleteSessions((string) $this->username);
+        Session::remove_remember_token((string) $this->username);
 
         return true;
     }
@@ -1136,6 +1138,9 @@ class User extends database_object
         if ($this->store(UserFieldEnum::PASSWORD, $hashed_password)) {
             unset($_SESSION['userdata']['password']);
         }
+
+        // a persistent remember-me token issued under the old password must not outlive it
+        Session::remove_remember_token((string) $this->username);
     }
 
     public function update_state(string $new_state): void

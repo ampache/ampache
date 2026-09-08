@@ -73,7 +73,10 @@ final readonly class Session implements SessionInterface
             if (hash_equals(hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key')), (string) $mac)) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
-                if (Dba::num_rows($db_results) > 0) {
+                // a disabled account keeps its remember-me row until it expires, so the disabled flag
+                // still has to be checked here rather than trusting the row alone
+                $rememberedUser = User::get_from_username($username);
+                if (Dba::num_rows($db_results) > 0 && $rememberedUser instanceof User && !$rememberedUser->disabled) {
                     self::create_cookie();
                     self::create(
                         [

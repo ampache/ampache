@@ -23,59 +23,47 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Admin\Catalog;
+namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class ClearNowPlayingAction implements ApplicationActionInterface
+final readonly class ShowClearCacheAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'clear_now_playing';
+    public const string REQUEST_KEY = 'show_clear_cache';
 
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private RequestParserInterface $requestParser,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (
-            check_http_referer() === false
-            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
-            || !$this->requestParser->verifyForm('clear_now_playing')
-        ) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 
+        $type = (string) ($request->getQueryParams()['type'] ?? '');
+
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-
-            return null;
-        }
-
-        Stream::clear_now_playing();
-
         $this->ui->showConfirmation(
-            T_('No Problem'),
-            T_('All Now Playing data has been cleared'),
+            T_('Are You Sure?'),
+            T_('This will clear the selected cache'),
             sprintf(
-                '%s/catalog.php',
-                $this->configContainer->getWebPath('/admin')
-            )
+                '%s/system.php?action=clear_cache&type=%s',
+                $this->configContainer->getWebPath('/admin'),
+                rawurlencode($type)
+            ),
+            1,
+            'clear_cache'
         );
 
         $this->ui->showQueryStats();

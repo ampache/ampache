@@ -199,7 +199,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_rating':
                 /* Setting ratings */
-                if (User::is_registered()) {
+                if (User::is_registered() && check_http_referer() === true) {
                     ob_start();
                     $object_id = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $rating    = new Rating($object_id, Core::get_get('rating_type'));
@@ -213,7 +213,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_userflag':
                 /* Setting userflags */
-                if (User::is_registered()) {
+                if (User::is_registered() && check_http_referer() === true) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);

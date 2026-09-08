@@ -26,56 +26,38 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class ClearNowPlayingAction implements ApplicationActionInterface
+final readonly class ShowClearNowPlayingAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'clear_now_playing';
+    public const string REQUEST_KEY = 'show_clear_now_playing';
 
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private RequestParserInterface $requestParser,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (
-            check_http_referer() === false
-            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
-            || !$this->requestParser->verifyForm('clear_now_playing')
-        ) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-
-            return null;
-        }
-
-        Stream::clear_now_playing();
-
         $this->ui->showConfirmation(
-            T_('No Problem'),
-            T_('All Now Playing data has been cleared'),
-            sprintf(
-                '%s/catalog.php',
-                $this->configContainer->getWebPath('/admin')
-            )
+            T_('Are You Sure?'),
+            T_('This will clear all Now Playing data'),
+            sprintf('%s/catalog.php?action=clear_now_playing', $this->configContainer->getWebPath('/admin')),
+            1,
+            'clear_now_playing'
         );
 
         $this->ui->showQueryStats();

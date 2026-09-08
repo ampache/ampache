@@ -1014,7 +1014,7 @@ class Ui implements UiInterface
             } elseif ($value == '0') {
                 echo T_("Disabled");
             } else {
-                echo $value;
+                echo htmlspecialchars((string) $value, ENT_QUOTES);
             }
 
             return;
@@ -1676,7 +1676,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
-                echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
+                echo '<input type="text" name="' . $name . '" value="' . htmlspecialchars((string) $value, ENT_QUOTES) . '" />';
 
                 break;
         }
