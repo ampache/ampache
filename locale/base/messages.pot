@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 07:23+1000\n"
+"POT-Creation-Date: 2026-09-08 15:11+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3265,6 +3265,12 @@ msgstr ""
 msgid "The Catalog folder scan has started"
 msgstr ""
 
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr ""
 
@@ -3402,6 +3408,14 @@ msgstr ""
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
+msgstr ""
+
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
 msgstr ""
 
 msgid "Your Passwords don't match"
@@ -3857,19 +3871,13 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
-msgid "no picture yet, drawn from the name"
-msgstr ""
-
-msgid "no cover yet, drawn from the artists it holds"
-msgstr ""
-
-msgid "no cover yet, drawn from the artist name"
-msgstr ""
-
 #. HINT: %1$s is the item name, %2$s says what the drawing was made from
 #. the name arrives escaped, so only the translated half is escaped here
 #, php-format
 msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
 msgstr ""
 
 msgid "Unable to open"
