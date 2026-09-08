@@ -33,7 +33,6 @@ use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\Search;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -150,11 +149,26 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
             $objectType = 'search';
         }
 
-        $className = ObjectTypeToClassNameMapper::map($objectType);
-
-        /** @var Album|Artist|Playlist|Search|Song $item */
-        $item = new $className((int) $objectId);
+        $item = match ($objectType) {
+            'album' => $this->modelFactory->createAlbum((int) $objectId),
+            'artist' => $this->modelFactory->createArtist((int) $objectId),
+            'playlist' => $this->modelFactory->createPlaylist((int) $objectId),
+            'search' => $this->modelFactory->createSearch((int) $objectId),
+            default => $this->modelFactory->createSong((int) $objectId),
+        };
         if ($item->isNew()) {
+            throw new ResultEmptyException(
+                (string) $objectId,
+                'id'
+            );
+        }
+
+        // a private list you cannot see is not yours to expand into a playlist
+        if (
+            ($item instanceof Playlist || $item instanceof Search)
+            && $item->type !== 'public'
+            && !$item->has_collaborate($user)
+        ) {
             throw new ResultEmptyException(
                 (string) $objectId,
                 'id'

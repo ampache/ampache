@@ -25,6 +25,8 @@
   * `playlist`, `playlist_songs`: A private playlist or smartlist you neither own nor collaborate on was readable by anyone who guessed its id
 * API5
   * `ping`: `server_details` returned server-wide catalog counts scoped to user id `0` when the auth token didn't resolve to a real user, instead of being rejected like API8 already was
+* `playlist_add` (API6, API8)
+  * A private playlist or smartlist named as the source object was expanded into the caller's own playlist, leaking its songs; a non-public source you neither own nor collaborate on is now refused
 * `playlist_folder_items` (API8)
   * A private playlist or smartlist filed into a folder leaked its metadata through the folder listing, which gated only on existence; a non-public list you neither own nor collaborate on is now hidden from the output
 
