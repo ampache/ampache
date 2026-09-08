@@ -24,6 +24,8 @@ namespace Ampache\Module\Share;
 
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +34,7 @@ use Psr\Log\LoggerInterface;
 class ShareCreatorTest extends TestCase
 {
     private LoggerInterface&MockObject $logger;
+    private ModelFactoryInterface&MockObject $modelFactory;
     private PluginRetrieverInterface&MockObject $pluginRetriever;
     private ShareCreator $subject;
 
@@ -94,14 +97,34 @@ class ShareCreatorTest extends TestCase
         self::assertNull($result);
     }
 
+    public function testCreateReturnsNullWhenSharingAPrivateListYouCannotSee(): void
+    {
+        $user     = $this->createMock(User::class);
+        $playlist = $this->createMock(Playlist::class);
+
+        $this->modelFactory->method('createPlaylist')
+            ->with(42)
+            ->willReturn($playlist);
+        $playlist->type = 'private';
+        $playlist->method('has_collaborate')
+            ->with($user)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->create($user, LibraryItemEnum::PLAYLIST, 42)
+        );
+    }
+
     protected function setUp(): void
     {
         $this->pluginRetriever = $this->createMock(PluginRetrieverInterface::class);
         $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new ShareCreator(
             $this->pluginRetriever,
             $this->logger,
+            $this->modelFactory,
         );
     }
 }
