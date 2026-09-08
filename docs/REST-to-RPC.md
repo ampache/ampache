@@ -111,6 +111,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `catalogs/{catalog_id}/file`                         | `?action=catalog_file&filter={catalog_id}`                                       |                    |
 | GET    | `catalogs/{catalog_id}/folder`                       | `?action=catalog_folder&filter={catalog_id}`                                     |                    |
 | POST   | `catalogs/{catalog_id}/folder`                       | `?action=catalog_folder&filter={catalog_id}`                                     |                    |
+| POST   | `catalogs/{catalog_id}/scan`                         | `?action=catalog_action&filter={catalog_id}&task=scan_catalog_folders`           |                    |
 | POST   | `catalogs/{catalog_id}/update`                       | `?action=catalog_action&filter={catalog_id}&task=update_catalog`                 |                    |
 | POST   | `catalogs/{catalog_id}/verify`                       | `?action=catalog_action&filter={catalog_id}&task=verify_catalog`                 |                    |
 | GET    | `catalogs/{catalog_id}`                              | `?action=catalog&filter={catalog_id}`                                            |                    |

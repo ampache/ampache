@@ -822,12 +822,21 @@ abstract class Catalog extends database_object
             ? self::_check_length($results['albumartist'])
             : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
-        if (empty($results['albumartist'])) {
+        if (empty($results['albumartist']) && !isset($results['albumartist_id'])) {
             $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
 
-            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album'])))
-                ? $song->get_album_artist()
-                : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+            if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
+                $results['albumartist_id'] = $song->get_album_artist();
+            } elseif (empty($results['album'])) {
+                // nothing to group under, so an orphaned song still needs an album artist of its own
+                $results['albumartist_id'] = Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+            } else {
+                // One file cannot tell whether a named album has one artist or many. Taking the song artist
+                // here gave every artist on a compilation an album of the same name, because album_artist is
+                // part of an album's identity. update_album_artist() decides once every track is in, and only
+                // when they all agree on one artist.
+                $results['albumartist_id'] = null;
+            }
         }
 
         if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {
@@ -2063,6 +2072,19 @@ abstract class Catalog extends database_object
             : str_replace(['/', '\\'], '_', (string) $string);
 
         return (string) $string;
+    }
+
+    /**
+     * Neutralises path traversal in a sort/rename pattern once the tag values have been substituted in.
+     *
+     * A tag value can be exactly `..` (or `.`), which with the pattern's own `/` separators would climb out
+     * of the catalog. Any segment made only of dots becomes `_`; every other character, unicode included, is
+     * left untouched so international names sort unchanged. Null bytes are stripped so they cannot truncate
+     * the path handed to the filesystem.
+     */
+    public static function sort_clean_path(string $path): string
+    {
+        return (string) preg_replace('~(^|/)\\.+(?=/|$)~', '$1_', str_replace("\0", '', $path));
     }
 
     /**
@@ -4254,7 +4276,7 @@ abstract class Catalog extends database_object
         $version        = self::sort_clean_name($album->version, '%s');
         $genre          = ($album->get_tags() === [])
             ? '%b'
-            : Tag::get_display($album->get_tags());
+            : self::sort_clean_name(Tag::get_display($album->get_tags()), '%g', $windowsCompat);
 
         // Replace everything we can find
         $replace_array = [
@@ -4293,8 +4315,7 @@ abstract class Catalog extends database_object
         ];
         $sort_pattern = str_replace($replace_array, $content_array, $sort_pattern);
 
-        // Remove non A-Z0-9 chars
-        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
+        $sort_pattern = self::sort_clean_path((string) $sort_pattern);
 
         // Replace non-critical search patterns
         $post_replace_array = [

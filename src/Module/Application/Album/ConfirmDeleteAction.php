@@ -63,6 +63,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
+        if ($this->requestParser->verifyForm('delete_album') === false) {
+            throw new AccessDeniedException();
+        }
+
         $album_id = (int) $this->requestParser->getFromRequest('album_id');
         $album    = $this->modelFactory->createAlbum($album_id);
         if (!Catalog::can_remove($album)) {

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\FolderRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -83,6 +84,24 @@ class FolderTest extends TestCase
             ->willReturn([]);
 
         self::assertSame([], $subject->get_children('some-name'));
+    }
+
+    public function testGetDisplayEscapesTheNameInTheLink(): void
+    {
+        // a folder name is a directory name from the catalog, so it carries whatever the filesystem holds
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame(
+            '<a href="https://music.example/folders.php?action=show&folder=7" title="a&quot;b">a&quot;b</a>',
+            Folder::get_display([7 => 'a"b'], true)
+        );
+    }
+
+    public function testGetDisplayLeavesThePlainFormUnescaped(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame('Éditions & Co', Folder::get_display([7 => 'Éditions & Co']));
     }
 
     public function testGetFLinkClosesTheAnchor(): void

@@ -275,7 +275,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 if ($row['apikey'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['apikey']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $apikey) {
+                    if (hash_equals($passphrase, $apikey)) {
                         return new User((int) $row['id']);
                     }
                 }
@@ -336,7 +336,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 if ($row['streamtoken'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['streamtoken']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $streamToken) {
+                    if (hash_equals($passphrase, $streamToken)) {
                         return new User((int) $row['id']);
                     }
                 }

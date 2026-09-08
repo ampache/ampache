@@ -4164,7 +4164,8 @@
               "verify_catalog",
               "update_catalog",
               "gather_art",
-              "garbage_collect"
+              "garbage_collect",
+              "scan_catalog_folders"
             ],
             "type": "string",
             "description": "Catalog task to run"
@@ -6240,6 +6241,7 @@
     "POST /catalogs/{catalog_id}/clean": "action=catalog_action&filter={catalog_id}&task=clean_catalog",
     "POST /catalogs/{catalog_id}/file": "action=catalog_file&filter={catalog_id}",
     "POST /catalogs/{catalog_id}/folder": "action=catalog_folder&filter={catalog_id}",
+    "POST /catalogs/{catalog_id}/scan": "action=catalog_action&filter={catalog_id}&task=scan_catalog_folders",
     "POST /catalogs/{catalog_id}/update": "action=catalog_action&filter={catalog_id}&task=update_catalog",
     "POST /catalogs/{catalog_id}/verify": "action=catalog_action&filter={catalog_id}&task=verify_catalog",
     "POST /democratic/{object_id}": "action=democratic&filter={object_id}",
@@ -11726,7 +11728,8 @@
                 "verify_catalog",
                 "update_catalog",
                 "gather_art",
-                "garbage_collect"
+                "garbage_collect",
+                "scan_catalog_folders"
               ],
               "type": "string"
             }
@@ -11767,7 +11770,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Kick off a catalog task (add/clean/verify/gather art) for the selected catalog",
+        "summary": "Kick off a catalog task (add/clean/verify/gather art/scan folders) for the selected catalog",
         "tags": [
           "Catalogs"
         ],
@@ -12507,6 +12510,56 @@
         },
         "operationId": "catalogFolderCatalogsFolderPost",
         "description": "Perform actions on local catalog folders. Single folder versions of catalog add, clean, verify and remove (delete) Make sure you remember to urlencode those folder names!"
+      }
+    },
+    "/catalogs/{catalog_id}/scan": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CatalogId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "catalog action",
+                    "value": {
+                      "success": "successfully started: scan_catalog_folders for music"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Run the scan_catalog_folders task on a catalog",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Convenience alias of `catalog_action` with `task=scan_catalog_folders`. The task is taken from the path, so no `task` parameter is sent.",
+        "operationId": "catalogActionScan"
       }
     },
     "/catalogs/{catalog_id}/update": {

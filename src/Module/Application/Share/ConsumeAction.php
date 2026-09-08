@@ -104,7 +104,9 @@ final readonly class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->shareRepository->registerAccess($share, new DateTime());
+        if (!$this->shareRepository->registerAccess($share, new DateTime())) {
+            throw new AccessDeniedException();
+        }
 
         if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {

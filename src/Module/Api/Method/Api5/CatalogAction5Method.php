@@ -62,7 +62,7 @@ final class CatalogAction5Method implements MethodInterface
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
+     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'scan_catalog_folders'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -105,7 +105,7 @@ final class CatalogAction5Method implements MethodInterface
         $task = (string) $input['task'];
 
         // confirm the correct data
-        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
+        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'scan_catalog_folders'])) {
             return $response->withBody(
                 $this->streamFactory->createStream(
                     $output->error(
@@ -143,6 +143,9 @@ final class CatalogAction5Method implements MethodInterface
                 break;
             case 'gather_art':
                 $catalog->gather_art();
+                break;
+            case 'scan_catalog_folders':
+                $catalog->scan_catalog_folders();
                 break;
             case 'add_to_catalog':
                 $options = [

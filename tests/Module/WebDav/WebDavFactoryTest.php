@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -39,6 +40,7 @@ class WebDavFactoryTest extends MockeryTestCase
 {
     private AuthenticationManagerInterface&MockInterface $authenticationManager;
     private WebDavFactory $subject;
+    private UserRepositoryInterface&MockInterface $userRepository;
 
     public static function methodDataProvider(): array
     {
@@ -76,9 +78,11 @@ class WebDavFactoryTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
+        $this->userRepository        = Mockery::mock(UserRepositoryInterface::class);
 
         $this->subject = new WebDavFactory(
-            $this->authenticationManager
+            $this->authenticationManager,
+            $this->userRepository
         );
     }
 }

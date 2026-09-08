@@ -197,7 +197,8 @@ class ShareRepositoryTest extends TestCase
 
     public function testRegisterAccessRegisters(): void
     {
-        $share = $this->createMock(Share::class);
+        $share  = $this->createMock(Share::class);
+        $result = $this->createMock(PDOStatement::class);
 
         $date    = new DateTime();
         $shareId = 666;
@@ -209,11 +210,39 @@ class ShareRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
+                'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ? AND (`max_counter` = 0 OR `counter` < `max_counter`)',
                 [$date->getTimestamp(), $shareId]
-            );
+            )
+            ->willReturn($result);
 
-        $this->subject->registerAccess($share, $date);
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(1);
+
+        static::assertTrue($this->subject->registerAccess($share, $date));
+    }
+
+    public function testRegisterAccessReturnsFalseWhenLimitReached(): void
+    {
+        $share  = $this->createMock(Share::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $date    = new DateTime();
+        $shareId = 666;
+
+        $share->expects(static::once())
+            ->method('getId')
+            ->willReturn($shareId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('rowCount')
+            ->willReturn(0);
+
+        static::assertFalse($this->subject->registerAccess($share, $date));
     }
 
     public function testUpdateScopesTheStatementToTheOwnerForANonManager(): void
