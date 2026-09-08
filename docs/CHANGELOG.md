@@ -88,6 +88,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack. 
 * A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
 * Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
+* The web folder browse listed a folder's contents without a catalog-access check and with the per-user catalog filter disabled, so a catalog-filtered user could enumerate folders in a catalog they're excluded from; it now checks catalog access
 * localplay access was never actually checked (any user passed) and Subsonic jukeboxControl checked nothing. Now they are gated on the user's access level
 * Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists
 * Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.

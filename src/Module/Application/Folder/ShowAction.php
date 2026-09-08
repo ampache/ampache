@@ -35,6 +35,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
@@ -71,7 +72,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $user      = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $folder_id = (isset($input['folder'])) ? (int) $input['folder'] : -1;
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
@@ -87,6 +88,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
             return null;
         } elseif ($folder instanceof Folder) {
+            // a folder in a catalog you are filtered from is not yours to browse
+            if ($folder->id > 0 && !Catalog::has_access($folder->getCatalogId(), $user->getId())) {
+                throw new AccessDeniedException('Access Denied: catalog filter');
+            }
+
             $browse = $this->browseFactory->create();
             $browse->set_type('folder');
             $browse->set_use_pages(true);
