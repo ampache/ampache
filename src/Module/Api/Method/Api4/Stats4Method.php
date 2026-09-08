@@ -117,6 +117,14 @@ final class Stats4Method implements MethodInterface
             return $response;
         }
 
+        // the output below embeds $user->streamtoken in every item's play url; when browsing someone
+        // else's stats that must stay the caller's own token, or the response hands back a credential
+        // that streams as the browsed user
+        if ($user_id !== $viewer->id) {
+            $user              = clone $user;
+            $user->streamtoken = $viewer->streamtoken;
+        }
+
         $type   = $input['type'];
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);

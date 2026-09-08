@@ -184,6 +184,14 @@ final class Stats5Method implements MethodInterface
             );
         }
 
+        // the output below embeds $user->streamtoken in every item's play url; when browsing someone
+        // else's stats that must stay the caller's own token, or the response hands back a credential
+        // that streams as the browsed user
+        if ($userId !== $viewer->id) {
+            $user              = clone $user;
+            $user->streamtoken = $viewer->streamtoken;
+        }
+
         $results = [];
         $filter  = $input['filter'] ?? '';
         switch ($filter) {

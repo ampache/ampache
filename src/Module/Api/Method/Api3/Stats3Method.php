@@ -90,6 +90,14 @@ final class Stats3Method implements MethodInterface
             return $response;
         }
 
+        // the output below embeds $user->streamtoken in every item's play url; when browsing someone
+        // else's stats that must stay the caller's own token, or the response hands back a credential
+        // that streams as the browsed user
+        if ($user->getId() !== $viewer->getId()) {
+            $user              = clone $user;
+            $user->streamtoken = $viewer->streamtoken;
+        }
+
         $results = [];
         if ($type == "newest") {
             $results = Stats::get_newest("album", $limit, $offset);
