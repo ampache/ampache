@@ -26,6 +26,12 @@
 
 :root {
     color-scheme: dark;
+    --amp-surface: hsl(0, 0%, 10%);
+    --amp-raised: #2d2d2d;
+    --amp-border: hsl(0, 0%, 30%);
+    --amp-muted: #b0b0b0;
+    --amp-accent: #ff9d00;
+    --amp-accent-ink: #1a1a1a;
     accent-color: #ff9d00;
 }
 
@@ -747,7 +753,7 @@ a.option-list:hover {
 /* Mobile off-canvas drawers need a solid (opaque) panel background so the
    dim backdrop behind them doesn't show through. See the off-canvas block in default.css.
    @see //REBORN_MEDIA and keep in sync with default.css (portrait phones + short landscape phones). */
-@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) and (max-width: 1024px) {
     #sidebar,
     #rightbar {
         background-color: #222;

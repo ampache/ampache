@@ -25,8 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Video;
 
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Video;
 use Override;
 
@@ -69,6 +76,14 @@ final class VideoView extends AbstractView
         return $this->subtitlesEnabled;
     }
 
+    public function getArt(): string
+    {
+        ob_start();
+        Art::display('video', $this->video->getId(), $this->getName(), ['width' => 200, 'height' => 300], null, true, false, 'preview');
+
+        return (string) ob_get_clean();
+    }
+
     public function getDeleteUrl(): string
     {
         return $this->webPath . '/video.php?action=delete&video_id=' . $this->video->id;
@@ -84,9 +99,104 @@ final class VideoView extends AbstractView
         return $this->webPath . '/stats.php?action=graph&object_type=video&object_id=' . $this->video->id;
     }
 
+    public function getHeader(): ObjectHeaderView
+    {
+        $video = $this->video;
+
+        return new ObjectHeaderView(
+            kind: T_('Video'),
+            title: $this->e($this->getName()),
+            art: $this->getArt(),
+            chips: HeaderChip::listOf(
+                ($video->release_date) ? new HeaderChip($this->e(get_datetime((int) $video->release_date, 'short', 'none')), title: T_('Release Date')) : null,
+                new HeaderChip((string) $video->get_f_time(), true, title: T_('Length')),
+                new HeaderChip((string) $video->get_f_resolution(), true, title: T_('Resolution')),
+            ),
+            rating: ($this->showRatings) ? Rating::show($video->getId(), 'video') : '',
+            userflag: ($this->showRatings) ? Userflag::show($video->getId(), 'video') : '',
+            ratingKey: $video->getId() . '_video',
+            primaryAction: $this->getPrimaryHeaderAction(),
+            actions: $this->getHeaderActions(),
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getHeaderActions(): array
+    {
+        $video   = $this->video;
+        $videoId = $video->getId();
+        $actions = [];
+
+        if ($this->directPlay) {
+            if ($this->autoplayNext) {
+                $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=video&object_id=' . $videoId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_video_' . $videoId);
+            }
+
+            if ($this->autoplayAppend) {
+                $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=video&object_id=' . $videoId . '&append=true', 'low_priority', T_('Play last'), 'addplay_video_' . $videoId);
+            }
+        }
+
+        $actions[] = Ajax::button_with_text('?action=basket&type=video&id=' . $videoId, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $videoId);
+        if ($this->mayInteract) {
+            $actions[] = sprintf(
+                '<a id="add_to_playlist_%d" onclick="showPlaylistDialog(event, \'video\', \'%d\')">%s %s</a>',
+                $videoId,
+                $videoId,
+                Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()),
+                Ui::get_add_to_list_label()
+            );
+        }
+
+        if ($this->mayShout) {
+            $actions[] = $this->link($this->getShoutUrl(), 'comment', T_('Post Shout'));
+        }
+
+        if ($this->mayShare) {
+            $actions[] = Share::display_ui('video', $videoId);
+        }
+
+        if ($this->mayDownload) {
+            $actions[] = $this->link($video->play_url(), 'link', T_('Link'), true);
+            $actions[] = $this->link($this->getDownloadUrl(), 'download', T_('Download'), true);
+        }
+
+        if ($this->mayManage) {
+            if ($this->statisticalGraphsEnabled) {
+                $actions[] = $this->link($this->getGraphUrl(), 'bar_chart', T_('Graphs'));
+            }
+
+            $actions[] = sprintf(
+                '<a onclick="showEditDialog(\'video_row\', \'%d\', \'edit_video_%d\', \'%s\', \'\')">%s %s</a>',
+                $videoId,
+                $videoId,
+                addslashes(T_('Video Edit')),
+                Ui::get_material_symbol('edit', T_('Edit')),
+                T_('Edit')
+            );
+        }
+
+        if ($this->mayDelete) {
+            $actions[] = $this->link($this->getDeleteUrl(), 'close', T_('Delete'));
+        }
+
+        return $actions;
+    }
+
     public function getName(): string
     {
         return $this->video->get_fullname() ?? '';
+    }
+
+    public function getPrimaryHeaderAction(): string
+    {
+        $videoId = $this->video->getId();
+
+        return ($this->directPlay)
+            ? Ajax::button_with_text('?page=stream&action=directplay&object_type=video&object_id=' . $videoId, 'play_circle', T_('Play'), 'play_video_' . $videoId)
+            : '';
     }
 
     /**
@@ -106,7 +216,7 @@ final class VideoView extends AbstractView
             ['label' => T_('Resolution'), 'value' => $this->e($video->get_f_resolution())],
             ['label' => T_('Display'), 'value' => $this->e($video->get_f_display())],
             ['label' => T_('Audio Bitrate'), 'value' => $this->e((int) ($video->bitrate / 1024) . '-' . strtoupper((string) $video->mode))],
-            ['label' => T_('Video Bitrate'), 'value' => $this->e((string) ($video->video_bitrate / 1024))],
+            ['label' => T_('Video Bitrate'), 'value' => $this->e((string) (int) ($video->video_bitrate / 1024))],
             ['label' => T_('Frame Rate'), 'value' => $this->e($video->frame_rate ? $video->frame_rate . ' fps' : '')],
             ['label' => T_('Channels'), 'value' => $this->e($video->channels)],
         ];
@@ -133,6 +243,33 @@ final class VideoView extends AbstractView
         return array_values(
             array_filter($properties, static fn(array $property): bool => trim($property['value']) !== '')
         );
+    }
+
+    /**
+     * @return list<array{label: string, properties: array<string, string>}>
+     */
+    public function getPropertyGroups(): array
+    {
+        $file        = [T_('Path'), T_('Filename'), T_('Size'), T_('Last Updated'), T_('Added'), T_('Played')];
+        $information = [];
+        $technical   = [];
+
+        foreach ($this->getProperties() as $property) {
+            if ($property['label'] === T_('Title')) {
+                continue;
+            }
+
+            if (in_array($property['label'], $file, true)) {
+                $technical[$property['label']] = $property['value'];
+            } else {
+                $information[$property['label']] = $property['value'];
+            }
+        }
+
+        return [
+            ['label' => T_('Information'), 'properties' => $information],
+            ['label' => T_('File'), 'properties' => $technical],
+        ];
     }
 
     public function getSelectedSubtitle(): string
@@ -212,5 +349,16 @@ final class VideoView extends AbstractView
     protected function templateFile(): string
     {
         return $this->findTemplate('video.phtml');
+    }
+
+    private function link(string $url, string $icon, string $label, bool $external = false): string
+    {
+        return sprintf(
+            '<a %shref="%s">%s %s</a>',
+            ($external) ? 'class="nohtml" rel="nofollow" ' : '',
+            $this->e($url),
+            Ui::get_material_symbol($icon, $label),
+            $this->e($label)
+        );
     }
 }

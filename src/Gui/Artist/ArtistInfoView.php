@@ -71,21 +71,11 @@ final class ArtistInfoView extends AbstractView
     }
 
     /**
-     * Where and when the act formed, whichever of the two last.fm knows.
+     * Where the act formed, when last.fm knows it.
      */
-    public function getFormationDetails(): string
+    public function getPlaceFormed(): string
     {
-        $details = [];
-        $place   = (string) ($this->biography['placeformed'] ?? '');
-        if ($place !== '') {
-            $details[] = $place;
-        }
-
-        if ((int) ($this->biography['yearformed'] ?? 0) > 0) {
-            $details[] = (string) $this->biography['yearformed'];
-        }
-
-        return implode(', ', $details);
+        return trim((string) ($this->biography['placeformed'] ?? ''));
     }
 
     public function getSummary(): ?string
@@ -93,6 +83,16 @@ final class ArtistInfoView extends AbstractView
         $summary = trim((string) ($this->biography['summary'] ?? ''));
 
         return ($summary === '') ? null : $summary;
+    }
+
+    /**
+     * When the act formed, when last.fm knows it.
+     */
+    public function getYearFormed(): string
+    {
+        $year = (int) ($this->biography['yearformed'] ?? 0);
+
+        return ($year > 0) ? (string) $year : '';
     }
 
     #[Override]

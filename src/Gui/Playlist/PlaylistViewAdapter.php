@@ -265,7 +265,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getRating(): string
     {
-        return Rating::show($this->playlist->getId(), 'playlist');
+        return Rating::show($this->playlist->getId(), 'playlist', true);
     }
 
     public function getRefreshIcon(): string

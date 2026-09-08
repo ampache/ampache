@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Label;
 
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Label;
 use Override;
 
@@ -75,6 +79,14 @@ final class LabelView extends AbstractView
         return array_keys(self::EXTERNAL_LINKS);
     }
 
+    public function getArt(): string
+    {
+        ob_start();
+        Art::display('label', $this->label->id, $this->getName(), ['width' => 384, 'height' => 384], null, true, false);
+
+        return (string) ob_get_clean();
+    }
+
     /**
      * @return array<int>
      */
@@ -114,6 +126,37 @@ final class LabelView extends AbstractView
         }
 
         return $links;
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $label = $this->label;
+        $links = '';
+        foreach ($this->getExternalLinks() as $link) {
+            $links .= sprintf(
+                '<a href="%s" target="_blank" rel="noopener">%s</a>',
+                $this->e($link['url']),
+                Ui::get_icon($link['icon'], $link['title'])
+            );
+        }
+
+        return new ObjectHeaderView(
+            kind: T_('Label'),
+            title: $this->e($this->getName()),
+            art: $this->getArt(),
+            chips: HeaderChip::listOf(
+                new HeaderChip(trim(preg_replace('/\s+/', ' ', (string) $label->address) ?? ''), title: T_('Address')),
+                new HeaderChip((string) $label->category, title: T_('Category')),
+                new HeaderChip((string) $label->country, title: T_('Country')),
+                ($label->creation_date !== null && $label->creation_date > 0)
+                    ? new HeaderChip(get_datetime($label->creation_date, 'short', 'none'), true, title: T_('Creation Date'))
+                    : null,
+                ($this->getWebsiteUrl() !== null)
+                    ? new HeaderChip((string) parse_url($this->getWebsiteUrl(), PHP_URL_HOST), url: $this->getWebsiteUrl(), external: true)
+                    : null,
+            ),
+            links: $links,
+        );
     }
 
     public function getLabel(): Label

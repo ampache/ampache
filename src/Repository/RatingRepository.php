@@ -167,21 +167,26 @@ final readonly class RatingRepository implements RatingRepositoryInterface
         );
     }
 
-    public function getAverageRating(int $objectId, string $objectType): ?float
+    /**
+     * The average and how many people it took, which the query already counts for its own HAVING
+     *
+     * @return array{0: float, 1: int}|null
+     */
+    public function getAverageRating(int $objectId, string $objectType): ?array
     {
-        $rating = $this->connection->fetchOne(
-            'SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1',
+        $row = $this->connection->fetchRow(
+            'SELECT ROUND(AVG(`rating`), 2) AS `rating`, COUNT(`object_id`) AS `voters` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(`object_id`) > 1',
             [$objectId, $objectType]
         );
 
-        return ($rating === false || $rating === null)
+        return (!is_array($row) || $row === [])
             ? null
-            : (float) $rating;
+            : [(float) $row['rating'], (int) $row['voters']];
     }
 
     /**
      * @param list<int|string> $objectIds
-     * @return array<int, float>
+     * @return array<int, array{0: float, 1: int}>
      */
     public function getAverageRatings(string $objectType, array $objectIds): array
     {
@@ -191,7 +196,7 @@ final readonly class RatingRepository implements RatingRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN (%s) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
+                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, COUNT(`object_id`) AS `voters`, `object_id` FROM `rating` WHERE `object_id` IN (%s) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
                 implode(',', array_map(intval(...), $objectIds))
             ),
             [$objectType]
@@ -199,7 +204,7 @@ final readonly class RatingRepository implements RatingRepositoryInterface
 
         $ratings = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $ratings[(int) $row['object_id']] = (float) $row['rating'];
+            $ratings[(int) $row['object_id']] = [(float) $row['rating'], (int) $row['voters']];
         }
 
         return $ratings;

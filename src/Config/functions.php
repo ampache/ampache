@@ -1136,7 +1136,7 @@ function nT_(string $original, string $plural, float|int|string $value): string
         return n__($original, $plural, (int) $value);
     }
 
-    return $plural;
+    return ((int) $value === 1) ? $original : $plural;
 }
 
 /**

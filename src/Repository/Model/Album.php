@@ -676,7 +676,11 @@ class Album extends database_object implements
      */
     public function get_f_time(): string
     {
-        return '';
+        $time = (int) $this->time;
+        $min  = sprintf("%02d", (floor($time / 60) % 60));
+        $sec  = sprintf("%02d", ($time % 60));
+
+        return ltrim(floor($time / 3600) . ':' . $min . ':' . $sec, '0:');
     }
 
     /**

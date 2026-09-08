@@ -25,8 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Podcast;
 
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Share;
 use Override;
 
 /**
@@ -56,6 +64,14 @@ final class PodcastEpisodeView extends AbstractView
         return $this->showRatings;
     }
 
+    public function getArt(): string
+    {
+        ob_start();
+        Art::display('podcast', $this->episode->podcast, (string) $this->episode->get_fullname(), ['width' => 384, 'height' => 384], null, true, false);
+
+        return (string) ob_get_clean();
+    }
+
     public function getDeleteUrl(): string
     {
         return $this->webPath . '/podcast_episode.php?action=delete&podcast_episode_id=' . $this->episode->id;
@@ -76,6 +92,106 @@ final class PodcastEpisodeView extends AbstractView
         return $this->webPath . '/stats.php?action=graph&object_type=podcast_episode&object_id=' . $this->episode->id;
     }
 
+    public function getHeader(): ObjectHeaderView
+    {
+        $episode = $this->episode;
+
+        return new ObjectHeaderView(
+            kind: T_('Podcast Episode'),
+            title: $this->e((string) $episode->get_fullname()),
+            art: $this->getArt(),
+            breadcrumb: $episode->getPodcastLink(),
+            chips: HeaderChip::listOf(
+                new HeaderChip($this->e($episode->getCategory()), title: T_('Category')),
+                ($episode->time > 0) ? new HeaderChip($episode->get_f_time(), true, title: T_('Length')) : null,
+                $this->e($episode->getState()->toDescription()),
+            ),
+            rating: ($this->showRatings) ? Rating::show($episode->id, 'podcast_episode') : '',
+            userflag: ($this->showRatings) ? Userflag::show($episode->id, 'podcast_episode') : '',
+            ratingKey: $episode->id . '_podcast_episode',
+            primaryAction: $this->getPrimaryHeaderAction(),
+            actions: $this->getHeaderActions(),
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getHeaderActions(): array
+    {
+        $episode   = $this->episode;
+        $episodeId = $episode->id;
+        $actions   = [];
+
+        if ($this->hasFile()) {
+            if ($this->directPlay) {
+                if ($this->autoplayNext) {
+                    $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId . '&playnext=true', 'menu_open', T_('Play next'), 'addnext_podcast_episode_' . $episodeId);
+                }
+
+                if ($this->autoplayAppend) {
+                    $actions[] = Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $episodeId);
+                }
+            }
+
+            $actions[] = Ajax::button_with_text('?action=basket&type=podcast_episode&id=' . $episodeId, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episodeId);
+            if ($this->mayInteract) {
+                $actions[] = sprintf(
+                    '<a id="add_to_playlist_%d" onclick="showPlaylistDialog(event, \'podcast_episode\', \'%d\')">%s %s</a>',
+                    $episodeId,
+                    $episodeId,
+                    Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()),
+                    Ui::get_add_to_list_label()
+                );
+            }
+        }
+
+        if ($this->mayShout) {
+            $actions[] = $this->link($this->getShoutUrl(), 'comment', T_('Post Shout'));
+        }
+
+        if ($this->mayShare) {
+            $actions[] = Share::display_ui('podcast_episode', $episodeId);
+        } else {
+            $actions[] = $this->link($episode->get_link(), 'open_in_new', T_('Link'), true);
+        }
+
+        if ($this->mayDownload && $this->hasFile()) {
+            $actions[] = $this->link($episode->play_url(), 'link', T_('Stream URL'), true);
+            $actions[] = $this->link($this->getDownloadUrl(), 'download', T_('Download'), true);
+        }
+
+        if ($this->mayManage) {
+            if ($this->statisticalGraphsEnabled) {
+                $actions[] = $this->link($this->getGraphUrl(), 'bar_chart', T_('Graphs'));
+            }
+
+            $actions[] = sprintf(
+                '<a onclick="showEditDialog(\'podcast_episode_row\', \'%d\', \'edit_podcast_episode_%d\', \'%s\', \'\')">%s %s</a>',
+                $episodeId,
+                $episodeId,
+                addslashes(T_('Podcast Episode Edit')),
+                Ui::get_material_symbol('edit', T_('Edit')),
+                T_('Edit')
+            );
+        }
+
+        if ($this->mayDelete) {
+            $actions[] = $this->link($this->getDeleteUrl(), 'close', T_('Delete'));
+        }
+
+        return $actions;
+    }
+
+    public function getPrimaryHeaderAction(): string
+    {
+        $episodeId = $this->episode->id;
+
+        return ($this->hasFile() && $this->directPlay)
+            ? Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episodeId, 'play_circle', T_('Play'), 'play_podcast_episode_' . $episodeId)
+            : '';
+    }
+
     /**
      * The values are html, not text: the model's getters already escape what they return, so escaping
      * again here would show the entities. The two raw values are escaped explicitly below.
@@ -90,7 +206,7 @@ final class PodcastEpisodeView extends AbstractView
             ['label' => T_('Description'), 'value' => nl2br($episode->get_description())],
             ['label' => T_('Category'), 'value' => $episode->getCategory()],
             ['label' => T_('Author'), 'value' => $episode->getAuthor()],
-            ['label' => T_('Publication Date'), 'value' => $this->e($episode->getPubDate()->format(DATE_ATOM))],
+            ['label' => T_('Publication Date'), 'value' => $this->e(get_datetime($episode->getPubDate()->getTimestamp()))],
             ['label' => T_('Status'), 'value' => $this->e($episode->getState()->toDescription())],
             ['label' => T_('Website'), 'value' => $episode->getWebsite()],
         ];
@@ -109,6 +225,33 @@ final class PodcastEpisodeView extends AbstractView
         return array_values(
             array_filter($properties, static fn(array $property): bool => trim($property['value']) !== '')
         );
+    }
+
+    /**
+     * @return list<array{label: string, properties: array<string, string>}>
+     */
+    public function getPropertyGroups(): array
+    {
+        $file        = [T_('File'), T_('Size'), T_('Bitrate'), T_('Channels')];
+        $information = [];
+        $technical   = [];
+
+        foreach ($this->getProperties() as $property) {
+            if ($property['label'] === T_('Title')) {
+                continue;
+            }
+
+            if (in_array($property['label'], $file, true)) {
+                $technical[$property['label']] = $property['value'];
+            } else {
+                $information[$property['label']] = $property['value'];
+            }
+        }
+
+        return [
+            ['label' => T_('Information'), 'properties' => $information],
+            ['label' => T_('File'), 'properties' => $technical],
+        ];
     }
 
     public function getShoutUrl(): string
@@ -188,5 +331,16 @@ final class PodcastEpisodeView extends AbstractView
     protected function templateFile(): string
     {
         return $this->findTemplate('podcast_episode.phtml');
+    }
+
+    private function link(string $url, string $icon, string $label, bool $external = false): string
+    {
+        return sprintf(
+            '<a %shref="%s">%s %s</a>',
+            ($external) ? 'class="nohtml" rel="nofollow" ' : '',
+            $this->e($url),
+            Ui::get_material_symbol($icon, $label),
+            $this->e($label)
+        );
     }
 }
