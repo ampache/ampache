@@ -28,10 +28,12 @@ namespace Ampache\Module\Api\Method\Api8;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
@@ -99,6 +101,8 @@ final class CollectionEdit8Method implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         $collection = $this->loadEditableCollection($input, $user);
+        $hasAccess  = $collection->has_access($user);
+        $changeMade = false;
 
         $objectType = (isset($input['object_type'])) ? (string) $input['object_type'] : null;
         if ($objectType !== null && $objectType !== '' && !Collection::isValidType($objectType)) {
@@ -160,9 +164,25 @@ final class CollectionEdit8Method implements MethodInterface
                 }
 
                 $collection->set_by_track_number($memberId, $memberType, $track);
+                $changeMade = true;
             }
 
             $collection->regenerate_track_numbers();
+        }
+
+        // has_collaborate allows reordering, but only an owner or admin may edit the metadata below
+        if (!$hasAccess) {
+            if ($changeMade) {
+                $response->getBody()->write(
+                    $output->success($apiVersion, 'collection track changes saved')
+                );
+
+                return $response;
+            }
+
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
 
         $type = (isset($input['type']))
