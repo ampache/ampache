@@ -1716,7 +1716,7 @@ class Preference extends database_object
             'show_folder' => "Show 'Folders' link in the main sidebar",
             'show_header_login' => 'Show the login / registration links in the site header',
             'show_license' => 'Show License',
-            'show_lyrics' => 'Show lyrics',
+            'show_lyrics' => 'Show Lyrics',
             'show_mood' => "Show 'Moods' link in the main sidebar",
             'show_original_year' => 'Show Album original year on links (if available)',
             'show_played_times' => 'Show # played',

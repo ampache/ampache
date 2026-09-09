@@ -491,10 +491,6 @@ msgid "Show License"
 msgstr ""
 
 #: Ampache preference description
-msgid "Show lyrics"
-msgstr ""
-
-#: Ampache preference description
 msgid "Show 'Moods' link in the main sidebar"
 msgstr ""
 

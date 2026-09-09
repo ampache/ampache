@@ -55,10 +55,6 @@ msgstr ""
 msgid "Headphones"
 msgstr ""
 
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
-msgstr ""
-
 #: ./untranslated-strings.txt:134
 msgid "Libravatar"
 msgstr ""

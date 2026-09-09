@@ -71,7 +71,7 @@ class ShowCreateActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showBoxTop')
-            ->with('Create license')
+            ->with('Create License')
             ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->once();
