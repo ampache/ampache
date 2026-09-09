@@ -58,6 +58,7 @@ class Album extends database_object implements
 
     /** @var array<string, int> keyed by `check()`'s identity-column cache key, see there */
     private static array $_mapcache   = [];
+
     public ?int $addition_time        = null;
     public ?int $album_artist         = null;
     public int $artist_count          = 0;
@@ -303,10 +304,7 @@ class Album extends database_object implements
 
         $albumRepository = self::getAlbumRepository();
 
-        // mirrors findByProperties()'s own identity check: only the currently configured grouping fields
-        // distinguish one album from another (a dropped field never reaches the cache key either, or two
-        // songs differing only there would each miss the cache and still resolve to the same album, just
-        // slower), plus `catalog`, which is matched unconditionally and is never one of the droppable fields
+        // mirrors findByProperties()'s identity columns (config-driven) plus catalog, which is always matched but never droppable
         $cacheKey = $catalog_id . '|' . implode('|', array_map(
             static fn(string $column): string => (string) ($properties[$column] ?? ''),
             $albumRepository->getIdentityColumns()

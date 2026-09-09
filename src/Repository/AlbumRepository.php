@@ -530,6 +530,28 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
+     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
+     * Unset/empty config keeps the default behavior and matches all columns
+     *
+     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
+     * matches it separately regardless of what's returned here
+     *
+     * @return list<string>
+     */
+    public function getIdentityColumns(): array
+    {
+        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
+        if (!is_string($configured) || trim($configured) === '') {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        $requested = array_map('trim', explode(',', $configured));
+
+        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
+    }
+
+    /**
      * The album ids of a set of artists, for warming a page that lists them
      *
      * @param array<int|string> $artistIds
@@ -1158,28 +1180,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         foreach ($albumIds as $albumId) {
             Album::remove_from_cache('album_artists', $albumId);
         }
-    }
-
-    /**
-     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
-     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
-     * Unset/empty config keeps the default behavior and matches all columns
-     *
-     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
-     * matches it separately regardless of what's returned here
-     *
-     * @return list<string>
-     */
-    public function getIdentityColumns(): array
-    {
-        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
-        if (!is_string($configured) || trim($configured) === '') {
-            return self::IDENTITY_COLUMNS;
-        }
-
-        $requested = array_map('trim', explode(',', $configured));
-
-        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
     }
 
     /**
