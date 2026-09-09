@@ -54,7 +54,7 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 class HttpQPlayer
 {
     /**
-     * HttpQPlayer
+     * __construct
      * This is the constructor, it defaults to localhost
      * with port 4800
      */

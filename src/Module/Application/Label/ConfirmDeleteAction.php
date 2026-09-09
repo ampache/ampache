@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,6 +46,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
         private LabelDeleterInterface $labelDeleter,
         private LabelRepositoryInterface $labelRepository,
         private DeletionUrlResolverInterface $deletionUrlResolver,
@@ -58,6 +60,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
+        }
+
+        if ($this->requestParser->verifyForm('delete_label') === false) {
+            throw new AccessDeniedException();
         }
 
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {

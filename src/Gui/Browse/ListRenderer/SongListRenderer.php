@@ -123,6 +123,10 @@ final class SongListRenderer extends AbstractBrowseListRenderer
             $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'sort' => 'rating', 'id' => 'song_sort_rating', 'footer' => true];
         }
 
+        if ($this->isShown('cel_add_date')) {
+            $columns[] = ['class' => 'cel_add_date optional', 'label' => T_('Added'), 'sort' => 'addition_time', 'id' => 'song_sort_addition_time' . $browseId, 'footer' => true];
+        }
+
         $columns[] = ['class' => 'cel_action essential', 'label' => T_('Action'), 'sort' => null, 'id' => null, 'footer' => false];
 
         if ($this->showDrag()) {
@@ -251,7 +255,8 @@ final class SongListRenderer extends AbstractBrowseListRenderer
             $this->isHidden('cel_artist'),
             $this->isHidden('cel_album'),
             $this->isHidden('cel_year'),
-            !$this->showDrag()
+            !$this->showDrag(),
+            $this->isShown('cel_add_date')
         )->render();
     }
 

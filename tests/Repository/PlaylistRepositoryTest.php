@@ -80,6 +80,34 @@ class PlaylistRepositoryTest extends TestCase
         self::assertNotEmpty(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'playlist_data')));
     }
 
+    public function testCollectGarbageRecomputesTheStoredTotalsAfterDeleting(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbage();
+
+        // last_count and last_duration feed the web sort and the API listings, and the deletes above
+        // change what they should say, so the sweep has to end by refreshing both
+        $updates = array_values(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `playlist`')));
+
+        self::assertCount(2, $updates);
+        self::assertStringContainsString('SET `p`.`last_count` = COALESCE(`pd`.`total`, 0)', $updates[0]);
+        self::assertStringContainsString('SET `p`.`last_duration` = COALESCE(`pd`.`total`, 0)', $updates[1]);
+
+        // and only after every delete already ran, or the totals would still count the removed rows
+        $lastDelete = max(array_keys(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'DELETE'))));
+        $firstTotal = min(array_keys(array_filter($statements, static fn(string $sql): bool => str_starts_with($sql, 'UPDATE `playlist`'))));
+
+        self::assertGreaterThan($lastDelete, $firstTotal);
+    }
+
     public function testDeleteAllTracksEmptiesTheList(): void
     {
         $this->connection->expects(static::once())
@@ -124,6 +152,52 @@ class PlaylistRepositoryTest extends TestCase
             ->with(self::stringContains('`playlist_data`.`track` = ? LIMIT 1'), [666, 3]);
 
         $this->subject->deleteTrackByNumber($this->playlist(666), 3);
+    }
+
+    public function testFindEditableIdsAsksForOwnedAndCollaboratedRows(): void
+    {
+        // access level plays no part: an admin must get a usable list, not every playlist on the server
+        $result = $this->createMock(PDOStatement::class);
+        $result->method('fetchColumn')
+            ->willReturn('7', '42', false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `playlist` WHERE `user` = ? OR FIND_IN_SET(?, `collaborate`) ORDER BY `name`',
+                [666, 666]
+            )
+            ->willReturn($result);
+
+        self::assertSame([7, 42], $this->subject->findEditableIds(666));
+    }
+
+    public function testFindOwnedSearchNamesBulkDoesNothingForNoUsers(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->findOwnedSearchNamesBulk([]));
+    }
+
+    public function testFindOwnedSearchNamesBulkGroupsByOwnerAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `name`, `user` FROM `search` WHERE `user` IN (?,?)', [7, 8])
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['id' => '21', 'name' => 'Some name', 'user' => '8'],
+            false
+        );
+
+        self::assertSame(
+            [7 => [], 8 => [21 => 'Some name']],
+            $this->subject->findOwnedSearchNamesBulk([7, 8])
+        );
     }
 
     public function testGetIdsByCatalogRepeatsTheCatalogForEveryMediaType(): void
@@ -256,6 +330,19 @@ class PlaylistRepositoryTest extends TestCase
             ->with('UPDATE `playlist` SET `last_update` = ? WHERE `id` = ?', [1234, 666]);
 
         $this->subject->setLastUpdate($this->playlist(666), 1234);
+    }
+
+    public function testSetTrackNumberIsScopedToTheOwnPlaylist(): void
+    {
+        // the row id alone used to be enough to reorder another user's list, so the playlist id is part of the where
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?',
+                [1, 491963, 666]
+            );
+
+        $this->subject->setTrackNumber(491963, 1, 666);
     }
 
     public function testSetTrackNumbersDoesNothingForAnEmptySet(): void

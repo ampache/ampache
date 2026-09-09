@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -36,6 +38,20 @@ class UserTest extends TestCase
     private ContainerInterface&MockObject $dic;
     private ImageRepositoryInterface&MockObject $imageRepository;
     private UserRepositoryInterface&MockObject $userRepository;
+
+    /**
+     * @return list<array{0: string}>
+     */
+    public static function pathLikeUsernameProvider(): array
+    {
+        return [
+            ['../../../../etc'],
+            ['a/b'],
+            ['a\\b'],
+            ['.'],
+            ['..'],
+        ];
+    }
 
     public function testBuildCacheSkipsAnEmptyList(): void
     {
@@ -60,6 +76,19 @@ class UserTest extends TestCase
             ->willReturn([]);
 
         self::assertTrue(User::build_cache([666]));
+    }
+
+    #[DataProvider('pathLikeUsernameProvider')]
+    public function testCreateRejectsAUsernameThatCarriesAPathSegment(string $username): void
+    {
+        // the name becomes a directory under the upload catalog, so a path segment must never reach the disk
+        $this->userRepository->expects(static::never())
+            ->method('idByUsername');
+
+        self::assertSame(
+            0,
+            User::create($username, 'Full Name', 'user@example.com', '', 'password', AccessLevelEnum::USER)
+        );
     }
 
     protected function setUp(): void

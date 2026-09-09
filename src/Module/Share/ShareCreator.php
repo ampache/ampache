@@ -32,6 +32,7 @@ use Ampache\Plugin\PluginShortenerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -47,6 +48,7 @@ final readonly class ShareCreator implements ShareCreatorInterface
     public function __construct(
         private PluginRetrieverInterface $pluginRetriever,
         private LoggerInterface $logger,
+        private ModelFactoryInterface $modelFactory,
     ) {}
 
     public function create(
@@ -79,6 +81,21 @@ final readonly class ShareCreator implements ShareCreatorInterface
             );
 
             return null;
+        }
+
+        // a private list the sharer neither owns nor collaborates on is not theirs to publish via a share
+        if ($object_type === LibraryItemEnum::PLAYLIST || $object_type === LibraryItemEnum::SEARCH) {
+            $list = ($object_type === LibraryItemEnum::SEARCH)
+                ? $this->modelFactory->createSmartlist($object_id)
+                : $this->modelFactory->createPlaylist($object_id);
+            if (!$list->isVisible($user)) {
+                $this->logger->error(
+                    'create_share: not allowed to share a private list you do not own',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return null;
+            }
         }
 
         if ($description === '') {

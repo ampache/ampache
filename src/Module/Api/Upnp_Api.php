@@ -97,6 +97,7 @@ final class Upnp_Api
         switch ($data['type']) {
             case 'artist':
                 [$maxCount, $ids] = self::slice($ids, $start, $count);
+                Artist::build_cache($ids);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
                     if ($artist->isNew()) {
@@ -108,6 +109,7 @@ final class Upnp_Api
                 break;
             case 'song':
                 [$maxCount, $ids] = self::slice($ids, $start, $count);
+                Song::build_cache($ids);
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
                     if ($song->isNew() === false) {
@@ -119,6 +121,7 @@ final class Upnp_Api
                 break;
             case 'album':
                 [$maxCount, $ids] = self::slice($ids, $start, $count);
+                Album::build_cache($ids);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     if ($album->isNew()) {
@@ -131,6 +134,7 @@ final class Upnp_Api
                 break;
             case 'playlist':
                 [$maxCount, $ids] = self::slice($ids, $start, $count);
+                Playlist::build_cache($ids);
                 foreach ($ids as $pl_id) {
                     $playlist     = new Playlist($pl_id);
                     $mediaItems[] = self::_itemPlaylist($playlist, "amp://music/playlists");
@@ -321,11 +325,11 @@ final class Upnp_Api
         $ndBody->appendChild($ndBrowseResp);
         $ndResult = $doc->createElement('Result', $prmDIDL);
         $ndBrowseResp->appendChild($ndResult);
-        $ndNumRet = $doc->createElement('NumberReturned', $prmNumRet);
+        $ndNumRet = $doc->createElement('NumberReturned', (string) $prmNumRet);
         $ndBrowseResp->appendChild($ndNumRet);
-        $ndTotMatches = $doc->createElement('TotalMatches', $prmTotMatches);
+        $ndTotMatches = $doc->createElement('TotalMatches', (string) $prmTotMatches);
         $ndBrowseResp->appendChild($ndTotMatches);
-        $ndUpdateID = $doc->createElement('UpdateID', $prmUpdateID); // seems to be ignored by the WDTVL
+        $ndUpdateID = $doc->createElement('UpdateID', (string) $prmUpdateID); // seems to be ignored by the WDTVL
         //$ndUpdateID = $doc->createElement('UpdateID', (string) bin2hex(random_bytes(20)); // seems to be ignored by the WDTVL
         $ndBrowseResp->appendChild($ndUpdateID);
 
@@ -567,13 +571,13 @@ final class Upnp_Api
                     case 'StartingIndex':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
-                            $retArr['startingindex'] = $reader->value;
+                            $retArr['startingindex'] = (int) $reader->value;
                         }
                         break;
                     case 'RequestedCount':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
-                            $retArr['requestedcount'] = $reader->value;
+                            $retArr['requestedcount'] = (int) $reader->value;
                         }
                         break;
                     case 'SearchCriteria':
@@ -1277,6 +1281,7 @@ final class Upnp_Api
                         if ($artist->isNew() === false) {
                             $album_ids              = $this->albumRepository->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::slice($album_ids, $start, $count);
+                            Album::build_cache($album_ids);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
                                 if ($album->isNew()) {
@@ -1294,6 +1299,7 @@ final class Upnp_Api
                     case 1: // Get albums list
                         $album_ids              = Catalog::get_albums($count, $start);
                         [$maxCount, $album_ids] = [$counts['album'], $album_ids];
+                        Album::build_cache($album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             if ($album->isNew()) {
@@ -1308,6 +1314,7 @@ final class Upnp_Api
                         if ($album->isNew() === false) {
                             $song_ids              = $this->songRepository->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::slice($song_ids, $start, $count);
+                            Song::build_cache($song_ids);
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
                                 if ($song->isNew() === false) {
@@ -1324,6 +1331,7 @@ final class Upnp_Api
                 if ($pathcount == 1) {
                     $song_ids = Catalog::get_all_song_ids($count, $start);
                     $maxCount = $counts['song'];
+                    Song::build_cache($song_ids);
                     foreach ($song_ids as $song_id) {
                         $song = new Song($song_id);
                         if ($song->isNew() === false) {
@@ -1338,6 +1346,7 @@ final class Upnp_Api
                     case 1: // Get playlists list
                         $pl_ids              = Playlist::get_playlists();
                         [$maxCount, $pl_ids] = self::slice($pl_ids, $start, $count);
+                        Playlist::build_cache($pl_ids);
                         foreach ($pl_ids as $pl_id) {
                             $playlist     = new Playlist($pl_id);
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
@@ -1366,6 +1375,7 @@ final class Upnp_Api
                     case 1: // Get playlists list
                         $searches              = Search::get_searches();
                         [$maxCount, $searches] = self::slice($searches, $start, $count);
+                        Search::build_cache(array_column($searches, 'id'));
                         foreach ($searches as $search) {
                             $playlist     = new Search($search['id'], 'song');
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);

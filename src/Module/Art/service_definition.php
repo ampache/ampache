@@ -30,6 +30,12 @@ use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Art\Export\ArtExporter;
 use Ampache\Module\Art\Export\ArtExporterInterface;
 use Ampache\Module\Art\Export\Writer\MetadataWriter;
+use Ampache\Module\Art\Generated\GeneratedArtService;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
+use Ampache\Module\Art\Generated\RecipeBuilder;
+use Ampache\Module\Art\Generated\RecipeBuilderInterface;
+use Ampache\Module\Art\Generated\Template\TemplateRegistry;
+use Ampache\Module\Art\Generated\Template\TemplateRegistryInterface;
 use Ampache\Module\Art\Mosaic\PlaylistArtBuilder;
 use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 
@@ -41,4 +47,8 @@ return [
     ArtExporterInterface::class => autowire(ArtExporter::class),
     MetadataWriter::class => autowire(),
     PlaylistArtBuilderInterface::class => autowire(PlaylistArtBuilder::class),
+    RecipeBuilderInterface::class => autowire(RecipeBuilder::class),
+    // the registry looks for the templates on disk, so a new design needs no entry here
+    TemplateRegistryInterface::class => autowire(TemplateRegistry::class),
+    GeneratedArtServiceInterface::class => autowire(GeneratedArtService::class),
 ];

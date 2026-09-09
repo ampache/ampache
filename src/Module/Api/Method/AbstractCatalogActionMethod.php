@@ -66,9 +66,10 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
     protected const array TASKS = [
         'add_to_catalog',
         'clean_catalog',
-        'verify_catalog',
         'gather_art',
         'garbage_collect',
+        'scan_catalog_folders',
+        'verify_catalog',
     ];
 
     private PrivilegeCheckerInterface $privilegeChecker;
@@ -85,7 +86,7 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
      *
      * Kick off a catalog update or clean for the selected catalog
      *
-     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
+     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect', 'scan_catalog_folders'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -169,6 +170,9 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
                 break;
             case 'gather_art':
                 $catalog->gather_art();
+                break;
+            case 'scan_catalog_folders':
+                $catalog->scan_catalog_folders();
                 break;
             case 'add_to_catalog':
                 $catalog->add_to_catalog($options);

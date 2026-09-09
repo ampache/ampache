@@ -599,7 +599,7 @@ class mpd
     }
 
     /**
-     * PLAdd
+     * PLAddBulk
      *
      * Adds each track listed in a single-dimensional <trackArray>, which
      * contains filenames of tracks to add to the end of the playlist. This

@@ -25,30 +25,15 @@ declare(strict_types=1);
 
 // artist_info.phtml -- rendered by Ampache\Gui\Artist\ArtistInfoView
 
-use Ampache\Module\Art\Art;
+use Ampache\Gui\Partial\ProseBlockView;
 
 /** @var Ampache\Gui\Artist\ArtistInfoView $this */
 
-$summary = $this->getSummary(); ?>
-<div class="item_info">
-    <?php $artistId = $this->getArtistIdWithArt();
-if ($artistId !== null) {
-    Art::display('artist', $artistId, $this->getArtistName(), $this->getArtSize(), null, true, false);
-} ?>
-    <div class="item_properties">
-        <?php echo $this->e($this->getFormationDetails()); ?>
-    </div>
-</div>
-<div id="item_summary">
-    <?php if ($summary !== null) {
-        echo $this->raw(nl2br($summary));
-    } ?>
-</div>
-<script>
-    $(document).ready(function(){
-        $("a[rel^='prettyPhoto']").prettyPhoto({
-            social_tools: false,
-            deeplinking: false
-        });
-    });
-</script>
+$summary = $this->getSummary();
+
+if ($summary === null) {
+    return;
+}
+
+?>
+<?php echo $this->raw(ProseBlockView::fromText($summary, 'artist_summary_fold')->render()); ?>

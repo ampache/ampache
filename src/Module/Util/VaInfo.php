@@ -658,7 +658,7 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * translate_pattern_code
+     * _translate_pattern_code
      * This just contains a keyed array which it checks against to give you the
      * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
      */
@@ -720,7 +720,7 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * get_info
+     * gather_tags
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */

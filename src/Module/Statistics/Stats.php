@@ -63,12 +63,38 @@ final class Stats
      * Tables carrying a `weight` column; playing, rating and flagging bump it, other types must not be handed to it.
      */
     public const array WEIGHT_TYPES = ['album', 'album_disk', 'artist', 'podcast', 'podcast_episode', 'song', 'video'];
+
+    /**
+     * Slack allowed on a client-supplied play date. A device without ntp runs a few seconds off, and rewriting
+     * those dates would make the exact-match duplicate guard miss every play such a client sends.
+     */
+    private const int CLOCK_DRIFT = 60;
+
     /**
      * Types written by the Song/Podcast_Episode::set_played fan-out. They duplicate the date, user, agent and
      * location of the media row that triggered them, so consolidation drops them instead of archiving them and
      * Stats::restore() rebuilds them from the archived media rows.
      */
     private const array DERIVED_TYPES = ['album', 'album_disk', 'artist', 'podcast'];
+
+    /**
+     * The table carrying an indexed `last_played`, keyed by the type asked for
+     *
+     * @var array<string, string>
+     */
+    private const array LAST_PLAYED_TABLES = [
+        'album' => 'album',
+        'album_artist' => 'artist',
+        'album_disk' => 'album_disk',
+        'artist' => 'artist',
+        'podcast_episode' => 'podcast_episode',
+        'song' => 'song',
+        'song_artist' => 'artist',
+        'video' => 'video',
+    ];
+
+    /** @var array<string, ?string> Memoized lookups for the current request, keyed by coordinate pair */
+    private static array $place_name_cache = [];
 
     public ?string $agent = null;
     public int $date;
@@ -175,7 +201,7 @@ final class Stats
         $skip           = ($count_type === 'down') ? ', `total_skip` = `total_skip` + 1' : '';
         $played         = ($takesAPlayBack)
             ? ''
-            : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', $date ?? time());
+            : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', self::_clampDate($date));
 
         switch ($type) {
             case 'podcast_episode':
@@ -299,6 +325,12 @@ final class Stats
      */
     public static function get_cached_place_name(float $latitude, float $longitude): ?string
     {
+        // The lookup scans object_count and rows share coordinates: run it once per pair.
+        $cache_key = $latitude . '/' . $longitude;
+        if (array_key_exists($cache_key, self::$place_name_cache)) {
+            return self::$place_name_cache[$cache_key];
+        }
+
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
         $db_results = Dba::read($sql, [$latitude, $longitude]);
@@ -306,6 +338,8 @@ final class Stats
         if ($results !== []) {
             $name = $results['geo_name'];
         }
+
+        self::$place_name_cache[$cache_key] = $name;
 
         return $name;
     }
@@ -579,7 +613,7 @@ final class Stats
     }
 
     /**
-     * get_play_data
+     * get_object_data
      * Get data about object history and play data from object_count
      */
     public static function get_object_data(string $dataType, int $startTime, int $endTime, User $user): string
@@ -674,6 +708,12 @@ final class Stats
      */
     public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true, int $catalog_id = 0, int $limit = 0): string
     {
+        // `object_count` keeps one row per play and is pruned as it ages, so grouping it reads half a million
+        // rows to rebuild a date each of these tables already stores, indexed, and keeps when the history goes
+        if ($user === null && array_key_exists($input_type, self::LAST_PLAYED_TABLES)) {
+            return self::_get_last_played_sql($input_type, $newest, $catalog_id);
+        }
+
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest) ? 'DESC' : 'ASC';
         $user_sql       = ($user !== null) ? " AND `object_count`.`user` = '" . $user->getId() . "'" : '';
@@ -793,8 +833,8 @@ final class Stats
             if (
                 $geolocation
                 && empty($row['geo_name'])
-                && !empty($row['geo_latitude'])
-                && !empty($row['geo_longitude'])
+                && (float) $row['geo_latitude'] !== 0.0
+                && (float) $row['geo_longitude'] !== 0.0
             ) {
                 $row['geo_name'] = Stats::get_cached_place_name((float) $row['geo_latitude'], (float) $row['geo_longitude']);
             }
@@ -1179,6 +1219,8 @@ final class Stats
      */
     public static function shift_last_play(int $user_id, string $agent, int $original_date, int $new_date): void
     {
+        $new_date = self::_clampDate($new_date);
+
         // update the object_count table
         $sql = "UPDATE `object_count` SET `object_count`.`date` = ? WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
         Dba::write($sql, [$new_date, $user_id, $agent, $original_date]);
@@ -1248,6 +1290,14 @@ final class Stats
         };
     }
 
+    // A play cannot have happened later than now, past the slack a client's clock is allowed.
+    private static function _clampDate(?int $date): int
+    {
+        $now = time();
+
+        return ($date === null || $date < 1 || $date > $now + self::CLOCK_DRIFT) ? $now : $date;
+    }
+
     /**
      * Per-type aggregate shaped for the summary subtraction. Deliberately archive-based, not object_count-based:
      * the summary must only lose what consolidation put into it, never the extra rows the repair pass creates.
@@ -1314,6 +1364,54 @@ final class Stats
     private static function _derivedTypeList(): string
     {
         return "'" . implode("', '", self::DERIVED_TYPES) . "'";
+    }
+
+    /**
+     * Reads what a whole server played last, from the column each play already updates
+     */
+    private static function _get_last_played_sql(string $input_type, bool $newest, int $catalog_id): string
+    {
+        $type     = self::validate_type($input_type);
+        $table    = self::LAST_PLAYED_TABLES[$input_type];
+        $column   = sprintf('`%s`.`last_played`', $table);
+        $idColumn = sprintf('`%s`.`id`', $table);
+        $where    = [$column . ' > 0'];
+
+        // an album artist is an artist credited on an album, the same guard the play history carries
+        if ($input_type === 'album_artist') {
+            $where[] = '`artist`.`album_count` > 0';
+        }
+
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'], true)) {
+            // the album_disk enable filter correlates on the parent album id, not the disk id
+            $enableColumn = ($type === 'album_disk') ? '`album_disk`.`album_id`' : $idColumn;
+            $where[]      = Catalog::get_enable_filter($type, $enableColumn);
+        }
+
+        $filter_user = Core::get_global('user');
+        if (
+            AmpConfig::get('catalog_filter')
+            && in_array($type, ['video', 'artist', 'album', 'album_disk', 'song'], true)
+            && $filter_user instanceof User
+        ) {
+            $where[] = Catalog::get_user_filter($type, $filter_user->getId());
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, $idColumn, $catalog_id);
+        if ($catalog_sql !== '') {
+            $where[] = $catalog_sql;
+        }
+
+        return sprintf(
+            'SELECT %s AS `id`, %s AS `date` FROM `%s` WHERE %s ORDER BY %s %s, %s',
+            $idColumn,
+            $column,
+            $table,
+            implode(' AND ', $where),
+            $column,
+            ($newest) ? 'DESC' : 'ASC',
+            $idColumn
+        );
     }
 
     /**
@@ -1478,9 +1576,7 @@ final class Stats
             return false;
         }
 
-        if ($date == null) {
-            $date = time();
-        }
+        $date = self::_clampDate($date);
 
         $type = self::validate_type($input_type);
         if (self::is_already_inserted($type, $object_id, $user_id, $agent, $date)) {

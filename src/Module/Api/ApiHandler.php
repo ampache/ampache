@@ -173,7 +173,11 @@ final class ApiHandler implements ApiHandlerInterface
             : null;
         $userId      = $user->id ?? -1;
         $api_version = (int) Preference::get_by_user($userId, 'api_force_version');
-        if (!in_array($api_version, Api::API_VERSIONS)) {
+        // a forced version must still be enabled, or any user could reopen an api the admin turned off
+        if (
+            !in_array($api_version, Api::API_VERSIONS)
+            || !Preference::get_by_user($userId, 'api_enable_' . $api_version)
+        ) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
                 ? (int) substr((string) $version, 0, 1)
@@ -756,12 +760,12 @@ final class ApiHandler implements ApiHandlerInterface
                     $action = 'catalog_create';
                 }
 
-                // `catalogs/{catalog_id}/(add|clean|update|verify)` are undocumented aliases of
+                // `catalogs/{catalog_id}/(add|clean|scan|update|verify)` are undocumented aliases of
                 // `catalogs/{catalog_id}/action`; the matching task is derived from the path by
                 // the REST applications. (`add` without a filter keeps its `catalog_create` meaning)
                 if (
                     $hasFilter
-                    && ($action === 'add' || $action === 'clean' || $action === 'update' || $action === 'verify')
+                    && ($action === 'add' || $action === 'clean' || $action === 'scan' || $action === 'update' || $action === 'verify')
                 ) {
                     $action = 'catalog_action';
                 }

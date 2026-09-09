@@ -26,10 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Search\AlbumDiskSearch;
 use Ampache\Module\Database\Search\AlbumSearch;
 use Ampache\Module\Database\Search\ArtistSearch;
@@ -258,7 +260,7 @@ class Search extends playlist_object
                             $this->limit = (int) $value;
                             break;
                         case 'logic_operator':
-                            $this->logic_operator = ($value === null) ? null : (string) $value;
+                            $this->logic_operator = ($value === null) ? null : self::normalizeLogicOperator($value);
                             break;
                         case 'random':
                             $this->random = ($value === null) ? null : (int) $value;
@@ -339,6 +341,32 @@ class Search extends playlist_object
                 $this->order_by   = '`video`.`file`';
                 break;
         }
+    }
+
+    /**
+     * Caches a page of smartlists, their owners and their art in three reads instead of three per list
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        global $dic;
+        $owners = [];
+        foreach ($dic->get(SearchRepositoryInterface::class)->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('search', (int) $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
+        }
+
+        User::build_cache(array_values($owners));
+        Art::build_cache($ids, 'search');
+
+        return true;
     }
 
     /**
@@ -687,7 +715,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _set_basetypes
+     * get_basetypes
      *
      * Function called during construction to set the different types and rules for search
      * @return array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>>
@@ -819,7 +847,7 @@ class Search extends playlist_object
     }
 
     /**
-     * get_rule_type
+     * get_rule_type_by_name
      *
      * Validate the rule name and return the rule type (text, date, etc)
      *
@@ -1060,7 +1088,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = strtolower($data['operator'] ?? 'and');
+        $this->logic_operator = self::normalizeLogicOperator($data['operator'] ?? 'and');
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -2061,7 +2089,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _get_rule_name
+     * _set_rule_name
      *
      * Validate the rule name
      */

@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Override;
@@ -41,6 +42,7 @@ class ResetDbCharsetActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private DatabaseCharsetUpdaterInterface|MockInterface|null $databaseCharsetUpdater;
+    private RequestParserInterface|MockInterface|null $requestParser;
     private ?ResetDbCharsetAction $subject;
     private UiInterface|MockInterface|null $ui;
 
@@ -94,6 +96,11 @@ class ResetDbCharsetActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with('reset_db_charset')
+            ->once()
+            ->andReturnTrue();
+
         $this->databaseCharsetUpdater->shouldReceive('update')
             ->withNoArgs()
             ->once();
@@ -130,11 +137,13 @@ class ResetDbCharsetActionTest extends MockeryTestCase
         $this->configContainer        = $this->mock(ConfigContainerInterface::class);
         $this->ui                     = $this->mock(UiInterface::class);
         $this->databaseCharsetUpdater = $this->mock(DatabaseCharsetUpdaterInterface::class);
+        $this->requestParser          = $this->mock(RequestParserInterface::class);
 
         $this->subject = new ResetDbCharsetAction(
             $this->configContainer,
             $this->ui,
-            $this->databaseCharsetUpdater
+            $this->databaseCharsetUpdater,
+            $this->requestParser
         );
     }
 }

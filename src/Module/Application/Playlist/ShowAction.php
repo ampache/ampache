@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Playlist\PlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -55,6 +56,30 @@ final readonly class ShowAction implements ApplicationActionInterface
         $playlist = $this->modelFactory->createPlaylist(
             (int) ($_REQUEST['playlist_id'] ?? 0)
         );
+        if (!$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private')) {
+            $webPath = AmpConfig::get_web_path();
+            $count   = (int) $playlist->last_count;
+            $url     = $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id;
+            PageMeta::set(
+                [
+                    (string) $playlist->username,
+                    ($count > 0) ? sprintf(nT_('%d song', '%d songs', $count), $count) : null,
+                    $playlist->get_f_time(),
+                ],
+                'music.playlist',
+                (string) $playlist->name,
+                $url,
+                $webPath . '/image.php?object_id=' . $playlist->id . '&object_type=playlist&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MusicPlaylist',
+                    'name' => (string) $playlist->name,
+                    'url' => $url,
+                    'numTracks' => $count,
+                ])
+            );
+        }
+
         $this->ui->showHeader();
 
         if ($playlist->isNew() || (!$playlist->has_collaborate() && $playlist->type === 'private')) {

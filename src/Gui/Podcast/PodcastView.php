@@ -25,8 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Podcast;
 
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Browse;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Override;
@@ -60,6 +65,14 @@ final class PodcastView extends AbstractView
     public function areRatingsShown(): bool
     {
         return $this->showRatings;
+    }
+
+    public function getArt(): string
+    {
+        ob_start();
+        Art::display('podcast', $this->podcast->getId(), $this->getName(), $this->getArtSize(), null, true, false);
+
+        return (string) ob_get_clean();
     }
 
     /**
@@ -98,6 +111,24 @@ final class PodcastView extends AbstractView
     public function getGraphUrl(): string
     {
         return $this->webPath . '/stats.php?action=graph&object_type=podcast&object_id=' . $this->podcast->getId();
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $podcast  = $this->podcast;
+        $episodes = count($this->getEpisodeIds());
+
+        return new ObjectHeaderView(
+            kind: T_('Podcast'),
+            title: $this->e($this->getName()),
+            art: $this->getArt(),
+            chips: HeaderChip::listOf(
+                ($episodes > 0) ? new HeaderChip(sprintf(nT_('%d episode', '%d episodes', $episodes), $episodes), true) : null,
+            ),
+            rating: ($this->areRatingsShown()) ? Rating::show($podcast->getId(), 'podcast') : '',
+            userflag: ($this->areRatingsShown()) ? Userflag::show($podcast->getId(), 'podcast') : '',
+            ratingKey: $podcast->getId() . '_podcast',
+        );
     }
 
     public function getName(): string

@@ -86,6 +86,6 @@ if ($this->canAddToPlaylist()) { ?>
         </a>
 <?php }
 if ($this->canDelete()) {
-    echo $this->raw(Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $itemId, 'close', T_('Delete'), 'delete_live_stream_' . $itemId, '', '', T_('Are you sure?')));
+    echo $this->raw(Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $itemId, 'close', T_('Delete'), 'delete_live_stream_' . $itemId, '', '', T_('Are You Sure?')));
 } ?>
 </td>

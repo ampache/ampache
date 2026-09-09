@@ -31,6 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Art\BigArtView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -56,6 +57,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
         private LoggerInterface $logger,
+        private GeneratedArtServiceInterface $generatedArt,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -114,6 +116,29 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             ? 'preview'
             : 'default';
 
+        // Naming them in the url gives one link that draws the same tile for everyone who opens it,
+        // whatever their own settings are, and makes a tile reproducible while debugging.
+        $forceGenerated = (filter_input(INPUT_GET, 'generate', FILTER_SANITIZE_NUMBER_INT) === '1');
+        // a caller that renders no svg says so, and a link preview scraper never renders one on its own
+        $noSvg           = (filter_input(INPUT_GET, 'nosvg', FILTER_SANITIZE_NUMBER_INT) === '1');
+        $previewMotif    = filter_input(INPUT_GET, 'preview', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
+        $wantedTemplate  = filter_input(INPUT_GET, 'template', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
+        $wantedTemplate  = is_string($wantedTemplate) ? $wantedTemplate : null;
+
+        // the preferences page shows one of these beside every template, so a listener can see a design
+        // before picking it rather than choosing a name out of a list
+        if ($forceGenerated && is_string($previewMotif) && $previewMotif !== '') {
+            $preview = $this->generatedArt->renderPreview(
+                $previewMotif,
+                $wantedTemplate,
+                Art::fallback_edge(is_string($size) ? $size : null)
+            );
+
+            if ($preview !== null) {
+                return $this->svgResponse($response, $preview);
+            }
+        }
+
         $image       = '';
         $mime        = '';
         $filename    = '';
@@ -169,20 +194,47 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
                 $mime       = 'image/png';
                 $defaultimg = ($type === 'folder') ? '' : $this->configContainer->get('custom_blankalbum');
-                if (
-                    empty($defaultimg)
-                    || (!str_starts_with($defaultimg, "http://") && !str_starts_with($defaultimg, "https://"))
-                ) {
-                    $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
-                    $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                        ? $rootimg . $filename . "_" . $size . ".png"
-                        : $rootimg . $filename . ".png";
+
+                // A drawn tile at least says which item is missing its cover, where one shared placeholder
+                // turns a whole grid into the same picture. Nothing is stored: the svg is rebuilt per request.
+                $generated = (
+                    !$noSvg
+                    && ($forceGenerated || $this->generatedArt->isEnabled())
+                    && (empty($defaultimg) || $forceGenerated)
+                )
+                    ? $this->generatedArt->render(
+                        $type,
+                        $objectId,
+                        $has_size ? Art::fallback_edge($size) : 400,
+                        $wantedTemplate,
+                        $forceGenerated
+                    )
+                    : null;
+
+                if ($generated !== null) {
+                    return $this->svgResponse($response, $generated);
                 }
 
-                $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                    ? "EmptyMediaAlbum" . $size
-                    : "EmptyMediaAlbum";
-                $image = file_get_contents($defaultimg);
+                if (
+                    !empty($defaultimg)
+                    && (str_starts_with($defaultimg, "http://") || str_starts_with($defaultimg, "https://"))
+                ) {
+                    // A remote placeholder was being fetched server side on every miss, then passed through.
+                    // Hand the browser the url instead: one image it can cache, rather than one per object.
+                    // The redirect carries the same expiry as an image, or every page view would ask again.
+                    return $this->responseFactory
+                        ->createResponse(302)
+                        ->withHeader('Location', $defaultimg)
+                        ->withHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60 * 24 * 7)))
+                        ->withHeader('Cache-Control', 'private, max-age=604800');
+                }
+
+                // the closest pre-rendered file, so a 200x200 slot is not handed the 1400x1400 original
+                $suffix     = ($has_size) ? Art::fallback_size($size) : '';
+                $filename   = Art::fallback_image_name($type);
+                $defaultimg = $rootimg . $filename . $suffix . ".png";
+                $etag       = "EmptyMediaAlbum" . $suffix;
+                $image      = file_get_contents($defaultimg);
             } else {
                 // show the original image or thumbnail
                 $etag       = $type . '_' . $art->id . '_' . $size;
@@ -274,4 +326,23 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
     abstract protected function getFileName(
         ServerRequestInterface $request,
     ): ?array;
+
+    /**
+     * @param array{svg: string, etag: string} $generated
+     */
+    private function svgResponse(ResponseInterface $response, array $generated): ResponseInterface
+    {
+        $sent = getallheaders()['If-None-Match'] ?? '';
+        if (is_string($sent) && str_replace('"', '', $sent) === $generated['etag']) {
+            return $response->withStatus(304);
+        }
+
+        return $response
+            ->withHeader('Content-Type', 'image/svg+xml')
+            ->withHeader('Content-Length', (string) strlen($generated['svg']))
+            ->withHeader('ETag', $generated['etag'])
+            ->withHeader('Cache-Control', 'private, max-age=3600')
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withBody($this->streamFactory->createStream($generated['svg']));
+    }
 }

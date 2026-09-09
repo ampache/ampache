@@ -121,7 +121,8 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
      */
     private function resolveReferrer(string $webPath): string
     {
-        $referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? Core::get_server('HTTP_REFERER'));
+        // read HTTP_REFERER raw: Core::get_server() html-escapes it, and the template escapes again, so a url would carry a literal &amp;
+        $referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? $_SERVER['HTTP_REFERER'] ?? '');
 
         if (
             $referrer !== ''

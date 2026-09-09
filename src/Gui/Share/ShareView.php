@@ -91,6 +91,21 @@ final class ShareView extends AbstractView
         return $this->share->getObjectUrl();
     }
 
+    /**
+     * The Open Graph type of the shared object, so a preview is not announced as a song whatever it holds.
+     */
+    public function getOgType(): string
+    {
+        return match ((string) $this->share->object_type) {
+            'album', 'album_disk' => 'music.album',
+            'artist' => 'profile',
+            'playlist', 'search' => 'music.playlist',
+            'song' => 'music.song',
+            'video' => 'video.other',
+            default => 'website',
+        };
+    }
+
     public function getPublicUrl(): string
     {
         return (string) $this->share->public_url;

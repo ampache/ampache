@@ -28,10 +28,12 @@ namespace Ampache\Module\Api\Method\Api8;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
@@ -99,6 +101,19 @@ final class CollectionEdit8Method implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         $collection = $this->loadEditableCollection($input, $user);
+        $hasAccess  = $collection->has_access($user);
+        $changeMade = false;
+
+        // has_collaborate allows reordering, but only an owner or admin may edit the metadata below; refused
+        // up front, before any reorder is applied, so a request either applies whole or not at all
+        if (
+            !$hasAccess
+            && (isset($input['name']) || isset($input['type']) || isset($input['object_type']) || isset($input['collaborate']))
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
+        }
 
         $objectType = (isset($input['object_type'])) ? (string) $input['object_type'] : null;
         if ($objectType !== null && $objectType !== '' && !Collection::isValidType($objectType)) {
@@ -160,9 +175,26 @@ final class CollectionEdit8Method implements MethodInterface
                 }
 
                 $collection->set_by_track_number($memberId, $memberType, $track);
+                $changeMade = true;
             }
 
             $collection->regenerate_track_numbers();
+        }
+
+        // No metadata field reached this point, per the guard above, so a collaborator with no reorder
+        // either has nothing to do or sent a malformed request
+        if (!$hasAccess) {
+            if ($changeMade) {
+                $response->getBody()->write(
+                    $output->success($apiVersion, 'collection track changes saved')
+                );
+
+                return $response;
+            }
+
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
 
         $type = (isset($input['type']))
