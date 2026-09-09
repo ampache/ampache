@@ -2193,8 +2193,6 @@ final class Xml8_Data
     }
 
     /**
-     * Batch per item cache `folders()` loop reads one row at a time (base row, rating, art), grouped by object type
-     *
      * @param array<int|string> $objects
      */
     private function warmFolderItemCaches(array $objects): void

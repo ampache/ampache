@@ -3502,8 +3502,6 @@ class Subsonic_Json_Data
     }
 
     /**
-     * Batch per item cache `folders()` loop reads one row at a time (base row, rating, art), grouped by object type
-     *
      * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
      */
     private function _warmChildObjectCaches(array $children): void
