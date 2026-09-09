@@ -1577,6 +1577,7 @@ final class Json8_Data
             "time" => $folder->time,
             "items" => []
         ];
+        $this->warmFolderItemCaches($objects);
         foreach ($objects as $item) {
             preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
             $object_type = $matches[1] ?? null;
@@ -3927,5 +3928,35 @@ final class Json8_Data
         }
 
         return $indexed;
+    }
+
+    /**
+     * Batch per item cache `folders()` loop reads one row at a time (base row, rating, art), grouped by object type
+     *
+     * @param array<int|string> $objects
+     */
+    private function warmFolderItemCaches(array $objects): void
+    {
+        $idsByType = [];
+        foreach ($objects as $item) {
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
+            $type = $matches[1] ?? null;
+            $id   = (int) ($matches[2] ?? 0);
+            if ($type === null || $id <= 0) {
+                continue;
+            }
+
+            $idsByType[$type][] = $id;
+        }
+
+        foreach ($idsByType as $type => $ids) {
+            Rating::build_cache($type, $ids);
+            Art::build_cache($ids, $type);
+        }
+
+        Song::build_cache($idsByType['song'] ?? []);
+        Video::build_cache($idsByType['video'] ?? []);
+        Podcast_Episode::build_cache($idsByType['podcast_episode'] ?? []);
+        Folder::build_cache($idsByType['folder'] ?? []);
     }
 }

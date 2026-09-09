@@ -542,6 +542,8 @@ class OpenSubsonic_Json_Data
      */
     public function addFolderIndexes(array $response, array $children, int $lastModified = 0): array
     {
+        $this->_warmChildObjectCaches($children);
+
         $folders = [];
         $media   = [];
         foreach ($children as $child) {
@@ -3414,7 +3416,9 @@ class OpenSubsonic_Json_Data
         $json['child'] = [];
 
         $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
-        foreach ($this->folderRepository->getObjects($childFolderId, $userId) as $child) {
+        $children      = $this->folderRepository->getObjects($childFolderId, $userId);
+        $this->_warmChildObjectCaches($children);
+        foreach ($children as $child) {
             if ($child['object_type'] === LibraryItemEnum::FOLDER) {
                 $childFolder = new Folder($child['object_id']);
                 if (!$childFolder->isNew()) {
@@ -4118,5 +4122,29 @@ class OpenSubsonic_Json_Data
             'shareRole' => (bool) Preference::get_by_user($user->id, 'share'),
             'videoConversionRole' => false,
         ];
+    }
+
+    /**
+     * Batch per item cache `folders()` loop reads one row at a time (base row, rating, art), grouped by object type
+     *
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    private function _warmChildObjectCaches(array $children): void
+    {
+        $songIds = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::SONG) {
+                $songIds[] = $child['object_id'];
+            }
+        }
+
+        if ($songIds === []) {
+            return;
+        }
+
+        Song::build_cache($songIds);
+        Rating::build_cache('song', $songIds);
+        Userflag::build_cache('song', $songIds);
+        Tag::build_cache($songIds);
     }
 }
