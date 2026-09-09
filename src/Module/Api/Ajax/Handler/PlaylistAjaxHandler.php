@@ -30,10 +30,12 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -42,6 +44,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
     public function __construct(
         private RequestParserInterface $requestParser,
         private BrowseFactoryInterface $browseFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {}
 
     public function handle(User $user): void
@@ -105,12 +108,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         break;
                     }
 
-                    $playlist = new Playlist($playlist_id);
+                    $playlist = $this->libraryItemLoader->load(LibraryItemEnum::PLAYLIST, $playlist_id);
                 } else {
-                    $playlist = new Playlist((int) $_REQUEST['playlist_id']);
+                    $playlist = $this->libraryItemLoader->load(LibraryItemEnum::PLAYLIST, (int) $_REQUEST['playlist_id']);
                 }
 
-                if (!$playlist->has_collaborate()) {
+                if (!$playlist instanceof Playlist || !$playlist->has_collaborate()) {
                     break;
                 }
 
@@ -123,13 +126,22 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if (!empty($item_type) && InterfaceImplementationChecker::is_library_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', (string) $item_id);
+                    $itemType = LibraryItemEnum::fromObjectType($item_type);
                     foreach ($item_ids as $iid) {
-                        $className = ObjectTypeToClassNameMapper::map($item_type);
-                        /** @var container_item $libitem */
-                        $libitem = new $className((int) $iid);
-                        if ($libitem->isNew() === false) {
-                            $medias = array_merge($medias, $libitem->get_medias());
+                        $libitem = ($itemType instanceof LibraryItemEnum)
+                            ? $this->libraryItemLoader->load($itemType, (int) $iid)
+                            : null;
+                        if (!$libitem instanceof container_item) {
+                            continue;
                         }
+                        // a private list you cannot see is not yours to expand into a playlist you can edit
+                        if (
+                            ($libitem instanceof Playlist || $libitem instanceof Search)
+                            && !$libitem->isVisible($user)
+                        ) {
+                            continue;
+                        }
+                        $medias = array_merge($medias, $libitem->get_medias());
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);

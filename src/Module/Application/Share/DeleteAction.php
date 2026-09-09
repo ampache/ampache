@@ -60,6 +60,10 @@ final readonly class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        if ($this->requestParser->verifyForm('delete_share') === false) {
+            throw new AccessDeniedException();
+        }
+
         $user = $gatekeeper->getUser();
 
         $share = $this->shareRepository->findById(

@@ -44,7 +44,7 @@ Ui::show_box_top($this->getTitle(), 'box box_preferences'); ?>
 <?php foreach ($this->getPreferences() as $preference) { ?>
 <tr>
     <td class="cel_preference"><?php echo $this->e(T_($preference['description'])); ?></td>
-    <td class="cel_value"><?php echo $this->raw($this->renderInput($preference['name'], $preference['value'])); ?></td>
+    <td class="cel_value"><?php echo $this->raw($this->renderInput($preference['name'], $preference['value'], $preference['type'] ?? null)); ?></td>
 </tr>
 <?php } ?>
 <tr>

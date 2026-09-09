@@ -37,6 +37,8 @@ final class InitializationHandlerGetText implements InitializationHandlerInterfa
             throw new GetTextNotAvailableException();
         }
 
-        load_gettext();
+        // The catalogue itself is not read here. T_() loads it the first time something asks for a
+        // translation, so a request that renders no text at all - image.php serving a cover is the
+        // clearest case - never pays for parsing it.
     }
 }

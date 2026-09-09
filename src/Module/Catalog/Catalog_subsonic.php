@@ -595,7 +595,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * createClient
+     * _createClient
      */
     private function _createClient(): void
     {
@@ -654,7 +654,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * update_remote_catalog
+     * _update_remote_catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
      */

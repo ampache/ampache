@@ -126,7 +126,7 @@ $(function() {
 
     $("body").delegate("a", "click", function() {
         var link = $(this).attr("href");
-        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
+        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link.charAt(0) !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (ampacheUrl(link)) {
@@ -329,10 +329,20 @@ export function processContents(data) {
 export function loadContentData(data, status, jqXHR)
 {
     var $response = $(data);
+    var incoming  = new DOMParser().parseFromString(data, "text/html");
+
+    // the swapped page carries its own tab title, and pushState navigation never applies it.
+    // The web player wins while it is playing, so we only remember the page title in that case.
+    if (incoming.title) {
+        window.AmpachePageTitle = incoming.title;
+        if (!window.AmpacheNowPlayingTitle) {
+            document.title = incoming.title;
+        }
+    }
 
     // data needs a full document here (e.g. the login page after a session expired mid-navigation).
     if ($response.find("#guts").length === 0) {
-        var incomingBody = new DOMParser().parseFromString(data, "text/html").body;
+        var incomingBody = incoming.body;
 
         $("body").undelegate("a");
         $("body").undelegate("form");
@@ -361,6 +371,20 @@ export function loadContentData(data, status, jqXHR)
         deeplinking: false
     });
     initTabs();
+    scrollToHash();
+}
+
+// The browser scrolls to a fragment on a real navigation, but an ajax swap replaces the content after
+// it would have happened.
+function scrollToHash()
+{
+    if (window.location.hash.length < 2) {
+        return;
+    }
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (target) {
+        target.scrollIntoView();
+    }
 }
 
 export function loadContentPage(url)

@@ -55,9 +55,6 @@ final class InstallConfigView extends AbstractInstallStepView
     }
 
     /**
-     * @return array<string, string>
-     */
-    /**
      * The "recheck config" link, whose database host and name come straight from the request.
      */
     public function getConfigPath(): string

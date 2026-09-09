@@ -103,7 +103,7 @@ final class EditObjectAction extends AbstractEditAction
         ) {
             // an uploader editing their own item may not re-file it, so the ownership and parent keys are dropped
             // TODO: improve this uniqueness check
-            unset($data['user'], $data['artist'], $data['artist_name'], $data['album'], $data['album_name']);
+            unset($data['user'], $data['user_upload'], $data['artist'], $data['artist_name'], $data['album'], $data['album_name']);
             if (isset($data['edit_tags'])) {
                 $data['edit_tags'] = Tag::clean_to_existing($data['edit_tags']);
             }

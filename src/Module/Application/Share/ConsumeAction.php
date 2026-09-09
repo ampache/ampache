@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Share\ShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Batch\DefaultAction;
@@ -104,7 +105,9 @@ final readonly class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->shareRepository->registerAccess($share, new DateTime());
+        if (!$this->shareRepository->registerAccess($share, new DateTime())) {
+            throw new AccessDeniedException();
+        }
 
         if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
@@ -120,11 +123,24 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
         } elseif ($action === 'stream') {
-            echo new ShareView(
+            $view = new ShareView(
                 AmpConfig::get_web_path('/client'),
                 $this->ajaxUriRetriever,
                 $share
-            )->render();
+            );
+
+            // the page head is rendered from inside the view, so the meta has to be set before it runs
+            if (!$view->isEmbed()) {
+                PageMeta::set(
+                    [$view->getSharedByText()],
+                    $view->getOgType(),
+                    $view->getShareTitle(),
+                    $view->getPublicUrl(),
+                    $view->getArtUrl()
+                );
+            }
+
+            echo $view->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');
         }

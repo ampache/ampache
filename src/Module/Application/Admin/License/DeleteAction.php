@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,6 +47,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private LicenseRepositoryInterface $licenseRepository,
     ) {}
@@ -53,6 +55,10 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->requestParser->verifyForm('delete_license') === false) {
             throw new AccessDeniedException();
         }
 

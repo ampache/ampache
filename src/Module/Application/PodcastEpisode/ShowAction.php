@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\PodcastEpisode;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Podcast\PodcastEpisodeView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -65,13 +66,40 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $user       = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs   = $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id);
         $episode_id = (int) $this->requestParser->getFromRequest('podcast_episode');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
-        if ($episode->isNew() || !in_array($episode->catalog, $catalogs)) {
+        $shown      = !$episode->isNew() && in_array($episode->catalog, $catalogs);
+
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/podcast_episode.php?action=show&podcast_episode=' . $episode_id;
+            PageMeta::set(
+                [
+                    $episode->getPodcastName(),
+                    ($episode->time > 0) ? $episode->get_f_time() : null,
+                    $episode->get_description(),
+                ],
+                'website',
+                (string) $episode->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $episode->podcast . '&object_type=podcast&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'PodcastEpisode',
+                    'name' => (string) $episode->get_fullname(),
+                    'url' => $url,
+                    'partOfSeries' => ['@type' => 'PodcastSeries', 'name' => $episode->getPodcastName()],
+                    'duration' => PageMeta::duration((int) $episode->time),
+                    'datePublished' => $episode->getPubDate()->format('Y-m-d'),
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
                 'Requested a podcast_episode that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

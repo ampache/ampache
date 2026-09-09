@@ -551,6 +551,10 @@ export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refre
     }
 }
 
+/**
+ * @deprecated No caller
+ * Always returns "": #play_setting_subtitle does not seem to exist anywhere.
+ */
 export function getPagePlaySettings() {
     var settings = "";
     var stg_subtitle = document.getElementById("play_setting_subtitle");

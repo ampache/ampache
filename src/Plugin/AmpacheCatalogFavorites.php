@@ -90,6 +90,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         }
 
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
+        Song::build_cache($userflags);
         if (
             AmpConfig::get('ratings')
             && $userflags !== []
@@ -203,7 +204,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 <tfoot>
                 <tr class="th-bottom">
                     <th class="cel_play"></th>
-                    <td class="cel_cover">
+                    <th class="cel_cover"></th>
                     <th class="cel_song"></th>
                     <th class="cel_add"></th>
                     <th class="cel_artist"></th>
@@ -261,7 +262,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 echo '</span></td>';
             }
 
-            echo '<td class=grid_cover>';
+            echo '<td class="grid_cover">';
             $thumb = ($this->gridview)
                 ? ['width' => 150, 'height' => 150]
                 : ['width' => 100, 'height' => 100]; // default to 100x100
@@ -273,7 +274,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             }
 
             echo '<td class="optional">';
-            echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
+            echo '<div style="white-space: normal;">' . scrub_out($item->get_description()) . '</div>';
             echo '</div>';
             echo '</td></tr>';
         }

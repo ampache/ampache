@@ -133,7 +133,7 @@ final class SseApiApplication implements ApiApplicationInterface
     {
         $catalogPart = ($catalogIds === null) ? 'null' : implode(',', $catalogIds);
 
-        return hash('sha256', $action . '|' . $catalogPart);
+        return $action . '|' . $catalogPart;
     }
 
     /**

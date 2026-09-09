@@ -30,6 +30,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 use Override;
+use PDO;
 
 /**
  * Manages search related database access
@@ -58,6 +59,37 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
         $this->connection->query('DELETE FROM `search` WHERE `id` = ?', [$search->getId()]);
 
         $this->catalogCounter->count(CountableTableEnum::SEARCH);
+    }
+
+    /**
+     * Reads whole search rows for the in-request cache
+     *
+     * @param array<int|string> $searchIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $searchIds): array
+    {
+        if ($searchIds === []) {
+            return [];
+        }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $searchIds = array_map(intval(...), array_values($searchIds));
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `search` WHERE `id` IN (%s)',
+                implode(',', array_fill(0, count($searchIds), '?'))
+            ),
+            $searchIds
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     /**

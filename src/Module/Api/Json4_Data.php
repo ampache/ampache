@@ -142,7 +142,7 @@ class Json4_Data
     }
 
     /**
-     * _genre_array
+     * _simple_genre_array
      *
      * This returns the formatted 'tags' array for a JSON document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags

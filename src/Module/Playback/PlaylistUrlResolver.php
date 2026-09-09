@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -57,15 +58,26 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
 
     public function __construct(
         private LoggerInterface $logger,
+        private UrlValidatorInterface $urlValidator,
     ) {}
 
     public function resolve(string $url): string
     {
-        if (!$this->looksLikePlaylist($url)) {
+        $target = $this->urlValidator->resolvePinnedTarget($url);
+        if ($target === null) {
+            $this->logger->warning(
+                'Refusing to resolve playlist url: ' . $url,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
             return $url;
         }
 
-        $body = $this->read($url);
+        if (!$this->looksLikePlaylist($url, $target)) {
+            return $url;
+        }
+
+        $body = $this->read($url, $target);
         if ($body === null) {
             return $url;
         }
@@ -88,7 +100,10 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
         return $stream;
     }
 
-    private function contentType(string $url): string
+    /**
+     * @param array{host: string, port: int, address: string} $target
+     */
+    private function contentType(string $url, array $target): string
     {
         if (!function_exists('curl_version')) {
             return '';
@@ -106,6 +121,9 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
+            // pins the connection to the address resolve() already validated, so curl's own DNS lookup at
+            // connect time can't be answered differently than the check just above it was
+            CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
         ]);
         curl_exec($curl);
 
@@ -139,8 +157,10 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
 
     /**
      * An extension is the cheap test; a content type catches the directories that serve a playlist from a bare url.
+     *
+     * @param array{host: string, port: int, address: string} $target
      */
-    private function looksLikePlaylist(string $url): bool
+    private function looksLikePlaylist(string $url, array $target): bool
     {
         $extension = strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
         if (in_array($extension, self::PLAYLIST_EXTENSIONS, true)) {
@@ -152,10 +172,13 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
             return false;
         }
 
-        return in_array($this->contentType($url), self::PLAYLIST_MIMES, true);
+        return in_array($this->contentType($url, $target), self::PLAYLIST_MIMES, true);
     }
 
-    private function read(string $url): ?string
+    /**
+     * @param array{host: string, port: int, address: string} $target
+     */
+    private function read(string $url, array $target): ?string
     {
         if (!function_exists('curl_version')) {
             return null;
@@ -173,6 +196,7 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
             CURLOPT_RANGE => '0-' . (self::MAX_PLAYLIST_BYTES - 1),
+            CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
         ]);
 
         $body = curl_exec($curl);

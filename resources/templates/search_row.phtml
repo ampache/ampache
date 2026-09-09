@@ -85,6 +85,6 @@ if ($this->mayEdit()) { ?>
     <a id="edit_playlist_<?php echo $this->e($searchId); ?>" onclick="showEditDialog('search_row', '<?php echo $this->e($searchId); ?>', 'edit_playlist_<?php echo $this->e($searchId); ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
     </a>
-    <?php echo $this->raw(Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are you sure?')));
+    <?php echo $this->raw(Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are You Sure?')));
 } ?>
 </td>

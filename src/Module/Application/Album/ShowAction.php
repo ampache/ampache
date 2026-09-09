@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumPageView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -61,14 +63,42 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
+        $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs));
 
-        if ($album->isNew() || ($album->catalog !== 0 && !in_array($album->catalog, $catalogs))) {
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/albums.php?action=show&album=' . $albumId;
+            PageMeta::set(
+                [
+                    $album->get_parent_fullname(),
+                    ($album->year > 0) ? $album->year : null,
+                    ($album->song_count > 0) ? sprintf(nT_('%d song', '%d songs', $album->song_count), $album->song_count) : null,
+                    $album->get_f_time(),
+                    $album->get_f_tags(),
+                ],
+                'music.album',
+                $album->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $albumId . '&object_type=album&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MusicAlbum',
+                    'name' => $album->get_fullname(),
+                    'url' => $url,
+                    'byArtist' => ['@type' => 'MusicGroup', 'name' => $album->get_parent_fullname()],
+                    'numTracks' => $album->song_count,
+                    'datePublished' => ($album->year > 0) ? (string) $album->year : null,
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

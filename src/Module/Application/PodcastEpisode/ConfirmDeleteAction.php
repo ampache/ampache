@@ -61,6 +61,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
+        if ($this->requestParser->verifyForm('delete_podcast_episode') === false) {
+            throw new AccessDeniedException();
+        }
+
         $episode_id = (int) $this->requestParser->getFromRequest('podcast_episode_id');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if (!Catalog::can_remove($episode)) {

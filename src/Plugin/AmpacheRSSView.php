@@ -97,17 +97,23 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
                 : '<div class="home_plugin"><table class="tabledata striped-rows">';
             echo $divString;
             foreach ($xml->channel->item as $item) {
+                // Every field here comes from a third-party feed and is rendered in the user's session, so it is
+                // escaped the same way podcast feed data already is; a link is dropped unless it is http(s) so a
+                // `javascript:` url cannot survive the escaping.
+                $link  = (string) $item->link;
+                $link  = (preg_match('/^https?:\/\//i', $link) === 1) ? $link : '';
+                $title = scrub_out((string) $item->title);
                 echo '<tr><td>';
                 echo '<div>';
-                echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
+                echo '<div style="float: left; font-weight: bold;">' . (($link !== '') ? '<a href="' . scrub_out($link) . '" target="_blank">' . $title . '</a>' : $title) . '</div>';
                 echo '<div style="float: right;">' . get_datetime((int) strtotime((string) $item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (property_exists($item, 'image') && $item->image !== null) {
-                    echo '<div style="float: left; margin-right: 20px;"><img src="' . $item->image . '" style="width: auto; max-height: 48px;" /></div>';
+                    echo '<div style="float: left; margin-right: 20px;"><img src="' . scrub_out((string) $item->image) . '" style="width: auto; max-height: 48px;" /></div>';
                 }
 
-                echo '<div>' . $item->description . '</div>';
+                echo '<div>' . scrub_out((string) $item->description) . '</div>';
                 echo '</div>';
                 echo '</td></tr>';
 

@@ -475,13 +475,14 @@ class FolderRepositoryTest extends TestCase
                 }
 
                 if (str_contains($sql, 'CASE `id`')) {
-                    // params are N (id, count) pairs, then N (id, skip) pairs, then N ids for the WHERE IN
-                    $n = intdiv(count($params), 5);
+                    // params are N (id, count) pairs, then N (id, skip) pairs, then N (id, time) pairs, then N ids
+                    $n = intdiv(count($params), 7);
                     for ($i = 0; $i < $n; $i++) {
                         $folderId          = (int) $params[$i * 2];
                         $count             = (int) $params[$i * 2 + 1];
                         $skip              = (int) $params[2 * $n + $i * 2 + 1];
-                        $writes[$folderId] = [$count, $skip];
+                        $time              = (int) $params[4 * $n + $i * 2 + 1];
+                        $writes[$folderId] = [$count, $skip, $time];
                     }
                 }
 
@@ -490,8 +491,8 @@ class FolderRepositoryTest extends TestCase
 
         // only the two leaf folders hold media
         $direct->method('fetch')->willReturn(
-            ['folder_id' => '4', 'total_count' => '2', 'total_skip' => '1'],
-            ['folder_id' => '5', 'total_count' => '3', 'total_skip' => '0'],
+            ['folder_id' => '4', 'total_count' => '2', 'total_skip' => '1', 'time' => '100'],
+            ['folder_id' => '5', 'total_count' => '3', 'total_skip' => '0', 'time' => '150'],
             false
         );
 
@@ -508,10 +509,10 @@ class FolderRepositoryTest extends TestCase
         $this->subject->update_folder_counts();
 
         // Stats::count() increments every ancestor as a track plays, so the rebuild has to match that
-        self::assertSame([2, 1], $writes[4]);
-        self::assertSame([3, 0], $writes[5]);
-        self::assertSame([5, 1], $writes[2]);
-        self::assertSame([5, 1], $writes[1]);
+        self::assertSame([2, 1, 100], $writes[4]);
+        self::assertSame([3, 0, 150], $writes[5]);
+        self::assertSame([5, 1, 250], $writes[2]);
+        self::assertSame([5, 1, 250], $writes[1]);
         self::assertArrayNotHasKey(3, $writes);
     }
 

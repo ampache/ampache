@@ -579,7 +579,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
 
-        $this->rollUpPlayCounts();
+        $this->rollUpFolderCounts();
 
         $this->connection->query("UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
         $this->connection->query("UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
@@ -743,58 +743,67 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
-     * Sets each folder's play totals to the sum of every media item in its whole subtree
+     * Sets each folder's play totals and summed duration to the total of every media item in its whole subtree
      *
      * `Stats::count()` walks the ancestry and increments every parent as a track plays, so a folder's
-     * total covers what is under it, not only what is mapped directly to it. The accumulation is done in
+     * total covers what is under it, not only what is mapped directly to it; `time` is rolled up the
+     * same way, so a folder's duration always includes its subfolders'. The accumulation is done in
      * PHP because the ancestry lives in a comma-separated `path`, and matching it in SQL means
      * `FIND_IN_SET` over a folder-by-folder join that no index can help.
      */
-    private function rollUpPlayCounts(): void
+    private function rollUpFolderCounts(): void
     {
         $result = $this->connection->query(
-            "SELECT `counting`.`folder_id`, SUM(`counting`.`total_count`) AS `total_count`, SUM(`counting`.`total_skip`) AS `total_skip` FROM (SELECT `smap`.`folder_id`, COALESCE(`song`.`total_count`, 0) AS `total_count`, COALESCE(`song`.`total_skip`, 0) AS `total_skip` FROM `folder_map` AS `smap` JOIN `song` ON `smap`.`object_type` = 'song' AND `smap`.`object_id` = `song`.`id` UNION ALL SELECT `vmap`.`folder_id`, COALESCE(`video`.`total_count`, 0), COALESCE(`video`.`total_skip`, 0) FROM `folder_map` AS `vmap` JOIN `video` ON `vmap`.`object_type` = 'video' AND `vmap`.`object_id` = `video`.`id` UNION ALL SELECT `pmap`.`folder_id`, COALESCE(`podcast_episode`.`total_count`, 0), COALESCE(`podcast_episode`.`total_skip`, 0) FROM `folder_map` AS `pmap` JOIN `podcast_episode` ON `pmap`.`object_type` = 'podcast_episode' AND `pmap`.`object_id` = `podcast_episode`.`id`) AS `counting` GROUP BY `counting`.`folder_id`;"
+            "SELECT `counting`.`folder_id`, SUM(`counting`.`total_count`) AS `total_count`, SUM(`counting`.`total_skip`) AS `total_skip`, SUM(`counting`.`time`) AS `time` FROM (SELECT `smap`.`folder_id`, COALESCE(`song`.`total_count`, 0) AS `total_count`, COALESCE(`song`.`total_skip`, 0) AS `total_skip`, COALESCE(`song`.`time`, 0) AS `time` FROM `folder_map` AS `smap` JOIN `song` ON `smap`.`object_type` = 'song' AND `smap`.`object_id` = `song`.`id` UNION ALL SELECT `vmap`.`folder_id`, COALESCE(`video`.`total_count`, 0), COALESCE(`video`.`total_skip`, 0), COALESCE(`video`.`time`, 0) FROM `folder_map` AS `vmap` JOIN `video` ON `vmap`.`object_type` = 'video' AND `vmap`.`object_id` = `video`.`id` UNION ALL SELECT `pmap`.`folder_id`, COALESCE(`podcast_episode`.`total_count`, 0), COALESCE(`podcast_episode`.`total_skip`, 0), COALESCE(`podcast_episode`.`time`, 0) FROM `folder_map` AS `pmap` JOIN `podcast_episode` ON `pmap`.`object_type` = 'podcast_episode' AND `pmap`.`object_id` = `podcast_episode`.`id`) AS `counting` GROUP BY `counting`.`folder_id`;"
         );
 
         $direct = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $direct[(int) $row['folder_id']] = [(int) $row['total_count'], (int) $row['total_skip']];
+            $direct[(int) $row['folder_id']] = [(int) $row['total_count'], (int) $row['total_skip'], (int) $row['time']];
         }
 
         $result = $this->connection->query('SELECT `id`, `path` FROM `folder`;');
 
         $totals = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $folderId       = (int) $row['id'];
-            [$count, $skip] = $direct[$folderId] ?? [0, 0];
-            if ($count === 0 && $skip === 0) {
+            $folderId              = (int) $row['id'];
+            [$count, $skip, $time] = $direct[$folderId] ?? [0, 0, 0];
+            if ($count === 0 && $skip === 0 && $time === 0) {
                 continue;
             }
 
             // the folder itself, then every ancestor its path names
             foreach ([$folderId, ...array_map(intval(...), array_filter(explode(',', (string) $row['path'])))] as $id) {
-                $totals[$id] ??= [0, 0];
+                $totals[$id] ??= [0, 0, 0];
                 $totals[$id][0] += $count;
                 $totals[$id][1] += $skip;
+                $totals[$id][2] += $time;
             }
         }
 
-        $this->connection->query('UPDATE `folder` SET `total_count` = 0, `total_skip` = 0 WHERE `total_count` > 0 OR `total_skip` > 0;');
+        $this->connection->query('UPDATE `folder` SET `total_count` = 0, `total_skip` = 0, `time` = 0 WHERE `total_count` > 0 OR `total_skip` > 0 OR `time` > 0;');
 
         foreach (array_chunk($totals, 1000, true) as $chunk) {
             $countCases = [];
             $skipCases  = [];
+            $timeCases  = [];
             $params     = [];
-            foreach ($chunk as $folderId => [$count, $skip]) {
+            foreach ($chunk as $folderId => [$count, $skip, $time]) {
                 $countCases[] = 'WHEN ? THEN ?';
                 $params[]     = $folderId;
                 $params[]     = $count;
             }
 
-            foreach ($chunk as $folderId => [$count, $skip]) {
+            foreach ($chunk as $folderId => [$count, $skip, $time]) {
                 $skipCases[] = 'WHEN ? THEN ?';
                 $params[]    = $folderId;
                 $params[]    = $skip;
+            }
+
+            foreach ($chunk as $folderId => [$count, $skip, $time]) {
+                $timeCases[] = 'WHEN ? THEN ?';
+                $params[]    = $folderId;
+                $params[]    = $time;
             }
 
             $ids = array_keys($chunk);
@@ -802,9 +811,10 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
             $this->connection->query(
                 sprintf(
-                    'UPDATE `folder` SET `total_count` = CASE `id` %s ELSE `total_count` END, `total_skip` = CASE `id` %s ELSE `total_skip` END WHERE `id` IN (%s);',
+                    'UPDATE `folder` SET `total_count` = CASE `id` %s ELSE `total_count` END, `total_skip` = CASE `id` %s ELSE `total_skip` END, `time` = CASE `id` %s ELSE `time` END WHERE `id` IN (%s);',
                     implode(' ', $countCases),
                     implode(' ', $skipCases),
+                    implode(' ', $timeCases),
                     implode(',', array_fill(0, count($ids), '?'))
                 ),
                 $params

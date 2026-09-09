@@ -210,7 +210,7 @@ final class PlaylistImporter
     }
 
     /**
-     * parse_xspf
+     * _parse_xspf
      * this takes xspf filename and then attempts to found song filenames listed in the xspf
      *
      * @return Generator<string>

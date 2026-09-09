@@ -32,6 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -161,6 +162,21 @@ final class ScrobbleMethod implements MethodInterface
 
         $media = $this->modelFactory->createSong((int) $scrobbleId);
         if ($media->isNew()) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::NOT_FOUND,
+                    sprintf('Not Found: %s', $scrobbleId),
+                    self::ACTION,
+                    'song'
+                )
+            );
+
+            return $response;
+        }
+
+        // a catalog you are filtered from is not yours to record against
+        if (!Catalog::has_access($media->getCatalogId(), $userId)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,

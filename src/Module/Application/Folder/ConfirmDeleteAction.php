@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Folder\Deletion\FolderDeleterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -44,6 +45,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
         private FolderDeleterInterface $folderDeleter,
         private FolderRepositoryInterface $folderRepository,
     ) {}
@@ -56,6 +58,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
+        }
+
+        if ($this->requestParser->verifyForm('delete_folder') === false) {
+            throw new AccessDeniedException();
         }
 
         $body     = $request->getQueryParams();

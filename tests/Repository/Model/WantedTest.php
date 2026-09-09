@@ -55,6 +55,24 @@ class WantedTest extends TestCase
         self::assertTrue(Wanted::build_cache([666]));
     }
 
+    public function testGetFLinkEscapesTheNameInTheTitleAndTheText(): void
+    {
+        // name and mbid come from a musicbrainz lookup, and wanted_album_row.phtml prints this output raw
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Wanted();
+
+        $subject->name        = 'a"b';
+        $subject->mbid        = 'c"d';
+        $subject->artist      = 5;
+        $subject->artist_mbid = 'e"f';
+
+        self::assertSame(
+            '<a href="https://music.example/albums.php?action=show_missing&mbid=c&quot;d&artist=5&artist_mbid=e&quot;f" title="a&quot;b">a&quot;b</a>',
+            $subject->get_f_link()
+        );
+    }
+
     protected function setUp(): void
     {
         $this->wantedRepository  = $this->createMock(WantedRepositoryInterface::class);

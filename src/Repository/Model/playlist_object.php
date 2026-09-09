@@ -71,6 +71,14 @@ abstract class playlist_object extends database_object implements
     private ?bool $has_art         = null;
 
     /**
+     * The operator glues the search conditions together in the WHERE, so it must only ever be AND or OR.
+     */
+    protected static function normalizeLogicOperator(mixed $value): string
+    {
+        return (strtolower((string) $value) === 'or') ? 'or' : 'and';
+    }
+
+    /**
      * display_art
      * @param array{width: int, height: int} $size
      */
@@ -366,6 +374,14 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * Whether the user may see this list at all; a collaborator counts, they are invited to curate it.
+     */
+    public function isVisible(?User $user = null): bool
+    {
+        return ($this->type === 'public' || $this->has_collaborate($user));
+    }
+
+    /**
      * set_last
      * Stores one of the cached totals.
      */
@@ -428,7 +444,7 @@ abstract class playlist_object extends database_object implements
             }
 
             if (!empty($data['operator'])) {
-                $this->logic_operator = (string) $data['operator'];
+                $this->logic_operator = self::normalizeLogicOperator($data['operator']);
             }
         }
 

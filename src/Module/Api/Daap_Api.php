@@ -598,7 +598,7 @@ class Daap_Api
     }
 
     /**
-     * catalog_songs
+     * _catalog_songs
      */
     private static function _catalog_songs(): string
     {

@@ -30,6 +30,7 @@ use Ampache\Gui\Art\GetArtView;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +39,10 @@ final class ShowArtDlgAction extends AbstractArtAction
 {
     public const string REQUEST_KEY = 'show_art_dlg';
 
-    public function __construct(private readonly UiInterface $ui) {}
+    public function __construct(
+        private readonly UiInterface $ui,
+        private readonly DeletionUrlResolverInterface $deletionUrlResolver,
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -49,10 +53,7 @@ final class ShowArtDlgAction extends AbstractArtAction
             throw new AccessDeniedException();
         }
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
+        $burl = $this->deletionUrlResolver->resolveBurl(Core::get_get('burl'));
 
         $object_id = $item->getId();
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Util\UrlValidatorInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -102,10 +103,37 @@ class PlaylistUrlResolverTest extends TestCase
         self::assertSame($url, $this->subject->resolve($url));
     }
 
+    /**
+     * A url the validator refuses (loopback, private, link-local, cloud metadata, ...) is never fetched.
+     */
+    public function testResolveRefusesAUrlTheValidatorRejects(): void
+    {
+        $urlValidator = $this->createMock(UrlValidatorInterface::class);
+        $urlValidator->method('resolvePinnedTarget')->willReturn(null);
+
+        $subject = new PlaylistUrlResolver(
+            $this->createMock(LoggerInterface::class),
+            $urlValidator
+        );
+
+        self::assertSame(
+            'http://127.0.0.1:9999/poc.m3u',
+            $subject->resolve('http://127.0.0.1:9999/poc.m3u')
+        );
+    }
+
     protected function setUp(): void
     {
+        $urlValidator = $this->createMock(UrlValidatorInterface::class);
+        $urlValidator->method('resolvePinnedTarget')->willReturn([
+            'host' => 'some-host',
+            'port' => 443,
+            'address' => '203.0.113.10',
+        ]);
+
         $this->subject = new PlaylistUrlResolver(
-            $this->createMock(LoggerInterface::class)
+            $this->createMock(LoggerInterface::class),
+            $urlValidator
         );
     }
 }

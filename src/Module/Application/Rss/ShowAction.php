@@ -76,6 +76,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         $rssToken = $queryParams['rsstoken'] ?? '';
 
         $user = $this->userRepository->getByRssToken($rssToken);
+        if ($user !== null && $user->disabled) {
+            // same as an unknown token: the feeds already take a null user
+            $user = null;
+        }
 
         if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $item = $this->libraryItemLoader->load(

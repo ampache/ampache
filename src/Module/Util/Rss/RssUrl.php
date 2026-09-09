@@ -105,9 +105,10 @@ final class RssUrl
      */
     public static function slug(string $text): string
     {
+        $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $slug = (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
         $slug = strtolower((string) preg_replace('/[^a-zA-Z0-9]+/', '-', $slug));
 
-        return trim($slug, '-');
+        return trim(substr($slug, 0, 96), '-');
     }
 }

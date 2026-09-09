@@ -183,7 +183,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * directPlayReasons
+     * _directPlayReasons
      *
      * Why the client cannot play the file as it stands, as one human-readable string per unmet constraint. An empty
      * list means direct play is fine. A client that declares no profiles at all is taken at its word and allowed to
@@ -234,7 +234,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * profileAllowsChannels
+     * _profileAllowsChannels
      *
      * Whether the media fits within a profile's channel limit. Kept apart from the format check so a rejection can
      * say which constraint was actually missed.
@@ -254,7 +254,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * profileCarriesFormat
+     * _profileCarriesFormat
      *
      * Whether one DirectPlayProfile covers this container and codec. Per the spec an empty list means "any", so only
      * a non-empty list that excludes the value counts as a mismatch.
@@ -279,7 +279,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * sourceStream
+     * _sourceStream
      *
      * The StreamDetails of the file as it sits on disk. Ampache stores the container as the file suffix and has no
      * separate codec column, so the two carry the same value; bit depth has no source and is left out.
@@ -313,7 +313,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * targetBitrate
+     * _targetBitrate
      *
      * The output bitrate in bits per second, held to whatever the server already allows for API players so a client
      * cannot ask its way past the configured ceiling.
@@ -337,7 +337,7 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * targetFormat
+     * _targetFormat
      *
      * The container the client would rather be given. Its transcoding profiles are preferences, not commands, so an
      * unconfigured format is ignored here and Stream falls back to the server's own target.

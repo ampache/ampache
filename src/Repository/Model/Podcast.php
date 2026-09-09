@@ -71,7 +71,7 @@ class Podcast extends database_object implements
     private ?string $website     = null;
 
     /**
-     * Podcast
+     * __construct
      * Takes the ID of the podcast and pulls the info from the db
      */
     public function __construct(?int $podcast_id = 0)

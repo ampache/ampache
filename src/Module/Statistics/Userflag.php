@@ -310,7 +310,10 @@ class Userflag extends database_object
             return true;
         }
 
-        $date = $date ?? time();
+        // a flag cannot be dated in the future: a wrong clock used to pin a favourite to the top of every
+        // newest list and the activity feed forever. one minute of slack for a clock merely off ntp
+        $now  = time();
+        $date = ($date === null || $date < 1 || $date > $now + 60) ? $now : $date;
 
         debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
 

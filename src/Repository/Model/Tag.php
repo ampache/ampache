@@ -142,7 +142,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     /**
      * Warm get_top_tags() for a whole page with one read
      *
-     * @param list<int> $object_ids
+     * @param array<int|string> $object_ids
      */
     public static function build_object_tag_cache(string $type, array $object_ids): bool
     {
@@ -271,6 +271,22 @@ class Tag extends database_object implements library_item, displayable_item, con
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
+        }
+
+        // the page warm holds the same rows, heaviest first; this read lists them by id like the query does
+        if ($object_id !== null && parent::is_cached('object_tags_' . $type, $object_id)) {
+            $tags = [];
+            foreach (parent::get_from_cache('object_tags_' . $type, $object_id) as $tag) {
+                $tags[(int) $tag['id']] = [
+                    'id' => (int) $tag['id'],
+                    'name' => (string) $tag['name'],
+                    'is_hidden' => (int) $tag['is_hidden'],
+                    'user' => (int) $tag['user'],
+                ];
+            }
+            ksort($tags);
+
+            return array_values($tags);
         }
 
         return self::getTagRepository()->getObjectTags($type, $object_id);
@@ -456,7 +472,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag
+     * _add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      */
     private static function _add_tag(string $value): ?int
@@ -473,7 +489,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag_map
+     * _add_tag_map
      * This adds a specific tag to the map for specified object
      */
     private static function _add_tag_map(string $type, int|string $object_id, int|string $tag_id, int $user_id = self::NO_USER): int
@@ -549,7 +565,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * remove_all_maps
+     * _remove_all_maps
      * Clear all the tags from an object when there isn't anything there
      */
     private static function _remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
@@ -573,7 +589,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * tag_map_exists
+     * _tag_map_exists
      * This looks to see if the current mapping of the current object exists
      */
     private static function _tag_map_exists(string $type, int $object_id, int $tag_id, int $user_id = self::NO_USER): bool

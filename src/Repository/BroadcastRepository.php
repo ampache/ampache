@@ -47,9 +47,6 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     ) {}
 
     /**
-     * Starts or stops the broadcast, resetting the current song and listener count
-     */
-    /**
      * Clears the started state of broadcasts that cannot be running
      *
      * Only the rows that are provably dead are touched: a broadcast with no `key` has nothing a listener
@@ -168,9 +165,6 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     }
 
     /**
-     * Writes the editable properties of an existing broadcast
-     */
-    /**
      * Writes the broadcast, inserting it when it has no id yet
      *
      * Returns the id a new row was given, or null when an existing one was updated.
@@ -202,6 +196,9 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
         return $result->rowCount();
     }
 
+    /**
+     * Writes the editable properties of an existing broadcast
+     */
     public function update(Broadcast $broadcast): void
     {
         $this->connection->query(
@@ -237,6 +234,9 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
         );
     }
 
+    /**
+     * Starts or stops the broadcast, resetting the current song and listener count
+     */
     public function updateState(Broadcast $broadcast, int $started, string $key): void
     {
         $this->connection->query(

@@ -27,6 +27,7 @@ use Ampache\Module\Application\Admin\License\DeleteAction;
 use Ampache\Module\Application\Admin\License\EditAction;
 use Ampache\Module\Application\Admin\License\ShowAction;
 use Ampache\Module\Application\Admin\License\ShowCreateAction;
+use Ampache\Module\Application\Admin\License\ShowDeleteAction;
 use Ampache\Module\Application\Admin\License\ShowEditAction;
 use Ampache\Module\Application\Admin\License\ShowHiddenAction;
 use Ampache\Module\Application\ApplicationRunner;
@@ -42,6 +43,7 @@ $dic->get(ApplicationRunner::class)->run(
         ShowAction::REQUEST_KEY => ShowAction::class,
         ShowHiddenAction::REQUEST_KEY => ShowHiddenAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,
         ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         EditAction::REQUEST_KEY => EditAction::class,

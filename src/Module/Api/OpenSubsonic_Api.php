@@ -1605,6 +1605,10 @@ class OpenSubsonic_Api
         $artists = ($catalogs === [])
             ? []
             : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+
+        // one flag read for the whole index instead of one per artist
+        Userflag::build_cache('artist', array_column($artists, 'id'));
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -1826,7 +1830,11 @@ class OpenSubsonic_Api
             return;
         }
 
-        $size = (isset($input['size']) && is_numeric($input['size'])) ? (int) $input['size'] : 'original';
+        // clients each pick their own pixel count, and every distinct one is stored and kept, so snap
+        // onto a size the interface already makes. Larger than anything we make serves the original.
+        $size = (isset($input['size']) && is_numeric($input['size']))
+            ? (Art::canonical_size((int) $input['size']) ?? 'original')
+            : 'original';
 
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -2247,6 +2255,13 @@ class OpenSubsonic_Api
             return;
         }
 
+        // a private list you neither own nor collaborate on is not yours to read
+        if ($playlist->type !== 'public' && !$playlist->has_collaborate($user)) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -2268,7 +2283,8 @@ class OpenSubsonic_Api
      */
     public function getplaylists(array $input, User $user): void
     {
-        $user = (isset($input['username']))
+        // only an admin may list another user's playlists; their private ones are not public
+        $user = (isset($input['username']) && $user->access >= AccessLevelEnum::ADMIN->value)
             ? User::get_from_username($input['username']) ?? $user
             : $user;
 
@@ -2290,6 +2306,8 @@ class OpenSubsonic_Api
         }
 
         $results = $browse->get_objects();
+
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -3145,6 +3163,16 @@ class OpenSubsonic_Api
             return;
         }
 
+        // driving the server's own playback is gated like the native localplay method, nothing checked it here
+        if (
+            !AmpConfig::get('allow_localplay_playback')
+            || $user->access < (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        ) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
         $object_id  = $input['id'] ?? [];
         $controller = AmpConfig::get('localplay_controller', '');
         $localplay  = ($controller) ? new LocalPlay($controller) : null;
@@ -3336,6 +3364,10 @@ class OpenSubsonic_Api
 
         // The reported position is stored verbatim: the spec derives `positionMs` from the last report received
         $position_ms = (array_key_exists('positionMs', $input)) ? (int) $input['positionMs'] : null;
+        if ($position_ms !== null) {
+            // an out-of-range position would pin a stuck now_playing row, so keep it within the track
+            $position_ms = max(0, min($position_ms, (int) $media->time * 1000));
+        }
         $position    = (int) round(($position_ms ?? 0) / 1000);
         $started     = time() - $position;
         $rate        = (array_key_exists('playbackRate', $input)) ? (float) $input['playbackRate'] : null;
@@ -3385,6 +3417,8 @@ class OpenSubsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
@@ -3477,6 +3511,8 @@ class OpenSubsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
@@ -3572,6 +3608,8 @@ class OpenSubsonic_Api
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
+            // long pauses might cause your now_playing to hide, and the sweep is the same for every id
+            Stream::garbage_collection();
             foreach ($valid_media as list($media, $type)) {
                 $time = (isset($input['time']))
                     ? (int) (((int) $input['time']) / 1000)
@@ -3580,8 +3618,6 @@ class OpenSubsonic_Api
                 $prev_obj  = $previous['object_id'] ?: 0;
                 $prev_date = $previous['date'];
 
-                // long pauses might cause your now_playing to hide
-                Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
                 // submission is true: stream finished. Record the play locally
                 // (set_played is dedup-guarded) and notify scrobble plugins.
@@ -4181,7 +4217,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * check_parameter
+     * _check_parameter
      * @param array<string, mixed> $input
      * @return false|mixed
      */

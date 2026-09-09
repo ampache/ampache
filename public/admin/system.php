@@ -26,7 +26,9 @@ declare(strict_types=1);
 use Ampache\Module\Application\Admin\System\ClearCacheAction;
 use Ampache\Module\Application\Admin\System\GenerateConfigAction;
 use Ampache\Module\Application\Admin\System\ResetDbCharsetAction;
+use Ampache\Module\Application\Admin\System\ShowClearCacheAction;
 use Ampache\Module\Application\Admin\System\ShowDebugAction;
+use Ampache\Module\Application\Admin\System\ShowResetDbCharsetAction;
 use Ampache\Module\Application\Admin\System\WriteConfigAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -41,8 +43,10 @@ $dic->get(ApplicationRunner::class)->run(
         GenerateConfigAction::REQUEST_KEY => GenerateConfigAction::class,
         WriteConfigAction::REQUEST_KEY => WriteConfigAction::class,
         ResetDbCharsetAction::REQUEST_KEY => ResetDbCharsetAction::class,
+        ShowResetDbCharsetAction::REQUEST_KEY => ShowResetDbCharsetAction::class,
         ShowDebugAction::REQUEST_KEY => ShowDebugAction::class,
         ClearCacheAction::REQUEST_KEY => ClearCacheAction::class,
+        ShowClearCacheAction::REQUEST_KEY => ShowClearCacheAction::class,
     ],
     ShowDebugAction::REQUEST_KEY
 );

@@ -39,6 +39,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
+use Ampache\Module\System\Session;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginGetAvatarUrlInterface;
@@ -157,6 +158,11 @@ class User extends database_object
         ?bool $disabled = false,
         ?bool $encrypted = false,
     ): int {
+        // the name is used as a filesystem path for uploads, so it must not carry a path segment
+        if (str_contains($username, '/') || str_contains($username, '\\') || in_array($username, ['.', '..'], true)) {
+            return 0;
+        }
+
         // don't try to overwrite users that already exist
         if (
             in_array(strtolower($username), [strtolower(T_('System')), 'system'])
@@ -450,12 +456,10 @@ class User extends database_object
                 'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
-            foreach ($user_list as $user_id) {
-                debug_event(self::class, 'Update counts for ' . $user_id, 5);
-                foreach ($server_counts as $table => $count) {
-                    if (in_array($table, $count_array)) {
-                        self::set_user_data($user_id, $table, $count);
-                    }
+            debug_event(self::class, 'Update counts for all users', 5);
+            foreach ($server_counts as $table => $count) {
+                if (in_array($table, $count_array)) {
+                    $userRepository->setUserDataForAll($table, $count);
                 }
             }
 
@@ -614,8 +618,9 @@ class User extends database_object
         $this->disabled = true;
         self::remove_from_cache('user', $this->id);
 
-        // Delete any sessions they may have
+        // Delete any sessions they may have, including a persistent remember-me token
         $userRepository->deleteSessions((string) $this->username);
+        Session::remove_remember_token((string) $this->username);
 
         return true;
     }
@@ -873,6 +878,19 @@ class User extends database_object
     }
 
     /**
+     * The play queue, created on first use. Callers that only read it should
+     * use the playlist property, which stays null until something is queued.
+     */
+    public function getPlaylist(): Tmp_Playlist
+    {
+        if ($this->playlist === null) {
+            $this->playlist = Tmp_Playlist::get_from_session((string) session_id());
+        }
+
+        return $this->playlist;
+    }
+
+    /**
      * Returns the value of a certain user-preference
      */
     public function getPreferenceValue(string $preferenceName): int|string|null
@@ -961,7 +979,7 @@ class User extends database_object
     public function load_playlist(): void
     {
         if ($this->playlist === null && session_id()) {
-            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+            $this->playlist = Tmp_Playlist::find_from_session(session_id());
         }
     }
 
@@ -1120,6 +1138,9 @@ class User extends database_object
         if ($this->store(UserFieldEnum::PASSWORD, $hashed_password)) {
             unset($_SESSION['userdata']['password']);
         }
+
+        // a persistent remember-me token issued under the old password must not outlive it
+        Session::remove_remember_token((string) $this->username);
     }
 
     public function update_state(string $new_state): void
@@ -1230,7 +1251,6 @@ class User extends database_object
                 'access' => 25,
                 'disabled' => 0,
                 'catalog_filter_group' => 0,
-                'catalogs' => self::get_user_catalogs(-1),
                 'apikey' => null,
                 'rsstoken' => null,
                 'streamtoken' => null,

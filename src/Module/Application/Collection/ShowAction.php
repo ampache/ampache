@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -56,8 +58,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             (int) ($request->getQueryParams()['collection'] ?? 0)
         );
 
-        $this->ui->showHeader();
-
         $globalUser = Core::get_global('user');
         $user       = $globalUser instanceof User ? $globalUser : null;
         // A collection the user may not see reports as missing rather than forbidden, matching the API: telling
@@ -70,8 +70,20 @@ final readonly class ShowAction implements ApplicationActionInterface
                 'Requested a collection that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
+            $this->ui->showHeader();
             echo T_('You have requested an object that does not exist');
         } else {
+            // the header renders the meta, so the collection has to describe itself before it is shown
+            $webPath = AmpConfig::get_web_path();
+            PageMeta::set(
+                [],
+                'music.playlist',
+                (string) $collection->get_fullname(),
+                $webPath . '/collection.php?action=show&collection=' . $collection->getId(),
+                $webPath . '/image.php?object_id=' . $collection->getId() . '&object_type=collection&size=600x600'
+            );
+
+            $this->ui->showHeader();
             // `get_items()` is the shape every other ordered browse is fed, so `show_objects()` needs no
             // special case; the view decides how to lay the members out
             echo $this->guiFactory->createCollectionViewAdapter(

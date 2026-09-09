@@ -165,14 +165,16 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     }
 
     /**
-     * Sets the last access-date and raises the counter
+     * Atomically raise the counter while below max_counter. Returns false when the limit is reached.
      */
-    public function registerAccess(Share $share, DateTimeInterface $date): void
+    public function registerAccess(Share $share, DateTimeInterface $date): bool
     {
-        $this->connection->query(
-            'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?',
+        $result = $this->connection->query(
+            'UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ? AND (`max_counter` = 0 OR `counter` < `max_counter`)',
             [$date->getTimestamp(), $share->getId()]
         );
+
+        return $result->rowCount() > 0;
     }
 
     /**

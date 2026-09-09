@@ -159,10 +159,12 @@ generate_pot_utds() {
     echo "Deleting old $tdstxt"
     rm -f $tdstxt
     {
+        printf ''
+        printf ''
         printf ' #######################################################################\n\n'
         printf ' # This file lists all translatable strings from the Ampache preference table\n'
         printf ' # (descriptions and subcategories). It is generated from the source code by\n'
-        printf " # './gather-messages.sh [-gu|--getutds]' - descriptions come from\n"
+        printf ' # ./gather-messages.sh [-gu|--getutds] - descriptions come from\n'
         printf ' # Preference::translate_db() and subcategories from Preference::DEFAULTS,\n'
         printf ' # so a live database is NOT required. Do not edit it by hand; re-run the script.\n\n'
         printf ' #######################################################################\n'

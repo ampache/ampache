@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\database_object;
@@ -59,9 +60,12 @@ use RuntimeException;
  */
 class Art extends database_object
 {
+    /** @var int[] The square sizes the interface already generates, smallest first */
+    public const array CANONICAL_SIZES = [64, 128, 200, 256, 300, 400, 512, 768, 1400];
     /** @var int[] The placeholder sizes shipped in public/images, smallest first */
     public const array FALLBACK_SIZES = [128, 200, 256, 384, 768];
-    public const array VALID_TYPES    = [
+
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -72,6 +76,12 @@ class Art extends database_object
     ];
 
     protected const string DB_TABLENAME = 'image';
+
+    /**
+     * Aspect derived output sizes are rounded up to this step. display() scales the width by each
+     * image's own ratio, so without rounding one stored size is generated per distinct ratio.
+     */
+    private const int EXPAND_STEP = 32;
 
     /** @var string The placeholder every type without one of its own falls back to */
     private const string FALLBACK_IMAGE = 'blankalbum';
@@ -134,10 +144,21 @@ class Art extends database_object
             return false;
         }
 
-        $ids = array_values($object_ids);
+        $ids      = array_values($object_ids);
+        $with_art = [];
 
         foreach (self::getImageRepository()->getRowsByObjectIds($ids, $type) as $row) {
             parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
+            $with_art[(int) $row['object_id']] = true;
+        }
+
+        // an object with no image row at all is warm too, or url() reads it back one by one
+        if ($type !== null) {
+            foreach ($ids as $id) {
+                if (!isset($with_art[(int) $id])) {
+                    parent::add_to_cache('art_none_' . $type, (int) $id, [true]);
+                }
+            }
         }
 
         // also warm has_db_meta()'s per-object cache, so row rendering stops querying once per item
@@ -165,10 +186,10 @@ class Art extends database_object
                 }
             }
 
-            // objects with no art of a given kind would otherwise keep re-querying on every cache miss
+            // an object with no art of a given kind is cached as such, so it is not read again on every miss
             foreach ($remaining as $kind => $object_ids_without_art) {
                 foreach (array_keys($object_ids_without_art) as $object_id) {
-                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, [0]);
+                    parent::add_to_cache('art_meta_' . $type . '_' . $kind, $object_id, []);
                 }
             }
 
@@ -179,6 +200,24 @@ class Art extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * canonical_size
+     *
+     * Snaps a client requested square size up onto the set the interface already generates, so a client
+     * picking its own pixel count reuses a thumbnail instead of storing one of its own for good.
+     * Null when the request is larger than anything generated, leaving the caller to serve the original.
+     */
+    public static function canonical_size(int $wanted): ?int
+    {
+        foreach (self::CANONICAL_SIZES as $available) {
+            if ($wanted <= $available) {
+                return $available;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -281,6 +320,7 @@ class Art extends database_object
         }
 
         // Expand wide art slightly if it's larger than the desired thumbnail size
+        $expanded = false;
         if (!$thumb_link && $art->width && $art->height) {
             $src_ratio  = $art->width / $art->height;
             $dst_ratio  = $size['width'] / $size['height'];
@@ -288,19 +328,26 @@ class Art extends database_object
             if ($difference > 0.3) {
                 // keep original height and widen a bit
                 $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
+                $expanded      = true;
             }
 
             if ($difference < -0.1) {
                 // extend the height a little bit and thin it out
                 $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
                 $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
+                $expanded       = true;
             }
         }
 
         // double the image output size for display scaling
-        $out_size = (AmpConfig::get('upscale_images', true))
-            ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
-            : $size['width'] . 'x' . $size['height'];
+        $scale  = (AmpConfig::get('upscale_images', true)) ? 2 : 1;
+        $out_w  = $size['width'] * $scale;
+        $out_h  = $size['height'] * $scale;
+        // the size above came from this image's own ratio, so asking for it verbatim stores a derivative
+        // per ratio. Only the file we request is rounded, the markup below keeps the exact size.
+        $out_size = ($expanded)
+            ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
+            : $out_w . 'x' . $out_h;
 
         $web_path = AmpConfig::get_web_path('/client');
         $use_auth = !self::isPublic();
@@ -323,12 +370,18 @@ class Art extends database_object
             if ($has_db) {
                 $link .= '&id=' . $art->id;
             }
+
+            // the full size view of a drawn tile has to be the same drawing as the thumbnail
+            $link .= self::generated_art_query();
         }
 
         echo '<div class="item_art">';
+        // A drawn tile is not the cover, and nothing on screen says so. The hover text does, while the
+        // alt text stays the plain name so a listing is not read out as a paragraph per row.
         // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
-        $name = scrub_out($name);
-        echo '<a href="' . $link . '" title="' . $name . '"';
+        $name  = scrub_out($name);
+        $hover = self::drawn_hover_title($name, $object_type, !$has_db);
+        echo '<a href="' . $link . '" title="' . $hover . '"';
         if ($prettyPhoto) {
             echo ' rel="prettyPhoto"';
         }
@@ -346,9 +399,19 @@ class Art extends database_object
 
             // Keeps the browser cache feature but forces a refresh once the art changes: the original row's id and changes on every replace and thumbs are deleted
             $imgurl .= '&id=' . $art->id;
+            $imgurl .= self::generated_art_query();
         } else {
-            // one shared url for every item with no art, so the browser fetches and caches the placeholder once
-            $imgurl = self::get_fallback_url($object_type, $out_size);
+            $suffix = self::generated_art_query();
+            if ($suffix !== '') {
+                $imgurl = $web_path . '/image.php?object_id=' . $object_id . '&object_type=' . $object_type
+                    . '&size=' . $out_size . $suffix;
+                if ($use_auth) {
+                    $imgurl .= '&auth=' . session_id();
+                }
+            } else {
+                // one shared url for every item with no art, so the browser fetches and caches the placeholder once
+                $imgurl = self::get_fallback_url($object_type, $out_size);
+            }
         }
 
         echo '<img src="' . $imgurl . '" alt="' . $name . '" height="' . $size['height'] . '" width="' . $size['width'] . '" loading="lazy" decoding="async" />';
@@ -360,8 +423,8 @@ class Art extends database_object
         if ($size['width'] == 150 && $size['height'] == 150) {
             echo $item_art_play;
             echo Ajax::text(
-                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . "' + getPagePlaySettings() + '",
-                '<span class="item_art_play_icon" title="' . T_('Play') . '" />',
+                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id,
+                '<span class="item_art_play_icon" title="' . T_('Play') . '"></span>',
                 'directplay_art_' . $object_type . '_' . $object_id
             );
             echo "</div>";
@@ -450,6 +513,54 @@ class Art extends database_object
         }
 
         return $extension;
+    }
+
+    /**
+     * fallback_edge
+     *
+     * The longest side a size string asks for, or 0 when it asks for none. Callers that draw rather than
+     * resize need the number, not the nearest shipped file.
+     */
+    public static function fallback_edge(?string $size): int
+    {
+        if ($size !== null && preg_match('/^(\\d+)x(\\d+)$/', $size, $matches)) {
+            return max((int) $matches[1], (int) $matches[2]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * fallback_image_name
+     *
+     * The placeholder file a type falls back to, so a caller cannot name one that was never shipped.
+     */
+    public static function fallback_image_name(string $type): string
+    {
+        return self::FALLBACK_IMAGES[$type] ?? self::FALLBACK_IMAGE;
+    }
+
+    /**
+     * fallback_size
+     *
+     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
+     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
+     */
+    public static function fallback_size(?string $size): string
+    {
+        // the full size image, for 'original' and anything bigger than the largest thumbnail
+        if ($size === 'original') {
+            return '';
+        }
+
+        $wanted = self::fallback_edge($size);
+        foreach (self::FALLBACK_SIZES as $available) {
+            if ($wanted <= $available) {
+                return '_' . $available . 'x' . $available;
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -564,7 +675,7 @@ class Art extends database_object
      */
     public static function get_fallback_url(string $type, ?string $size = null): string
     {
-        $name = self::FALLBACK_IMAGES[$type] ?? self::FALLBACK_IMAGE;
+        $name = self::fallback_image_name($type);
 
         // a custom blank album is already a url of its own, and a type with its own placeholder keeps it
         if ($name === self::FALLBACK_IMAGE) {
@@ -574,7 +685,7 @@ class Art extends database_object
             }
         }
 
-        $suffix = self::_fallback_size($size);
+        $suffix = self::fallback_size($size);
 
         return AmpConfig::get_web_path('/client') . '/images/' . $name . $suffix . '.png';
     }
@@ -871,6 +982,10 @@ class Art extends database_object
             $size       = $size_array['width'] . 'x' . $size_array['height'];
         }
 
+        if (parent::is_cached('art_none_' . $type, $uid)) {
+            return self::get_fallback_url($type, $size);
+        }
+
         $key = $type . $uid . $size;
         if (parent::is_cached('art', $key)) {
             $row    = parent::get_from_cache('art', $key);
@@ -886,6 +1001,9 @@ class Art extends database_object
                 parent::add_to_cache('art', $key, $row);
                 $mime   = $row['mime'];
                 $art_id = $row['id'];
+            } elseif ($size === 'original') {
+                // the fallback read below asks the very same question
+                return self::get_fallback_url($type, $size);
             } else {
                 $row = $repository->findByObjectAndSize($type, $uid, 'original');
 
@@ -978,33 +1096,6 @@ class Art extends database_object
         }
     }
 
-    /**
-     * _fallback_size
-     *
-     * Snaps a requested size onto a shipped placeholder. Anything else fell through to the full size image,
-     * which is 660KB for a folder, so an unrecognised size took the largest file rather than the closest one.
-     */
-    private static function _fallback_size(?string $size): string
-    {
-        $wanted = 0;
-        if ($size !== null && preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
-            $wanted = max((int) $matches[1], (int) $matches[2]);
-        }
-
-        // the full size image, for 'original' and anything bigger than the largest thumbnail
-        if ($size === 'original') {
-            return '';
-        }
-
-        foreach (self::FALLBACK_SIZES as $available) {
-            if ($wanted <= $available) {
-                return '_' . $available . 'x' . $available;
-            }
-        }
-
-        return '';
-    }
-
     private static function _hasGD(): bool
     {
         return (
@@ -1056,6 +1147,16 @@ class Art extends database_object
     }
 
     /**
+     * _snap_expanded
+     *
+     * Rounds up to EXPAND_STEP. Only ever applied to a dimension the aspect expansion computed.
+     */
+    private static function _snap_expanded(int $value): int
+    {
+        return (int) (ceil($value / self::EXPAND_STEP) * self::EXPAND_STEP);
+    }
+
+    /**
      * _write_to_dir
      */
     private static function _write_to_dir(
@@ -1104,6 +1205,49 @@ class Art extends database_object
     }
 
     /**
+     * The hover text, telling the listener a tile was drawn and what it was drawn from.
+     *
+     * Only claimed when the item holds no art row at all, which is the only case display() can be sure
+     * about: finding out whether an existing row still has its data behind it means loading the image,
+     * and a browse page would load fifty of them just to write its html. So this understates rather
+     * than risks calling a real cover a drawing.
+     */
+    private static function drawn_hover_title(string $escapedName, string $type, bool $missing): string
+    {
+        if (!$missing || self::generated_art_query() === '') {
+            return $escapedName;
+        }
+
+        /* HINT: %1$s is the item name, %2$s says what the drawing was made from */
+        // the name arrives escaped, so only the translated half is escaped here
+        return sprintf(T_('%1$s — %2$s'), $escapedName, scrub_out(T_('no cover yet')));
+    }
+
+    /**
+     * The query string that pins a drawn tile, or an empty string when nothing would be drawn.
+     *
+     * It goes on every image url, not only the ones we expect to fall back. An item can hold an image
+     * row whose data has gone missing, and display() only knows the row is there while image.php is the
+     * one that finds out the data is not: those urls end up drawn too. Naming the template on all of
+     * them also means switching template changes the url, so the browser fetches the new tile instead
+     * of handing back the one it already had.
+     */
+    private static function generated_art_query(): string
+    {
+        $generated = self::getGeneratedArt();
+        if (!$generated->isEnabled()) {
+            return '';
+        }
+
+        $custom = (string) AmpConfig::get('custom_blankalbum', '');
+        if ($custom !== '') {
+            return '';
+        }
+
+        return '&generate=1&template=' . rawurlencode($generated->resolveTemplate()->getId());
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private static function getConfigContainer(): ConfigContainerInterface
@@ -1111,6 +1255,13 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(ConfigContainerInterface::class);
+    }
+
+    private static function getGeneratedArt(): GeneratedArtServiceInterface
+    {
+        global $dic;
+
+        return $dic->get(GeneratedArtServiceInterface::class);
     }
 
     /**
@@ -1526,12 +1677,12 @@ class Art extends database_object
         if (database_object::is_cached($index, $this->object_id)) {
             $row = database_object::get_from_cache($index, $this->object_id);
         } else {
-            $row = self::getImageRepository()->getOriginalRow($this->object_type, $this->object_id, $this->kind);
-            // [0] marks "no art": add_to_cache() drops empty arrays, so a miss would re-query every time
-            database_object::add_to_cache($index, $this->object_id, ($row === []) ? [0] : $row);
+            // the meta reader, not the one that carries the image itself
+            $row = self::getImageRepository()->getOriginalRowsByObjectIds([$this->object_id], $this->object_type, [$this->kind])[0] ?? [];
+            database_object::add_to_cache($index, $this->object_id, $row);
         }
 
-        if ($row === [] || $row === [0]) {
+        if ($row === []) {
             return false;
         }
 
@@ -1833,7 +1984,7 @@ class Art extends database_object
     }
 
     /**
-     * check_for_duplicate
+     * _check_for_duplicate
      * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
      * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
      * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int} $new_pic
@@ -1862,32 +2013,12 @@ class Art extends database_object
     private function _get_blankalbum(?string $size = null): string
     {
         $defaultimg = self::FALLBACK_IMAGES[$this->object_type] ?? self::FALLBACK_IMAGE;
-        switch ($size) {
-            case '128x128':
-                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_128x128.png';
-                $this->width  = 128;
-                $this->height = 128;
-                break;
-            case '256x256':
-                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_256x256.png';
-                $this->width  = 256;
-                $this->height = 256;
-                break;
-            case '384x384':
-                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_384x384.png';
-                $this->width  = 384;
-                $this->height = 384;
-                break;
-            case '768x768':
-                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_768x768.png';
-                $this->width  = 768;
-                $this->height = 768;
-                break;
-            default:
-                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '.png';
-                $this->width  = 1400;
-                $this->height = 1400;
-        }
+        // fallback_size() already picks the closest pre-rendered file; the switch here knew only four of them
+        // no size asked for keeps the full image, as the old switch did on its default branch
+        $suffix       = ($size === null || $size === '') ? '' : self::fallback_size($size);
+        $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . $suffix . '.png';
+        $this->width  = ($suffix === '') ? 1400 : (int) ltrim($suffix, '_');
+        $this->height = $this->width;
 
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);
@@ -1926,7 +2057,7 @@ class Art extends database_object
     }
 
     /**
-     * test_image
+     * _test_image
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */
@@ -1951,7 +2082,7 @@ class Art extends database_object
     }
 
     /**
-     * test_size
+     * _test_size
      * Runs some sanity checks on the putative image
      * @throws RuntimeException
      */

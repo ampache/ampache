@@ -149,6 +149,14 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
+     * The album ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array;
+
+    /**
      * Reads the albums of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>
@@ -184,6 +192,14 @@ interface AlbumRepositoryInterface
      * @return list<int>
      */
     public function getMappedObjectIds(int $albumId, string $objectType): array;
+
+    /**
+     * The objects mapped onto a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, list<int>>
+     */
+    public function getMappedObjectIdsBulk(array $albumIds, string $objectType): array;
 
     /**
      * Get item prefix, basename and name by the album id

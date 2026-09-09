@@ -134,7 +134,7 @@ interface CollectionRepositoryInterface
     /**
      * Store the position of one member, addressed by its `collection_map` row
      */
-    public function setTrackNumber(int $mapId, int $track): void;
+    public function setTrackNumber(int $mapId, int $track, int $collectionId): void;
 
     public function update(
         int $collectionId,

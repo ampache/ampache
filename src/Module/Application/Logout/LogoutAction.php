@@ -67,6 +67,9 @@ final readonly class LogoutAction implements ApplicationActionInterface
             // To end a legitimate session, just call logout.
             setcookie($sessionName . '_remember', '', $cookie_options);
 
+            // Revoke the persistent remember-me token server-side, not just the cookie.
+            Session::remove_remember_token(Session::username((string) $input['session']));
+
             $this->authenticationManager->logout((string) $input['session'], false);
         } else {
             header('Location: ' . $this->configContainer->getWebPath('/client'));

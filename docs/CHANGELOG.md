@@ -22,14 +22,26 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 * Database 810001
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
+* Database 810010
+  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
-* A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
+* Add `Time` column on folder browses
+  * `php bin/cli run:updateCatalog -s` skips the folder count/time rollup on a run that finds no changes
+  * If a folder's counts or duration look stale, run garbage collection (`-t`, or `admin/catalog.php?action=garbage_collect`) to force a refresh
+* A `Time` column on playlist browses, sortable via `last_duration`
 * Config version 99
   * New `album_grouping_fields` option controlling which fields decide whether two songs share an album row, so pressings that only differ by `barcode`/`catalog_number`/`version` (or any other field) can be grouped together instead of split into separate albums
   * Not recommended: a dropped field is written as NULL rather than stored from whichever song scanned first, so albums it merges together lose that value entirely; every such match logs a warning (not shown in the UI)
   * `name` and `year` can be dropped from the list too, though doing so can merge albums you didn't mean to merge
   * `catalog` is always matched and isn't part of the list; an album is always scoped to its catalog
   * Server-wide, not a user preference; defaults to today's full field set (`name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version`)
+* Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, per-user opt-in; a configured `custom_blankalbum` always takes precedence when present
+* Dynamic page titles carrying the artist or album in context, with a user preference to show a page-type icon in the tab title
+* A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customises them
+* A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place, plus a site description for link previews
+* An `Uploaded` column on the upload browses, sortable
+* A browser-measured HTTP compression check on the test page
+* Folder and collection pages describe themselves in a shared link, like the other object pages do
 
 ### Changed (8.1.0)
 
@@ -37,6 +49,25 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * Covering index on `image` for the art cache lookup, so it can be answered from the index alone; drops the now-redundant `object_id` key it replaces
 * Folder garbage collection now also removes folders with nothing left inside them, including root folders
 * Folder play-count rollups now write in bulk instead of one query per folder, and a scan skips garbage collection when nothing changed
+* Serving a cover no longer opens a full session: no `last_seen` write, no serialized-session rewrite, and a cookie-less request (a crawler, a link preview) no longer leaves a session row behind
+* `Session::extend` no longer rewrites the expire column on every request
+* Visitors who never queue anything no longer get a `tmp_playlist` row, dashboard and mashup boxes no longer write a `tmp_browse` row they never store, and a page view no longer creates a broadcast stream session
+* Gettext loads the catalogue only when something is translated, and reads a prebuilt PHP array the opcache holds rather than parsing the `.mo` each request
+* The Subsonic artist and playlist lists, the genre and artist-name lookups, the smartlist name lists and reverse-geocoding all warm their caches once per page instead of once per row
+* Server-wide user counters are batched into one statement per key
+* The set of generated art sizes is bounded, and a missing cover is served the placeholder that fits rather than the full-size original
+* A remote `custom_blankalbum` is handed to the browser as a url it caches once, rather than fetched server-side on every miss
+* The Subsonic, OpenSubsonic and API 6/8 playlist listings now serve the stored `last_count`/`last_duration`, the way their smartlist branch always has, instead of recounting each row with two joined queries
+* The API song, album, artist and playlist pages, the Subsonic and OpenSubsonic lists, and the UPnP browse lists read a fixed number of queries whatever the page size. Genres, moods, ratings, art, labels, disks and smartlist owners are read once for the page
+* The XML API output reads the page's song art rows once instead of once per song
+* The home page reads its highlighted songs from the page-wide cache, and cover metadata is read without the image blob nor file
+* A request looks a user up once by API key or username, however many times it asks
+* The recently played lists use more cache, speed improvement
+* The preferences rebuild that follows a database update repairs the install once instead of once per user, and the garbage collector only rewrites the preference names that changed. Test on 500 users, went from 248s to 6s
+* `user`.`apikey` carries an index, and the hashed-key fallback only reads the users holding a key
+* Play history search rules had no index
+* Whole-table sweeps moved out of the loops (subsonic scrobble, catalog add)
+* `docs/examples/nginx-site.conf` and `apache-site.conf` gained example per-IP rate limiting for `/login.php`, the API handshake and Subsonic
 
 ### Fixed (8.1.0)
 
@@ -45,7 +76,58 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
+* The UPnP backend no longer answer every browse with a fatal error on PHP 8.5
+* A custom browse base skipped every filter, group and sort; it is now joined as a derived table that restricts the normal query instead of replacing it
+* Toggling a browse option emptied a browse that had been handed its ids
+* An expired browse replayed by a crawler filled the log with level 1 "no renderer" lines
+* Missing close box on a few template phtml files, and an anchor that closed inside the mashup heading box
+* Grid view lost its row actions, and the delete confirm dialog ignored the theme
+* The album page fell back to a blank cover instead of the album artist's art
+* The add-to-playlist menu offered playlists the user could not add to
+* Migration700005 filled `last_count` with its two parameters swapped, writing the playlist id in place of the count; upgrades from Ampache 6 now backfill correctly, and database 810007 repairs the installs that already ran it
+* Saving the server Interface preferences wiped `custom_favicon`, `custom_login_logo` and `custom_login_background`, three system preferences that tab never shows
+* The login page sent its redirect back with a literal `&amp;` in the url
+* The RSS feed url kept html entities in its slug and had no length limit
+* The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
+* `stats.php?action=show` now say "access denied" when access is denied
+* Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue
+* A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack.
+* A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
+* Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
+* The web "add to playlist" action expanded a source playlist or smartlist checking only that it existed, so a user could copy another user's private list into their own; a non-public source you neither own nor collaborate on is now skipped
+* The web folder browse listed a folder's contents without a catalog-access check and with the per-user catalog filter disabled, so a catalog-filtered user could enumerate folders in a catalog they're excluded from; it now checks catalog access
+* localplay access was never actually checked (any user passed) and Subsonic jukeboxControl checked nothing. Now they are gated on the user's access level
+* Private playlists and searches leaked through several endpoints: web smartlist, Subsonic getPlaylist/getPlaylists
+* Deleting a play queue track checked only the row id, so any user could empty another user's queue. Playlist's id is now added to prevent that.
+* Reordering a track checked only the row id, so any user could reorder another user's playlist or collection
+* Rating an object 0 repeatedly drained its weight
+* An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
+* Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
+* On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
 * Missing close box on a few template phtml files
+* A disabled user account could still authenticate through Subsonic and an RSS feed token
+* Password/token comparisons in the API handshake, the `session_remember` cookie MAC, and API key/stream token lookups used `===`/`!=` instead of `hash_equals()`
+* `Ldap::auth()` concatenated the raw username into the LDAP search filter and group-membership regex with no escaping
+* OpenID Connect login copied an `email` claim even when the provider explicitly marked it `email_verified: false`
+* `bin/cli run:catalog -s` (sort/rename) could write outside the catalog when a tag value was exactly `..`
+* A server configured with `site_charset` `sjis`/`gbk`/`big5`/`cp932` could have its escaping backslash eaten by a crafted string's lead byte, enabling SQL injection
+* WebDAV login accepted a disabled account and never bound the authenticated user, so `catalog_filter_group` wasn't applied to WebDAV browsing
+* Logging out only cleared the `_remember` cookie client-side; the server-side token stayed valid and replayable
+* Deleting a license, shout, album, folder, label, podcast episode or share via `action=delete` didn't check the CSRF confirmation token
+* A share's access counter could exceed `max_counter` under concurrent access
+* The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
+* Downloading a file the server could not open answered with an empty file and a success status rather than an error
+* Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
+* A free-text user preference (e.g. `custom_datetime`) rendered unescaped into the admin preference-edit page (XSS)
+* `PlaylistUrlResolver` (radio station playback) fetched a station's playlist url without checking it was a public address first
+* `UrlValidator`'s check and the later curl fetch could resolve a hostname to different addresses (DNS rebinding); the fetch is now pinned to the address that was actually checked
+* `admin/catalog.php?action=clear_stats`, `system.php?action=reset_db_charset`, `action=clear_cache` and `action=clear_now_playing` didn't check the CSRF confirmation token either
+* The `set_rating`/`set_userflag` ajax actions had no CSRF check at all
+* Disabling a user, or changing their password, didn't revoke their `session_remember` cookie, so the old session could keep authenticating with it
+* Link previews described the site instead of the page: the metadata each object page already built was never emitted, so a shared album or artist showed the generic card
+* A share link announced every object as a song, so an album, artist or playlist preview claimed to be one
+* A folder was served no cover at all: the image action asked for a placeholder file that was never shipped
+* A shared link showed no image for an item without a cover while generated art was on: the drawn tile is an svg, which no preview scraper renders
 
 ## Ampache 8.0.1
 

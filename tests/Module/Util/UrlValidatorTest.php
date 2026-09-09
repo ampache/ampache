@@ -33,6 +33,22 @@ class UrlValidatorTest extends TestCase
     private UrlValidator $subject;
 
     /**
+     * @return list<array{0: string, 1: array{host: string, port: int, address: string}|null}>
+     */
+    public static function pinnedTargetDataProvider(): array
+    {
+        return [
+            ['http://93.184.216.34/feed.xml', ['host' => '93.184.216.34', 'port' => 80, 'address' => '93.184.216.34']],
+            ['https://93.184.216.34/feed.xml', ['host' => '93.184.216.34', 'port' => 443, 'address' => '93.184.216.34']],
+            ['https://93.184.216.34:8443/feed.xml', ['host' => '93.184.216.34', 'port' => 8443, 'address' => '93.184.216.34']],
+            ['https://[2606:2800:220:1:248:1893:25c8:1946]/feed.xml', ['host' => '2606:2800:220:1:248:1893:25c8:1946', 'port' => 443, 'address' => '2606:2800:220:1:248:1893:25c8:1946']],
+            ['http://127.0.0.1/', null],
+            ['http://169.254.169.254/latest/meta-data/', null],
+            ['not-a-url', null],
+        ];
+    }
+
+    /**
      * Only ip literals are used, so the test needs no name resolution
      *
      * @return list<array{0: string, 1: bool}>
@@ -72,6 +88,15 @@ class UrlValidatorTest extends TestCase
             $this->subject->isPublicHttpUrl($url),
             $url
         );
+    }
+
+    /**
+     * @param array{host: string, port: int, address: string}|null $expected
+     */
+    #[DataProvider('pinnedTargetDataProvider')]
+    public function testResolvePinnedTarget(string $url, ?array $expected): void
+    {
+        self::assertSame($expected, $this->subject->resolvePinnedTarget($url), $url);
     }
 
     protected function setUp(): void

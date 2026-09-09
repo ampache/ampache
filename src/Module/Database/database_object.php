@@ -53,12 +53,8 @@ abstract class database_object
             return false;
         }
 
-        $value = false;
-        if ($data !== []) {
-            $value = $data;
-        }
-
-        self::$object_cache[$index][$object_id] = $value;
+        // an empty result is a result: keeping it is what stops the same miss being read again
+        self::$object_cache[$index][$object_id] = $data;
 
         return true;
     }
@@ -101,7 +97,7 @@ abstract class database_object
         return (
             $object_id
             && array_key_exists((string) $object_id, self::$object_cache[$index])
-            && !empty(self::$object_cache[$index][$object_id])
+            && is_array(self::$object_cache[$index][$object_id])
         );
     }
 

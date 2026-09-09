@@ -201,7 +201,7 @@ final class Json8_Data
     }
 
     /**
-     * genre_array
+     * _genre_array
      *
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array<int, array{id: string, name: string}>
@@ -587,6 +587,10 @@ final class Json8_Data
         Album::build_cache($objects);
         Rating::build_cache('album', $objects);
         Userflag::build_cache('album', $objects);
+        // the songs of every album on the page, read once instead of once per album
+        if (count($objects) > 1 && in_array('songs', $include, true)) {
+            Song::build_cache($this->songRepository->getIdsByAlbums($objects));
+        }
         $JSON = [];
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -896,6 +900,15 @@ final class Json8_Data
         Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
         Userflag::build_cache('artist', $objects);
+        // the albums and songs of every artist on the page, read once instead of once per artist
+        if (count($objects) > 1) {
+            if (in_array('albums', $include, true)) {
+                Album::build_cache($this->albumRepository->getIdsByArtists($objects));
+            }
+            if (in_array('songs', $include, true)) {
+                Song::build_cache($this->songRepository->getIdsByArtists($objects));
+            }
+        }
         $JSON = [];
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -1561,6 +1574,7 @@ final class Json8_Data
             "parent" => ($parentId === null) ? null : (string) $parentId,
             "path" => $folder->path_name,
             "catalog" => (string) $folder->catalog,
+            "time" => $folder->time,
             "items" => []
         ];
         foreach ($objects as $item) {
@@ -1637,6 +1651,7 @@ final class Json8_Data
      *     "parent": null|string,
      *     "path": null|string,
      *     "catalog": string,
+     *     "time": int,
      *     "items": int,
      *     "playable": bool,
      *     "art": null|string,
@@ -1669,6 +1684,7 @@ final class Json8_Data
                 "parent" => ($parentId === null) ? null : (string) $parentId,
                 "path" => $folder->path_name,
                 "catalog" => (string) $folder->catalog,
+                "time" => $folder->time,
                 "items" => (int) $folder->object_count,
                 "playable" => $folder->playable,
                 "art" => Art::url($folder->getId(), 'folder', $auth),
@@ -1683,7 +1699,7 @@ final class Json8_Data
     }
 
     /**
-     * genres_string
+     * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
@@ -1982,7 +1998,7 @@ final class Json8_Data
     }
 
     /**
-     * labels_string
+     * labels
      *
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
@@ -2391,7 +2407,7 @@ final class Json8_Data
     }
 
     /**
-     * playlists_string
+     * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
@@ -2465,18 +2481,19 @@ final class Json8_Data
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($playlist->isNew()) {
+                // a private list is only exposed to its owner or a collaborator, whatever route reached it
+                if ($playlist->isNew() || !$playlist->isVisible($user)) {
                     continue;
                 }
                 $object_type    = 'search';
                 $playitem_total = $playlist->last_count;
             } else {
                 $playlist = new Playlist((int) $playlist_id);
-                if ($playlist->isNew()) {
+                if ($playlist->isNew() || !$playlist->isVisible($user)) {
                     continue;
                 }
                 $object_type    = 'playlist';
-                $playitem_total = $playlist->get_media_count('song');
+                $playitem_total = $playlist->last_count;
             }
             $art_url           = Art::url($playlist->id, $object_type, $auth);
             $playlist_name     = $playlist->get_fullname();
@@ -3113,6 +3130,10 @@ final class Json8_Data
         Stream::set_session($auth);
 
         $JSON = [];
+        // one song is not worth the page warm
+        if (count($objects) > 1) {
+            Song::build_cache($objects);
+        }
         foreach ($objects as $song_id) {
             $song = new Song((int) $song_id);
             // If the song id is invalid/null
@@ -3193,7 +3214,7 @@ final class Json8_Data
     }
 
     /**
-     * songs_string
+     * songs
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
@@ -3663,7 +3684,7 @@ final class Json8_Data
     }
 
     /**
-     * videos_string
+     * videos
      *
      * @param array<int|string> $objects Video id's to include
      * @param bool $object (whether to return as a named object array or regular array)

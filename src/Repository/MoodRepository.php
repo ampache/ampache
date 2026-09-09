@@ -304,6 +304,49 @@ final readonly class MoodRepository implements MoodRepositoryInterface
         return $moods;
     }
 
+    /**
+     * The moods mapped onto a set of objects, read in one go
+     *
+     * @param array<int|string> $objectIds
+     * @return array<int, list<array{id: int, name: string, user: int, count: int}>>
+     */
+    public function getTopMoodsBulk(string $objectType, array $objectIds): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+
+        // the boundary that builds sql is where the ids become ints, once for every caller
+        $objectIds = array_map(intval(...), array_values($objectIds));
+
+        $countType = MoodCountTypeEnum::tryFrom($objectType);
+        $count     = ($countType instanceof MoodCountTypeEnum)
+            ? sprintf('`mood`.`%s`', $countType->value)
+            : '(`mood`.`artist`+`mood`.`album`+`mood`.`song`)';
+        $holders = implode(',', array_fill(0, count($objectIds), '?'));
+
+        $sql = sprintf(
+            'SELECT `mood_map`.`object_id` AS `owner_id`, `mood`.`id`, `mood`.`name`, MAX(`mood_map`.`user`) AS `user`, %s AS `count` FROM `mood` LEFT JOIN `mood_map` ON `mood_map`.`mood_id`=`mood`.`id` WHERE `mood_map`.`object_type` = ? AND `mood_map`.`object_id` IN (%s) GROUP BY `mood_map`.`object_id`, `mood`.`id`, `mood`.`name`, %s ORDER BY `count` DESC, `mood`.`id`',
+            $count,
+            $holders,
+            $count
+        );
+
+        $result = $this->connection->query($sql, array_merge([$objectType], $objectIds));
+
+        $moods = array_fill_keys($objectIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $moods[(int) $row['owner_id']][] = [
+                'id' => (int) $row['id'],
+                'name' => (string) $row['name'],
+                'user' => (int) $row['user'],
+                'count' => (int) $row['count'],
+            ];
+        }
+
+        return $moods;
+    }
+
     public function incrementCount(int $moodId, MoodCountTypeEnum $type): void
     {
         $this->connection->query(

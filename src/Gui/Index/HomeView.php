@@ -34,7 +34,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginDisplayHomeInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 use Override;
@@ -110,9 +109,7 @@ final class HomeView extends AbstractView
         $data     = ($allTypes)
             ? Stats::get_recently_played($userId)
             : Stats::get_recently_played($userId, 'stream', 'song');
-        if (!$allTypes) {
-            Song::build_cache(array_keys($data));
-        }
+        RecentlyPlayedView::warm($data);
 
         return new RecentlyPlayedView(
             ($allTypes) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,

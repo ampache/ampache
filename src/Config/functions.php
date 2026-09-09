@@ -37,6 +37,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Gettext\Generator\ArrayGenerator;
 use Gettext\Loader\MoLoader;
 use Gettext\Translator;
 use Gettext\TranslatorFunctions;
@@ -861,9 +862,9 @@ function show_catalog_select(string $name, int $catalog_id, string $style = '', 
 }
 
 /**
- * show_album_select
- * This displays a select of every album that we've got in Ampache (which can be hella long).
- * It's used by the Edit page and takes a $name and an $album_id
+ * show_license_select
+ * This displays a select of every license we've got in Ampache.
+ * It's used by the Edit page and takes a $name and a $license_id
  */
 function show_license_select(string $name, ?int $license_id = 0, ?int $song_id = 0): void
 {
@@ -1020,18 +1021,94 @@ function show_table_render(bool $render = false, bool $force = false): void
  */
 function load_gettext(): bool
 {
-    $lang   = AmpConfig::get('lang', 'en_US');
-    $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
+    // The catalogue is read once per language and kept: parsing the .mo costs about nine
+    // milliseconds, and every T_() call comes through here now. Keying on the language rather
+    // than a flag keeps the explicit reload after someone changes their language preference.
+    static $loaded = null;
 
-    if (file_exists($mopath)) {
-        $loader       = new MoLoader();
-        $translations = $loader->loadFile($mopath);
-        $gettext      = Translator::createFromTranslations($translations);
-
-        TranslatorFunctions::register($gettext);
+    $lang = (string) AmpConfig::get('lang', 'en_US');
+    if ($loaded === $lang) {
+        return true;
     }
 
+    $loaded = $lang;
+    $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
+
+    if (!file_exists($mopath)) {
+        return true;
+    }
+
+    $compiled = compiled_gettext_catalogue($mopath);
+    $gettext  = ($compiled === null)
+        ? Translator::createFromTranslations((new MoLoader())->loadFile($mopath))
+        : (new Translator())->loadTranslations($compiled);
+
+    TranslatorFunctions::register($gettext);
+
     return true;
+}
+
+/**
+ * compiled_gettext_catalogue
+ *
+ * The path to a php version of a .mo catalogue, or null when one cannot be had.
+ *
+ * Decoding the binary catalogue costs about nine milliseconds of every request; including a php
+ * array the opcache already holds costs two. The cached file is named after the catalogue it was
+ * built from, so a new .mo simply asks for a name that does not exist yet and nothing has to be
+ * expired. Every failure here is answered with null, which puts the caller back on the .mo.
+ */
+function compiled_gettext_catalogue(string $mopath): ?string
+{
+    $stamp = @filemtime($mopath);
+    $size  = @filesize($mopath);
+    if ($stamp === false || $size === false) {
+        return null;
+    }
+
+    // one shipped beside the catalogue is taken as it is, which lets whoever builds the release
+    // pay this once rather than leaving it to the first listener through the door
+    $sibling = substr($mopath, 0, -3) . '.php';
+    if (is_readable($sibling) && (int) @filemtime($sibling) >= $stamp) {
+        return $sibling;
+    }
+
+    $dir = (string) AmpConfig::get('tmp_dir_path', '');
+    if ($dir === '' || !is_dir($dir) || !is_writable($dir)) {
+        $dir = sys_get_temp_dir();
+    }
+
+    $cached = sprintf('%s/ampache-gettext-%s.php', rtrim($dir, '/'), md5($mopath . $stamp . $size));
+    if (is_readable($cached)) {
+        return $cached;
+    }
+
+    try {
+        $content = (new ArrayGenerator())->generateString((new MoLoader())->loadFile($mopath));
+    } catch (Throwable $error) {
+        debug_event('gettext', 'Could not compile ' . $mopath . ': ' . $error->getMessage(), 3);
+
+        return null;
+    }
+
+    // written aside and moved into place: two requests compiling at once must never leave a
+    // half-written file behind for a third one to include
+    $scratch = @tempnam($dir, 'ampache-gettext-');
+    if (
+        !is_string($scratch)
+        || @file_put_contents($scratch, $content) === false
+        || !@rename($scratch, $cached)
+    ) {
+        if (is_string($scratch)) {
+            @unlink($scratch);
+        }
+
+        return null;
+    }
+
+    @chmod($cached, 0644);
+
+    return $cached;
 }
 
 /**
@@ -1040,6 +1117,8 @@ function load_gettext(): bool
  */
 function T_(string $msgid): string
 {
+    load_gettext();
+
     if (function_exists('__')) {
         return __($msgid);
     }
@@ -1051,11 +1130,13 @@ function T_(string $msgid): string
  */
 function nT_(string $original, string $plural, float|int|string $value): string
 {
+    load_gettext();
+
     if (function_exists('n__')) {
         return n__($original, $plural, (int) $value);
     }
 
-    return $plural;
+    return ((int) $value === 1) ? $original : $plural;
 }
 
 /**

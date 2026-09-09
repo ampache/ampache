@@ -538,7 +538,7 @@ class Random
     }
 
     /**
-     * advanced_results
+     * _advanced_results
      * Run the query generated above by self::advanced so we can while it
      * @param array<int, mixed> $sql_params
      * @param array<string, mixed> $data
@@ -615,7 +615,7 @@ class Random
     }
 
     /**
-     * advanced_sql
+     * _advanced_sql
      * Generate the sql query for self::advanced
      * @param array<string, mixed> $data
      * @return array{

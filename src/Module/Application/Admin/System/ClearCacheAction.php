@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -52,13 +53,16 @@ final readonly class ClearCacheAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            check_http_referer() === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('clear_cache')
         ) {
             throw new AccessDeniedException();
         }

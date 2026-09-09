@@ -32,11 +32,14 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AccessRepositoryInterface;
 
-final readonly class NetworkChecker implements NetworkCheckerInterface
+final class NetworkChecker implements NetworkCheckerInterface
 {
+    /** @var array<string, bool> */
+    private array $checked = [];
+
     public function __construct(
-        private ConfigContainerInterface $configContainer,
-        private AccessRepositoryInterface $accessRepository,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly AccessRepositoryInterface $accessRepository,
     ) {}
 
     /**
@@ -65,8 +68,12 @@ final readonly class NetworkChecker implements NetworkCheckerInterface
                 return false;
         }
 
-        return $this->accessRepository->findByIp(
-            Core::get_user_ip(),
+        $userIp = Core::get_user_ip();
+        $key    = $type->value . '|' . $level->value . '|' . $userId . '|' . $userIp;
+
+        // the answer cannot change while a request runs, and a page of songs asks once per song
+        return $this->checked[$key] ??= $this->accessRepository->findByIp(
+            $userIp,
             $level,
             $type,
             $userId

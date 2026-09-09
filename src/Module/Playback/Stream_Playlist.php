@@ -621,7 +621,7 @@ class Stream_Playlist
     }
 
     /**
-     * create_simplem3u
+     * create_simple_m3u
      * this creates a simple m3u without any of the extended information
      */
     public function create_simple_m3u(): void

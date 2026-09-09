@@ -116,7 +116,6 @@ class ShowSongActionTest extends MockeryTestCase
         $songViewAdapter = $this->mock(SongViewAdapterInterface::class);
 
         $song_id = 666;
-        $title   = 'some-song-title';
         $content = 'some-content';
 
         $song->id      = $song_id;
@@ -148,11 +147,20 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
+        // the head metadata reads the song before the page starts
+        $song->year  = 2008;
+        $song->time  = 236;
+        $song->album = 55;
+        $song->shouldReceive('getLicense')->withNoArgs()->once()->andReturnNull();
+        $song->shouldReceive('get_parent_fullname')->withNoArgs()->twice()->andReturn('Some Artist');
+        $song->shouldReceive('get_album_fullname')->withNoArgs()->twice()->andReturn('Some Album');
+        $song->shouldReceive('get_fullname')->withNoArgs()->twice()->andReturn('Some Song');
+        $song->shouldReceive('get_f_tags')->withNoArgs()->once()->andReturn('');
+        $song->shouldReceive('get_f_time')->withNoArgs()->once()->andReturn('3:56');
+        $song->shouldReceive('getId')->withNoArgs()->andReturn($song_id);
+
         $this->ui->shouldReceive('showBoxTop')
-            ->with(
-                $title,
-                'box box_song_details'
-            )
+            ->with('', 'box box_song_details')
             ->once();
         $this->ui->shouldReceive('showBoxBottom')
             ->withNoArgs()
@@ -163,11 +171,6 @@ class ShowSongActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-
-        $song->shouldReceive('get_fullname')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($title);
 
         $this->guiFactory->shouldReceive('createSongViewAdapter')
             ->with($gatekeeper, $song)

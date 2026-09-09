@@ -69,6 +69,7 @@ final class FolderListRenderer extends AbstractBrowseListRenderer
             ['class' => $this->getFolderClass() . ' essential persist', 'label' => T_('Name'), 'sort' => 'name'],
             ['class' => 'cel_add essential', 'label' => '', 'sort' => null],
             ['class' => 'cel_songs optional', 'label' => T_('# Items'), 'sort' => null],
+            ['class' => 'cel_time optional', 'label' => T_('Time'), 'sort' => null],
         ];
 
         if ($this->showPlayedTimes()) {

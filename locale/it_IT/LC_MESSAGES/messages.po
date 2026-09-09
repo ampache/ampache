@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-14 08:58+1000\n"
+"POT-Creation-Date: 2026-09-08 15:11+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: GABG, 2022\n"
 "Language-Team: Italian (Italy) (http://app.transifex.com/ampache/ampache/language/it_IT/)\n"
@@ -32,182 +32,11 @@ msgstr ""
 "Language: it_IT\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-msgid "Filters"
-msgstr "Filtri"
-
-msgid "Starts With"
-msgstr "Inizia con"
-
-msgid "Minimum Count"
-msgstr "Nr minimo"
-
-msgid "Rated"
-msgstr "Valutato"
-
-msgid "Unplayed"
-msgstr "Mai ascoltato"
-
-msgid "All Playlists"
-msgstr "Tutte le playlist"
-
-msgid "Catalog"
-msgstr "Catalogo"
-
-msgid "All"
-msgstr "Tutti"
-
-msgid "Toggle Artwork"
-msgstr "Attiva/Disattiva copertina"
-
-msgid "Use of cookies by Ampache"
-msgstr "Utilizzo dei cookies da parte di Ampache"
-
-msgid ""
-"Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
-"site"
-msgstr "I cookie sono piccoli file di testo che vengono inseriti nel tuo computer dai siti web che visiti. Sono ampiamente utilizzati per far funzionare o far funzionare i siti web in modo più efficiente, nonché per fornire informazioni ai proprietari del sito"
-
-msgid "The table below explains the cookies we use and why"
-msgstr "La tabella seguente spiega i cookie che utilizziamo e perché"
-
-msgid "Cookie"
-msgstr "Cookie"
-
-msgid "Name"
-msgstr "Nome"
-
-msgid "Purpose"
-msgstr "Scopo"
-
-msgid "Ampache session"
-msgstr "Sessione di Ampache"
-
-msgid "Ampache session username (if authenticated, information only)"
-msgstr "Username della sessione Ampache (se autenticato,soltanto una info)"
-
-msgid "Automatically authenticate users"
-msgstr "Autentica gli utenti automaticamente"
-
-msgid "Keep latest web player volume"
-msgstr "Mantieni il volume dell'ultimo web player"
-
-msgid "Show/Hide column [column_index] when browsing [object_type] objects"
-msgstr "Mostra/nascondi la colonna [column_index] Quando navighi [object_type] "
-
-msgid "Use alphabet when browsing [object_type] objects"
-msgstr "Usa l'alfabeto quando navighi [object_type] "
-
-msgid "Use pages when browsing [object_type] objects"
-msgstr "usa le pagine quando navighi [object_type] "
-
-msgid "Collapse/Expand Sidebar [menu_section]"
-msgstr "Collassa/Espandi la Sidebar [menu_section]"
-
-msgid "Collapse/Expand Sidebar"
-msgstr "Collassa/Espandi la Sidebar"
-
-msgid "Ampache"
-msgstr "Ampache"
-
-msgid "Ampache Error Page"
-msgstr "Pagina di errore di Ampache"
-
-msgid "For the Love of Music"
-msgstr "Per Amore della Musica"
-
-msgid "Error"
-msgstr "Errore"
-
-msgid ""
-"The following error has occurred, you will be automatically redirected in 10"
-" seconds."
-msgstr "Si è verificato il seguente errore, verrai reindirizzato automaticamente in 10 secondi."
-
-msgid "Error Messages"
-msgstr "Messaggio di errore"
-
-msgid "Donate"
-msgstr "Dona"
-
-msgid "Copyright"
-msgstr "Copyright"
-
-msgid "Show/Hide Player"
-msgstr "Mostra/Nascondi il Player"
-
 msgid "Home"
 msgstr "Home"
 
-msgid "Play"
-msgstr "Riproduci"
-
-msgid "Artists"
-msgstr "Artisti"
-
-msgid "Albums"
-msgstr "Album"
-
-msgid "Playlists"
-msgstr "Playlists"
-
-msgid "Genres"
-msgstr "Generi"
-
-msgid "Favorites"
-msgstr "Preferiti"
-
 msgid "Upload"
 msgstr "Carica"
-
-msgid "Now Playing"
-msgstr "In esecuzione"
-
-msgid "Recently Played"
-msgstr "Eseguiti recentemente"
-
-msgid "Newest Albums"
-msgstr "Nuovi album"
-
-msgid "Newest Artists"
-msgstr "Nuovi artisti"
-
-msgid "Newest Songs"
-msgstr ""
-
-msgid "Newest Shouts"
-msgstr "Nuovi Shouts"
-
-msgid "Information"
-msgstr "Informazione"
-
-msgid "New messages"
-msgstr "Nuovi messaggi"
-
-msgid "Login"
-msgstr "Accedi"
-
-msgid "Register"
-msgstr "Registra"
-
-msgid "Show/Hide Playlist"
-msgstr "Mostra/Nascondi Playlist"
-
-msgid "Loading"
-msgstr "Caricamento"
-
-msgid "Your Ampache config file is out of date!"
-msgstr "Il tuo file di configurazione è obsoleto!"
-
-msgid "Update your current config file automatically"
-msgstr "Aggiorna automaticamente il tuo attuale file di configurazione"
-
-msgid "Download a copy of the new version"
-msgstr "Aggiorna automaticamente il tuo attuale file di configurazione"
-
-msgid "Installation"
-msgstr "Installazione"
 
 msgid "Localplay"
 msgstr "Ascolto locale"
@@ -293,6 +122,15 @@ msgstr "Salva"
 msgid "Cancel"
 msgstr "Annulla"
 
+msgid "Confirm"
+msgstr "Conferma"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Play"
+msgstr "Riproduci"
+
 msgid "Play next"
 msgstr "Riproduci successiva"
 
@@ -302,116 +140,20 @@ msgstr "Riproduci ultima"
 msgid "Add to Temporary Playlist"
 msgstr "Aggiungi a una playlist temporanea"
 
-msgid "Add to playlist"
-msgstr "Aggiungi alla playlist"
+msgid "Editing Existing User"
+msgstr "Modifica utente esistente"
 
-msgid "Prev"
-msgstr "Precedente"
+msgid "User Properties"
+msgstr " \nProprietà utente"
 
-msgid "Page"
-msgstr "Pagina"
-
-msgid "of"
-msgstr "di"
-
-msgid "Next"
-msgstr "Successivo"
-
-msgid "View"
-msgstr "Visualizza"
-
-msgid "Pages"
-msgstr "Pagine"
-
-msgid "Infinite Scroll"
-msgstr "Scroll infinito"
-
-msgid "Grid View"
-msgstr "Visualizzazione griglia"
-
-msgid "Alphabet"
-msgstr "Alfabetico"
-
-msgid "Limit"
-msgstr "Limite"
-
-msgid "Item Count"
-msgstr "Conteggio oggetti"
-
-msgid "Add to New Playlist"
-msgstr "Aggiungi ad una nuova Playlist"
-
-msgid "Batch download"
-msgstr "Download in batch"
-
-msgid "Clear Playlist"
-msgstr "Pulisci Playlist"
-
-msgid "Add dynamic items"
-msgstr "Aggiungi un oggetto dinamico"
-
-msgid "Random song"
-msgstr "Brano casuale"
-
-msgid "Random artist"
-msgstr "Artista casuale"
-
-msgid "Random album"
-msgstr "Album casuale"
-
-msgid "Random playlist"
-msgstr "Playlist casuale"
-
-msgid "Refresh"
-msgstr "Aggiorna"
-
-msgid "Delete"
-msgstr "Elimina"
-
-msgid "No items"
-msgstr "Nessun oggetto"
-
-msgid "More"
-msgstr "Altro"
-
-msgid "Add Current Host"
-msgstr "Aggiungi l'host corrente"
-
-msgid "Add API / RPC Host"
-msgstr "Aggiungi API / RPC Host"
-
-msgid "Add Local Network Definition"
-msgstr "Aggiungi una definizione di rete locale"
-
-msgid "Advanced Add"
-msgstr "Aggiunta avanzata"
-
-msgid "Access Control Entries"
-msgstr "Voci di controllo degli accessi"
-
-msgid "Start Address"
-msgstr "Indirizzo iniziale"
-
-msgid "End Address"
-msgstr "Indirizzo finale"
-
-msgid "Level"
-msgstr "Livello"
-
-msgid "User"
-msgstr "Utente"
-
-msgid "Type"
-msgstr "Tipo"
-
-msgid "Action"
-msgstr "Azione"
-
-msgid "Edit"
-msgstr "Modifica"
+msgid "Username"
+msgstr "Nome utente"
 
 msgid "Full Name"
 msgstr "Nome completo"
+
+msgid "Public"
+msgstr "Pubblico"
 
 msgid "E-mail"
 msgstr "E-mail"
@@ -425,14 +167,35 @@ msgstr "Stato"
 msgid "City"
 msgstr "Città"
 
-msgid "New Password"
-msgstr "Nuova password"
+msgid "Password"
+msgstr "Password"
 
 msgid "Confirm Password"
 msgstr "Conferma password"
 
+msgid "Subsonic Password"
+msgstr ""
+
+msgid "Delete"
+msgstr "Elimina"
+
+msgid "Currently set"
+msgstr ""
+
+msgid "Not set"
+msgstr ""
+
+msgid "User Access Level"
+msgstr "Livello accesso utente"
+
+msgid "Catalog Filter"
+msgstr ""
+
 msgid "Avatar"
 msgstr "Avatar"
+
+msgid "Other Options"
+msgstr "Altre opzioni"
 
 msgid "API key"
 msgstr "API key"
@@ -452,517 +215,25 @@ msgstr "RSS Token"
 msgid "Generate new RSS token"
 msgstr "Genera un nuovo token RSS"
 
+msgid "Config Preset"
+msgstr "Preset di configurazione"
+
+msgid "This affects all non-admin accounts"
+msgstr ""
+
+msgid "Prevent Preset Override"
+msgstr ""
+
 msgid "Clear Stats"
 msgstr "Azzera statistiche"
 
-msgid "Update Account"
-msgstr "Aggiorna account"
+msgid "Update User"
+msgstr "Aggiorna utente"
 
-msgid "Add Access Control List"
-msgstr "Aggiungi elenco di controllo degli accessi"
-
-msgid "API/RPC"
-msgstr "API/RPC"
-
-msgid "Local Network Definition"
-msgstr "Definizione Rete Locale"
-
-msgid "Stream Access"
-msgstr "Accesso Stream"
-
-msgid "Read"
-msgstr "Lettura"
-
-msgid "Read/Write"
-msgstr "Lettura/Scrittura"
-
-msgid "Web Interface"
-msgstr "Interfaccia web"
-
-msgid "IPv4 or IPv6 Addresses"
-msgstr "Indirizzo IPv4 oppure IPv6 "
-
-msgid "Start"
-msgstr "Inizia"
-
-msgid "End"
-msgstr "Fine"
-
-msgid "Create ACL"
-msgstr "Crea ACL"
-
-msgid "Add Catalog"
-msgstr "Aggiungi catalogo"
-
-msgid "New catalogs are added to the DEFAULT group when created"
-msgstr "I nuovi cataloghi vengono aggiunti al gruppo DEFAULT al momento della creazione"
-
-msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-
-msgid "Catalog Name"
-msgstr "Nome catalogo"
-
-msgid "Auto-inserted Fields"
-msgstr "Inserimento automatico campi"
-
-msgid "Album Artist"
-msgstr "Artista album"
-
-msgid "Song Artist"
-msgstr "Artista Canzone"
-
-msgid "Song Title"
-msgstr "Titolo brano"
-
-msgid "Track (0 padded)"
-msgstr "Traccia (0 padded)"
-
-msgid "Disk"
-msgstr "Disco"
-
-msgid "Genre"
-msgstr "Genere"
-
-msgid "Year"
-msgstr "Anno"
-
-msgid "Original Year"
-msgstr "Anno Originale"
-
-msgid "Comment"
-msgstr "Commento"
-
-msgid "Label"
-msgstr "Etichetta"
-
-msgid "Release Type"
-msgstr "Tipo rilascio"
-
-msgid "Release Status"
-msgstr "Stato di rilascio"
-
-msgid "Release Comment"
-msgstr ""
-
-msgid "Catalog Number"
-msgstr "Catalogo numero"
-
-msgid "Barcode"
-msgstr "Barcode"
-
-msgid "Ignore"
-msgstr ""
-
-msgid "Catalog Type"
-msgstr "Tipo di catalogo"
-
-msgid "Select"
-msgstr "Seleziona"
-
-msgid "Filename Pattern"
-msgstr "Filtro nome file"
-
-msgid "Folder Pattern"
-msgstr "Filtro cartelle"
-
-msgid "(no leading or ending '/')"
-msgstr "(non inizianti o terminanti per '/')"
-
-msgid "Gather Art"
-msgstr "Raccogli le copertine"
-
-msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr "Costruisci le playlist da file. (m3u, m3u8, asx, pls, xspf)"
-
-msgid "Catalog Media Type"
-msgstr "Tipo di media del catalogo"
-
-msgid "Music"
-msgstr "Musica"
-
-msgid "Add Catalog Filter"
-msgstr "Aggiungi un filtro per il catalogo"
-
-msgid "Please enable 'catalog_filter' in your sever config file"
-msgstr "Per favore, attiva \"catalog_filter\" nel file di configurazione del web server"
-
-msgid "Catalog filters are a way to stop users accessing different catalogs"
-msgstr "I filtri catalogo sono un modo per impedire agli utenti accedere a cataloghi differenti"
-
-msgid ""
-"If you do not tick a catalog, it will be hidden from users that you assign "
-"to this filter"
-msgstr "Se non selezioni un catalogo, sarà nascosto agli utenti che assegni a questo filtro"
-
-msgid "Filter Name"
-msgstr "Nome del filtro"
-
-msgid "Add Filter"
-msgstr "Aggiungi filtro"
-
-msgid "Add Label"
-msgstr "Aggiungi etichetta"
-
-msgid "MusicBrainz ID"
-msgstr "MusicBrainz ID"
-
-msgid "Category"
-msgstr "Categoria"
-
-msgid "Personal"
-msgstr "Personale"
-
-msgid "Association"
-msgstr "Associazione"
-
-msgid "Company"
-msgstr "Compagnia"
-
-msgid "Imprint"
-msgstr "Impronta"
-
-msgid "Production"
-msgstr "Produzione"
-
-msgid "Original Production"
-msgstr "Produzione originale"
-
-msgid "Bootleg Production"
-msgstr "Produzione bootleg"
-
-msgid "Reissue Production"
-msgstr "Produzione ristampa"
-
-msgid "Distributor"
-msgstr "Distributore"
-
-msgid "Holding"
-msgstr "Holding"
-
-msgid "Rights Society"
-msgstr "Diritti Societari"
-
-msgid "Tag Generated"
-msgstr "Tag generato"
-
-msgid "Summary"
-msgstr "Sommario"
-
-msgid "Address"
-msgstr "Indirizzo"
-
-msgid "Country"
-msgstr "Paese"
-
-msgid "Status"
-msgstr "Stato"
-
-msgid "Active"
-msgstr "Attivo"
-
-msgid "Inactive"
-msgstr "Inattivo"
-
-msgid "Add"
-msgstr "Aggiungi"
-
-msgid "Add Radio Station"
-msgstr "Aggiungi una stazione radio"
-
-msgid "Stream URL"
-msgstr "Stream URL"
-
-msgid "Codec"
-msgstr "Codec"
-
-msgid "Create Playlist"
-msgstr "Crea Playlist"
-
-msgid "Private"
-msgstr "Privato"
-
-msgid "Public"
-msgstr "Pubblico"
-
-msgid "Create"
-msgstr "Crea"
-
-msgid "Subscribe to Podcast"
-msgstr "Iscriviti al podcast"
-
-msgid "Podcast Feed URL"
-msgstr "Podcast Feed URL"
-
-msgid "Subscribe"
-msgstr "Iscriviti"
-
-msgid "Compose Message"
-msgstr "Componi messaggio"
-
-msgid "Recipient"
-msgstr "Contenitore"
-
-msgid "Subject"
-msgstr "Oggetto"
-
-msgid "Message"
-msgstr "Messaggio"
-
-msgid "Send"
-msgstr "Invia"
-
-msgid "Starting New Media Search"
-msgstr "Comincia una nuova ricerca di media"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Starting New Media Search on \"%s\" Catalog"
-msgstr "Comincio una nuova ricerca media nel catalogo \"%s\" "
-
-msgid "Found"
-msgstr "Trovato"
-
-msgid "None"
-msgstr "Nessuno"
-
-msgid "Reading"
-msgstr "Leggendo"
-
-msgid "Create Share"
-msgstr "Crea condivisione"
-
-msgid "Share"
-msgstr "Condividi"
-
-msgid "Secret"
-msgstr "Secret"
-
-msgid "Max Counter"
-msgstr "Contatore massimo"
-
-msgid "Expiry Days"
-msgstr "Giorni di scadenza"
-
-msgid "Allow Stream"
-msgstr "Consenti Stream"
-
-msgid "Allow Download"
-msgstr "Consenti Download"
-
-msgid "Post to Shoutbox"
-msgstr "Postalo nello Shoutbox"
-
-msgid "Stick this comment"
-msgstr "Attacca questo commento"
-
-msgid "Shoutbox"
-msgstr "Shoutbox"
-
-msgid "Target folder"
-msgstr "Cartella destinazione"
-
-msgid "New folder"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Reload"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Leave the artist and album fields blank to read file tags"
-msgstr "Lascia vuoti i campi artista e album per leggere i tag dei file"
-
-msgid "Music License"
-msgstr "Licenza della musica"
-
-msgid "WARNING"
-msgstr "ATTENZIONE"
-
-msgid ""
-"The music license you choose gives away rights in an irrevocable manner to "
-"the audience."
-msgstr ""
-
-msgid ""
-"Read the text of the license you choose carefully with the 'View License' "
-"link."
-msgstr ""
-
-msgid "Files"
-msgstr "File"
-
-msgid "Max upload size"
-msgstr ""
-
-msgid "Allowed file type"
-msgstr "Tipi di file Consentiti"
-
-msgid ""
-"Drag & Drop your files or <span class=\\\"filepond--label-action\\\"> Browse"
-" </span>"
-msgstr ""
-
-msgid "Field contains invalid files"
-msgstr ""
-
-msgid "Waiting for size"
-msgstr ""
-
-msgid "Size not available"
-msgstr ""
-
-msgid "Error during load"
-msgstr ""
-
-msgid "Uploading"
-msgstr ""
-
-msgid "Upload complete"
-msgstr ""
-
-msgid "Upload cancelled"
-msgstr ""
-
-msgid "Error during upload"
-msgstr ""
-
-msgid "Error during revert"
-msgstr ""
-
-msgid "Error during remove"
-msgstr ""
-
-msgid "tap to cancel"
-msgstr ""
-
-msgid "tap to retry"
-msgstr ""
-
-msgid "tap to undo"
-msgstr ""
-
-msgid "Remove"
-msgstr "Rimuovi"
-
-msgid "Abort"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Undo"
-msgstr ""
-
-msgid "File is too large"
-msgstr ""
-
-msgid "Maximum file size is {filesize}"
-msgstr ""
-
-msgid "Maximum total size exceeded"
-msgstr ""
-
-msgid "Maximum total file size is {filesize}"
-msgstr ""
-
-msgid "File of invalid type"
-msgstr ""
-
-msgid "Expects {allButLastType} or {lastType}"
-msgstr ""
-
-msgid "Image type not supported"
-msgstr ""
-
-msgid "Image is too small"
-msgstr ""
-
-msgid "Image is too big"
-msgstr ""
-
-msgid "Minimum size is {minWidth} × {minHeight}"
-msgstr ""
-
-msgid "Maximum size is {maxWidth} × {maxHeight}"
-msgstr ""
-
-msgid "Resolution is too low"
-msgstr ""
-
-msgid "Resolution is too high"
-msgstr ""
-
-msgid "Minimum resolution is {minResolution}"
-msgstr ""
-
-msgid "Maximum resolution is {maxResolution}"
-msgstr ""
-
-msgid "Add User"
-msgstr "Aggiungi utente"
-
-msgid "Username"
-msgstr "Nome utente"
-
-msgid "Password"
-msgstr "Password"
-
-msgid "User Access Level"
-msgstr "Livello accesso utente"
-
-msgid "Guest"
-msgstr "Ospite"
-
-msgid "Content Manager"
-msgstr "Gestore contenuti"
-
-msgid "Catalog Manager"
-msgstr "Gestore catalogo"
-
-msgid "Admin"
-msgstr "Amministratore"
-
-msgid "User Catalog Filter"
-msgstr "Filtro per il catalogo dell'utente"
-
-msgid "Search on Google ..."
-msgstr "Ricerca in Google ..."
-
-msgid "Search on DuckDuckGo ..."
-msgstr "Ricerca in DuckDuckGo ..."
-
-msgid "Search on Wikipedia ..."
-msgstr "Ricerca in Wikipedia ..."
-
-msgid "Search on Last.fm ..."
-msgstr "Ricerca in Last.fm ..."
-
-msgid "Search on Bandcamp ..."
-msgstr ""
-
-msgid "Search on Discogs ..."
-msgstr ""
-
-msgid "Search on Musicbrainz ..."
-msgstr "Ricerca in Musicbrainz ..."
-
+#. HINT: Number of times an object has been played
 msgid "Played"
 msgstr "Ascoltato"
 
-#. HINT: Number of times an object has been played
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
@@ -991,6 +262,9 @@ msgstr "Collegamento"
 msgid "Graphs"
 msgstr "Grafici"
 
+msgid "Save Track Order"
+msgstr "Salva l'ordine delle tracce"
+
 msgid "Do you really want to update from tags?"
 msgstr "Davvero vuoi aggiornare dalle tags??"
 
@@ -1000,29 +274,38 @@ msgstr "Aggiorna dai Tags"
 msgid "Album Edit"
 msgstr "Edita l'album"
 
+msgid "Edit"
+msgstr "Modifica"
+
 msgid "Edit Album"
 msgstr "Modifica album"
 
 msgid "Download"
 msgstr "Scarica"
 
-msgid "Songs"
-msgstr "Brani"
+msgid "Direct URL to Image"
+msgstr "URL diretto all' immagine"
 
-msgid "Rating"
-msgstr "Voto"
+msgid "Local Image"
+msgstr "Immagine Locale"
 
-msgid "Art"
-msgstr "Copertina"
+msgid "Spotify Album Filters"
+msgstr "Filtro album Spotify"
 
-msgid "No Album found"
-msgstr "Nessun album trovato"
+msgid "Year"
+msgstr "Anno"
 
-msgid "Unknown (Orphaned)"
-msgstr "Sconosciuto (Orfano)"
+msgid "(e.g. '2001', '2001-2005')"
+msgstr "(e.g. '2001', '2001-2005')"
 
-msgid "Save Track Order"
-msgstr "Salva l'ordine delle tracce"
+msgid "Limit"
+msgstr "Limite"
+
+msgid "Search Limit"
+msgstr "Limite di ricerca"
+
+msgid "Get Art"
+msgstr "Ottenere Copertina"
 
 msgid "Loading..."
 msgstr "Caricamento....."
@@ -1064,6 +347,9 @@ msgstr "Edita artista"
 msgid "Edit Artist"
 msgstr "Modifica artista"
 
+msgid "Albums"
+msgstr "Album"
+
 msgid "Top Tracks"
 msgstr "Migliori tracce"
 
@@ -1076,23 +362,26 @@ msgstr "Artsti simili"
 msgid "Similar Songs"
 msgstr "Brani simili"
 
-msgid "Time"
-msgstr "Durata"
-
-msgid "No Artist found"
-msgstr "Nessun artista trovato"
-
 msgid "Select New Art"
 msgstr "Seleziona una nuova copertina"
+
+msgid "Art"
+msgstr "Copertina"
+
+msgid "Select"
+msgstr "Seleziona"
 
 msgid "Invalid"
 msgstr "Non valido"
 
-msgid "Album Art"
-msgstr "Copertina"
-
 msgid "Click to close window"
 msgstr "Clicca per chiudere la finestra"
+
+msgid "Broadcast"
+msgstr "Broadcast"
+
+msgid "Unbroadcast"
+msgstr "Disabilita Broadcast"
 
 msgid "Yes"
 msgstr "Si"
@@ -1100,209 +389,20 @@ msgstr "Si"
 msgid "No"
 msgstr "No"
 
+msgid "Broadcast Edit"
+msgstr "Modifica Trasmissione"
+
 msgid "New broadcast"
 msgstr "Nuova trasmissione"
 
-msgid "Started"
-msgstr "Inizia"
-
-msgid "Listeners"
-msgstr "Ascoltatori"
-
-msgid "No Broadcast found"
-msgstr "Nessuna trasmissione trovata"
-
-msgid "Disable"
-msgstr "Disabilita"
-
-msgid "Enable"
-msgstr "Abilitato"
-
-msgid "Make it ready .."
-msgstr "Preparalo ...."
-
-msgid "Verify"
-msgstr "Verifica"
-
-msgid "Clean"
-msgstr "Pulisci"
-
-msgid "Update"
-msgstr "Aggiorna"
-
-msgid "Import"
-msgstr "Importa"
-
-msgid "Update File Tags"
-msgstr "Aggiorna i tag dei file"
-
-msgid "Garbage Collection"
+msgid "Found nothing to show"
 msgstr ""
 
-msgid "Go"
-msgstr "Vai"
-
-msgid "Path"
-msgstr "Percorso"
-
-msgid "Last Verify"
-msgstr "Ultima Verifica"
-
-msgid "Last Add"
-msgstr "Ultima aggiunta"
-
-msgid "Last Clean"
-msgstr "Ultima pulizia"
-
-msgid "No Catalog found"
-msgstr "Nessun catalogo trovato"
-
-msgid "Description"
-msgstr "Descrizione"
-
-msgid "Version"
-msgstr "Versione"
-
-msgid "Activate"
-msgstr "Attiva"
-
-msgid "No records found"
-msgstr "Nessun record trovato"
-
-msgid "Clean Catalog"
-msgstr "Pulisci il catalogo"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Cleaning the \"%s\" Catalog"
-msgstr "Pulendo il catalogo \"%s\" "
-
-msgid "Checking"
-msgstr "Controllo in corso"
-
-msgid "Continue"
-msgstr "Continua"
-
-msgid "Ampache Debug"
-msgstr "Ampache Debug"
-
-msgid "Generate Configuration File"
-msgstr "Genera un file di configurazione"
-
-msgid "Write New Config"
-msgstr "Scrivi la nuova configurazione"
-
-msgid "Set Database Charset"
-msgstr "Seleziona Database Charset"
-
-msgid "Clear Songs Cache"
-msgstr "Cancella la cache dei brani"
-
-msgid "Clear Artists Cache"
-msgstr "Cancella la cache degli artisti"
-
-msgid "Clear Albums Cache"
-msgstr "Cancella la cache degli album"
-
-msgid "Clear Perpetual API Sessions"
+msgid "Create Collection"
 msgstr ""
-
-msgid "Ampache Update"
-msgstr "Aggiornamento Ampache"
-
-msgid "Installed Ampache version"
-msgstr "Versione di Ampache installata"
-
-msgid "Latest Ampache version"
-msgstr "Versione di Ampache più recente"
-
-msgid "GitHub Branch"
-msgstr "GitHub Branch"
-
-msgid "Force check"
-msgstr "Forza controllo"
-
-msgid "Ampache Cron"
-msgstr "Ampache Cron"
-
-msgid "The last cron was completed"
-msgstr "L'ultimo cron è stato completato"
-
-msgid "PHP Settings"
-msgstr "PHP Settings"
-
-msgid "Setting"
-msgstr "Settaggi"
-
-msgid "Value"
-msgstr "Valore"
-
-msgid "Memory Limit"
-msgstr "Limite memoria"
-
-msgid "Maximum Execution Time"
-msgstr "Tempo di esecuzione massimo"
-
-msgid "Override Execution Time"
-msgstr "Sovrascrivi il tempo di esecuzione"
-
-msgid "Failed"
-msgstr "Fallito"
-
-msgid "Succeeded"
-msgstr "Riuscito"
-
-msgid "Open Basedir"
-msgstr "Apri la directory di base"
-
-msgid "Zlib Support"
-msgstr "Supporto Zlib"
-
-msgid "GD Support"
-msgstr "Supporto GD"
-
-msgid "Iconv Support"
-msgstr "Supporto iconv"
-
-msgid "Gettext Support"
-msgstr "Supporto Gettext"
-
-msgid "PHP intl extension"
-msgstr "PHP intl extension"
-
-msgid "Current Configuration"
-msgstr "Configurazione corrente"
-
-msgid "Preference"
-msgstr "Preferenza"
-
-#, php-format
-msgid "%s Playlist"
-msgstr "%s Playlist"
-
-msgid "Democratic Playlist"
-msgstr "Playlist Democratica"
-
-msgid "Cooldown"
-msgstr "Cooldown"
-
-msgid "minutes"
-msgstr "minuti"
-
-msgid "Configure Democratic Playlist"
-msgstr "Configura una playlist democratica"
-
-msgid "Reload this page automatically"
-msgstr "Ricarica questa pagina automaticamente"
 
 msgid "Playing from base playlist"
 msgstr "Riproducendo dalla playlist di base"
-
-msgid "Votes"
-msgstr "Voti"
-
-msgid "Title"
-msgstr "Titolo"
 
 msgid "Remove Vote"
 msgstr "Rimuovi voto"
@@ -1310,54 +410,238 @@ msgstr "Rimuovi voto"
 msgid "Add Vote"
 msgstr "Aggiungi voto"
 
-msgid "Debug Page"
-msgstr "Pagina di debug"
+msgid "Filters"
+msgstr "Filtri"
 
-msgid "Access Denied"
-msgstr "Accesso Negato!"
+msgid "Name"
+msgstr "Nome"
 
-msgid "This event has been logged"
-msgstr "Questo evento è stato registrato"
+msgid "Minimum Count"
+msgstr "Nr minimo"
 
-msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function"
-msgstr "Sei stato rediretto in questa pagina perchè non hai accesso a questa funzione"
+msgid "Rated"
+msgstr "Valutato"
 
-msgid ""
-"If you believe this is an error please contact an Ampache administrator"
-msgstr "Se credi questo sia un'errore contatta un amministratore di Ampache"
+msgid "Unplayed"
+msgstr "Mai ascoltato"
 
-msgid "You will be automatically redirected in 10 seconds."
-msgstr "Sarai rediretto automaticamente in 10 secondi."
+msgid "All Playlists"
+msgstr "Tutte le playlist"
 
-msgid ""
-"You have been redirected to this page because you attempted to access a "
-"function that is disabled in the demo."
-msgstr "È stato rediretto su questa pagina perchè ha provato di accedere a una funzione disattivata nella demo."
+msgid "Catalog"
+msgstr "Catalogo"
 
-msgid "Permission Denied"
-msgstr "Permesso negato"
+msgid "All"
+msgstr "Tutti"
 
-msgid "You do not have permission to write to this file or folder"
-msgstr "Non hai l'autorizzazione per scrivere su questo file o cartella"
+msgid "Toggle Artwork"
+msgstr "Attiva/Disattiva copertina"
 
-msgid "Filename"
-msgstr "Nome file"
+msgid "Add"
+msgstr "Aggiungi"
 
-msgid "Addition Time"
-msgstr "Aggiungi tempo"
+msgid "Create Label"
+msgstr "Crea etichetta"
 
-msgid "Edit Access Control List"
-msgstr "Edita l'access control list"
+msgid "Prev"
+msgstr "Precedente"
+
+msgid "Page"
+msgstr "Pagina"
+
+msgid "of"
+msgstr "di"
+
+msgid "Next"
+msgstr "Successivo"
+
+msgid "View"
+msgstr "Visualizza"
+
+msgid "Pages"
+msgstr "Pagine"
+
+msgid "Infinite Scroll"
+msgstr "Scroll infinito"
+
+msgid "Grid View"
+msgstr "Visualizzazione griglia"
+
+msgid "Alphabet"
+msgstr "Alfabetico"
+
+msgid "Item Count"
+msgstr "Conteggio oggetti"
+
+msgid "Manage"
+msgstr " \namministrare"
+
+msgid "Add Radio Station"
+msgstr "Aggiungi una stazione radio"
+
+msgid "No live stream found"
+msgstr "Nessun Live Stream trovato"
+
+msgid "Track"
+msgstr "Traccia"
+
+msgid "Action"
+msgstr "Azione"
+
+msgid "Create License"
+msgstr "Crea licenza"
+
+msgid "Refresh"
+msgstr "Aggiorna"
+
+msgid "Duration"
+msgstr "Durata"
+
+msgid "Create Playlist"
+msgstr "Crea Playlist"
+
+msgid "No podcast episode found"
+msgstr "Nessun episodio podcast trovato"
+
+msgid "Subscribe to Podcast"
+msgstr "Iscriviti al podcast"
+
+msgid "Import"
+msgstr "Importa"
+
+msgid "Export"
+msgstr "Esporta"
+
+msgid "Compose"
+msgstr "Componi"
+
+msgid "Compose a New Message"
+msgstr "Componi un nuovo messaggio"
+
+msgid "Mark as Read"
+msgstr "Segnalo come letto"
+
+msgid "Mark as Unread"
+msgstr "Segnalo come non letto"
+
+msgid "Add Smart Playlist"
+msgstr "Aggiungi alla plylist intelligente"
+
+msgid "No smart playlist found"
+msgstr "Nessuna smart list trovata"
+
+msgid "Fullname"
+msgstr "Nome completo"
+
+msgid "No User found"
+msgstr ""
+
+msgid "No missing albums found"
+msgstr "Nessun album mancante trovato"
+
+msgid "Export Catalog"
+msgstr "Esporta catalogo"
+
+msgid "Format"
+msgstr "Formato"
+
+msgid "Make it ready .."
+msgstr "Preparalo ...."
+
+msgid "Go"
+msgstr "Vai"
+
+msgid "Reorder"
+msgstr "Riordina"
+
+msgid "Owner"
+msgstr "Proprietario"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "This Collection is empty"
+msgstr ""
+
+msgid "Private"
+msgstr "Privato"
+
+msgid "Collection Edit"
+msgstr ""
+
+msgid "Do you really want to delete this Collection?"
+msgstr ""
+
+msgid "Configure Democratic Playlist"
+msgstr "Configura una playlist democratica"
+
+msgid "Base Playlist"
+msgstr "Playlist di base"
+
+msgid "Cooldown Time"
+msgstr "Tempo di recupero"
+
+msgid "minutes"
+msgstr "minuti"
+
+msgid "Level"
+msgstr "Livello"
+
+msgid "Make Default"
+msgstr "Rendilo di default"
+
+msgid "Update"
+msgstr "Aggiorna"
+
+msgid "Cooldown"
+msgstr "Cooldown"
+
+msgid "Reload this page automatically"
+msgstr "Ricarica questa pagina automaticamente"
+
+msgid "Enable"
+msgstr "Abilitato"
+
+msgid "Album Artist"
+msgstr "Artista album"
 
 msgid "Additional Artists"
 msgstr ""
 
+msgid "MusicBrainz ID"
+msgstr "MusicBrainz ID"
+
 msgid "MusicBrainz Release Group ID"
 msgstr "MusicBrainz Release Group ID"
 
+msgid "Release Type"
+msgstr "Tipo rilascio"
+
+msgid "Release Status"
+msgstr "Stato di rilascio"
+
+msgid "Release Comment"
+msgstr ""
+
+msgid "Disk"
+msgstr "Disco"
+
 msgid "Disk Subtitle"
+msgstr ""
+
+msgid "Catalog Number"
+msgstr "Catalogo numero"
+
+msgid "Barcode"
+msgstr "Barcode"
+
+msgid "Original Year"
+msgstr "Anno Originale"
+
+msgid "Genres"
+msgstr "Generi"
+
+msgid "Moods"
 msgstr ""
 
 msgid "Overwrite tags of sub songs"
@@ -1365,6 +649,9 @@ msgstr "Sovrascrivi i tag delle canzoni secondarie"
 
 msgid "Add tags to sub songs"
 msgstr "Aggiungi tag alle canzoni secondarie"
+
+msgid "Summary"
+msgstr "Sommario"
 
 msgid "Place Formed"
 msgstr "Luogo formato"
@@ -1381,46 +668,74 @@ msgstr "Aggiungi tag agli album secondari e ai brani secondari"
 msgid "Authentication Required"
 msgstr "Richiesta autenticazione"
 
-#. HINT: Catalog Name
-#, php-format
-msgid "Settings for Catalog: %s"
-msgstr "Impostazioni per il catalogo: %s"
+msgid "Genre"
+msgstr "Genere"
+
+msgid "Auto-inserted Fields"
+msgstr "Inserimento automatico campi"
+
+msgid "Catalog Type"
+msgstr "Tipo di catalogo"
+
+msgid "Catalog Media Type"
+msgstr "Tipo di media del catalogo"
+
+msgid "Filename Pattern"
+msgstr "Filtro nome file"
+
+msgid "Folder Pattern"
+msgstr "Filtro cartelle"
+
+msgid "(no leading or ending '/')"
+msgstr "(non inizianti o terminanti per '/')"
 
 msgid "Save Catalog Settings"
 msgstr "Salva impostazioni catalogo"
 
-msgid "Base Playlist"
-msgstr "Playlist di base"
+msgid "Object Type"
+msgstr "Tipo oggetto"
 
-msgid "Cooldown Time"
-msgstr "Tempo di recupero"
-
-msgid "Make Default"
-msgstr "Rendilo di default"
-
-msgid "Edit Catalog Filter"
+msgid "Mixed"
 msgstr ""
-
-msgid "Edit Filter"
-msgstr ""
-
-msgid "Description:"
-msgstr "Descrizione:"
-
-msgid "External Link"
-msgstr "Collegamento esterno"
-
-msgid "Order"
-msgstr ""
-
-msgid "Confirm"
-msgstr "Conferma"
-
-msgid "Owner"
-msgstr "Proprietario"
 
 msgid "Collaborate"
 msgstr ""
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "Country"
+msgstr "Paese"
+
+msgid "Status"
+msgstr "Stato"
+
+msgid "Active"
+msgstr "Attivo"
+
+msgid "Inactive"
+msgstr "Inattivo"
+
+msgid "Stream URL"
+msgstr "Stream URL"
+
+msgid "Codec"
+msgstr "Codec"
+
+msgid "Random"
+msgstr "Casuale"
+
+msgid "Item Limit (0 = unlimited)"
+msgstr "Limite oggetti (0 = unlimited)"
+
+msgid "Title"
+msgstr "Titolo"
+
+msgid "Description"
+msgstr "Descrizione"
 
 msgid "GUID"
 msgstr "GUID"
@@ -1434,11 +749,23 @@ msgstr "Feed"
 msgid "Language"
 msgstr "Lingua"
 
-msgid "Random"
-msgstr "Casuale"
+msgid "Copyright"
+msgstr "Copyright"
 
-msgid "Item Limit (0 = unlimited)"
-msgstr "Limite oggetti (0 = unlimited)"
+msgid "Share"
+msgstr "Condividi"
+
+msgid "Max Counter"
+msgstr "Contatore massimo"
+
+msgid "Expiry Days"
+msgstr "Giorni di scadenza"
+
+msgid "Allow Stream"
+msgstr "Consenti Stream"
+
+msgid "Allow Download"
+msgstr "Consenti Download"
 
 msgid "Edit Existing Shoutbox Post"
 msgstr "Edita un post Shoutbox esistente"
@@ -1451,14 +778,26 @@ msgstr "Creato da: %1$s per %2$s"
 msgid "Comment:"
 msgstr "Commento:"
 
-msgid "Track"
-msgstr "Traccia"
+msgid "Stick this comment"
+msgstr "Attacca questo commento"
 
 msgid "Composer"
 msgstr "Compositore"
 
+msgid "Comment"
+msgstr "Commento"
+
+msgid "Label"
+msgstr "Etichetta"
+
+msgid "Music License"
+msgstr "Licenza della musica"
+
 msgid "More Metadata"
 msgstr "Più metadati"
+
+msgid "Less Metadata"
+msgstr ""
 
 msgid "Hidden"
 msgstr ""
@@ -1472,56 +811,210 @@ msgstr "Persistente"
 msgid "Keep Existing"
 msgstr "Continua ad esistere"
 
-msgid "Editing Existing User"
-msgstr "Modifica utente esistente"
-
-msgid "User Properties"
-msgstr " \nProprietà utente"
-
-msgid "Catalog Filter"
-msgstr ""
-
-msgid "Other Options"
-msgstr "Altre opzioni"
-
-msgid "Config Preset"
-msgstr "Preset di configurazione"
-
-msgid "This affects all non-admin accounts"
-msgstr ""
-
-msgid "System"
-msgstr "System"
-
-msgid "Default"
-msgstr "Predefinito"
-
-msgid "Minimalist"
-msgstr "Minimale"
-
-msgid "Community"
-msgstr "Community"
-
-msgid "Prevent Preset Override"
-msgstr ""
-
-msgid "Update User"
-msgstr "Aggiorna utente"
-
 msgid "Release Date"
 msgstr "Data di rilascio"
 
-msgid "Export Catalog"
-msgstr "Esporta catalogo"
+msgid "Add Current Host"
+msgstr "Aggiungi l'host corrente"
 
-msgid "Format"
-msgstr "Formato"
+msgid "Add API / RPC Host"
+msgstr "Aggiungi API / RPC Host"
 
-msgid "Export"
-msgstr "Esporta"
+msgid "Add Local Network Definition"
+msgstr "Aggiungi una definizione di rete locale"
+
+msgid "Advanced Add"
+msgstr "Aggiunta avanzata"
+
+msgid "Access Control Entries"
+msgstr "Voci di controllo degli accessi"
+
+msgid "Start Address"
+msgstr "Indirizzo iniziale"
+
+msgid "End Address"
+msgstr "Indirizzo finale"
+
+msgid "User"
+msgstr "Utente"
+
+msgid "Add Access Control List"
+msgstr "Aggiungi elenco di controllo degli accessi"
+
+msgid "API/RPC"
+msgstr "API/RPC"
+
+msgid "Local Network Definition"
+msgstr "Definizione Rete Locale"
+
+msgid "Stream Access"
+msgstr "Accesso Stream"
+
+msgid "Read"
+msgstr "Lettura"
+
+msgid "Read/Write"
+msgstr "Lettura/Scrittura"
+
+msgid "Web Interface"
+msgstr "Interfaccia web"
+
+msgid "IPv4 or IPv6 Addresses"
+msgstr "Indirizzo IPv4 oppure IPv6 "
+
+msgid "Start"
+msgstr "Inizia"
+
+msgid "End"
+msgstr "Fine"
+
+msgid "Create ACL"
+msgstr "Crea ACL"
+
+msgid "Add Catalog Filter"
+msgstr "Aggiungi un filtro per il catalogo"
+
+msgid "Please enable 'catalog_filter' in your sever config file"
+msgstr "Per favore, attiva \"catalog_filter\" nel file di configurazione del web server"
+
+msgid "Catalog filters are a way to stop users accessing different catalogs"
+msgstr "I filtri catalogo sono un modo per impedire agli utenti accedere a cataloghi differenti"
+
+msgid ""
+"If you do not tick a catalog, it will be hidden from users that you assign "
+"to this filter"
+msgstr "Se non selezioni un catalogo, sarà nascosto agli utenti che assegni a questo filtro"
+
+msgid "Filter Name"
+msgstr "Nome del filtro"
+
+msgid "Add Filter"
+msgstr "Aggiungi filtro"
+
+msgid "Add Catalog"
+msgstr "Aggiungi catalogo"
+
+msgid "New catalogs are added to the DEFAULT group when created"
+msgstr "I nuovi cataloghi vengono aggiunti al gruppo DEFAULT al momento della creazione"
+
+msgid ""
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+
+msgid "Catalog Name"
+msgstr "Nome catalogo"
+
+msgid "Song Artist"
+msgstr "Artista Canzone"
+
+msgid "Song Title"
+msgstr "Titolo brano"
+
+msgid "Track (0 padded)"
+msgstr "Traccia (0 padded)"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Gather Art"
+msgstr "Raccogli le copertine"
+
+msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
+msgstr "Costruisci le playlist da file. (m3u, m3u8, asx, pls, xspf)"
+
+msgid "Music"
+msgstr "Musica"
+
+msgid "Add Label"
+msgstr "Aggiungi etichetta"
+
+msgid "Personal"
+msgstr "Personale"
+
+msgid "Association"
+msgstr "Associazione"
+
+msgid "Company"
+msgstr "Compagnia"
+
+msgid "Imprint"
+msgstr "Impronta"
+
+msgid "Production"
+msgstr "Produzione"
+
+msgid "Original Production"
+msgstr "Produzione originale"
+
+msgid "Bootleg Production"
+msgstr "Produzione bootleg"
+
+msgid "Reissue Production"
+msgstr "Produzione ristampa"
+
+msgid "Distributor"
+msgstr "Distributore"
+
+msgid "Holding"
+msgstr "Holding"
+
+msgid "Rights Society"
+msgstr "Diritti Societari"
+
+msgid "Tag Generated"
+msgstr "Tag generato"
+
+msgid "Podcast Feed URL"
+msgstr "Podcast Feed URL"
+
+msgid "Subscribe"
+msgstr "Iscriviti"
+
+msgid "Compose Message"
+msgstr "Componi messaggio"
+
+msgid "Recipient"
+msgstr "Contenitore"
+
+msgid "Subject"
+msgstr "Oggetto"
+
+msgid "Message"
+msgstr "Messaggio"
+
+msgid "Send"
+msgstr "Invia"
+
+msgid "Add User"
+msgstr "Aggiungi utente"
+
+msgid "Guest"
+msgstr "Ospite"
+
+msgid "Content Manager"
+msgstr "Gestore contenuti"
+
+msgid "Catalog Manager"
+msgstr "Gestore catalogo"
+
+msgid "Admin"
+msgstr "Amministratore"
+
+msgid "User Catalog Filter"
+msgstr "Filtro per il catalogo dell'utente"
 
 msgid "Browse Ampache..."
 msgstr "Esplora Ampache..."
+
+msgid "Folders"
+msgstr ""
+
+msgid "Songs"
+msgstr "Brani"
+
+msgid "Artists"
+msgstr "Artisti"
 
 msgid "Album Artists"
 msgstr "Artisti dell'album"
@@ -1538,182 +1031,87 @@ msgstr "Episodi Podcast"
 msgid "Videos"
 msgstr "Video"
 
+msgid "Continue"
+msgstr "Continua"
+
+msgid "Use of cookies by Ampache"
+msgstr "Utilizzo dei cookies da parte di Ampache"
+
+msgid ""
+"Cookies are small text files that are placed on your computer by websites "
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
+msgstr "I cookie sono piccoli file di testo che vengono inseriti nel tuo computer dai siti web che visiti. Sono ampiamente utilizzati per far funzionare o far funzionare i siti web in modo più efficiente, nonché per fornire informazioni ai proprietari del sito"
+
+msgid "The table below explains the cookies we use and why"
+msgstr "La tabella seguente spiega i cookie che utilizziamo e perché"
+
+msgid "Cookie"
+msgstr "Cookie"
+
+msgid "Purpose"
+msgstr "Scopo"
+
+msgid "Ampache session"
+msgstr "Sessione di Ampache"
+
+msgid "Ampache session username (if authenticated, information only)"
+msgstr "Username della sessione Ampache (se autenticato,soltanto una info)"
+
+msgid "Automatically authenticate users"
+msgstr "Autentica gli utenti automaticamente"
+
+msgid "Keep latest web player volume"
+msgstr "Mantieni il volume dell'ultimo web player"
+
+msgid "Show/Hide column [column_index] when browsing [object_type] objects"
+msgstr "Mostra/nascondi la colonna [column_index] Quando navighi [object_type] "
+
+msgid "Use alphabet when browsing [object_type] objects"
+msgstr "Usa l'alfabeto quando navighi [object_type] "
+
+msgid "Use pages when browsing [object_type] objects"
+msgstr "usa le pagine quando navighi [object_type] "
+
+msgid "Collapse/Expand Sidebar [menu_section]"
+msgstr "Collassa/Espandi la Sidebar [menu_section]"
+
+msgid "Collapse/Expand Sidebar"
+msgstr "Collassa/Espandi la Sidebar"
+
+msgid "Create"
+msgstr "Crea"
+
+msgid "Edit Access Control List"
+msgstr "Edita l'access control list"
+
+msgid "Edit Catalog Filter"
+msgstr ""
+
+msgid "Edit Filter"
+msgstr ""
+
+msgid "Description:"
+msgstr "Descrizione:"
+
+msgid "External Link"
+msgstr "Collegamento esterno"
+
+msgid "Order"
+msgstr ""
+
 msgid "Top Rated"
 msgstr "Più votati"
 
-msgid "Newest"
-msgstr "Nuovi"
-
-msgid "Popular"
-msgstr "Popolari"
-
-msgid "Recent"
-msgstr "Recente"
-
-msgid "Search Ampache"
-msgstr "Cerca Ampache"
-
-msgid "Maximum Results"
-msgstr "Massimo numero risultati"
-
-msgid "Unlimited"
-msgstr "Illimitato"
-
-msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Salva come playlist intelligente"
-
-msgid "Save as Playlist"
-msgstr "Salva come playlist"
-
-msgid "Art Search"
-msgstr "Ricerca copertine"
-
-msgid "Starting Art Search"
-msgstr "Comincia a cercare le copertine"
-
-msgid "Searched"
-msgstr "Cercato"
-
-msgid "Artist Art Search"
-msgstr "Ricerca immagini Artisti"
-
-msgid "Cover Art Search"
-msgstr "Ricerca di copertine"
-
-msgid "Direct URL to Image"
-msgstr "URL diretto all' immagine"
-
-msgid "Local Image"
-msgstr "Immagine Locale"
-
-msgid "Spotify Album Filters"
-msgstr "Filtro album Spotify"
-
-msgid "(e.g. '2001', '2001-2005')"
-msgstr "(e.g. '2001', '2001-2005')"
-
-msgid "Search Limit"
-msgstr "Limite di ricerca"
-
-msgid "Get Art"
-msgstr "Ottenere Copertina"
-
-msgid "Statistical Graphs"
-msgstr "Grafici statistici"
-
-msgid "Show large"
-msgstr "Mostra grande"
-
-msgid "Start Date"
-msgstr "Data di inizio"
-
-msgid "End Date"
-msgstr "Data fine"
-
-msgid "Zoom"
-msgstr "Zoom"
-
-msgid "Month"
-msgstr "Mese"
-
-msgid "Day"
-msgstr "Giorno"
-
-msgid "Hour"
-msgstr "Ora"
-
-msgid "Your browser doesn't support this feature."
-msgstr "Il tuo browser non supporta questa funzione"
-
-msgid "Full-Screen not supported by your browser"
-msgstr "Schermo intero non supportato dal tuo browser"
-
-msgid "Media is currently playing, are you sure you want to close?"
-msgstr "Il contenuto multimediale è attualmente in riproduzione. Vuoi davvero chiudere?"
-
-msgid "Previous"
-msgstr "Precedente"
-
-msgid "Pause"
-msgstr "Pausa"
-
-msgid "Stop"
-msgstr "Ferma"
-
-msgid "Mute"
-msgstr "Mute"
-
-msgid "Unmute"
-msgstr "Unmute"
-
-msgid "Max Volume"
-msgstr "Max Volume"
-
-msgid "Full Screen"
-msgstr "Schermo intero"
-
-msgid "Restore Screen"
-msgstr "Ripristina schermo"
-
-msgid "Shuffle"
-msgstr "Shuffle"
-
-msgid "Shuffle Off"
-msgstr "Shuffle Off"
-
-msgid "Repeat"
-msgstr "Ripeti"
-
-msgid "Repeat Off"
-msgstr "Disattiva ripeti"
-
-msgid "Show Album"
-msgstr "Mostra Album"
-
-msgid "Show Lyrics"
-msgstr "Mostra Testo"
-
-msgid "Double click to post a new shout"
-msgstr "Doppio click per postare un nuovo shout"
-
-msgid "Add All to playlist"
-msgstr "Aggiungit tutto su playlist"
-
-msgid "Loop Playlist"
-msgstr ""
-
-msgid "Expand/Collapse playlist"
-msgstr "Espandi/Collassa la Playlist"
-
-msgid "Slideshow"
-msgstr "Slideshow"
-
-msgid "My Broadcast"
-msgstr "La mia trasmissione"
-
-msgid "Visualizer"
-msgstr "Visualizzatore"
-
-msgid "ReplayGain"
-msgstr "ReplayGain"
-
-msgid "Visualizer full-screen"
-msgstr "Visualizzatore tutto schermo"
-
-msgid "Equalizer"
-msgstr "Equalizzatore"
-
-msgid "Unsupported"
-msgstr "Non supportato"
-
-msgid "This media is not supported by the player. Is your browser up to date?"
-msgstr "Questo media non è supportato dal player. Il tuo browser è aggiornato?"
+msgid "Playlists"
+msgstr "Playlists"
 
 msgid "Importing a Playlist from a File"
 msgstr "Importazione playlist da file"
+
+msgid "Filename"
+msgstr "Nome file"
 
 msgid "Import Playlist"
 msgstr "Importa playlist"
@@ -1724,11 +1122,209 @@ msgstr "File"
 msgid "Format: opml"
 msgstr ""
 
+msgid "Add Localplay Instance"
+msgstr "Aggiungi un'istanza locale"
+
+msgid "Add Instance"
+msgstr "Aggiungi istanza"
+
+msgid "Edit Localplay Instance"
+msgstr "Edita l'istanza locale"
+
+msgid "Update Instance"
+msgstr "Aggiorna istanza"
+
+msgid "Show Localplay Instances"
+msgstr "Mostra le istanze locali"
+
+msgid "Edit Instance"
+msgstr "Edita istanza"
+
+msgid "Localplay Control"
+msgstr "Localplay Control"
+
+msgid "Now Playing"
+msgstr "In esecuzione"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Repeat"
+msgstr "Ripeti"
+
+msgid "Clear Playlist"
+msgstr "Pulisci Playlist"
+
+msgid "Ampache"
+msgstr "Ampache"
+
+msgid "Remember Me"
+msgstr "Ricordami"
+
+msgid "Login"
+msgstr "Accedi"
+
+msgid "Register"
+msgstr "Registra"
+
+msgid "Lost Password"
+msgstr "Password persa"
+
+msgid "Mini player"
+msgstr ""
+
+msgid ""
+"Ampache places cookies on your computer to help make this website better."
+msgstr "Ampache inserisce dei cookie sul tuo computer per contribuire a migliorare questo sito web."
+
+msgid ""
+"Cookies are used for core site functionality and are not used for tracking "
+"or analytics."
+msgstr "I cookie vengono utilizzati per le funzionalità principali del sito e non vengono utilizzati ai fini di tracciamento."
+
+msgid "By logging in you agree to the use of cookies while using this site."
+msgstr "Effettuando il login acconsenti all'uso dei cookie durante l'utilizzo di questo sito."
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Mail to"
+msgstr "Mail a"
+
+msgid "Mail Everyone"
+msgstr "Invia mail a tutti"
+
+msgid "Mail Users"
+msgstr "Posta utenti"
+
+msgid "Mail Admins"
+msgstr "Mail Admins"
+
+msgid "Mail Inactive Users"
+msgstr "Mail agli utenti non attivi"
+
+msgid "Inactive Users"
+msgstr "Utenti inattivi"
+
+msgid "From"
+msgstr "Da"
+
+msgid "Self"
+msgstr "Se stesso"
+
+msgid "Yourself"
+msgstr "te stesso"
+
+msgid "System"
+msgstr "System"
+
+msgid "Send E-mail"
+msgstr "Invia E-mail"
+
+msgid "Gather All Art"
+msgstr "Raccogli tutte le copertine"
+
+msgid "Update All File Tags"
+msgstr "Aggiorna tutti i file Tags"
+
+msgid "Show Disabled Songs"
+msgstr "Mostra brani disabilitati"
+
+msgid "Add to All"
+msgstr "Aggiungi a tutti"
+
+msgid "Verify All"
+msgstr "Verifica tutti"
+
+msgid "Clean All"
+msgstr "Pulisci tutti"
+
+msgid "Scan All Folders"
+msgstr ""
+
+msgid "Update All"
+msgstr "Aggiorna tutti"
+
+msgid "Garbage Collection"
+msgstr ""
+
+msgid "Add new files from:"
+msgstr ""
+
+msgid "Clean deleted files in:"
+msgstr ""
+
+msgid "Update existing files in:"
+msgstr ""
+
+#. HINT: example path /media/music
+msgid "Example path:"
+msgstr ""
+
+msgid "Number of Users"
+msgstr ""
+
+msgid "Number of Catalogs"
+msgstr ""
+
+msgid "Users"
+msgstr "Utenti"
+
+msgid "Newest"
+msgstr "Nuovi"
+
+msgid "Popular"
+msgstr "Popolari"
+
+msgid "Recent"
+msgstr "Recente"
+
+msgid "Update from tags complete"
+msgstr "Aggiornamento dai tag completato"
+
+msgid "Favorites"
+msgstr "Preferiti"
+
+msgid "No Genre"
+msgstr "Nessun genere"
+
+msgid "Do you really want to delete this Tag?"
+msgstr "Vuoi davvero Cancellare questa Tag?"
+
+msgid "Not Enough Data"
+msgstr "Dati insufficienti"
+
+msgid "Start Date"
+msgstr "Data di inizio"
+
+msgid "End Date"
+msgstr "Data fine"
+
+msgid "Zoom"
+msgstr "Zoom"
+
 msgid "Albums of the Moment"
 msgstr "Album del momento"
 
 msgid "Videos of the Moment"
 msgstr "Video del momento"
+
+msgid "Ampache Error Page"
+msgstr "Pagina di errore di Ampache"
+
+msgid "For the Love of Music"
+msgstr "Per Amore della Musica"
+
+msgid "Error"
+msgstr "Errore"
+
+msgid ""
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
+msgstr "Si è verificato il seguente errore, verrai reindirizzato automaticamente in 10 secondi."
+
+msgid "Error Messages"
+msgstr "Messaggio di errore"
 
 msgid "Install Progress"
 msgstr "Progresso installazione"
@@ -1813,6 +1409,9 @@ msgid ""
 "then manually place the config file in %s."
 msgstr "Questo passaggio prende i valori di configurazione di base e genera il file di configurazione. Se la tua cartella config / è scrivibile, puoi selezionare 'write' per fare in modo che Ampache scriva il file di configurazione direttamente nella posizione corretta. Se selezioni 'download' ti verrà chiesto di scaricare il file di configurazione e potrai quindi posizionare manualmente il file di configurazione in %s."
 
+msgid "Generate Configuration File"
+msgstr "Genera un file di configurazione"
+
 msgid "Various"
 msgstr "Vari"
 
@@ -1848,13 +1447,22 @@ msgid ""
 "features automatically."
 msgstr "Ottimizza Ampache per il tuo caso d'uso. Il programma di installazione abiliterà / disabiliterà automaticamente le funzionalità."
 
+msgid "Default"
+msgstr "Predefinito"
+
 msgid "Ampache is configured for personal use with the best features."
 msgstr "Ampache è configurato per uso personale con le migliori caratteristiche."
+
+msgid "Minimalist"
+msgstr "Minimale"
 
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
 " Interface."
 msgstr "Solo le funzionalità essenziali sono abilitate per trasmettere semplicemente la tua musica dall'interfaccia web."
+
+msgid "Community"
+msgstr "Community"
 
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
@@ -1883,6 +1491,9 @@ msgstr "Vedi la pagina wiki"
 
 msgid "Template Configuration"
 msgstr "Configurazione dal template"
+
+msgid "None"
+msgstr "Nessuno"
 
 msgid ""
 "No default transcoding application found. You may need to install a popular "
@@ -1948,6 +1559,12 @@ msgstr "Salta"
 msgid "Create Config"
 msgstr "Crea Configurazione"
 
+msgid "Choose Installation Language"
+msgstr "Scegli la lingua di installazione"
+
+msgid "Start Configuration"
+msgstr "Inizia la configurazione"
+
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
@@ -1987,538 +1604,6 @@ msgstr "Password utente del database Ampache"
 msgid "Insert Database"
 msgstr "Inserisci database"
 
-msgid "Choose Installation Language"
-msgstr "Scegli la lingua di installazione"
-
-msgid "Start Configuration"
-msgstr "Inizia la configurazione"
-
-msgid "Date"
-msgstr "Data"
-
-msgid "IP Address"
-msgstr "Indirizzo IP"
-
-msgid "Agent"
-msgstr "Agente"
-
-msgid "Unknown"
-msgstr "Sconosciuto"
-
-msgid "Send E-mail"
-msgstr "Invia E-mail"
-
-msgid "Label Edit"
-msgstr "Etichetta Edit"
-
-msgid "Edit Label"
-msgstr "Modifica etichetta"
-
-msgid "Create Label"
-msgstr "Crea etichetta"
-
-msgid "No label found"
-msgstr "Nessuna etichetta trovata"
-
-msgid "Stream"
-msgstr "Stream"
-
-msgid "Live Stream Edit"
-msgstr "edita Live Stream "
-
-msgid "Manage"
-msgstr " \namministrare"
-
-msgid "No live stream found"
-msgstr "Nessun Live Stream trovato"
-
-msgid "Add Localplay Instance"
-msgstr "Aggiungi un'istanza locale"
-
-msgid "Add Instance"
-msgstr "Aggiungi istanza"
-
-msgid "Decrease Volume"
-msgstr "Diminuisci volume"
-
-msgid "Increase Volume"
-msgstr "Aumenta volume"
-
-msgid "Edit Localplay Instance"
-msgstr "Edita l'istanza locale"
-
-msgid "Update Instance"
-msgstr "Aggiorna istanza"
-
-msgid "Show Localplay Instances"
-msgstr "Mostra le istanze locali"
-
-msgid "Edit Instance"
-msgstr "Edita istanza"
-
-msgid "Localplay Control"
-msgstr "Localplay Control"
-
-msgid "Volume"
-msgstr "Volume"
-
-msgid "Remember Me"
-msgstr "Ricordami"
-
-msgid "Lost Password"
-msgstr "Password persa"
-
-msgid ""
-"Ampache places cookies on your computer to help make this website better."
-msgstr "Ampache inserisce dei cookie sul tuo computer per contribuire a migliorare questo sito web."
-
-msgid ""
-"Cookies are used for core site functionality and are not used for tracking "
-"or analytics."
-msgstr "I cookie vengono utilizzati per le funzionalità principali del sito e non vengono utilizzati ai fini di tracciamento."
-
-msgid "By logging in you agree to the use of cookies while using this site."
-msgstr "Effettuando il login acconsenti all'uso dei cookie durante l'utilizzo di questo sito."
-
-msgid "Submit"
-msgstr "Submit"
-
-msgid "No lyrics found."
-msgstr "Nessun testo trovato."
-
-msgid "Show more"
-msgstr "Mostra altro"
-
-msgid "Mail to"
-msgstr "Mail a"
-
-msgid "Mail Everyone"
-msgstr "Invia mail a tutti"
-
-msgid "Mail Users"
-msgstr "Posta utenti"
-
-msgid "Mail Admins"
-msgstr "Mail Admins"
-
-msgid "Mail Inactive Users"
-msgstr "Mail agli utenti non attivi"
-
-msgid "Inactive Users"
-msgstr "Utenti inattivi"
-
-msgid "From"
-msgstr "Da"
-
-msgid "Self"
-msgstr "Se stesso"
-
-msgid "Yourself"
-msgstr "te stesso"
-
-msgid "Gather All Art"
-msgstr "Raccogli tutte le copertine"
-
-msgid "Update All File Tags"
-msgstr "Aggiorna tutti i file Tags"
-
-msgid "Show Disabled Songs"
-msgstr "Mostra brani disabilitati"
-
-msgid "Add to All"
-msgstr "Aggiungi a tutti"
-
-msgid "Verify All"
-msgstr "Verifica tutti"
-
-msgid "Clean All"
-msgstr "Pulisci tutti"
-
-msgid "Update All"
-msgstr "Aggiorna tutti"
-
-msgid "Are you sure?"
-msgstr ""
-
-msgid "Add new files from:"
-msgstr ""
-
-msgid "Clean deleted files in:"
-msgstr ""
-
-msgid "Update existing files in:"
-msgstr ""
-
-#. HINT: example path /media/music
-msgid "Example path:"
-msgstr ""
-
-msgid "Primary"
-msgstr "Principale"
-
-msgid "No democratic found"
-msgstr "Nessun democratico trovato"
-
-msgid "Number of Users"
-msgstr ""
-
-msgid "Number of Catalogs"
-msgstr ""
-
-msgid "Filter name"
-msgstr ""
-
-msgid "Users"
-msgstr "Utenti"
-
-msgid "Create License"
-msgstr "Crea licenza"
-
-msgid "No licenses found"
-msgstr "Nessuna licenza trovata"
-
-msgid "Object"
-msgstr "Oggetto"
-
-msgid "Sticky"
-msgstr "Sticky"
-
-msgid "Date Added"
-msgstr "Data aggiunta"
-
-msgid "Trending"
-msgstr "Di tendenza"
-
-msgid "No missing albums found"
-msgstr "Nessun album mancante trovato"
-
-msgid "Missing Artists"
-msgstr "Artisti mancanti"
-
-msgid "No missing artists found"
-msgstr "Nessun artista mancante trovato"
-
-msgid "Sort Tracks by Artist, Album, Song"
-msgstr "Ordina le tracce per artista, album, canzone"
-
-msgid "Remove Duplicates"
-msgstr "Rimuovi Duplicati"
-
-msgid "Share playlist"
-msgstr "Condividi playlist"
-
-msgid "Download Playlist"
-msgstr ""
-
-msgid "Refresh from Smartlist"
-msgstr ""
-
-msgid "Playlist Edit"
-msgstr "Modifica Playlist"
-
-msgid "Do you really want to delete this Playlist?"
-msgstr "Vuoi davvero cancellare questa Playlist??"
-
-msgid "Duration"
-msgstr "Durata"
-
-msgid "Reorder"
-msgstr "Riordina"
-
-msgid "Playlist Name"
-msgstr "Nome playlist"
-
-msgid "Last Update"
-msgstr "Ultimo aggiornamento"
-
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr "# Oggetti"
-
-msgid "No playlist found"
-msgstr "Nessuna playlist trovata"
-
-msgid "Web Player"
-msgstr "Player web"
-
-msgid "Installed Version"
-msgstr "Versione installata"
-
-msgid "Deactivate"
-msgstr "Disattiva"
-
-msgid "Upgrade"
-msgstr "Aggiorna"
-
-msgid "Fav."
-msgstr "Fav."
-
-msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "Modifica episodio podcast"
-
-msgid "Publication Date"
-msgstr "Data di pubblicazione"
-
-msgid "Length"
-msgstr "Durata"
-
-msgid "Size"
-msgstr "Dimensione"
-
-msgid "Bitrate"
-msgstr "Bitrate"
-
-msgid "Channels"
-msgstr "Canali"
-
-msgid "Sync"
-msgstr "Sync"
-
-msgid "No podcast episode found"
-msgstr "Nessun episodio podcast trovato"
-
-msgid "Podcast Edit"
-msgstr "Modifica Podcast"
-
-msgid "Edit Podcast"
-msgstr "Edita podcast"
-
-msgid "Episodes"
-msgstr "Episodi"
-
-msgid "No podcast found"
-msgstr "Nessun Podcast trovato"
-
-msgid "Apply to All"
-msgstr "Applica a tutti"
-
-msgid "Access Level"
-msgstr "Livello di accesso"
-
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr "Editando %s Preferenze"
-
-msgid "Update Preferences"
-msgstr "Aggiorna impostazioni"
-
-msgid "Sent by"
-msgstr "Inviato da"
-
-msgid "Reply"
-msgstr "Rispondi"
-
-msgid "Compose"
-msgstr "Componi"
-
-msgid "Compose a New Message"
-msgstr "Componi un nuovo messaggio"
-
-msgid "Mark as Read"
-msgstr "Segnalo come letto"
-
-msgid "Mark as Unread"
-msgstr "Segnalo come non letto"
-
-msgid "Sender"
-msgstr "Mittente"
-
-msgid "No message found"
-msgstr "Nessun messaggio trovato"
-
-msgid "Queries: "
-msgstr "Queries: "
-
-msgid "Cache Hits: "
-msgstr "Cache Hits: "
-
-msgid "Load Time: "
-msgstr "Tempo di caricamento"
-
-msgid "Play Random Selection"
-msgstr "Riproduzione selezione casuale"
-
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d ora"
-msgstr[1] "%d ore"
-msgstr[2] "%d ore"
-
-msgid "Size Limit"
-msgstr "Limite grandezza"
-
-msgid "Enqueue"
-msgstr "Accoda"
-
-msgid "Last Played"
-msgstr "Il mio ultimo ascolto"
-
-#, php-format
-msgid "%d second ago"
-msgid_plural "%d seconds ago"
-msgstr[0] "%d secondo fa"
-msgstr[1] "%d secondi fa"
-msgstr[2] "%d secondi fa"
-
-#, php-format
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d minuto fa"
-msgstr[1] "%d minuti fa"
-msgstr[2] "%d minuti fa"
-
-#, php-format
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d ora fa"
-msgstr[1] "%d ore fa"
-msgstr[2] "%d ore fa"
-
-#, php-format
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d giorno fa"
-msgstr[1] "%d giorni fa"
-msgstr[2] "%d giorni fa"
-
-#, php-format
-msgid "%d week ago"
-msgid_plural "%d weeks ago"
-msgstr[0] "%d settimana fa"
-msgstr[1] "%d settimane fa"
-msgstr[2] "%d settimane fa"
-
-#, php-format
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d mese fa"
-msgstr[1] "%d mesi fa"
-msgstr[2] "%d mesi fa"
-
-#, php-format
-msgid "%d year ago"
-msgid_plural "%d years ago"
-msgstr[0] "%d anno fa"
-msgstr[1] "%d anni fa"
-msgstr[2] "%d anni fa"
-
-#, php-format
-msgid "%d decade ago"
-msgid_plural "%d decades ago"
-msgstr[0] "%d decade fa"
-msgstr[1] "%d decadi fa"
-msgstr[2] "%d decadi fa"
-
-msgid "No recently played items found"
-msgstr "Nessun oggetto riprodotto recentemente trovato"
-
-msgid "Recently Skipped"
-msgstr ""
-
-msgid "No similar artist found"
-msgstr "Nessun artista simile è stato trovato"
-
-msgid "Registration"
-msgstr "Registrazione"
-
-msgid "Return to Login Page"
-msgstr "Ritorna alla pagine di accesso"
-
-msgid "Please wait for an administrator to activate your account"
-msgstr "Per favore aspetta che un amministratore attivi il tuo account"
-
-msgid ""
-"An activation key has been sent to the e-mail address you provided. Please "
-"check your e-mail for further information"
-msgstr "Una codice di attivazione è stato inviato all'indirizzo e-mail fornito. Controlla la tua e-mail per ulteriori informazioni"
-
-msgid "Your account has been created"
-msgstr "Il tuo account è stato creato"
-
-msgid "Rules"
-msgstr "Regole"
-
-msgid "Match"
-msgstr "Match"
-
-msgid "all rules"
-msgstr "tutte le regole"
-
-msgid "any rule"
-msgstr "ogni regola"
-
-msgid "Add Another Rule"
-msgstr "Aggiungi altra regola"
-
-msgid "Anywhere"
-msgstr "Ovunque"
-
-msgid "Add Smart Playlist"
-msgstr "Aggiungi alla plylist intelligente"
-
-msgid "Item Limit"
-msgstr "Limite elementi"
-
-msgid "No smart playlist found"
-msgstr "Nessuna smart list trovata"
-
-msgid "Smart Playlist Edit"
-msgstr "Edita la playlist intelligente"
-
-msgid "Save Changes"
-msgstr "Salva cambiamenti"
-
-msgid "Options"
-msgstr "Impostazioni"
-
-msgid "Object Type"
-msgstr "Tipo oggetto"
-
-msgid "Creation Date"
-msgstr "Data creazione"
-
-msgid "Last Visit"
-msgstr "Ultima visita"
-
-msgid "Counter"
-msgstr "Contatore"
-
-msgid "Public URL"
-msgstr "URL pubblico"
-
-msgid "Shared by"
-msgstr "Condiviso da"
-
-msgid "Skipped"
-msgstr ""
-
-msgid "No song found"
-msgstr "Nessun brano trovato"
-
-msgid "License"
-msgstr "Licenza"
-
-msgid "Do you really want to delete this Tag?"
-msgstr "Vuoi davvero Cancellare questa Tag?"
-
-msgid "No Genre"
-msgstr "Nessun genere"
-
-msgid "Not Enough Data"
-msgstr "Dati insufficienti"
-
 msgid "Ampache -- Config Debug Page"
 msgstr "Ampache -- Pagina di Debug Config"
 
@@ -2535,6 +1620,20 @@ msgstr "Potresti aver raggiunto questa pagina perché il tuo %s file di configur
 msgid "Please visit the wiki for help"
 msgstr "Per favore visita la wiki per trovare aiuto"
 
+msgid "Installation"
+msgstr "Installazione"
+
+msgid ""
+"You may have reached this page because Ampache was unable to load the "
+"required dependencies"
+msgstr "Potresti essere arrivato a questa pagina perché Ampache non è stato in grado di caricare le dipendenze richieste"
+
+msgid "Debug Page"
+msgstr "Pagina di debug"
+
+msgid "Ampache Debug"
+msgstr "Ampache Debug"
+
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
@@ -2542,9 +1641,6 @@ msgstr "Potresti essere arrivato a questa pagina perché si è verificato un err
 
 msgid "Web Installation"
 msgstr "Installazione Web"
-
-msgid "OK"
-msgstr "OK"
 
 msgid "PHP version"
 msgstr "versione PHP"
@@ -2563,7 +1659,7 @@ msgstr "Questo verifica se le dipendenze di Ampache sono installate."
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
 "mv composer.phar /usr/local/bin/composer). Then run `composer install --no-"
-"dev --prefer-source --no-interaction` on the Ampache directory."
+"dev --prefer-dist --no-interaction` on the Ampache directory."
 msgstr ""
 
 msgid "PHP hash extension"
@@ -2622,6 +1718,9 @@ msgid ""
 "required by Ampache."
 msgstr "Questo verifica se l'estensione JSON è abilitata. Questa estensione è richiesta da Ampache."
 
+msgid "PHP intl extension"
+msgstr "PHP intl extension"
+
 msgid ""
 "This tests whether you have the intl extension enabled. This extension is "
 "required by Ampache."
@@ -2642,6 +1741,32 @@ msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly"
 " necessary, but may result in a better experience (zip download)."
 msgstr "Questo verifica se hai l'estensione zlib abilitata. Questo non è strettamente necessario, ma può comportare una migliore esperienza (download zip)."
+
+msgid "WARNING"
+msgstr "ATTENZIONE"
+
+msgid "UNKNOWN"
+msgstr ""
+
+msgid "HTTP compression"
+msgstr ""
+
+msgid ""
+"This measures the page you are reading: your browser reports both the bytes "
+"it received and the bytes after decoding, so a smaller received size means "
+"the server compressed it. Compression is not required, but it makes a large "
+"difference to page and API response sizes."
+msgstr ""
+
+msgid ""
+"Enable gzip or brotli in your web server for html, css, javascript, json and"
+" xml. Do not compress audio streams: they are already compressed, so it only"
+" costs CPU on every listen."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript, which is why it reads as unknown right now."
+msgstr ""
 
 msgid "PHP SimpleXML extension"
 msgstr "PHP SimpleXML extension"
@@ -2744,8 +1869,565 @@ msgid ""
 "then your web_path is not set correctly."
 msgstr "Questo test assicura che la tua variabile web_path sia impostata correttamente e che siamo in grado di accedere alla pagina dell'indice. Se non vedi un segno di spunta qui, il tuo web_path non è impostato correttamente."
 
-msgid "Update from tags complete"
-msgstr "Aggiornamento dai tag completato"
+msgid "Date"
+msgstr "Data"
+
+msgid "IP Address"
+msgstr "Indirizzo IP"
+
+msgid "Agent"
+msgstr "Agente"
+
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+msgid "Label Edit"
+msgstr "Etichetta Edit"
+
+msgid "Edit Label"
+msgstr "Modifica etichetta"
+
+msgid "Live Stream Edit"
+msgstr "edita Live Stream "
+
+msgid "Song Lyrics"
+msgstr ""
+
+msgid "Show more"
+msgstr "Mostra altro"
+
+msgid "Primary"
+msgstr "Principale"
+
+msgid "Missing Artists"
+msgstr "Artisti mancanti"
+
+msgid "No missing artists found"
+msgstr "Nessun artista mancante trovato"
+
+msgid "Donate"
+msgstr "Dona"
+
+msgid "Show/Hide Player"
+msgstr "Mostra/Nascondi il Player"
+
+msgid "Information"
+msgstr "Informazione"
+
+msgid "Menu"
+msgstr ""
+
+msgid "New messages"
+msgstr "Nuovi messaggi"
+
+msgid "Show/Hide Playlist"
+msgstr "Mostra/Nascondi Playlist"
+
+msgid "Loading"
+msgstr "Caricamento"
+
+msgid "Close"
+msgstr ""
+
+msgid "Your Ampache config file is out of date!"
+msgstr "Il tuo file di configurazione è obsoleto!"
+
+msgid "Update your current config file automatically"
+msgstr "Aggiorna automaticamente il tuo attuale file di configurazione"
+
+msgid "Download a copy of the new version"
+msgstr "Aggiorna automaticamente il tuo attuale file di configurazione"
+
+#, php-format
+msgid "%s selected"
+msgstr ""
+
+msgid "Add to New Playlist"
+msgstr "Aggiungi ad una nuova Playlist"
+
+msgid "Add to New Collection"
+msgstr ""
+
+msgid "Batch download"
+msgstr "Download in batch"
+
+msgid "Add dynamic items"
+msgstr "Aggiungi un oggetto dinamico"
+
+msgid "Random song"
+msgstr "Brano casuale"
+
+msgid "Random artist"
+msgstr "Artista casuale"
+
+msgid "Random album"
+msgstr "Album casuale"
+
+msgid "Random playlist"
+msgstr "Playlist casuale"
+
+msgid "No items"
+msgstr "Nessun oggetto"
+
+msgid "More"
+msgstr "Altro"
+
+msgid "Log out"
+msgstr "Esci"
+
+msgid "Show Lyrics"
+msgstr "Mostra Testo"
+
+msgid "Add All to playlist"
+msgstr "Aggiungit tutto su playlist"
+
+msgid "Loop Playlist"
+msgstr ""
+
+msgid "Expand/Collapse playlist"
+msgstr "Espandi/Collassa la Playlist"
+
+msgid "Visualizer"
+msgstr "Visualizzatore"
+
+msgid "Slideshow"
+msgstr "Slideshow"
+
+msgid "My Broadcast"
+msgstr "La mia trasmissione"
+
+msgid "Show Now Playing"
+msgstr ""
+
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+msgid "Equalizer"
+msgstr "Equalizzatore"
+
+msgid "Visualizer full-screen"
+msgstr "Visualizzatore tutto schermo"
+
+msgid "Unsupported"
+msgstr "Non supportato"
+
+msgid "This media is not supported by the player. Is your browser up to date?"
+msgstr "Questo media non è supportato dal player. Il tuo browser è aggiornato?"
+
+msgid "Are you sure? This will replace the current track order"
+msgstr ""
+
+msgid "Sort Tracks by Artist, Album, Song"
+msgstr "Ordina le tracce per artista, album, canzone"
+
+msgid "Remove Duplicates"
+msgstr "Rimuovi Duplicati"
+
+msgid "Share playlist"
+msgstr "Condividi playlist"
+
+msgid "Download Playlist"
+msgstr ""
+
+msgid "Refresh from Smartlist"
+msgstr ""
+
+msgid "Playlist Edit"
+msgstr "Modifica Playlist"
+
+msgid "Do you really want to delete this Playlist?"
+msgstr "Vuoi davvero cancellare questa Playlist??"
+
+msgid "Smart Playlist Edit"
+msgstr "Edita la playlist intelligente"
+
+msgid "Save Changes"
+msgstr "Salva cambiamenti"
+
+msgid "Save as Playlist"
+msgstr "Salva come playlist"
+
+msgid "Rating"
+msgstr "Voto"
+
+msgid "Fav."
+msgstr "Fav."
+
+msgid "Waveform"
+msgstr ""
+
+msgid "Podcast Episode Edit"
+msgstr "Modifica episodio podcast"
+
+msgid "Sync"
+msgstr "Sync"
+
+msgid "Started"
+msgstr "Inizia"
+
+msgid "Podcast Edit"
+msgstr "Modifica Podcast"
+
+msgid "Edit Podcast"
+msgstr "Edita podcast"
+
+msgid "Are you sure? This will overwrite Podcast details using the RSS feed"
+msgstr ""
+
+msgid "Update details from RSS feed"
+msgstr ""
+
+msgid "Episodes"
+msgstr "Episodi"
+
+msgid "Checking your browser"
+msgstr ""
+
+msgid "This link is rate limited. Your download will start on its own."
+msgstr ""
+
+msgid "Return to the previous page"
+msgstr ""
+
+msgid "Checking your browser..."
+msgstr ""
+
+#. HINT: %d is how far along the check is, as a percentage
+#, php-format
+msgid "Checking your browser... %d%%"
+msgstr ""
+
+msgid "Check passed."
+msgstr ""
+
+msgid "Your browser is too old to pass this check."
+msgstr ""
+
+msgid "The browser check failed to run. Please reload the page."
+msgstr ""
+
+msgid "Your download has started."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript and Web Workers, and this browser is not running"
+" them."
+msgstr ""
+
+msgid ""
+"Enable them and reload the page, or ask the administrator of this server for"
+" another way in."
+msgstr ""
+
+msgid "Confirm Subsonic Password"
+msgstr ""
+
+msgid "Update Account"
+msgstr "Aggiorna account"
+
+msgid "Update Preferences"
+msgstr "Aggiorna impostazioni"
+
+msgid "Preference"
+msgstr "Preferenza"
+
+msgid "Value"
+msgstr "Valore"
+
+msgid "Apply to All"
+msgstr "Applica a tutti"
+
+msgid "Access Level"
+msgstr "Livello di accesso"
+
+msgid "Sent by"
+msgstr "Inviato da"
+
+msgid "Reply"
+msgstr "Rispondi"
+
+msgid "Queries: "
+msgstr "Queries: "
+
+msgid "Cache Hits: "
+msgstr "Cache Hits: "
+
+msgid "Load Time: "
+msgstr "Tempo di caricamento"
+
+msgid "No recently played items found"
+msgstr "Nessun oggetto riprodotto recentemente trovato"
+
+msgid "No similar artist found"
+msgstr "Nessun artista simile è stato trovato"
+
+msgid "Registration"
+msgstr "Registrazione"
+
+msgid "User Agreement"
+msgstr "Consenso utente"
+
+msgid "Required fields"
+msgstr "Campi richiesti"
+
+msgid "Captcha is required"
+msgstr "E' richiesto il chapcha"
+
+msgid "I Accept"
+msgstr "Accetto"
+
+msgid "Search Ampache"
+msgstr "Cerca Ampache"
+
+msgid "Maximum Results"
+msgstr "Massimo numero risultati"
+
+msgid "Unlimited"
+msgstr "Illimitato"
+
+msgid "Permalink"
+msgstr ""
+
+msgid "Save as Smart Playlist"
+msgstr "Salva come playlist intelligente"
+
+msgid "Options"
+msgstr "Impostazioni"
+
+msgid "Play Random Selection"
+msgstr "Riproduzione selezione casuale"
+
+msgid "Length"
+msgstr "Durata"
+
+msgid "Size Limit"
+msgstr "Limite grandezza"
+
+msgid "Enqueue"
+msgstr "Accoda"
+
+msgid "Rules"
+msgstr "Regole"
+
+msgid "Match"
+msgstr "Match"
+
+msgid "all rules"
+msgstr "tutte le regole"
+
+msgid "any rule"
+msgstr "ogni regola"
+
+msgid "Add Another Rule"
+msgstr "Aggiungi altra regola"
+
+msgid "Create Share"
+msgstr "Crea condivisione"
+
+msgid "Secret"
+msgstr "Secret"
+
+msgid "Shoutbox"
+msgstr "Shoutbox"
+
+msgid "Expand/Collapse"
+msgstr "Espandi/collassa"
+
+msgid "Show Instances"
+msgstr "Mostra istanze"
+
+msgid "Show Playlist"
+msgstr "Mostra Playlist"
+
+msgid "Active Instance"
+msgstr "Istanza attiva"
+
+msgid "Localplay Disabled"
+msgstr "Localplay disattivato"
+
+msgid "Uploads"
+msgstr "Caricamenti"
+
+msgid "Help"
+msgstr "Aiuto"
+
+msgid "Ampache Wiki"
+msgstr "Ampache Wiki"
+
+msgid "API Documentation"
+msgstr "API Documentazione"
+
+msgid "Cookie Information"
+msgstr "Informazioni sui cookie"
+
+msgid "Admin Disabled"
+msgstr "Amministratore disabilitato"
+
+msgid "Average for all users"
+msgstr ""
+
+msgid "average"
+msgstr ""
+
+msgid "Fav"
+msgstr ""
+
+msgid "Connected Users"
+msgstr ""
+
+msgid "Total Users"
+msgstr ""
+
+msgid "Catalog Size"
+msgstr ""
+
+msgid "Catalog Time"
+msgstr ""
+
+msgid "Path"
+msgstr "Percorso"
+
+msgid "Last Verify"
+msgstr "Ultima Verifica"
+
+msgid "Last Add"
+msgstr "Ultima aggiunta"
+
+msgid "Last Clean"
+msgstr "Ultima pulizia"
+
+msgid "Write New Config"
+msgstr "Scrivi la nuova configurazione"
+
+msgid "Set Database Charset"
+msgstr "Seleziona Database Charset"
+
+msgid "Clear Songs Cache"
+msgstr "Cancella la cache dei brani"
+
+msgid "Clear Artists Cache"
+msgstr "Cancella la cache degli artisti"
+
+msgid "Clear Albums Cache"
+msgstr "Cancella la cache degli album"
+
+msgid "Clear Perpetual API Sessions"
+msgstr ""
+
+msgid "Ampache Update"
+msgstr "Aggiornamento Ampache"
+
+msgid "Installed Ampache version"
+msgstr "Versione di Ampache installata"
+
+msgid "Latest Ampache version"
+msgstr "Versione di Ampache più recente"
+
+msgid "GitHub Branch"
+msgstr "GitHub Branch"
+
+msgid "Last Update"
+msgstr "Ultimo aggiornamento"
+
+msgid "Force check"
+msgstr "Forza controllo"
+
+msgid "Ampache Cron"
+msgstr "Ampache Cron"
+
+msgid "The last cron was completed"
+msgstr "L'ultimo cron è stato completato"
+
+msgid "Invalid configuration settings"
+msgstr "Il file di configurazione è invalido"
+
+msgid "Setting"
+msgstr "Settaggi"
+
+msgid "PHP Settings"
+msgstr "PHP Settings"
+
+msgid "Version"
+msgstr "Versione"
+
+msgid "Memory Limit"
+msgstr "Limite memoria"
+
+msgid "Maximum Execution Time"
+msgstr "Tempo di esecuzione massimo"
+
+msgid "Override Execution Time"
+msgstr "Sovrascrivi il tempo di esecuzione"
+
+msgid "Succeeded"
+msgstr "Riuscito"
+
+msgid "Failed"
+msgstr "Fallito"
+
+msgid "Open Basedir"
+msgstr "Apri la directory di base"
+
+msgid "PHP Modules"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Current Configuration"
+msgstr "Configurazione corrente"
+
+msgid "The following updates need to be performed:"
+msgstr "I seguenti aggiornamenti devono essere effettuati:"
+
+msgid "Warning"
+msgstr ""
+
+msgid "Update Now!"
+msgstr ""
+
+msgid "Target folder"
+msgstr "Cartella destinazione"
+
+msgid "New folder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Leave the artist and album fields blank to read file tags"
+msgstr "Lascia vuoti i campi artista e album per leggere i tag dei file"
+
+msgid ""
+"The music license you choose may give away some rights in an irrevocable "
+"manner."
+msgstr ""
+
+msgid ""
+"Read the text of the license you choose carefully with the 'View License' "
+"link."
+msgstr ""
+
+msgid "Files"
+msgstr "File"
+
+msgid "Max upload size"
+msgstr ""
+
+msgid "Allowed file type"
+msgstr "Tipi di file Consentiti"
 
 msgid "Registration Validation"
 msgstr " Convalida della registrazione"
@@ -2762,14 +2444,14 @@ msgstr "Validazione fallita"
 msgid "The validation key used isn't correct"
 msgstr "La chiave di convalida utilizzata non è corretta"
 
-msgid "Never"
-msgstr "Mai"
+msgid "Send private message"
+msgstr "Invia messaggio privato"
+
+msgid "Disable"
+msgstr "Disabilita"
 
 msgid "Display Name"
 msgstr "Nome da visualizzare"
-
-msgid "Send private message"
-msgstr "Invia messaggio privato"
 
 msgid "Wrapped"
 msgstr ""
@@ -2789,6 +2471,9 @@ msgstr "L'utente è adesso online"
 msgid "User is Offline Now"
 msgstr "L'utente è adesso offline"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Following"
 msgstr "Seguendo"
 
@@ -2801,14 +2486,156 @@ msgstr "Sequenza temporale"
 msgid "Active Playlist"
 msgstr "Playlist attiva"
 
-msgid "User Agreement"
-msgstr "Consenso utente"
+msgid "Subtitle"
+msgstr "Sottotitolo"
 
-msgid "Required fields"
-msgstr "Campi richiesti"
+msgid "Video Edit"
+msgstr "Modifica video"
 
-msgid "I Accept"
-msgstr "Accetto"
+msgid "Video Information"
+msgstr "Informazioni Video"
+
+msgid "Songs Played"
+msgstr ""
+
+msgid "Minutes Played"
+msgstr ""
+
+#, php-format
+msgid "Tried to clobber '%s' without setting clobber"
+msgstr ""
+
+#. HINT: File
+#, php-format
+msgid "Unknown %s"
+msgstr "Sconosciuto %s"
+
+msgid "Add New"
+msgstr "Aggiungi nuovo"
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Not Found: %s"
+msgstr "Non trovato: %s"
+
+msgid "View License"
+msgstr "Visualizza licenza"
+
+msgid "Activate"
+msgstr "Attiva"
+
+msgid "Addition Time"
+msgstr "Aggiungi tempo"
+
+#, php-format
+msgid "Settings for Catalog: %s"
+msgstr "Impostazioni per il catalogo: %s"
+
+msgid "Installed Version"
+msgstr "Versione installata"
+
+msgid "Deactivate"
+msgstr "Disattiva"
+
+msgid "Upgrade"
+msgstr "Aggiorna"
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr "Editando %s Preferenze"
+
+msgid "Unknown (Orphaned)"
+msgstr "Sconosciuto (Orfano)"
+
+msgid "Album Art"
+msgstr "Copertina"
+
+msgid "Artist Art Search"
+msgstr "Ricerca immagini Artisti"
+
+msgid "Cover Art Search"
+msgstr "Ricerca di copertine"
+
+msgid "Time"
+msgstr "Durata"
+
+msgid "Starts With"
+msgstr "Inizia con"
+
+msgid "Contains"
+msgstr ""
+
+msgid "Listeners"
+msgstr "Ascoltatori"
+
+msgid "Live"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Remove from collection"
+msgstr ""
+
+msgid "Remove {count} selected items from this collection?"
+msgstr ""
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr "# Oggetti"
+
+msgid "Holds"
+msgstr ""
+
+msgid "Votes"
+msgstr "Voti"
+
+msgid "Playlist Name"
+msgstr "Nome playlist"
+
+msgid "Remove from playlist"
+msgstr ""
+
+msgid "Remove {count} selected items from this playlist?"
+msgstr ""
+
+msgid "Publication Date"
+msgstr "Data di pubblicazione"
+
+msgid "Sender"
+msgstr "Mittente"
+
+msgid "Object"
+msgstr "Oggetto"
+
+msgid "Creation Date"
+msgstr "Data creazione"
+
+msgid "Last Visit"
+msgstr "Ultima visita"
+
+msgid "Counter"
+msgstr "Contatore"
+
+msgid "Public URL"
+msgstr "URL pubblico"
+
+msgid "Sticky"
+msgstr "Sticky"
+
+msgid "Date Added"
+msgstr "Data aggiunta"
+
+msgid "Item Limit"
+msgstr "Limite elementi"
+
+msgid "License"
+msgstr "Licenza"
+
+msgid "Added"
+msgstr "Aggiunti"
 
 msgid "Registration Date"
 msgstr "Data registrazione"
@@ -2819,61 +2646,238 @@ msgstr "Ultimo IP"
 msgid "Online"
 msgstr "Online"
 
-msgid "Verify Catalog"
-msgstr "Verifica catalogo"
+msgid "Resolution"
+msgstr "Risoluzione"
+
+msgid "Trending"
+msgstr "Di tendenza"
+
+msgid "Found"
+msgstr "Trovato"
+
+msgid "Searched"
+msgstr "Cercato"
+
+msgid "Checking"
+msgstr "Controllo in corso"
+
+msgid "Verified"
+msgstr "Virificato"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Starting New Media Search on \"%s\" Catalog"
+msgstr "Comincio una nuova ricerca media nel catalogo \"%s\" "
+
+msgid "Starting Art Search"
+msgstr "Comincia a cercare le copertine"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Cleaning the \"%s\" Catalog"
+msgstr "Pulendo il catalogo \"%s\" "
 
 #. HINT: Catalog Name
 #, php-format
 msgid "Updating the %s Catalog"
 msgstr "Aggiornando il catalogo %s "
 
-msgid "Verified"
-msgstr "Virificato"
+msgid "Reading"
+msgstr "Leggendo"
 
-msgid "Subtitle"
-msgstr "Sottotitolo"
+msgid "Starting New Media Search"
+msgstr "Comincia una nuova ricerca di media"
 
-msgid "Video Edit"
-msgstr "Modifica video"
+msgid "Art Search"
+msgstr "Ricerca copertine"
 
-msgid "Resolution"
-msgstr "Risoluzione"
+msgid "Clean Catalog"
+msgstr "Pulisci il catalogo"
 
-msgid "Display"
-msgstr "Display"
+msgid "Verify Catalog"
+msgstr "Verifica catalogo"
 
-msgid "Audio Bitrate"
-msgstr "Audio Bitrate"
+msgid "Verify"
+msgstr "Verifica"
 
-msgid "Video Bitrate"
-msgstr "Video Bitrate"
+msgid "Clean"
+msgstr "Pulisci"
 
-msgid "Frame Rate"
-msgstr "Frame Rate"
-
-msgid "Last Updated"
-msgstr "Ultimo aggiornamento"
-
-msgid "Added"
-msgstr "Aggiunti"
-
-msgid "Video Information"
-msgstr "Informazioni Video"
-
-msgid "No video found"
-msgstr "Nessun video trovato"
-
-msgid "Ampache Wrapped"
+msgid "Scan Folders"
 msgstr ""
 
-msgid "Songs Played"
+msgid "Update File Tags"
+msgstr "Aggiorna i tag dei file"
+
+msgid "Save the current order of this collection?"
 msgstr ""
 
-msgid "Minutes Played"
+msgid "Folder Edit"
 msgstr ""
 
-msgid "Ratings"
+msgid "Sign in with OpenID Connect"
 msgstr ""
+
+#, php-format
+msgid "Search on %s ..."
+msgstr ""
+
+msgid "Stream"
+msgstr "Stream"
+
+msgid "Recently Played"
+msgstr "Eseguiti recentemente"
+
+msgid "Newest Albums"
+msgstr "Nuovi album"
+
+msgid "Newest Artists"
+msgstr "Nuovi artisti"
+
+msgid "Newest Songs"
+msgstr ""
+
+msgid "Newest Shouts"
+msgstr "Nuovi Shouts"
+
+msgid "Smart Playlists"
+msgstr "Playlist Inteligente"
+
+msgid "Private Messages"
+msgstr "Messaggi privati"
+
+msgid "Smartlists"
+msgstr "Liste intelligenti"
+
+msgid "Radio"
+msgstr "Radio"
+
+#, php-format
+msgid "%s Playlist"
+msgstr "%s Playlist"
+
+msgid "Democratic Playlist"
+msgstr "Playlist Democratica"
+
+msgid "Previous"
+msgstr "Precedente"
+
+msgid "Stop"
+msgstr "Ferma"
+
+msgid "Pause"
+msgstr "Pausa"
+
+msgid "Mute"
+msgstr "Mute"
+
+msgid "Decrease Volume"
+msgstr "Diminuisci volume"
+
+msgid "Increase Volume"
+msgstr "Aumenta volume"
+
+msgid "Web Player"
+msgstr "Player web"
+
+msgid "Could not connect to the broadcast. Resuming normal playback."
+msgstr ""
+
+msgid "Media is currently playing, are you sure you want to close?"
+msgstr "Il contenuto multimediale è attualmente in riproduzione. Vuoi davvero chiudere?"
+
+msgid "Full-Screen not supported by your browser"
+msgstr "Schermo intero non supportato dal tuo browser"
+
+msgid ""
+"The visualizer and equalizer are not available for remote catalog streams."
+msgstr ""
+
+msgid "Your browser doesn't support this feature."
+msgstr "Il tuo browser non supporta questa funzione"
+
+msgid "Unmute"
+msgstr "Unmute"
+
+msgid "Max Volume"
+msgstr "Max Volume"
+
+msgid "Full Screen"
+msgstr "Schermo intero"
+
+msgid "Restore Screen"
+msgstr "Ripristina schermo"
+
+msgid "Shuffle"
+msgstr "Shuffle"
+
+msgid "Shuffle Off"
+msgstr "Shuffle Off"
+
+msgid "Repeat Off"
+msgstr "Disattiva ripeti"
+
+msgid "Show Album"
+msgstr "Mostra Album"
+
+msgid "Collections"
+msgstr ""
+
+msgid "Collection Name"
+msgstr ""
+
+msgid "Size"
+msgstr "Dimensione"
+
+msgid "Bitrate"
+msgstr "Bitrate"
+
+msgid "Channels"
+msgstr "Canali"
+
+msgid "Return to Login Page"
+msgstr "Ritorna alla pagine di accesso"
+
+msgid "Please wait for an administrator to activate your account"
+msgstr "Per favore aspetta che un amministratore attivi il tuo account"
+
+msgid ""
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information"
+msgstr "Una codice di attivazione è stato inviato all'indirizzo e-mail fornito. Controlla la tua e-mail per ulteriori informazioni"
+
+msgid "Your account has been created"
+msgstr "Il tuo account è stato creato"
+
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d ora"
+msgstr[1] "%d ore"
+msgstr[2] "%d ore"
+
+msgid "Anywhere"
+msgstr "Ovunque"
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Post to Shoutbox"
+msgstr "Postalo nello Shoutbox"
+
+msgid "Add ACL"
+msgstr "Aggiungi ACL"
+
+msgid "Show ACL(s)"
+msgstr "Mostra ACL(s)"
 
 msgid "Show Catalogs"
 msgstr "Mostra cataloghi"
@@ -2883,6 +2887,15 @@ msgstr ""
 
 msgid "Manage Licenses"
 msgstr "Gestisci licenza"
+
+msgid "Localplay Controllers"
+msgstr "Controller Localplay"
+
+msgid "Catalog Types"
+msgstr "Tipi di catalogo"
+
+msgid "Manage Plugins"
+msgstr "Gestisci Plugin"
 
 msgid "Browse Users"
 msgstr "Sfoglia utenti"
@@ -2896,62 +2909,17 @@ msgstr "Gestisci Shoutbox"
 msgid "Clear Now Playing"
 msgstr "Cancella 'Ora in ascolto'"
 
-msgid "Add ACL"
-msgstr "Aggiungi ACL"
-
-msgid "Show ACL(s)"
-msgstr "Mostra ACL(s)"
-
-msgid "Localplay Controllers"
-msgstr "Controller Localplay"
-
-msgid "Catalog Types"
-msgstr "Tipi di catalogo"
-
-msgid "Manage Plugins"
-msgstr "Gestisci Plugin"
-
-msgid "Expand/Collapse"
-msgstr "Espandi/collassa"
-
-msgid "Radio"
-msgstr "Radio"
-
-msgid "Uploads"
-msgstr "Caricamenti"
-
-msgid "Smart Playlists"
-msgstr "Playlist Inteligente"
-
-msgid "Smartlists"
-msgstr "Liste intelligenti"
-
 msgid "Wanted"
 msgstr "Ricercati"
 
 msgid "Shares"
 msgstr "Shares"
 
-msgid "Log out"
-msgstr "Esci"
-
-msgid "Admin Disabled"
-msgstr "Amministratore disabilitato"
-
-msgid "Show Instances"
-msgstr "Mostra istanze"
-
-msgid "Show Playlist"
-msgstr "Mostra Playlist"
-
-msgid "Active Instance"
-msgstr "Istanza attiva"
-
-msgid "Localplay Disabled"
-msgstr "Localplay disattivato"
-
 msgid "Allow Localplay Set to False"
 msgstr "Consenti il localplay impostato su false"
+
+msgid "Access Denied"
+msgstr "Accesso Negato!"
 
 msgid "Localplay Controller Not Defined"
 msgstr "Controller di riproduzione locale non definito"
@@ -2959,22 +2927,257 @@ msgstr "Controller di riproduzione locale non definito"
 msgid "Account"
 msgstr "Utente"
 
-msgid "Help"
-msgstr "Aiuto"
+msgid "No lyrics found."
+msgstr "Nessun testo trovato."
 
-msgid "Ampache Wiki"
-msgstr "Ampache Wiki"
+msgid "Song Edit"
+msgstr "Edita Brano"
 
-msgid "API Documentation"
-msgstr "API Documentazione"
+msgid "Song Information"
+msgstr "Informazioni Brano"
 
-msgid "Cookie Information"
-msgstr "Informazioni sui cookie"
+msgid "Links"
+msgstr "Collegamenti"
+
+msgid "Song Language"
+msgstr "Lingua brano"
+
+msgid "BPM"
+msgstr ""
+
+msgid "Song MBID"
+msgstr "Brano MBID"
+
+msgid "Album MBID"
+msgstr "Album MBID"
+
+msgid "Artist MBID"
+msgstr "Artista MBID"
+
+msgid "ReplayGain Track Gain"
+msgstr "ReplayGain Track Gain"
+
+msgid "ReplayGain Album Gain"
+msgstr "ReplayGain Album Gain"
+
+msgid "R128 Track Gain"
+msgstr ""
+
+msgid "R128 Album Gain"
+msgstr ""
+
+msgid "ISRC"
+msgstr ""
+
+msgid "Last Updated"
+msgstr "Ultimo aggiornamento"
+
+msgid "Lyrics"
+msgstr "Testi"
+
+msgid "Licensing"
+msgstr "Licensing"
+
+msgid "Statistical Graphs"
+msgstr "Grafici statistici"
+
+msgid "Month"
+msgstr "Mese"
+
+msgid "Day"
+msgstr "Giorno"
+
+msgid "Hour"
+msgstr "Ora"
+
+msgid "Recently Skipped"
+msgstr ""
+
+msgid "Last Played"
+msgstr "Il mio ultimo ascolto"
+
+#, php-format
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
+msgstr[0] "%d decade fa"
+msgstr[1] "%d decadi fa"
+msgstr[2] "%d decadi fa"
+
+msgid "Ampache Wrapped"
+msgstr ""
 
 msgid ""
-"You may have reached this page because Ampache was unable to load the "
-"required dependencies"
-msgstr "Potresti essere arrivato a questa pagina perché Ampache non è stato in grado di caricare le dipendenze richieste"
+"You have been redirected to this page because you attempted to access a "
+"function that is disabled in the demo."
+msgstr "È stato rediretto su questa pagina perchè ha provato di accedere a una funzione disattivata nella demo."
+
+msgid ""
+"You have been redirected to this page because you do not have access to this"
+" function"
+msgstr "Sei stato rediretto in questa pagina perchè non hai accesso a questa funzione"
+
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
+msgstr "Se credi questo sia un'errore contatta un amministratore di Ampache"
+
+msgid "This event has been logged"
+msgstr "Questo evento è stato registrato"
+
+msgid "You will be automatically redirected in 10 seconds."
+msgstr "Sarai rediretto automaticamente in 10 secondi."
+
+msgid "Something went wrong. Please check the logs for further information."
+msgstr ""
+
+msgid "You do not have permission to write to this file or folder"
+msgstr "Non hai l'autorizzazione per scrivere su questo file o cartella"
+
+msgid "Permission Denied"
+msgstr "Permesso negato"
+
+msgid "Ampache :: For the Love of Music - Installation"
+msgstr "Ampache :: Per L'amore della musica - Installazione"
+
+#, php-format
+msgid "%s - Update"
+msgstr "%s - Aggiornamento"
+
+#, php-format
+msgid ""
+"This page handles all database updates to Ampache starting with %1$s. Your "
+"current version is %2$s with database version %3$s"
+msgstr "Questa pagina gestisce tutti gli aggiornamenti del database per Ampache a partire da %1$s. La tua versione corrente %2$s Con la versione database %3$s"
+
+msgid ""
+"Drag & Drop your files or <span class=\"filepond--label-action\"> Browse "
+"</span>"
+msgstr ""
+
+msgid "Field contains invalid files"
+msgstr ""
+
+msgid "Waiting for size"
+msgstr ""
+
+msgid "Size not available"
+msgstr ""
+
+msgid "Error during load"
+msgstr ""
+
+msgid "Uploading"
+msgstr ""
+
+msgid "Upload complete"
+msgstr ""
+
+msgid "Upload cancelled"
+msgstr ""
+
+msgid "Error during upload"
+msgstr ""
+
+msgid "Error during revert"
+msgstr ""
+
+msgid "Error during remove"
+msgstr ""
+
+msgid "tap to cancel"
+msgstr ""
+
+msgid "tap to retry"
+msgstr ""
+
+msgid "tap to undo"
+msgstr ""
+
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgid "Abort"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "File is too large"
+msgstr ""
+
+msgid "Maximum file size is {filesize}"
+msgstr ""
+
+msgid "Maximum total size exceeded"
+msgstr ""
+
+msgid "Maximum total file size is {filesize}"
+msgstr ""
+
+msgid "File of invalid type"
+msgstr ""
+
+msgid "Expects {allButLastType} or {lastType}"
+msgstr ""
+
+msgid "Image type not supported"
+msgstr ""
+
+msgid "Image is too small"
+msgstr ""
+
+msgid "Image is too big"
+msgstr ""
+
+msgid "Minimum size is {minWidth} × {minHeight}"
+msgstr ""
+
+msgid "Maximum size is {maxWidth} × {maxHeight}"
+msgstr ""
+
+msgid "Resolution is too low"
+msgstr ""
+
+msgid "Resolution is too high"
+msgstr ""
+
+msgid "Minimum resolution is {minResolution}"
+msgstr ""
+
+msgid "Maximum resolution is {maxResolution}"
+msgstr ""
+
+msgid "Never"
+msgstr "Mai"
+
+msgid "Display"
+msgstr "Display"
+
+msgid "Audio Bitrate"
+msgstr "Audio Bitrate"
+
+msgid "Video Bitrate"
+msgstr "Video Bitrate"
+
+msgid "Frame Rate"
+msgstr "Frame Rate"
+
+#, php-format
+msgid "Unable to open `%s` for writing"
+msgstr "Impossibile aprire `%s` per scrivere"
+
+#, php-format
+msgid "Unable to write to `%s`"
+msgstr "Impossibile scrivere in `%s`"
+
+#, php-format
+msgid "Art files written: %d"
+msgstr "Copertine scritte: %d"
+
+msgid "Added to collection"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -2999,308 +3202,6 @@ msgstr "La prossima canzone ha fallito la partenza"
 
 msgid "UPnP"
 msgstr "UPnP"
-
-#, php-format
-msgid "Tried to clobber '%s' without setting clobber"
-msgstr ""
-
-#. HINT: File
-#, php-format
-msgid "Unknown %s"
-msgstr "Sconosciuto %s"
-
-msgid "Add New"
-msgstr "Aggiungi nuovo"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Not Found: %s"
-msgstr "Non trovato: %s"
-
-msgid "View License"
-msgstr "Visualizza licenza"
-
-msgid "Song Edit"
-msgstr "Edita Brano"
-
-msgid "Links"
-msgstr "Collegamenti"
-
-msgid "Song Language"
-msgstr "Lingua brano"
-
-msgid "Song MBID"
-msgstr "Brano MBID"
-
-msgid "Album MBID"
-msgstr "Album MBID"
-
-msgid "Artist MBID"
-msgstr "Artista MBID"
-
-msgid "ReplayGain Track Gain"
-msgstr "ReplayGain Track Gain"
-
-msgid "ReplayGain Album Gain"
-msgstr "ReplayGain Album Gain"
-
-msgid "R128 Track Gain"
-msgstr ""
-
-msgid "R128 Album Gain"
-msgstr ""
-
-msgid "Lyrics"
-msgstr "Testi"
-
-msgid "Licensing"
-msgstr "Licensing"
-
-msgid "Song Information"
-msgstr "Informazioni Brano"
-
-#, php-format
-msgid "%s - Update"
-msgstr "%s - Aggiornamento"
-
-msgid "Ampache :: For the Love of Music - Installation"
-msgstr "Ampache :: Per L'amore della musica - Installazione"
-
-#, php-format
-msgid ""
-"This page handles all database updates to Ampache starting with %1$s. Your "
-"current version is %2$s with database version %3$s"
-msgstr "Questa pagina gestisce tutti gli aggiornamenti del database per Ampache a partire da %1$s. La tua versione corrente %2$s Con la versione database %3$s"
-
-#, php-format
-msgid "Unable to open `%s` for writing"
-msgstr "Impossibile aprire `%s` per scrivere"
-
-#, php-format
-msgid "Unable to write to `%s`"
-msgstr "Impossibile scrivere in `%s`"
-
-#, php-format
-msgid "Art files written: %d"
-msgstr "Copertine scritte: %d"
-
-msgid "Missing mandatory parameter"
-msgstr "Parametro obbligatorio mancante"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Bad Request: %s"
-msgstr "Richiesta non valida: %s"
-
-#. HINT: Access level, eg 75, 100
-#, php-format
-msgid "Require: %s"
-msgstr "Richiesto: %s"
-
-msgid "Access Control not Enabled"
-msgstr "Access control non abilitato"
-
-msgid "Session Expired"
-msgstr "Sessione scaduta"
-
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr "Tentativo di accesso non autorizzato alla API - ACL Errore"
-
-msgid "Invalid Request"
-msgstr "Richiesta non valida"
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Wrong object type "
-msgstr "Tipo di oggetto errato"
-
-msgid "Media Object Invalid or Not Specified"
-msgstr "Oggetto multimediale non valido o non specificato"
-
-msgid "Login Failed: version too old"
-msgstr "Accesso non riuscito: versione troppo vecchia"
-
-msgid "Login Failed: timestamp out of range"
-msgstr ""
-
-msgid "Error Invalid Handshake - "
-msgstr ""
-
-msgid "Invalid Username/Password"
-msgstr "Nome utente/password non valido"
-
-msgid "Access denied to this playlist."
-msgstr "Accesso negato a questa playlist."
-
-msgid "Wrong library item type."
-msgstr "Tipo di elemento della libreria errato."
-
-msgid "Library item not found."
-msgstr "Elemento della libreria non trovato."
-
-msgid "Incorrect catalog task"
-msgstr ""
-
-msgid "The requested item was not found"
-msgstr "L'elemento richiesto non è stato trovato"
-
-msgid "Access Denied: delete from disk is not enabled."
-msgstr "Accesso negato: l'eliminazione dal disco non è abilitata."
-
-msgid "Incorrect file task"
-msgstr ""
-
-msgid "File not found"
-msgstr "File non trovato"
-
-msgid "Catalog not found"
-msgstr "Catalogo non trovato"
-
-msgid "The requested catalog was not found"
-msgstr "Il catalogo richiesto non è stato trovato"
-
-msgid "Media object invalid or not specified"
-msgstr "Oggetto multimediale non valido o non specificato"
-
-msgid "Invalid request"
-msgstr "Richiesta non valida"
-
-msgid "Access Denied: Rating features are not enabled."
-msgstr "Accesso negato: le funzioni di valutazione non sono abilitate."
-
-msgid "Incorrect object type"
-msgstr ""
-
-msgid "Wrong library item type"
-msgstr ""
-
-msgid "Library item not found"
-msgstr ""
-
-msgid "Access Denied: social features are not enabled."
-msgstr "Accesso negato: le funzionalità social non sono abilitate."
-
-msgid "Access Denied: allow_video is not enabled."
-msgstr "Accesso negato: consenti_video non è abilitato."
-
-msgid "Access Denied: podcast features are not enabled."
-msgstr "Accesso negato: le funzionalità del podcast non sono abilitate."
-
-msgid "Access Denied: sharing features are not enabled."
-msgstr "Accesso negato: le funzioni di condivisione non sono abilitate."
-
-msgid "Login failed, API version is too old"
-msgstr "Login fallito, la versione della API è troppo vecchia"
-
-msgid "Login Failed, timestamp is out of range"
-msgstr ""
-
-msgid "Received Invalid Handshake"
-msgstr "Ho ricevuto un Handshake invalido"
-
-msgid "Login failed, timestamp is out of range"
-msgstr "Login fallito, timestamp è fuori portata"
-
-msgid "Server"
-msgstr "Server"
-
-msgid "Incorrect username or password"
-msgstr "Username o password errato"
-
-msgid "Access Denied: licensing features are not enabled."
-msgstr "Accesso negato: le funzionalità di licenza non sono abilitate."
-
-msgid "Error Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Access denied to this playlist"
-msgstr "Accesso negato a questa playlist"
-
-msgid "Can't add a duplicate item when check is enabled"
-msgstr "Impossibile aggiungere un elemento duplicato quando il controllo è abilitato"
-
-msgid "Nothing was changed"
-msgstr "Nulla è stato cambiato"
-
-msgid "Song not found in playlist"
-msgstr "Canzone non trovata nella playlist"
-
-msgid "Track ID not found in playlist"
-msgstr "ID traccia non trovato nella playlist"
-
-msgid "Bad Request"
-msgstr "Richiesta non valida"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-msgid "Ratings must be between [0-5]. "
-msgstr "Le valutazioni devono essere comprese tra [0-5]."
-
-msgid "User_id not found"
-msgstr "User_id non trovato"
-
-msgid "Invalid input options"
-msgstr "Opzioni di input non valide"
-
-msgid "Failed to scrobble: No item found!"
-msgstr ""
-
-msgid "Failed to update_art for "
-msgstr ""
-
-msgid "Failed to update_artist_info or recommendations for "
-msgstr ""
-
-msgid "Failed to sync episodes for podcast: "
-msgstr "Impossibile sincronizzare gli episodi per il podcast:"
-
-msgid "Enable: video"
-msgstr "Abilita: video"
-
-msgid "Not Found"
-msgstr "Non trovato"
-
-msgid "Enable: delete_from_disk"
-msgstr "Abilita: cancellazione dal disco"
-
-msgid "Enable: podcast"
-msgstr "Abilita: podcast"
-
-msgid "Enable: ratings"
-msgstr "Abilita: Valutazioni"
-
-msgid "Enable: sociable"
-msgstr "Abilita: sociable"
-
-msgid "Enable: share"
-msgstr "Abilita: share"
-
-msgid "Enable: live_stream"
-msgstr "Abilita: live_stream"
-
-msgid "Enable: label"
-msgstr "Abilita: Etichette"
-
-msgid "Enable: licensing"
-msgstr "Abilita: licenze"
-
-msgid "Unable to connect to localplay controller"
-msgstr "Impossibile connettersi al controller locale"
-
-msgid "Require: 100"
-msgstr "Richiesto: 100"
-
-msgid "Require: 75"
-msgstr "Richiesto: 75"
-
-msgid "Access denied"
-msgstr ""
-
-msgid "Ampache XSPF Playlist"
-msgstr "Ampache ASX Playlist"
 
 msgid "IP Address version mismatch"
 msgstr "Versione indirizzo ip non corrispondente"
@@ -3378,6 +3279,15 @@ msgstr "Elaborazione delle canzoni disabilitate finita"
 msgid "The Catalog art search has started"
 msgstr "La ricerca delle copertine per il catalogo è iniziata"
 
+msgid "The Catalog folder scan has started"
+msgstr ""
+
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr "Questo cancellerà per sempre il tuo catalogo"
 
@@ -3399,7 +3309,7 @@ msgstr "iTunes"
 msgid "A filter name is required"
 msgstr ""
 
-msgid "That filter name already exists"
+msgid "That name already exists"
 msgstr ""
 
 msgid "The new filter was not created"
@@ -3444,7 +3354,8 @@ msgstr "La licenza è stata aggiornata"
 msgid "A new License has been created"
 msgstr "Una nuova licenza è stata creata"
 
-msgid "Create license"
+#, php-format
+msgid "This will permanently delete the license \"%s\""
 msgstr ""
 
 msgid "Edit license"
@@ -3501,6 +3412,10 @@ msgstr "Shoutbox è stata cancellata"
 msgid "Shoutbox post has been updated"
 msgstr "Shoutbox è stata aggiornata"
 
+#, php-format
+msgid "This will permanently delete the shoutbox post \"%s\""
+msgstr ""
+
 msgid "Your cache has been cleared successfully"
 msgstr "La cache è stata cancellata con successo"
 
@@ -3509,14 +3424,19 @@ msgid ""
 "currently configured charset"
 msgstr "Il tuo database e le tabelle associate sono stati aggiornati per combaciare con la codifica di caratteri attualmente configurata"
 
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
+msgstr ""
+
 msgid "Your Passwords don't match"
 msgstr "Password errata"
 
 msgid "A Username is required"
 msgstr "È necessario un Username"
-
-msgid "That Username already exists"
-msgstr "Questo Username esiste già"
 
 msgid "You entered an invalid e-mail address"
 msgstr "Hai immesso un indirizzo e-mail non valido"
@@ -3579,6 +3499,10 @@ msgstr ""
 msgid "This Avatar will be deleted"
 msgstr "Questo Avatar verrà eliminato"
 
+msgid ""
+"This will remove the Subsonic password and disconnect any client using it"
+msgstr ""
+
 msgid "This will replace your existing API key"
 msgstr "Questo rimpiazzerà la tua API key esistente"
 
@@ -3590,6 +3514,17 @@ msgstr ""
 #, php-format
 msgid "%s IP History"
 msgstr "%s IP storia"
+
+msgid "That Username already exists"
+msgstr "Questo Username esiste già"
+
+msgid "Passwords do not match"
+msgstr "Le password non coincidono"
+
+msgid ""
+"Could not store the Subsonic password. Check that secret_key is set in your "
+"Ampache config"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -3634,6 +3569,9 @@ msgstr ""
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr "Parametro obbligatorio mancante"
+
 msgid "Art file failed size check"
 msgstr "Il controllo della grandezza della copertina è fallito"
 
@@ -3645,14 +3583,51 @@ msgstr "Non è stato possibile caricare la copertina. Questo potrebbe essere per
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
 
+msgid "Failed to update_art for "
+msgstr ""
+
+#, php-format
+msgid "%s and %d more item"
+msgid_plural "%s and %d more items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Broadcast has been deleted"
 msgstr "Broadcast eliminato"
 
 msgid "This Broadcast will be deleted"
 msgstr "Questo Broadcast verrà eliminato"
 
+msgid "This collection does not accept items of that type"
+msgstr ""
+
+msgid "Object added to collection"
+msgstr ""
+
+msgid "Name is required"
+msgstr "Il nome è richiesto"
+
+msgid "Not a valid item type"
+msgstr ""
+
+msgid "Failed to create collection"
+msgstr ""
+
+msgid "Collection created"
+msgstr ""
+
+msgid "Object removed from collection"
+msgstr ""
+
 msgid "The Playlist has been deleted"
 msgstr "La Playlist è stata eliminata"
+
+msgid "Folder"
+msgstr ""
+
+msgid "This Folder will be deleted"
+msgstr ""
 
 msgid "The Ampache database username or password is missing"
 msgstr "Manca l'username o la password del database di Ampache "
@@ -3672,6 +3647,9 @@ msgstr "Questa etichetta verrà eliminata"
 msgid "The Label cannot be found"
 msgstr "L'etichetta non è stata trovata"
 
+msgid "Incorrect username or password"
+msgstr "Username o password errato"
+
 msgid "Account is disabled, please contact the administrator"
 msgstr "L'account è disabilitato, perfavore contattare l'amministratore"
 
@@ -3681,17 +3659,18 @@ msgstr "L'utente è già loggato"
 msgid "Unable to create a local account"
 msgstr "Impossibile creare un account locale"
 
+msgid "OpenID Connect is not configured correctly"
+msgstr ""
+
+msgid "Ratings"
+msgstr ""
+
 #, php-format
 msgid "%s - Now Playing"
 msgstr ""
 
 msgid "Playlist created"
 msgstr "Playlist Creata"
-
-#. HINT: %1 playlist name, %2 playlist type
-#, php-format
-msgid "%1$s (%2$s) has been created"
-msgstr "%1$s (%2$s) è stata creata"
 
 #. HINT: Number of songs
 #, php-format
@@ -3715,6 +3694,9 @@ msgstr "Nessun brano valido trovato nel file della playlist"
 
 msgid "Podcast has been deleted"
 msgstr "Il podcast è stato eliminato"
+
+msgid "Catalog not found"
+msgstr "Catalogo non trovato"
 
 msgid "Feed URL is invalid"
 msgstr "L' URL del Feed non è valido"
@@ -3752,6 +3734,15 @@ msgstr ""
 
 msgid "Import Podcasts"
 msgstr ""
+
+msgid "Podcast information updated from the feed"
+msgstr ""
+
+msgid "The feed could not be read"
+msgstr ""
+
+msgid "Server"
+msgstr "Server"
 
 msgid "Your account has been updated"
 msgstr "Il tuo account è stato aggiornato"
@@ -3808,11 +3799,11 @@ msgstr "RE"
 msgid "Radio Station created"
 msgstr "Stazione radio Creata"
 
-msgid "Captcha is required"
-msgstr "E' richiesto il chapcha"
-
 msgid "Captcha failed"
 msgstr "Hai fallito il chapcha"
+
+msgid "Browser check failed. Please reload the page and try again"
+msgstr ""
 
 msgid "You must accept the user agreement"
 msgstr "Devi accettare i termini e condizioni"
@@ -3825,9 +3816,6 @@ msgstr "Questa mail non è valida"
 
 msgid "You must enter a password"
 msgstr "Devi inserire una password"
-
-msgid "Passwords do not match"
-msgstr "Le password non coincidono"
 
 msgid "Failed to create user"
 msgstr "Crazione dell'utente fallita"
@@ -3890,6 +3878,24 @@ msgstr "Il video è stato cancellato"
 msgid "The Video will be deleted"
 msgstr "Il video sarà cancellato"
 
+msgid "Edit/Find Art"
+msgstr "Edita/trova Copertina"
+
+msgid "Do you really want to reset art?"
+msgstr "Davvero vuoi resettare la copertina?"
+
+msgid "Reset Art"
+msgstr "Ressetta Copertina"
+
+#. HINT: %1$s is the item name, %2$s says what the drawing was made from
+#. the name arrives escaped, so only the translated half is escaped here
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
+msgstr ""
+
 msgid "Unable to open"
 msgstr "Impossibile da aprire"
 
@@ -3897,6 +3903,28 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
 
 msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
+#, php-format
+msgid "%d track"
+msgid_plural "%d tracks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "OpenID Connect requires an interactive browser login"
+msgstr ""
+
+msgid "OpenID Connect authentication failed"
+msgstr ""
+
+msgid "The identity provider did not return a username"
 msgstr ""
 
 msgid "Running Beets Update"
@@ -3907,9 +3935,6 @@ msgstr "Aggiornamento di Beets in corso"
 msgid "Unable to add Song - %s"
 msgstr "Impossibile aggiungere la canzone - %s"
 
-msgid "Beets Database File"
-msgstr "Beets Database File"
-
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr " Il catalogo Beets è stato selezionato, ma non è stato fornito alcun file DB di Beets"
 
@@ -3917,11 +3942,39 @@ msgstr " Il catalogo Beets è stato selezionato, ma non è stato fornito alcun f
 msgid "This path belongs to an existing Beets Catalog: %s"
 msgstr "Questo percorso appartiene a un catalogo Beets esistente: %s"
 
-msgid "Beets Server URI"
-msgstr "Beets Server URL"
+msgid "Beets Database File"
+msgstr "Beets Database File"
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr "È stato selezionato il tipo di catalogo remoto, ma il percorso non è un URL"
+
+msgid "Beets Server URI"
+msgstr "Beets Server URL"
+
+msgid "Invalid \"dropbox-path\": "
+msgstr "non valido \"dropbox-path\": "
+
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "Errore: Il Catalogo con %s esite già"
+
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr "Errore: API Key, Secret and Access Token sono richiesti per il catalogo Dropbox "
+
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr "non valido \"API key\", \"secret\", oppure \"access token\": "
+
+msgid "Running Dropbox Remote Update"
+msgstr "Sto eseguendo aggiornamento Dropbox Remote "
+
+msgid "Access Token"
+msgstr "Access Token"
+
+msgid "Get chunked files on analyze"
+msgstr "Ottieni file in blocchi durante l'analisi"
+
+msgid "API Error: cannot connect to Dropbox."
+msgstr "Errore API: non posso connetermi al Dropbox."
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "Vai a https://www.dropbox.com/developers/apps/create"
@@ -3942,28 +3995,6 @@ msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr "Copia la tua app key e il tuo app secret e l'access token nei seguenti campi"
 
-msgid "Access Token"
-msgstr "Access Token"
-
-msgid "Get chunked files on analyze"
-msgstr "Ottieni file in blocchi durante l'analisi"
-
-msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr "Errore: API Key, Secret and Access Token sono richiesti per il catalogo Dropbox "
-
-msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr "non valido \"API key\", \"secret\", oppure \"access token\": "
-
-msgid "Invalid \"dropbox-path\": "
-msgstr "non valido \"dropbox-path\": "
-
-#, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr "Errore: Il Catalogo con %s esite già"
-
-msgid "Running Dropbox Remote Update"
-msgstr "Sto eseguendo aggiornamento Dropbox Remote "
-
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "Aggiornamento del catalogo Finito.  Media Totali: [%s]"
@@ -3981,21 +4012,21 @@ msgstr "Canzone aggiornata: \"%s\""
 msgid "Removing song: \"%s\""
 msgstr "Rimuovendo i brani: \"%s\""
 
-msgid "API Error: cannot connect to Dropbox."
-msgstr "Errore API: non posso connetermi al Dropbox."
-
 msgid "Path was not specified"
 msgstr "Il percorso non è stato specificato"
+
+msgid "Specified path is inside an existing catalog"
+msgstr "il percorso specificato è dentro un catalogo esistente"
+
+#. HINT: directory (file path)
+#, php-format
+msgid "The folder couldn't be read. Does it exist? %s"
+msgstr "La cartella non può essere letta. Sicuro che esista? %s"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
 msgstr "Questo percorso appartiene a un catalogo locale esistente: %s"
-
-#. HINT: directory (file path)
-#, php-format
-msgid "Unable to open: %s"
-msgstr "Impossibile da aprire: %s"
 
 #. HINT: directory (file path)
 #, php-format
@@ -4017,6 +4048,11 @@ msgstr "Il file non può essere letto. Sicuro che esista? %s"
 msgid "\"%s\" does not match site charset"
 msgstr "\"%s\" non appartiene allo stesso charset del sito"
 
+#. HINT: directory (file path)
+#, php-format
+msgid "Unable to open: %s"
+msgstr "Impossibile da aprire: %s"
+
 msgid "N/A"
 msgstr "N/D"
 
@@ -4027,8 +4063,7 @@ msgstr "Catalogo Aggiornato"
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "Tempo Totale: [%s] Media Totali: [%s] Media Per Secondo: [%s]"
 
-#, php-format
-msgid "File count: %d"
+msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
 msgid "Catalog root unreadable, stopping clean"
@@ -4042,19 +4077,78 @@ msgstr "Tutti i file verranno rimossi. Facendo nulla"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Il file non è stato trovato oppure è 0 Bytes: %s"
 
-msgid "Specified path is inside an existing catalog"
-msgstr "il percorso specificato è dentro un catalogo esistente"
-
-#. HINT: directory (file path)
 #, php-format
-msgid "The folder couldn't be read. Does it exist? %s"
-msgstr "La cartella non può essere letta. Sicuro che esista? %s"
-
-msgid "Catalog root unreadable, stopping check"
+msgid "File count: %d"
 msgstr ""
 
-msgid "URI"
-msgstr "URI"
+#, php-format
+msgid "Create directory \"%s\""
+msgstr "Crea cartella \"%s\""
+
+msgid "File already exists"
+msgstr ""
+
+#, php-format
+msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr "Copia in corso di \"%1$s\" in \"%2$s\""
+
+#, php-format
+msgid "There was an error trying to copy file to \"%s\""
+msgstr "C'è stato un errore durante la copia del file in \"%s\""
+
+#, php-format
+msgid "Size comparison failed. Not deleting \"%s\""
+msgstr "Verifica dimensione fallita. \"%s\" non verrà eliminato"
+
+#, php-format
+msgid "There was an error trying to delete \"%s\""
+msgstr "C'è stato un errore durante l'eliminazione di \"%s\""
+
+msgid "Failed to create the catalog, check the debug logs"
+msgstr "Creazione catalogo fallita, controlla i log di debug"
+
+msgid "day"
+msgid_plural "days"
+msgstr[0] "giorno"
+msgstr[1] "giorni"
+msgstr[2] "giorni"
+
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "ora"
+msgstr[1] "ore"
+msgstr[2] "ore"
+
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr "Questa sotto directory non fa parte di un catalogo esistente. L'aggiornamento non può essere effettuato."
+
+msgid "Updated"
+msgstr "Aggiornato"
+
+msgid "No Update Needed"
+msgstr "Non è necessario aggiornare"
+
+msgid "Catalog Cleaned"
+msgstr "Catalogo pulito"
+
+#, php-format
+msgid "%d file removed."
+msgid_plural "%d files removed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Catalog Verified"
+msgstr "Catalogo Verificato"
+
+#, php-format
+msgid "%d file updated."
+msgid_plural "%d files updated."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 msgid "No username or password was specified"
 msgstr "Nessun username o password è stato specificato"
@@ -4066,6 +4160,9 @@ msgstr "Questo percorso appartiene a un catalogo remoto esistente: %s"
 
 msgid "Running Remote Update"
 msgstr "Aggiornamento remoto in corso"
+
+msgid "URI"
+msgstr "URI"
 
 msgid "Failed to connect to the remote server"
 msgstr "Non riesco a connettermi  al server remoto"
@@ -4081,47 +4178,8 @@ msgstr[2] ""
 msgid "Remote Catalog Updated"
 msgstr "Il catalogo Remoto è aggiornato"
 
-msgid "Updated"
-msgstr "Aggiornato"
-
 msgid "Completed updating remote Catalog(s)."
 msgstr "Ho completato l'aggiornamento dei cataloghi remoti"
-
-msgid "Install a Seafile server as described in the documentation"
-msgstr "Installa un Seafile server come descritto nella documentazione"
-
-msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
-"(e.g. 'Music')."
-msgstr "Inserisci un URL per il server (e.g. 'https://seafile.example.com') e il nome della libreria (e.g. 'Music')."
-
-msgid ""
-"API Call Delay is the delay inserted between repeated requests to Seafile "
-"(such as during an Add or Clean action) to accommodate Seafile's Rate "
-"Limiting."
-msgstr "API Call Delay è il ritardo inserito  tra richieste ripetute a Seafile (come durante un'azione Aggiungi o Pulisci) per soddisfare il limite di velocità di Seafile."
-
-msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr "L'impostazione predefinita è sintonizzata sulle impostazioni del limite di velocità predefinito di Seafile."
-
-msgid ""
-"After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr "Dopo aver creato il catalogo, è necessario 'Renderlo pronto' nella tabella Catalogo."
-
-msgid "Server URI"
-msgstr "Server URI"
-
-msgid "Library Name"
-msgstr "Nome Libreria"
-
-msgid "API Call Delay"
-msgstr "API Call Delay ritardo della chiamata api"
-
-msgid "Seafile Username/Email"
-msgstr "Seafile Username/Email"
-
-msgid "Seafile Password"
-msgstr "Seafile Password"
 
 msgid "Seafile server URL is required"
 msgstr "Seafile server URL è richiesto"
@@ -4153,20 +4211,20 @@ msgstr "Media Totali: [%s]"
 msgid "No media was updated, did you respect the patterns?"
 msgstr "Nessun media è stato aggiornato, hai rispettato i percorsi?"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Skipping existing song: %s"
-msgstr "Saltando le canzoni esistenti: %s"
+msgid "Server URI"
+msgstr "Server URI"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Adding a new song: %s"
-msgstr "aggiungendo una nuova canzone: %s"
+msgid "Library Name"
+msgstr "Nome Libreria"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Could not add song: %s"
-msgstr "Non si può aggiungere la canzone: %s"
+msgid "API Call Delay"
+msgstr "API Call Delay ritardo della chiamata api"
+
+msgid "Seafile Username/Email"
+msgstr "Seafile Username/Email"
+
+msgid "Seafile Password"
+msgstr "Seafile Password"
 
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
@@ -4176,6 +4234,42 @@ msgstr "Si è verificato un errore durante il controllo di questo brano \"%1$s\"
 #, php-format
 msgid "Keeping song: %s"
 msgstr "Mantenere la canzone: %s"
+
+msgid "Install a Seafile server as described in the documentation"
+msgstr "Installa un Seafile server come descritto nella documentazione"
+
+msgid ""
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr "Inserisci un URL per il server (e.g. 'https://seafile.example.com') e il nome della libreria (e.g. 'Music')."
+
+msgid ""
+"API Call Delay is the delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accommodate Seafile's Rate "
+"Limiting."
+msgstr "API Call Delay è il ritardo inserito  tra richieste ripetute a Seafile (come durante un'azione Aggiungi o Pulisci) per soddisfare il limite di velocità di Seafile."
+
+msgid "The default is tuned towards Seafile's default rate limit settings."
+msgstr "L'impostazione predefinita è sintonizzata sulle impostazioni del limite di velocità predefinito di Seafile."
+
+msgid ""
+"After creating the Catalog, you must 'Make it ready' on the Catalog table."
+msgstr "Dopo aver creato il catalogo, è necessario 'Renderlo pronto' nella tabella Catalogo."
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Could not add song: %s"
+msgstr "Non si può aggiungere la canzone: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Skipping existing song: %s"
+msgstr "Saltando le canzoni esistenti: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Adding a new song: %s"
+msgstr "aggiungendo una nuova canzone: %s"
 
 #. HINT: subsonic catalog URI
 #, php-format
@@ -4208,9 +4302,6 @@ msgstr "Non puoi autenticarti con Seafile"
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr "Non posso trovare la libreria Seafile chiamata \"%s\", nessun media è stato aggiornato"
 
-msgid "Failed to create the catalog, check the debug logs"
-msgstr "Creazione catalogo fallita, controlla i log di debug"
-
 msgid "Catalog created"
 msgstr ""
 
@@ -4221,9 +4312,13 @@ msgstr "Limite di memoria PHP disattivato"
 msgid "Reading Catalog: \"%s\""
 msgstr "Leggendo il Catalogo: \"%s\""
 
+msgid "Skipping catalog, already being processed"
+msgstr ""
+
 msgid "Look for missing file media entries"
 msgstr ""
 
+#. HINT: filename (File path) OR table name (podcast, video, etc)
 #, php-format
 msgid "Missing: %s"
 msgstr ""
@@ -4236,6 +4331,9 @@ msgstr "Avvio aggiunta di nuovi media"
 
 msgid "Start verifying media related to Catalog entries"
 msgstr "Avvio verifica dei media del Catalogo"
+
+msgid "Start scanning folders"
+msgstr ""
 
 msgid "Start searching new media art"
 msgstr "Avvio ricerca di nuove Copertine"
@@ -4269,6 +4367,15 @@ msgstr "C'è un errore con i tuoi parametri"
 msgid "Catalog `%s` not found"
 msgstr "Catalogo `%s` non trovato"
 
+msgid "File not found"
+msgstr "File non trovato"
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Updated: %s"
+msgstr ""
+
 #, php-format
 msgid "Removing File: \"%s\""
 msgstr "rimuovendo il file: \"%s\""
@@ -4278,9 +4385,6 @@ msgid "Reading File: \"%s\""
 msgstr "Leggendo il File: \"%s\""
 
 msgid "Create a local media catalog"
-msgstr ""
-
-msgid "Catalog name"
 msgstr ""
 
 msgid "Catalog Media Type (optional)"
@@ -4308,17 +4412,100 @@ msgstr "Creato %s utente %s con la password %s"
 msgid "User creation failed"
 msgstr "Creazione dell'utente fallita"
 
-msgid "Users List"
+msgid ""
+"Clear a cache. Only `perpetual_api_session` persists; object caches live for"
+" one process"
+msgstr ""
+
+msgid "Destroy stored perpetual API sessions"
+msgstr ""
+
+#, php-format
+msgid "Unknown cache type: %s"
+msgstr ""
+
+#, php-format
+msgid "Cleared cache: %s"
+msgstr ""
+
+msgid "Delete a User"
 msgstr ""
 
 msgid "User ID"
 msgstr "ID utente"
+
+msgid "Delete the User with the name `some-user`"
+msgstr ""
+
+msgid "Disable a User"
+msgstr ""
+
+msgid "Disable the User with the name `some-user`"
+msgstr ""
+
+msgid "Enable a User"
+msgstr ""
+
+msgid "Enable the User with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Database version: %s"
+msgstr ""
+
+msgid "Install a catalog type"
+msgstr ""
+
+msgid "Enable the subsonic catalog type"
+msgstr ""
+
+msgid "Install a localplay controller"
+msgstr ""
+
+msgid "User ID to receive the localplay preferences"
+msgstr ""
+
+msgid "Localplay Type"
+msgstr ""
+
+msgid "Enable the mpd localplay controller"
+msgstr ""
+
+msgid "Install a plugin"
+msgstr ""
+
+msgid "Install the Last.FM plugin"
+msgstr ""
+
+msgid "List plugins, catalog types and localplay controllers"
+msgstr ""
+
+msgid "List all pluggable modules and their installed state"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Enabled"
+msgstr "Abilitato"
+
+msgid "Users List"
+msgstr ""
 
 msgid "Find a User with the name `some-user`"
 msgstr ""
 
 #, php-format
 msgid "%s (%d)"
+msgstr ""
+
+msgid "Send an e-mail to a group of users"
+msgstr ""
+
+msgid "Mail all standard users"
+msgstr ""
+
+msgid "Mail is not enabled"
 msgstr ""
 
 msgid "Reset preference values for users"
@@ -4335,6 +4522,24 @@ msgstr ""
 
 msgid "No changes have been made"
 msgstr "Non sono stati fatti cambiamenti"
+
+msgid "Uninstall a catalog type"
+msgstr ""
+
+msgid "Disable the subsonic catalog type"
+msgstr ""
+
+msgid "Uninstall a localplay controller"
+msgstr ""
+
+msgid "Disable the mpd localplay controller"
+msgstr ""
+
+msgid "Uninstall a plugin"
+msgstr ""
+
+msgid "Uninstall the Last.FM plugin"
+msgstr ""
 
 msgid "Update the Ampache config file"
 msgstr ""
@@ -4360,9 +4565,8 @@ msgstr ""
 msgid "Config version: %s"
 msgstr ""
 
-#, php-format
-msgid "Database version: %s"
-msgstr ""
+msgid "Unable to query the database, check your Ampache config"
+msgstr "Impossibile interrogare il database, Controlla la configurazione di Ampache"
 
 msgid "Missing database tables have been created"
 msgstr ""
@@ -4380,15 +4584,6 @@ msgid ""
 "to rollback"
 msgstr ""
 
-msgid "Update Now!"
-msgstr ""
-
-msgid "The following updates need to be performed:"
-msgstr "I seguenti aggiornamenti devono essere effettuati:"
-
-msgid "No update needed"
-msgstr "Non è necessario aggiornare"
-
 msgid "Update Plugins automatically"
 msgstr ""
 
@@ -4396,6 +4591,22 @@ msgid "Update available"
 msgstr "Aggiornamento disponibile"
 
 msgid "Update Preference Access Level"
+msgstr ""
+
+msgid "Set the Subsonic password"
+msgstr ""
+
+msgid "Update API key for user with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Bad Request: %s"
+msgstr "Richiesta non valida: %s"
+
+msgid "Upgrade a plugin"
+msgstr ""
+
+msgid "Upgrade the Last.FM plugin"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"
@@ -4459,6 +4670,16 @@ msgstr "Inizia il processo della cache"
 msgid "Completed cache process"
 msgstr "Ho completato il processo della cache"
 
+msgid "Re-enable all disabled songs"
+msgstr ""
+
+msgid "Re-enable every disabled song"
+msgstr ""
+
+#, php-format
+msgid "Re-enabled %d songs"
+msgstr ""
+
 msgid "Update the object cache tables"
 msgstr "Aggiorna le tabelle della cache degli oggetti"
 
@@ -4485,6 +4706,24 @@ msgstr "Il cron cache non è abilitato"
 
 msgid "Cron process finished"
 msgstr "Il processo cron è stato completato"
+
+msgid "Delete a media catalog"
+msgstr ""
+
+msgid "Delete the catalog with ID 3"
+msgstr ""
+
+msgid "Disable a media catalog"
+msgstr ""
+
+msgid "Disable the catalog with ID 3"
+msgstr ""
+
+msgid "Enable a media catalog"
+msgstr ""
+
+msgid "Enable the catalog with ID 3"
+msgstr ""
 
 msgid "Export album art"
 msgstr "Esporta le copertine degli album"
@@ -4513,6 +4752,16 @@ msgstr ""
 msgid "Art Dump Complete"
 msgstr ""
 
+msgid "Export catalog metadata to a file"
+msgstr ""
+
+msgid "Export all catalogs as CSV"
+msgstr ""
+
+#, php-format
+msgid "Exported catalog metadata to %s"
+msgstr ""
+
 msgid "Export Playlists"
 msgstr "Esporta le Playlist"
 
@@ -4537,6 +4786,9 @@ msgid "Export playlists as m3u files to /tmp"
 msgstr "Esporta le playlist come m3u file in /tmp"
 
 msgid "Create .htaccess files"
+msgstr ""
+
+msgid "Include the optional web root .htaccess"
 msgstr ""
 
 msgid "Recreate Ampache .htaccess files"
@@ -4593,6 +4845,9 @@ msgstr "Possibile duplicato"
 msgid "Possible Duplicate Albums"
 msgstr ""
 
+msgid "Invalid Request"
+msgstr "Richiesta non valida"
+
 msgid "Print file tags"
 msgstr "Stampa i Tag dei file"
 
@@ -4613,14 +4868,29 @@ msgstr "Risultati Raw"
 msgid "Final results seen by Ampache using %s:"
 msgstr "Risultati finali visti da Ampache usando %s:"
 
-msgid "Run a Websocket"
-msgstr "Esegui un Websocket"
+msgid "Run the websocket server that listen-along broadcasting needs"
+msgstr ""
 
 msgid "Listening port, default 8100"
 msgstr "Porta di ascolto, default 8100"
 
 msgid "Run the websocket on port 8888"
 msgstr "Esegui il websocket sulla porta 8888"
+
+msgid "Show a system status and environment report"
+msgstr ""
+
+msgid "Query the remote version (network access required)"
+msgstr ""
+
+msgid "Print a headless status report"
+msgstr ""
+
+msgid "up to date"
+msgstr ""
+
+msgid "Environment"
+msgstr ""
 
 msgid "Delete disabled songs"
 msgstr "Cancella i brani disabilitati"
@@ -4649,11 +4919,61 @@ msgstr ""
 msgid "Sets the default name for `Various Artists`"
 msgstr "Imposta il nome di default per `Various Artists`"
 
+msgid "Sort a single file or folder path"
+msgstr ""
+
 msgid "Name of Catalog (optional)"
 msgstr "Nome del Catalogo (opzionale)"
 
 msgid "Sort song files"
 msgstr "Ordina i file dei brani"
+
+msgid "Consolidate old play history into summary counts"
+msgstr ""
+
+msgid "Only consolidate this count type (stream, skip, download)"
+msgstr ""
+
+msgid "Show what would be consolidated (dry-run)"
+msgstr ""
+
+msgid ""
+"Stats consolidation is disabled. Set stats_consolidate_threshold in your "
+"ampache.cfg.php to the number of days of detailed play history to keep"
+msgstr ""
+
+#, php-format
+msgid "%d rows consolidated into %d summary rows"
+msgstr ""
+
+msgid "Run OPTIMIZE TABLE on object_count to reclaim disk space"
+msgstr ""
+
+#. HINT: %1 row count, %2 group count
+#, php-format
+msgid "%d rows would be consolidated into %d summary rows (dry-run)"
+msgstr ""
+
+msgid "Restore consolidated play history from the archive"
+msgstr ""
+
+msgid "Show what would be restored (dry-run)"
+msgstr ""
+
+msgid "The play history archive is empty, there is nothing to restore"
+msgstr ""
+
+#. HINT: %1 archived row count, %2 rebuilt album/artist/podcast row count
+#, php-format
+msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
+msgstr ""
+
+msgid "Updating counts"
+msgstr ""
+
+#, php-format
+msgid "%d rows would be restored (dry-run)"
+msgstr ""
 
 msgid ""
 "Perform catalog actions for all files of a catalog. If no options are given,"
@@ -4681,6 +5001,9 @@ msgstr "Aggiunge nuovi file multimediali e importa file di playlist"
 msgid "Optimizes database tables"
 msgstr "Ottimizza le tabelle del database"
 
+msgid "Scan Local Catalog folders for folder browsing"
+msgstr ""
+
 msgid "Temporarily deactivates PHP memory limit"
 msgstr "Disattiva temporaneamente il limite di memoria PHP"
 
@@ -4690,9 +5013,25 @@ msgstr "Aggiorna il catalogo locale chiamato `some-catalog`"
 msgid "Perform catalog actions for a single file"
 msgstr "Esegui azione di catalogo per un singolo file"
 
+msgid "Move file in the database to a new location"
+msgstr ""
+
+msgid "Update file path in the database to a new location"
+msgstr ""
+
 #. HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album)
 #, php-format
 msgid "Update %s in the catalog `some-catalog`"
+msgstr ""
+
+#, php-format
+msgid "Rename %s to %s in the catalog `some-catalog`"
+msgstr ""
+
+msgid "Move (-m|--move) cannot be used with other options enabled"
+msgstr ""
+
+msgid "Rename (-r|--rename) cannot be used with other options enabled"
 msgstr ""
 
 msgid "Perform catalog actions for a single folder"
@@ -4719,6 +5058,285 @@ msgstr "Target collation: %s"
 #, php-format
 msgid "Table engine: %s"
 msgstr "Table engine: %s"
+
+msgid "Collection Items"
+msgstr ""
+
+msgid "Current Playlist"
+msgstr "Playlist corrente"
+
+msgid "Playlist Items"
+msgstr "Elementi della playlist"
+
+msgid "Shoutbox Records"
+msgstr "Shoutbox Records"
+
+msgid "Wanted Albums"
+msgstr "Album desiderati"
+
+#, php-format
+msgid ""
+"This view has %d item and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgid_plural ""
+"This view has %d items and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Browse was not found or expired, try reloading the page"
+msgstr "Browse non è stato trovato o è scaduto, prova a ricaricare la pagina"
+
+msgid "0 Stars"
+msgstr "0 Stelle"
+
+msgid "1 Star"
+msgstr "1 Stella"
+
+msgid "2 Stars"
+msgstr "2 Stelle"
+
+msgid "3 Stars"
+msgstr "3 Stelle"
+
+msgid "4 Stars"
+msgstr "4 Stelle"
+
+msgid "5 Stars"
+msgstr "5 Stelle"
+
+msgid "Album Data"
+msgstr ""
+
+msgid "Length (in minutes)"
+msgstr "Durata (in minuti)"
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
+msgstr ""
+
+msgid "Database ID"
+msgstr ""
+
+msgid "My Rating"
+msgstr "La mia valutazione"
+
+msgid "Rating (Average)"
+msgstr "Valutazione (media)"
+
+msgid "My Rating (Song)"
+msgstr ""
+
+msgid "My Rating (Artist)"
+msgstr "La mia valutazione (artista)"
+
+msgid "My Favorite Songs"
+msgstr ""
+
+msgid "My Favorite Albums"
+msgstr ""
+
+msgid "My Favorite Artists"
+msgstr ""
+
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
+msgstr ""
+
+msgid "Another User"
+msgstr "Un'altro utente"
+
+msgid "Play History"
+msgstr "Riproduci cronologia"
+
+#. HINT: Number of times object has been played
+msgid "# Played"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped"
+msgstr "# Eseguiti o saltati"
+
+msgid "My Last Play"
+msgstr "Il mio ultimo ascolto"
+
+msgid "My Last Skip"
+msgstr "Il mio ultimo skip"
+
+msgid "My Last Play or Skip"
+msgstr "Il mio ultimo ascolto o skip"
+
+msgid "Played by Me"
+msgstr "Ascoltato da me"
+
+msgid "Played by Me (Artist)"
+msgstr "Ascoltato da me (artista)"
+
+#. HINT: Number of times object has been played
+msgid "# Played by Me"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped by Me"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped by Me"
+msgstr ""
+
+msgid "Mood"
+msgstr ""
+
+msgid "Song Genre"
+msgstr ""
+
+msgid "Song Count (Genre)"
+msgstr ""
+
+msgid "Album Count (Genre)"
+msgstr ""
+
+msgid "Artist Count (Genre)"
+msgstr ""
+
+msgid "File Data"
+msgstr "File Dati"
+
+msgid "Date Updated"
+msgstr ""
+
+msgid "Image Width"
+msgstr "Larghezza dell'immagine"
+
+msgid "Image Height"
+msgstr "Altezza dell'immagine"
+
+msgid "Recently Added"
+msgstr ""
+
+msgid "Duplicate Album Tracks"
+msgstr ""
+
+msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr "MusicBrainz ID (Artista)"
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "Album Count"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr "La mia valutazione (album)"
+
+msgid "MusicBrainz ID (Album)"
+msgstr "MusicBrainz ID (Album)"
+
+msgid "public"
+msgstr ""
+
+msgid "private"
+msgstr ""
+
+msgid "Episode Count"
+msgstr ""
+
+msgid "skipped"
+msgstr ""
+
+msgid "pending"
+msgstr ""
+
+msgid "completed"
+msgstr ""
+
+msgid "My Rating (Podcast)"
+msgstr ""
+
+msgid "My Rating (Podcast Episode)"
+msgstr ""
+
+msgid "My Favorite Podcasts"
+msgstr ""
+
+msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
+msgstr ""
+
+msgid "Any searchable text"
+msgstr "Ogni testo ricercabile"
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr "Preferiti (album)"
+
+msgid "Favorites (Artist)"
+msgstr "Preferiti (Artisti)"
+
+msgid "Another User (Album)"
+msgstr "Un'altro utente (Album)"
+
+msgid "Another User (Artist)"
+msgstr "Un'altro utente (Artista)"
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr "Ascoltato/Saltato rapporto"
+
+msgid "Played by Me (Album)"
+msgstr "Ascoltato da me (Album)"
+
+msgid "Album Genre"
+msgstr "Genere dell'album"
+
+msgid "Artist Genre"
+msgstr "Genere dell'artista"
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
+msgid "Artist Count"
+msgstr ""
+
+msgid "Video Count"
+msgstr ""
 
 msgid "HTTPQ Active Instance"
 msgstr "HTTPQ istanza attiva"
@@ -4774,15 +5392,6 @@ msgstr "Playlist creata: \"%s\""
 msgid "Ampache podcast subscriptions"
 msgstr ""
 
-msgid "skipped"
-msgstr ""
-
-msgid "pending"
-msgstr ""
-
-msgid "completed"
-msgstr ""
-
 msgid "Advanced Share"
 msgstr "Condivisione avanzata"
 
@@ -4810,13 +5419,6 @@ msgstr "Avvio del Catalogo: %s"
 msgid "Catalog Block: %s"
 msgstr ""
 
-#, php-format
-msgid "%d file updated."
-msgid_plural "%d files updated."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
 msgid "Examine File..."
 msgstr "Esaminazione del File in corso..."
 
@@ -4833,34 +5435,33 @@ msgid "Destin: %s"
 msgstr "Destinazione: %s"
 
 #, php-format
-msgid "Create directory \"%s\""
-msgstr "Crea cartella \"%s\""
-
-#, php-format
 msgid "Don't overwrite an existing file: \"%s\""
 msgstr "Non sovrascrivere un file esistente: \"%s\""
 
-#, php-format
-msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr "Copia in corso di \"%1$s\" in \"%2$s\""
+msgid " Stars"
+msgstr ""
+
+msgid "Average from all users"
+msgstr "Media di tutti gli utenti"
+
+msgid "not rated yet"
+msgstr "Non ancora valutata"
 
 #, php-format
-msgid "There was an error trying to copy file to \"%s\""
-msgstr "C'è stato un errore durante la copia del file in \"%s\""
+msgid "%s of 5"
+msgstr "%s di 5"
 
-#, php-format
-msgid "Size comparison failed. Not deleting \"%s\""
-msgstr "Verifica dimensione fallita. \"%s\" non verrà eliminato"
+msgid "Current rating"
+msgstr "Valutazione attuale"
 
-#, php-format
-msgid "There was an error trying to delete \"%s\""
-msgstr "C'è stato un errore durante l'eliminazione di \"%s\""
+msgid "Unfavorite"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
 
 msgid "View changes"
 msgstr "Visualizza le modifiche"
-
-msgid "Updating Ampache sources with `"
-msgstr "Aggiorna i sorgenti di Ampache con `"
 
 msgid "Updating dependencies with `"
 msgstr "Aggiorna le dipendenze con `"
@@ -4868,20 +5469,48 @@ msgstr "Aggiorna le dipendenze con `"
 msgid "Updating npm build with `"
 msgstr ""
 
-msgid "Invalid configuration settings"
-msgstr "Il file di configurazione è invalido"
+#. HINT: comma separated list of filesystem paths
+#, php-format
+msgid "Unable to update dependencies: the web server user cannot write to %s"
+msgstr ""
+
+msgid "Updating Ampache sources with `"
+msgstr "Aggiorna i sorgenti di Ampache con `"
+
+msgid ""
+"Unable to run the update: the PHP exec() function is disabled on this server"
+msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
 msgstr "Impossibile connettersi al database, controlla la tua configurazione Ampache"
 
-msgid "Unable to query the database, check your Ampache config"
-msgstr "Impossibile interrogare il database, Controlla la configurazione di Ampache"
-
 msgid "Existing database was detected, unable to continue the installation"
 msgstr "Un database esistente è stato rilevato, impossibile continuare l'installazione"
 
+#. HINT: Database error message
+#, php-format
+msgid "Connection to the database failed: %s"
+msgstr "Connessione al database fallita: %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Database select failed: %s"
+msgstr "La selezione del database è fallita: %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Administrative user creation failed: %s"
+msgstr "La creazione di un utente amministratore è fallita: %s"
+
+msgid ""
+"Connection to the database failed: Check hostname, username and password"
+msgstr "La connessione al database è fallita: Controlla l' hostname, username e password"
+
 msgid "Config file is not writable"
 msgstr "Il file di configurazione non è scrivibile"
+
+msgid "Failed writing config file"
+msgstr "Impossibile scrivere il file di configurazione"
 
 msgid "Database name is invalid"
 msgstr "Il nome del database non è valido"
@@ -4912,32 +5541,12 @@ msgstr "Impossibile di dare il permesso di \"%1$s\" per l'utente \"%2$s\" in \"%
 msgid "Unable to open ampache.sql"
 msgstr ""
 
-msgid ""
-"Connection to the database failed: Check hostname, username and password"
-msgstr "La connessione al database è fallita: Controlla l' hostname, username e password"
-
-msgid "Failed writing config file"
-msgstr "Impossibile scrivere il file di configurazione"
-
-#. HINT: Database error message
+#. HINT: Database version number
 #, php-format
-msgid "Connection to the database failed: %s"
-msgstr "Connessione al database fallita: %s"
+msgid "Unable to update the database schema from version %s"
+msgstr ""
 
-#. HINT: Database error message
-#, php-format
-msgid "Database select failed: %s"
-msgstr "La selezione del database è fallita: %s"
-
-#. HINT: Database error message
-#, php-format
-msgid "Administrative user creation failed: %s"
-msgstr "La creazione di un utente amministratore è fallita: %s"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Updated: %s"
+msgid "You have Plugins that need an update!"
 msgstr ""
 
 msgid "commented on"
@@ -5004,9 +5613,6 @@ msgstr "Per cominciare ad usare il tuo account, devi verificare la tua mail visi
 msgid "A new user has registered, the following values were entered:"
 msgstr "Un nuovo utente si è registrato, i seguenti valori sono stati immessi:"
 
-msgid "Fullname"
-msgstr "Nome completo"
-
 #, php-format
 msgid "Account enabled at %s"
 msgstr "Account abilitato a %s"
@@ -5025,6 +5631,9 @@ msgstr "Verifica in corso di %1$s (%2$s)"
 
 msgid "Finished checking file names for valid characters"
 msgstr "Terminato il controllo di caratteri validi nei nomi dei file"
+
+msgid "There was an error trying to check the file names for valid characters"
+msgstr ""
 
 #, php-format
 msgid "There was an error trying to open \"%s\""
@@ -5070,20 +5679,39 @@ msgid "File moved..."
 msgstr "File spostato..."
 
 #, php-format
+msgid "%1$s on %2$s"
+msgstr ""
+
+#, php-format
 msgid "%s on %s"
 msgstr ""
 
 msgid "Play date"
 msgstr ""
 
-msgid "Enabled"
-msgstr "Abilitato"
+msgid "Add to playlist"
+msgstr "Aggiungi alla playlist"
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Add to playlist / collection"
+msgstr ""
 
 msgid "On"
 msgstr "On"
 
 msgid "Off"
 msgstr "Off"
+
+msgid "bps"
+msgstr ""
+
+msgid "0 = use the source file rate"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
 
 msgid "M3U"
 msgstr "M3U"
@@ -5114,21 +5742,6 @@ msgstr "Consenti solo API5"
 
 msgid "Allow API6 Only"
 msgstr ""
-
-msgid "1 Star"
-msgstr "1 Stella"
-
-msgid "2 Stars"
-msgstr "2 Stelle"
-
-msgid "3 Stars"
-msgstr "3 Stelle"
-
-msgid "4 Stars"
-msgstr "4 Stelle"
-
-msgid "5 Stars"
-msgstr "5 Stelle"
 
 msgid "Keep last played track"
 msgstr ""
@@ -5170,17 +5783,11 @@ msgstr "Nome decrescente"
 msgid "Click to grant %s access to Ampache"
 msgstr "Clicca per dare l'accesso %s ad Ampache"
 
+msgid "Match my theme"
+msgstr ""
+
 msgid "Unknown Artist"
 msgstr "Artista Sconosciuto"
-
-msgid "Song preview from 7digital"
-msgstr "Anteprima della canzone da 7digital"
-
-msgid "7digital consumer key"
-msgstr "7digital consumer key"
-
-msgid "7digital secret"
-msgstr "7digital secret"
 
 msgid "Amazon art search"
 msgstr "Amazon ricerca copertine"
@@ -5200,6 +5807,12 @@ msgstr "Amazon Secret Access Key"
 msgid "Amazon associate tag"
 msgstr "Amazon associate tag"
 
+msgid "Sonic similarity from an AudioMuse-AI server"
+msgstr ""
+
+msgid "AudioMuse-AI server URL"
+msgstr ""
+
 msgid "URL shorteners on shared links with Bit.ly"
 msgstr "URL shorteners nei link condivisi con Bit.ly"
 
@@ -5215,6 +5828,9 @@ msgstr ""
 msgid "Catalog favorites on homepage"
 msgstr "Preferiti del catalogo sulla home page"
 
+msgid "Highlight"
+msgstr "Evidenzia"
+
 msgid "Catalog favorites max items"
 msgstr "Max numero favoriti del catalogo"
 
@@ -5227,11 +5843,11 @@ msgstr ""
 msgid "Catalog favorites media row display"
 msgstr ""
 
-msgid "Highlight"
-msgstr "Evidenzia"
-
 msgid "Get lyrics from ChartLyrics"
 msgstr "Ottieni testi da ChartLyrics"
+
+msgid "Song preview from Deezer"
+msgstr ""
 
 msgid "Discogs metadata integration"
 msgstr "Integrazione dei metadati Discogs "
@@ -5254,11 +5870,11 @@ msgstr "Flickr API key"
 msgid "Friend's Timeline on homepage"
 msgstr "Mostra la Timeline degli amici nella home"
 
-msgid "Friends timeline max items"
-msgstr "Massimo nr di oggetti nella timeline degli amici"
-
 msgid "Friends Timeline"
 msgstr "Timeline degli amici"
+
+msgid "Friends timeline max items"
+msgstr "Massimo nr di oggetti nella timeline degli amici"
 
 msgid "Google Analytics statistics"
 msgstr "Statistiche di Google Analytics"
@@ -5269,14 +5885,14 @@ msgstr "Google Analytics Tracking ID"
 msgid "Show user's location with Google Maps"
 msgstr "Mostra la posizione deli utenti con google maps"
 
-msgid "Google Maps API key"
-msgstr "Google Maps API key"
-
 msgid "Hits"
 msgstr "Hits"
 
 msgid "Last activity"
 msgstr "Attività recenti"
+
+msgid "Google Maps API key"
+msgstr "Google Maps API key"
 
 msgid "User's avatars from Gravatar"
 msgstr "Avatar utenti da Gravatar"
@@ -5294,6 +5910,9 @@ msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
 msgid "Home Dashboard max items"
+msgstr ""
+
+msgid "Song preview from the iTunes Search API"
 msgstr ""
 
 msgid "Scrobble songs you play to your Last.FM account"
@@ -5326,6 +5945,12 @@ msgstr "ListenBrainz User Token"
 msgid "ListenBrainz API URL"
 msgstr ""
 
+msgid "Get lyrics from an LrcLib compatible server"
+msgstr ""
+
+msgid "LrcLib site URL"
+msgstr ""
+
 msgid "Get lyrics from a public Lyrist instance"
 msgstr ""
 
@@ -5350,20 +5975,23 @@ msgstr "Integrazione dei metadati MusicBrainz"
 msgid "PayPal donation button on user page"
 msgstr "Visualizza il bottone per le donazioni PayPal nella pagina utente"
 
-msgid "PayPal ID"
-msgstr "PayPal ID"
-
-msgid "PayPal Currency Code"
-msgstr "PayPal Currency Code"
-
 msgid "on"
 msgstr "acceso"
 
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr "PayPal - Il metodo più sicuro per pagare online!"
 
+msgid "PayPal ID"
+msgstr "PayPal ID"
+
+msgid "PayPal Currency Code"
+msgstr "PayPal Currency Code"
+
 msgid "Personal favorites on homepage"
 msgstr "Preferiti personali sulla homepage"
+
+msgid "Favorite Lists"
+msgstr "Lista preferiti"
 
 msgid "Personal favorites on the homepage"
 msgstr "Preferiti personali sulla homepage"
@@ -5373,9 +6001,6 @@ msgstr "Playlist preferite"
 
 msgid "Favorite Smartlists"
 msgstr "Playlist intelligenti Favorite"
-
-msgid "Favorite Lists"
-msgstr "Lista preferiti"
 
 msgid "Piwik statistics"
 msgstr "Statistiche Piwik"
@@ -5488,384 +6113,19 @@ msgstr "Gruppo di rilascio MusicBrainzID"
 msgid "Artist MusicBrainzID"
 msgstr "MusicBrainzID dell'Artista"
 
-msgid "Edit/Find Art"
-msgstr "Edita/trova Copertina"
-
-msgid "Do you really want to reset art?"
-msgstr "Davvero vuoi resettare la copertina?"
-
-msgid "Reset Art"
-msgstr "Ressetta Copertina"
-
-msgid "Broadcast Edit"
-msgstr "Modifica Trasmissione"
-
-msgid "Broadcast"
-msgstr "Broadcast"
-
-msgid "Unbroadcast"
-msgstr "Disabilita Broadcast"
-
-msgid "Playlist Items"
-msgstr "Elementi della playlist"
-
-msgid "Current Playlist"
-msgstr "Playlist corrente"
-
-msgid "Shoutbox Records"
-msgstr "Shoutbox Records"
-
-msgid "Wanted Albums"
-msgstr "Album desiderati"
-
-msgid "Private Messages"
-msgstr "Messaggi privati"
-
-msgid "day"
-msgid_plural "days"
-msgstr[0] "giorno"
-msgstr[1] "giorni"
-msgstr[2] "giorni"
-
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "ora"
-msgstr[1] "ore"
-msgstr[2] "ore"
-
-msgid "No Update Needed"
-msgstr "Non è necessario aggiornare"
-
-msgid "Catalog Cleaned"
-msgstr "Catalogo pulito"
-
-#, php-format
-msgid "%d file removed."
-msgid_plural "%d files removed."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-msgid "Catalog Verified"
-msgstr "Catalogo Verificato"
-
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
-msgstr "Questa sotto directory non fa parte di un catalogo esistente. L'aggiornamento non può essere effettuato."
-
-msgid "Name is required"
-msgstr "Il nome è richiesto"
-
-msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr ""
+msgid "Codec is required (e.g. MP3, OGG...)"
+msgstr "Codec (es. MP3, OGG) richiesto"
 
 msgid "URL is invalid, must be http:// or https://"
 msgstr "URL invalido, deve essere http:// o https://"
 
-msgid "Codec is required (e.g. MP3, OGG...)"
-msgstr "Codec (es. MP3, OGG) richiesto"
-
 msgid "Catalog is invalid"
 msgstr "Il catalogo è invalido"
 
-msgid "You have Plugins that need an update!"
+msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-msgid "Browse was not found or expired, try reloading the page"
-msgstr "Browse non è stato trovato o è scaduto, prova a ricaricare la pagina"
-
-msgid "0 Stars"
-msgstr "0 Stelle"
-
-msgid " Stars"
-msgstr ""
-
-msgid "Average from all users"
-msgstr "Media di tutti gli utenti"
-
-msgid "not rated yet"
-msgstr "Non ancora valutata"
-
-#, php-format
-msgid "%s of 5"
-msgstr "%s di 5"
-
-msgid "Current rating"
-msgstr "Valutazione attuale"
-
-msgid "is greater than or equal to"
-msgstr "è maggiore o uguale a"
-
-msgid "is less than or equal to"
-msgstr "è minore o uguale a"
-
-msgid "equals"
-msgstr "uguale"
-
-msgid "does not equal"
-msgstr "non è uguale"
-
-msgid "is greater than"
-msgstr "è maggiore di"
-
-msgid "is less than"
-msgstr "è minore di"
-
-msgid "is true"
-msgstr "è vero"
-
-msgid "is false"
-msgstr "è falso"
-
-msgid "contains"
-msgstr "contiene"
-
-msgid "does not contain"
-msgstr "non contiene"
-
-msgid "starts with"
-msgstr "inizia con"
-
-msgid "ends with"
-msgstr "finisce con"
-
-msgid "is"
-msgstr "è"
-
-msgid "is not"
-msgstr "non è"
-
-msgid "sounds like"
-msgstr "Suona come"
-
-msgid "does not sound like"
-msgstr "Non suona come"
-
-msgid "matches regular expression"
-msgstr "corrisponde all'espressione regolare"
-
-msgid "does not match regular expression"
-msgstr "non corrisponde all'espressione regolare"
-
-msgid "before"
-msgstr "prima"
-
-msgid "after"
-msgstr "dopo"
-
-msgid "before (x) days ago"
-msgstr "prima di (x) giorni fa"
-
-msgid "after (x) days ago"
-msgstr "dopo di  (x) giorni fa"
-
-msgid "has loved"
-msgstr "ha amato"
-
-msgid "has rated 5 stars"
-msgstr "Ha recensito 5 Stelle"
-
-msgid "has rated 4 stars"
-msgstr "Ha recensito 4 Stelle"
-
-msgid "has rated 3 stars"
-msgstr "Ha recensito 3 Stelle"
-
-msgid "has rated 2 stars"
-msgstr "Ha recensito 2 Stelle"
-
-msgid "has rated 1 star"
-msgstr "Ha recensito 1 Stella"
-
-msgid "has not rated"
-msgstr "Non ha recensito"
-
-msgid "Any searchable text"
-msgstr "Ogni testo ricercabile"
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Length (in minutes)"
-msgstr "Durata (in minuti)"
-
-msgid "Database ID"
-msgstr ""
-
-msgid "My Rating"
-msgstr "La mia valutazione"
-
-msgid "Rating (Average)"
-msgstr "Valutazione (media)"
-
-msgid "My Rating (Album)"
-msgstr "La mia valutazione (album)"
-
-msgid "My Rating (Artist)"
-msgstr "La mia valutazione (artista)"
-
-msgid "My Favorite Songs"
-msgstr ""
-
-msgid "My Favorite Albums"
-msgstr ""
-
-msgid "My Favorite Artists"
-msgstr ""
-
-msgid "Favorites (Album)"
-msgstr "Preferiti (album)"
-
-msgid "Favorites (Artist)"
-msgstr "Preferiti (Artisti)"
-
-msgid "Another User"
-msgstr "Un'altro utente"
-
-msgid "Another User (Album)"
-msgstr "Un'altro utente (Album)"
-
-msgid "Another User (Artist)"
-msgstr "Un'altro utente (Artista)"
-
-msgid "Play History"
-msgstr "Riproduci cronologia"
-
-#. HINT: Number of times object has been played
-msgid "# Played"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped"
-msgstr "# Eseguiti o saltati"
-
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr "Ascoltato/Saltato rapporto"
-
-msgid "My Last Play"
-msgstr "Il mio ultimo ascolto"
-
-msgid "My Last Skip"
-msgstr "Il mio ultimo skip"
-
-msgid "My Last Play or Skip"
-msgstr "Il mio ultimo ascolto o skip"
-
-msgid "Played by Me"
-msgstr "Ascoltato da me"
-
-msgid "Played by Me (Album)"
-msgstr "Ascoltato da me (Album)"
-
-msgid "Played by Me (Artist)"
-msgstr "Ascoltato da me (artista)"
-
-#. HINT: Number of times object has been played
-msgid "# Played by Me"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped by Me"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped by Me"
-msgstr ""
-
-msgid "Recently played"
-msgstr ""
-
-msgid "Album Genre"
-msgstr "Genere dell'album"
-
-msgid "Artist Genre"
-msgstr "Genere dell'artista"
-
-msgid "Song Count"
-msgstr ""
-
-msgid "Album Count"
-msgstr ""
-
-msgid "Artist Count"
-msgstr ""
-
-msgid "File Data"
-msgstr "File Dati"
-
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently added"
-msgstr "Aggiunti di recente"
-
-msgid "Recently updated"
-msgstr "Aggiornati di recente"
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr "MusicBrainz ID (Album)"
-
-msgid "MusicBrainz ID (Artist)"
-msgstr "MusicBrainz ID (Artista)"
-
-msgid "Metadata"
-msgstr "Metadati"
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "Album Title"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
-msgid "Image Width"
-msgstr "Larghezza dell'immagine"
-
-msgid "Image Height"
-msgstr "Altezza dell'immagine"
-
-msgid "MusicBrainz ID (Song)"
-msgstr ""
-
-msgid "Album Data"
-msgstr ""
-
-msgid "Disk Count"
-msgstr ""
-
-msgid "Duplicate MusicBrainz Release Group"
-msgstr ""
-
-msgid "public"
-msgstr ""
-
-msgid "private"
-msgstr ""
-
-msgid "Episode Count"
-msgstr ""
-
-msgid "Video Count"
+msgid "User set"
 msgstr ""
 
 msgid "Share Edit"
@@ -5874,17 +6134,11 @@ msgstr "Modifica condivisione"
 msgid "Track MusicBrainzID"
 msgstr "MusicBrainzID della Traccia"
 
-msgid "Unfavorite"
-msgstr ""
-
-msgid "Favorite"
-msgstr ""
+msgid "User avatar"
+msgstr "Avatar dell'Utente"
 
 msgid "Username is required"
 msgstr ""
-
-msgid "User avatar"
-msgstr "Avatar dell'Utente"
 
 msgid "Afar"
 msgstr "Afar"
@@ -6444,682 +6698,6 @@ msgstr "Accetta"
 msgid "Add to wanted list"
 msgstr "Aggiungi  alla lista desiderati"
 
-# This file lists all description strings from your Ampache-database ->
-# preference-table.
-# Please do not delete or modify the content by yourself. It will be
-# automatically (re)generated
-# if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 08.07.2025 09:44:34 AEST
-# 
-#: Database preference table id 1
-msgid "Allow Downloads"
-msgstr ""
-
-#: Database preference table id 4
-msgid "Popular Threshold"
-msgstr ""
-
-#: Database preference table id 19
-msgid "Transcode Bitrate"
-msgstr ""
-
-#: Database preference table id 22
-msgid "Website Title"
-msgstr ""
-
-#: Database preference table id 23
-msgid "Lock Songs"
-msgstr ""
-
-#: Database preference table id 24
-msgid "Force HTTP playback regardless of port"
-msgstr ""
-
-#: Database preference table id 29
-msgid "Playback Type"
-msgstr ""
-
-#: Database preference table id 32
-msgid "Playlist Type"
-msgstr ""
-
-#: Database preference table id 33
-msgid "Theme"
-msgstr ""
-
-#: Database preference table id 40
-msgid "Localplay Access"
-msgstr ""
-
-#: Database preference table id 41
-msgid "Localplay Type"
-msgstr ""
-
-#: Database preference table id 44
-msgid "Allow Streaming"
-msgstr ""
-
-#: Database preference table id 45
-msgid "Allow Democratic Play"
-msgstr ""
-
-#: Database preference table id 46
-msgid "Allow Localplay Play"
-msgstr ""
-
-#: Database preference table id 47
-msgid "Statistics Day Threshold"
-msgstr ""
-
-#: Database preference table id 51
-msgid "Offset Limit"
-msgstr ""
-
-#: Database preference table id 52
-msgid "Rate Limit"
-msgstr ""
-
-#: Database preference table id 53
-msgid "Playlist Method"
-msgstr ""
-
-#: Database preference table id 69
-msgid "Show lyrics"
-msgstr ""
-
-#: Database preference table id 71
-msgid "httpQ Active Instance"
-msgstr ""
-
-#: Database preference table id 82
-msgid "Now Playing filtered per user"
-msgstr ""
-
-#: Database preference table id 83
-msgid "Album - Default sort"
-msgstr ""
-
-#: Database preference table id 84
-msgid "Show # played"
-msgstr ""
-
-#: Database preference table id 85
-msgid "Show current song in Web Player page title"
-msgstr ""
-
-#: Database preference table id 86
-msgid "Use Subsonic backend"
-msgstr ""
-
-#: Database preference table id 88
-msgid "Authorize Flash Web Player"
-msgstr ""
-
-#: Database preference table id 89
-msgid "Authorize HTML5 Web Player"
-msgstr ""
-
-#: Database preference table id 90
-msgid "Share Now Playing information"
-msgstr ""
-
-#: Database preference table id 91
-msgid "Share Recently Played information"
-msgstr ""
-
-#: Database preference table id 92
-msgid ""
-"Share Recently Played information - Allow access to streaming date/time"
-msgstr ""
-
-#: Database preference table id 93
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Database preference table id 94
-msgid "Fix header position on compatible themes"
-msgstr ""
-
-#: Database preference table id 95
-msgid "Check for Ampache updates automatically"
-msgstr ""
-
-#: Database preference table id 96
-msgid "AutoUpdate last check time"
-msgstr ""
-
-#: Database preference table id 97
-msgid "AutoUpdate last version from last check"
-msgstr ""
-
-#: Database preference table id 98
-msgid "AutoUpdate last version from last check is newer"
-msgstr ""
-
-#: Database preference table id 99
-msgid "Confirmation when closing current playing window"
-msgstr ""
-
-#: Database preference table id 100
-msgid "Auto-pause between tabs"
-msgstr ""
-
-#: Database preference table id 101
-msgid "Enable URL Rewriting"
-msgstr ""
-
-#: Database preference table id 102
-msgid "Allow Share"
-msgstr ""
-
-#: Database preference table id 103
-msgid "Share links default expiration days (0=never)"
-msgstr ""
-
-#: Database preference table id 104
-msgid "Artist slideshow inactivity time"
-msgstr ""
-
-#: Database preference table id 105
-msgid "Broadcast web player by default"
-msgstr ""
-
-#: Database preference table id 108
-msgid "Album - Group multiple disks"
-msgstr ""
-
-#: Database preference table id 109
-msgid "Top menu"
-msgstr ""
-
-#: Database preference table id 110
-msgid "Democratic - Clear votes for expired user sessions"
-msgstr ""
-
-#: Database preference table id 111
-msgid "Show donate button in footer"
-msgstr ""
-
-#: Database preference table id 113
-msgid "Allow user uploads"
-msgstr ""
-
-#: Database preference table id 114
-msgid "Create a subdirectory per user"
-msgstr ""
-
-#: Database preference table id 115
-msgid "Consider the user sender as the track's artist"
-msgstr ""
-
-#: Database preference table id 116
-msgid "Post-upload script (current directory = upload target directory)"
-msgstr ""
-
-#: Database preference table id 117
-msgid "Allow users to edit uploaded songs"
-msgstr ""
-
-#: Database preference table id 118
-msgid "Use DAAP backend"
-msgstr ""
-
-#: Database preference table id 119
-msgid "DAAP backend password"
-msgstr ""
-
-#: Database preference table id 120
-msgid "Use UPnP backend"
-msgstr ""
-
-#: Database preference table id 121
-msgid "Allow Video Features"
-msgstr ""
-
-#: Database preference table id 122
-msgid "Album - Group per release type"
-msgstr ""
-
-#: Database preference table id 123
-msgid "Ajax page load"
-msgstr ""
-
-#: Database preference table id 124
-msgid "Limit direct play to maximum media count"
-msgstr ""
-
-#: Database preference table id 125
-msgid "Show Albums of the Moment"
-msgstr ""
-
-#: Database preference table id 126
-msgid "Show Videos of the Moment"
-msgstr ""
-
-#: Database preference table id 127
-msgid "Show Recently Played"
-msgstr ""
-
-#: Database preference table id 128
-msgid "Show Now Playing"
-msgstr ""
-
-#: Database preference table id 129
-msgid "Custom URL - Logo"
-msgstr ""
-
-#: Database preference table id 130
-msgid "Album - Group per release type sort"
-msgstr ""
-
-#: Database preference table id 131
-msgid "Web Player browser notifications"
-msgstr ""
-
-#: Database preference table id 132
-msgid "Web Player browser notifications timeout (seconds)"
-msgstr ""
-
-#: Database preference table id 133
-msgid "Allow Geolocation"
-msgstr ""
-
-#: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
-msgstr ""
-
-#: Database preference table id 135
-msgid "Allow users to remove uploaded songs"
-msgstr ""
-
-#: Database preference table id 136
-msgid "Custom URL - Login page logo"
-msgstr ""
-
-#: Database preference table id 137
-msgid "Custom URL - Favicon"
-msgstr ""
-
-#: Database preference table id 138
-msgid "Custom text footer"
-msgstr ""
-
-#: Database preference table id 139
-msgid "Use WebDAV backend"
-msgstr ""
-
-#: Database preference table id 140
-msgid "Allow E-mail notifications"
-msgstr ""
-
-#: Database preference table id 141
-msgid "Theme color"
-msgstr ""
-
-#: Database preference table id 142
-msgid "Custom metadata - Disable these fields"
-msgstr ""
-
-#: Database preference table id 143
-msgid "Custom metadata - Define field list"
-msgstr ""
-
-#: Database preference table id 144
-msgid "# latest episodes to keep"
-msgstr ""
-
-#: Database preference table id 145
-msgid "# episodes to download when new episodes are available"
-msgstr ""
-
-#: Database preference table id 146
-msgid "Library item context menu"
-msgstr ""
-
-#: Database preference table id 147
-msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
-
-#: Database preference table id 148
-msgid "Check library item at import time and disable duplicates"
-msgstr ""
-
-#: Database preference table id 149
-msgid "Show filter box on browse"
-msgstr ""
-
-#: Database preference table id 150
-msgid "Light sidebar by default"
-msgstr ""
-
-#: Database preference table id 151
-msgid "Custom blank album default image"
-msgstr ""
-
-#: Database preference table id 153
-msgid ""
-"Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 154
-msgid "Show # skipped"
-msgstr ""
-
-#: Database preference table id 155
-msgid "Custom datetime"
-msgstr ""
-
-#: Database preference table id 156
-msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr ""
-
-#: Database preference table id 157
-msgid "Only add unique items to playlists"
-msgstr ""
-
-#: Database preference table id 158
-msgid "Set the amount of items Album/Video of the Moment will display"
-msgstr ""
-
-#: Database preference table id 159
-msgid "Custom URL - Login page background"
-msgstr ""
-
-#: Database preference table id 160
-msgid "Show License"
-msgstr ""
-
-#: Database preference table id 161
-msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr ""
-
-#: Database preference table id 162
-msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr ""
-
-#: Database preference table id 163
-msgid "Hide the Genre column in browse table rows"
-msgstr ""
-
-#: Database preference table id 164
-msgid ""
-"Force Subsonic streams to download. (Enable scrobble in your client to "
-"record stats)"
-msgstr ""
-
-#: Database preference table id 165
-msgid "Allow Ampache API3 responses"
-msgstr ""
-
-#: Database preference table id 166
-msgid "Allow Ampache API4 responses"
-msgstr ""
-
-#: Database preference table id 167
-msgid "Allow Ampache API5 responses"
-msgstr ""
-
-#: Database preference table id 168
-msgid "Force a specific API response no matter what version you send"
-msgstr ""
-
-#: Database preference table id 169
-msgid "Show playlist owner username in titles"
-msgstr ""
-
-#: Database preference table id 170
-msgid "Hide playlists in Subsonic and API clients that start with this string"
-msgstr ""
-
-#: Database preference table id 171
-msgid "Hide smartlists that match playlist names in Subsonic and API clients"
-msgstr ""
-
-#: Database preference table id 172
-msgid "Show 'Album Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 173
-msgid "Show 'Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 174
-msgid "Democratic - Use smartlists for base playlist"
-msgstr ""
-
-#: Database preference table id 175
-msgid ""
-"Remove tracks before the current playlist item in the webplayer when played"
-msgstr ""
-
-#: Database preference table id 176
-msgid "Allow Ampache API6 responses"
-msgstr ""
-
-#: Database preference table id 177
-msgid "Upload Access Level"
-msgstr ""
-
-#: Database preference table id 178
-msgid "Show Album subtitle on links (if available)"
-msgstr ""
-
-#: Database preference table id 179
-msgid "Show Album original year on links (if available)"
-msgstr ""
-
-#: Database preference table id 180
-msgid "Show the login / registration links in the site header"
-msgstr ""
-
-#: Database preference table id 181
-msgid ""
-"Use an alternative playback action for streaming if you have issues with "
-"playing music"
-msgstr ""
-
-#: Database preference table id 182
-msgid "Custom timezone (Override PHP date.timezone)"
-msgstr ""
-
-#: Database preference table id 183
-msgid "Only keep the latest media bookmark"
-msgstr ""
-
-#: Database preference table id 184
-msgid "Default webplayer volume"
-msgstr ""
-
-#: Database preference table id 185
-msgid "API sessions do not expire"
-msgstr ""
-
-#: Database preference table id 186
-msgid "Show all media types in Recently Played"
-msgstr ""
-
-#: Database preference table id 187
-msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr ""
-
-#: Database preference table id 188
-msgid "Hide sidebar switcher arrows"
-msgstr ""
-
-#: Database preference table id 189
-msgid "Hide the Browse menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 190
-msgid "Hide the Dashboard menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 191
-msgid "Hide the Video menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 192
-msgid "Hide the Search menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 193
-msgid "Hide the Playlist menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 194
-msgid "Hide the Information menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 195
-msgid "Destination catalog"
-msgstr ""
-
-#: Database preference table id 196
-msgid "Custom URL - Use your avatar for header logo"
-msgstr ""
-
-#: Database preference table id 197
-msgid "Use Dashboard links for the index page header"
-msgstr ""
-
-#: Database preference table id 198
-msgid "Custom CSS Order - Browse"
-msgstr ""
-
-#: Database preference table id 199
-msgid "Custom CSS Order - Dashboard"
-msgstr ""
-
-#: Database preference table id 200
-msgid "Custom CSS Order - Video"
-msgstr ""
-
-#: Database preference table id 201
-msgid "Custom CSS Order - Playlist"
-msgstr ""
-
-#: Database preference table id 202
-msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Database preference table id 203
-msgid "Custom CSS Order - Information"
-msgstr ""
-
-#: Database preference table id 204
-msgid ""
-"Force API streams to download. (Enable scrobble in your client to record "
-"stats)"
-msgstr ""
-
-#: Database preference table id 205
-msgid "Show Google search icon on library items"
-msgstr ""
-
-#: Database preference table id 206
-msgid "Show DuckDuckGo search icon on library items"
-msgstr ""
-
-#: Database preference table id 207
-msgid "Show Wikipedia search icon on library items"
-msgstr ""
-
-#: Database preference table id 208
-msgid "Show Last.fm search icon on library items"
-msgstr ""
-
-#: Database preference table id 209
-msgid "Show Bandcamp search icon on library items"
-msgstr ""
-
-#: Database preference table id 210
-msgid "Show MusicBrainz search icon on library items"
-msgstr ""
-
-#: Database preference table id 211
-msgid "Show extended links for playlist media"
-msgstr ""
-
-#: Database preference table id 212
-msgid "Show Discogs search icon on library items"
-msgstr ""
-
-#: Database preference table id 213
-msgid "Force Grid View on Song browse"
-msgstr ""
-
-#: Database preference table id 214
-msgid "Force Grid View on Album browse"
-msgstr ""
-
-#: Database preference table id 215
-msgid "Force Grid View on Album Disk browse"
-msgstr ""
-
-#: Database preference table id 216
-msgid "Force Grid View on Artist browse"
-msgstr ""
-
-#: Database preference table id 217
-msgid "Force Grid View on Radio Station browse"
-msgstr ""
-
-#: Database preference table id 218
-msgid "Force Grid View on Playlist browse"
-msgstr ""
-
-#: Database preference table id 219
-msgid "Force Grid View on Video browse"
-msgstr ""
-
-#: Database preference table id 220
-msgid "Force Grid View on Podcast browse"
-msgstr ""
-
-#: Database preference table id 221
-msgid "Force Grid View on Podcast Episode browse"
-msgstr ""
-
-#: Database preference table id 222
-msgid "Show Artist column on playlist media rows"
-msgstr ""
-
-#: Database preference table id 223
-msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr ""
-
-#: Database preference subcategory table id 77
-msgid "last.fm"
-msgstr ""
-
-#: Database preference subcategory table id 138
-msgid "interface"
-msgstr ""
-
-#: Database preference subcategory table id 164
-msgid "api"
-msgstr ""
-
-#: Database preference subcategory table id 213
-msgid "cookies"
-msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
@@ -7174,10 +6752,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
 msgstr ""
 
 #: ./untranslated-strings.txt:134
@@ -7256,10 +6830,798 @@ msgstr ""
 msgid "ping"
 msgstr ""
 
-#: ./untranslated-strings.txt:250
+#: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
 msgstr ""
 
-#: ./untranslated-strings.txt:256
-msgid "average"
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
+msgstr ""
+
+# This file lists all translatable strings from the Ampache preference table
+# (descriptions and subcategories). It is generated from the source code by
+# ./gather-messages.sh [-gu|--getutds] - descriptions come from
+# Preference::translate_db() and subcategories from Preference::DEFAULTS,
+# so a live database is NOT required. Do not edit it by hand; re-run the
+# script.
+# 
+#: Ampache preference description
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Default sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information - Allow access to streaming agent"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Now Playing information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Streaming"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow user uploads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Video Features"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force API streams to download. (Enable scrobble in your client to record "
+"stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API3 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API4 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API5 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API6 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API8 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force a specific API response no matter what version you send"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide playlists in Subsonic and API clients that start with this string"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide smartlists that match playlist names in Subsonic and API clients"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly API key"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly Username"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only keep the latest media bookmark"
+msgstr ""
+
+#: Ampache preference description
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Require a session to listen to my broadcasts"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album Disk browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Artist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Radio Station browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Playlist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast Episode browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Song browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Video browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications timeout (seconds)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check library item at import time and disable duplicates"
+msgstr ""
+
+#: Ampache preference description
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Add live plays to the cached count for accurate stats (Require: Cron Cache)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom datetime"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Touch icon for phone home screens (PNG, 180x180, no "
+"transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page background"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Image shown when a link to this server is shared (PNG or JPEG, "
+"1200x630)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Use your avatar for header logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom text footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom timezone (Override PHP date.timezone)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "DAAP backend password"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Clear votes for expired user sessions"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Use smartlists for base playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Additional fields to disable"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Disable these fields"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Downloads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Audio Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Video Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show extended links for playlist media"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Google search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Discogs search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show DuckDuckGo search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Wikipedia search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Last.fm search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Bandcamp search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show MusicBrainz search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force HTTP playback regardless of port"
+msgstr ""
+
+#: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Geolocation"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Mood column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Albums of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Videos of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show all media types in Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Dashboard links for the index page header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Default webplayer volume"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Library item context menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Localplay Access"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock Songs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Minimum transcode bitrate for dynamic downsampling in bps"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow E-mail notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Now Playing filtered per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Offset Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
+msgstr ""
+
+#: Ampache preference description
+msgid "API sessions do not expire"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Method"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playback Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "# latest episodes to keep"
+msgstr ""
+
+#: Ampache preference description
+msgid "# episodes to download when new episodes are available"
+msgstr ""
+
+#: Ampache preference description
+msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Share"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Album Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Collections' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Composer column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Folders' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show the login / registration links in the site header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show License"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Moods' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album original year on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Artist column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show playlist owner username in titles"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # skipped"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album subtitle on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
+msgstr ""
+
+#: Ampache preference description
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Browse menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Dashboard menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Information menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Playlist menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Search menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide sidebar switcher arrows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Video menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable URL Rewriting"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force Subsonic streams to download. (Enable scrobble in your client to "
+"record stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Subsonic backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Album Artist for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable legacy Subsonic API responses for compatibility issues"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use single user data for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme color"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme"
+msgstr ""
+
+#: Ampache preference description
+msgid "Top menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Fix header position on compatible themes"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Ampache preference description
+msgid "Upload Access Level"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to edit uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to remove uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Ampache preference description
+msgid "Destination catalog"
+msgstr ""
+
+#: Ampache preference description
+msgid "Post-upload script (current directory = upload target directory)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Create a subdirectory per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Consider the user sender as the track's artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use WebDAV backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Ampache preference description
+msgid "Auto-pause between tabs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Remove tracks before the current playlist item in the webplayer when played"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Api"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Cookies"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Custom"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Feature"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Httpq"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Interface"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Last.fm"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Library"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Metadata"
+msgstr "Metadati"
+
+#: Ampache preference subcategory
+msgid "Notification"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Player"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Privacy"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Sidebar"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Transcoding"
 msgstr ""

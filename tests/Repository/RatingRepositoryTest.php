@@ -38,6 +38,19 @@ class RatingRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private RatingRepository $subject;
 
+    public function testAdjustWeightFloorsTheDecrementAtZero(): void
+    {
+        // an unbalanced sequence of removals must never push the weight below zero
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `song` SET `weight` = GREATEST(`weight` - 1, 0) WHERE `id` = ?;',
+                [666]
+            );
+
+        $this->subject->adjustWeight('song', 666, -1);
+    }
+
     public function testAdjustWeightIgnoresATypeWithoutTheColumn(): void
     {
         $this->connection->expects(static::never())
@@ -46,16 +59,16 @@ class RatingRepositoryTest extends TestCase
         $this->subject->adjustWeight('playlist', 666, 1);
     }
 
-    public function testAdjustWeightMovesTheCounterOnTheRatedTable(): void
+    public function testAdjustWeightRaisesTheCounterOnTheRatedTable(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `song` SET `weight` = `weight` - 1 WHERE `id` = ?;',
+                'UPDATE `song` SET `weight` = `weight` + 1 WHERE `id` = ?;',
                 [666]
             );
 
-        $this->subject->adjustWeight('song', 666, -1);
+        $this->subject->adjustWeight('song', 666, 1);
     }
 
     public function testCollectGarbageRefusesAnUnsupportedType(): void
@@ -92,12 +105,22 @@ class RatingRepositoryTest extends TestCase
         );
     }
 
+    public function testGetAverageRatingCountsItsVotersFromTheSameQuery(): void
+    {
+        // the HAVING already counts them, so the number of voters costs nothing to read back
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->willReturn(['rating' => '4.14', 'voters' => '7']);
+
+        self::assertSame([4.14, 7], $this->subject->getAverageRating(666, 'song'));
+    }
+
     public function testGetAverageRatingReturnsNullWhileOnlyOneUserHasRated(): void
     {
         $this->connection->expects(static::once())
-            ->method('fetchOne')
+            ->method('fetchRow')
             ->with(
-                'SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1',
+                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, COUNT(`object_id`) AS `voters` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(`object_id`) > 1',
                 [666, 'song']
             )
             ->willReturn(false);
@@ -114,16 +137,16 @@ class RatingRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN (1,2) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
+                'SELECT ROUND(AVG(`rating`), 2) AS `rating`, COUNT(`object_id`) AS `voters`, `object_id` FROM `rating` WHERE `object_id` IN (1,2) AND `object_type` = ? GROUP BY `object_id` HAVING COUNT(`object_id`) > 1',
                 ['song']
             )
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
             ->method('fetch')
-            ->willReturn(['object_id' => '1', 'rating' => '3.67'], false);
+            ->willReturn(['object_id' => '1', 'rating' => '3.67', 'voters' => '3'], false);
 
-        self::assertSame([1 => 3.67], $this->subject->getAverageRatings('song', [1, 2]));
+        self::assertSame([1 => [3.67, 3]], $this->subject->getAverageRatings('song', [1, 2]));
     }
 
     public function testGetUserRatingReturnsTheStoredValue(): void

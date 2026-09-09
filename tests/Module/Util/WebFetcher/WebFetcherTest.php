@@ -73,6 +73,9 @@ class WebFetcherTest extends TestCase
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
         $curl->expects(static::once())
+            ->method('setOpt')
+            ->with(CURLOPT_RESOLVE, ['some-host:80:203.0.113.10']);
+        $curl->expects(static::once())
             ->method('setProxy')
             ->with($proxyHost, $proxyPort, null, null);
         $curl->expects(static::once())
@@ -135,6 +138,9 @@ class WebFetcherTest extends TestCase
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
         $curl->expects(static::once())
+            ->method('setOpt')
+            ->with(CURLOPT_RESOLVE, ['some-host:80:203.0.113.10']);
+        $curl->expects(static::once())
             ->method('setProxy')
             ->with($proxyHost, $proxyPort, $proxyUser, $proxyPass);
         $curl->expects(static::once())
@@ -183,9 +189,9 @@ class WebFetcherTest extends TestCase
         );
 
         $validator->expects(static::once())
-            ->method('isPublicHttpUrl')
+            ->method('resolvePinnedTarget')
             ->with($uri)
-            ->willReturn(false);
+            ->willReturn(null);
 
         // nothing may reach curl at all
         $this->utilityFactory->expects(static::never())
@@ -223,6 +229,9 @@ class WebFetcherTest extends TestCase
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
         $curl->expects(static::once())
+            ->method('setOpt')
+            ->with(CURLOPT_RESOLVE, ['some-host:80:203.0.113.10']);
+        $curl->expects(static::once())
             ->method('setReferer')
             ->with($uri);
         $curl->expects(static::once())
@@ -254,9 +263,9 @@ class WebFetcherTest extends TestCase
         );
 
         $validator->expects(static::once())
-            ->method('isPublicHttpUrl')
+            ->method('resolvePinnedTarget')
             ->with($uri)
-            ->willReturn(false);
+            ->willReturn(null);
 
         $this->utilityFactory->expects(static::never())
             ->method('createCurl');
@@ -296,6 +305,9 @@ class WebFetcherTest extends TestCase
             ->method('setUserAgent')
             ->with(sprintf('Ampache/%s', $version));
         $curl->expects(static::once())
+            ->method('setOpt')
+            ->with(CURLOPT_RESOLVE, ['some-host:80:203.0.113.10']);
+        $curl->expects(static::once())
             ->method('setReferer')
             ->with($uri);
         $curl->expects(static::once())
@@ -328,9 +340,9 @@ class WebFetcherTest extends TestCase
             ->willReturn($curl);
 
         $validator->expects(static::exactly(2))
-            ->method('isPublicHttpUrl')
+            ->method('resolvePinnedTarget')
             ->with(...self::withConsecutive([$uri], [$redirect]))
-            ->willReturn(true, false);
+            ->willReturn(['host' => 'some-host', 'port' => 80, 'address' => '203.0.113.10'], null);
 
         $curl->expects(static::once())
             ->method('get')
@@ -357,8 +369,8 @@ class WebFetcherTest extends TestCase
         $this->urlValidator   = $this->createMock(UrlValidatorInterface::class);
 
         // the fetch tests are about the curl setup, so the url is allowed unless a test says otherwise
-        $this->urlValidator->method('isPublicHttpUrl')
-            ->willReturn(true);
+        $this->urlValidator->method('resolvePinnedTarget')
+            ->willReturn(['host' => 'some-host', 'port' => 80, 'address' => '203.0.113.10']);
 
         $this->subject = new WebFetcher(
             $this->config,

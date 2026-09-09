@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
@@ -55,6 +56,7 @@ final readonly class ShowAction extends AbstractShowAction
         StreamFactoryInterface $streamFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger,
+        GeneratedArtServiceInterface $generatedArt,
     ) {
         parent::__construct(
             $requestParser,
@@ -63,7 +65,8 @@ final readonly class ShowAction extends AbstractShowAction
             $horde_browser,
             $responseFactory,
             $streamFactory,
-            $logger
+            $logger,
+            $generatedArt
         );
     }
 

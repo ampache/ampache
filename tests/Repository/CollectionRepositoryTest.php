@@ -216,6 +216,19 @@ class CollectionRepositoryTest extends TestCase
         $this->subject->regenerateTrackNumbers($collectionId);
     }
 
+    public function testSetTrackNumberIsScopedToTheOwnCollection(): void
+    {
+        // the map row id alone used to be enough to reorder another user's collection, so the collection id is checked
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `collection_map` SET `track` = ? WHERE `id` = ? AND `collection` = ?;',
+                [1, 555, 666]
+            );
+
+        $this->subject->setTrackNumber(555, 1, 666);
+    }
+
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
