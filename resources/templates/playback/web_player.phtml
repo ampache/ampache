@@ -394,7 +394,7 @@ $labels = $this->getLabels(); ?>
                             if ($this->mayPostShout()) {
                                 echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a> |' : '';";
                             }
-                            echo "actionsobj += '<div id=\'action_buttons\'></div>';";
+                            echo "actionsobj += '<div id=\'action_buttons_' + currentjpitem.attr('data-media_id') + '_' + ((typeof actiontype !== 'undefined') ? actiontype : '') + '\'></div>';";
                         } else {
                             echo "var titleobj = obj.title;";
                             echo "var artistobj = obj.artist;";

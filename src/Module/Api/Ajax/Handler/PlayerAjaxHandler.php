@@ -87,7 +87,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $actions   = ($albumId > 0)
                             ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
                             : '';
-                        $actions .= "<div id='action_buttons'></div>";
+                        $actions .= "<div id='action_buttons_" . $current['object_id'] . '_' . $current['object_type'] . "'></div>";
 
                         $data = [
                             'found' => true,
