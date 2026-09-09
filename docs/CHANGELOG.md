@@ -25,8 +25,10 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Database 810010
   * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
-* A `Time` column on the folder browse, next to `# Items`
-* A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
+* Add `Time` column on folder browses
+  * `php bin/cli run:updateCatalog -s` skips the folder count/time rollup on a run that finds no changes
+  * If a folder's counts or duration look stale, run garbage collection (`-t`, or `admin/catalog.php?action=garbage_collect`) to force a refresh
+* A `Time` column on playlist browses, sortable via `last_duration`
 * Config version 99
   * New `album_grouping_fields` option controlling which fields decide whether two songs share an album row, so pressings that only differ by `barcode`/`catalog_number`/`version` (or any other field) can be grouped together instead of split into separate albums
   * Not recommended: a dropped field is written as NULL rather than stored from whichever song scanned first, so albums it merges together lose that value entirely; every such match logs a warning (not shown in the UI)
@@ -88,7 +90,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 * `stats.php?action=show` now say "access denied" when access is denied
 * Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue
-* A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack. 
+* A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack.
 * A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
 * Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
 * localplay access was never actually checked (any user passed) and Subsonic jukeboxControl checked nothing. Now they are gated on the user's access level
