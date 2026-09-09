@@ -1165,9 +1165,12 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
      * Unset/empty config keeps the default behavior and matches all columns
      *
+     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
+     * matches it separately regardless of what's returned here
+     *
      * @return list<string>
      */
-    private function getIdentityColumns(): array
+    public function getIdentityColumns(): array
     {
         $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
         if (!is_string($configured) || trim($configured) === '') {
