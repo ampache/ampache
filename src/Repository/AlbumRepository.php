@@ -115,7 +115,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         try {
             // left over garbage, keyed on catalog like `unique_album_disk` so a disk left behind by a move goes too
-            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND CONCAT(`album_disk`.`album_id`, '_', `album_disk`.`disk`, '_', `album_disk`.`catalog`) NOT IN (SELECT CONCAT(`album`, '_', `disk`, '_', `catalog`) AS `id` FROM `song`);");
+            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`catalog` = `album_disk`.`catalog`);");
             while ($albumDiskId = $result->fetchColumn()) {
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
