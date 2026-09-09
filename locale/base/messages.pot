@@ -6856,7 +6856,9 @@ msgstr ""
 
 #: ./untranslated-strings.txt:269
 msgid "Mpd"
-msgstr "" #######################################################################
+msgstr ""
+
+ #######################################################################
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
