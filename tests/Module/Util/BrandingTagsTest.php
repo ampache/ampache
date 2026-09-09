@@ -152,7 +152,7 @@ class BrandingTagsTest extends TestCase
 
         $tags = $this->tags('', '', '', false);
 
-        // the icons and the site name belong to the instance, not to whatever the page shows
+        // the icons and the site name belong to the instance, not to whatever object the page shows
         self::assertStringContainsString('rel="icon"', $tags);
         self::assertStringContainsString('og:site_name" content="Dogmazic"', $tags);
         self::assertStringNotContainsString('og:image', $tags);

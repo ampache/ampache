@@ -163,11 +163,10 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
             );
         }
 
-        // a private list you cannot see is not yours to expand into a playlist
+        // a private list you cannot see is not yours to expand into a playlist, whatever route reached it
         if (
             ($item instanceof Playlist || $item instanceof Search)
-            && $item->type !== 'public'
-            && !$item->has_collaborate($user)
+            && !$item->isVisible($user)
         ) {
             throw new ResultEmptyException(
                 (string) $objectId,

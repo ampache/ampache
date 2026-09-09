@@ -83,12 +83,12 @@ final readonly class ShareCreator implements ShareCreatorInterface
             return null;
         }
 
-        // a private list the sharer cannot see is not theirs to publish
+        // a private list the sharer neither owns nor collaborates on is not theirs to publish via a share
         if ($object_type === LibraryItemEnum::PLAYLIST || $object_type === LibraryItemEnum::SEARCH) {
             $list = ($object_type === LibraryItemEnum::SEARCH)
-                ? $this->modelFactory->createSearch($object_id)
+                ? $this->modelFactory->createSmartlist($object_id)
                 : $this->modelFactory->createPlaylist($object_id);
-            if ($list->type !== 'public' && !$list->has_collaborate($user)) {
+            if (!$list->isVisible($user)) {
                 $this->logger->error(
                     'create_share: not allowed to share a private list you do not own',
                     [LegacyLogger::CONTEXT_TYPE => self::class]

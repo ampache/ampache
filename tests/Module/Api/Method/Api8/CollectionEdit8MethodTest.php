@@ -86,6 +86,52 @@ class CollectionEdit8MethodTest extends MockeryTestCase
     }
 
     /**
+     * A collaborator reordering the collection may not smuggle a metadata edit in on the same request; the
+     * whole request is refused, and neither the reorder nor the metadata is ever written.
+     */
+    public function testHandleRefusesAMetadataEditBundledWithAReorderFromCollaborator(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $collection = $this->mock(Collection::class);
+
+        $this->collectionRepository->shouldReceive('findById')
+            ->with(5)
+            ->once()
+            ->andReturn($collection);
+
+        $collection->shouldReceive('isVisible')->with($user)->andReturn(true);
+        $collection->shouldReceive('has_collaborate')->with($user)->andReturn(true);
+        $collection->shouldReceive('has_access')->with($user)->andReturn(false);
+
+        // neither the reorder nor the metadata write may be reached for a bundled request like this
+        $collection->shouldNotReceive('set_by_track_number');
+        $collection->shouldNotReceive('regenerate_track_numbers');
+        $this->collectionRepository->shouldNotReceive('update');
+
+        $this->expectException(AccessFailedException::class);
+        $this->expectExceptionMessage(sprintf('Require: %s', 100));
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'filter' => '5',
+                'name' => 'New name',
+                'items' => 'song:1',
+                'tracks' => '1',
+                'api_format' => 'json',
+                'auth' => 'some-auth',
+            ],
+            $user,
+            8
+        );
+    }
+
+    /**
      * A collaborator may curate the contents but must not edit the metadata (name, visibility, collaborators);
      * asking for a metadata change with no reorder is refused, and the metadata is never written.
      */
@@ -106,7 +152,7 @@ class CollectionEdit8MethodTest extends MockeryTestCase
         $collection->shouldReceive('has_collaborate')->with($user)->andReturn(true);
         $collection->shouldReceive('has_access')->with($user)->andReturn(false);
 
-        // the metadata write must never be reached for a collaborator
+        // the metadata write must never be reached for a collaborator, even with no reorder requested
         $this->collectionRepository->shouldNotReceive('update');
 
         $this->expectException(AccessFailedException::class);

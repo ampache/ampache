@@ -29,6 +29,8 @@ use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -45,6 +47,46 @@ class DefaultAjaxHandlerTest extends TestCase
     private SongRepositoryInterface&MockObject $songRepository;
     private DefaultAjaxHandler $subject;
     private UiInterface&MockObject $ui;
+
+    public function testBasketExpandsAnObjectTypeThatIsOnlyAnAliasOfALoadableType(): void
+    {
+        $medias = [['object_type' => 'song', 'object_id' => 11]];
+        $artist = $this->createMock(Artist::class);
+        $artist->expects(static::once())
+            ->method('get_medias')
+            ->willReturn($medias);
+
+        $this->requestParser->method('getFromRequest')
+            ->willReturnMap([
+                ['action', 'basket'],
+                ['type', ''],
+                ['object_type', 'album_artist'],
+                ['id', '42'],
+                ['object_id', ''],
+            ]);
+
+        $this->libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::ARTIST, 42)
+            ->willReturn($artist);
+
+        $handed = null;
+        $queue  = $this->createMock(Tmp_Playlist::class);
+        $queue->method('add_medias')
+            ->willReturnCallback(static function (array $medias) use (&$handed): void {
+                $handed = $medias;
+            });
+
+        $user = $this->createMock(User::class);
+        $user->method('getPlaylist')
+            ->willReturn($queue);
+
+        ob_start();
+        $this->subject->handle($user);
+        ob_end_clean();
+
+        static::assertSame($medias, $handed);
+    }
 
     public function testBasketExpandsAPrivateListTheViewerCollaboratesOn(): void
     {
@@ -71,7 +113,7 @@ class DefaultAjaxHandlerTest extends TestCase
     public function testBasketRefusesToExpandAPrivateListTheViewerCannotSee(): void
     {
         $playlist = $this->playlist('private', false);
-        // the tell that the guard fired: the members are never even read
+        // the tell that the guard fired: the members are never even read, let alone queued up anywhere
         $playlist->expects(static::never())
             ->method('get_medias');
 
@@ -99,16 +141,15 @@ class DefaultAjaxHandlerTest extends TestCase
 
     private function playlist(string $type, bool $collaborates): Playlist&MockObject
     {
-        $playlist       = $this->createMock(Playlist::class);
-        $playlist->type = $type;
-        $playlist->method('has_collaborate')
-            ->willReturn($collaborates);
+        $playlist = $this->createMock(Playlist::class);
+        $playlist->method('isVisible')
+            ->willReturn($type === 'public' || $collaborates);
 
         return $playlist;
     }
 
     /**
-     * Runs the basket action for one playlist id and returns what was handed to the queue.
+     * Runs the basket action for one playlist id and returns whatever ended up handed to the queue.
      *
      * @return array<mixed>
      */

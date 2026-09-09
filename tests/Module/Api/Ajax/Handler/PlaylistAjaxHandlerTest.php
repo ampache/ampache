@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
@@ -48,7 +49,7 @@ class PlaylistAjaxHandlerTest extends TestCase
         $target = $this->target();
         $source = $this->source('private', false);
 
-        // the tell that the guard fired: the members are never read, and nothing is appended
+        // the tell that the guard fired: the members are never read, and nothing is appended anywhere
         $source->expects(static::never())
             ->method('get_medias');
         $target->expects(static::never())
@@ -89,6 +90,30 @@ class PlaylistAjaxHandlerTest extends TestCase
         $this->append($target, $source);
     }
 
+    public function testAppendTakesASourceWhoseObjectTypeIsOnlyAnAliasOfALoadableType(): void
+    {
+        $medias = [['object_type' => 'song', 'object_id' => 8]];
+        $target = $this->target();
+        $artist = $this->createMock(Artist::class);
+        $artist->method('get_medias')
+            ->willReturn($medias);
+
+        $_REQUEST['item_type'] = 'album_artist';
+
+        $this->libraryItemLoader->method('load')
+            ->willReturnCallback(
+                static fn(LibraryItemEnum $type, int $id) => ($id === 10) ? $target : (($type === LibraryItemEnum::ARTIST) ? $artist : null)
+            );
+        $target->expects(static::once())
+            ->method('add_medias')
+            ->with($medias)
+            ->willReturn(true);
+
+        ob_start();
+        $this->subject->handle($this->createMock(User::class));
+        ob_end_clean();
+    }
+
     protected function setUp(): void
     {
         $this->requestParser     = $this->createMock(RequestParserInterface::class);
@@ -127,10 +152,9 @@ class PlaylistAjaxHandlerTest extends TestCase
 
     private function source(string $type, bool $collaborates): Playlist&MockObject
     {
-        $source       = $this->createMock(Playlist::class);
-        $source->type = $type;
-        $source->method('has_collaborate')
-            ->willReturn($collaborates);
+        $source = $this->createMock(Playlist::class);
+        $source->method('isVisible')
+            ->willReturn($type === 'public' || $collaborates);
 
         return $source;
     }

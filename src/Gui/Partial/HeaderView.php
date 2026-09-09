@@ -373,11 +373,10 @@ final class HeaderView extends AbstractView
                 }
 
                 $item = $this->libraryItemLoader->load(LibraryItemEnum::from($type), $object_id);
-                // a private list you cannot see must not name itself in the tab title either
+                // a private list you cannot see must not name itself in the tab title either, only the site
                 if (
                     ($item instanceof Playlist || $item instanceof Search)
-                    && $item->type !== 'public'
-                    && !$item->has_collaborate($this->currentUser)
+                    && !$item->isVisible($this->currentUser)
                 ) {
                     continue;
                 }

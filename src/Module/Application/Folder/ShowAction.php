@@ -77,8 +77,8 @@ final readonly class ShowAction implements ApplicationActionInterface
             ? $this->folderRepository->findById($folder_id)
             : new Folder(-1);
 
-        // a folder in a catalog you are filtered from is not yours to browse, and the check has to
-        // come before the header so nothing about it reaches the page
+        // a folder in a catalog you are filtered from is not yours to browse, and the check has to come
+        // before the header so nothing about it reaches the page
         if ($folder instanceof Folder && $folder->id > 0) {
             if (!Catalog::has_access($folder->getCatalogId(), $user->getId())) {
                 throw new AccessDeniedException('Access Denied: catalog filter');

@@ -74,7 +74,7 @@ class ShowActionTest extends MockeryTestCase
     {
         $collection = $this->collection(false);
 
-        // the tell that the guard fired: the members are never read and the head is told nothing
+        // the tell that the guard fired: the members are never read and the head is told nothing at all
         $collection->shouldReceive('get_items')->never();
         $this->guiFactory->shouldReceive('createCollectionViewAdapter')->never();
 

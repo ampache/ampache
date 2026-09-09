@@ -374,6 +374,14 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * Whether the user may see this list at all; a collaborator counts, they are invited to curate it.
+     */
+    public function isVisible(?User $user = null): bool
+    {
+        return ($this->type === 'public' || $this->has_collaborate($user));
+    }
+
+    /**
      * set_last
      * Stores one of the cached totals.
      */

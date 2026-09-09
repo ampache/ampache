@@ -52,7 +52,7 @@ class HeaderViewTest extends TestCase
     public function testAPrivateListTheViewerCannotSeeStaysAnonymous(): void
     {
         $playlist = $this->list(Playlist::class, 'private', false);
-        // the tell that the guard fired: the name is never even read
+        // the tell that the guard fired: the name is never even read, let alone shown to anyone at all
         $playlist->expects(static::never())
             ->method('get_fullname');
 
@@ -120,10 +120,9 @@ class HeaderViewTest extends TestCase
      */
     private function list(string $className, string $type, bool $collaborates): MockObject
     {
-        $item       = $this->createMock($className);
-        $item->type = $type;
-        $item->method('has_collaborate')
-            ->willReturn($collaborates);
+        $item = $this->createMock($className);
+        $item->method('isVisible')
+            ->willReturn($type === 'public' || $collaborates);
 
         $this->libraryItemLoader->method('load')
             ->willReturn($item);

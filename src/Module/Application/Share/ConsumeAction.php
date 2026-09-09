@@ -129,7 +129,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
                 $share
             );
 
-            // the page head is rendered from inside the view, so the meta has to be set before it
+            // the page head is rendered from inside the view, so the meta has to be set before it runs
             if (!$view->isEmbed()) {
                 PageMeta::set(
                     [$view->getSharedByText()],

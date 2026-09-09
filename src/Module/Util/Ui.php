@@ -964,7 +964,7 @@ class Ui implements UiInterface
             $share    = $supplied ?: (($square) ? $custom : $webPath . '/ampache-card.png');
 
             $tags[] = '<meta property="og:image" content="' . self::esc(self::absolute($share)) . '">';
-            // a favicon standing in for the wide artwork would be cropped by the banner card
+            // a favicon standing in for the wide artwork would be cropped by the banner card format
             $tags[] = '<meta name="twitter:card" content="' . (($square) ? 'summary' : 'summary_large_image') . '">';
         }
 

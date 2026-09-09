@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -105,13 +106,30 @@ class ShareCreatorTest extends TestCase
         $this->modelFactory->method('createPlaylist')
             ->with(42)
             ->willReturn($playlist);
-        $playlist->type = 'private';
-        $playlist->method('has_collaborate')
+        $playlist->method('isVisible')
             ->with($user)
             ->willReturn(false);
 
         self::assertNull(
             $this->subject->create($user, LibraryItemEnum::PLAYLIST, 42)
+        );
+    }
+
+    public function testCreateReturnsNullWhenSharingAPrivateSmartlistYouCannotSee(): void
+    {
+        $user      = $this->createMock(User::class);
+        $smartlist = $this->createMock(Smartlist::class);
+
+        // a saved search is loaded as a smartlist, since the id alone cannot say what it was searching for
+        $this->modelFactory->method('createSmartlist')
+            ->with(42)
+            ->willReturn($smartlist);
+        $smartlist->method('isVisible')
+            ->with($user)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->create($user, LibraryItemEnum::SEARCH, 42)
         );
     }
 

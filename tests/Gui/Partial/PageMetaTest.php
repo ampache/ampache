@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Config\AmpConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -41,6 +42,16 @@ class PageMetaTest extends TestCase
             [236, 'PT3M56S'],
             [3725, 'PT1H2M5S'],
         ];
+    }
+
+    public function testAppendsNoSvgToTheBeautifiedArtRouteToo(): void
+    {
+        PageMeta::set([], 'profile', 'An artist', 'https://x/artists.php?artist=1', 'https://x/play/art/abc123/artist/1/size600x600.png');
+
+        static::assertStringContainsString(
+            'og:image" content="https://x/play/art/abc123/artist/1/size600x600.png&amp;nosvg=1"',
+            PageMeta::render()
+        );
     }
 
     public function testAsksArtForTheRasterSinceAScraperRendersNoSvg(): void
@@ -79,6 +90,15 @@ class PageMetaTest extends TestCase
         static::assertStringContainsString('twitter:card', $html);
     }
 
+    public function testFallsBackToTheSiteDescriptionWhenTheObjectHasNone(): void
+    {
+        AmpConfig::set('site_description', 'A shared music server', true);
+
+        PageMeta::set([], 'website', 'A folder', 'https://x/folders.php?folder=1', 'https://x/image.php?object_id=1&object_type=folder&size=600x600');
+
+        static::assertStringContainsString('name="description" content="A shared music server"', PageMeta::render());
+    }
+
     public function testLeavesAnImageThatIsNotServedByArtAlone(): void
     {
         PageMeta::set([], 'music.album', 'An album', 'https://x/albums.php?album=1', 'https://x/themes/reborn/images/logo.png');
@@ -89,5 +109,10 @@ class PageMetaTest extends TestCase
     public function testRendersNothingWhenNoPageSetAnything(): void
     {
         static::assertSame('', PageMeta::render());
+    }
+
+    protected function tearDown(): void
+    {
+        AmpConfig::set('site_description', null, true);
     }
 }

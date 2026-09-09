@@ -57,8 +57,7 @@ class PlaylistAdd8MethodTest extends MockeryTestCase
 
         $this->modelFactory->shouldReceive('createPlaylist')->with(9)->once()->andReturn($source);
         $source->shouldReceive('isNew')->andReturn(false);
-        $source->type = 'private';
-        $source->shouldReceive('has_collaborate')->with($user)->andReturn(true);
+        $source->shouldReceive('isVisible')->with($user)->andReturn(true);
         $source->shouldReceive('get_songs')->andReturn([101, 102]);
 
         $target->shouldReceive('add_songs')->with([101, 102])->once()->andReturn(true);
@@ -95,13 +94,12 @@ class PlaylistAdd8MethodTest extends MockeryTestCase
 
         $this->modelFactory->shouldReceive('createPlaylist')->with(5)->once()->andReturn($target);
         $target->shouldReceive('has_collaborate')->with($user)->andReturn(true);
-        // the target must never receive the foreign list's songs
+        // the target must never receive the foreign list's songs once the source list is refused as private
         $target->shouldNotReceive('add_songs');
 
         $this->modelFactory->shouldReceive('createPlaylist')->with(9)->once()->andReturn($source);
         $source->shouldReceive('isNew')->andReturn(false);
-        $source->type = 'private';
-        $source->shouldReceive('has_collaborate')->with($user)->andReturn(false);
+        $source->shouldReceive('isVisible')->with($user)->andReturn(false);
 
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage('9');

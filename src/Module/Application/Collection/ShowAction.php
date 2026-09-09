@@ -73,7 +73,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->ui->showHeader();
             echo T_('You have requested an object that does not exist');
         } else {
-            // the header renders the meta, so the collection has to describe itself before it
+            // the header renders the meta, so the collection has to describe itself before it is shown
             $webPath = AmpConfig::get_web_path();
             PageMeta::set(
                 [],

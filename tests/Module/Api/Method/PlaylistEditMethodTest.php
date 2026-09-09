@@ -130,7 +130,7 @@ class PlaylistEditMethodTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        // the tell that the guard fired: the playlist is never written to
+        // the tell that the guard fired: the playlist is never written to when reassigning is refused
         $playlist->shouldReceive('update')->never();
 
         $this->expectException(AccessFailedException::class);

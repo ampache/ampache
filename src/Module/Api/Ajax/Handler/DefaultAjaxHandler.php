@@ -95,7 +95,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         array_map('intval', explode(',', $request_ids)),
                         static fn(int $object_id): bool => $object_id > 0
                     );
-                    $itemType = LibraryItemEnum::tryFrom($object_type);
+                    $itemType = LibraryItemEnum::fromObjectType($object_type);
                     if ($object_ids !== [] && $itemType instanceof LibraryItemEnum) {
                         $medias = [];
                         foreach ($object_ids as $object_id) {
@@ -104,11 +104,10 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 continue;
                             }
 
-                            // a private list you cannot see is not yours to expand into a playlist
+                            // a private list you cannot see is not yours to expand into the queue here
                             if (
                                 ($object instanceof Playlist || $object instanceof Search)
-                                && $object->type !== 'public'
-                                && !$object->has_collaborate($user)
+                                && !$object->isVisible($user)
                             ) {
                                 continue;
                             }

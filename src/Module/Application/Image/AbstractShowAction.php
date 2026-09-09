@@ -119,7 +119,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         // Naming them in the url gives one link that draws the same tile for everyone who opens it,
         // whatever their own settings are, and makes a tile reproducible while debugging.
         $forceGenerated = (filter_input(INPUT_GET, 'generate', FILTER_SANITIZE_NUMBER_INT) === '1');
-        // a caller that renders no svg says so, and a link preview scraper never renders one
+        // a caller that renders no svg says so, and a link preview scraper never renders one on its own
         $noSvg           = (filter_input(INPUT_GET, 'nosvg', FILTER_SANITIZE_NUMBER_INT) === '1');
         $previewMotif    = filter_input(INPUT_GET, 'preview', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
         $wantedTemplate  = filter_input(INPUT_GET, 'template', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);

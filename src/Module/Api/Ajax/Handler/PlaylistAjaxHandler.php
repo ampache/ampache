@@ -126,7 +126,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if (!empty($item_type) && InterfaceImplementationChecker::is_library_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', (string) $item_id);
-                    $itemType = LibraryItemEnum::tryFrom($item_type);
+                    $itemType = LibraryItemEnum::fromObjectType($item_type);
                     foreach ($item_ids as $iid) {
                         $libitem = ($itemType instanceof LibraryItemEnum)
                             ? $this->libraryItemLoader->load($itemType, (int) $iid)
@@ -134,11 +134,10 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         if (!$libitem instanceof container_item) {
                             continue;
                         }
-                        // a private list you cannot see is not yours to expand into a playlist
+                        // a private list you cannot see is not yours to expand into a playlist you can edit
                         if (
                             ($libitem instanceof Playlist || $libitem instanceof Search)
-                            && $libitem->type !== 'public'
-                            && !$libitem->has_collaborate($user)
+                            && !$libitem->isVisible($user)
                         ) {
                             continue;
                         }

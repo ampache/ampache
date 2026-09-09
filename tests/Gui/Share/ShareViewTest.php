@@ -36,7 +36,7 @@ class ShareViewTest extends TestCase
 
     public function testTheOpenGraphTypeFollowsTheSharedObject(): void
     {
-        // a share used to announce every object as a song, so an album preview claimed to be one
+        // a share used to announce every object as a song, so an album preview once claimed to be one too
         self::assertSame('music.album', $this->ogType('album'));
         self::assertSame('music.album', $this->ogType('album_disk'));
         self::assertSame('profile', $this->ogType('artist'));

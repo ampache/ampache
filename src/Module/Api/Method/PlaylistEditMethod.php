@@ -160,7 +160,7 @@ final class PlaylistEditMethod implements MethodInterface
             $owner  = $lookup->id ?? $playlist->user;
         }
 
-        // handing a list to somebody else is an admin's call, the way setting a play for them is
+        // handing a list's ownership to somebody else is an admin's call, not the current owner's to make
         if (
             (int) $owner !== (int) $playlist->user
             && !$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->getId())
