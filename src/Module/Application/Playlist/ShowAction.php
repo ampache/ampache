@@ -57,7 +57,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             (int) ($_REQUEST['playlist_id'] ?? 0)
         );
         if (!$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private')) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $count   = (int) $playlist->last_count;
             $url     = $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id;
             PageMeta::set(

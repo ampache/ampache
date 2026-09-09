@@ -53,7 +53,7 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
         $video = new Video((int) filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
 
         if (!$video->isNew()) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/video.php?action=show_video&video_id=' . $video->getId();
             PageMeta::set(
                 [

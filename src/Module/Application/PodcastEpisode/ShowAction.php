@@ -73,7 +73,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $shown      = !$episode->isNew() && in_array($episode->catalog, $catalogs);
 
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/podcast_episode.php?action=show&podcast_episode=' . $episode_id;
             PageMeta::set(
                 [

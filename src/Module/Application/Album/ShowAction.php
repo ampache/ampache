@@ -70,7 +70,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs));
 
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/albums.php?action=show&album=' . $albumId;
             PageMeta::set(
                 [

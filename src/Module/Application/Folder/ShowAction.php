@@ -84,7 +84,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 throw new AccessDeniedException('Access Denied: catalog filter');
             }
 
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             PageMeta::set(
                 [],
                 'website',

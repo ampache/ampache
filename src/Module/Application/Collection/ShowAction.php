@@ -74,7 +74,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             echo T_('You have requested an object that does not exist');
         } else {
             // the header renders the meta, so the collection has to describe itself before it is shown
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             PageMeta::set(
                 [],
                 'music.playlist',

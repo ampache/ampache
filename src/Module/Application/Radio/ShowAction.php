@@ -72,7 +72,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $shown    = !$radio->isNew() && in_array($radio->catalog, $catalogs);
 
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             PageMeta::set(
                 [(string) $radio->site_url, (string) $radio->codec],
                 'music.radio_station',

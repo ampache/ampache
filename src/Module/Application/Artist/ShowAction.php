@@ -75,7 +75,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $shown = !$artist->isNew();
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/artists.php?action=show&artist=' . $artistId;
             PageMeta::set(
                 [

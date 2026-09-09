@@ -68,7 +68,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs);
 
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId;
             PageMeta::set(
                 [

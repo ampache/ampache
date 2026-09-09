@@ -59,7 +59,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         $shown    = !$song->isNew() && in_array($song->catalog, $catalogs);
 
         if ($shown) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $license = $song->getLicense();
             PageMeta::set(
                 [

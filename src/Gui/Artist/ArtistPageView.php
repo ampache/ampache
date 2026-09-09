@@ -107,7 +107,7 @@ final class ArtistPageView extends AbstractView
     {
         $artist = $this->artist;
         $listed = $this->isAlbumType();
-        $base   = $this->getWebPath() . '/artists.php?artist=' . $this->getArtistId();
+        $base   = $this->getWebPath('/client') . '/artists.php?artist=' . $this->getArtistId();
 
         return new ObjectHeaderView(
             kind: T_('Artist'),
@@ -132,7 +132,7 @@ final class ArtistPageView extends AbstractView
                     : null,
                 ($artist->time > 0) ? new HeaderChip((string) $artist->get_f_time(), true, title: T_('Time')) : null,
             ),
-            tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath() . '/browse.php?action=tag&type=artist&show_tag='),
+            tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath('/client') . '/browse.php?action=tag&type=artist&show_tag='),
             rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist', true) : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getArtistId(), 'artist') : '',
             ratingKey: $this->getArtistId() . '_artist',

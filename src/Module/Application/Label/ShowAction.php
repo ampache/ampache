@@ -77,7 +77,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             : null;
 
         if ($label !== null) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/labels.php?action=show&label=' . $label->id;
             PageMeta::set(
                 [(string) $label->category, (string) $label->country, (string) $label->summary],
