@@ -139,6 +139,9 @@ if ($this->isUsingRatings()) { ?>
             </div>
         </td>
 <?php } ?>
+<?php if ($this->isShowAddDate()) { ?>
+    <td class="cel_add_date optional"><?php echo $this->e($song->getAdditionTime()); ?></td>
+<?php } ?>
     <td class="cel_action">
 <?php if ($song->canPostShout()) { ?>
         <a href="<?php echo $this->e($song->getPostShoutUrl()); ?>"><?php echo $this->raw($song->getPostShoutIcon()); ?></a>

@@ -96,18 +96,6 @@ class ApiOutputFactoryTest extends MockeryTestCase
         ];
     }
 
-    private function repositories(): array
-    {
-        return [
-            $this->mock(AlbumRepositoryInterface::class),
-            $this->mock(BookmarkRepositoryInterface::class),
-            $this->mock(LabelRepositoryInterface::class),
-            $this->mock(LicenseRepositoryInterface::class),
-            $this->mock(PodcastRepositoryInterface::class),
-            $this->mock(SongRepositoryInterface::class),
-        ];
-    }
-
     /**
      * Every formatter takes the same six repositories, so each one gets its own set of mocks
      *
@@ -120,6 +108,18 @@ class ApiOutputFactoryTest extends MockeryTestCase
      *     SongRepositoryInterface,
      * }
      */
+    private function repositories(): array
+    {
+        return [
+            $this->mock(AlbumRepositoryInterface::class),
+            $this->mock(BookmarkRepositoryInterface::class),
+            $this->mock(LabelRepositoryInterface::class),
+            $this->mock(LicenseRepositoryInterface::class),
+            $this->mock(PodcastRepositoryInterface::class),
+            $this->mock(SongRepositoryInterface::class),
+        ];
+    }
+
     /**
      * The version 3 builder takes only two
      *

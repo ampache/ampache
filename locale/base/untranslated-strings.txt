@@ -1,20 +1,4 @@
 
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
@@ -69,10 +53,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
 msgstr ""
 
 #: ./untranslated-strings.txt:134
@@ -149,10 +129,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:155
 msgid "ping"
-msgstr ""
-
-#: ./untranslated-strings.txt:256
-msgid "average"
 msgstr ""
 
 #: ./untranslated-strings.txt:260

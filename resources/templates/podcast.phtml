@@ -25,10 +25,9 @@ declare(strict_types=1);
 
 // podcast.phtml -- rendered by Ampache\Gui\Podcast\PodcastView
 
+use Ampache\Gui\Partial\ObjectHeaderView;
+use Ampache\Gui\Partial\ProseBlockView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Art\Art;
-use Ampache\Module\Statistics\Rating;
-use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 
@@ -39,30 +38,18 @@ $podcastId         = $podcast->getId();
 $websiteUrl        = $this->getWebsiteUrl();
 $updateFromFeedUrl = $this->getUpdateFromFeedUrl();
 
-Ui::show_box_top($this->e($this->getName()), 'info-box'); ?>
-<div class="item_right_info">
-    <?php Art::display('podcast', $podcastId, $this->getName(), $this->getArtSize(), null, true, false); ?>
-</div>
-<?php if ($podcast->get_description() !== '') { ?>
-<div id="item_summary">
-    <?php // the getter escapes, so the line breaks the feed supplied are all that is turned into markup here
-    echo $this->raw(nl2br($podcast->get_description())); ?>
-</div>
-<?php }
+Ui::show_box_top('', 'info-box'); ?>
+<div class="object-page">
+<?php echo $this->raw($this->getHeader()->render());
 
-if ($this->areRatingsShown()) { ?>
-    <span id="rating_<?php echo $this->e($podcastId); ?>_podcast">
-        <?php echo $this->raw(Rating::show($podcastId, 'podcast')); ?>
-    </span>
-    <span id="userflag_<?php echo $this->e($podcastId); ?>_podcast">
-        <?php echo $this->raw(Userflag::show($podcastId, 'podcast')); ?>
-    </span>
+if ($podcast->getDescription() !== '') { ?>
+<?php // the getter escapes, so the line breaks the feed supplied are all that is turned into markup here
+    echo $this->raw(ProseBlockView::fromText($podcast->getDescription(), 'podcast_summary_fold')->render()); ?>
 <?php } ?>
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
         <?php if ($this->isDirectPlayEnabled()) { ?>
-        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId, 'play_circle', T_('Play All'), 'directplay_full_' . $podcastId)); ?></li>
+        <li class="primary"><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcastId, 'play_circle', T_('Play All'), 'directplay_full_' . $podcastId)); ?></li>
         <?php }
 
         if ($this->isAutoplayNextEnabled()) { ?>
@@ -138,7 +125,9 @@ if ($this->mayDelete()) { ?>
             </a>
         </li>
         <?php } ?>
+        <?php echo $this->raw(ObjectHeaderView::actionsHelp()); ?>
     </ul>
+</div>
 </div>
 <?php Ui::show_box_bottom(); ?>
 <div class="tabs_wrapper">

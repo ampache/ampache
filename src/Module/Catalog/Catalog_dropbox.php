@@ -303,7 +303,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * check_remote_song
+     * check_remote_file
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
@@ -521,7 +521,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * insert_local_video
+     * insert_video
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot here
      * @throws DropboxClientException|Exception
@@ -777,7 +777,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * _insert_local_song
+     * insert_song
      *
      * Insert a song that isn't already in the database.
      * @throws DropboxClientException|Exception

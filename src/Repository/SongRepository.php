@@ -725,6 +725,48 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * The song ids of a set of albums, for warming a page that lists them
+     *
+     * @param array<int|string> $albumIds
+     * @return list<int>
+     */
+    public function getIdsByAlbums(array $albumIds): array
+    {
+        if ($albumIds === []) {
+            return [];
+        }
+
+        $user_id = Core::get_global('user')?->getId() ?? -1;
+        $sql     = sprintf('SELECT `song`.`id` FROM `song` WHERE `song`.`album` IN (%s)', implode(',', array_map(intval(...), $albumIds)));
+        if (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter')) {
+            $sql .= ' AND `song`.`catalog` IN (' . implode(',', Catalog::get_catalogs('', $user_id, true)) . ')';
+        }
+
+        return array_values(array_map(intval(...), $this->connection->query($sql)->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
+    /**
+     * The song ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array
+    {
+        if ($artistIds === []) {
+            return [];
+        }
+
+        $user_id = Core::get_global('user')?->getId();
+        $sql     = sprintf("SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` IN (%s) AND `artist_map`.`object_type` = 'song'", implode(',', array_map(intval(...), $artistIds)));
+        if (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter')) {
+            $sql .= ' AND `song`.`catalog` IN (' . implode(',', Catalog::get_catalogs('', $user_id, true)) . ')';
+        }
+
+        return array_values(array_map(intval(...), $this->connection->query($sql)->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
+    /**
      * Reads the ids of every song of one catalog, enabled or not
      *
      * @return list<int>
@@ -965,6 +1007,34 @@ final readonly class SongRepository implements SongRepositoryInterface
         $values = [];
         while ($value = $result->fetchColumn()) {
             $values[] = (string) $value;
+        }
+
+        return $values;
+    }
+
+    /**
+     * The song_map values of a set of songs, read in one go
+     *
+     * @param list<int> $songIds
+     * @return array<int, list<string>>
+     */
+    public function getSongMapValuesBulk(array $songIds, string $objectType): array
+    {
+        if ($songIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT DISTINCT `song_id`, `object_id` FROM `song_map` WHERE `object_type` = ? AND `song_id` IN (%s)',
+                implode(',', array_fill(0, count($songIds), '?'))
+            ),
+            array_merge([$objectType], $songIds)
+        );
+
+        $values = array_fill_keys($songIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $values[(int) $row['song_id']][] = (string) $row['object_id'];
         }
 
         return $values;

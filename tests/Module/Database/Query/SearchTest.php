@@ -35,6 +35,20 @@ use Psr\Log\LoggerInterface;
 class SearchTest extends MockeryTestCase
 {
     /**
+     * @return list<array{0: string, 1: string}>
+     */
+    public static function maliciousOperatorProvider(): array
+    {
+        return [
+            'and stays and' => ['and', 'and'],
+            'or stays or' => ['or', 'or'],
+            'uppercase or' => ['OR', 'or'],
+            'injection collapses' => ['AND (SELECT 1)-- -', 'and'],
+            'garbage collapses' => ['x', 'and'],
+        ];
+    }
+
+    /**
      * rule names the search form offers that get_rule_type_by_name() once failed to resolve, with their basetype
      *
      * @return list<array{string, string}>
@@ -91,16 +105,35 @@ class SearchTest extends MockeryTestCase
         ];
     }
 
-    /**
-     * set_rules() drops a rule whose name does not resolve, so an unresolvable name makes the search return every
-     * object instead of a filtered list
-     */
     #[DataProvider('ruleNameProvider')]
     public function testEveryOfferedRuleNameResolvesToItsBaseType(string $rule, string $expected): void
     {
         $search = new Search(0, 'song');
 
         $this->assertSame($expected, $search->get_rule_type_by_name($rule), sprintf('rule "%s" does not resolve and would be dropped', $rule));
+    }
+
+    #[DataProvider('maliciousOperatorProvider')]
+    public function testNormalizeLogicOperatorOnlyEverYieldsAndOrOr(string $operator, string $expected): void
+    {
+        // the shared normaliser is what update() applies too; anything but "or" must become "and"
+        $method = new \ReflectionMethod(Search::class, 'normalizeLogicOperator');
+
+        self::assertSame($expected, $method->invoke(null, $operator));
+    }
+
+    /**
+     * set_rules() drops a rule whose name does not resolve, so an unresolvable name makes the search return every
+     * object instead of a filtered list
+     */
+    #[DataProvider('maliciousOperatorProvider')]
+    public function testSetRulesNeutralisesTheLogicOperator(string $operator, string $expected): void
+    {
+        // the operator glues the where conditions together, so anything but "or" must collapse to "and"
+        $search = new Search(0, 'song');
+        $search->set_rules(['operator' => $operator]);
+
+        self::assertSame($expected, $search->logic_operator);
     }
 
     /**

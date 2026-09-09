@@ -52,9 +52,6 @@ final readonly class UploadAction implements ApplicationActionInterface
 
         define('TABLE_RENDERED', 1);
 
-        // Temporary workaround to avoid sorting on custom base requests
-        define('NO_BROWSE_SORTING', true);
-
         $this->ui->showBoxTop(T_('Uploads'));
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $browse  = $this->browseFactory->create();
@@ -62,6 +59,8 @@ final readonly class UploadAction implements ApplicationActionInterface
             'song',
             Catalog::get_uploads_sql('song', $user_id)
         );
+        $browse->set_sort('title', 'ASC', false);
+        $browse->set_show_columns(['cel_add_date']);
         $browse->set_simple_browse(true);
         $browse->show_objects();
         $browse->store();
@@ -71,6 +70,7 @@ final readonly class UploadAction implements ApplicationActionInterface
             'album',
             Catalog::get_uploads_sql('album', $user_id)
         );
+        $browse->set_sort('name', 'ASC', false);
         $browse->set_simple_browse(true);
         $browse->show_objects();
         $browse->store();
@@ -81,6 +81,7 @@ final readonly class UploadAction implements ApplicationActionInterface
                 'artist',
                 Catalog::get_uploads_sql('artist', $user_id)
             );
+            $browse->set_sort('name', 'ASC', false);
             $browse->set_simple_browse(true);
             $browse->show_objects();
             $browse->store();

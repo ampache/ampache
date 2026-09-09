@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -59,13 +61,21 @@ final class Playlist3Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $uid = scrub_in((string) $input['filter']);
+        $uid      = scrub_in((string) $input['filter']);
+        $playlist = ((int) $uid === 0)
+            ? new Search((int) str_replace('smart_', '', $uid), 'song', $user)
+            : new Playlist((int) $uid);
+
+        // a private list you neither own nor collaborate on is not yours to read
+        $ids = ($playlist->isNew() || $playlist->type === 'public' || $playlist->has_collaborate($user))
+            ? [$uid]
+            : [];
 
         ob_end_clean();
 
         return $response->withBody(
             $this->streamFactory->createStream(
-                $output->playlists($apiVersion, [$uid], $user, $input['auth'])
+                $output->playlists($apiVersion, $ids, $user, $input['auth'])
             )
         );
     }

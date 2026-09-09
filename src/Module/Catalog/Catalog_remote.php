@@ -961,7 +961,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * update_remote_catalog
+     * _update_remote_catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
      */

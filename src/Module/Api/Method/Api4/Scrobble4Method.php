@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -127,6 +128,12 @@ final class Scrobble4Method implements MethodInterface
         } else {
             $item = new Song((int) $scrobble_id);
             if ($item->isNew()) {
+                Api4::message('error', 'Library item not found', '404', $input['api_format']);
+
+                return $response;
+            }
+            // a catalog you are filtered from is not yours to record against
+            if (!Catalog::has_access($item->getCatalogId(), $user_id)) {
                 Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
                 return $response;

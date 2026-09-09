@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -56,6 +57,10 @@ final readonly class ShowAction extends AbstractGraphRendererAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if (!$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+            throw new AccessDeniedException();
+        }
+
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
@@ -63,16 +68,14 @@ final readonly class ShowAction extends AbstractGraphRendererAction
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
+        $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
 
-            echo $this->guiFactory->createStatsViewAdapter()->render();
+        echo $this->guiFactory->createStatsViewAdapter()->render();
 
-            $this->ui->showBoxBottom();
+        $this->ui->showBoxBottom();
 
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)) {
-                $this->renderGraph($gatekeeper);
-            }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)) {
+            $this->renderGraph($gatekeeper);
         }
 
         show_table_render(false, true);

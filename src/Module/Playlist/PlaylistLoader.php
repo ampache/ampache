@@ -27,25 +27,23 @@ namespace Ampache\Module\Playlist;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\PlaylistRepositoryInterface;
 
 final readonly class PlaylistLoader implements PlaylistLoaderInterface
 {
-    public function __construct(private ModelFactoryInterface $modelFactory) {}
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private PlaylistRepositoryInterface $playlistRepository,
+    ) {}
 
     public function loadByUserId(int $userId): array
     {
+        $playlistIds = $this->playlistRepository->findEditableIds($userId);
+        Playlist::build_cache($playlistIds);
+
         $result = [];
-
-        $playlists = Playlist::get_playlists($userId);
-        Playlist::build_cache($playlists);
-
-        $user = $this->modelFactory->createUser($userId);
-
-        foreach ($playlists as $playlist_id) {
-            $playlist = $this->modelFactory->createPlaylist($playlist_id);
-            if ($playlist->has_collaborate($user)) {
-                $result[] = $playlist;
-            }
+        foreach ($playlistIds as $playlistId) {
+            $result[] = $this->modelFactory->createPlaylist($playlistId);
         }
 
         return $result;

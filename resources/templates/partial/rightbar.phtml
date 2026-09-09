@@ -54,7 +54,7 @@ $items = $this->getItems(); ?>
     <?php } ?>
     <?php if ($this->mayBatchDownload()) { ?>
     <li>
-        <a class="nohtml" href="<?php echo $this->e($this->getBatchUrl()); ?>">
+        <a class="nohtml" rel="nofollow" href="<?php echo $this->e($this->getBatchUrl()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('folder_zip', T_('Batch download'))); ?>
         </a>
     </li>

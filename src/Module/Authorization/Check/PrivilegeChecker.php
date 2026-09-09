@@ -77,11 +77,10 @@ final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
         }
 
         // Switch on the type
+        // localplay callers pass the required level themselves (a fixed one, or `localplay_level`), so it is
+        // gated on the user's own access, exactly like the interface. the old test compared the config to itself
         return match ($type) {
-            AccessTypeEnum::LOCALPLAY => (
-                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value
-                || $user->access >= AccessLevelEnum::ADMIN->value
-            ),
+            AccessTypeEnum::LOCALPLAY,
             AccessTypeEnum::INTERFACE => ($user->access >= $level->value),
             default => false,
         };

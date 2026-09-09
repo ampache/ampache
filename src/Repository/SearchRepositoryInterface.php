@@ -41,6 +41,14 @@ interface SearchRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function delete(Search $search): void;
 
     /**
+     * Reads whole search rows for the in-request cache
+     *
+     * @param array<int|string> $searchIds
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $searchIds): array;
+
+    /**
      * Stores a new saved search and returns its id, or null when nothing was written
      */
     public function insert(Search $search, User $user, int $time): ?int;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\FolderRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -85,6 +86,24 @@ class FolderTest extends TestCase
         self::assertSame([], $subject->get_children('some-name'));
     }
 
+    public function testGetDisplayEscapesTheNameInTheLink(): void
+    {
+        // a folder name is a directory name from the catalog, so it carries whatever the filesystem holds
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame(
+            '<a href="https://music.example/folders.php?action=show&folder=7" title="a&quot;b">a&quot;b</a>',
+            Folder::get_display([7 => 'a"b'], true)
+        );
+    }
+
+    public function testGetDisplayLeavesThePlainFormUnescaped(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        self::assertSame('Éditions & Co', Folder::get_display([7 => 'Éditions & Co']));
+    }
+
     public function testGetFLinkClosesTheAnchor(): void
     {
         $subject = new Folder();
@@ -97,6 +116,24 @@ class FolderTest extends TestCase
             '<a href="some-link" title="some-name">some-name</a>',
             $subject->get_f_link()
         );
+    }
+
+    public function testGetFTimeDropsTheHourWhenZero(): void
+    {
+        $subject = new Folder();
+
+        $subject->time = 65; // 1:05
+
+        self::assertSame('1:05', $subject->get_f_time());
+    }
+
+    public function testGetFTimeFormatsHoursMinutesSeconds(): void
+    {
+        $subject = new Folder();
+
+        $subject->time = 3725; // 1:02:05
+
+        self::assertSame('1:02:05', $subject->get_f_time());
     }
 
     public function testGetMediasDelegatesWithTheFilterType(): void

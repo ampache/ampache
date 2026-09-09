@@ -346,6 +346,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         bool $isHideAlbum,
         bool $isHideYear,
         bool $isHideDrag,
+        bool $isShowAddDate = false,
     ): SongRowView {
         return new SongRowView(
             $this->createSongViewAdapter($gatekeeper, $song),
@@ -362,7 +363,8 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $isHideArtist,
             $isHideAlbum,
             $isHideYear,
-            $isHideDrag
+            $isHideDrag,
+            $isShowAddDate
         );
     }
 

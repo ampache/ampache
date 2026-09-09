@@ -1436,10 +1436,10 @@ Kick off a catalog update or clean for the selected catalog
 
 **NOTE** `filter` is available in Ampache 7.9.0 and higher. `catalog` is deprecated and will be removed in **API9**.
 
-| Input    | Type   | Description                       | Optional |
-|----------|--------|-----------------------------------|---------:|
-| 'task'   | string | `add_to_catalog`, `clean_catalog` |       NO |
-| 'filter' | string | $catalog_id                       |       NO |
+| Input    | Type   | Description                                                                                                                    | Optional |
+|----------|--------|--------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'task'   | string | `add_to_catalog`, `clean_catalog`, `verify_catalog`, `update_catalog`, `gather_art`, `garbage_collect`, `scan_catalog_folders` |       NO |
+| 'filter' | string | $catalog_id                                                                                                                    |       NO |
 
 * return object
 
@@ -6408,6 +6408,7 @@ The folder that was browsed, and its children. `parent` is the id of the folder 
 | parent  | string                                             |   YES    |    NO    |                                                  |
 | path    | string                                             |   YES    |    NO    |                                                  |
 | catalog | string                                             |    NO    |    NO    |                                                  |
+| time    | integer                                            |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
 ### GenreReference

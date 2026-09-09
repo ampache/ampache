@@ -26,6 +26,7 @@ declare(strict_types=1);
 use Ampache\Module\Application\Admin\Shout\DeleteAction;
 use Ampache\Module\Application\Admin\Shout\EditShoutAction;
 use Ampache\Module\Application\Admin\Shout\ShowAction;
+use Ampache\Module\Application\Admin\Shout\ShowDeleteAction;
 use Ampache\Module\Application\Admin\Shout\ShowEditAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -39,6 +40,7 @@ $dic->get(ApplicationRunner::class)->run(
     [
         ShowAction::REQUEST_KEY => ShowAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         EditShoutAction::REQUEST_KEY => EditShoutAction::class,
     ],

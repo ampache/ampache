@@ -34,6 +34,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -134,6 +135,14 @@ final class RecordPlay5Method implements MethodInterface
 
         $media = $this->modelFactory->createSong($object_id);
         if ($media->isNew()) {
+            throw new ResultEmptyException(
+                (string) $object_id,
+                'id'
+            );
+        }
+
+        // a catalog you are filtered from is not yours to record against
+        if (!Catalog::has_access($media->getCatalogId(), $user->id)) {
             throw new ResultEmptyException(
                 (string) $object_id,
                 'id'

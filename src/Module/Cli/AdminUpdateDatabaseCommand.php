@@ -205,7 +205,7 @@ final class AdminUpdateDatabaseCommand extends Command
                 );
             } else {
                 $interactor->info(
-                    T_('No update needed'),
+                    T_('No Update Needed'),
                     true
                 );
             }

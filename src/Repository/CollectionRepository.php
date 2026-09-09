@@ -361,11 +361,12 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
     /**
      * Store the position of one member, addressed by its `collection_map` row
      */
-    public function setTrackNumber(int $mapId, int $track): void
+    public function setTrackNumber(int $mapId, int $track, int $collectionId): void
     {
+        // scope to the caller's own collection, so a map row id alone can't reorder someone else's members
         $this->connection->query(
-            'UPDATE `collection_map` SET `track` = ? WHERE `id` = ?;',
-            [$track, $mapId]
+            'UPDATE `collection_map` SET `track` = ? WHERE `id` = ? AND `collection` = ?;',
+            [$track, $mapId, $collectionId]
         );
     }
 

@@ -28,7 +28,6 @@ namespace Ampache\Gui\Playback;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Broadcast\Broadcast_Server;
-use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use JsonException;
@@ -155,14 +154,6 @@ final class WebPlayerHeadersView extends AbstractView
     public function getSiteTitleJs(): string
     {
         return $this->toJs($this->getSiteTitle());
-    }
-
-    /**
-     * @throws JsonException
-     */
-    public function getStreamSessionJs(): string
-    {
-        return $this->toJs(Stream::get_session());
     }
 
     /**

@@ -83,7 +83,7 @@ if ($this->isShowRatings()) { ?>
         <td class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $itemId; ?>_artist">
-                    <?php echo $this->raw(Rating::show($itemId, 'artist')); ?>
+                    <?php echo $this->raw(Rating::show($itemId, 'artist', true)); ?>
                 </span>
                 <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_artist">
                     <?php echo $this->raw(Userflag::show($itemId, 'artist')); ?>

@@ -99,7 +99,8 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
         $statements = [
             'DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE (`user_preference`.`user` != -1 AND `user`.`id` IS NULL) OR `preference` = 0;',
             "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';",
-            'UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;',
+            // update only when there is a change. <=> is the "NULL-safe equal to" operator
+            'UPDATE `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` SET `user_preference`.`name` = `preference`.`name` WHERE NOT (`user_preference`.`name` <=> `preference`.`name`);',
         ];
 
         foreach ($statements as $sql) {

@@ -129,7 +129,7 @@ final class AdminSidebarView extends AbstractSidebarView
             $items[] = ['id' => 'sb_admin_ot_ManageShoutbox', 'url' => '/shout.php', 'label' => T_('Manage Shoutbox')];
         }
 
-        $items[] = ['id' => 'sb_admin_ot_ClearNowPlaying', 'url' => '/catalog.php?action=clear_now_playing', 'label' => T_('Clear Now Playing')];
+        $items[] = ['id' => 'sb_admin_ot_ClearNowPlaying', 'url' => '/catalog.php?action=show_clear_now_playing', 'label' => T_('Clear Now Playing')];
 
         return $items;
     }
