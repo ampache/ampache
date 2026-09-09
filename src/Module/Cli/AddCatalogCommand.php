@@ -37,7 +37,7 @@ final class AddCatalogCommand extends Command
         parent::__construct('run:addCatalog', T_('Create a local media catalog'));
 
         $this
-            ->argument('[catalogName]', T_('Catalog name'))
+            ->argument('[catalogName]', T_('Catalog Name'))
             ->argument('[catalogPath]', T_('Path'))
             ->argument('[mediaType]', T_('Catalog Media Type (optional)') . " ('music', 'video', 'podcast')", 'music')
             ->argument('[filePattern]', T_('Filename Pattern (optional)'), '%T - %t')

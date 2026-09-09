@@ -84,7 +84,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
         $artist = $this->artistName($album);
 
         return new Recipe(
-            label: T_('ALBUM'),
+            label: mb_strtoupper(T_('Album')),
             name: $name,
             subtitle: mb_strtoupper($artist),
             motif: 'record',
@@ -107,7 +107,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
         }
 
         return new Recipe(
-            label: T_('ARTIST'),
+            label: mb_strtoupper(T_('Artist')),
             name: $name,
             subtitle: '',
             motif: 'medallion',
@@ -138,7 +138,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
         }
 
         return new Recipe(
-            label: T_('PLAYLIST'),
+            label: mb_strtoupper(T_('Playlist')),
             name: $name,
             subtitle: $subtitle,
             motif: 'tracklist',
@@ -173,7 +173,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
         $seed   = ($artist !== '') ? $artist : $name;
 
         return new Recipe(
-            label: T_('SONG'),
+            label: mb_strtoupper(T_('Song')),
             name: $name,
             subtitle: $artist,
             motif: 'waveform',

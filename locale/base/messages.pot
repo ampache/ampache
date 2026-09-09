@@ -1123,9 +1123,6 @@ msgstr ""
 msgid "Edit Instance"
 msgstr ""
 
-msgid "Are you sure?"
-msgstr ""
-
 msgid "Localplay Control"
 msgstr ""
 
@@ -1251,9 +1248,6 @@ msgid "Number of Users"
 msgstr ""
 
 msgid "Number of Catalogs"
-msgstr ""
-
-msgid "Filter name"
 msgstr ""
 
 msgid "Users"
@@ -3337,9 +3331,6 @@ msgstr ""
 msgid "A new License has been created"
 msgstr ""
 
-msgid "Create license"
-msgstr ""
-
 #, php-format
 msgid "This will permanently delete the license \"%s\""
 msgstr ""
@@ -3889,23 +3880,11 @@ msgstr ""
 msgid "local_metadata_dir setting is required to store art on disk"
 msgstr ""
 
-msgid "ALBUM"
-msgstr ""
-
-msgid "ARTIST"
-msgstr ""
-
 #, php-format
 msgid "%d track"
 msgid_plural "%d tracks"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "PLAYLIST"
-msgstr ""
-
-msgid "SONG"
-msgstr ""
 
 msgid "Dark"
 msgstr ""
@@ -4374,9 +4353,6 @@ msgstr ""
 msgid "Create a local media catalog"
 msgstr ""
 
-msgid "Catalog name"
-msgstr ""
-
 msgid "Catalog Media Type (optional)"
 msgstr ""
 
@@ -4572,9 +4548,6 @@ msgstr ""
 msgid ""
 "Your database version is higher than the Ampache version. Use -e|--execute "
 "to rollback"
-msgstr ""
-
-msgid "No update needed"
 msgstr ""
 
 msgid "Update Plugins automatically"
