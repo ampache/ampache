@@ -122,6 +122,7 @@ final class PlaylistEditMethod implements MethodInterface
         $hasAccess = $playlist->has_access($user);
         $hasCollab = $playlist->has_collaborate($user);
 
+        // has_collaborate allows reordering, but only an owner or admin may edit the metadata below; refuse before any reorder is applied
         if (
             !$hasAccess
             && (isset($input['name']) || isset($input['type']) || isset($input['owner']) || isset($input['sort']))
@@ -144,8 +145,7 @@ final class PlaylistEditMethod implements MethodInterface
             }
         }
 
-        // No metadata field reached this point, per the guard above, so a collaborator with no reorder either
-        // has nothing to do or sent a malformed request
+        // No metadata field reached this point, per the guard above, so a collaborator with no reorder either has nothing to do or sent a malformed request
         if (!$hasAccess) {
             if ($changeMade) {
                 $response->getBody()->write(
