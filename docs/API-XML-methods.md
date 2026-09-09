@@ -6991,7 +6991,7 @@ The folder that was browsed, and its children. `parent` is the id of the folder 
 | parent  | string                                             |   YES    |    NO    |                                                  |
 | path    | string                                             |   YES    |    NO    |                                                  |
 | catalog | string                                             |    NO    |    NO    |                                                  |
-| time    | integer                                            |    NO    |    NO    | The summed duration, in seconds, of everything below this folder, subfolders included |
+| time    | integer                                            |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
 ### GenreReference
