@@ -97,6 +97,8 @@ interface FolderViewAdapterInterface
 
     public function getSongCount(): ?int;
 
+    public function getTime(): string;
+
     public function getUserFlags(): string;
 
     public function isEditable(): bool;

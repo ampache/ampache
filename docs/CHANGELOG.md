@@ -25,6 +25,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Database 810010
   * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
+* A `Time` column on the folder browse, next to `# Items`
 * A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
 * Config version 99
   * New `album_grouping_fields` option controlling which fields decide whether two songs share an album row, so pressings that only differ by `barcode`/`catalog_number`/`version` (or any other field) can be grouped together instead of split into separate albums

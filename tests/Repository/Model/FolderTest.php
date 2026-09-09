@@ -118,6 +118,24 @@ class FolderTest extends TestCase
         );
     }
 
+    public function testGetFTimeDropsTheHourWhenZero(): void
+    {
+        $subject = new Folder();
+
+        $subject->time = 65; // 1:05
+
+        self::assertSame('1:05', $subject->get_f_time());
+    }
+
+    public function testGetFTimeFormatsHoursMinutesSeconds(): void
+    {
+        $subject = new Folder();
+
+        $subject->time = 3725; // 1:02:05
+
+        self::assertSame('1:02:05', $subject->get_f_time());
+    }
+
     public function testGetMediasDelegatesWithTheFilterType(): void
     {
         $subject = new Folder();
