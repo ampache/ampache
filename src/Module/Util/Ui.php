@@ -34,6 +34,7 @@ use Ampache\Gui\Partial\BoxBottomView;
 use Ampache\Gui\Partial\BoxTopView;
 use Ampache\Gui\Partial\FooterView;
 use Ampache\Gui\Partial\HeaderView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Partial\RightbarView;
 use Ampache\Gui\Preferences\PreferenceBoxView;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
@@ -654,7 +655,9 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        echo self::branding_tags();
+        $pageMeta = PageMeta::render();
+        echo self::branding_tags($pageMeta === '');
+        echo $pageMeta;
     }
 
     /**
@@ -925,8 +928,10 @@ class Ui implements UiInterface
      * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
      * works; where a raster is required and only a vector was given, the tag is left out rather
      * than filled with somebody else's logo.
+     *
+     * @param bool $withSocialCard false when the page already described its own object through PageMeta
      */
-    private static function branding_tags(): string
+    private static function branding_tags(bool $withSocialCard): string
     {
         $webPath = AmpConfig::get_web_path();
         $custom  = trim((string) AmpConfig::get('custom_favicon', ''));
@@ -953,26 +958,30 @@ class Ui implements UiInterface
 
         // a shared link always shows something: the shipped card stands in when nothing usable was
         // supplied, since Ampache's artwork beats the stray page image a scraper settles on
-        $supplied = trim((string) AmpConfig::get('custom_share_image', ''));
-        $square   = ($supplied === '' && $custom !== '' && !$vector);
-        $share    = $supplied ?: (($square) ? $custom : $webPath . '/ampache-card.png');
+        if ($withSocialCard) {
+            $supplied = trim((string) AmpConfig::get('custom_share_image', ''));
+            $square   = ($supplied === '' && $custom !== '' && !$vector);
+            $share    = $supplied ?: (($square) ? $custom : $webPath . '/ampache-card.png');
 
-        $tags[] = '<meta property="og:image" content="' . self::esc(self::absolute($share)) . '">';
-        // a favicon standing in for the wide artwork would be cropped by the banner card
-        $tags[] = '<meta name="twitter:card" content="' . (($square) ? 'summary' : 'summary_large_image') . '">';
+            $tags[] = '<meta property="og:image" content="' . self::esc(self::absolute($share)) . '">';
+            // a favicon standing in for the wide artwork would be cropped by the banner card format
+            $tags[] = '<meta name="twitter:card" content="' . (($square) ? 'summary' : 'summary_large_image') . '">';
+        }
 
         $title = trim((string) AmpConfig::get('site_title', ''));
         if ($title !== '') {
             $tags[] = '<meta property="og:site_name" content="' . self::esc($title) . '">';
         }
 
-        $description = trim((string) AmpConfig::get('site_description', ''));
-        if ($description !== '') {
-            $tags[] = '<meta name="description" content="' . self::esc($description) . '">';
-            $tags[] = '<meta property="og:description" content="' . self::esc($description) . '">';
-        }
+        if ($withSocialCard) {
+            $description = trim((string) AmpConfig::get('site_description', ''));
+            if ($description !== '') {
+                $tags[] = '<meta name="description" content="' . self::esc($description) . '">';
+                $tags[] = '<meta property="og:description" content="' . self::esc($description) . '">';
+            }
 
-        $tags[] = '<meta property="og:type" content="website">';
+            $tags[] = '<meta property="og:type" content="website">';
+        }
 
         return implode("\n", $tags) . "\n";
     }

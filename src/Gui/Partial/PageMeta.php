@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Config\AmpConfig;
+
 /**
  * What the page's <head> says about the object it shows: description, Open Graph and schema.org.
  * An action sets it before the header renders; pages that set nothing emit nothing.
@@ -73,9 +75,11 @@ final class PageMeta
 
         $e   = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES);
         $out = [];
-        if ($meta->description !== '') {
-            $out[] = '<meta name="description" content="' . $e($meta->description) . '">';
-            $out[] = '<meta property="og:description" content="' . $e($meta->description) . '">';
+        // An object with nothing of its own to say still gets a description, falling back to the site-wide one
+        $description = ($meta->description !== '') ? $meta->description : trim((string) AmpConfig::get('site_description', ''));
+        if ($description !== '') {
+            $out[] = '<meta name="description" content="' . $e($description) . '">';
+            $out[] = '<meta property="og:description" content="' . $e($description) . '">';
         }
 
         $out[] = '<meta property="og:type" content="' . $e($meta->ogType) . '">';
@@ -85,7 +89,13 @@ final class PageMeta
         }
 
         if ($meta->image !== '') {
-            $out[] = '<meta property="og:image" content="' . $e($meta->image) . '">';
+            // Both the direct route and its beautified `stream_beautiful_url` rewrite reach the same art
+            // handler, and only that handler can generate an svg placeholder a scraper cannot render.
+            $imagePath   = (string) parse_url($meta->image, PHP_URL_PATH);
+            $servedByArt = str_ends_with($imagePath, '/image.php') || str_contains($imagePath, '/play/art/');
+            $image       = ($servedByArt) ? $meta->image . '&nosvg=1' : $meta->image;
+
+            $out[] = '<meta property="og:image" content="' . $e($image) . '">';
             $out[] = '<meta name="twitter:card" content="summary">';
         }
 

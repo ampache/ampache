@@ -119,9 +119,11 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         // Naming them in the url gives one link that draws the same tile for everyone who opens it,
         // whatever their own settings are, and makes a tile reproducible while debugging.
         $forceGenerated = (filter_input(INPUT_GET, 'generate', FILTER_SANITIZE_NUMBER_INT) === '1');
-        $previewMotif   = filter_input(INPUT_GET, 'preview', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
-        $wantedTemplate = filter_input(INPUT_GET, 'template', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
-        $wantedTemplate = is_string($wantedTemplate) ? $wantedTemplate : null;
+        // a caller that renders no svg says so, and a link preview scraper never renders one on its own
+        $noSvg           = (filter_input(INPUT_GET, 'nosvg', FILTER_SANITIZE_NUMBER_INT) === '1');
+        $previewMotif    = filter_input(INPUT_GET, 'preview', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
+        $wantedTemplate  = filter_input(INPUT_GET, 'template', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE);
+        $wantedTemplate  = is_string($wantedTemplate) ? $wantedTemplate : null;
 
         // the preferences page shows one of these beside every template, so a listener can see a design
         // before picking it rather than choosing a name out of a list
@@ -196,7 +198,8 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 // A drawn tile at least says which item is missing its cover, where one shared placeholder
                 // turns a whole grid into the same picture. Nothing is stored: the svg is rebuilt per request.
                 $generated = (
-                    ($forceGenerated || $this->generatedArt->isEnabled())
+                    !$noSvg
+                    && ($forceGenerated || $this->generatedArt->isEnabled())
                     && (empty($defaultimg) || $forceGenerated)
                 )
                     ? $this->generatedArt->render(
@@ -228,7 +231,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
                 // the closest pre-rendered file, so a 200x200 slot is not handed the 1400x1400 original
                 $suffix     = ($has_size) ? Art::fallback_size($size) : '';
-                $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
+                $filename   = Art::fallback_image_name($type);
                 $defaultimg = $rootimg . $filename . $suffix . ".png";
                 $etag       = "EmptyMediaAlbum" . $suffix;
                 $image      = file_get_contents($defaultimg);

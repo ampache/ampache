@@ -386,14 +386,6 @@ class Collection extends playlist_object
     }
 
     /**
-     * Whether the user may see this collection at all; a collaborator counts, they are invited to curate it.
-     */
-    public function isVisible(?User $user = null): bool
-    {
-        return ($this->type === 'public' || $this->has_collaborate($user));
-    }
-
-    /**
      * Renumber the members from 1 so the positions stay dense
      */
     public function regenerate_track_numbers(): void

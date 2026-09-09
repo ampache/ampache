@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
+use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +35,7 @@ use Psr\Log\LoggerInterface;
 class ShareCreatorTest extends TestCase
 {
     private LoggerInterface&MockObject $logger;
+    private ModelFactoryInterface&MockObject $modelFactory;
     private PluginRetrieverInterface&MockObject $pluginRetriever;
     private ShareCreator $subject;
 
@@ -94,14 +98,51 @@ class ShareCreatorTest extends TestCase
         self::assertNull($result);
     }
 
+    public function testCreateReturnsNullWhenSharingAPrivateListYouCannotSee(): void
+    {
+        $user     = $this->createMock(User::class);
+        $playlist = $this->createMock(Playlist::class);
+
+        $this->modelFactory->method('createPlaylist')
+            ->with(42)
+            ->willReturn($playlist);
+        $playlist->method('isVisible')
+            ->with($user)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->create($user, LibraryItemEnum::PLAYLIST, 42)
+        );
+    }
+
+    public function testCreateReturnsNullWhenSharingAPrivateSmartlistYouCannotSee(): void
+    {
+        $user      = $this->createMock(User::class);
+        $smartlist = $this->createMock(Smartlist::class);
+
+        // a saved search is loaded as a smartlist, since the id alone cannot say what it was searching for
+        $this->modelFactory->method('createSmartlist')
+            ->with(42)
+            ->willReturn($smartlist);
+        $smartlist->method('isVisible')
+            ->with($user)
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->create($user, LibraryItemEnum::SEARCH, 42)
+        );
+    }
+
     protected function setUp(): void
     {
         $this->pluginRetriever = $this->createMock(PluginRetrieverInterface::class);
         $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new ShareCreator(
             $this->pluginRetriever,
             $this->logger,
+            $this->modelFactory,
         );
     }
 }

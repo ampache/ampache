@@ -27,11 +27,11 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -52,6 +53,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private SongRepositoryInterface $songRepository,
         private UiInterface $ui,
         private BrowseFactoryInterface $browseFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {}
 
     public function handle(User $user): void
@@ -93,12 +95,23 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         array_map('intval', explode(',', $request_ids)),
                         static fn(int $object_id): bool => $object_id > 0
                     );
-                    if ($object_ids !== []) {
-                        $className = ObjectTypeToClassNameMapper::map($object_type);
-                        $medias    = [];
+                    $itemType = LibraryItemEnum::fromObjectType($object_type);
+                    if ($object_ids !== [] && $itemType instanceof LibraryItemEnum) {
+                        $medias = [];
                         foreach ($object_ids as $object_id) {
-                            /** @var container_item $object */
-                            $object = new $className($object_id);
+                            $object = $this->libraryItemLoader->load($itemType, $object_id);
+                            if (!$object instanceof container_item) {
+                                continue;
+                            }
+
+                            // a private list you cannot see is not yours to expand into the queue here
+                            if (
+                                ($object instanceof Playlist || $object instanceof Search)
+                                && !$object->isVisible($user)
+                            ) {
+                                continue;
+                            }
+
                             $medias = array_merge($medias, $object->get_medias());
                         }
 
