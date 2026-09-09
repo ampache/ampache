@@ -22,6 +22,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * Needs JavaScript and Web Workers: it stops crawlers, not a determined attacker, so pair it with a rate limit
 * Database 810001
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
+* Database 810010
+  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
 * A `Time` column on the playlist browse, next to `# Items`, sortable via `last_duration`
 * Config version 99

@@ -1574,6 +1574,7 @@ final class Json8_Data
             "parent" => ($parentId === null) ? null : (string) $parentId,
             "path" => $folder->path_name,
             "catalog" => (string) $folder->catalog,
+            "time" => $folder->time,
             "items" => []
         ];
         foreach ($objects as $item) {
@@ -1650,6 +1651,7 @@ final class Json8_Data
      *     "parent": null|string,
      *     "path": null|string,
      *     "catalog": string,
+     *     "time": int,
      *     "items": int,
      *     "playable": bool,
      *     "art": null|string,
@@ -1682,6 +1684,7 @@ final class Json8_Data
                 "parent" => ($parentId === null) ? null : (string) $parentId,
                 "path" => $folder->path_name,
                 "catalog" => (string) $folder->catalog,
+                "time" => $folder->time,
                 "items" => (int) $folder->object_count,
                 "playable" => $folder->playable,
                 "art" => Art::url($folder->getId(), 'folder', $auth),

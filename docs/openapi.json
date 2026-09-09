@@ -297,6 +297,10 @@
           "catalog": {
             "type": "string"
           },
+          "time": {
+            "type": "integer",
+            "description": "The summed duration, in seconds, of every song/video/podcast episode below this folder, subfolders included."
+          },
           "items": {
             "type": "array",
             "items": {
@@ -310,6 +314,7 @@
           "parent",
           "path",
           "catalog",
+          "time",
           "items"
         ],
         "additionalProperties": true
@@ -13999,6 +14004,7 @@
                         "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
+                        "time": 227,
                         "items": [
                           {
                             "id": "2",
@@ -14112,6 +14118,7 @@
                         "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
+                        "time": 227,
                         "items": [
                           {
                             "id": "2",

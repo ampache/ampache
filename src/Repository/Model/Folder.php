@@ -68,6 +68,7 @@ class Folder extends database_object implements
     /** @var int[] $songs */
     public array $songs = [];
 
+    public int $time         = 0;
     public int $total_count  = 0;
     public int $total_skip   = 0;
     public ?int $update_time = null;
@@ -108,6 +109,7 @@ class Folder extends database_object implements
         $this->path          = $info['path'] ?? null;
         $this->path_name     = $info['path_name'] ?? null;
         $this->playable      = (bool) ($info['playable'] ?? false);
+        $this->time          = (int) ($info['time'] ?? 0);
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
         $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;

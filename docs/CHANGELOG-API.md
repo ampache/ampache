@@ -10,6 +10,8 @@
   * New `scan_catalog_folders` task
 * REST
   * `catalogs/{catalog_id}/scan` as an alias of `catalog_action` with `task=scan_catalog_folders`
+* `folders` (API8)
+  * New `time` field on the browsed folder, the summed duration of everything below it, subfolders included
 
 ### Fixed (810000)
 
