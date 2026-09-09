@@ -122,6 +122,15 @@ final class PlaylistEditMethod implements MethodInterface
         $hasAccess = $playlist->has_access($user);
         $hasCollab = $playlist->has_collaborate($user);
 
+        if (
+            !$hasAccess
+            && (isset($input['name']) || isset($input['type']) || isset($input['owner']) || isset($input['sort']))
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
+        }
+
         $changeMade = false;
         if (
             $hasCollab
@@ -135,10 +144,10 @@ final class PlaylistEditMethod implements MethodInterface
             }
         }
 
-        // don't continue if you don't actually have the access level to edit
+        // No metadata field reached this point, per the guard above, so a collaborator with no reorder either
+        // has nothing to do or sent a malformed request
         if (!$hasAccess) {
             if ($changeMade) {
-                // has_collaborate allows playlist track editing
                 $response->getBody()->write(
                     $output->success($apiVersion, 'playlist track changes saved')
                 );

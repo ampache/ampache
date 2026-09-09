@@ -108,6 +108,49 @@ class PlaylistEditMethodTest extends MockeryTestCase
         );
     }
 
+    /**
+     * A collaborator reordering the playlist may not smuggle a metadata edit in on the same request; the
+     * whole request is refused, and neither the reorder nor the metadata is ever written.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleRefusesAMetadataEditBundledWithAReorderFromCollaborator(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $playlist   = $this->mock(Playlist::class);
+
+        $objectId = 666;
+
+        $this->mockPlaylist($playlist, $user, $objectId, false, true);
+        $playlist->name = 'some-name';
+        $playlist->type = 'private';
+        $playlist->user = 42;
+
+        // neither the reorder nor the metadata write may be reached for a bundled request like this
+        $playlist->shouldReceive('set_by_track_number')->never();
+        $playlist->shouldReceive('update')->never();
+
+        $this->expectException(AccessFailedException::class);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            [
+                'filter' => (string) $objectId,
+                'name' => 'new-name',
+                'items' => '1',
+                'tracks' => '1',
+                'api_format' => 'json',
+                'auth' => 'some-auth',
+            ],
+            $user,
+            $apiVersion
+        );
+    }
+
     #[DataProvider(methodName: 'apiVersionProvider')]
     public function testHandleRefusesToHandThePlaylistToSomebodyElse(int $apiVersion): void
     {
@@ -190,6 +233,62 @@ class PlaylistEditMethodTest extends MockeryTestCase
                 $response,
                 $output,
                 ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+                $user,
+                $apiVersion
+            )
+        );
+    }
+
+    /**
+     * has_collaborate allows reordering with no ownership of the list at all, and that alone is enough
+     * to save the track order without touching name, type or owner.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleSavesAReorderFromACollaboratorWithNoOtherChange(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $playlist   = $this->mock(Playlist::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $objectId = 666;
+        $result   = 'track-result';
+
+        $this->mockPlaylist($playlist, $user, $objectId, false, true);
+
+        $playlist->shouldReceive('set_by_track_number')
+            ->with(9, 1)
+            ->once();
+        $playlist->shouldReceive('update')->never();
+
+        $output->shouldReceive('success')
+            ->with($apiVersion, 'playlist track changes saved')
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'filter' => (string) $objectId,
+                    'items' => '9',
+                    'tracks' => '1',
+                    'api_format' => 'json',
+                    'auth' => 'some-auth',
+                ],
                 $user,
                 $apiVersion
             )
