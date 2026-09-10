@@ -342,7 +342,7 @@ class ArtistRepositoryTest extends TestCase
     {
         $statements = [];
 
-        $this->connection->expects(static::exactly(2))
+        $this->connection->expects(static::exactly(3))
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
                 $statements[] = [$sql, $params];
@@ -351,6 +351,10 @@ class ArtistRepositoryTest extends TestCase
             });
 
         $this->subject->setChildrenEnabled(666, false);
+
+        // the third pass repairs the stored counts of the albums the first two just changed
+        self::assertStringContainsString('`song_count`', $statements[2][0]);
+        self::assertSame([666], $statements[2][1]);
 
         self::assertStringContainsString('UPDATE `album`', $statements[0][0]);
         self::assertSame([0, 666], $statements[0][1]);
@@ -363,7 +367,7 @@ class ArtistRepositoryTest extends TestCase
     {
         $bound = [];
 
-        $this->connection->expects(static::exactly(2))
+        $this->connection->expects(static::exactly(3))
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;
@@ -373,7 +377,7 @@ class ArtistRepositoryTest extends TestCase
 
         $this->subject->setChildrenEnabled(666, true);
 
-        self::assertSame([[1, 666], [1, 666]], $bound);
+        self::assertSame([[1, 666], [1, 666], [666]], $bound);
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void
@@ -414,31 +418,9 @@ class ArtistRepositoryTest extends TestCase
      */
     public function testUpdateAllCountsOnlyFiltersOnTablesItJoins(): void
     {
-        $statements = [];
-
-        $this->connection->method('query')
-            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
-                $statements[] = $sql;
-
-                return $this->createMock(PDOStatement::class);
-            });
-
-        $this->subject->updateAllCounts();
-
-        foreach ($statements as $sql) {
-            foreach (['song', 'album', 'album_disk', 'artist', 'catalog'] as $table) {
-                if (!str_contains($sql, sprintf('`%s`.`enabled`', $table))) {
-                    continue;
-                }
-
-                // the tell: a table can only be filtered on where the statement actually brought it in
-                self::assertMatchesRegularExpression(
-                    sprintf('/(FROM|JOIN) `%s`/', $table),
-                    $sql,
-                    sprintf('a statement filters on `%s`.`enabled` without joining `%s`', $table, $table)
-                );
-            }
-        }
+        $this->assertEveryStatementFiltersOnATableItJoins(function (): void {
+            $this->subject->updateAllCounts();
+        });
     }
 
     public function testUpdateAllSkipCountsZeroesAnArtistWithNoSkipsBeforeRollingTheRestUp(): void
@@ -458,6 +440,17 @@ class ArtistRepositoryTest extends TestCase
         // the rollup is a join, so an artist whose last skip was deleted is only reached by the first statement
         self::assertStringContainsString('`total_skip` = 0', $calls[0]);
         self::assertStringContainsString('`artist_map`.`artist_id` AS `artist_id`', $calls[1]);
+    }
+
+    /**
+     * The per-artist refresh grew the same defect as the sweep, twice: it is the one a caller reaches after
+     * a withdrawal, so it has to hold on its own.
+     */
+    public function testUpdateCountsOnlyFiltersOnTablesItJoins(): void
+    {
+        $this->assertEveryStatementFiltersOnATableItJoins(function (): void {
+            $this->subject->updateCounts(666);
+        });
     }
 
     public function testUpdateInfoStampsTheManualFlagAsAnInt(): void
@@ -495,5 +488,34 @@ class ArtistRepositoryTest extends TestCase
             $this->connection,
             $this->logger,
         );
+    }
+
+    private function assertEveryStatementFiltersOnATableItJoins(callable $sweep): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $sweep();
+
+        foreach ($statements as $sql) {
+            foreach (['song', 'album', 'album_disk', 'artist', 'catalog'] as $table) {
+                if (!str_contains($sql, sprintf('`%s`.`enabled`', $table))) {
+                    continue;
+                }
+
+                // the tell: a table can only be filtered on where the statement actually brought it in
+                self::assertMatchesRegularExpression(
+                    sprintf('/(FROM|JOIN) `%s`/', $table),
+                    $sql,
+                    sprintf('a statement filters on `%s`.`enabled` without joining `%s`', $table, $table)
+                );
+            }
+        }
     }
 }

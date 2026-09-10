@@ -859,11 +859,20 @@ class AlbumRepositoryTest extends TestCase
     {
         $bound = [];
 
-        $this->connection->expects(static::exactly(2))
+        $counts = 0;
+
+        $this->connection->expects(static::exactly(4))
             ->method('query')
-            ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
-                self::assertStringContainsString('UPDATE `song` SET `enabled` = ? WHERE `album` = ?', $sql);
-                $bound[] = $params;
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound, &$counts): PDOStatement {
+                if (str_contains($sql, '`song_count`')) {
+                    // the stored count is brought back in the same breath, or the album keeps announcing
+                    // tracks nobody can play until the next maintenance sweep
+                    self::assertSame([666], $params);
+                    $counts++;
+                } else {
+                    self::assertStringContainsString('UPDATE `song` SET `enabled` = ? WHERE `album` = ?', $sql);
+                    $bound[] = $params;
+                }
 
                 return $this->createMock(PDOStatement::class);
             });
@@ -873,6 +882,7 @@ class AlbumRepositoryTest extends TestCase
 
         // the tell that the cascade runs both ways: the same statement carries 0 and then 1
         self::assertSame([[0, 666], [1, 666]], $bound);
+        self::assertSame(2, $counts);
     }
 
     public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void

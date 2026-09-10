@@ -616,6 +616,7 @@ class Artist extends database_object implements
         $artistRepository = self::getArtistRepository();
         $artistRepository->setField($artist_id, ArtistFieldEnum::ENABLED, ($new_enabled) ? 1 : 0);
         $artistRepository->setChildrenEnabled($artist_id, $new_enabled);
+        $artistRepository->updateCounts($artist_id);
     }
 
     /**

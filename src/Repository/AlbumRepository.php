@@ -1092,6 +1092,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'UPDATE `song` SET `enabled` = ? WHERE `album` = ?',
             [($enabled) ? 1 : 0, $albumId]
         );
+
+        // the stored count is what every page reads, so it is brought back in the same breath rather than
+        // left announcing tracks nobody can play until the next maintenance sweep
+        $this->connection->query(
+            "UPDATE `album` SET `song_count` = (SELECT COUNT(`song`.`id`) FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = `album`.`id` AND `catalog`.`enabled` = '1' AND `song`.`enabled` = 1) WHERE `album`.`id` = ?",
+            [$albumId]
+        );
     }
 
     /**
