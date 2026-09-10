@@ -199,7 +199,9 @@ abstract class Catalog extends database_object
                 // check for lost catalogs
                 if ('.' === $file || '..' === $file) {
                     continue;
-                } elseif (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
+                }
+                // check for lost catalogs
+                if (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
                     debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $cache_path . '/' . $file, 5);
                     $interactor?->warn(
                         sprintf('WARNING: Orphaned catalog cache %s/%s', $cache_path, $file),
@@ -1573,9 +1575,7 @@ abstract class Catalog extends database_object
     public static function getLastUpdate(?array $catalogs = null): int
     {
         $last_update = 0;
-        if ($catalogs === null) {
-            $catalogs = self::get_all_catalogs();
-        }
+        $catalogs ??= self::get_all_catalogs();
 
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
@@ -2026,7 +2026,7 @@ abstract class Catalog extends database_object
                     $count = 0;
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        $count   = $count + $catalog?->scan_catalog_folders(null, true);
+                        $count += $catalog?->scan_catalog_folders(null, true);
                     }
 
                     self::getFolderRepository()->update_folder_map();
@@ -3188,12 +3188,10 @@ abstract class Catalog extends database_object
     {
         $string = (string) $string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
-            $string = trim(mb_substr($string, 0, $max_length, $encoding));
-        } else {
-            $string = trim(substr($string, 0, $max_length));
+            return trim(mb_substr($string, 0, $max_length, $encoding));
         }
 
-        return $string;
+        return trim(substr($string, 0, $max_length));
     }
 
     /**
@@ -3205,7 +3203,7 @@ abstract class Catalog extends database_object
     private static function _check_title(string $title, string $file = ''): string
     {
         if (strlen(trim($title)) < 1) {
-            $title = $file;
+            return $file;
         }
 
         return $title;
@@ -3955,9 +3953,7 @@ abstract class Catalog extends database_object
     public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
-        }
+        $this->f_link ??= '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
 
         return $this->f_link;
     }
@@ -4000,7 +3996,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type === "music") {
-            $types = array_diff($types, ['video']);
+            return array_diff($types, ['video']);
         }
 
         return $types;
@@ -4345,7 +4341,7 @@ abstract class Catalog extends database_object
             '',
             '',
         ];
-        $sort_pattern = str_replace($post_replace_array, $post_content_array, (string) $sort_pattern);
+        $sort_pattern = str_replace($post_replace_array, $post_content_array, $sort_pattern);
 
         $home .= '/' . $sort_pattern;
 

@@ -108,7 +108,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         $statements[] = 'DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` NOT IN (SELECT `id` FROM `tag`) OR `tag_merge`.`merged_to` NOT IN (SELECT `id` FROM `tag`)';
         // Delete their following/followers
         $statements[] = 'DELETE FROM `user_follower` WHERE (`user` NOT IN (SELECT `id` FROM `user`)) OR (`follow_user` NOT IN (SELECT `id` FROM `user`))';
-        $statements[] = 'DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user`);';
+        $statements[] = 'DELETE FROM `session` WHERE `username` IS NOT NULL AND `username` NOT IN (SELECT `username` FROM `user` WHERE `username` IS NOT NULL);';
 
         // one table the install does not have must not take the rest of the sweep down with it
         foreach ($statements as $sql) {

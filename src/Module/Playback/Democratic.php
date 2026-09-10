@@ -156,7 +156,7 @@ class Democratic extends Tmp_Playlist
      */
     public static function get_current_playlist(?User $user = null): Democratic
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 

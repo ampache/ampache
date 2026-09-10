@@ -30,11 +30,13 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\RatingRepositoryInterface;
+use Mockery;
 use Mockery\MockInterface;
 use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use ReflectionProperty;
 
 class RatingTest extends MockeryTestCase
 {
@@ -51,7 +53,7 @@ class RatingTest extends MockeryTestCase
             ->with('song', 42, 1)
             ->once();
         $this->ratingRepository->shouldReceive('setRating')
-            ->with(42, 'song', 5, 7, \Mockery::type('int'))
+            ->with(42, 'song', 5, 7, Mockery::type('int'))
             ->once();
 
         $rating = new Rating(42, 'song');
@@ -97,7 +99,7 @@ class RatingTest extends MockeryTestCase
     {
         // a cached 0 means "no rating", which is exactly the unrated case the guard must treat as 0
         AmpConfig::set('memory_cache', true, true);
-        (new \ReflectionProperty(database_object::class, '_enabled'))->setValue(null, null);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
         Rating::add_to_cache('rating_' . $type . '_user' . $userId, $objectId, [$value]);
     }
 }

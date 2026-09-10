@@ -161,7 +161,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 $filter_sql = " `playlist`.`id` LIKE 'smart_%' AND ";
                 break;
             case 'hide_dupe_smartlist':
-                $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
+                $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND NOT EXISTS (SELECT 1 FROM `playlist` AS `dupe_playlist` WHERE `dupe_playlist`.`name` = `playlist`.`name` AND `dupe_playlist`.`user` = `playlist`.`user`))) AND ";
                 break;
             case 'playlist_open':
                 $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string) $value, 100);

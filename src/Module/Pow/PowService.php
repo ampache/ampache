@@ -181,7 +181,7 @@ final readonly class PowService implements PowServiceInterface
         // maintenance are not made to burn CPU on every download.
         $exemptLevel = (int) ($this->configContainer->get(ConfigurationKeyEnum::POW_EXEMPT_LEVEL) ?? 0);
 
-        return !($exemptLevel > 0 && $user->access >= $exemptLevel);
+        return $exemptLevel <= 0 || $user->access < $exemptLevel;
     }
 
     #[Override]
@@ -302,10 +302,10 @@ final readonly class PowService implements PowServiceInterface
                 'INSERT IGNORE INTO `' . self::TABLE . '` (`id`, `expire`) VALUES (?, ?)',
                 [$id, $expire]
             );
-        } catch (Throwable $error) {
+        } catch (Throwable $throwable) {
             // Refuse rather than accept answers that can no longer be checked for replay.
             $this->logger->critical(
-                'Could not record a proof of work answer: ' . $error->getMessage(),
+                'Could not record a proof of work answer: ' . $throwable->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 

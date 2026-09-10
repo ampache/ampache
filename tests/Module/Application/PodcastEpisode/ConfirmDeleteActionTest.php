@@ -62,7 +62,7 @@ class ConfirmDeleteActionTest extends TestCase
         $this->requestParser->expects(static::never())
             ->method('verifyForm');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
     }

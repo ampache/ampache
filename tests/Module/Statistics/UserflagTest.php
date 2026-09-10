@@ -35,6 +35,7 @@ use Mockery\MockInterface;
 use Override;
 use Psr\Container\ContainerInterface;
 use Psr\Log\NullLogger;
+use ReflectionProperty;
 
 class UserflagTest extends MockeryTestCase
 {
@@ -85,7 +86,7 @@ class UserflagTest extends MockeryTestCase
     private function primeFlag(string $type, int $objectId, int $userId, bool $value): void
     {
         AmpConfig::set('memory_cache', true, true);
-        (new \ReflectionProperty(database_object::class, '_enabled'))->setValue(null, null);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
         Userflag::add_to_cache('userflag_' . $type . '_user' . $userId, $objectId, [$value]);
     }
 }

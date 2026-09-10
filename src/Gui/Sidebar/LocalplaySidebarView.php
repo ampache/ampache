@@ -107,9 +107,7 @@ final class LocalplaySidebarView extends AbstractSidebarView
 
     private function getLocalplay(): LocalPlay
     {
-        if ($this->localplay === null) {
-            $this->localplay = new LocalPlay((string) AmpConfig::get('localplay_controller'));
-        }
+        $this->localplay ??= new LocalPlay((string) AmpConfig::get('localplay_controller'));
 
         return $this->localplay;
     }

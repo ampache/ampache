@@ -83,6 +83,12 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Missing close box on a few template phtml files, and an anchor that closed inside the mashup heading box
 * Grid view lost its row actions, and the delete confirm dialog ignored the theme
 * The album page fell back to a blank cover instead of the album artist's art
+* `Album::check()`'s cache wasn't keyed on catalog, so a song could be matched onto an identically-tagged album from a different catalog instead of getting its own, sometimes surfacing as a duplicate `[Disk N]` section on a multi-disk album
+* A leftover `album_disk` row from a catalog move was never cleaned up (the check used a nullable-column `NOT IN`), so a multi-disk album could show a duplicate `[Disk N]` section indefinitely
+* The same nullable-column `NOT IN` bug elsewhere, each silently doing nothing once one row anywhere had a NULL:
+  * Folder playable-state was never re-marked unplayable
+  * `hide_dupe_smartlist` hid every smartlist, not just duplicates
+  * User garbage collection stopped removing orphaned sessions
 * The add-to-playlist menu offered playlists the user could not add to
 * Migration700005 filled `last_count` with its two parameters swapped, writing the playlist id in place of the count; upgrades from Ampache 6 now backfill correctly, and database 810007 repairs the installs that already ran it
 * Saving the server Interface preferences wiped `custom_favicon`, `custom_login_logo` and `custom_login_background`, three system preferences that tab never shows

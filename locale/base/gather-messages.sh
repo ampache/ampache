@@ -159,8 +159,8 @@ generate_pot_utds() {
     echo "Deleting old $tdstxt"
     rm -f $tdstxt
     {
-        printf ''
-        printf ''
+        printf '\n'
+        printf '\n'
         printf ' #######################################################################\n\n'
         printf ' # This file lists all translatable strings from the Ampache preference table\n'
         printf ' # (descriptions and subcategories). It is generated from the source code by\n'

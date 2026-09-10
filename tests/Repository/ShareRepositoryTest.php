@@ -219,7 +219,7 @@ class ShareRepositoryTest extends TestCase
             ->method('rowCount')
             ->willReturn(1);
 
-        static::assertTrue($this->subject->registerAccess($share, $date));
+        self::assertTrue($this->subject->registerAccess($share, $date));
     }
 
     public function testRegisterAccessReturnsFalseWhenLimitReached(): void
@@ -242,7 +242,7 @@ class ShareRepositoryTest extends TestCase
             ->method('rowCount')
             ->willReturn(0);
 
-        static::assertFalse($this->subject->registerAccess($share, $date));
+        self::assertFalse($this->subject->registerAccess($share, $date));
     }
 
     public function testUpdateScopesTheStatementToTheOwnerForANonManager(): void

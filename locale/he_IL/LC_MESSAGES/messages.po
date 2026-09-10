@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Dotan Mazor, 2021\n"
 "Language-Team: Hebrew (Israel) (http://app.transifex.com/ampache/ampache/language/he_IL/)\n"
@@ -217,23 +217,6 @@ msgstr "ניקוי סטטיסטיקה"
 msgid "Update User"
 msgstr "עדכון משתמש"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "הושמע"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d פעם"
-msgstr[1] "%d פעמים"
-msgstr[2] "%d פעמים"
-
-msgid "Uploaded by"
-msgstr "הועלה על ידי"
-
-msgid "Actions"
-msgstr "פעולות"
-
 msgid "Random to Temporary Playlist"
 msgstr "הוספה בסדר אקראי לרשימת השמעה זמנית"
 
@@ -336,6 +319,9 @@ msgstr "עריכת אמן"
 
 msgid "Albums"
 msgstr "אלבומים"
+
+msgid "Songs"
+msgstr "שירים"
 
 msgid "Top Tracks"
 msgstr ""
@@ -801,6 +787,9 @@ msgstr ""
 msgid "Release Date"
 msgstr "תאריך שחרור"
 
+msgid "Actions"
+msgstr "פעולות"
+
 msgid "Add Current Host"
 msgstr ""
 
@@ -997,9 +986,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "שירים"
-
 msgid "Artists"
 msgstr "אמנים"
 
@@ -1125,6 +1111,9 @@ msgid "Show Localplay Instances"
 msgstr ""
 
 msgid "Edit Instance"
+msgstr ""
+
+msgid "Are You Sure?"
 msgstr ""
 
 msgid "Localplay Control"
@@ -1929,6 +1918,9 @@ msgstr "הורדת עותק של הגרסה החדשה"
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "הוספה לרשימת השמעה חדשה"
 
@@ -2034,23 +2026,17 @@ msgstr "שמירת שינויים"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "דירוג"
-
-msgid "Fav."
-msgstr "מועדף"
-
 msgid "Waveform"
 msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "עריכת פרק פודקאסט"
 
 msgid "Sync"
 msgstr "סנכרון"
 
 msgid "Started"
 msgstr ""
+
+msgid "Podcast Episode Edit"
+msgstr "עריכת פרק פודקאסט"
 
 msgid "Podcast Edit"
 msgstr "עריכת פודקאסט"
@@ -2248,15 +2234,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2458,6 +2435,9 @@ msgstr "המשתמש מחובר כעת"
 msgid "User is Offline Now"
 msgstr "המשתמש אינו מחובר כעת"
 
+msgid "Played"
+msgstr "הושמע"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2476,11 +2456,11 @@ msgstr "רשימת השמעה פעילה"
 msgid "Subtitle"
 msgstr "כתוביות"
 
-msgid "Video Edit"
-msgstr "עריכת וידאו"
-
 msgid "Video Information"
 msgstr "מידע וידאו"
+
+msgid "Video Edit"
+msgstr "עריכת וידאו"
 
 msgid "Songs Played"
 msgstr ""
@@ -2533,6 +2513,26 @@ msgstr "שדרוג"
 msgid "Editing %s Preferences"
 msgstr "עריכת %s הגדרות"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Time"
+msgstr "זמן"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "לא ידוע (יתום)"
 
@@ -2545,8 +2545,15 @@ msgstr "חיפוש תמונות אמנים"
 msgid "Cover Art Search"
 msgstr "חיפוש עטיפות אלבומים"
 
-msgid "Time"
-msgstr "זמן"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Rating"
+msgstr "דירוג"
 
 msgid "Starts With"
 msgstr "מתחיל ב"
@@ -2709,6 +2716,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr ""
 
@@ -2822,6 +2832,13 @@ msgstr ""
 msgid "Channels"
 msgstr "ערוצים"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
 msgid "Return to Login Page"
 msgstr "חזרה אל עמוד הכניסה"
 
@@ -2920,11 +2937,15 @@ msgstr "לא נמצאו מילים."
 msgid "Song Edit"
 msgstr "עריכת שיר"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "מידע שיר"
-
-msgid "Links"
-msgstr "קישורים"
 
 msgid "Song Language"
 msgstr "שפת השיר"
@@ -2964,6 +2985,12 @@ msgstr "מילים"
 
 msgid "Licensing"
 msgstr "רישיון שימוש"
+
+msgid "Uploaded by"
+msgstr "הועלה על ידי"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr ""
@@ -3207,9 +3234,6 @@ msgstr "רשימ(ו)ת בקרת הגישה החדשות שלך נוצרו"
 
 msgid "Your Access List entry has been removed"
 msgstr "רשימת בקרת הגישה הוסרה"
-
-msgid "Are You Sure?"
-msgstr ""
 
 #. HINT: ACL Name
 #, php-format
@@ -5427,6 +5451,13 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 msgid "Average from all users"
 msgstr ""

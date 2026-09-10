@@ -38,6 +38,6 @@ class MashupViewTest extends TestCase
             true
         );
 
-        static::assertSame($browse, $subject->createBrowse());
+        self::assertSame($browse, $subject->createBrowse());
     }
 }

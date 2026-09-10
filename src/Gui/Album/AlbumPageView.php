@@ -175,17 +175,17 @@ final class AlbumPageView extends AbstractView
             chips: HeaderChip::listOf(
                 ($album->year > 0) ? new HeaderChip((string) $album->year, title: T_('Year')) : null,
                 ($album->song_count > 0) ? new HeaderChip(sprintf(nT_('%d song', '%d songs', $album->song_count), $album->song_count), true) : null,
-                ($album->time > 0) ? new HeaderChip($this->e((string) $album->get_f_time()), true, title: T_('Time')) : null,
+                ($album->time > 0) ? new HeaderChip($this->e($album->get_f_time()), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($album->get_tags(), $this->webPath . '/browse.php?action=tag&type=album&show_tag='),
             rating: ($this->showRatings()) ? Rating::show($this->getAlbumId(), $this->getObjectType(), true) : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getAlbumId(), $this->getObjectType()) : '',
             ratingKey: $this->getAlbumId() . '_' . $this->getObjectType(),
-            links: $this->getExternalLinks()->render(),
-            wideArt: true,
             note: ($this->showPlayedTimes())
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
                 : '',
+            links: $this->getExternalLinks()->render(),
+            wideArt: true,
         );
     }
 

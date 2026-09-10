@@ -37,7 +37,7 @@ class OAuthUtil
      */
     public static function build_http_query(array $params): string
     {
-        if (!$params) {
+        if ($params === []) {
             return '';
         }
 
@@ -205,7 +205,8 @@ class OAuthUtil
                 OAuthUtil::urlencode_rfc3986(...),
                 $input
             );
-        } elseif (is_scalar($input)) {
+        }
+        if (is_scalar($input)) {
             return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode((string) $input)));
         }
 

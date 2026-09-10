@@ -6,7 +6,7 @@ file_filter            = locale/<lang>/LC_MESSAGES/messages.po
 source_file            = locale/base/messages.pot
 type                   = PO
 minimum_perc           = 0
-resource_name          = messages.pot
+resource_name          = locale/base/messages.pot
 replace_edited_strings = false
 keep_translations      = false
 

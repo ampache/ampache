@@ -1380,7 +1380,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             }
 
             return null;
-        } elseif ($status > 0) {
+        }
+        if ($status > 0) {
             do {
                 $read_size = ($transcode)
                     ? 2048

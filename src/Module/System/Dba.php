@@ -534,9 +534,10 @@ class Dba
             if ($dsn !== $base_dsn) {
                 try {
                     return new PDO($base_dsn, $username, $password);
-                } catch (PDOException $pdoException) {
+                } catch (PDOException) {
                 }
             }
+
             self::$_error = $pdoException->getMessage();
             debug_event(self::class, 'Connection failed: ' . $pdoException->getMessage(), 1);
 

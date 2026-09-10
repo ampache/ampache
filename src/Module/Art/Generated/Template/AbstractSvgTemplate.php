@@ -218,7 +218,7 @@ abstract class AbstractSvgTemplate implements TemplateInterface
             'record' => $this->record($recipe, $accent, $ground),
             'medallion' => $this->medallion($recipe, $accent),
             'waveform' => $this->waveform($recipe, $accent),
-            'tracklist' => $this->tracklist($recipe, $ground),
+            'tracklist' => $this->tracklist($recipe),
             default => '',
         };
     }
@@ -281,6 +281,7 @@ abstract class AbstractSvgTemplate implements TemplateInterface
                 $out[] = mb_substr($part, 0, $limit);
                 $part  = mb_substr($part, $limit);
             }
+
             if ($part !== '') {
                 $out[] = $part;
             }
@@ -290,7 +291,7 @@ abstract class AbstractSvgTemplate implements TemplateInterface
     }
 
     /** A playlist is a list, and every line of it is one of those waveforms, borrowed from its artists. */
-    private function tracklist(Recipe $recipe, string $ground): string
+    private function tracklist(Recipe $recipe): string
     {
         $rows = min(5, count($recipe->voices));
         if ($rows === 0) {
@@ -321,6 +322,7 @@ abstract class AbstractSvgTemplate implements TemplateInterface
                     . '" width="' . round($width, 2) . '" height="' . round($height * 2, 2)
                     . '" fill="' . $tint . '" fill-opacity="' . $this->weight(0.30 + abs($value) * 0.26) . '"/>';
             }
+
             $out .= '<circle cx="8.2" cy="' . round($axis, 2) . '" r="0.85" fill="' . $tint
                 . '" fill-opacity="' . $this->weight(0.6) . '"/>';
         }

@@ -114,7 +114,7 @@ class Catalog_dropbox extends Catalog
         $getchunk  = (bool) ($data['getchunk'] ?? 0);
 
         $dropbox = self::_connect_dropbox($apikey, $secret, $authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return false;
         }
 
@@ -325,7 +325,7 @@ class Catalog_dropbox extends Catalog
         $dead = 0;
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return $dead;
         }
 
@@ -407,7 +407,7 @@ class Catalog_dropbox extends Catalog
         }
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return false;
         }
 
@@ -637,7 +637,7 @@ class Catalog_dropbox extends Catalog
     public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             throw new DropboxClientException('Could not connect to Dropbox.');
         }
 
@@ -689,7 +689,7 @@ class Catalog_dropbox extends Catalog
         $this->count = 0;
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return 0;
         }
 
@@ -714,7 +714,7 @@ class Catalog_dropbox extends Catalog
         $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
         $dropbox        = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return 0;
         }
 

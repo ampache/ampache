@@ -31,6 +31,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use ReflectionMethod;
 
 class SearchTest extends MockeryTestCase
 {
@@ -117,7 +118,7 @@ class SearchTest extends MockeryTestCase
     public function testNormalizeLogicOperatorOnlyEverYieldsAndOrOr(string $operator, string $expected): void
     {
         // the shared normaliser is what update() applies too; anything but "or" must become "and"
-        $method = new \ReflectionMethod(Search::class, 'normalizeLogicOperator');
+        $method = new ReflectionMethod(Search::class, 'normalizeLogicOperator');
 
         self::assertSame($expected, $method->invoke(null, $operator));
     }

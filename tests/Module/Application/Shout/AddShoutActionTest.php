@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -41,7 +42,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class AddShoutActionTest extends \Ampache\MockeryTestCase
+class AddShoutActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
     private RequestParserInterface&MockInterface $requestParser;

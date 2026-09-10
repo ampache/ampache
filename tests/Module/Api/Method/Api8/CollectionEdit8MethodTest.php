@@ -109,6 +109,7 @@ class CollectionEdit8MethodTest extends MockeryTestCase
         // neither the reorder nor the metadata write may be reached for a bundled request like this
         $collection->shouldNotReceive('set_by_track_number');
         $collection->shouldNotReceive('regenerate_track_numbers');
+
         $this->collectionRepository->shouldNotReceive('update');
 
         $this->expectException(AccessFailedException::class);

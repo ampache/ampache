@@ -174,7 +174,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     public function getArt(): string
     {
         ob_start();
-        Art::display('album', (int) $this->song->album, (string) $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
+        Art::display('album', $this->song->album, $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
 
         return (string) ob_get_clean();
     }
@@ -364,8 +364,8 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             rating: $this->getRating(),
             userflag: $this->getUserFlags(),
             ratingKey: $this->song->getId() . '_song',
-            links: $this->getExternalLinks(),
             note: $this->getPlayNote(),
+            links: $this->getExternalLinks(),
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
         );
@@ -665,6 +665,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             T_('R128 Track Gain'),
             T_('R128 Album Gain'),
         ];
+
         $file = [
             T_('Path'),
             T_('Filename'),
@@ -705,11 +706,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
                 'properties' => $this->ordered($rest, $information) + $rest,
             ],
             [
-                'label' => T_('Technical'),
+                'label' => T_('Song Data'),
                 'properties' => $this->ordered($properties, $technical),
             ],
             [
-                'label' => T_('File'),
+                'label' => T_('File Data'),
                 'properties' => $this->ordered($properties, $file),
             ],
         ];
