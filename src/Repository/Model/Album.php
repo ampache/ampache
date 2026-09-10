@@ -484,18 +484,6 @@ class Album extends database_object implements
     }
 
     /**
-     * Take the album off the shelves, or put it back. It stays playable: only the listing is withdrawn.
-     */
-    public static function update_hidden(bool $new_hidden, int $album_id): void
-    {
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-            return;
-        }
-
-        self::_update_field(AlbumFieldEnum::HIDDEN, ($new_hidden) ? 1 : 0, $album_id);
-    }
-
-    /**
      * update_table_counts
      * Update all albums with mapping and missing data after catalog changes
      */
@@ -503,6 +491,22 @@ class Album extends database_object implements
     {
         debug_event(self::class, 'update_table_counts', 5);
         self::getAlbumRepository()->updateAllCounts();
+    }
+
+    /**
+     * Take the album off the shelves, or put it back. Hiding withdraws the listing only; the songs stay
+     * playable unless the caller asks for them too, and putting it back never re-enables anything.
+     */
+    public static function update_visibility(VisibilityStateEnum $state, int $album_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        self::_update_field(AlbumFieldEnum::HIDDEN, ($state->isHidden()) ? 1 : 0, $album_id);
+        if ($state->cascades()) {
+            self::getAlbumRepository()->disableSongs($album_id);
+        }
     }
 
     /**
@@ -991,6 +995,11 @@ class Album extends database_object implements
         return $this->has_art ?? false;
     }
 
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
@@ -1018,9 +1027,10 @@ class Album extends database_object implements
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
 
-        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
-        if (array_key_exists('hidden', $data)) {
-            self::update_hidden((bool) $data['hidden'], $this->id);
+        // sent by the edit form only; every other caller leaves the key out and the flag alone
+        $visibility = VisibilityStateEnum::tryFrom((string) ($data['visibility'] ?? ''));
+        if ($visibility instanceof VisibilityStateEnum) {
+            self::update_visibility($visibility, $this->id);
         }
 
         // If you have created an album_artist using 'add new...' we need to create a new artist

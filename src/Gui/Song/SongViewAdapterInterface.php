@@ -84,6 +84,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getDirectplayButton(): string;
 
+    public function getDisabledIcon(): string;
+
     public function getDisplayStatsIcon(): string;
 
     public function getDisplayStatsUrl(): string;
@@ -167,6 +169,8 @@ interface SongViewAdapterInterface extends TemplateInterface
      * A waveform is rendered on demand, so this is false when there is nothing to render it from.
      */
     public function hasWaveform(): bool;
+
+    public function isDisabled(): bool;
 
     public function isEditable(): bool;
 }

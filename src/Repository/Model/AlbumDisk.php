@@ -598,6 +598,14 @@ class AlbumDisk extends database_object implements
         return $this->has_art;
     }
 
+    /**
+     * A disk is never withdrawn on its own; it reads the flag of the album it belongs to.
+     */
+    public function isHidden(): bool
+    {
+        return $this->album->hidden;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;

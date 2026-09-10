@@ -212,6 +212,13 @@ interface ArtistRepositoryInterface
     public function getUploaderId(int $artistId): int;
 
     /**
+     * Hides every album of an artist and disables their songs, in one pass each.
+     *
+     * One-way on purpose: showing the artist again must not re-enable a song disabled for its own reasons.
+     */
+    public function hideChildren(int $artistId): void;
+
+    /**
      * Moves everything credited to one artist onto another, or clears the credit when there is no replacement
      */
     public function migrate(int $oldArtistId, int $newArtistId): void;
@@ -230,11 +237,6 @@ interface ArtistRepositoryInterface
      * Writes the split name onto whichever artist carries this MusicBrainz id
      */
     public function renameByMbid(string $mbid, ?string $prefix, string $name): void;
-
-    /**
-     * Hides or shows every album of an artist and disables or re-enables their songs, in one pass each
-     */
-    public function setChildrenHidden(int $artistId, bool $hidden): void;
 
     /**
      * Writes a single artist column, bounded by the enum because the column name goes into the statement

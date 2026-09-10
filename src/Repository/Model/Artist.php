@@ -600,24 +600,6 @@ class Artist extends database_object implements
     }
 
     /**
-     * Take the artist off the shelves, or put it back, optionally taking its albums and their songs along.
-     *
-     * The albums follow the same rule as the artist and stay playable; only disabling the songs closes that.
-     */
-    public static function update_hidden(bool $new_hidden, int $artist_id, bool $with_children = false): void
-    {
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-            return;
-        }
-
-        $artistRepository = self::getArtistRepository();
-        $artistRepository->setField($artist_id, ArtistFieldEnum::HIDDEN, ($new_hidden) ? 1 : 0);
-        if ($with_children) {
-            $artistRepository->setChildrenHidden($artist_id, $new_hidden);
-        }
-    }
-
-    /**
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
@@ -651,6 +633,24 @@ class Artist extends database_object implements
     {
         debug_event(self::class, 'update_table_counts', 5);
         self::getArtistRepository()->updateAllCounts();
+    }
+
+    /**
+     * Take the artist off the shelves, or put it back, optionally taking its albums and their songs along.
+     *
+     * The albums follow the same rule as the artist and stay playable; only disabling the songs closes that.
+     */
+    public static function update_visibility(VisibilityStateEnum $state, int $artist_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        $artistRepository = self::getArtistRepository();
+        $artistRepository->setField($artist_id, ArtistFieldEnum::HIDDEN, ($state->isHidden()) ? 1 : 0);
+        if ($state->cascades()) {
+            $artistRepository->hideChildren($artist_id);
+        }
     }
 
     /**
@@ -949,6 +949,11 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
@@ -964,8 +969,7 @@ class Artist extends database_object implements
      *     placeformed?: ?string,
      *     yearformed?: ?int,
      *     user?: ?int,
-     *     hidden?: string,
-     *     hide_childs?: string,
+     *     visibility?: string,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -987,9 +991,10 @@ class Artist extends database_object implements
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
 
-        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
-        if (array_key_exists('hidden', $data)) {
-            self::update_hidden((bool) $data['hidden'], $this->id, !empty($data['hide_childs']));
+        // sent by the edit form only; every other caller leaves the key out and the flag alone
+        $visibility = VisibilityStateEnum::tryFrom((string) ($data['visibility'] ?? ''));
+        if ($visibility instanceof VisibilityStateEnum) {
+            self::update_visibility($visibility, $this->id);
         }
 
         // Check if name is different than the current name

@@ -609,6 +609,23 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Writes a single artist column, bounded by the enum because the column name goes into the statement
+     */
+    public function hideChildren(int $artistId): void
+    {
+        $this->connection->query(
+            "UPDATE `album` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' SET `album`.`hidden` = 1 WHERE `artist_map`.`artist_id` = ?",
+            [$artistId]
+        );
+
+        // hiding only withdraws the listing, so the songs are disabled alongside to close playback too
+        $this->connection->query(
+            "UPDATE `song` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' SET `song`.`enabled` = 0 WHERE `artist_map`.`artist_id` = ?",
+            [$artistId]
+        );
+    }
+
+    /**
      * Moves everything credited to one artist onto another, or clears the credit when there is no replacement
      */
     public function migrate(int $oldArtistId, int $newArtistId): void
@@ -671,23 +688,6 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         $this->connection->query(
             'UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `mbid` = ?',
             [$prefix, $name, $mbid]
-        );
-    }
-
-    /**
-     * Writes a single artist column, bounded by the enum because the column name goes into the statement
-     */
-    public function setChildrenHidden(int $artistId, bool $hidden): void
-    {
-        $this->connection->query(
-            "UPDATE `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' SET `album`.`hidden` = ? WHERE `artist_map`.`artist_id` = ?",
-            [($hidden) ? 1 : 0, $artistId]
-        );
-
-        // hiding only withdraws the listing, so the songs are disabled alongside to close playback too
-        $this->connection->query(
-            "UPDATE `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' SET `song`.`enabled` = ? WHERE `artist_map`.`artist_id` = ?",
-            [($hidden) ? 0 : 1, $artistId]
         );
     }
 

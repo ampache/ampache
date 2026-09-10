@@ -37,7 +37,11 @@ $userflag  = $this->getUserflag();
 $ratingKey = $this->getRatingKey();
 $note      = $this->getNote();
 $links     = $this->getLinks();
-$tags      = $this->getTags(); ?>
+$tags      = $this->getTags();
+$notice    = $this->getNotice(); ?>
+<?php if ($notice !== '') { ?>
+<div class="object-header-notice error"><?php echo $this->raw($notice); ?></div>
+<?php } ?>
 <div class="object-header<?php echo ($this->hasWideArt()) ? ' wide-art' : ''; ?>">
 <?php if ($art !== '') { ?>
     <div class="object-header-art"><?php echo $this->raw($art); ?></div>

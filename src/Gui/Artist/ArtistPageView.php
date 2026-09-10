@@ -140,6 +140,9 @@ final class ArtistPageView extends AbstractView
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
                 : '',
             links: $this->getExternalLinks()->render(),
+            notice: ($this->artist->isHidden())
+                ? Ui::get_material_symbol('visibility_off', T_('Hidden')) . '<strong>' . T_('Hidden') . '</strong>'
+                : '',
         );
     }
 

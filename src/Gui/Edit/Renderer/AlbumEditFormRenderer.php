@@ -176,9 +176,7 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
 
     public function isHidden(): bool
     {
-        $item = $this->getItem();
-
-        return ($item instanceof Album) && $item->hidden;
+        return $this->getItem()->isHidden();
     }
 
     public function mayEditMbid(): bool
@@ -190,14 +188,13 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
 
     /**
      * Withdrawing a release from the shelves sits with whoever can already disable its songs. A single disk
-     * is not withdrawn on its own: the album it belongs to is what leaves the listing.
+     * is not withdrawn on its own: editing one still sets the flag on the album it belongs to.
      */
     public function mayHide(): bool
     {
         $user = Core::get_global('user');
 
-        return $this->getItem() instanceof Album
-            && $user instanceof User
+        return $user instanceof User
             && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 

@@ -2415,6 +2415,14 @@ class Song extends database_object implements
                         $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
+                case 'enabled':
+                    $new_enabled = (bool) $value;
+                    if ($new_enabled !== $this->enabled) {
+                        // update_enabled carries the manager check, so no caller can flip the state around it
+                        self::update_enabled($new_enabled, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'label':
                     if ($value != $this->label) {
                         self::update_label((string) $value, $this->id);

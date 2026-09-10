@@ -304,6 +304,48 @@ class ArtistRepositoryTest extends TestCase
         self::assertSame(0, $this->subject->getUploaderId(666));
     }
 
+    public function testHideChildrenNeverReEnablesASong(): void
+    {
+        $statements = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
+                $statements[] = [$sql, $params];
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->hideChildren(666);
+
+        // the tell that the cascade is one-way: no bound value can carry the enabling side back in
+        foreach ($statements as [$sql, $params]) {
+            self::assertStringNotContainsString('`enabled` = 1', $sql);
+            self::assertSame([666], $params);
+        }
+    }
+
+    public function testHideChildrenWithdrawsTheAlbumsAndDisablesTheirSongs(): void
+    {
+        $statements = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
+                $statements[] = [$sql, $params];
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->hideChildren(666);
+
+        self::assertStringContainsString('UPDATE `album`', $statements[0][0]);
+        self::assertStringContainsString('`album`.`hidden` = 1', $statements[0][0]);
+        // hiding withdraws the listing only, so the songs have to be disabled for playback to close with it
+        self::assertStringContainsString('UPDATE `song`', $statements[1][0]);
+        self::assertStringContainsString('`song`.`enabled` = 0', $statements[1][0]);
+    }
+
     public function testMigrateClearsTheCreditWhenThereIsNoReplacement(): void
     {
         $this->connection->expects(static::exactly(4))
@@ -336,44 +378,6 @@ class ArtistRepositoryTest extends TestCase
             );
 
         $this->subject->migrate(666, 42);
-    }
-
-    public function testSetChildrenHiddenPutsBackWhatItTookAway(): void
-    {
-        $params = [];
-
-        $this->connection->expects(static::exactly(2))
-            ->method('query')
-            ->willReturnCallback(function (string $sql, array $bound) use (&$params): PDOStatement {
-                $params[] = $bound;
-
-                return $this->createMock(PDOStatement::class);
-            });
-
-        $this->subject->setChildrenHidden(666, false);
-
-        self::assertSame([[0, 666], [1, 666]], $params);
-    }
-
-    public function testSetChildrenHiddenWithdrawsTheAlbumsAndDisablesTheirSongs(): void
-    {
-        $statements = [];
-
-        $this->connection->expects(static::exactly(2))
-            ->method('query')
-            ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
-                $statements[] = [$sql, $params];
-
-                return $this->createMock(PDOStatement::class);
-            });
-
-        $this->subject->setChildrenHidden(666, true);
-
-        self::assertStringContainsString('UPDATE `album`', $statements[0][0]);
-        self::assertSame([1, 666], $statements[0][1]);
-        // hiding withdraws the listing only, so the songs have to be disabled for playback to close with it
-        self::assertStringContainsString('UPDATE `song`', $statements[1][0]);
-        self::assertSame([0, 666], $statements[1][1]);
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void

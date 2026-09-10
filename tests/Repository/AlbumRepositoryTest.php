@@ -254,6 +254,19 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testDisableSongsClosesPlaybackForTheWholeAlbum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::stringContains('UPDATE `song` SET `enabled` = 0 WHERE `album` = ?'),
+                [666]
+            )
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->disableSongs(666);
+    }
+
     public function testFindByPropertiesCanDisableNameAndYearMatching(): void
     {
         // every column is configurable, including name/year - the admin can choose a value that merges albums

@@ -163,6 +163,11 @@ final class SongEditFormRenderer extends AbstractEditFormRenderer
         return (string) $this->getItem()->year;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->getItem()->enabled;
+    }
+
     /**
      * The artist, album and owner controls need manage rights; the MusicBrainz id asks for more.
      */

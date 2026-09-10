@@ -248,6 +248,17 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
+    public function disableSongs(int $albumId): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `enabled` = 0 WHERE `album` = ?',
+            [$albumId]
+        );
+    }
+
+    /**
      * Finds the album that already carries exactly these properties, matching what create() would write
      *
      * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
@@ -1135,9 +1146,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
     }
 
-    /**
-     * Recomputes the cached totals on one album and its disks, after a song on it changed
-     */
     public function updateCounts(int $albumId): void
     {
         // each statement names the column it maintains in its own SET clause; they run in order because the

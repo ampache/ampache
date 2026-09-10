@@ -2311,6 +2311,18 @@ a.option-list:hover {
     text-align: center;
 }
 
+/* a withdrawn or unplayable item keeps its page, so the page says so above everything else on it */
+.object-header-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 15px;
+}
+
 .find-duplicates strong {
     display: block;
 }

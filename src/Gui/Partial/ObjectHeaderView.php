@@ -54,6 +54,7 @@ final class ObjectHeaderView extends AbstractView
         private readonly string $primaryAction = '',
         private readonly array $actions = [],
         private readonly bool $wideArt = false,
+        private readonly string $notice = '',
     ) {}
 
     /**
@@ -104,6 +105,14 @@ final class ObjectHeaderView extends AbstractView
     public function getNote(): string
     {
         return $this->note;
+    }
+
+    /**
+     * The state a reader has to know before anything else on the page, such as an item withdrawn or unplayable.
+     */
+    public function getNotice(): string
+    {
+        return $this->notice;
     }
 
     public function getPrimaryAction(): string

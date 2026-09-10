@@ -139,8 +139,14 @@ $mayEditMbid = $this->mayEditMbid(); ?>
             </tr>
             <?php if ($this->mayHide()) { ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
-                <td><input type="hidden" name="hidden" value="0" /><input type="checkbox" <?php echo ($this->isHidden()) ? 'checked="checked"' : ''; ?> name="hidden" value="1" /></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Visibility'); ?></td>
+                <td>
+                    <select name="visibility">
+                        <option value="visible"<?php echo ($this->isHidden()) ? '' : ' selected="selected"'; ?>><?php echo T_('Visible'); ?></option>
+                        <option value="hidden"<?php echo ($this->isHidden()) ? ' selected="selected"' : ''; ?>><?php echo T_('Hidden'); ?></option>
+                        <option value="hidden_disabled"><?php echo T_('Hidden, and disable its items'); ?></option>
+                    </select>
+                </td>
             </tr>
             <?php } ?>
         </table>

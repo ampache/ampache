@@ -260,6 +260,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         );
     }
 
+    public function getDisabledIcon(): string
+    {
+        return Ui::get_material_symbol('unpublished', T_('Disabled'));
+    }
+
     public function getDisplayStatsIcon(): string
     {
         return Ui::get_material_symbol('bar_chart', T_('Graphs'));
@@ -368,6 +373,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             links: $this->getExternalLinks(),
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
+            notice: ($this->song->enabled) ? '' : $this->getDisabledIcon() . '<strong>' . T_('Disabled') . '</strong>',
         );
     }
 
@@ -814,6 +820,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     public function hasWaveform(): bool
     {
         return Waveform::is_available($this->song, 'song');
+    }
+
+    public function isDisabled(): bool
+    {
+        return !$this->song->enabled;
     }
 
     public function isEditable(): bool
