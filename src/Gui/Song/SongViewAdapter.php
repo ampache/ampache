@@ -665,6 +665,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             T_('R128 Track Gain'),
             T_('R128 Album Gain'),
         ];
+
         $file = [
             T_('Path'),
             T_('Filename'),
@@ -705,11 +706,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
                 'properties' => $this->ordered($rest, $information) + $rest,
             ],
             [
-                'label' => T_('Technical'),
+                'label' => T_('Song Data'),
                 'properties' => $this->ordered($properties, $technical),
             ],
             [
-                'label' => T_('File'),
+                'label' => T_('File Data'),
                 'properties' => $this->ordered($properties, $file),
             ],
         ];
