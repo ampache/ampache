@@ -65,7 +65,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $catalogs    = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
-        $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs);
+        $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path();

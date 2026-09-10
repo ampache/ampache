@@ -611,6 +611,11 @@ class AlbumDisk extends database_object implements
         return $this->getId() === 0;
     }
 
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->album->isVisible($user);
+    }
+
     /**
      * update
      * This function takes a key'd array of data and updates this object

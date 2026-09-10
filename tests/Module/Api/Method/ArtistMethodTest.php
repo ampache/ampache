@@ -71,6 +71,49 @@ class ArtistMethodTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * A withdrawn artist is refused exactly like an id that was never there, so nothing in the response
+     * tells a listener that the artist exists at all.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleRefusesAnArtistTheCallerCannotSee(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $artist     = $this->mock(Artist::class);
+
+        $objectId = 666;
+
+        $this->modelFactory->shouldReceive('createArtist')
+            ->with($objectId)
+            ->once()
+            ->andReturn($artist);
+
+        $artist->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $artist->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnFalse();
+
+        // the tell that the guard fired: the same exception and message an absent id produces
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage((string) $objectId);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+            $user,
+            $apiVersion
+        );
+    }
+
     #[DataProvider(methodName: 'includeProvider')]
     public function testHandleResolvesInclude(string|array $include, array $expected): void
     {
@@ -95,6 +138,10 @@ class ArtistMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $artist->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnTrue();
 
         $output->shouldReceive('artists')
             ->with($apiVersion, [$objectId], $expected, $user, 'some-auth', false)
@@ -149,6 +196,10 @@ class ArtistMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $artist->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnTrue();
 
         // the resolved api version must reach the output untouched
         $output->shouldReceive('artists')

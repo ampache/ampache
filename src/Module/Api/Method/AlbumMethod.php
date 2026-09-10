@@ -89,7 +89,7 @@ final class AlbumMethod implements MethodInterface
         }
 
         $album = $this->modelFactory->createAlbum((int) $objectId);
-        if ($album->isNew()) {
+        if ($album->isNew() || !$album->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
         $include = [];

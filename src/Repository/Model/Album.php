@@ -1007,6 +1007,18 @@ class Album extends database_object implements
     }
 
     /**
+     * Whether the album is visible to this viewer at all.
+     *
+     * A withdrawn album is indistinguishable from a missing one for anyone who cannot put it back, so every
+     * caller that resolves one by id refuses it the same way it refuses an id that was never there.
+     */
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
+    }
+
+    /**
      * update
      * This function takes a key'd array of data and updates this object
      * as needed

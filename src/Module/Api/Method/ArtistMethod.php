@@ -80,7 +80,7 @@ final class ArtistMethod implements MethodInterface
         }
 
         $artist = $this->modelFactory->createArtist($objectId);
-        if ($artist->isNew()) {
+        if ($artist->isNew() || !$artist->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
 

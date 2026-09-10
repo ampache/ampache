@@ -40,6 +40,9 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
@@ -373,9 +376,11 @@ final class HeaderView extends AbstractView
                 }
 
                 $item = $this->libraryItemLoader->load(LibraryItemEnum::from($type), $object_id);
-                // a private list you cannot see must not name itself in the tab title either, only the site
+                // an item you cannot see must not name itself in the tab title either, only the site: that
+                // covers a private list and, since they are refused the same way, a withdrawn release
                 if (
-                    ($item instanceof Playlist || $item instanceof Search)
+                    ($item instanceof Playlist || $item instanceof Search || $item instanceof Album
+                        || $item instanceof AlbumDisk || $item instanceof Artist)
                     && !$item->isVisible($this->currentUser)
                 ) {
                     continue;

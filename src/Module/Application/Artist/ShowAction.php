@@ -73,7 +73,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $artist = $this->modelFactory->createArtist($artistId);
 
-        $shown = !$artist->isNew();
+        $shown = !$artist->isNew() && $artist->isVisible($gatekeeper->getUser());
         if ($shown) {
             $webPath = AmpConfig::get_web_path();
             $url     = $webPath . '/artists.php?action=show&artist=' . $artistId;
