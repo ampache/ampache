@@ -830,8 +830,10 @@ abstract class Catalog extends database_object
             if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
                 $results['albumartist_id'] = $song->get_album_artist();
             } elseif (empty($results['album'])) {
-                // nothing to group under, so an orphaned song still needs an album artist of its own
-                $results['albumartist_id'] = Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+                // nothing to group under, so an orphaned song still needs an album artist of its own.
+                // Named rather than created here: the row belongs to whoever inserts the song, who knows
+                // the uploader. Creating it here made it before they could, and it landed with no owner.
+                $results['albumartist'] = $song?->get_parent_fullname() ?? $results['artist'];
             } else {
                 // One file cannot tell whether a named album has one artist or many. Taking the song artist
                 // here gave every artist on a compilation an album of the same name, because album_artist is
