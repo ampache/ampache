@@ -36,6 +36,7 @@ use Ampache\Repository\ArtistRepositoryInterface;
  */
 enum ArtistFieldEnum: string
 {
+    case HIDDEN      = 'hidden';
     case LAST_UPDATE = 'last_update';
     case MBID        = 'mbid';
     case USER        = 'user';

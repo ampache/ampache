@@ -543,6 +543,12 @@ final class Stats
             $where[] = $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
         }
 
+        // the newest lists reach the home page and the feeds without going through a browse, so the
+        // withdrawn items have to be dropped here as well
+        if (in_array($base_type, ['album', 'artist'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
+            $where[] = sprintf('`%s`.`hidden` = 0', $base_type);
+        }
+
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
 
         return $sql . ('WHERE ' . implode(' AND ', $where) . ' ' . $group_by . 'ORDER BY `real_atime` DESC ');

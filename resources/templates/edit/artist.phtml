@@ -100,6 +100,16 @@ $ownerId  = $this->getOwnerId(); ?>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs'); ?></td>
             </tr>
+            <?php if ($this->mayHide()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
+                <td><input type="hidden" name="hidden" value="0" /><input type="checkbox" <?php echo ($this->isHidden()) ? 'checked="checked"' : ''; ?> name="hidden" value="1" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"></td>
+                <td><input type="checkbox" name="hide_childs" value="1" checked="checked" />&nbsp;<?php echo T_('Hide the albums too and disable their songs'); ?></td>
+            </tr>
+            <?php } ?>
         </table>
         <input type="hidden" name="id" value="<?php echo $artistId; ?>" />
         <input type="hidden" name="type" value="artist_row" />

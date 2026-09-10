@@ -251,6 +251,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return $this->album->get_f_tags();
     }
 
+    public function getHiddenIcon(): string
+    {
+        return Ui::get_material_symbol('visibility_off', T_('Hidden'));
+    }
+
     public function getId(): int
     {
         return $this->album->getId();
@@ -318,5 +323,10 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
             $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             || $this->gatekeeper->getUserId() == $this->album->get_user_owner()
         );
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->album->hidden;
     }
 }

@@ -868,7 +868,7 @@ class Search extends playlist_object
             'weight_podcast_episode' => 'numeric',
             'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
             'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'has_image',
-            'waveform' => 'boolean',
+            'hidden', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
             'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
@@ -1481,6 +1481,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
         $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('hidden', T_('Hidden'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
@@ -1596,6 +1597,7 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('hidden', T_('Hidden'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);

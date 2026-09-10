@@ -232,6 +232,11 @@ interface ArtistRepositoryInterface
     public function renameByMbid(string $mbid, ?string $prefix, string $name): void;
 
     /**
+     * Hides or shows every album of an artist and disables or re-enables their songs, in one pass each
+     */
+    public function setChildrenHidden(int $artistId, bool $hidden): void;
+
+    /**
      * Writes a single artist column, bounded by the enum because the column name goes into the statement
      */
     public function setField(int $artistId, ArtistFieldEnum $field, int|string|null $value): bool;

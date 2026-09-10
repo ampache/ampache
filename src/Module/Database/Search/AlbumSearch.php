@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
 
 final class AlbumSearch implements SearchInterface
@@ -489,6 +492,9 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
+                case 'hidden':
+                    $where[] = ($operator_sql == '1') ? "`album`.`hidden` = 1" : "`album`.`hidden` = 0";
+                    break;
                 case 'has_image':
                     $where[] = ($operator_sql == '1')
                         ? "`album`.`id` IN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album' AND `size` = 'original')"
@@ -632,6 +638,14 @@ final class AlbumSearch implements SearchInterface
             } else {
                 $where_sql = "`catalog_se`.`enabled` = '1'";
             }
+        }
+
+        // a withdrawn item is out of a smartlist too, and unlike the catalog test above this one is not
+        // optional: a takedown does not depend on whether the instance turned catalog checks on
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
+            $where_sql = ($where_sql !== '' && $where_sql !== '0')
+                ? "(" . $where_sql . ") AND `album`.`hidden` = 0"
+                : "`album`.`hidden` = 0";
         }
 
         if ($search->catalog_id) {

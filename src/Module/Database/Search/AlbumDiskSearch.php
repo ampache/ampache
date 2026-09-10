@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
 
 final class AlbumDiskSearch implements SearchInterface
@@ -638,6 +641,14 @@ final class AlbumDiskSearch implements SearchInterface
             } else {
                 $where_sql = "`catalog_se`.`enabled` = '1'";
             }
+        }
+
+        // a withdrawn item is out of a smartlist too, and unlike the catalog test above this one is not
+        // optional: a takedown does not depend on whether the instance turned catalog checks on
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
+            $where_sql = ($where_sql !== '' && $where_sql !== '0')
+                ? "(" . $where_sql . ") AND NOT EXISTS (SELECT 1 FROM `album` AS `album_hid` WHERE `album_hid`.`id` = `album_disk`.`album_id` AND `album_hid`.`hidden` = 1)"
+                : "NOT EXISTS (SELECT 1 FROM `album` AS `album_hid` WHERE `album_hid`.`id` = `album_disk`.`album_id` AND `album_hid`.`hidden` = 1)";
         }
 
         if ($search->catalog_id) {

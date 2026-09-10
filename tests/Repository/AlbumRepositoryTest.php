@@ -570,7 +570,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
+            ->with('SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) AND `album`.`hidden` = 0 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -586,7 +586,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
+            ->with('SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) AND `album`.`hidden` = 0 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -602,7 +602,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `album` GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
+            ->with('SELECT `album`.`id` FROM `album` WHERE `album`.`hidden` = 0 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -858,7 +858,7 @@ class AlbumRepositoryTest extends TestCase
     public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
     {
         // a maintenance statement that dies must not take the rest of the sweep with it, as `Dba::write()` did not
-        $this->connection->expects(static::exactly(14))
+        $this->connection->expects(static::exactly(16))
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
@@ -906,7 +906,7 @@ class AlbumRepositoryTest extends TestCase
     {
         $bound = [];
 
-        $this->connection->expects(static::exactly(13))
+        $this->connection->expects(static::exactly(15))
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;

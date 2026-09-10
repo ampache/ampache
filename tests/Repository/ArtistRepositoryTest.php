@@ -287,7 +287,7 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(self::stringContains(' AND `song`.`catalog` IN (4) GROUP BY '))
+            ->with(self::stringContains(' AND `song`.`catalog` IN (4) WHERE `artist`.`hidden` = 0 GROUP BY '))
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -336,6 +336,44 @@ class ArtistRepositoryTest extends TestCase
             );
 
         $this->subject->migrate(666, 42);
+    }
+
+    public function testSetChildrenHiddenPutsBackWhatItTookAway(): void
+    {
+        $params = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $bound) use (&$params): PDOStatement {
+                $params[] = $bound;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->setChildrenHidden(666, false);
+
+        self::assertSame([[0, 666], [1, 666]], $params);
+    }
+
+    public function testSetChildrenHiddenWithdrawsTheAlbumsAndDisablesTheirSongs(): void
+    {
+        $statements = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
+                $statements[] = [$sql, $params];
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->setChildrenHidden(666, true);
+
+        self::assertStringContainsString('UPDATE `album`', $statements[0][0]);
+        self::assertSame([1, 666], $statements[0][1]);
+        // hiding withdraws the listing only, so the songs have to be disabled for playback to close with it
+        self::assertStringContainsString('UPDATE `song`', $statements[1][0]);
+        self::assertSame([0, 666], $statements[1][1]);
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void

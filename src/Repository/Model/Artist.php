@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -55,6 +58,7 @@ class Artist extends database_object implements
     public ?int $addition_time      = null;
     public int $album_count         = 0;
     public int $album_disk_count    = 0;
+    public bool $hidden             = false;
     public int $id                  = 0;
     public int $last_update;
     public ?string $lastfm_url  = null;
@@ -98,6 +102,7 @@ class Artist extends database_object implements
         }
 
         $this->id               = (int) ($info['id'] ?? 0);
+        $this->hidden           = (bool) ($info['hidden'] ?? false);
         $this->name             = $info['name'] ?? null;
         $this->prefix           = $info['prefix'] ?? null;
         $this->summary          = $info['summary'] ?? null;
@@ -595,6 +600,24 @@ class Artist extends database_object implements
     }
 
     /**
+     * Take the artist off the shelves, or put it back, optionally taking its albums and their songs along.
+     *
+     * The albums follow the same rule as the artist and stay playable; only disabling the songs closes that.
+     */
+    public static function update_hidden(bool $new_hidden, int $artist_id, bool $with_children = false): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        $artistRepository = self::getArtistRepository();
+        $artistRepository->setField($artist_id, ArtistFieldEnum::HIDDEN, ($new_hidden) ? 1 : 0);
+        if ($with_children) {
+            $artistRepository->setChildrenHidden($artist_id, $new_hidden);
+        }
+    }
+
+    /**
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
@@ -941,6 +964,8 @@ class Artist extends database_object implements
      *     placeformed?: ?string,
      *     yearformed?: ?int,
      *     user?: ?int,
+     *     hidden?: string,
+     *     hide_childs?: string,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -961,6 +986,11 @@ class Artist extends database_object implements
         $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int) $data['yearformed'] : null;
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
+
+        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
+        if (array_key_exists('hidden', $data)) {
+            self::update_hidden((bool) $data['hidden'], $this->id, !empty($data['hide_childs']));
+        }
 
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {

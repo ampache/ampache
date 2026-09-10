@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -69,6 +72,7 @@ class Album extends database_object implements
     public int $catalog_id            = 0;
     public ?string $catalog_number    = null;
     public int $disk_count            = 0;
+    public bool $hidden               = false;
     public int $id                    = 0;
     public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $link              = null;
@@ -138,6 +142,7 @@ class Album extends database_object implements
         $this->catalog_id        = (int) ($info['catalog_id'] ?? 0);
         $this->catalog_number    = $info['catalog_number'] ?? null;
         $this->disk_count        = (int) ($info['disk_count'] ?? 0);
+        $this->hidden            = (bool) ($info['hidden'] ?? false);
         $this->id                = (int) ($info['id'] ?? 0);
         $this->link              = $info['link'] ?? null;
         $this->mbid              = $info['mbid'] ?? null;
@@ -476,6 +481,18 @@ class Album extends database_object implements
     {
         debug_event(self::class, 'update_album_count ' . $album_id, 5);
         self::getAlbumRepository()->updateCounts($album_id);
+    }
+
+    /**
+     * Take the album off the shelves, or put it back. It stays playable: only the listing is withdrawn.
+     */
+    public static function update_hidden(bool $new_hidden, int $album_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        self::_update_field(AlbumFieldEnum::HIDDEN, ($new_hidden) ? 1 : 0, $album_id);
     }
 
     /**
@@ -1000,6 +1017,11 @@ class Album extends database_object implements
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
+
+        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
+        if (array_key_exists('hidden', $data)) {
+            self::update_hidden((bool) $data['hidden'], $this->id);
+        }
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {

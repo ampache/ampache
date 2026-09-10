@@ -174,11 +174,31 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
         return $this->getItem() instanceof AlbumDisk;
     }
 
+    public function isHidden(): bool
+    {
+        $item = $this->getItem();
+
+        return ($item instanceof Album) && $item->hidden;
+    }
+
     public function mayEditMbid(): bool
     {
         $user = Core::get_global('user');
 
         return $this->mayManage() || ($user instanceof User && $user->getId() === $this->getItem()->get_user_owner());
+    }
+
+    /**
+     * Withdrawing a release from the shelves sits with whoever can already disable its songs. A single disk
+     * is not withdrawn on its own: the album it belongs to is what leaves the listing.
+     */
+    public function mayHide(): bool
+    {
+        $user = Core::get_global('user');
+
+        return $this->getItem() instanceof Album
+            && $user instanceof User
+            && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 
     public function mayManage(): bool

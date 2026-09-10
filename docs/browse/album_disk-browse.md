@@ -29,6 +29,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `equal`           | string         | The album name is exactly this value. Matching is case insensitive.                                                                       |
 | `exact_match`     | string         | Alias of `equal`.                                                                                                                         |
 | `genre`           | genre id       | Only disks whose album is tagged with this genre.                                                                                         |
+| `hidden`          | 0 or 1         | Send `1` for hidden album disks, `0` for visible ones.                                                                                    |
 | `id`              | array          | Only these album disk ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `like`            | string         | The album name contains this value.                                                                                                       |
 | `no_genre`        | none           | Only disks whose album has no genre at all. Needs no value.                                                                               |

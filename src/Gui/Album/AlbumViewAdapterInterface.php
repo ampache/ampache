@@ -77,6 +77,11 @@ interface AlbumViewAdapterInterface
 
     public function getGenre(): string;
 
+    /**
+     * The marker shown on a withdrawn album; only a manager ever sees a row that carries one
+     */
+    public function getHiddenIcon(): string;
+
     public function getId(): int;
 
     public function getMoods(): string;
@@ -98,4 +103,9 @@ interface AlbumViewAdapterInterface
     public function getUserFlags(): string;
 
     public function isEditable(): bool;
+
+    /**
+     * Whether the album has been withdrawn from the listings
+     */
+    public function isHidden(): bool;
 }

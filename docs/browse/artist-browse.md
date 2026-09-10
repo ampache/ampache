@@ -27,6 +27,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `equal`           | string         | The artist name is exactly this value. Matching is case insensitive.                                                                  |
 | `exact_match`     | string         | Alias of `equal`.                                                                                                                     |
 | `genre`           | genre id       | Only artists tagged with this genre.                                                                                                  |
+| `hidden`          | 0 or 1         | Send `1` for hidden artists, `0` for visible ones.                                                                                    |
 | `id`              | array          | Only these artist ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
 | `label`           | label id       | Only artists signed to this label.                                                                                                    |
 | `like`            | string         | The artist name contains this value.                                                                                                  |

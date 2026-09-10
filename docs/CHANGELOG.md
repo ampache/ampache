@@ -42,6 +42,11 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
 * Folder and collection pages describe themselves in a shared link, like the other object pages do
+* Database 810011
+  * New `album`.`hidden` and `artist`.`hidden`, so a release can be withdrawn from the listings without deleting it and losing its playlist entries, ratings and play history
+  * Set from the album or artist edit dialog by a catalog manager, who keeps seeing what is hidden; hiding an artist offers to take its albums and disable their songs with it
+  * Withdrawn items leave every browse, smartlist, API, Subsonic and RSS listing, and carry a marker in the rows only a manager still sees. A `Hidden` search rule lists them
+  * Playback stays governed by `song`.`enabled`, which the cascade turns off
 
 ### Changed (8.1.0)
 
@@ -70,6 +75,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * `docs/examples/nginx-site.conf` and `apache-site.conf` gained example per-IP rate limiting for `/login.php`, the API handshake and Subsonic
 
 ### Fixed (8.1.0)
+
+* Album, album disk and artist song counts no longer include disabled songs, so an album whose tracks are all disabled stops advertising them
 
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse

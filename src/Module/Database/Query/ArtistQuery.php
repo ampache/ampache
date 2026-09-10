@@ -40,6 +40,7 @@ final class ArtistQuery implements QueryInterface
         'equal',
         'exact_match',
         'genre',
+        'hidden',
         'id',
         'label',
         'like',
@@ -124,6 +125,9 @@ final class ArtistQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'hidden':
+                $filter_sql = " `artist`.`hidden` = " . (int) $value . " AND ";
+                break;
             case 'id':
                 $filter_sql = " `artist`.`id` IN (";
                 foreach ($value as $uid) {
