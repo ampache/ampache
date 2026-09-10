@@ -77,7 +77,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             } elseif (Session::auth_remember()) {
                 $auth = true;
             }
-
             if ($auth) {
                 return $this->responseFactory
                     ->createResponse(RFC7231::FOUND)
@@ -85,7 +84,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
                         'Location',
                         $this->configContainer->getWebPath()
                     );
-            } elseif (array_key_exists($name, $_COOKIE)) {
+            }
+
+            if (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
                 setcookie($name, '', ['expires' => -1, 'path' => (string) $this->configContainer->get('cookie_path')]);
                 setcookie($name, '', ['expires' => -1]);

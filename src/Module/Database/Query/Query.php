@@ -1439,9 +1439,7 @@ class Query
         }
 
         // TODO we should remove this default fallback and rely on set_type()
-        if ($this->queryType === null) {
-            $this->queryType = new SongQuery();
-        }
+        $this->queryType ??= new SongQuery();
 
         $this->set_select($this->queryType->get_select());
 

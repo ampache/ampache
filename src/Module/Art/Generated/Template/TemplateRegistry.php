@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Generated\Template;
 
+use ReflectionClass;
+
 /**
  * Finds the drawing templates by looking in this directory.
  *
@@ -50,7 +52,7 @@ final class TemplateRegistry implements TemplateRegistryInterface
                 continue;
             }
 
-            $reflection = new \ReflectionClass($class);
+            $reflection = new ReflectionClass($class);
             if (
                 $reflection->isAbstract()
                 || !$reflection->implementsInterface(TemplateInterface::class)

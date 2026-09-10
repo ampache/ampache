@@ -106,8 +106,8 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
 
             usort(
                 $list_array,
-                fn(array $a, array $b): int => (new Rating($b[0]->id, $b[1]))->get_user_rating($this->user->getId())
-                    <=> (new Rating($a[0]->id, $a[1]))->get_user_rating($this->user->getId())
+                fn(array $a, array $b): int => new Rating($b[0]->id, $b[1])->get_user_rating($this->user->getId())
+                    <=> new Rating($a[0]->id, $a[1])->get_user_rating($this->user->getId())
             );
 
             if ($list_array !== []) {
@@ -197,6 +197,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     {
         $this->user = $user;
         $user->set_preferences();
+
         $data = $user->prefs;
 
         $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');

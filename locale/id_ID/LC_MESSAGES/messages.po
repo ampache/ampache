@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: whenwesober, 2021\n"
 "Language-Team: Indonesian (Indonesia) (http://app.transifex.com/ampache/ampache/language/id_ID/)\n"
@@ -216,21 +216,6 @@ msgstr "Bersihkan Statistik"
 msgid "Update User"
 msgstr "Perbarui Pengguna"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Dimainkan"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%dkali"
-
-msgid "Uploaded by"
-msgstr "Diunggah oleh"
-
-msgid "Actions"
-msgstr "Tindakan"
-
 msgid "Random to Temporary Playlist"
 msgstr "Acak ke Daftar Putar Sementara"
 
@@ -333,6 +318,9 @@ msgstr "Edit Artis"
 
 msgid "Albums"
 msgstr "Album"
+
+msgid "Songs"
+msgstr "Lagu"
 
 msgid "Top Tracks"
 msgstr ""
@@ -798,6 +786,9 @@ msgstr "Tetapkan yang telah Ada"
 msgid "Release Date"
 msgstr "Tanggal Rilis"
 
+msgid "Actions"
+msgstr "Tindakan"
+
 msgid "Add Current Host"
 msgstr "Tambah Host Saat Ini"
 
@@ -994,9 +985,6 @@ msgstr "Telusuri Ampache..."
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Lagu"
-
 msgid "Artists"
 msgstr "Artis"
 
@@ -1123,6 +1111,9 @@ msgstr "Tampilkan Instance Putarlokal"
 
 msgid "Edit Instance"
 msgstr "Edit Instance"
+
+msgid "Are You Sure?"
+msgstr "Apakah Anda yakin?"
 
 msgid "Localplay Control"
 msgstr "Kontrol Putarlokal"
@@ -1926,6 +1917,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Tambah ke Daftar Putar Baru"
 
@@ -2031,23 +2025,17 @@ msgstr "Simpan perubahan"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "Peringkat"
-
-msgid "Fav."
-msgstr "Fav."
-
 msgid "Waveform"
 msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "Edit Episode Podcast"
 
 msgid "Sync"
 msgstr "Sinkronkan"
 
 msgid "Started"
 msgstr "Dimulai"
+
+msgid "Podcast Episode Edit"
+msgstr "Edit Episode Podcast"
 
 msgid "Podcast Edit"
 msgstr "Podcast Edit"
@@ -2246,15 +2234,6 @@ msgstr "Informasi Cookie"
 
 msgid "Admin Disabled"
 msgstr "Admin dinonaktifkan"
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
 
 msgid "Connected Users"
 msgstr ""
@@ -2455,6 +2434,9 @@ msgstr "Pengguna online sekarang"
 msgid "User is Offline Now"
 msgstr "Pengguna sedang offline sekarang"
 
+msgid "Played"
+msgstr "Dimainkan"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2473,11 +2455,11 @@ msgstr "Daftar putar aktif"
 msgid "Subtitle"
 msgstr "Subtitle"
 
-msgid "Video Edit"
-msgstr "Video Edit"
-
 msgid "Video Information"
 msgstr "Informasi video"
+
+msgid "Video Edit"
+msgstr "Video Edit"
 
 msgid "Songs Played"
 msgstr ""
@@ -2530,6 +2512,22 @@ msgstr "Meningkatkan"
 msgid "Editing %s Preferences"
 msgstr "Mengedit preferensi %s"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+
+msgid "Time"
+msgstr "Waktu"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Tidak diketahui (tanpa nama)"
 
@@ -2542,8 +2540,13 @@ msgstr "Pencarian Sampul Artis"
 msgid "Cover Art Search"
 msgstr "Pencariaan Karya Sampul"
 
-msgid "Time"
-msgstr "Waktu"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+
+msgid "Rating"
+msgstr "Peringkat"
 
 msgid "Starts With"
 msgstr "Mulai Dengan"
@@ -2706,6 +2709,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Stream"
 
@@ -2819,6 +2825,11 @@ msgstr "Bitrate"
 msgid "Channels"
 msgstr "Saluran"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+
 msgid "Return to Login Page"
 msgstr "Kembali ke halaman login"
 
@@ -2913,11 +2924,15 @@ msgstr "Lirik tidak ditemukan."
 msgid "Song Edit"
 msgstr "Edit Lagu"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Informasi Lagu"
-
-msgid "Links"
-msgstr "Tautan"
 
 msgid "Song Language"
 msgstr "Bahasa Lagu"
@@ -2957,6 +2972,12 @@ msgstr "Lirik"
 
 msgid "Licensing"
 msgstr "LISENSI"
+
+msgid "Uploaded by"
+msgstr "Diunggah oleh"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "Grafik Statistik"
@@ -3198,9 +3219,6 @@ msgstr "Daftar Kontrol Akses Baru Anda telah dibuat"
 
 msgid "Your Access List entry has been removed"
 msgstr "Entri Daftar Akses Anda telah dihapus"
-
-msgid "Are You Sure?"
-msgstr "Apakah Anda yakin?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5396,6 +5414,11 @@ msgstr "Jangan menimpa sebuah berkas yang sudah ada: \"%s\""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
 
 msgid "Average from all users"
 msgstr ""

@@ -666,6 +666,8 @@ class OpenSubsonic_Xml_Data
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
         $this->_addIgnoredArticles($xindexes);
 
+        $this->_warmChildObjectCaches($children);
+
         $folders = [];
         foreach ($children as $child) {
             if ($child['object_type'] === LibraryItemEnum::FOLDER) {
@@ -2102,7 +2104,9 @@ class OpenSubsonic_Xml_Data
         $xdir->addAttribute('name', (string) $folder->name);
 
         $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
-        foreach ($this->folderRepository->getObjects($childFolderId, $userId) as $child) {
+        $children      = $this->folderRepository->getObjects($childFolderId, $userId);
+        $this->_warmChildObjectCaches($children);
+        foreach ($children as $child) {
             if ($child['object_type'] === LibraryItemEnum::FOLDER) {
                 $childFolder = new Folder($child['object_id']);
                 if (!$childFolder->isNew()) {
@@ -2652,5 +2656,27 @@ class OpenSubsonic_Xml_Data
                 }
             }
         }
+    }
+
+    /**
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    private function _warmChildObjectCaches(array $children): void
+    {
+        $songIds = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::SONG) {
+                $songIds[] = $child['object_id'];
+            }
+        }
+
+        if ($songIds === []) {
+            return;
+        }
+
+        Song::build_cache($songIds);
+        Rating::build_cache('song', $songIds);
+        Userflag::build_cache('song', $songIds);
+        Tag::build_cache($songIds);
     }
 }

@@ -28,6 +28,8 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use ReflectionProperty;
+use Throwable;
 
 class BrowseShowObjectsTest extends MockeryTestCase
 {
@@ -61,7 +63,7 @@ class BrowseShowObjectsTest extends MockeryTestCase
      */
     private function savedList(Browse $browse): array
     {
-        return (array) new \ReflectionProperty(Query::class, '_cache')->getValue($browse);
+        return (array) new ReflectionProperty(Query::class, '_cache')->getValue($browse);
     }
 
     /**
@@ -74,7 +76,7 @@ class BrowseShowObjectsTest extends MockeryTestCase
         ob_start();
         try {
             $browse->show_objects($objectIds);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             // rendering infrastructure is absent on purpose
         } finally {
             ob_end_clean();

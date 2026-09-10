@@ -110,12 +110,12 @@ class GettextLoadingTest extends TestCase
         // the point of compiling is speed, so the two have to answer identically
         $mo = __DIR__ . '/../../locale/fr_FR/LC_MESSAGES/messages.mo';
 
-        $fromBinary = Translator::createFromTranslations((new MoLoader())->loadFile($mo));
+        $fromBinary = Translator::createFromTranslations(new MoLoader()->loadFile($mo));
         $compiled   = compiled_gettext_catalogue($mo);
 
         self::assertIsString($compiled);
 
-        $fromCompiled = (new Translator())->loadTranslations($compiled);
+        $fromCompiled = new Translator()->loadTranslations($compiled);
 
         foreach (['Unknown (Orphaned)', 'Albums', 'Playlists'] as $msgid) {
             self::assertSame($fromBinary->gettext($msgid), $fromCompiled->gettext($msgid), $msgid);
@@ -141,7 +141,7 @@ class GettextLoadingTest extends TestCase
     {
         self::assertFalse(function_exists('__'), 'the fixture starts with no catalogue registered');
 
-        (new InitializationHandlerGetText())->init();
+        new InitializationHandlerGetText()->init();
 
         self::assertFalse(function_exists('__'));
     }

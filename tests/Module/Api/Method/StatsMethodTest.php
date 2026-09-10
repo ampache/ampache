@@ -46,6 +46,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use ReflectionProperty;
 
 /**
  * Every result path runs through the Stats/Rating/Userflag/Random database statics, so only the
@@ -100,7 +101,7 @@ class StatsMethodTest extends MockeryTestCase
         // left unstubbed so that path fails the test. the guard must short-circuit to writeEmpty before it.
         // force `allow_personal_info_recent` to 0 for the target without touching the database
         AmpConfig::set('memory_cache', true, true);
-        (new \ReflectionProperty(database_object::class, '_enabled'))->setValue(null, null);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
         Preference::add_to_cache('get_by_user-allow_personal_info_recent', 7, [0]);
 
         $viewer->shouldReceive('getId')->andReturn(1);

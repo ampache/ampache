@@ -130,7 +130,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
 
         $voices = $this->voices($playlistId);
         $count  = $playlist->get_media_count('song');
-        $owner  = (string) ($playlist->username ?? '');
+        $owner  = $playlist->username ?? '';
 
         $subtitle = sprintf(nT_('%d track', '%d tracks', $count), $count);
         if ($owner !== '') {

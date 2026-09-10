@@ -56,7 +56,7 @@ final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
         );
 
         if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) && !$object->enabled) {
-            $object = null;
+            return null;
         }
 
         return $object;

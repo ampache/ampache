@@ -234,9 +234,7 @@ class AmpacheXbmc extends localplay_controller
                     }
                 }
 
-                if (!isset($data['name'])) {
-                    $data['name'] = $item['label'];
-                }
+                $data['name'] ??= $item['label'];
 
                 $results[] = $data;
             }

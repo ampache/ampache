@@ -91,7 +91,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'name' => (string) $episode->get_fullname(),
                     'url' => $url,
                     'partOfSeries' => ['@type' => 'PodcastSeries', 'name' => $episode->getPodcastName()],
-                    'duration' => PageMeta::duration((int) $episode->time),
+                    'duration' => PageMeta::duration($episode->time),
                     'datePublished' => $episode->getPubDate()->format('Y-m-d'),
                 ])
             );

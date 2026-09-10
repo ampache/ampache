@@ -55,7 +55,7 @@ class AlbumDurationTest extends TestCase
         $disk       = new AlbumDisk();
         $disk->time = $seconds;
 
-        static::assertSame($expected, $disk->get_f_time());
+        self::assertSame($expected, $disk->get_f_time());
     }
 
     #[DataProvider('durations')]
@@ -64,6 +64,6 @@ class AlbumDurationTest extends TestCase
         $album       = new Album();
         $album->time = $seconds;
 
-        static::assertSame($expected, $album->get_f_time());
+        self::assertSame($expected, $album->get_f_time());
     }
 }

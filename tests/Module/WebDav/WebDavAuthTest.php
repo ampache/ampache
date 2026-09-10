@@ -126,7 +126,7 @@ class WebDavAuthTest extends MockeryTestCase
 
     private function validate(string $username, string $password): bool
     {
-        return (bool) (new ReflectionMethod($this->subject, 'validateUserPass'))
+        return (bool) new ReflectionMethod($this->subject, 'validateUserPass')
             ->invoke($this->subject, $username, $password);
     }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -216,22 +216,6 @@ msgstr "پاک کردن آمار"
 msgid "Update User"
 msgstr "به‌روزرسانی کاربر "
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "پخش شده"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "زمان %d"
-msgstr[1] "زمان %d"
-
-msgid "Uploaded by"
-msgstr "بارگزاری شده توسط"
-
-msgid "Actions"
-msgstr "اقدامات"
-
 msgid "Random to Temporary Playlist"
 msgstr "لیست پخش تصادفی به موقت"
 
@@ -334,6 +318,9 @@ msgstr "ویرایش هنرمند"
 
 msgid "Albums"
 msgstr "آلبوم ها"
+
+msgid "Songs"
+msgstr "آهنگ ها"
 
 msgid "Top Tracks"
 msgstr ""
@@ -799,6 +786,9 @@ msgstr "حفظ موجودی"
 msgid "Release Date"
 msgstr "تاریخ انتشار"
 
+msgid "Actions"
+msgstr "اقدامات"
+
 msgid "Add Current Host"
 msgstr "افزودن میزبان فعلی"
 
@@ -995,9 +985,6 @@ msgstr "مرور آمپاچی..."
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "آهنگ ها"
-
 msgid "Artists"
 msgstr "هنرمندان"
 
@@ -1124,6 +1111,9 @@ msgstr "نمایش نمونه های پخش محلی"
 
 msgid "Edit Instance"
 msgstr "ویرایش نمونه"
+
+msgid "Are You Sure?"
+msgstr "آیا مطمئنی؟"
 
 msgid "Localplay Control"
 msgstr "کنترل پخش محلی"
@@ -1927,6 +1917,9 @@ msgstr "یک نسخه از ورژن جدید را بارگیری کنید"
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "افزودن به لیست پخش جدید"
 
@@ -2032,23 +2025,17 @@ msgstr "ذخیره‌ تغییرات"
 msgid "Save as Playlist"
 msgstr "ذخیره بعنوان لیست پخش"
 
-msgid "Rating"
-msgstr "رتبه بندی"
-
-msgid "Fav."
-msgstr "دلخواه."
-
 msgid "Waveform"
 msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "ویرایش قسمت های پادکست"
 
 msgid "Sync"
 msgstr "همگام سازی"
 
 msgid "Started"
 msgstr "آغاز شده"
+
+msgid "Podcast Episode Edit"
+msgstr "ویرایش قسمت های پادکست"
 
 msgid "Podcast Edit"
 msgstr "ویرایش پادکست"
@@ -2247,15 +2234,6 @@ msgstr "اطلاعات کوکی"
 
 msgid "Admin Disabled"
 msgstr "مدیر غیر فعال شده"
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
 
 msgid "Connected Users"
 msgstr ""
@@ -2456,6 +2434,9 @@ msgstr "کاربر در حال حاضر آنلاین است"
 msgid "User is Offline Now"
 msgstr "کاربر در حال حاضر آفلاین است"
 
+msgid "Played"
+msgstr "پخش شده"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2474,11 +2455,11 @@ msgstr "لیست پخش فعال"
 msgid "Subtitle"
 msgstr "زیرنویس"
 
-msgid "Video Edit"
-msgstr "ویرایش های ویدیو"
-
 msgid "Video Information"
 msgstr "اطلاعات ویدیو"
+
+msgid "Video Edit"
+msgstr "ویرایش های ویدیو"
 
 msgid "Songs Played"
 msgstr ""
@@ -2531,6 +2512,24 @@ msgstr "ارتقاء"
 msgid "Editing %s Preferences"
 msgstr "ویرایش کردن %s اولویت ها"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "زمان"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "ناشناس (یتیم)"
 
@@ -2543,8 +2542,14 @@ msgstr "جستجوی روی جلد هنرمند"
 msgid "Cover Art Search"
 msgstr "جستجو روی جلد اثر هنری"
 
-msgid "Time"
-msgstr "زمان"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "رتبه بندی"
 
 msgid "Starts With"
 msgstr "شروع شده با"
@@ -2707,6 +2712,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "استریم"
 
@@ -2820,6 +2828,12 @@ msgstr "نرخ بیت"
 msgid "Channels"
 msgstr "کانال ها"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr "بازگشت به صفحه ورود"
 
@@ -2916,11 +2930,15 @@ msgstr "متن ترانه پیدا نشد."
 msgid "Song Edit"
 msgstr "ویرایش های آهنگ"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "اطلاعات آهنگ"
-
-msgid "Links"
-msgstr "پیوندها"
 
 msgid "Song Language"
 msgstr "زبان ترانه"
@@ -2960,6 +2978,12 @@ msgstr "متن ترانه"
 
 msgid "Licensing"
 msgstr "صدور مجوز"
+
+msgid "Uploaded by"
+msgstr "بارگزاری شده توسط"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "اطلاعات نموداری"
@@ -3202,9 +3226,6 @@ msgstr "لیست (ها) جدید کنترل دسترسی شما ایجاد شد�
 
 msgid "Your Access List entry has been removed"
 msgstr "لیست دسترسی وارد شده شما حذف شده است"
-
-msgid "Are You Sure?"
-msgstr "آیا مطمئنی؟"
 
 #. HINT: ACL Name
 #, php-format
@@ -5411,6 +5432,12 @@ msgstr "فایل موجود: \"%s\" را بازنویسی نکنید"
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Average from all users"
 msgstr "میانگین تمام کاربران"

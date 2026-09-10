@@ -231,9 +231,7 @@ final class DefaultAction implements ApplicationActionInterface
                 // Intentional break fall-through
             case 'show_create_account':
                 $results = parse_ini_file($configfile);
-                if (!isset($created_config)) {
-                    $created_config = true;
-                }
+                $created_config ??= true;
 
                 /* Make sure we've got a valid config file */
                 if (

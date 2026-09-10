@@ -101,9 +101,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
                 $results['web_path'] ?? ''
             );
             $results['site_charset'] ??= 'UTF-8';
-            if (!isset($results['max_upload_size'])) {
-                $results['max_upload_size'] = 1048576;
-            }
+            $results['max_upload_size'] ??= 1048576;
 
             $_SERVER['SERVER_NAME'] ??= '';
             if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {

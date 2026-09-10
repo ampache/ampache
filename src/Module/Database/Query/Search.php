@@ -376,9 +376,7 @@ class Search extends playlist_object
      */
     public static function get_search_array(?int $user_id = null): array
     {
-        if ($user_id === null) {
-            $user_id = (int) (Core::get_global('user')?->id);
-        }
+        $user_id ??= (int) (Core::get_global('user')?->id);
 
         $key = 'searcharray';
         if (parent::is_cached($key, $user_id)) {
@@ -416,9 +414,7 @@ class Search extends playlist_object
      */
     public static function get_searches(?int $user_id = null): array
     {
-        if ($user_id === null) {
-            $user_id = (int) (Core::get_global('user')?->id);
-        }
+        $user_id ??= (int) (Core::get_global('user')?->id);
 
         $key = 'searches';
         if (parent::is_cached($key, $user_id)) {

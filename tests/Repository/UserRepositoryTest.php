@@ -45,35 +45,6 @@ class UserRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private UserRepository $subject;
 
-    /**
-     * A whole user row, the way the constructor expects it out of the cache
-     *
-     * @return array<string, mixed>
-     */
-    private static function userRow(int $id, string $username): array
-    {
-        return [
-            'id' => $id,
-            'username' => $username,
-            'fullname' => $username,
-            'email' => '',
-            'website' => '',
-            'apikey' => '',
-            'access' => 25,
-            'disabled' => 0,
-            'last_seen' => 0,
-            'create_date' => 0,
-            'validation' => '',
-            'state' => '',
-            'city' => '',
-            'fullname_public' => 0,
-            'rsstoken' => '',
-            'streamtoken' => '',
-            'subsonic_secret' => '',
-            'catalog_filter_group' => 0,
-        ];
-    }
-
     public function testCountByCatalogFilterGroupCountsTheAssignedUsers(): void
     {
         $this->connection->expects(static::once())
@@ -174,7 +145,7 @@ class UserRepositoryTest extends TestCase
     public function testFindByApiKeyResolvesTheCallerOncePerRequest(): void
     {
         // the row itself is cached too, so the second lookup never reaches the database
-        User::add_to_cache('user', 42, self::userRow(42, 'some-user'));
+        User::add_to_cache('user', 42, $this->userRow(42, 'some-user'));
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
@@ -189,7 +160,7 @@ class UserRepositoryTest extends TestCase
 
     public function testFindByUsernameResolvesTheNameOncePerRequest(): void
     {
-        User::add_to_cache('user', 42, self::userRow(42, 'some-user'));
+        User::add_to_cache('user', 42, $this->userRow(42, 'some-user'));
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
@@ -372,7 +343,7 @@ class UserRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'UPDATE `user` SET `last_seen` = ? WHERE `id` = ?',
-                static::callback(static fn(array $params): bool => is_int($params[0]) && $params[1] === 666)
+                self::callback(static fn(array $params): bool => is_int($params[0]) && $params[1] === 666)
             );
 
         $this->subject->updateLastSeen(666);
@@ -387,5 +358,34 @@ class UserRepositoryTest extends TestCase
             $this->connection,
             $this->logger,
         );
+    }
+
+    /**
+     * A whole user row, the way the constructor expects it out of the cache
+     *
+     * @return array<string, mixed>
+     */
+    private function userRow(int $id, string $username): array
+    {
+        return [
+            'id' => $id,
+            'username' => $username,
+            'fullname' => $username,
+            'email' => '',
+            'website' => '',
+            'apikey' => '',
+            'access' => 25,
+            'disabled' => 0,
+            'last_seen' => 0,
+            'create_date' => 0,
+            'validation' => '',
+            'state' => '',
+            'city' => '',
+            'fullname_public' => 0,
+            'rsstoken' => '',
+            'streamtoken' => '',
+            'subsonic_secret' => '',
+            'catalog_filter_group' => 0,
+        ];
     }
 }

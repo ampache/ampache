@@ -142,7 +142,7 @@ class PlaylistAjaxHandlerTest extends TestCase
     {
         $this->libraryItemLoader->method('load')
             ->willReturnCallback(
-                static fn(LibraryItemEnum $type, int $id): ?Playlist => ($id === 10) ? $target : $source
+                static fn(LibraryItemEnum $type, int $id): Playlist => ($id === 10) ? $target : $source
             );
 
         ob_start();

@@ -767,6 +767,7 @@ final class Xml8_Data
         $xml_folder->addChild('time', (string) $folder->time);
         $xml_items = $xml_folder->addChild('items');
 
+        $this->warmFolderItemCaches($objects);
         foreach ($objects as $object) {
             preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
             $object_type = $matches[1] ?? null;
@@ -2189,5 +2190,33 @@ final class Xml8_Data
         $this->offset = $offset;
 
         return $rendered;
+    }
+
+    /**
+     * @param array<int|string> $objects
+     */
+    private function warmFolderItemCaches(array $objects): void
+    {
+        $idsByType = [];
+        foreach ($objects as $item) {
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
+            $type = $matches[1] ?? null;
+            $id   = (int) ($matches[2] ?? 0);
+            if ($type === null || $id <= 0) {
+                continue;
+            }
+
+            $idsByType[$type][] = $id;
+        }
+
+        foreach ($idsByType as $type => $ids) {
+            Rating::build_cache($type, $ids);
+            Art::build_cache($ids, $type);
+        }
+
+        Song::build_cache($idsByType['song'] ?? []);
+        Video::build_cache($idsByType['video'] ?? []);
+        Podcast_Episode::build_cache($idsByType['podcast_episode'] ?? []);
+        Folder::build_cache($idsByType['folder'] ?? []);
     }
 }

@@ -67,28 +67,22 @@ final readonly class UpdateAction implements ApplicationActionInterface
                 ->createResponse(RFC7231::FOUND)
                 ->withHeader('Location', $this->configContainer->getWebPath() . '/test.php');
         }
-
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
             if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
                 throw new AccessDeniedException();
             }
-
             set_time_limit(300);
             $success = AutoUpdate::update_files();
             if ($success) {
                 $success = AutoUpdate::update_dependencies($this->configContainer);
             }
-
             Preference::translate_db();
             Preference::set_defaults();
-
             // a failed update has already printed the command output, so stay on the page rather than redirect
             if (!$success) {
                 return $this->responseFactory->createResponse();
             }
-
             $target = $this->getReturnPath($request);
-
             // the commands flush their output as they run, so a Location header would be dropped
             if (headers_sent()) {
                 echo '<script>window.location.href = ' . json_encode(
@@ -103,7 +97,9 @@ final readonly class UpdateAction implements ApplicationActionInterface
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)
                 ->withHeader('Location', $target);
-        } elseif ($hasPendingUpdates) {
+        }
+
+        if ($hasPendingUpdates) {
             try {
                 $this->updater->update();
             } catch (UpdateFailedException) {

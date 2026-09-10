@@ -440,7 +440,8 @@ final readonly class InstallationHelper implements InstallationHelperInterface
                 AmpError::add('general', T_('Config file is not writable'));
 
                 return false;
-            } elseif (!file_put_contents($config_file, $final)) {
+            }
+            if (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
                 AmpError::add('general', T_('Failed writing config file'));
 
