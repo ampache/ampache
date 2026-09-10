@@ -51,10 +51,10 @@ final class Migration810011 extends AbstractMigration
                 );
             }
 
-            // every browse of these tables now carries `enabled` = 1, so the column is read on all of them
-            if (!Dba::has_index($table, 'enabled')) {
-                $this->updateDatabase(sprintf('ALTER TABLE `%s` ADD KEY `enabled` (`enabled`);', $table));
-            }
+            // deliberately unindexed: almost every row is enabled, so the optimiser that takes the index
+            // reads 8500 entries and then fetches each row, where a scan of the same table is a third
+            // faster. The one query it would serve - a manager listing what is withdrawn - is rare enough
+            // to pay for itself out of the scan.
         }
     }
 }

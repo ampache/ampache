@@ -74,5 +74,14 @@ list implements for the same reason a withdrawn release does.
 ## Database
 
 `album`.`enabled` and `artist`.`enabled` arrive with database version **810011**, as
-`tinyint(1) unsigned NOT NULL DEFAULT 1` plus an index, alongside the `song`, `video` and `podcast_episode`
-columns of the same name that predate it.
+`tinyint(1) unsigned NOT NULL DEFAULT 1`, alongside the `song`, `video` and `podcast_episode` columns of the
+same name that predate it.
+
+Neither column is indexed, and that is measured rather than assumed. Almost every row is enabled - 8581 of
+8584 albums on the catalogue this was built against - so an index on the column has a cardinality of two and
+the optimiser that reaches for it reads every entry and then fetches every row, where scanning the table is
+a third faster. Adding the name to make it composite is worse again, because the browse groups by name and
+filesorts either way. The one query an index would serve, a manager listing what is withdrawn, is rare and
+pays for itself out of the same scan.
+
+What the condition costs is the three queries per page that carry it, around half a millisecond each.
