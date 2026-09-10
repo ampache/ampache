@@ -868,7 +868,7 @@ class Search extends playlist_object
             'weight_podcast_episode' => 'numeric',
             'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
             'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'has_image',
-            'hidden', 'waveform' => 'boolean',
+            'enabled', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
             'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',

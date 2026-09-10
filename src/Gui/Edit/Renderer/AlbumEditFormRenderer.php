@@ -179,18 +179,6 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
         return $this->getItem()->isEnabled();
     }
 
-    /**
-     * Disabling a release sits with whoever can already disable its songs. A single disk is not disabled on
-     * its own: editing one still sets the flag on the album it belongs to.
-     */
-    public function mayDisable(): bool
-    {
-        $user = Core::get_global('user');
-
-        return $user instanceof User
-            && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
-    }
-
     public function mayEditMbid(): bool
     {
         $user = Core::get_global('user');

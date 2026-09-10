@@ -643,8 +643,7 @@ final class AlbumDiskSearch implements SearchInterface
             }
         }
 
-        // a withdrawn item is out of a smartlist too, and unlike the catalog test above this one is not
-        // optional: a takedown does not depend on whether the instance turned catalog checks on
+        // a withdrawn item is out of a smartlist too, and unlike the catalog test it is never optional
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
             $where_sql = ($where_sql !== '' && $where_sql !== '0')
                 ? "(" . $where_sql . ") AND EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)"

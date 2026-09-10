@@ -2131,12 +2131,6 @@ class Song extends database_object implements
         return $this->getId() === 0;
     }
 
-    /**
-     * Whether the song is visible to this viewer at all.
-     *
-     * A disabled song is indistinguishable from a missing one for anyone who cannot turn it back on, so
-     * every caller that resolves one by id refuses it the same way it refuses an id that was never there.
-     */
     public function isVisible(?User $user = null): bool
     {
         return $this->enabled

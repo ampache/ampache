@@ -1246,9 +1246,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         try {
             $this->connection->query($sql, $params);
-        } catch (DatabaseException $error) {
+        } catch (DatabaseException) {
             $this->logger->warning(
-                'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
+                'count maintenance failed: ' . $sql,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

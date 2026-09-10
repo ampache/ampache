@@ -93,11 +93,11 @@ final class AlbumMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        // the caller is told the same thing either way; the line this throws from is what separates a
-        // withdrawn album from a missing one in the log the handler writes
+        // a withdrawn album is refused like an id that was never there, so nothing says it exists
         if (!$album->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
+
         $include = [];
         if (array_key_exists('include', $input)) {
             if (is_array($input['include'])) {

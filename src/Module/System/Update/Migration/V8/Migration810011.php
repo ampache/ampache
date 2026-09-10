@@ -43,18 +43,14 @@ final class Migration810011 extends AbstractMigration
 
     public function migrate(): void
     {
-        // A partly-applied migration re-runs from the top, so each column is only added when it is absent.
+        // a partly-applied migration re-runs from the top, so each column is only added when it is absent
+        // and stays unindexed: almost every row is enabled, so a scan beats the two-value index it would be
         foreach (['album', 'artist'] as $table) {
             if (!Dba::has_column($table, 'enabled')) {
                 $this->updateDatabase(
                     sprintf('ALTER TABLE `%s` ADD COLUMN `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1;', $table)
                 );
             }
-
-            // deliberately unindexed: almost every row is enabled, so the optimiser that takes the index
-            // reads 8500 entries and then fetches each row, where a scan of the same table is a third
-            // faster. The one query it would serve - a manager listing what is withdrawn - is rare enough
-            // to pay for itself out of the scan.
         }
     }
 }

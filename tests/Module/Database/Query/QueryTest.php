@@ -184,9 +184,6 @@ class QueryTest extends MockeryTestCase
     }
 
     /**
-     * An uncached query keeps its state in memory and never reaches the database.
-     */
-    /**
      * The browse asks whether the caller may see withdrawn rows, so a checker has to be reachable.
      */
     private function bootPrivilegeChecker(): void
@@ -200,6 +197,9 @@ class QueryTest extends MockeryTestCase
         $GLOBALS['dic'] = $dic;
     }
 
+    /**
+     * An uncached query keeps its state in memory and never reaches the database.
+     */
     private function subject(): Query
     {
         $this->bootPrivilegeChecker();

@@ -83,8 +83,7 @@ final class SongMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        // the caller is told the same thing either way; the line this throws from is what separates a
-        // disabled song from a missing one in the log the handler writes
+        // a disabled song is refused like an id that was never there, so nothing says it exists
         if (!$song->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }

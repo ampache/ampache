@@ -54,7 +54,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song       = $this->mock(Song::class);
         $user       = $this->mock(User::class);
 
-        $song_id       = 0;
+        $song_id       = 666;
         $song->catalog = 1;
 
         $user->catalogs['music'] = [1];
@@ -78,9 +78,6 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $song->shouldReceive('getId')
-            ->withNoArgs()
-            ->andReturn($song_id);
         $song->shouldReceive('isNew')
             ->withNoArgs()
             ->twice()
@@ -95,7 +92,7 @@ class ShowSongActionTest extends MockeryTestCase
 
         $this->logger->shouldReceive('warning')
             ->with(
-                'Refused song 0: no such song',
+                'Refused song 666: no such song',
                 [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
             )
             ->once();

@@ -55,12 +55,12 @@ class Artist extends database_object implements
 {
     protected const string DB_TABLENAME = 'artist';
 
-    private static array $_mapcache  = [];
-    public ?int $addition_time       = null;
-    public int $album_count          = 0;
-    public int $album_disk_count     = 0;
-    public bool $enabled             = true;
-    public int $id                   = 0;
+    private static array $_mapcache = [];
+    public ?int $addition_time      = null;
+    public int $album_count         = 0;
+    public int $album_disk_count    = 0;
+    public bool $enabled            = true;
+    public int $id                  = 0;
     public int $last_update;
     public ?string $lastfm_url  = null;
     public ?string $link        = null;
@@ -960,12 +960,6 @@ class Artist extends database_object implements
         return $this->getId() === 0;
     }
 
-    /**
-     * Whether the artist is visible to this viewer at all.
-     *
-     * A withdrawn artist is indistinguishable from a missing one for anyone who cannot put it back, so every
-     * caller that resolves one by id refuses it the same way it refuses an id that was never there.
-     */
     public function isVisible(?User $user = null): bool
     {
         return $this->enabled
@@ -1004,8 +998,9 @@ class Artist extends database_object implements
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
 
-        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
-        if (array_key_exists('enabled', $data)) {
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
             self::update_enabled((bool) $data['enabled'], $this->id);
         }
 

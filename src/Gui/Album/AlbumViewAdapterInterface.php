@@ -102,9 +102,6 @@ interface AlbumViewAdapterInterface
 
     public function getUserFlags(): string;
 
-    /**
-     * Whether the album has been withdrawn from the listings
-     */
     public function isDisabled(): bool;
 
     public function isEditable(): bool;

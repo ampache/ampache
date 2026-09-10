@@ -632,10 +632,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
-     * The songs of an artist a listener may be handed: unplayable ones are left out.
-     *
-     * `getAllByArtist()` keeps returning everything, because re-reading the tags of a disabled file is
-     * still a thing a catalogue has to do.
+     * The songs of an artist a listener may be handed: unplayable ones are left out
      *
      * @return int[]
      */
@@ -1286,9 +1283,9 @@ final readonly class SongRepository implements SongRepositoryInterface
         foreach ($statements as $sql) {
             try {
                 $this->connection->query($sql);
-            } catch (DatabaseException $error) {
+            } catch (DatabaseException) {
                 $this->logger->warning(
-                    'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
+                    'count maintenance failed: ' . $sql,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
@@ -1363,9 +1360,9 @@ final readonly class SongRepository implements SongRepositoryInterface
         foreach ($statements as $sql) {
             try {
                 $this->connection->query($sql);
-            } catch (DatabaseException $error) {
+            } catch (DatabaseException) {
                 $this->logger->warning(
-                    'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
+                    'count maintenance failed: ' . $sql,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }

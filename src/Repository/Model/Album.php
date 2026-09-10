@@ -63,28 +63,28 @@ class Album extends database_object implements
     /** @var array<string, int> keyed by `check()`'s identity-column cache key, see there */
     private static array $_mapcache   = [];
 
-    public ?int $addition_time         = null;
-    public ?int $album_artist          = null;
-    public int $artist_count           = 0;
-    public ?string $artist_name        = null;
-    public ?string $artist_prefix      = null;
-    public ?string $barcode            = null;
-    public int $catalog                = 0;
-    public int $catalog_id             = 0;
-    public ?string $catalog_number     = null;
-    public int $disk_count             = 0;
-    public bool $enabled               = true;
-    public int $id                     = 0;
-    public ?int $last_played           = null; // When this was last streamed, as a unix timestamp; null until it has been played.
-    public ?string $link               = null;
-    public ?string $mbid               = null; // MusicBrainz ID
-    public ?string $mbid_group         = null; // MusicBrainz Release Group ID
-    public ?string $name               = null;
-    public ?int $original_year         = null;
-    public ?string $prefix             = null;
-    public ?string $release_status     = null;
-    public ?string $release_type       = null;
-    public int $song_artist_count      = 0;
+    public ?int $addition_time        = null;
+    public ?int $album_artist         = null;
+    public int $artist_count          = 0;
+    public ?string $artist_name       = null;
+    public ?string $artist_prefix     = null;
+    public ?string $barcode           = null;
+    public int $catalog               = 0;
+    public int $catalog_id            = 0;
+    public ?string $catalog_number    = null;
+    public int $disk_count            = 0;
+    public bool $enabled              = true;
+    public int $id                    = 0;
+    public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
+    public ?string $link              = null;
+    public ?string $mbid              = null; // MusicBrainz ID
+    public ?string $mbid_group        = null; // MusicBrainz Release Group ID
+    public ?string $name              = null;
+    public ?int $original_year        = null;
+    public ?string $prefix            = null;
+    public ?string $release_status    = null;
+    public ?string $release_type      = null;
+    public int $song_artist_count     = 0;
 
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
@@ -1007,12 +1007,6 @@ class Album extends database_object implements
         return $this->getId() === 0;
     }
 
-    /**
-     * Whether the album is visible to this viewer at all.
-     *
-     * A withdrawn album is indistinguishable from a missing one for anyone who cannot put it back, so every
-     * caller that resolves one by id refuses it the same way it refuses an id that was never there.
-     */
     public function isVisible(?User $user = null): bool
     {
         return $this->enabled
@@ -1041,8 +1035,9 @@ class Album extends database_object implements
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
 
-        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
-        if (array_key_exists('enabled', $data)) {
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
             self::update_enabled((bool) $data['enabled'], $this->id);
         }
 

@@ -674,9 +674,6 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         );
     }
 
-    /**
-     * Writes a single artist column, bounded by the enum because the column name goes into the statement
-     */
     public function setChildrenEnabled(int $artistId, bool $enabled): void
     {
         $state = ($enabled) ? 1 : 0;
@@ -692,6 +689,9 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         );
     }
 
+    /**
+     * Writes a single artist column, bounded by the enum because the column name goes into the statement
+     */
     public function setField(int $artistId, ArtistFieldEnum $field, int|string|null $value): bool
     {
         try {
@@ -834,9 +834,9 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     {
         try {
             $this->connection->query($sql, $params);
-        } catch (DatabaseException $error) {
+        } catch (DatabaseException) {
             $this->logger->warning(
-                'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
+                'count maintenance failed: ' . $sql,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

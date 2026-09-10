@@ -55,7 +55,8 @@ final readonly class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
+        $songId   = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $song     = $this->modelFactory->createSong($songId);
         $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
         if ($shown) {
@@ -93,7 +94,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
             $this->logger->warning(
                 sprintf(
                     'Refused song %d: %s',
-                    $song->getId(),
+                    $songId,
                     ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogues this user may see'
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
