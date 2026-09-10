@@ -588,9 +588,9 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     {
         try {
             $this->connection->query($sql, $params);
-        } catch (DatabaseException) {
+        } catch (DatabaseException $error) {
             $this->logger->warning(
-                'count maintenance failed: ' . $sql,
+                'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

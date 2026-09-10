@@ -78,9 +78,12 @@ class ShowSongActionTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
+        $song->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($song_id);
         $song->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
+            ->twice()
             ->andReturn(true);
 
         $this->ui->shouldReceive('showQueryStats')
@@ -92,7 +95,7 @@ class ShowSongActionTest extends MockeryTestCase
 
         $this->logger->shouldReceive('warning')
             ->with(
-                'Requested a song that does not exist',
+                'Refused song 0: no such song',
                 [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
             )
             ->once();

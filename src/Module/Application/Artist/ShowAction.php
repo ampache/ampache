@@ -104,7 +104,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested an artist that does not exist',
+                sprintf(
+                    'Refused artist %d: %s',
+                    $artistId,
+                    ($artist->isNew()) ? 'no such artist' : 'withdrawn'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

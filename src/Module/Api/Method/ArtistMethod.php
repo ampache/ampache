@@ -80,7 +80,13 @@ final class ArtistMethod implements MethodInterface
         }
 
         $artist = $this->modelFactory->createArtist($objectId);
-        if ($artist->isNew() || !$artist->isVisible($user)) {
+        if ($artist->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        // the caller is told the same thing either way; the line this throws from is what separates a
+        // withdrawn artist from a missing one in the log the handler writes
+        if (!$artist->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
 

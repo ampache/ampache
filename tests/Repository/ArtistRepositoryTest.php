@@ -385,6 +385,62 @@ class ArtistRepositoryTest extends TestCase
         self::assertTrue($this->subject->setField(666, ArtistFieldEnum::MBID, 'some-mbid'));
     }
 
+    /**
+     * Binary: an item counts when it is enabled, and the state of its parent never enters into it.
+     */
+    public function testUpdateAllCountsLeavesOutWhatCannotBePlayedOrListed(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        $albumCount = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`album_count` = ')))[0];
+        $songCount  = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`song_count` = ')))[0];
+
+        self::assertStringContainsString('`album`.`enabled` = 1', $albumCount);
+        self::assertStringContainsString('`song`.`enabled` = 1', $songCount);
+    }
+
+    /**
+     * The album count named `song`.`enabled` in a statement that joins no `song` table, so it failed on every
+     * run and the column simply never moved. Nothing above it noticed: the sweep carries on by design.
+     */
+    public function testUpdateAllCountsOnlyFiltersOnTablesItJoins(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateAllCounts();
+
+        foreach ($statements as $sql) {
+            foreach (['song', 'album', 'album_disk', 'artist', 'catalog'] as $table) {
+                if (!str_contains($sql, sprintf('`%s`.`enabled`', $table))) {
+                    continue;
+                }
+
+                // the tell: a table can only be filtered on where the statement actually brought it in
+                self::assertMatchesRegularExpression(
+                    sprintf('/(FROM|JOIN) `%s`/', $table),
+                    $sql,
+                    sprintf('a statement filters on `%s`.`enabled` without joining `%s`', $table, $table)
+                );
+            }
+        }
+    }
+
     public function testUpdateAllSkipCountsZeroesAnArtistWithNoSkipsBeforeRollingTheRestUp(): void
     {
         $calls = [];

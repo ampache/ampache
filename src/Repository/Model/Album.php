@@ -53,6 +53,7 @@ use Exception;
  */
 class Album extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface

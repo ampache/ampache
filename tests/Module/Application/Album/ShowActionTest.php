@@ -88,7 +88,7 @@ class ShowActionTest extends MockeryTestCase
 
         $album->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
+            ->twice()
             ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
@@ -103,7 +103,7 @@ class ShowActionTest extends MockeryTestCase
 
         $this->logger->shouldReceive('warning')
             ->with(
-                'Requested an album that does not exist',
+                'Refused album 42: no such album',
                 [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
             )
             ->once();

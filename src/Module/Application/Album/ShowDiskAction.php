@@ -96,7 +96,11 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested an album_disk that does not exist',
+                sprintf(
+                    'Refused album_disk %d: %s',
+                    $albumDiskId,
+                    ($albumDisk->isNew()) ? 'no such disk' : 'withdrawn, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

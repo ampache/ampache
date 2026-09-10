@@ -23,11 +23,13 @@ which stays visible to everyone.
 | API `album_songs` `artist_songs` `artist_albums` `browse` | absent | absent | returned |
 | Subsonic, OpenSubsonic, UPnP, DAAP | absent | absent | absent |
 | Playback (`play/index.php`) | `404 File disabled` | `404 File disabled` | `404 File disabled` |
+| A public share link | refused | refused | refused |
 | Editing the state | refused | refused | allowed |
 
-Two rows are not level-aware on purpose. The device protocols have no logged-in user to hold a level, so
+Three rows are not level-aware on purpose. The device protocols have no logged-in user to hold a level, so
 they filter unconditionally. Playback answers to `song`.`enabled` alone, whoever asks: a manager can see a
-withdrawn track, not stream it.
+withdrawn track, not stream it. A share is a public link with nobody in particular on the other end, so it
+stops working when what it points at is withdrawn, whoever created it.
 
 Asking for withdrawn items below level 75 returns nothing rather than an error. The browse carries both
 `enabled = 1` and whatever the caller asked for, so a request for `enabled = 0` simply matches no row.
@@ -66,7 +68,8 @@ still a thing a catalogue has to do.
 
 Anything that resolves an item by id - the object pages and the `album`, `artist` and `song` API methods -
 answers with the response an id that was never there produces, so nothing tells the caller the item exists.
-The tab title follows the same rule.
+The tab title and `Share::is_valid()` follow the same rule, through `VisibleItemInterface`, which a private
+list implements for the same reason a withdrawn release does.
 
 ## Database
 

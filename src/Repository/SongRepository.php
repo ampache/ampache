@@ -1286,9 +1286,9 @@ final readonly class SongRepository implements SongRepositoryInterface
         foreach ($statements as $sql) {
             try {
                 $this->connection->query($sql);
-            } catch (DatabaseException) {
+            } catch (DatabaseException $error) {
                 $this->logger->warning(
-                    'count maintenance failed: ' . $sql,
+                    'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
@@ -1363,9 +1363,9 @@ final readonly class SongRepository implements SongRepositoryInterface
         foreach ($statements as $sql) {
             try {
                 $this->connection->query($sql);
-            } catch (DatabaseException) {
+            } catch (DatabaseException $error) {
                 $this->logger->warning(
-                    'count maintenance failed: ' . $sql,
+                    'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }

@@ -100,7 +100,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested an album that does not exist',
+                sprintf(
+                    'Refused album %d: %s',
+                    $albumId,
+                    ($album->isNew()) ? 'no such album' : 'withdrawn, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

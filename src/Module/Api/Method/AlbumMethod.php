@@ -89,7 +89,13 @@ final class AlbumMethod implements MethodInterface
         }
 
         $album = $this->modelFactory->createAlbum((int) $objectId);
-        if ($album->isNew() || !$album->isVisible($user)) {
+        if ($album->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        // the caller is told the same thing either way; the line this throws from is what separates a
+        // withdrawn album from a missing one in the log the handler writes
+        if (!$album->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
         $include = [];

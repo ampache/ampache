@@ -506,9 +506,9 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     {
         try {
             $this->connection->query($sql, $params);
-        } catch (DatabaseException) {
+        } catch (DatabaseException $error) {
             $this->logger->warning(
-                'count maintenance failed: ' . $sql,
+                'count maintenance failed: ' . $error->getMessage() . ' -- ' . $sql,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

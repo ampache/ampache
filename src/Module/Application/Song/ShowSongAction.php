@@ -91,7 +91,11 @@ final readonly class ShowSongAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested a song that does not exist',
+                sprintf(
+                    'Refused song %d: %s',
+                    $song->getId(),
+                    ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

@@ -66,6 +66,7 @@ use Traversable;
 
 class Song extends database_object implements
     Media,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     GarbageCollectibleInterface,

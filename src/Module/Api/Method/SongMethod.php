@@ -79,7 +79,13 @@ final class SongMethod implements MethodInterface
         $objectId = (int) $input['filter'];
 
         $song = $this->modelFactory->createSong($objectId);
-        if ($song->isNew() || !$song->isVisible($user)) {
+        if ($song->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        // the caller is told the same thing either way; the line this throws from is what separates a
+        // disabled song from a missing one in the log the handler writes
+        if (!$song->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
 
