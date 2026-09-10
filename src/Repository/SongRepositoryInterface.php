@@ -279,6 +279,13 @@ interface SongRepositoryInterface
     public function getIdsByFilePrefix(string $folderPath): array;
 
     /**
+     * Reads the enabled songs of one catalog that have no original-size art, for a scoped gather_art sweep
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingArt(int $catalogId): array;
+
+    /**
      * Reads the artists mapped onto a song, or the artists mapped onto an album
      *
      * @return list<int>

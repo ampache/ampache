@@ -836,6 +836,26 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * Reads the enabled songs of one catalog that have no original-size art, for a scoped gather_art sweep
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingArt(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            "SELECT `song`.`id` FROM `song` LEFT JOIN `image` ON `image`.`object_id` = `song`.`id` AND `image`.`object_type` = 'song' AND `image`.`size` = 'original' WHERE `song`.`catalog` = ? AND `song`.`enabled` = '1' AND `image`.`object_id` IS NULL",
+            [$catalogId]
+        );
+
+        $songIds = [];
+        while ($songId = $result->fetchColumn()) {
+            $songIds[] = (int) $songId;
+        }
+
+        return $songIds;
+    }
+
+    /**
      * Reads the artists mapped onto a song, or the artists mapped onto an album
      *
      * @return list<int>

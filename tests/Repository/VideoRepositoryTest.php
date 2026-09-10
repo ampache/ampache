@@ -218,6 +218,25 @@ class VideoRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getIdsByFilePrefix('/media/'));
     }
 
+    public function testGetIdsMissingArtOnlyReturnsVideosWithoutOriginalArt(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `video`.`id` FROM `video` LEFT JOIN `image` ON `image`.`object_id` = `video`.`id` AND `image`.`object_type` = 'video' AND `image`.`size` = 'original' WHERE `video`.`catalog` = ? AND `image`.`object_id` IS NULL",
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        self::assertSame([666], $this->subject->getIdsMissingArt(7));
+    }
+
     public function testGetItemCountReturnsTheCount(): void
     {
         $this->connection->expects(static::once())
