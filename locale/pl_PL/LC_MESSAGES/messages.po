@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Kuba Kuba, 2022\n"
 "Language-Team: Polish (Poland) (http://app.transifex.com/ampache/ampache/language/pl_PL/)\n"
@@ -220,24 +220,6 @@ msgstr "Czyść statystyki"
 msgid "Update User"
 msgstr "Aktualizuj użytkownika"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Odtworzono"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d raz"
-msgstr[1] "%d razy"
-msgstr[2] "%d razy"
-msgstr[3] "%d razy"
-
-msgid "Uploaded by"
-msgstr "Przesłany przez"
-
-msgid "Actions"
-msgstr "Akcje"
-
 msgid "Random to Temporary Playlist"
 msgstr "Dodaj losowo do schowka"
 
@@ -340,6 +322,9 @@ msgstr "Edytuj dane artysty"
 
 msgid "Albums"
 msgstr "Albumy"
+
+msgid "Songs"
+msgstr "Utwory"
 
 msgid "Top Tracks"
 msgstr "Najpopularniejsze utwory"
@@ -805,6 +790,9 @@ msgstr "Zachowaj istniejące"
 msgid "Release Date"
 msgstr "Data wydania"
 
+msgid "Actions"
+msgstr "Akcje"
+
 msgid "Add Current Host"
 msgstr "Dodaj obecny host"
 
@@ -1001,9 +989,6 @@ msgstr "Przeglądaj Ampache..."
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Utwory"
-
 msgid "Artists"
 msgstr "Artyści"
 
@@ -1130,6 +1115,9 @@ msgstr "Pokaż instancje Localplay"
 
 msgid "Edit Instance"
 msgstr "Edytuj instancję"
+
+msgid "Are You Sure?"
+msgstr "Masz pewność?"
 
 msgid "Localplay Control"
 msgstr "Sterowanie Localplay"
@@ -1933,6 +1921,9 @@ msgstr "Pobierz nową wersję"
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Dodaj do nowej playlisty"
 
@@ -2038,23 +2029,17 @@ msgstr "Zapisz zmiany"
 msgid "Save as Playlist"
 msgstr "Zapisz jako playlistę"
 
-msgid "Rating"
-msgstr "Ocena"
-
-msgid "Fav."
-msgstr "❤"
-
 msgid "Waveform"
 msgstr "Widmo częstotliwościowe"
-
-msgid "Podcast Episode Edit"
-msgstr "Edycja odcinka podcastu"
 
 msgid "Sync"
 msgstr "Synchronizacja"
 
 msgid "Started"
 msgstr "Rozpoczęto"
+
+msgid "Podcast Episode Edit"
+msgstr "Edycja odcinka podcastu"
 
 msgid "Podcast Edit"
 msgstr "Edycja podcastu"
@@ -2253,15 +2238,6 @@ msgstr "Informacja o ciasteczkach"
 
 msgid "Admin Disabled"
 msgstr "Funkcje administratora niedostępne"
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
 
 msgid "Connected Users"
 msgstr ""
@@ -2462,6 +2438,9 @@ msgstr "Użytkownik jest teraz podłączony"
 msgid "User is Offline Now"
 msgstr "Użytkownik jest teraz odłączony"
 
+msgid "Played"
+msgstr "Odtworzono"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2480,11 +2459,11 @@ msgstr "Aktywna playlista"
 msgid "Subtitle"
 msgstr "Napisy"
 
-msgid "Video Edit"
-msgstr "Edycja Wideo"
-
 msgid "Video Information"
 msgstr "Informacje o wideo"
+
+msgid "Video Edit"
+msgstr "Edycja Wideo"
 
 msgid "Songs Played"
 msgstr ""
@@ -2537,6 +2516,28 @@ msgstr "Aktualizuj"
 msgid "Editing %s Preferences"
 msgstr "Ustawienia użytkownika %s"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+msgid "Time"
+msgstr "Czas"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Nieznany (Osierocony)"
 
@@ -2549,8 +2550,16 @@ msgstr "Wyszukiwanie zdjęć artysty"
 msgid "Cover Art Search"
 msgstr "Wyszukiwanie okładek"
 
-msgid "Time"
-msgstr "Czas"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+msgid "Rating"
+msgstr "Ocena"
 
 msgid "Starts With"
 msgstr "Zaczyna się od"
@@ -2713,6 +2722,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Strumień"
 
@@ -2826,6 +2838,14 @@ msgstr "Bitrate"
 msgid "Channels"
 msgstr "Kanały"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
 msgid "Return to Login Page"
 msgstr "Wróć do strony logowania"
 
@@ -2926,11 +2946,15 @@ msgstr "Brak tekstu utworu."
 msgid "Song Edit"
 msgstr "Edycja utworu"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Informacje o utworze"
-
-msgid "Links"
-msgstr "Odsyłacze"
 
 msgid "Song Language"
 msgstr "Język utworu"
@@ -2970,6 +2994,12 @@ msgstr "Tekst utworu"
 
 msgid "Licensing"
 msgstr "Licencjonowanie"
+
+msgid "Uploaded by"
+msgstr "Przesłany przez"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "Wykresy"
@@ -3214,9 +3244,6 @@ msgstr "Twoja nowa lista kontroli dostępu została utworzona"
 
 msgid "Your Access List entry has been removed"
 msgstr ""
-
-msgid "Are You Sure?"
-msgstr "Masz pewność?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5445,6 +5472,14 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 msgid "Average from all users"
 msgstr "Średnia od wszystkich użytkowników"

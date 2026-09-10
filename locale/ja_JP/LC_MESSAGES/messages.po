@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: n magi <csma17068@g.nihon-u.ac.jp>, 2020\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/ampache/ampache/language/ja_JP/)\n"
@@ -219,21 +219,6 @@ msgstr "ステータスをクリア"
 msgid "Update User"
 msgstr "ユーザの更新"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "再生済"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] ""
-
-msgid "Uploaded by"
-msgstr "アップロード"
-
-msgid "Actions"
-msgstr "操作"
-
 msgid "Random to Temporary Playlist"
 msgstr ""
 
@@ -336,6 +321,9 @@ msgstr "アーティスト編集"
 
 msgid "Albums"
 msgstr "アルバム"
+
+msgid "Songs"
+msgstr "曲"
 
 msgid "Top Tracks"
 msgstr ""
@@ -801,6 +789,9 @@ msgstr "既存の維持"
 msgid "Release Date"
 msgstr "リリース日"
 
+msgid "Actions"
+msgstr "操作"
+
 msgid "Add Current Host"
 msgstr "現在ホストの追加"
 
@@ -997,9 +988,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "曲"
-
 msgid "Artists"
 msgstr "アーティスト"
 
@@ -1126,6 +1114,9 @@ msgstr "ローカル再生インスタンスの表示"
 
 msgid "Edit Instance"
 msgstr "インスタンス編集"
+
+msgid "Are You Sure?"
+msgstr "よろしいですか？"
 
 msgid "Localplay Control"
 msgstr "ローカル再生のコントロール"
@@ -1929,6 +1920,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "新規プレイリストへ追加"
 
@@ -2034,16 +2028,7 @@ msgstr "変更を保存"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "評価"
-
-msgid "Fav."
-msgstr "お気に入り"
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
@@ -2051,6 +2036,9 @@ msgstr "同期"
 
 msgid "Started"
 msgstr "開始"
+
+msgid "Podcast Episode Edit"
+msgstr ""
 
 msgid "Podcast Edit"
 msgstr ""
@@ -2248,15 +2236,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2458,6 +2437,9 @@ msgstr "ユーザは現在オンラインです"
 msgid "User is Offline Now"
 msgstr "ユーザは現在オフラインです"
 
+msgid "Played"
+msgstr "再生済"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2476,11 +2458,11 @@ msgstr "アクティブなプレイリスト"
 msgid "Subtitle"
 msgstr "サブタイトル"
 
-msgid "Video Edit"
-msgstr ""
-
 msgid "Video Information"
 msgstr "動画情報"
+
+msgid "Video Edit"
+msgstr ""
 
 msgid "Songs Played"
 msgstr ""
@@ -2533,6 +2515,22 @@ msgstr "アップグレード"
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+
+msgid "Time"
+msgstr "時間"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "不明(孤立)"
 
@@ -2545,8 +2543,13 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "時間"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+
+msgid "Rating"
+msgstr "評価"
 
 msgid "Starts With"
 msgstr "開始 :"
@@ -2709,6 +2712,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "ストリーム"
 
@@ -2822,6 +2828,11 @@ msgstr "ビットレート"
 msgid "Channels"
 msgstr "チャンネル"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+
 msgid "Return to Login Page"
 msgstr "ログインページへ戻る"
 
@@ -2916,11 +2927,15 @@ msgstr "歌詞が見つかりません"
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "曲情報"
-
-msgid "Links"
-msgstr "リンク"
 
 msgid "Song Language"
 msgstr "曲言語"
@@ -2960,6 +2975,12 @@ msgstr "歌詞"
 
 msgid "Licensing"
 msgstr "ライセンス"
+
+msgid "Uploaded by"
+msgstr "アップロード"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "統計グラフ"
@@ -3201,9 +3222,6 @@ msgstr "新しいアクセスコントロールリストを作成しました"
 
 msgid "Your Access List entry has been removed"
 msgstr "アクセスリストエントリが削除されました。"
-
-msgid "Are You Sure?"
-msgstr "よろしいですか？"
 
 #. HINT: ACL Name
 #, php-format
@@ -5399,6 +5417,11 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
 
 msgid "Average from all users"
 msgstr ""

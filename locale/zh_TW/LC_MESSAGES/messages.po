@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/ampache/ampache/language/zh_TW/)\n"
@@ -217,21 +217,6 @@ msgstr "清除統計"
 msgid "Update User"
 msgstr "更新使用者"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "已播放"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d 次"
-
-msgid "Uploaded by"
-msgstr "上傳者"
-
-msgid "Actions"
-msgstr "動作"
-
 msgid "Random to Temporary Playlist"
 msgstr "隨機順序的新增到暫存播放清單"
 
@@ -334,6 +319,9 @@ msgstr "編輯作者"
 
 msgid "Albums"
 msgstr "專輯"
+
+msgid "Songs"
+msgstr "歌曲"
 
 msgid "Top Tracks"
 msgstr ""
@@ -799,6 +787,9 @@ msgstr "保留其他現存標籤"
 msgid "Release Date"
 msgstr "發售日期"
 
+msgid "Actions"
+msgstr "動作"
+
 msgid "Add Current Host"
 msgstr "新增目前主機"
 
@@ -995,9 +986,6 @@ msgstr "瀏覽 Ampache…"
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "歌曲"
-
 msgid "Artists"
 msgstr "作者"
 
@@ -1124,6 +1112,9 @@ msgstr "顯示本地播放器實體"
 
 msgid "Edit Instance"
 msgstr "編輯實體"
+
+msgid "Are You Sure?"
+msgstr "您確定嗎？"
 
 msgid "Localplay Control"
 msgstr "本地播放控制器"
@@ -1927,6 +1918,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "新增到新的播放清單"
 
@@ -2032,23 +2026,17 @@ msgstr "儲存修改"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "評比"
-
-msgid "Fav."
-msgstr "最愛"
-
 msgid "Waveform"
 msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "編輯單集播客"
 
 msgid "Sync"
 msgstr "同步"
 
 msgid "Started"
 msgstr "已開始"
+
+msgid "Podcast Episode Edit"
+msgstr "編輯單集播客"
 
 msgid "Podcast Edit"
 msgstr "編輯播客"
@@ -2247,15 +2235,6 @@ msgstr "Cookie 資訊"
 
 msgid "Admin Disabled"
 msgstr "管理員已停用"
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
 
 msgid "Connected Users"
 msgstr ""
@@ -2456,6 +2435,9 @@ msgstr "使用者正在線上"
 msgid "User is Offline Now"
 msgstr "使用者不在線上"
 
+msgid "Played"
+msgstr "已播放"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2474,11 +2456,11 @@ msgstr "使用的播放清單"
 msgid "Subtitle"
 msgstr "字幕"
 
-msgid "Video Edit"
-msgstr "編輯視訊"
-
 msgid "Video Information"
 msgstr "視訊資訊"
+
+msgid "Video Edit"
+msgstr "編輯視訊"
 
 msgid "Songs Played"
 msgstr ""
@@ -2531,6 +2513,22 @@ msgstr "升級"
 msgid "Editing %s Preferences"
 msgstr "編輯%s的偏好設定"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+
+msgid "Time"
+msgstr "時間"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "未知 (遺孤)"
 
@@ -2543,8 +2541,13 @@ msgstr "作者圖片搜尋"
 msgid "Cover Art Search"
 msgstr "封面圖片搜尋"
 
-msgid "Time"
-msgstr "時間"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+
+msgid "Rating"
+msgstr "評比"
 
 msgid "Starts With"
 msgstr "始於"
@@ -2707,6 +2710,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "串流"
 
@@ -2820,6 +2826,11 @@ msgstr "位元率"
 msgid "Channels"
 msgstr "頻道"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+
 msgid "Return to Login Page"
 msgstr "回到登入頁面"
 
@@ -2914,11 +2925,15 @@ msgstr "找不到歌詞。"
 msgid "Song Edit"
 msgstr "編輯歌曲"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "歌曲資訊"
-
-msgid "Links"
-msgstr "鍊結"
 
 msgid "Song Language"
 msgstr "歌曲語言"
@@ -2958,6 +2973,12 @@ msgstr "歌詞"
 
 msgid "Licensing"
 msgstr "正在收聽"
+
+msgid "Uploaded by"
+msgstr "上傳者"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "統計圖表"
@@ -3199,9 +3220,6 @@ msgstr "您的新存取控制清單已被建立"
 
 msgid "Your Access List entry has been removed"
 msgstr ""
-
-msgid "Are You Sure?"
-msgstr "您確定嗎？"
 
 #. HINT: ACL Name
 #, php-format
@@ -5397,6 +5415,11 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
 
 msgid "Average from all users"
 msgstr ""

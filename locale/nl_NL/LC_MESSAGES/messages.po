@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2020,2026\n"
 "Language-Team: Dutch (Netherlands) (http://app.transifex.com/ampache/ampache/language/nl_NL/)\n"
@@ -227,22 +227,6 @@ msgstr "Statistieken opschonen"
 msgid "Update User"
 msgstr "Gebruiker bijwerken"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Gespeeld"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d keer"
-msgstr[1] "%d keer"
-
-msgid "Uploaded by"
-msgstr "Geüpload door"
-
-msgid "Actions"
-msgstr "Acties"
-
 msgid "Random to Temporary Playlist"
 msgstr "Willekeurige naar tijdelijke afspeellijst"
 
@@ -345,6 +329,9 @@ msgstr "Artiest bewerken"
 
 msgid "Albums"
 msgstr "Albums"
+
+msgid "Songs"
+msgstr "Liedjes"
 
 msgid "Top Tracks"
 msgstr "Top nummers"
@@ -810,6 +797,9 @@ msgstr "Behoud bestaande"
 msgid "Release Date"
 msgstr "Release datum"
 
+msgid "Actions"
+msgstr "Acties"
+
 msgid "Add Current Host"
 msgstr "Huidige Host toevoegen"
 
@@ -1006,9 +996,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Liedjes"
-
 msgid "Artists"
 msgstr "Artiesten"
 
@@ -1135,6 +1122,9 @@ msgstr "Lokaal afspeel instanties weergeven"
 
 msgid "Edit Instance"
 msgstr "Bewerk instantie"
+
+msgid "Are You Sure?"
+msgstr "Weet U het zeker?"
 
 msgid "Localplay Control"
 msgstr "Lokaal afspelen Control"
@@ -1938,6 +1928,9 @@ msgstr "Download een kopie van de nieuwe versie"
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Toevoegen aan nieuwe afspeellijst"
 
@@ -2043,16 +2036,7 @@ msgstr "Veranderingen opslaan"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "Waardering"
-
-msgid "Fav."
-msgstr "Favoriet"
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
@@ -2060,6 +2044,9 @@ msgstr ""
 
 msgid "Started"
 msgstr "Begonnen"
+
+msgid "Podcast Episode Edit"
+msgstr ""
 
 msgid "Podcast Edit"
 msgstr ""
@@ -2257,15 +2244,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2467,6 +2445,9 @@ msgstr "Gebruiker is online"
 msgid "User is Offline Now"
 msgstr "Gebruiker is offline"
 
+msgid "Played"
+msgstr "Gespeeld"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2485,10 +2466,10 @@ msgstr "Huidige afspeellijst"
 msgid "Subtitle"
 msgstr ""
 
-msgid "Video Edit"
+msgid "Video Information"
 msgstr ""
 
-msgid "Video Information"
+msgid "Video Edit"
 msgstr ""
 
 msgid "Songs Played"
@@ -2542,6 +2523,24 @@ msgstr "Upgrade"
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "Tijd"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Onbekend (Orphaned)"
 
@@ -2554,8 +2553,14 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "Tijd"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "Waardering"
 
 msgid "Starts With"
 msgstr "Begint met"
@@ -2718,6 +2723,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Stream"
 
@@ -2831,6 +2839,12 @@ msgstr "Bitrate"
 msgid "Channels"
 msgstr "Kanalen"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr "Terug naar de login pagina"
 
@@ -2927,11 +2941,15 @@ msgstr "Geen songtekst gevonden."
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Lied informatie"
-
-msgid "Links"
-msgstr ""
 
 msgid "Song Language"
 msgstr ""
@@ -2970,6 +2988,12 @@ msgid "Lyrics"
 msgstr ""
 
 msgid "Licensing"
+msgstr ""
+
+msgid "Uploaded by"
+msgstr "Geüpload door"
+
+msgid "Technical"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3213,9 +3237,6 @@ msgstr "Uw nieuwe toegangsregel(s) is/zijn aangemaakt"
 
 msgid "Your Access List entry has been removed"
 msgstr "Uw toegangslijst-item is verwijderd"
-
-msgid "Are You Sure?"
-msgstr "Weet U het zeker?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5422,6 +5443,12 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Average from all users"
 msgstr ""
