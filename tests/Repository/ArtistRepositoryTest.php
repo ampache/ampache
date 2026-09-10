@@ -304,6 +304,40 @@ class ArtistRepositoryTest extends TestCase
         self::assertSame(0, $this->subject->getUploaderId(666));
     }
 
+    public function testMigrateClearsTheCreditWhenThereIsNoReplacement(): void
+    {
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['UPDATE `song` SET `artist` = NULL WHERE `artist` = ?;', [666]],
+                    ['UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = ?;', [666]],
+                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
+                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
+                )
+            );
+
+        $this->subject->migrate(666, 0);
+    }
+
+    public function testMigrateMovesEverythingOntoTheNewArtist(): void
+    {
+        $this->connection->expects(static::exactly(6))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['UPDATE `song` SET `artist` = ? WHERE `artist` = ?;', [42, 666]],
+                    ['UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;', [42, 666]],
+                    ['UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;', [42, 666]],
+                    ["UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';", [42, 666]],
+                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
+                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
+                )
+            );
+
+        $this->subject->migrate(666, 42);
+    }
+
     public function testSetChildrenEnabledCarriesTheArtistStateToItsAlbumsAndSongs(): void
     {
         $statements = [];
