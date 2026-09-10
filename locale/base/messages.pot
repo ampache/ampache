@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-09 20:50+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6832,7 +6832,9 @@ msgstr ""
 
 #: ./untranslated-strings.txt:269
 msgid "Mpd"
-msgstr "" #######################################################################
+msgstr ""
+
+ #######################################################################
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by

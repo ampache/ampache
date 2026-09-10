@@ -8,7 +8,7 @@
 # Chris vandenBerg, 2024
 # Danny Houtworm <Danny@houtworm.net>, 2020
 # Francois Duprez <francoisduprez@gmail.com>, 2016
-# Fritigern <fritigerngothly@gmail.com>, 2020
+# Fritigern <fritigerngothly@gmail.com>, 2020,2026
 # Guido Janssen <guido@guidoo.nl>, 2016
 # Ivo van Geel <crap@lanis.nl>, 2020
 # Maarten Peeters <mwlpeeters@gmail.com>, 2018
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2026-09-08 15:11+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
-"Last-Translator: Chris vandenBerg, 2024\n"
+"Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2020,2026\n"
 "Language-Team: Dutch (Netherlands) (http://app.transifex.com/ampache/ampache/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +99,7 @@ msgid "Labels"
 msgstr "Labels"
 
 msgid "Dashboards"
-msgstr ""
+msgstr "Dashboards"
 
 msgid "Podcast"
 msgstr "Podcast"
@@ -138,7 +138,7 @@ msgid "Add to Temporary Playlist"
 msgstr "Toevoegen aan tijdelijke afspeellijst"
 
 msgid "Editing Existing User"
-msgstr ""
+msgstr "Bewerk bestaande Gebruiker"
 
 msgid "User Properties"
 msgstr "Gebruiker instellingen"
@@ -171,22 +171,22 @@ msgid "Confirm Password"
 msgstr "Herhaal uw wachtwoord"
 
 msgid "Subsonic Password"
-msgstr ""
+msgstr "Subsonic wachtwoord"
 
 msgid "Delete"
 msgstr "Verwijder"
 
 msgid "Currently set"
-msgstr ""
+msgstr "Momenteel ingesteld"
 
 msgid "Not set"
-msgstr ""
+msgstr "Niet ingesteld"
 
 msgid "User Access Level"
 msgstr "Gebruiker toegangsniveau"
 
 msgid "Catalog Filter"
-msgstr ""
+msgstr "Catalogus filter"
 
 msgid "Avatar"
 msgstr "Avatar"
@@ -213,13 +213,13 @@ msgid "Generate new RSS token"
 msgstr "Genereer een nieuwe RSS sleutel"
 
 msgid "Config Preset"
-msgstr ""
+msgstr "Configuratie voorinstelling"
 
 msgid "This affects all non-admin accounts"
-msgstr ""
+msgstr "Dit beïnvloedt alle niet-Admin accounts"
 
 msgid "Prevent Preset Override"
-msgstr ""
+msgstr "Voorkom overschrijven van voorinstellingen."
 
 msgid "Clear Stats"
 msgstr "Statistieken opschonen"
@@ -234,8 +234,8 @@ msgstr "Gespeeld"
 #, php-format
 msgid "%d time"
 msgid_plural "%d times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d keer"
+msgstr[1] "%d keer"
 
 msgid "Uploaded by"
 msgstr "Geüpload door"
@@ -244,7 +244,7 @@ msgid "Actions"
 msgstr "Acties"
 
 msgid "Random to Temporary Playlist"
-msgstr ""
+msgstr "Willekeurige naar tijdelijke afspeellijst"
 
 msgid "RSS Feed"
 msgstr "RSS Feed"
@@ -259,10 +259,10 @@ msgid "Graphs"
 msgstr "Grafieken"
 
 msgid "Save Track Order"
-msgstr ""
+msgstr "Sla nummer volgorde op"
 
 msgid "Do you really want to update from tags?"
-msgstr ""
+msgstr "Weet u zeker dat u vanuit de tags wilt bijwerken?"
 
 msgid "Update from tags"
 msgstr "Bijwerken van tags"
@@ -283,16 +283,16 @@ msgid "Direct URL to Image"
 msgstr "Directe URL naar afbeelding"
 
 msgid "Local Image"
-msgstr ""
+msgstr "Lokale afbeelding"
 
 msgid "Spotify Album Filters"
-msgstr ""
+msgstr "Spotify album filters"
 
 msgid "Year"
 msgstr "Jaar"
 
 msgid "(e.g. '2001', '2001-2005')"
-msgstr ""
+msgstr "(bijv. '2001', '2001-2005')"
 
 msgid "Limit"
 msgstr "Begrens"
@@ -307,38 +307,38 @@ msgid "Loading..."
 msgstr "Laden..."
 
 msgid "Show Artist Songs"
-msgstr ""
+msgstr "Nummers van artiest weergeven"
 
 msgid "Show All"
 msgstr "Alles weergeven"
 
 msgid "Show Albums"
-msgstr ""
+msgstr "Albums weergeven"
 
 msgid "Play All"
-msgstr ""
+msgstr "Alles afspelen"
 
 msgid "Play All Next"
-msgstr ""
+msgstr "Alles als volgende afspelen"
 
 msgid "Play All Last"
-msgstr ""
+msgstr "Alles als laatste afspelen"
 
 msgid "Add All to Temporary Playlist"
-msgstr ""
+msgstr "Alles aan tijdelijke afspeellijst toevoegen"
 
 msgid "Random All to Temporary Playlist"
-msgstr ""
+msgstr "Alles willekeurig naar tijdelijke afspeellijst"
 
 msgid ""
 "Are you sure? This will overwrite Artist details using MusicBrainz data"
-msgstr ""
+msgstr "Weet u het zeker? Hierdoor zal de artiestinformatie met gegevens van MusicBrainz worden overschreven"
 
 msgid "Update details from MusicBrainz"
-msgstr ""
+msgstr "Informatie van MusicBrainz bijwerken"
 
 msgid "Artist Edit"
-msgstr ""
+msgstr "Artiest bewerken"
 
 msgid "Edit Artist"
 msgstr "Artiest bewerken"
@@ -347,7 +347,7 @@ msgid "Albums"
 msgstr "Albums"
 
 msgid "Top Tracks"
-msgstr ""
+msgstr "Top nummers"
 
 msgid "Missing Albums"
 msgstr "Ontbrekende albums"
@@ -392,13 +392,13 @@ msgid "New broadcast"
 msgstr "Nieuwe uitzending"
 
 msgid "Found nothing to show"
-msgstr ""
+msgstr "Niets weer te geven"
 
 msgid "Create Collection"
-msgstr ""
+msgstr "Collectie aanmaken"
 
 msgid "Playing from base playlist"
-msgstr ""
+msgstr "Afspelen vanuit de basisafspeellijst"
 
 msgid "Remove Vote"
 msgstr "Verwijder stem"
@@ -437,7 +437,7 @@ msgid "Add"
 msgstr "Toevoegen"
 
 msgid "Create Label"
-msgstr ""
+msgstr "Label aanmaken"
 
 msgid "Prev"
 msgstr "Vorige"
@@ -470,7 +470,7 @@ msgid "Item Count"
 msgstr "Aantal items"
 
 msgid "Manage"
-msgstr ""
+msgstr "Beheren"
 
 msgid "Add Radio Station"
 msgstr "Radio station toevoegen"
@@ -485,19 +485,19 @@ msgid "Action"
 msgstr "Actie"
 
 msgid "Create License"
-msgstr ""
+msgstr "Licentie aanmaken"
 
 msgid "Refresh"
 msgstr "Vernieuwen"
 
 msgid "Duration"
-msgstr ""
+msgstr "Duur"
 
 msgid "Create Playlist"
-msgstr ""
+msgstr "Afspeellijst aanmaken"
 
 msgid "No podcast episode found"
-msgstr ""
+msgstr "Geen podcast-aflevering gevonden"
 
 msgid "Subscribe to Podcast"
 msgstr "Abonneer op Podcast"
@@ -512,25 +512,25 @@ msgid "Compose"
 msgstr "Opstellen"
 
 msgid "Compose a New Message"
-msgstr ""
+msgstr "Schrijf nieuw bericht"
 
 msgid "Mark as Read"
-msgstr ""
+msgstr "Als gelezen markeren"
 
 msgid "Mark as Unread"
-msgstr ""
+msgstr "Als ongelezen markeren"
 
 msgid "Add Smart Playlist"
-msgstr ""
+msgstr "Slimme afspeellijst toevoegen"
 
 msgid "No smart playlist found"
-msgstr ""
+msgstr "Geen slimme afspeellijst gevonden"
 
 msgid "Fullname"
 msgstr "Volledige naam"
 
 msgid "No User found"
-msgstr ""
+msgstr "Geen gebruiker gevonden"
 
 msgid "No missing albums found"
 msgstr "Geen ontbrekende albums gevonden"
@@ -542,7 +542,7 @@ msgid "Format"
 msgstr "Formaat"
 
 msgid "Make it ready .."
-msgstr ""
+msgstr "Maak het gereed .."
 
 msgid "Go"
 msgstr "Ga"
@@ -557,16 +557,16 @@ msgid "Type"
 msgstr "Type"
 
 msgid "This Collection is empty"
-msgstr ""
+msgstr "Deze verzameling is leeg"
 
 msgid "Private"
 msgstr "Prive"
 
 msgid "Collection Edit"
-msgstr ""
+msgstr "Verzameling bewerken"
 
 msgid "Do you really want to delete this Collection?"
-msgstr ""
+msgstr "Weet u zeker dat u deze verzameling wilt verwijderen?"
 
 msgid "Configure Democratic Playlist"
 msgstr "Configureer democratishe afspeellijst"
@@ -602,7 +602,7 @@ msgid "Album Artist"
 msgstr "Artiest Album"
 
 msgid "Additional Artists"
-msgstr ""
+msgstr "Overige artiesten"
 
 msgid "MusicBrainz ID"
 msgstr "MusicBrainz ID"
@@ -629,7 +629,7 @@ msgid "Catalog Number"
 msgstr "Catalogus nummer"
 
 msgid "Barcode"
-msgstr ""
+msgstr "Streepjescode"
 
 msgid "Original Year"
 msgstr "Oorspronkelijk jaar"
@@ -638,7 +638,7 @@ msgid "Genres"
 msgstr "Genres"
 
 msgid "Moods"
-msgstr ""
+msgstr "Stemmingen"
 
 msgid "Overwrite tags of sub songs"
 msgstr ""
@@ -769,7 +769,7 @@ msgstr ""
 #. HINT: %1 Client link, %2 Object link
 #, php-format
 msgid "Created by: %1$s for %2$s"
-msgstr ""
+msgstr "Aangemaakt door: %1$s voor %2$s"
 
 msgid "Comment:"
 msgstr "Commentaar:"
@@ -874,12 +874,12 @@ msgid "Please enable 'catalog_filter' in your sever config file"
 msgstr "Gelieve 'catalog_filter' inschakelen in de server configuratie"
 
 msgid "Catalog filters are a way to stop users accessing different catalogs"
-msgstr ""
+msgstr "Catalogusfilters zijn een manier om te voorkomen dat gebruikers toegang krijgen tot verschillende catalogi"
 
 msgid ""
 "If you do not tick a catalog, it will be hidden from users that you assign "
 "to this filter"
-msgstr ""
+msgstr "Als je een catalogus niet aanvinkt, wordt deze verborgen voor gebruikers die je aan dit filter toewijst"
 
 msgid "Filter Name"
 msgstr "Filter naam"
@@ -896,7 +896,7 @@ msgstr "Nieuwe catalogussen worden toegevoegd aan de STANDAARD-groep bij het aan
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to"
 " a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
+msgstr "Voer in het onderstaande formulier een lokaal pad (bijv. /data/music) of de URL naar een Ampache-installatie op een externe server (bijv. http://theotherampache.com) in."
 
 msgid "Catalog Name"
 msgstr "Catalogus naam"
@@ -917,7 +917,7 @@ msgid "Gather Art"
 msgstr "Afbeeldingen ophalen"
 
 msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr ""
+msgstr "Afspeellijsten samenstellen op basis van afspeellijstbestanden. (m3u, m3u8, asx, pls, xspf)"
 
 msgid "Music"
 msgstr "Muziek"
@@ -1171,15 +1171,15 @@ msgstr ""
 
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
-msgstr ""
+msgstr "Ampache plaatst cookies op je computer om deze website te verbeteren."
 
 msgid ""
 "Cookies are used for core site functionality and are not used for tracking "
 "or analytics."
-msgstr ""
+msgstr "Cookies worden gebruikt voor de basisfunctionaliteit van de website en worden niet gebruikt voor tracking of analyse."
 
 msgid "By logging in you agree to the use of cookies while using this site."
-msgstr ""
+msgstr "Door in te loggen ga je akkoord met het gebruik van cookies tijdens het gebruik van deze website."
 
 msgid "Submit"
 msgstr "Verzend"
@@ -1337,7 +1337,7 @@ msgstr "Stap 3 - Inrichten initiële gebruikersaccount"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr ""
+msgstr "Met deze stap maak je je eerste Ampache-beheerdersaccount aan. Zodra je beheerdersaccount is aangemaakt, word je doorgestuurd naar de inlogpagina."
 
 msgid "Create Admin Account"
 msgstr "Maak een Beheer Account aan"
@@ -1352,16 +1352,16 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr ""
+msgstr "Op deze pagina wordt uitgelegd hoe je de Ampache-database installeert en het bestand ampache.cfg.php aanmaakt. Controleer voordat je verdergaat of aan de volgende vereisten is voldaan:"
 
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr ""
+msgstr "Een MySQL-server met een gebruikersnaam en wachtwoord waarmee databases kunnen worden aangemaakt of gewijzigd"
 
 #. HINT: %1 and %2 refer to Ampache configuration files
 #, php-format
 msgid "Your webserver has read access to the files \"%1$s\" and \"%2$s\""
-msgstr ""
+msgstr "Je webserver heeft leestoegang tot de bestanden \"%1$s\" en \"%2$s\""
 
 #, php-format
 msgid ""
@@ -1369,32 +1369,32 @@ msgid ""
 "the information below. You will only be asked for the required config "
 "values. If you would like to make changes to your Ampache install at a later"
 " date simply edit %s"
-msgstr ""
+msgstr "Zodra u zich ervan heeft vergewist dat aan de bovenstaande vereisten is voldaan, vult u de onderstaande gegevens in. U wordt alleen gevraagd om de vereiste configuratiewaarden. Als u op een later tijdstip wijzigingen wilt aanbrengen in uw Ampache-installatie, bewerkt u gewoon %s"
 
 msgid "Check"
-msgstr ""
+msgstr "Controle"
 
 msgid "\"ampache.cfg.php.dist\" is readable"
-msgstr ""
+msgstr "\"ampache.cfg.php.dist\" is leesbaar"
 
 msgid "This tests whether the configuration template can be read."
-msgstr ""
+msgstr "Hiermee wordt getest of het configuratiesjabloon kan worden gelezen."
 
 msgid "\"ampache.sql\" is readable"
-msgstr ""
+msgstr "\"ampache.sql\" is leesbaar"
 
 msgid ""
 "This tests whether the file needed to initialize the database structure is "
 "available."
-msgstr ""
+msgstr "Hiermee wordt gecontroleerd of het bestand dat nodig is om de databasestructuur te initialiseren, beschikbaar is."
 
 msgid "\"ampache.cfg.php\" is writable"
-msgstr ""
+msgstr "\"ampache.cfg.php\" is beschrijfbaar"
 
 msgid ""
 "This tests whether PHP can write to config. This is not strictly necessary, "
 "but will help streamline the installation process."
-msgstr ""
+msgstr "Hiermee wordt gecontroleerd of PHP naar het configuratiebestand kan schrijven. Dit is niet strikt noodzakelijk, maar helpt wel om het installatieproces te vereenvoudigen."
 
 #, php-format
 msgid ""
@@ -1403,10 +1403,10 @@ msgid ""
 " write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
-msgstr ""
+msgstr "In deze stap wordt op basis van de basisconfiguratiewaarden het configuratiebestand gegenereerd. Als je config/ map schrijfbaar is, kun je ‘schrijven’ selecteren, zodat Ampache het configuratiebestand rechtstreeks naar de juiste locatie schrijft. Als je ‘downloaden’ selecteert, word je gevraagd het configuratiebestand te downloaden, waarna je het handmatig in %s kunt plaatsen."
 
 msgid "Generate Configuration File"
-msgstr ""
+msgstr "Genereer configuratiebestand"
 
 msgid "Various"
 msgstr "Diverse"
@@ -1415,7 +1415,7 @@ msgid "Web Path"
 msgstr "Web Directorie"
 
 msgid "Database Connection"
-msgstr ""
+msgstr "Database connectie"
 
 msgid "Database Name"
 msgstr "Database Naam"
@@ -1433,24 +1433,24 @@ msgid "MySQL Password"
 msgstr "MySQL Wachtwoord"
 
 msgid "required"
-msgstr ""
+msgstr "vereist"
 
 msgid "Installation Type"
-msgstr ""
+msgstr "Installatietype"
 
 msgid ""
 "Optimize Ampache for your use case. The installer will enable/disable "
 "features automatically."
-msgstr ""
+msgstr "Pas Ampache aan uw specifieke situatie aan. Het installatieprogramma schakelt functies automatisch in of uit."
 
 msgid "Default"
 msgstr "Standaard"
 
 msgid "Ampache is configured for personal use with the best features."
-msgstr ""
+msgstr "Ampache is ingesteld voor persoonlijk gebruik en biedt de beste functies."
 
 msgid "Minimalist"
-msgstr ""
+msgstr "Minimalistich"
 
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
@@ -1458,14 +1458,14 @@ msgid ""
 msgstr "Voor het vereenvoudigen van streamen vanuit de web interface zijn alleen essentiële  mogelijkheden aangezet."
 
 msgid "Community"
-msgstr ""
+msgstr "Gemeenschap"
 
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
 msgstr "Aanbevolen instellingen bij het gebruik van Ampache als Frontend voor een muziek community."
 
 msgid "Allow Transcoding"
-msgstr ""
+msgstr "Transcodering toestaan"
 
 msgid ""
 "Transcoding allows you to convert music from one encoding to another. "
@@ -1474,13 +1474,13 @@ msgid ""
 "takes advantage of existing binary applications such as ffmpeg. In order for"
 " transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr ""
+msgstr "Met transcodering kun je muziek van de ene codering naar het andere converteren. Ampache ondersteunt het direct transcoderen van elk bestandstype op basis van gebruiker, speler, IP-adres of beschikbare bandbreedte. Voor het transcoderen maakt Ampache gebruik van bestaande binaire toepassingen zoals ffmpeg. Om transcodering te laten werken, moet je eerst de benodigde toepassingen installeren en ervoor zorgen dat ze door de webserver kunnen worden uitgevoerd."
 
 msgid ""
 "This section applies the default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once setup "
 "has ended."
-msgstr ""
+msgstr "In dit gedeelte wordt de standaardconfiguratie voor transcodering toegepast, afhankelijk van de toepassing die u wilt gebruiken. Mogelijk moet u de instellingen aanpassen zodra de installatie is voltooid."
 
 msgid "See wiki page"
 msgstr "Zie wiki pagina"
@@ -1495,20 +1495,20 @@ msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (FFmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr ""
+msgstr "Er is geen standaardprogramma voor transcodering gevonden. Mogelijk moet u een veelgebruikt programma (FFmpeg, avconv ...) installeren of de instellingen voor transcodering na de installatie handmatig aanpassen."
 
 msgid "Players"
-msgstr ""
+msgstr "Spelers"
 
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media to any player."
-msgstr ""
+msgstr "Ampache is meer dan alleen een webinterface. Er zijn verschillende backends geïmplementeerd om ervoor te zorgen dat je je media naar elke speler kunt streamen."
 
 msgid ""
 "Select each backend to enable. Depending on the backend, you may need to "
 "perform additional configuration."
-msgstr ""
+msgstr "Selecteer elke backend die u wilt inschakelen. Afhankelijk van de backend moet u mogelijk aanvullende configuraties uitvoeren."
 
 msgid "File Insight"
 msgstr ""
@@ -1565,7 +1565,7 @@ msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
 "slower computers."
-msgstr ""
+msgstr "In deze stap wordt de Ampache-database aangemaakt en ingevoegd. Zorg er daarom voor dat u een MySQL-account hebt met rechten om databases aan te maken. Op tragere computers kan dit even duren."
 
 msgid "Insert Ampache Database"
 msgstr "Ampache Database toevoegen"
@@ -1611,7 +1611,7 @@ msgstr ""
 msgid ""
 "You may have reached this page because your %s configuration file was not "
 "parsable"
-msgstr ""
+msgstr "Mogelijk bent u op deze pagina terechtgekomen omdat uw %s-configuratiebestand niet kon worden verwerkt"
 
 msgid "Please visit the wiki for help"
 msgstr ""
@@ -1622,7 +1622,7 @@ msgstr "Installatie"
 msgid ""
 "You may have reached this page because Ampache was unable to load the "
 "required dependencies"
-msgstr ""
+msgstr "Mogelijk bent u op deze pagina terechtgekomen omdat Ampache de vereiste afhankelijkheden niet kon laden"
 
 msgid "Debug Page"
 msgstr ""
@@ -1633,7 +1633,7 @@ msgstr "Ampache Debug"
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
-msgstr ""
+msgstr "Mogelijk bent u op deze pagina terechtgekomen omdat er een configuratiefout is opgetreden. Hieronder vindt u foutopsporingsinformatie."
 
 msgid "Web Installation"
 msgstr "Web Installatie"
@@ -1644,7 +1644,7 @@ msgstr "PHP versie"
 msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
-msgstr ""
+msgstr "Hiermee wordt gecontroleerd of je ten minste de minimumversie van PHP gebruikt die Ampache vereist."
 
 msgid "Dependencies"
 msgstr "Afhankelijkheden"
