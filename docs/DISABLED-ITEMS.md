@@ -21,13 +21,18 @@ which stays visible to everyone.
 | API `album` `artist` `song` by id | refused | refused | returned |
 | API `albums` `artists` `index` `list` `stats` `advanced_search` | absent | absent | returned |
 | API `album_songs` `artist_songs` `artist_albums` `browse` | absent | absent | returned |
-| Subsonic, OpenSubsonic, UPnP, DAAP | absent | absent | absent |
+| Subsonic and OpenSubsonic | absent | absent | listed |
+| UPnP, DAAP | absent | absent | absent |
+| RSS feeds | absent | absent | listed |
+| A playlist streamed or exported | absent | absent | absent |
 | Playback (`play/index.php`) | `404 File disabled` | `404 File disabled` | `404 File disabled` |
 | A public share link | refused | refused | refused |
 | Editing the state | refused | refused | allowed |
 
-Three rows are not level-aware on purpose. The device protocols have no logged-in user to hold a level, so
-they filter unconditionally. Playback answers to `song`.`enabled` alone, whoever asks: a manager can see a
+Four rows are not level-aware on purpose. UPnP and DAAP have no logged-in user to hold a level, so they
+filter unconditionally; Subsonic authenticates a real account and follows it for albums and artists, while
+the songs it hands out come from the same unconditional repository call. A playlist is a list of things to
+play, so it carries what can be played and nothing else. Playback answers to `song`.`enabled` alone, whoever asks: a manager can see a
 withdrawn track, not stream it. A share is a public link with nobody in particular on the other end, so it
 stops working when what it points at is withdrawn, whoever created it.
 
