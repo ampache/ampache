@@ -602,7 +602,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         $sql = ($catalogIds !== null && $catalogIds !== [])
             ? sprintf(
-                'SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) ',
+                'SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) ',
                 implode(',', array_map(intval(...), $catalogIds))
             )
             : 'SELECT `album`.`id` FROM `album` ';
@@ -629,7 +629,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         if ($catalogIds !== null && $catalogIds !== []) {
             $sql = sprintf(
-                'SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
+                'SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
                 implode(',', array_map(intval(...), $catalogIds))
             );
         } else {

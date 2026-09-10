@@ -74,6 +74,21 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->addAlbumMap(666, 'album', 42);
     }
 
+    /**
+     * A song whose album row is gone used to contribute a NULL id through the outer join, and it sorts first.
+     * `while ($albumId = $result->fetchColumn())` reads that as the end of the result, so a single orphaned
+     * song emptied the whole album list -- which is what Subsonic and UPnP browse.
+     */
+    public function testAnOrphanedSongCannotContributeAnAlbumId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album`'))
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->getIdsByCatalogs([1]);
+    }
+
     public function testCollectGarbageDeletes(): void
     {
         $this->connection->expects(static::exactly(7))
@@ -555,7 +570,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
+            ->with('SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -571,7 +586,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
+            ->with('SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
             ->willReturn($result);
 
         $result->expects(static::once())
