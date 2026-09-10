@@ -729,7 +729,8 @@ class Catalog_remote extends Catalog
                     'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
                     // the remote server may be older than this one and ApiHandler only rolls a version up, so 6 is the highest all of them answer
-                    'server_version' => 6
+                    'server_version' => 6,
+                    'url_validator' => static fn(string $url): bool => self::getUrlValidator()->isPublicHttpUrl($url),
                 ]
             );
         } catch (Exception $exception) {
