@@ -1,9 +1,14 @@
 # Disabled items
 
-`enabled` answers one question for an album, an artist, a song, a video and a podcast episode: may this be
-listed and played? A row with `enabled = 0` has been withdrawn. It is not deleted, so the playlist entries,
-ratings and play history that point at it survive, which is why a takedown request has an answer that does
-not destroy anything.
+`enabled` answers one question for an album, an artist or a song: may this be listed and played? A row with
+`enabled = 0` has been withdrawn. It is not deleted, so the playlist entries, ratings and play history that
+point at it survive, which is why a takedown request has an answer that does not destroy anything.
+
+Music only, for now. `video` and `podcast_episode` carry a column of the same name, but neither gets this
+mechanism: `video`.`enabled` is read by one smartlist rule and one random-pick query, unconditionally for
+every level rather than exempting a manager, and nowhere else; `podcast_episode`.`enabled` is read nowhere
+at all. Bringing either one to parity with album, artist and song is separate follow-up work, not something
+this change does.
 
 Withdrawing sits with **catalog managers** (access level 75), the same people who can already disable a
 song. Everyone below that level is told the item does not exist.
@@ -79,8 +84,9 @@ list implements for the same reason a withdrawn release does.
 ## Database
 
 `album`.`enabled` and `artist`.`enabled` arrive with database version **810011**, as
-`tinyint(1) unsigned NOT NULL DEFAULT 1`, alongside the `song`, `video` and `podcast_episode` columns of the
-same name that predate it.
+`tinyint(1) unsigned NOT NULL DEFAULT 1`, carrying the name and the promise `song`.`enabled` already had.
+`video` and `podcast_episode` have columns of the same name too, older than this one, but - as noted above -
+they are not part of that promise today.
 
 Neither column is indexed, and that is measured rather than assumed. Almost every row is enabled - 8581 of
 8584 albums on the catalogue this was built against - so an index on the column has a cardinality of two and
