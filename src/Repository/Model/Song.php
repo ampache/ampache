@@ -1016,12 +1016,16 @@ class Song extends database_object implements
     }
 
     /**
-     * update_enabled
-     * sets the enabled flag
+     * Takes the song out of the listings and out of playback, or puts it back.
+     *
+     * The owner check every other field carries is deliberately absent: it drops the requirement to USER,
+     * which would let an uploader turn a withdrawn track of their own back on and undo the takedown that
+     * withdrew it. Every other field on a song asks for CONTENT_MANAGER; this one asks for MANAGER and
+     * means it.
      */
     public static function update_enabled(bool $new_enabled, int $song_id): void
     {
-        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER);
     }
 
     /**
