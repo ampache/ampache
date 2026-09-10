@@ -46,6 +46,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Override;
@@ -380,7 +381,7 @@ final class HeaderView extends AbstractView
                 // covers a private list and, since they are refused the same way, a withdrawn release
                 if (
                     ($item instanceof Playlist || $item instanceof Search || $item instanceof Album
-                        || $item instanceof AlbumDisk || $item instanceof Artist)
+                        || $item instanceof AlbumDisk || $item instanceof Artist || $item instanceof Song)
                     && !$item->isVisible($this->currentUser)
                 ) {
                     continue;

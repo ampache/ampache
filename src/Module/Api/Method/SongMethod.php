@@ -79,7 +79,7 @@ final class SongMethod implements MethodInterface
         $objectId = (int) $input['filter'];
 
         $song = $this->modelFactory->createSong($objectId);
-        if ($song->isNew()) {
+        if ($song->isNew() || !$song->isVisible($user)) {
             throw new ResultEmptyException((string) $objectId);
         }
 

@@ -146,6 +146,10 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(false);
+        $song->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturn(true);
 
         // the head metadata reads the song before the page starts
         $song->year  = 2008;

@@ -56,7 +56,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
-        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs);
+        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path();
