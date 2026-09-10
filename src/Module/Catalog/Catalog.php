@@ -3788,7 +3788,7 @@ abstract class Catalog extends database_object
             $searches['artist']   = $this->get_artist_ids('art');
             $searches['playlist'] = $this->get_playlist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_song_ids();
+                $searches['song'] = $this->get_song_ids('art');
             }
         } else {
             $searches['album']    = [];
@@ -3816,7 +3816,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $videos ?? $this->get_video_ids();
+        $searches['video'] = $videos ?? $this->get_video_ids('art');
         $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist']) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
@@ -4127,9 +4127,11 @@ abstract class Catalog extends database_object
      * Returns an array of song ids.
      * @return int[]
      */
-    public function get_song_ids(): array
+    public function get_song_ids(string $filter = ''): array
     {
-        return self::getSongRepository()->getEnabledIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getSongRepository()->getIdsMissingArt($this->id)
+            : self::getSongRepository()->getEnabledIdsByCatalog($this->id);
     }
 
     /**
@@ -4168,9 +4170,11 @@ abstract class Catalog extends database_object
      * This returns an array of ids of videos in this catalog
      * @return int[]
      */
-    public function get_video_ids(): array
+    public function get_video_ids(string $filter = ''): array
     {
-        return self::getVideoRepository()->getIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getVideoRepository()->getIdsMissingArt($this->id)
+            : self::getVideoRepository()->getIdsByCatalog($this->id);
     }
 
     public function getId(): int

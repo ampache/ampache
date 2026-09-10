@@ -124,6 +124,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
 * Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
+* `Catalog::gather_art()`'s full-catalog sweep (`run:updateCatalog -g` without `-a`) gathered art for every song and video, not just the ones missing it, unlike its already-scoped album/artist/playlist searches; with `gather_song_art` enabled this could look like the whole library was being reimported
 * A free-text user preference (e.g. `custom_datetime`) rendered unescaped into the admin preference-edit page (XSS)
 * `PlaylistUrlResolver` (radio station playback) fetched a station's playlist url without checking it was a public address first
 * `UrlValidator`'s check and the later curl fetch could resolve a hostname to different addresses (DNS rebinding); the fetch is now pinned to the address that was actually checked
