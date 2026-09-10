@@ -27,8 +27,10 @@ namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\User;
+use Psr\Container\ContainerInterface;
 
 class SongSearchTest extends MockeryTestCase
 {
@@ -68,6 +70,15 @@ class SongSearchTest extends MockeryTestCase
 
         $user = $this->mock(User::class);
         $user->shouldReceive('getId')->andReturn(2);
+
+        // the smartlist asks whether the caller may see withdrawn tracks, so a checker has to be reachable
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->shouldReceive('check')->andReturnFalse();
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->andReturn($privilegeChecker);
+
+        $GLOBALS['dic'] = $dic;
 
         $search              = new Search(0, 'song', $user);
         $search->search_user = $user;

@@ -59,12 +59,30 @@ class DisabledSearchTest extends TestCase
         self::assertStringContainsString($expected, $search->to_sql()['where_sql']);
     }
 
+    public function testAManagerSearchesSongsWithoutTheCondition(): void
+    {
+        $where = $this->search('song', true)->to_sql()['where_sql'];
+
+        self::assertStringNotContainsString('`song`.`enabled` = 1', $where);
+    }
+
     #[DataProvider(methodName: 'typeProvider')]
     public function testAManagerSearchesWithoutTheCondition(string $type, string $expected): void
     {
         $search = $this->search($type, true);
 
         self::assertStringNotContainsString($expected, $search->to_sql()['where_sql']);
+    }
+
+    /**
+     * The song condition used to ride along with the optional catalog test, so an instance that left
+     * catalog checks off handed withdrawn tracks to every smartlist.
+     */
+    public function testASongSmartlistExcludesWithdrawnTracksWhateverTheCatalogSettings(): void
+    {
+        $where = $this->search('song', false)->to_sql()['where_sql'];
+
+        self::assertStringContainsString('`song`.`enabled` = 1', $where);
     }
 
     /**
