@@ -492,8 +492,8 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
-                case 'hidden':
-                    $where[] = ($operator_sql == '1') ? "`album`.`hidden` = 1" : "`album`.`hidden` = 0";
+                case 'enabled':
+                    $where[] = ($operator_sql == '1') ? "`album`.`enabled` = 1" : "`album`.`enabled` = 0";
                     break;
                 case 'has_image':
                     $where[] = ($operator_sql == '1')
@@ -644,8 +644,8 @@ final class AlbumSearch implements SearchInterface
         // optional: a takedown does not depend on whether the instance turned catalog checks on
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
             $where_sql = ($where_sql !== '' && $where_sql !== '0')
-                ? "(" . $where_sql . ") AND `album`.`hidden` = 0"
-                : "`album`.`hidden` = 0";
+                ? "(" . $where_sql . ") AND `album`.`enabled` = 1"
+                : "`album`.`enabled` = 1";
         }
 
         if ($search->catalog_id) {

@@ -54,12 +54,12 @@ class Artist extends database_object implements
 {
     protected const string DB_TABLENAME = 'artist';
 
-    private static array $_mapcache = [];
-    public ?int $addition_time      = null;
-    public int $album_count         = 0;
-    public int $album_disk_count    = 0;
-    public bool $hidden             = false;
-    public int $id                  = 0;
+    private static array $_mapcache  = [];
+    public ?int $addition_time       = null;
+    public int $album_count          = 0;
+    public int $album_disk_count     = 0;
+    public bool $enabled             = true;
+    public int $id                   = 0;
     public int $last_update;
     public ?string $lastfm_url  = null;
     public ?string $link        = null;
@@ -102,7 +102,7 @@ class Artist extends database_object implements
         }
 
         $this->id               = (int) ($info['id'] ?? 0);
-        $this->hidden           = (bool) ($info['hidden'] ?? false);
+        $this->enabled          = (bool) ($info['enabled'] ?? true);
         $this->name             = $info['name'] ?? null;
         $this->prefix           = $info['prefix'] ?? null;
         $this->summary          = $info['summary'] ?? null;
@@ -600,6 +600,24 @@ class Artist extends database_object implements
     }
 
     /**
+     * Take the artist off the shelves, or put it back, taking its albums and their songs along.
+     *
+     * The whole catalogue below the artist follows either way, so the word promises here what it promises
+     * on a song. A single album or song can still be flipped on its own afterwards; only the next change
+     * of the artist's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $artist_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        $artistRepository = self::getArtistRepository();
+        $artistRepository->setField($artist_id, ArtistFieldEnum::ENABLED, ($new_enabled) ? 1 : 0);
+        $artistRepository->setChildrenEnabled($artist_id, $new_enabled);
+    }
+
+    /**
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
@@ -633,24 +651,6 @@ class Artist extends database_object implements
     {
         debug_event(self::class, 'update_table_counts', 5);
         self::getArtistRepository()->updateAllCounts();
-    }
-
-    /**
-     * Take the artist off the shelves, or put it back, optionally taking its albums and their songs along.
-     *
-     * The albums follow the same rule as the artist and stay playable; only disabling the songs closes that.
-     */
-    public static function update_visibility(VisibilityStateEnum $state, int $artist_id): void
-    {
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-            return;
-        }
-
-        $artistRepository = self::getArtistRepository();
-        $artistRepository->setField($artist_id, ArtistFieldEnum::HIDDEN, ($state->isHidden()) ? 1 : 0);
-        if ($state->cascades()) {
-            $artistRepository->hideChildren($artist_id);
-        }
     }
 
     /**
@@ -949,9 +949,9 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
-    public function isHidden(): bool
+    public function isEnabled(): bool
     {
-        return $this->hidden;
+        return $this->enabled;
     }
 
     public function isNew(): bool
@@ -969,7 +969,7 @@ class Artist extends database_object implements
      *     placeformed?: ?string,
      *     yearformed?: ?int,
      *     user?: ?int,
-     *     visibility?: string,
+     *     enabled?: string,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -991,10 +991,9 @@ class Artist extends database_object implements
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
 
-        // sent by the edit form only; every other caller leaves the key out and the flag alone
-        $visibility = VisibilityStateEnum::tryFrom((string) ($data['visibility'] ?? ''));
-        if ($visibility instanceof VisibilityStateEnum) {
-            self::update_visibility($visibility, $this->id);
+        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
+        if (array_key_exists('enabled', $data)) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
         }
 
         // Check if name is different than the current name

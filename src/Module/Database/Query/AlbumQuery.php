@@ -42,7 +42,7 @@ final class AlbumQuery implements QueryInterface
         'equal',
         'exact_match',
         'genre',
-        'hidden',
+        'enabled',
         'id',
         'like',
         'no_genre',
@@ -140,8 +140,8 @@ final class AlbumQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
-            case 'hidden':
-                $filter_sql = " `album`.`hidden` = " . (int) $value . " AND ";
+            case 'enabled':
+                $filter_sql = " `album`.`enabled` = " . (int) $value . " AND ";
                 break;
             case 'id':
                 $filter_sql = " `album`.`id` IN (";

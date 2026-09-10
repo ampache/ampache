@@ -601,9 +601,9 @@ class AlbumDisk extends database_object implements
     /**
      * A disk is never withdrawn on its own; it reads the flag of the album it belongs to.
      */
-    public function isHidden(): bool
+    public function isEnabled(): bool
     {
-        return $this->album->hidden;
+        return $this->album->enabled;
     }
 
     public function isNew(): bool

@@ -174,9 +174,21 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
         return $this->getItem() instanceof AlbumDisk;
     }
 
-    public function isHidden(): bool
+    public function isEnabled(): bool
     {
-        return $this->getItem()->isHidden();
+        return $this->getItem()->isEnabled();
+    }
+
+    /**
+     * Disabling a release sits with whoever can already disable its songs. A single disk is not disabled on
+     * its own: editing one still sets the flag on the album it belongs to.
+     */
+    public function mayDisable(): bool
+    {
+        $user = Core::get_global('user');
+
+        return $user instanceof User
+            && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 
     public function mayEditMbid(): bool
@@ -184,18 +196,6 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
         $user = Core::get_global('user');
 
         return $this->mayManage() || ($user instanceof User && $user->getId() === $this->getItem()->get_user_owner());
-    }
-
-    /**
-     * Withdrawing a release from the shelves sits with whoever can already disable its songs. A single disk
-     * is not withdrawn on its own: editing one still sets the flag on the album it belongs to.
-     */
-    public function mayHide(): bool
-    {
-        $user = Core::get_global('user');
-
-        return $user instanceof User
-            && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 
     public function mayManage(): bool

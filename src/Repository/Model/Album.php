@@ -62,28 +62,28 @@ class Album extends database_object implements
     /** @var array<string, int> keyed by `check()`'s identity-column cache key, see there */
     private static array $_mapcache   = [];
 
-    public ?int $addition_time        = null;
-    public ?int $album_artist         = null;
-    public int $artist_count          = 0;
-    public ?string $artist_name       = null;
-    public ?string $artist_prefix     = null;
-    public ?string $barcode           = null;
-    public int $catalog               = 0;
-    public int $catalog_id            = 0;
-    public ?string $catalog_number    = null;
-    public int $disk_count            = 0;
-    public bool $hidden               = false;
-    public int $id                    = 0;
-    public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
-    public ?string $link              = null;
-    public ?string $mbid              = null; // MusicBrainz ID
-    public ?string $mbid_group        = null; // MusicBrainz Release Group ID
-    public ?string $name              = null;
-    public ?int $original_year        = null;
-    public ?string $prefix            = null;
-    public ?string $release_status    = null;
-    public ?string $release_type      = null;
-    public int $song_artist_count     = 0;
+    public ?int $addition_time         = null;
+    public ?int $album_artist          = null;
+    public int $artist_count           = 0;
+    public ?string $artist_name        = null;
+    public ?string $artist_prefix      = null;
+    public ?string $barcode            = null;
+    public int $catalog                = 0;
+    public int $catalog_id             = 0;
+    public ?string $catalog_number     = null;
+    public int $disk_count             = 0;
+    public bool $enabled               = true;
+    public int $id                     = 0;
+    public ?int $last_played           = null; // When this was last streamed, as a unix timestamp; null until it has been played.
+    public ?string $link               = null;
+    public ?string $mbid               = null; // MusicBrainz ID
+    public ?string $mbid_group         = null; // MusicBrainz Release Group ID
+    public ?string $name               = null;
+    public ?int $original_year         = null;
+    public ?string $prefix             = null;
+    public ?string $release_status     = null;
+    public ?string $release_type       = null;
+    public int $song_artist_count      = 0;
 
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
@@ -142,7 +142,7 @@ class Album extends database_object implements
         $this->catalog_id        = (int) ($info['catalog_id'] ?? 0);
         $this->catalog_number    = $info['catalog_number'] ?? null;
         $this->disk_count        = (int) ($info['disk_count'] ?? 0);
-        $this->hidden            = (bool) ($info['hidden'] ?? false);
+        $this->enabled           = (bool) ($info['enabled'] ?? true);
         $this->id                = (int) ($info['id'] ?? 0);
         $this->link              = $info['link'] ?? null;
         $this->mbid              = $info['mbid'] ?? null;
@@ -484,6 +484,23 @@ class Album extends database_object implements
     }
 
     /**
+     * Take the album off the shelves, or put it back.
+     *
+     * The songs follow either way, so the word promises here what it promises on a song: what is disabled
+     * is neither listed nor playable. A single song can still be flipped on its own afterwards; only the
+     * next change of the album's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $album_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        self::_update_field(AlbumFieldEnum::ENABLED, ($new_enabled) ? 1 : 0, $album_id);
+        self::getAlbumRepository()->setSongsEnabled($album_id, $new_enabled);
+    }
+
+    /**
      * update_table_counts
      * Update all albums with mapping and missing data after catalog changes
      */
@@ -491,22 +508,6 @@ class Album extends database_object implements
     {
         debug_event(self::class, 'update_table_counts', 5);
         self::getAlbumRepository()->updateAllCounts();
-    }
-
-    /**
-     * Take the album off the shelves, or put it back. Hiding withdraws the listing only; the songs stay
-     * playable unless the caller asks for them too, and putting it back never re-enables anything.
-     */
-    public static function update_visibility(VisibilityStateEnum $state, int $album_id): void
-    {
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-            return;
-        }
-
-        self::_update_field(AlbumFieldEnum::HIDDEN, ($state->isHidden()) ? 1 : 0, $album_id);
-        if ($state->cascades()) {
-            self::getAlbumRepository()->disableSongs($album_id);
-        }
     }
 
     /**
@@ -995,9 +996,9 @@ class Album extends database_object implements
         return $this->has_art ?? false;
     }
 
-    public function isHidden(): bool
+    public function isEnabled(): bool
     {
-        return $this->hidden;
+        return $this->enabled;
     }
 
     public function isNew(): bool
@@ -1027,10 +1028,9 @@ class Album extends database_object implements
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
 
-        // sent by the edit form only; every other caller leaves the key out and the flag alone
-        $visibility = VisibilityStateEnum::tryFrom((string) ($data['visibility'] ?? ''));
-        if ($visibility instanceof VisibilityStateEnum) {
-            self::update_visibility($visibility, $this->id);
+        // sent by the edit form as 0 or 1; every other caller leaves the key out and the flag alone
+        if (array_key_exists('enabled', $data)) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
         }
 
         // If you have created an album_artist using 'add new...' we need to create a new artist

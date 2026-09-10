@@ -100,14 +100,13 @@ $ownerId  = $this->getOwnerId(); ?>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs'); ?></td>
             </tr>
-            <?php if ($this->mayHide()) { ?>
+            <?php if ($this->mayDisable()) { ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Visibility'); ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('State'); ?></td>
                 <td>
-                    <select name="visibility">
-                        <option value="visible"<?php echo ($this->isHidden()) ? '' : ' selected="selected"'; ?>><?php echo T_('Visible'); ?></option>
-                        <option value="hidden"<?php echo ($this->isHidden()) ? ' selected="selected"' : ''; ?>><?php echo T_('Hidden'); ?></option>
-                        <option value="hidden_disabled"><?php echo T_('Hidden, and disable its items'); ?></option>
+                    <select name="enabled">
+                        <option value="1"<?php echo ($this->isEnabled()) ? ' selected="selected"' : ''; ?>><?php echo T_('Enabled'); ?></option>
+                        <option value="0"<?php echo ($this->isEnabled()) ? '' : ' selected="selected"'; ?>><?php echo T_('Disabled'); ?></option>
                     </select>
                 </td>
             </tr>

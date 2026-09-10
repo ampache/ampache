@@ -38,7 +38,7 @@ use Psr\Log\LoggerInterface;
  * A smartlist reaches the rows without going through a browse, so the withdrawn items have to be excluded
  * here on their own. The rule is what lets the manager who can see them list them.
  */
-class HiddenSearchTest extends TestCase
+class DisabledSearchTest extends TestCase
 {
     /**
      * @return list<array{0: string, 1: string}>
@@ -46,8 +46,8 @@ class HiddenSearchTest extends TestCase
     public static function typeProvider(): array
     {
         return [
-            ['album', '`album`.`hidden` = 0'],
-            ['artist', '`artist`.`hidden` = 0'],
+            ['album', '`album`.`enabled` = 1'],
+            ['artist', '`artist`.`enabled` = 1'],
         ];
     }
 
@@ -76,8 +76,8 @@ class HiddenSearchTest extends TestCase
     {
         $search = $this->search($type, true);
 
-        self::assertSame('boolean', $search->get_rule_type_by_name('hidden'));
-        self::assertContains('hidden', array_column($search->get_rule_types(), 'name'));
+        self::assertSame('boolean', $search->get_rule_type_by_name('enabled'));
+        self::assertContains('enabled', array_column($search->get_rule_types(), 'name'));
     }
 
     private function search(string $type, bool $isManager): Search

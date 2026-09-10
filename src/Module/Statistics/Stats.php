@@ -546,7 +546,7 @@ final class Stats
         // the newest lists reach the home page and the feeds without going through a browse, so the
         // withdrawn items have to be dropped here as well
         if (in_array($base_type, ['album', 'artist'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
-            $where[] = sprintf('`%s`.`hidden` = 0', $base_type);
+            $where[] = sprintf('`%s`.`enabled` = 1', $base_type);
         }
 
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);

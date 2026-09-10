@@ -129,9 +129,9 @@ final class ArtistRowView extends AbstractView
         return $this->webPath;
     }
 
-    public function isHidden(): bool
+    public function isDisabled(): bool
     {
-        return $this->artist->hidden;
+        return !$this->artist->enabled;
     }
 
     public function isHideGenres(): bool

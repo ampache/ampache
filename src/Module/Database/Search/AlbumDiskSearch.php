@@ -647,8 +647,8 @@ final class AlbumDiskSearch implements SearchInterface
         // optional: a takedown does not depend on whether the instance turned catalog checks on
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
             $where_sql = ($where_sql !== '' && $where_sql !== '0')
-                ? "(" . $where_sql . ") AND NOT EXISTS (SELECT 1 FROM `album` AS `album_hid` WHERE `album_hid`.`id` = `album_disk`.`album_id` AND `album_hid`.`hidden` = 1)"
-                : "NOT EXISTS (SELECT 1 FROM `album` AS `album_hid` WHERE `album_hid`.`id` = `album_disk`.`album_id` AND `album_hid`.`hidden` = 1)";
+                ? "(" . $where_sql . ") AND EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)"
+                : "EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)";
         }
 
         if ($search->catalog_id) {

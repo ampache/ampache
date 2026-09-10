@@ -275,8 +275,8 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         $catalogIds = array_map(intval(...), $catalogIds);
 
         $sql = (count($catalogIds) === 1)
-            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . $catalogIds[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`hidden` = 0 ORDER BY `f_name`;"
-            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', $catalogIds) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`hidden` = 0 GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `artist`.`song_count`, `image`.`object_id` ORDER BY `f_name`;";
+            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . $catalogIds[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`enabled` = 1 ORDER BY `f_name`;"
+            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', $catalogIds) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`enabled` = 1 GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `artist`.`song_count`, `image`.`object_id` ORDER BY `f_name`;";
 
         $result = $this->connection->query($sql);
 
@@ -376,7 +376,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
             $params = [$catalogId];
         } else {
             $sql = ($albumArtist)
-                ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`hidden` = 0 ORDER BY `artist`.`name`;"
+                ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL AND `artist`.`enabled` = 1 ORDER BY `artist`.`name`;"
                 : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' ORDER BY `artist`.`name`;";
             $params = [];
         }
@@ -558,8 +558,8 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     public function getRowsByCatalogs(?array $catalogIds, int $size = 0, int $offset = 0): array
     {
         $where = ($catalogIds !== null && $catalogIds !== [])
-            ? ' AND `song`.`catalog` IN (' . implode(',', array_map(intval(...), $catalogIds)) . ') WHERE `artist`.`hidden` = 0'
-            : 'WHERE `artist`.`album_count` > 0 AND `artist`.`hidden` = 0';
+            ? ' AND `song`.`catalog` IN (' . implode(',', array_map(intval(...), $catalogIds)) . ') WHERE `artist`.`enabled` = 1'
+            : 'WHERE `artist`.`album_count` > 0 AND `artist`.`enabled` = 1';
 
         $result = $this->connection->query(
             sprintf(
@@ -606,23 +606,6 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     public function getUploaderId(int $artistId): int
     {
         return (int) $this->connection->fetchOne('SELECT `user` FROM `artist` WHERE `id` = ?', [$artistId]);
-    }
-
-    /**
-     * Writes a single artist column, bounded by the enum because the column name goes into the statement
-     */
-    public function hideChildren(int $artistId): void
-    {
-        $this->connection->query(
-            "UPDATE `album` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' SET `album`.`hidden` = 1 WHERE `artist_map`.`artist_id` = ?",
-            [$artistId]
-        );
-
-        // hiding only withdraws the listing, so the songs are disabled alongside to close playback too
-        $this->connection->query(
-            "UPDATE `song` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' SET `song`.`enabled` = 0 WHERE `artist_map`.`artist_id` = ?",
-            [$artistId]
-        );
     }
 
     /**
@@ -688,6 +671,24 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         $this->connection->query(
             'UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `mbid` = ?',
             [$prefix, $name, $mbid]
+        );
+    }
+
+    /**
+     * Writes a single artist column, bounded by the enum because the column name goes into the statement
+     */
+    public function setChildrenEnabled(int $artistId, bool $enabled): void
+    {
+        $state = ($enabled) ? 1 : 0;
+
+        $this->connection->query(
+            "UPDATE `album` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' SET `album`.`enabled` = ? WHERE `artist_map`.`artist_id` = ?",
+            [$state, $artistId]
+        );
+
+        $this->connection->query(
+            "UPDATE `song` INNER JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' SET `song`.`enabled` = ? WHERE `artist_map`.`artist_id` = ?",
+            [$state, $artistId]
         );
     }
 

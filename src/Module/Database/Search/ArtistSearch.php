@@ -199,8 +199,8 @@ final readonly class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
-                case 'hidden':
-                    $where[] = ($operator_sql == '1') ? "`artist`.`hidden` = 1" : "`artist`.`hidden` = 0";
+                case 'enabled':
+                    $where[] = ($operator_sql == '1') ? "`artist`.`enabled` = 1" : "`artist`.`enabled` = 0";
                     break;
                 case 'has_image':
                     $where[] = ($operator_sql == '1')
@@ -621,8 +621,8 @@ final readonly class ArtistSearch implements SearchInterface
         // optional: a takedown does not depend on whether the instance turned catalog checks on
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
             $where_sql = ($where_sql !== '' && $where_sql !== '0')
-                ? "(" . $where_sql . ") AND `artist`.`hidden` = 0"
-                : "`artist`.`hidden` = 0";
+                ? "(" . $where_sql . ") AND `artist`.`enabled` = 1"
+                : "`artist`.`enabled` = 1";
         }
 
         if ($search->catalog_id) {

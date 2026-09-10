@@ -1481,7 +1481,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
         $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
-        $rule_type[] = $this->_get_rule_boolean('hidden', T_('Hidden'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
@@ -1597,7 +1597,7 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
-        $rule_type[] = $this->_get_rule_boolean('hidden', T_('Hidden'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);

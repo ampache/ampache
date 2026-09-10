@@ -103,9 +103,19 @@ final class ArtistEditFormRenderer extends AbstractEditFormRenderer
         return (string) $this->getItem()->yearformed;
     }
 
-    public function isHidden(): bool
+    public function isEnabled(): bool
     {
-        return $this->getItem()->hidden;
+        return $this->getItem()->enabled;
+    }
+
+    /**
+     * Disabling a release sits with whoever can already disable its songs.
+     */
+    public function mayDisable(): bool
+    {
+        $user = Core::get_global('user');
+
+        return $user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 
     public function mayEditMbid(): bool
@@ -113,16 +123,6 @@ final class ArtistEditFormRenderer extends AbstractEditFormRenderer
         $user = Core::get_global('user');
 
         return $this->mayManage() || ($user instanceof User && $user->getId() === $this->getItem()->get_user_owner());
-    }
-
-    /**
-     * Withdrawing a release from the shelves sits with whoever can already disable its songs.
-     */
-    public function mayHide(): bool
-    {
-        $user = Core::get_global('user');
-
-        return $user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
     }
 
     /**

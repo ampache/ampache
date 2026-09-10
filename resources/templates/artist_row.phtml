@@ -92,7 +92,7 @@ if ($this->isShowRatings()) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-<?php if ($this->isHidden()) { ?>
+<?php if ($this->isDisabled()) { ?>
         <?php echo $this->raw(Ui::get_material_symbol('visibility_off', T_('Hidden'))); ?>
 <?php } ?>
 <?php if ($this->canPostShout()) { ?>

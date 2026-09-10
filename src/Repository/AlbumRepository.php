@@ -248,17 +248,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * Recomputes the cached totals on one album and its disks, after a song on it changed
-     */
-    public function disableSongs(int $albumId): void
-    {
-        $this->connection->query(
-            'UPDATE `song` SET `enabled` = 0 WHERE `album` = ?',
-            [$albumId]
-        );
-    }
-
-    /**
      * Finds the album that already carries exactly these properties, matching what create() would write
      *
      * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
@@ -613,10 +602,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         $sql = ($catalogIds !== null && $catalogIds !== [])
             ? sprintf(
-                'SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) AND `album`.`hidden` = 0 ',
+                'SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) AND `album`.`enabled` = 1 ',
                 implode(',', array_map(intval(...), $catalogIds))
             )
-            : 'SELECT `album`.`id` FROM `album` WHERE `album`.`hidden` = 0 ';
+            : 'SELECT `album`.`id` FROM `album` WHERE `album`.`enabled` = 1 ';
 
         $result = $this->connection->query(
             $sql . 'GROUP BY `album`.`id` ORDER BY `album`.`name` ' . $this->limitClause($size, $offset)
@@ -640,11 +629,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         if ($catalogIds !== null && $catalogIds !== []) {
             $sql = sprintf(
-                'SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) AND `album`.`hidden` = 0 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
+                'SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) AND `album`.`enabled` = 1 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
                 implode(',', array_map(intval(...), $catalogIds))
             );
         } else {
-            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`hidden` = 0 GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ';
+            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`enabled` = 1 GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ';
         }
 
         $result = $this->connection->query(
@@ -1094,6 +1083,17 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
+    public function setSongsEnabled(int $albumId, bool $enabled): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `enabled` = ? WHERE `album` = ?',
+            [($enabled) ? 1 : 0, $albumId]
+        );
     }
 
     /**

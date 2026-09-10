@@ -287,7 +287,7 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(self::stringContains(' AND `song`.`catalog` IN (4) WHERE `artist`.`hidden` = 0 GROUP BY '))
+            ->with(self::stringContains(' AND `song`.`catalog` IN (4) WHERE `artist`.`enabled` = 1 GROUP BY '))
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -304,7 +304,7 @@ class ArtistRepositoryTest extends TestCase
         self::assertSame(0, $this->subject->getUploaderId(666));
     }
 
-    public function testHideChildrenNeverReEnablesASong(): void
+    public function testSetChildrenEnabledCarriesTheArtistStateToItsAlbumsAndSongs(): void
     {
         $statements = [];
 
@@ -316,68 +316,30 @@ class ArtistRepositoryTest extends TestCase
                 return $this->createMock(PDOStatement::class);
             });
 
-        $this->subject->hideChildren(666);
-
-        // the tell that the cascade is one-way: no bound value can carry the enabling side back in
-        foreach ($statements as [$sql, $params]) {
-            self::assertStringNotContainsString('`enabled` = 1', $sql);
-            self::assertSame([666], $params);
-        }
-    }
-
-    public function testHideChildrenWithdrawsTheAlbumsAndDisablesTheirSongs(): void
-    {
-        $statements = [];
-
-        $this->connection->expects(static::exactly(2))
-            ->method('query')
-            ->willReturnCallback(function (string $sql, array $params) use (&$statements): PDOStatement {
-                $statements[] = [$sql, $params];
-
-                return $this->createMock(PDOStatement::class);
-            });
-
-        $this->subject->hideChildren(666);
+        $this->subject->setChildrenEnabled(666, false);
 
         self::assertStringContainsString('UPDATE `album`', $statements[0][0]);
-        self::assertStringContainsString('`album`.`hidden` = 1', $statements[0][0]);
-        // hiding withdraws the listing only, so the songs have to be disabled for playback to close with it
+        self::assertSame([0, 666], $statements[0][1]);
+        // an album leaving the listings has to take playback with it, or the word means two things
         self::assertStringContainsString('UPDATE `song`', $statements[1][0]);
-        self::assertStringContainsString('`song`.`enabled` = 0', $statements[1][0]);
+        self::assertSame([0, 666], $statements[1][1]);
     }
 
-    public function testMigrateClearsTheCreditWhenThereIsNoReplacement(): void
+    public function testSetChildrenEnabledPutsBackWhatItTookAway(): void
     {
-        $this->connection->expects(static::exactly(4))
+        $bound = [];
+
+        $this->connection->expects(static::exactly(2))
             ->method('query')
-            ->with(
-                ...self::withConsecutive(
-                    ['UPDATE `song` SET `artist` = NULL WHERE `artist` = ?;', [666]],
-                    ['UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = ?;', [666]],
-                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
-                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
-                )
-            );
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
+                $bound[] = $params;
 
-        $this->subject->migrate(666, 0);
-    }
+                return $this->createMock(PDOStatement::class);
+            });
 
-    public function testMigrateMovesEverythingOntoTheNewArtist(): void
-    {
-        $this->connection->expects(static::exactly(6))
-            ->method('query')
-            ->with(
-                ...self::withConsecutive(
-                    ['UPDATE `song` SET `artist` = ? WHERE `artist` = ?;', [42, 666]],
-                    ['UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;', [42, 666]],
-                    ['UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;', [42, 666]],
-                    ["UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';", [42, 666]],
-                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
-                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
-                )
-            );
+        $this->subject->setChildrenEnabled(666, true);
 
-        $this->subject->migrate(666, 42);
+        self::assertSame([[1, 666], [1, 666]], $bound);
     }
 
     public function testSetFieldWritesTheColumnFromTheEnum(): void

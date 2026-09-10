@@ -229,6 +229,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         );
     }
 
+    public function getDisabledIcon(): string
+    {
+        return Ui::get_material_symbol('unpublished', T_('Disabled'));
+    }
+
     public function getDisplayYear(): int
     {
         return ($this->configContainer->get('use_original_year') && $this->album->original_year)
@@ -249,11 +254,6 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getGenre(): string
     {
         return $this->album->get_f_tags();
-    }
-
-    public function getHiddenIcon(): string
-    {
-        return Ui::get_material_symbol('visibility_off', T_('Hidden'));
     }
 
     public function getId(): int
@@ -317,16 +317,16 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return Userflag::show($this->album->getId(), 'album');
     }
 
+    public function isDisabled(): bool
+    {
+        return !$this->album->enabled;
+    }
+
     public function isEditable(): bool
     {
         return (
             $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             || $this->gatekeeper->getUserId() == $this->album->get_user_owner()
         );
-    }
-
-    public function isHidden(): bool
-    {
-        return $this->album->hidden;
     }
 }

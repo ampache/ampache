@@ -43,10 +43,10 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A browser-measured HTTP compression check on the test page
 * Folder and collection pages describe themselves in a shared link, like the other object pages do
 * Database 810011
-  * New `album`.`hidden` and `artist`.`hidden`, so a release can be withdrawn from the listings without deleting it and losing its playlist entries, ratings and play history
-  * Set from a `Visibility` menu in the album or artist edit dialog by a catalog manager, who keeps seeing what is hidden; its third entry also disables the songs, and returning to `Visible` never re-enables them
-  * Withdrawn items leave every browse, smartlist, API, Subsonic and RSS listing, and carry a marker in the rows only a manager still sees. A `Hidden` search rule lists them
-  * Playback stays governed by `song`.`enabled`, which the cascade turns off
+  * New `album`.`enabled` and `artist`.`enabled`, carrying the name and the promise `song`.`enabled` already had, so a release can be withdrawn without deleting it and losing its playlist entries, ratings and play history
+  * Set from a `State` menu in the album, artist and song edit dialogs by a catalog manager, who keeps seeing what is disabled; disabling an album or artist carries down to its songs, and enabling carries back
+  * Disabled items leave every browse, smartlist, API, Subsonic and RSS listing, and carry a marker in the rows only a manager still sees. An `Enabled` search rule lists them
+  * A song can still be enabled or disabled on its own; the next change of its album or artist state writes over it
 
 ### Changed (8.1.0)
 

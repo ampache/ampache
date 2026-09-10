@@ -70,16 +70,6 @@ interface AlbumRepositoryInterface
     public function deleteEmpty(int $albumId): void;
 
     /**
-     * Recomputes the cached totals on one album and its disks, after a song on it changed
-     */
-    /**
-     * Makes every song of an album unplayable.
-     *
-     * One-way on purpose: showing the album again must not re-enable a song disabled for its own reasons.
-     */
-    public function disableSongs(int $albumId): void;
-
-    /**
      * Finds the album that already carries exactly these properties, matching what create() would write
      *
      * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
@@ -333,6 +323,14 @@ interface AlbumRepositoryInterface
      * Writes a single album column, bounded by the enum because the column name goes into the statement
      */
     public function setField(int $albumId, AlbumFieldEnum $field, int|string|null $value): bool;
+
+    /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
+    /**
+     * Puts every song of an album into the state the album itself was just put into.
+     */
+    public function setSongsEnabled(int $albumId, bool $enabled): void;
 
     /**
      * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed
