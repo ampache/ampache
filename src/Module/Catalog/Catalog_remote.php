@@ -33,6 +33,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -130,6 +131,14 @@ class Catalog_remote extends Catalog
             return false;
         }
 
+        // refuses a uri naming the loopback interface, a private network or another address the server must not
+        // be made to request on an administrator's behalf; the same check runs again before every connection
+        if (!self::getUrlValidator()->isPublicHttpUrl($uri)) {
+            AmpError::add('general', T_('Remote Catalog type was selected, but the address is not reachable from this server'));
+
+            return false;
+        }
+
         if (!strlen($username) || !strlen($password)) {
             AmpError::add('general', T_('No username or password was specified'));
 
@@ -153,6 +162,16 @@ class Catalog_remote extends Catalog
             ['uri' => $uri, 'username' => $username, 'password' => $password],
             $catalog_id
         );
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUrlValidator(): UrlValidatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UrlValidatorInterface::class);
     }
 
     /**
@@ -677,6 +696,25 @@ class Catalog_remote extends Catalog
         if ($this->remote_handle
             && $this->remote_handle->state() === 'CONNECTED'
         ) {
+            return;
+        }
+
+        // the remote client below has no address policy of its own, so the check that ran at catalog creation
+        // runs again here: the uri's dns answer isn't guaranteed to still be a public address at connect time
+        if (!self::getUrlValidator()->isPublicHttpUrl($this->uri)) {
+            debug_event('remote.catalog', 'Refusing to connect to ' . $this->uri, 1);
+            if (defined('CLI')) {
+                echo T_('Failed to connect to the remote server') . "\n";
+            }
+
+            if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Failed to connect to the remote server'));
+                echo AmpError::display('general');
+                flush();
+            }
+
+            $this->remote_handle = null;
+
             return;
         }
 
