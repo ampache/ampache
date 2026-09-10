@@ -325,9 +325,6 @@ interface AlbumRepositoryInterface
     public function setField(int $albumId, AlbumFieldEnum $field, int|string|null $value): bool;
 
     /**
-     * Recomputes the cached totals on one album and its disks, after a song on it changed
-     */
-    /**
      * Puts every song of an album into the state the album itself was just put into.
      */
     public function setSongsEnabled(int $albumId, bool $enabled): void;
@@ -342,5 +339,8 @@ interface AlbumRepositoryInterface
      */
     public function updateAllSkipCounts(): void;
 
+    /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
     public function updateCounts(int $albumId): void;
 }

@@ -952,7 +952,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         int $albumId,
     ): array {
         $userId     = Core::get_global('user')?->getId();
-        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
+        // every caller is an output layer for a device protocol, which has no level to exempt anyone with
+        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`enabled` = 1 AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $dbResults  = $this->connection->query($sql, [$albumId]);
 
         $results = [];
@@ -1085,9 +1086,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return true;
     }
 
-    /**
-     * Recomputes the cached totals on one album and its disks, after a song on it changed
-     */
     public function setSongsEnabled(int $albumId, bool $enabled): void
     {
         $this->connection->query(
@@ -1146,6 +1144,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
     }
 
+    /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
     public function updateCounts(int $albumId): void
     {
         // each statement names the column it maintains in its own SET clause; they run in order because the

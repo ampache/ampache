@@ -632,6 +632,31 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * The songs of an artist a listener may be handed: unplayable ones are left out.
+     *
+     * `getAllByArtist()` keeps returning everything, because re-reading the tags of a disabled file is
+     * still a thing a catalogue has to do.
+     *
+     * @return int[]
+     */
+    public function getEnabledByArtist(
+        int $artistId,
+    ): array {
+        $user_id = Core::get_global('user')?->getId();
+        $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `song`.`enabled` = 1 AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`;"
+            : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `song`.`enabled` = 1 ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`;";
+
+        $dbResults = $this->connection->query($sql, [$artistId]);
+        $results   = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * Reads a page of the enabled songs across every catalog, or the given ones
      *
      * @param array<int|string>|null $catalogIds every catalog when null or empty

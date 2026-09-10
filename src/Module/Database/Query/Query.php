@@ -1126,10 +1126,12 @@ class Query
             }
         }
 
-        // a withdrawn album or artist leaves every browse the way a filtered catalog does, and the catalog
-        // check is deliberately not consulted here: a takedown outlives whatever reason skipped that one
+        // a withdrawn item leaves every browse the way a filtered catalog does, and the catalog check is
+        // deliberately not consulted here: a takedown outlives whatever reason skipped that one. `song`
+        // joins them because leaving it to each caller is what let `album_songs` and `artist_songs` list
+        // unplayable files while `songs`, which remembered, did not
         if (
-            in_array($type, ['album', 'album_disk', 'artist'], true)
+            in_array($type, ['album', 'album_disk', 'artist', 'song'], true)
             && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $this->user_id)
         ) {
             // `album_disk` carries no flag of its own, so it reads the one on the album it belongs to

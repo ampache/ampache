@@ -43,6 +43,13 @@ class QueryDisabledTest extends TestCase
         self::assertStringNotContainsString('`album`.`enabled`', $sql, 'the manager is the one who can put it back');
     }
 
+    public function testAManagerBrowsesSongsWithoutTheCondition(): void
+    {
+        $sql = $this->sqlFor('song', true);
+
+        self::assertStringNotContainsString('`song`.`enabled`', $sql);
+    }
+
     public function testAnAlbumDiskBrowseReadsTheFlagOnTheAlbumItBelongsTo(): void
     {
         $sql = $this->sqlFor('album_disk', false);
@@ -78,6 +85,17 @@ class QueryDisabledTest extends TestCase
         // the tell that the guard fired: both conditions stand, so the browse can never match a row
         self::assertStringContainsString('`album`.`enabled` = 0', $sql);
         self::assertStringContainsString('`album`.`enabled` = 1', $sql);
+    }
+
+    /**
+     * Leaving it to each caller is what let `album_songs` and `artist_songs` hand out unplayable files
+     * while `songs`, which remembered to ask, did not.
+     */
+    public function testASongBrowseCarriesTheConditionForALowerLevel(): void
+    {
+        $sql = $this->sqlFor('song', false);
+
+        self::assertStringContainsString('`song`.`enabled` = 1', $sql);
     }
 
     /**

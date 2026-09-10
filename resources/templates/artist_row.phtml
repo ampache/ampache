@@ -92,20 +92,20 @@ if ($this->isShowRatings()) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-<?php if ($this->isDisabled()) { ?>
-        <?php echo $this->raw(Ui::get_material_symbol('visibility_off', T_('Hidden'))); ?>
-<?php } ?>
-<?php if ($this->canPostShout()) { ?>
+<?php if ($this->isDisabled()) {
+    echo $this->raw(Ui::get_material_symbol('unpublished', T_('Disabled')));
+}
+if ($this->canPostShout()) { ?>
     <a href="<?php echo $this->e($this->getWebPath()); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $itemId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
     </a>
 <?php }
-        if ($this->canEdit()) { ?>
+if ($this->canEdit()) { ?>
         <a id="edit_artist_<?php echo $itemId; ?>" onclick="showEditDialog('artist_row', '<?php echo $itemId; ?>', 'edit_artist_<?php echo $itemId; ?>', '<?php echo $this->raw(addslashes(T_('Artist Edit'))); ?>', 'artist_', '<?php echo '&browse_id=' . $this->getBrowseId(); ?>')">
         <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
         </a>
 <?php }
-        if ($this->canDelete()) { ?>
+if ($this->canDelete()) { ?>
         <a id="delete_artist_<?php echo $itemId; ?>" href="<?php echo $this->e($this->getWebPath()); ?>/artists.php?action=delete&artist_id=<?php echo $itemId; ?>">
             <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
         </a>

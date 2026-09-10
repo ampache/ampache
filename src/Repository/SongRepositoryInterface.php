@@ -212,6 +212,13 @@ interface SongRepositoryInterface
     public function getDisabled(): Iterator;
 
     /**
+     * The songs of an artist a listener may be handed: unplayable ones are left out
+     *
+     * @return list<int>
+     */
+    public function getEnabledByArtist(int $artistId): array;
+
+    /**
      * Reads a page of the enabled songs across every catalog, or the given ones
      *
      * @param array<int|string>|null $catalogIds every catalog when null or empty

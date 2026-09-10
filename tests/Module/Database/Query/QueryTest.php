@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
 use RuntimeException;
@@ -134,6 +136,8 @@ class QueryTest extends MockeryTestCase
         // which needs the query object, which used to go back through the virtual set_type():
         // an infinite recursion that took the whole page down. The filter path has to resolve
         // the type without handing control back to the child override.
+        $this->bootPrivilegeChecker();
+
         $query = new class (0, false) extends Query {
             public int $overrideCalls = 0;
 
@@ -182,8 +186,24 @@ class QueryTest extends MockeryTestCase
     /**
      * An uncached query keeps its state in memory and never reaches the database.
      */
+    /**
+     * The browse asks whether the caller may see withdrawn rows, so a checker has to be reachable.
+     */
+    private function bootPrivilegeChecker(): void
+    {
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->shouldReceive('check')->andReturnFalse();
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->andReturn($privilegeChecker);
+
+        $GLOBALS['dic'] = $dic;
+    }
+
     private function subject(): Query
     {
+        $this->bootPrivilegeChecker();
+
         return new Query(0, false);
     }
 }
