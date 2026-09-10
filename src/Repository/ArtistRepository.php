@@ -557,13 +557,15 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
      */
     public function getRowsByCatalogs(?array $catalogIds, int $size = 0, int $offset = 0): array
     {
+        // the withdrawal test reads a column of the joined table, which is an inner join whatever it is
+        // called: saying so leaves one clause holding one thing instead of a `WHERE` opened inside an `ON`
         $where = ($catalogIds !== null && $catalogIds !== [])
-            ? ' AND `song`.`catalog` IN (' . implode(',', array_map(intval(...), $catalogIds)) . ') WHERE `artist`.`enabled` = 1'
-            : 'WHERE `artist`.`album_count` > 0 AND `artist`.`enabled` = 1';
+            ? 'WHERE `artist`.`enabled` = 1 AND `song`.`catalog` IN (' . implode(',', array_map(intval(...), $catalogIds)) . ')'
+            : 'WHERE `artist`.`enabled` = 1 AND `artist`.`album_count` > 0';
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`mbid`, `artist`.`summary`, `artist`.`placeformed`, `artist`.`yearformed`, `artist`.`last_update`, `artist`.`user`, `artist`.`manual_update`, `artist`.`time`, `artist`.`album_count`, `artist`.`song_count`, `artist`.`album_disk_count`, `artist`.`total_count`, `artist`.`total_skip`, `artist`.`addition_time`, `artist`.`weight` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ',
+                'SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`mbid`, `artist`.`summary`, `artist`.`placeformed`, `artist`.`yearformed`, `artist`.`last_update`, `artist`.`user`, `artist`.`manual_update`, `artist`.`time`, `artist`.`album_count`, `artist`.`song_count`, `artist`.`album_disk_count`, `artist`.`total_count`, `artist`.`total_skip`, `artist`.`addition_time`, `artist`.`weight` FROM `song` INNER JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ',
                 $where
             ) . $this->limitClause($size, $offset)
         );

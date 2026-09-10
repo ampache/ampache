@@ -287,7 +287,7 @@ class ArtistRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(self::stringContains(' AND `song`.`catalog` IN (4) WHERE `artist`.`enabled` = 1 GROUP BY '))
+            ->with(self::stringContains('INNER JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `artist`.`enabled` = 1 AND `song`.`catalog` IN (4) GROUP BY '))
             ->willReturn($result);
 
         $result->expects(static::once())
