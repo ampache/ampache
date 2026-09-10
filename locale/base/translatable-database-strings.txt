@@ -4,7 +4,7 @@
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
- # './gather-messages.sh [-gu|--getutds]' - descriptions come from
+ # ./gather-messages.sh [-gu|--getutds] - descriptions come from
  # Preference::translate_db() and subcategories from Preference::DEFAULTS,
  # so a live database is NOT required. Do not edit it by hand; re-run the script.
 

@@ -382,9 +382,7 @@ class UPnPPlayer
      */
     private function Device(): UPnPDevice
     {
-        if ($this->_device === null) {
-            $this->_device = new UPnPDevice($this->_description_url);
-        }
+        $this->_device ??= new UPnPDevice($this->_description_url);
 
         return $this->_device;
     }
@@ -394,9 +392,7 @@ class UPnPPlayer
      */
     private function Playlist(): UPnPPlaylist
     {
-        if ($this->_playlist === null) {
-            $this->_playlist = new UPnPPlaylist($this->_description_url);
-        }
+        $this->_playlist ??= new UPnPPlaylist($this->_description_url);
 
         return $this->_playlist;
     }

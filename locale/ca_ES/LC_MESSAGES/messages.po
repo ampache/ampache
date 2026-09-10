@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: develmts <nikodeimos@gmail.com>, 2020\n"
 "Language-Team: Catalan (Spain) (http://app.transifex.com/ampache/ampache/language/ca_ES/)\n"
@@ -217,22 +217,6 @@ msgstr "Neteja estadístiques"
 msgid "Update User"
 msgstr "Actualitza l'usuari"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Reproduït"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d vegades"
-msgstr[1] "%d vegades"
-
-msgid "Uploaded by"
-msgstr "Pujat per "
-
-msgid "Actions"
-msgstr "Accions"
-
 msgid "Random to Temporary Playlist"
 msgstr "Llista de reproducció Aleatòria a Temporal"
 
@@ -335,6 +319,9 @@ msgstr "Edita l'artista"
 
 msgid "Albums"
 msgstr "Àlbums"
+
+msgid "Songs"
+msgstr "Cançons"
 
 msgid "Top Tracks"
 msgstr ""
@@ -800,6 +787,9 @@ msgstr ""
 msgid "Release Date"
 msgstr ""
 
+msgid "Actions"
+msgstr "Accions"
+
 msgid "Add Current Host"
 msgstr "Afegeix màquina actual"
 
@@ -996,9 +986,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Cançons"
-
 msgid "Artists"
 msgstr "Artistes"
 
@@ -1125,6 +1112,9 @@ msgstr "Mostra instàncies de reproducció local"
 
 msgid "Edit Instance"
 msgstr "Edita la instància"
+
+msgid "Are You Sure?"
+msgstr "Estàs segur ?"
 
 msgid "Localplay Control"
 msgstr "Control de reproducció local"
@@ -1928,6 +1918,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Afegeix a la nova llista"
 
@@ -2033,16 +2026,7 @@ msgstr "Guarda els canvis"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "Qualificat"
-
-msgid "Fav."
-msgstr ""
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
@@ -2050,6 +2034,9 @@ msgstr "Sincronitzar"
 
 msgid "Started"
 msgstr "Començat"
+
+msgid "Podcast Episode Edit"
+msgstr ""
 
 msgid "Podcast Edit"
 msgstr ""
@@ -2247,15 +2234,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2457,6 +2435,9 @@ msgstr "L'usuari és en línea ara"
 msgid "User is Offline Now"
 msgstr "L'usuari és fora de línia ara"
 
+msgid "Played"
+msgstr "Reproduït"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2475,10 +2456,10 @@ msgstr "Llista activa"
 msgid "Subtitle"
 msgstr "Subtítol"
 
-msgid "Video Edit"
+msgid "Video Information"
 msgstr ""
 
-msgid "Video Information"
+msgid "Video Edit"
 msgstr ""
 
 msgid "Songs Played"
@@ -2532,6 +2513,24 @@ msgstr "Actualitzar"
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "Temps"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Desconegut (orfa)"
 
@@ -2544,8 +2543,14 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "Temps"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "Qualificat"
 
 msgid "Starts With"
 msgstr "Comença per"
@@ -2708,6 +2713,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Stream"
 
@@ -2821,6 +2829,12 @@ msgstr "Bitrate"
 msgid "Channels"
 msgstr "Canals"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr "Torna a la pàgina d'entrada"
 
@@ -2917,11 +2931,15 @@ msgstr ""
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Informació de la cançó"
-
-msgid "Links"
-msgstr "Enllaços"
 
 msgid "Song Language"
 msgstr ""
@@ -2960,6 +2978,12 @@ msgid "Lyrics"
 msgstr ""
 
 msgid "Licensing"
+msgstr ""
+
+msgid "Uploaded by"
+msgstr "Pujat per "
+
+msgid "Technical"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3203,9 +3227,6 @@ msgstr "La teva nova llista d'accés ha estat creada"
 
 msgid "Your Access List entry has been removed"
 msgstr "S'ha esborrat la teva entrada a la Llista de control d'accés"
-
-msgid "Are You Sure?"
-msgstr "Estàs segur ?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5412,6 +5433,12 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Average from all users"
 msgstr ""

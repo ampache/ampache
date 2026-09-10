@@ -27,6 +27,7 @@ namespace Ampache\Module\Database;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 /**
  * This is a general object that is extended by all of the basic
@@ -111,9 +112,7 @@ abstract class database_object
     public static function isCacheEnabled(): bool
     {
         // lazy loaded to avoid some magic auto_init logic
-        if (self::$_enabled === null) {
-            self::$_enabled = (bool) AmpConfig::get('memory_cache', true);
-        }
+        self::$_enabled ??= (bool) AmpConfig::get('memory_cache', true);
 
         return self::$_enabled;
     }
@@ -160,7 +159,7 @@ abstract class database_object
         $sql        = sprintf('SELECT * FROM `%s` WHERE `id` = ?', $table);
         $db_results = Dba::read($sql, $params);
 
-        if (!$db_results) {
+        if (!$db_results instanceof PDOStatement) {
             return [];
         }
 
@@ -178,10 +177,7 @@ abstract class database_object
     {
         if (!$table_name) {
             $table_name = static::DB_TABLENAME;
-
-            if ($table_name === null) {
-                $table_name = Dba::escape(strtolower(static::class));
-            }
+            $table_name ??= Dba::escape(strtolower(static::class));
         }
 
         return Dba::escape($table_name);

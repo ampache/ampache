@@ -664,12 +664,13 @@ class Stream
 
         $has_default_target = AmpConfig::get($setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);
-
         // Fall backwards from the specific transcode formats to default
         // TARGET > PLAYER > CODEC > DEFAULT
         if ($target) {
             return $target;
-        } elseif ($has_player_target && $source !== $has_player_target) {
+        }
+
+        if ($has_player_target && $source !== $has_player_target) {
             $target = $has_player_target;
             debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target && $source !== $has_codec_target) {

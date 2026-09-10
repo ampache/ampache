@@ -92,7 +92,7 @@ class StatsTest extends TestCase
     private function clamp(?int $date): int
     {
         /** @var int $result */
-        $result = (new ReflectionMethod(Stats::class, '_clampDate'))->invoke(null, $date);
+        $result = new ReflectionMethod(Stats::class, '_clampDate')->invoke(null, $date);
 
         return $result;
     }

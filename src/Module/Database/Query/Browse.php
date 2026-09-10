@@ -29,7 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -122,6 +125,21 @@ class Browse extends Query
         'podcast',
         'podcast_episode',
         'smartplaylist',
+        'song',
+        'video',
+    ];
+
+    /** Types whose rows read a rating/userflag/art one object at a time, so those caches get warmed in bulk */
+    private const array INTERACTION_CACHE_TYPES = [
+        'album',
+        'album_disk',
+        'artist',
+        'collection',
+        'folder',
+        'live_stream',
+        'playlist',
+        'podcast',
+        'podcast_episode',
         'song',
         'video',
     ];
@@ -239,7 +257,7 @@ class Browse extends Query
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
-            $objects = [];
+            return [];
         }
 
         return $objects;
@@ -852,6 +870,16 @@ class Browse extends Query
     }
 
     /**
+     * @param array<int|string> $ids
+     */
+    private function _prefetchInteractionCaches(string $type, array $ids): void
+    {
+        Rating::build_cache($type, $ids);
+        Userflag::build_cache($type, $ids);
+        Art::build_cache($ids, $type);
+    }
+
+    /**
      * Warms the cache for a page whose rows are not a uniform list of one type's ids — a folder browse's entries
      * are each either a bare numeric folder id or an encoded "type-id" string, and a collection_items browse's
      * entries are each a shaped {object_type, object_id} record. Group by the embedded type, then reuse each
@@ -892,6 +920,10 @@ class Browse extends Query
                 'podcast_episode' => Podcast_Episode::build_cache($ids),
                 default => null,
             };
+
+            if (in_array($entryType, self::INTERACTION_CACHE_TYPES, true)) {
+                $this->_prefetchInteractionCaches($entryType, $ids);
+            }
         }
     }
 
@@ -925,6 +957,11 @@ class Browse extends Query
             'wanted' => Wanted::build_cache($this->_squashList($object_ids)),
             default => null,
         };
+
+        // 'folder'/'collection_items' already warmed their own split-by-type groups above
+        if ($type !== 'folder' && $type !== 'collection_items' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+            $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
+        }
     }
 
     /**

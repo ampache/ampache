@@ -325,7 +325,7 @@ class HttpQPlayer
         }
 
         if ($results == '3') {
-            $state = 'pause';
+            return 'pause';
         }
 
         return $state;

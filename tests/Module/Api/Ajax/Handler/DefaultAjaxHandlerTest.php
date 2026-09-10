@@ -85,7 +85,7 @@ class DefaultAjaxHandlerTest extends TestCase
         $this->subject->handle($user);
         ob_end_clean();
 
-        static::assertSame($medias, $handed);
+        self::assertSame($medias, $handed);
     }
 
     public function testBasketExpandsAPrivateListTheViewerCollaboratesOn(): void
@@ -96,7 +96,7 @@ class DefaultAjaxHandlerTest extends TestCase
             ->method('get_medias')
             ->willReturn($medias);
 
-        static::assertSame($medias, $this->runBasket($playlist));
+        self::assertSame($medias, $this->runBasket($playlist));
     }
 
     public function testBasketExpandsAPublicList(): void
@@ -107,7 +107,7 @@ class DefaultAjaxHandlerTest extends TestCase
             ->method('get_medias')
             ->willReturn($medias);
 
-        static::assertSame($medias, $this->runBasket($playlist));
+        self::assertSame($medias, $this->runBasket($playlist));
     }
 
     public function testBasketRefusesToExpandAPrivateListTheViewerCannotSee(): void
@@ -117,7 +117,7 @@ class DefaultAjaxHandlerTest extends TestCase
         $playlist->expects(static::never())
             ->method('get_medias');
 
-        static::assertSame([], $this->runBasket($playlist));
+        self::assertSame([], $this->runBasket($playlist));
     }
 
     protected function setUp(): void

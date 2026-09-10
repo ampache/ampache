@@ -211,7 +211,8 @@ class Ldap
             foreach ($result as $field => $values) {
                 if ($field == 'count' || is_int($field)) {
                     continue;
-                } elseif ($field == 'dn') {
+                }
+                if ($field == 'dn') {
                     $sr_clean[$key][$field] = $values;
                 } else {
                     $sr_clean[$key][$field] = self::_array_filter_key($values, 'is_int');

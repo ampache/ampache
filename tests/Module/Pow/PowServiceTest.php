@@ -41,6 +41,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class PowServiceTest extends MockeryTestCase
 {
@@ -425,7 +426,7 @@ class PowServiceTest extends MockeryTestCase
         // Accepting would mean handing out answers that can no longer be checked for replay, so a
         // database that cannot record one has to close the endpoint rather than open it.
         $this->database->shouldReceive('query')
-            ->andThrow(new \RuntimeException('Lost connection to server'));
+            ->andThrow(new RuntimeException('Lost connection to server'));
 
         $this->logger->shouldReceive('critical')->once();
 

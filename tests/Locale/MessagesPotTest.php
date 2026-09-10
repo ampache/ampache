@@ -100,7 +100,7 @@ class MessagesPotTest extends TestCase
                 continue;
             }
 
-            $unexplained[] = sprintf('%s', implode(' / ', array_map(static fn(string $s): string => '"' . $s . '"', $variants)));
+            $unexplained[] = implode(' / ', array_map(static fn(string $s): string => '"' . $s . '"', $variants));
         }
 
         self::assertSame(
@@ -126,9 +126,7 @@ class MessagesPotTest extends TestCase
             }
 
             $normalized = $this->normalize($msgid);
-            if (!isset($groups[$normalized])) {
-                $groups[$normalized] = [];
-            }
+            $groups[$normalized] ??= [];
 
             if (!in_array($msgid, $groups[$normalized], true)) {
                 $groups[$normalized][] = $msgid;
@@ -165,6 +163,7 @@ class MessagesPotTest extends TestCase
                 $value .= $this->unescape($continuation[1]);
                 $i++;
             }
+
             $i--;
 
             $msgids[] = $value;

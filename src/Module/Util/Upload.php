@@ -308,9 +308,7 @@ class Upload
      */
     public static function get_root(Catalog $catalog, ?string $username = null): ?string
     {
-        if ($username === null) {
-            $username = Core::get_global('user')?->username;
-        }
+        $username ??= Core::get_global('user')?->username;
 
         $rootdir  = "";
         $pathname = realpath($catalog->get_path());
@@ -342,7 +340,7 @@ class Upload
         $upload_max = return_bytes((string) ini_get('upload_max_filesize'));
         $post_max   = return_bytes((string) ini_get('post_max_size'));
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max === 0)) {
-            $upload_max = $post_max;
+            return $post_max;
         }
 
         return $upload_max;

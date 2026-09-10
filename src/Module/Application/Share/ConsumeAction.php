@@ -108,7 +108,6 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         if (!$this->shareRepository->registerAccess($share, new DateTime())) {
             throw new AccessDeniedException();
         }
-
         if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';
@@ -117,18 +116,18 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             }
-
             $_REQUEST['action'] = $share->object_type;
             $_REQUEST['id']     = $share->object_id;
 
             return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
-        } elseif ($action === 'stream') {
+        }
+
+        if ($action === 'stream') {
             $view = new ShareView(
                 AmpConfig::get_web_path('/client'),
                 $this->ajaxUriRetriever,
                 $share
             );
-
             // the page head is rendered from inside the view, so the meta has to be set before it runs
             if (!$view->isEmbed()) {
                 PageMeta::set(
@@ -139,7 +138,6 @@ final readonly class ConsumeAction implements ApplicationActionInterface
                     $view->getArtUrl()
                 );
             }
-
             echo $view->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');

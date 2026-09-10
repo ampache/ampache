@@ -36,9 +36,7 @@ final class PasswordGenerator implements PasswordGeneratorInterface
     public function generate(?int $length = null): string
     {
         // set a random password length so it's not as easy to guess
-        if ($length === null) {
-            $length = mt_rand(14, 20);
-        }
+        $length ??= mt_rand(14, 20);
 
         $string = openssl_random_pseudo_bytes((int) ceil($length * 0.67));
         $encode = str_replace('=', '', base64_encode($string));

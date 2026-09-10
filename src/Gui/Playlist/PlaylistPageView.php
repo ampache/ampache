@@ -112,7 +112,7 @@ final class PlaylistPageView extends AbstractView
             breadcrumb: $this->e((string) $playlist->username),
             chips: HeaderChip::listOf(
                 ($count > 0) ? new HeaderChip(sprintf(nT_('%d song', '%d songs', $count), $count), true) : null,
-                ($duration > 0) ? new HeaderChip((string) $playlist->get_f_time(), true, title: T_('Time')) : null,
+                ($duration > 0) ? new HeaderChip($playlist->get_f_time(), true, title: T_('Time')) : null,
                 ($playlist->type === 'private') ? T_('Private') : T_('Public'),
             ),
             rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'playlist', true) : '',

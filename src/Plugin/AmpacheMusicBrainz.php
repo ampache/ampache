@@ -120,7 +120,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         if ($results) {
-            $data = [
+            return [
                 'name' => $results->getName(),
                 'mbid' => $results->getId(),
             ];

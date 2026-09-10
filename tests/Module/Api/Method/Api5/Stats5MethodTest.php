@@ -69,7 +69,7 @@ class Stats5MethodTest extends MockeryTestCase
         // filter=recent means a missing guard would call get_recently_played on the target; it is deliberately
         // left unstubbed so that path fails the test. the guard must short-circuit to writeEmpty before it.
         AmpConfig::set('memory_cache', true, true);
-        (new ReflectionProperty(database_object::class, '_enabled'))->setValue(null, null);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
         Preference::add_to_cache('get_by_user-allow_personal_info_recent', 7, [0]);
 
         $viewer->id = 1;

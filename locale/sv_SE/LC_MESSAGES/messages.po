@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2025\n"
 "Language-Team: Swedish (Sweden) (http://app.transifex.com/ampache/ampache/language/sv_SE/)\n"
@@ -216,22 +216,6 @@ msgstr "Töm statistik"
 msgid "Update User"
 msgstr "Uppdatera användare"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Spelad"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d gång"
-msgstr[1] "%d tid"
-
-msgid "Uploaded by"
-msgstr "Uppladdad av"
-
-msgid "Actions"
-msgstr "Åtgärder"
-
 msgid "Random to Temporary Playlist"
 msgstr "Slumpmässig till tillfällig spellista"
 
@@ -334,6 +318,9 @@ msgstr "Redigera artist"
 
 msgid "Albums"
 msgstr "Album"
+
+msgid "Songs"
+msgstr "Låtar"
 
 msgid "Top Tracks"
 msgstr "Toppspår"
@@ -799,6 +786,9 @@ msgstr "Behåll befintlig"
 msgid "Release Date"
 msgstr "Utgivningsdatum"
 
+msgid "Actions"
+msgstr "Åtgärder"
+
 msgid "Add Current Host"
 msgstr "Lägg till aktuell värd"
 
@@ -995,9 +985,6 @@ msgstr "Bläddra i Ampache..."
 msgid "Folders"
 msgstr "Mappar"
 
-msgid "Songs"
-msgstr "Låtar"
-
 msgid "Artists"
 msgstr "Artister"
 
@@ -1124,6 +1111,9 @@ msgstr "Visa instanser för lokal uppspelning"
 
 msgid "Edit Instance"
 msgstr "Redigera instans"
+
+msgid "Are You Sure?"
+msgstr "Är du säker?"
 
 msgid "Localplay Control"
 msgstr "Kontroll av lokal uppspelning"
@@ -1927,6 +1917,9 @@ msgstr "Ladda ner en kopia av den nya versionen"
 msgid "%s selected"
 msgstr "%s markerade"
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Lägg till i ny spellista"
 
@@ -2032,23 +2025,17 @@ msgstr "Spara ändringar"
 msgid "Save as Playlist"
 msgstr "Spara som spellista"
 
-msgid "Rating"
-msgstr "Betyg"
-
-msgid "Fav."
-msgstr "Fav."
-
 msgid "Waveform"
 msgstr "Vågform"
-
-msgid "Podcast Episode Edit"
-msgstr "Redigera podcast-avsnitt"
 
 msgid "Sync"
 msgstr "Synkronisera"
 
 msgid "Started"
 msgstr "Startat"
+
+msgid "Podcast Episode Edit"
+msgstr "Redigera podcast-avsnitt"
 
 msgid "Podcast Edit"
 msgstr "Redigera podcast"
@@ -2247,15 +2234,6 @@ msgstr "Information om cookies"
 
 msgid "Admin Disabled"
 msgstr "Admin inaktiverad"
-
-msgid "Average for all users"
-msgstr "Genomsnitt för alla användare"
-
-msgid "average"
-msgstr "genomsnitt"
-
-msgid "Fav"
-msgstr "Favorit"
 
 msgid "Connected Users"
 msgstr "Anslutna användare"
@@ -2456,6 +2434,9 @@ msgstr "Användaren än nu ansluten"
 msgid "User is Offline Now"
 msgstr "Användaren är nu frånkopplad"
 
+msgid "Played"
+msgstr "Spelad"
+
 msgid "Skipped"
 msgstr "Överhoppade"
 
@@ -2474,11 +2455,11 @@ msgstr "Aktiv spellista"
 msgid "Subtitle"
 msgstr "Underrubrik"
 
-msgid "Video Edit"
-msgstr "Video redigering"
-
 msgid "Video Information"
 msgstr "Information om video"
+
+msgid "Video Edit"
+msgstr "Video redigering"
 
 msgid "Songs Played"
 msgstr "Spelade låtar"
@@ -2531,6 +2512,24 @@ msgstr "Uppgradera"
 msgid "Editing %s Preferences"
 msgstr "Redigera inställningar för %s"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "Tid"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Okänd (föräldralös)"
 
@@ -2543,8 +2542,14 @@ msgstr "Sök artistomslag"
 msgid "Cover Art Search"
 msgstr "Sök efter omslagsbilder"
 
-msgid "Time"
-msgstr "Tid"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "Betyg"
 
 msgid "Starts With"
 msgstr "Börjar med"
@@ -2707,6 +2712,9 @@ msgstr "Logga in med OpenID Connect"
 msgid "Search on %s ..."
 msgstr "Sök på %s ..."
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Strömmande"
 
@@ -2820,6 +2828,12 @@ msgstr "Bitfrekvens"
 msgid "Channels"
 msgstr "Kanaler"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr "Återgå till inloggningssidan"
 
@@ -2916,11 +2930,15 @@ msgstr "Ingen text hittades."
 msgid "Song Edit"
 msgstr "Låtredigering"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Låtinformation"
-
-msgid "Links"
-msgstr "Länkar"
 
 msgid "Song Language"
 msgstr "Språk för sång"
@@ -2960,6 +2978,12 @@ msgstr "Text"
 
 msgid "Licensing"
 msgstr "Licensiering"
+
+msgid "Uploaded by"
+msgstr "Uppladdad av"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "Statistiska diagram"
@@ -3202,9 +3226,6 @@ msgstr "Din nya behörighetskontroll har skapats"
 
 msgid "Your Access List entry has been removed"
 msgstr "Din post på åtkomstlistan har tagits bort"
-
-msgid "Are You Sure?"
-msgstr "Är du säker?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5411,6 +5432,12 @@ msgstr "Skriv inte över en befintlig fil: \"%s\""
 
 msgid " Stars"
 msgstr " Stjärnor"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Average from all users"
 msgstr "Genomsnitt från alla användare"

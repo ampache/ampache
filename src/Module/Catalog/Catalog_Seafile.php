@@ -620,9 +620,7 @@ class Catalog_Seafile extends Catalog
                 : $file;
         }
 
-        if ($gather_types === null) {
-            $gather_types = $this->get_gather_types('music');
-        }
+        $gather_types ??= $this->get_gather_types('music');
 
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $tempfilename,

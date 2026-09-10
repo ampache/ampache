@@ -137,7 +137,7 @@ final class RegistrationView extends AbstractView
      */
     public function renderPowWidget(): string
     {
-        return (new PowWidgetView($this->powService->issue('register'), $this->webPath))->render();
+        return new PowWidgetView($this->powService->issue('register'), $this->webPath)->render();
     }
 
     public function showAgreement(): bool

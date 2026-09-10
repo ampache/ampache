@@ -56,7 +56,9 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         foreach (array_chunk($objectIds, 500) as $chunk) {
             $params = [];
             foreach ($chunk as $objectId) {
-                array_push($params, $objectId, $playlistId, $objectType);
+                $params[] = $objectId;
+                $params[] = $playlistId;
+                $params[] = $objectType;
             }
 
             $this->connection->query(

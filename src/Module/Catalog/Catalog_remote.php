@@ -504,12 +504,10 @@ class Catalog_remote extends Catalog
 
         $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
 
-        if (
-            $song instanceof SimpleXMLElement
-            && $song->song
-            && ((int) $song->song->attributes()->id) > 0
-        ) {
-            $results = $this->_gather_tags($song->song);
+        if ($song instanceof SimpleXMLElement
+        && $song->song
+        && ((int) $song->song->attributes()->id) > 0) {
+            return $this->_gather_tags($song->song);
         }
 
         return $results;

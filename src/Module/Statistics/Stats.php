@@ -1599,7 +1599,7 @@ final class Stats
                 self::count($type, $object_id, 'up', $date);
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'], true)) {
-                    $this->userActivityPoster->post($user_id, 'play', $type, $object_id, (int) $date);
+                    $this->userActivityPoster->post($user_id, 'play', $type, $object_id, $date);
                 }
             }
 

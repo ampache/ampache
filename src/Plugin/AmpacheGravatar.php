@@ -64,10 +64,8 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
      */
     public function get_avatar_url(User $user, ?int $size = 80): string
     {
-        $url = '';
-        if (!in_array($user->email, [null, '', '0'], true)
-        ) {
-            $url = sprintf(
+        if (!in_array($user->email, [null, '', '0'], true)) {
+            return sprintf(
                 '%s/avatar/%s?s=%d&r=g&d=identicon',
                 $this->url,
                 md5(strtolower(trim($user->email))),
@@ -75,7 +73,7 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
             );
         }
 
-        return $url;
+        return '';
     }
 
     /**

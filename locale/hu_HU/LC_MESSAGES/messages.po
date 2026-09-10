@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Nite <shunite@gmail.com>, 2019-2020\n"
 "Language-Team: Hungarian (Hungary) (http://app.transifex.com/ampache/ampache/language/hu_HU/)\n"
@@ -217,22 +217,6 @@ msgstr "Statisztikák törlése"
 msgid "Update User"
 msgstr "Felhasználó frissítése"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Lejátszva"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d alkalommal"
-msgstr[1] "%d alkalommal"
-
-msgid "Uploaded by"
-msgstr "Feltöltötte"
-
-msgid "Actions"
-msgstr "Akciók"
-
 msgid "Random to Temporary Playlist"
 msgstr "Átmeneti lejátszási listára véletlenszerűen"
 
@@ -335,6 +319,9 @@ msgstr "Előadó szerkesztése"
 
 msgid "Albums"
 msgstr "Albumok"
+
+msgid "Songs"
+msgstr "Dalok"
 
 msgid "Top Tracks"
 msgstr ""
@@ -800,6 +787,9 @@ msgstr "Létező megtartása"
 msgid "Release Date"
 msgstr "Kiadás dátuma"
 
+msgid "Actions"
+msgstr "Akciók"
+
 msgid "Add Current Host"
 msgstr "Jelenlegi kiszolgáló hozzáadása"
 
@@ -996,9 +986,6 @@ msgstr "Ampache böngészése"
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Dalok"
-
 msgid "Artists"
 msgstr "Előadó"
 
@@ -1125,6 +1112,9 @@ msgstr "Localplay példányok mutatása"
 
 msgid "Edit Instance"
 msgstr "Példány szerkesztése"
+
+msgid "Are You Sure?"
+msgstr "Biztos vagy benne?"
 
 msgid "Localplay Control"
 msgstr "Localplay vezérlés"
@@ -1928,6 +1918,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Hozzáadás új Lejátszási listához"
 
@@ -2033,23 +2026,17 @@ msgstr "Változtatások mentése"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "Értékelés"
-
-msgid "Fav."
-msgstr "Kedv."
-
 msgid "Waveform"
 msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "Podcast Epizód szerkesztés"
 
 msgid "Sync"
 msgstr "Szinkronizál"
 
 msgid "Started"
 msgstr "Elindult"
+
+msgid "Podcast Episode Edit"
+msgstr "Podcast Epizód szerkesztés"
 
 msgid "Podcast Edit"
 msgstr "Podcast szerkesztés"
@@ -2248,15 +2235,6 @@ msgstr ""
 
 msgid "Admin Disabled"
 msgstr "Adminisztrátor letiltva"
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
 
 msgid "Connected Users"
 msgstr ""
@@ -2457,6 +2435,9 @@ msgstr "Felhasználó jelenleg onlájn"
 msgid "User is Offline Now"
 msgstr "Felhasználó jelenleg offlájn"
 
+msgid "Played"
+msgstr "Lejátszva"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2475,11 +2456,11 @@ msgstr "Aktív Lejátszási lista"
 msgid "Subtitle"
 msgstr "Felirat"
 
-msgid "Video Edit"
-msgstr "Videószerkesztés"
-
 msgid "Video Information"
 msgstr "Videó információ"
+
+msgid "Video Edit"
+msgstr "Videószerkesztés"
 
 msgid "Songs Played"
 msgstr ""
@@ -2532,6 +2513,24 @@ msgstr "Frissít"
 msgid "Editing %s Preferences"
 msgstr "%s beállításainak szerkesztése"
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "Hossz"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Ismeretlen (Árva)"
 
@@ -2544,8 +2543,14 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "Hossz"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "Értékelés"
 
 msgid "Starts With"
 msgstr "A kezdete"
@@ -2708,6 +2713,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Stream"
 
@@ -2821,6 +2829,12 @@ msgstr "Bitrate"
 msgid "Channels"
 msgstr "Csatornák"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr "Vissza a belépés oldalra"
 
@@ -2917,11 +2931,15 @@ msgstr "Dalszöveg nem található."
 msgid "Song Edit"
 msgstr "Dal szerkesztés"
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Dal információ"
-
-msgid "Links"
-msgstr "Linkek"
 
 msgid "Song Language"
 msgstr "Dal nyelve"
@@ -2961,6 +2979,12 @@ msgstr "Dalszöveg"
 
 msgid "Licensing"
 msgstr "Licenszelés"
+
+msgid "Uploaded by"
+msgstr "Feltöltötte"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "Statisztikai grafikonok"
@@ -3203,9 +3227,6 @@ msgstr "Az új Hozzáférési Listád/Listáid (ACL) létrejött(ek)"
 
 msgid "Your Access List entry has been removed"
 msgstr "A Hozzáférési Lista (ACL) bejegyzés törölve"
-
-msgid "Are You Sure?"
-msgstr "Biztos vagy benne?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5412,6 +5433,12 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Average from all users"
 msgstr ""

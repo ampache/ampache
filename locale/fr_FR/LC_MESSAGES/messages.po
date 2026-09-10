@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: tsointsoin <mike.gelabs@gmail.com>, 2021\n"
 "Language-Team: French (France) (http://app.transifex.com/ampache/ampache/language/fr_FR/)\n"
@@ -253,23 +253,6 @@ msgstr "Vider les statistiques"
 msgid "Update User"
 msgstr "Mettre à jour compte utilisateur"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Joué"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%dfois"
-msgstr[1] "%dfois"
-msgstr[2] "%dfois"
-
-msgid "Uploaded by"
-msgstr "Envoyé par"
-
-msgid "Actions"
-msgstr "Actions"
-
 msgid "Random to Temporary Playlist"
 msgstr "Ajouter aléatoirement à la playlist temporaire"
 
@@ -372,6 +355,9 @@ msgstr "Éditer l'artiste"
 
 msgid "Albums"
 msgstr "Albums"
+
+msgid "Songs"
+msgstr "Morceaux"
 
 msgid "Top Tracks"
 msgstr "Top des morceaux"
@@ -837,6 +823,9 @@ msgstr "Gardez existant"
 msgid "Release Date"
 msgstr "Date de sortie"
 
+msgid "Actions"
+msgstr "Actions"
+
 msgid "Add Current Host"
 msgstr "Ajouter l'hôte courant"
 
@@ -1033,9 +1022,6 @@ msgstr "Parcourir Ampache..."
 msgid "Folders"
 msgstr "Dossiers"
 
-msgid "Songs"
-msgstr "Morceaux"
-
 msgid "Artists"
 msgstr "Artistes"
 
@@ -1162,6 +1148,9 @@ msgstr "Afficher les instances Localplay"
 
 msgid "Edit Instance"
 msgstr "Éditer l'instance"
+
+msgid "Are You Sure?"
+msgstr "Êtes-vous certain ?"
 
 msgid "Localplay Control"
 msgstr "Paramétrage des Localplay"
@@ -1965,6 +1954,9 @@ msgstr "Télécharger une copie de la nouvelle version"
 msgid "%s selected"
 msgstr "%s sélectionnés"
 
+msgid "Show less"
+msgstr "Montrer moins"
+
 msgid "Add to New Playlist"
 msgstr "Ajouter à une nouvelle playlist"
 
@@ -2070,23 +2062,17 @@ msgstr "Enregistrer les changements"
 msgid "Save as Playlist"
 msgstr "Enregistrer en tant que playlist"
 
-msgid "Rating"
-msgstr "Vote"
-
-msgid "Fav."
-msgstr "Favori"
-
 msgid "Waveform"
 msgstr "Forme d'onde"
-
-msgid "Podcast Episode Edit"
-msgstr "Modifier épisode de podcast"
 
 msgid "Sync"
 msgstr "Synchroniser"
 
 msgid "Started"
 msgstr "Commencé"
+
+msgid "Podcast Episode Edit"
+msgstr "Modifier épisode de podcast"
 
 msgid "Podcast Edit"
 msgstr "Modifier podcast"
@@ -2285,15 +2271,6 @@ msgstr "Information sur les cookies"
 
 msgid "Admin Disabled"
 msgstr "Admin désactivé"
-
-msgid "Average for all users"
-msgstr "Moyenne de tous les utilisateurs"
-
-msgid "average"
-msgstr "moyenne"
-
-msgid "Fav"
-msgstr "Fav."
 
 msgid "Connected Users"
 msgstr "Utilisateurs connectés"
@@ -2494,6 +2471,9 @@ msgstr "Utilisateur en ligne"
 msgid "User is Offline Now"
 msgstr "Utilisateur hors ligne"
 
+msgid "Played"
+msgstr "Joué"
+
 msgid "Skipped"
 msgstr "Ignoré"
 
@@ -2512,11 +2492,11 @@ msgstr "Playlist active"
 msgid "Subtitle"
 msgstr "Sous-titre"
 
-msgid "Video Edit"
-msgstr "Modifier vidéo"
-
 msgid "Video Information"
 msgstr "Informations sur la vidéo"
+
+msgid "Video Edit"
+msgstr "Modifier vidéo"
 
 msgid "Songs Played"
 msgstr "Morceaux joués"
@@ -2569,6 +2549,26 @@ msgstr "Mettre à jour"
 msgid "Editing %s Preferences"
 msgstr "Modification des préférences %s"
 
+msgid "Album Disk"
+msgstr "Disque d'album"
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] "%d morceau"
+msgstr[1] "%d morceaux"
+msgstr[2] "%d morceaux"
+
+msgid "Time"
+msgstr "Durée"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] "Joué %d fois"
+msgstr[1] "Joué %d fois"
+msgstr[2] "Joué %d fois"
+
 msgid "Unknown (Orphaned)"
 msgstr "Inconnu (orphelin)"
 
@@ -2581,8 +2581,15 @@ msgstr "Recherche de l'image de l'artiste"
 msgid "Cover Art Search"
 msgstr "Recherche de l'image de la pochette"
 
-msgid "Time"
-msgstr "Durée"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] "%d album"
+msgstr[1] "%d albums"
+msgstr[2] "%d albums"
+
+msgid "Rating"
+msgstr "Vote"
 
 msgid "Starts With"
 msgstr "Commençant par"
@@ -2745,6 +2752,9 @@ msgstr "Se connecter avec OpenID Connect"
 msgid "Search on %s ..."
 msgstr "Rechercher sur %s ..."
 
+msgid "Radio Station"
+msgstr "Station de radio"
+
 msgid "Stream"
 msgstr "Flux"
 
@@ -2858,6 +2868,13 @@ msgstr "Débit"
 msgid "Channels"
 msgstr "Canaux"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] "%d épisode"
+msgstr[1] "%d épisodes"
+msgstr[2] "%d épisodes"
+
 msgid "Return to Login Page"
 msgstr "Retourner à la page d'identification"
 
@@ -2956,11 +2973,15 @@ msgstr "Aucune parole trouvée"
 msgid "Song Edit"
 msgstr "Modifier le morceau"
 
+#, php-format
+msgid "Track %d"
+msgstr "Piste %d"
+
+msgid "Play on the current player"
+msgstr "Jouer sur le lecteur actuel"
+
 msgid "Song Information"
 msgstr "Information du titre"
-
-msgid "Links"
-msgstr "Liens"
 
 msgid "Song Language"
 msgstr "Langue du titre"
@@ -3000,6 +3021,12 @@ msgstr "Paroles"
 
 msgid "Licensing"
 msgstr "Licences"
+
+msgid "Uploaded by"
+msgstr "Envoyé par"
+
+msgid "Technical"
+msgstr "Technique"
 
 msgid "Statistical Graphs"
 msgstr "Graphiques statistiques"
@@ -3243,9 +3270,6 @@ msgstr "Votre nouvelle liste(s) de contrôle d'accès a été créé"
 
 msgid "Your Access List entry has been removed"
 msgstr "Votre entrée de la liste d'accès a été supprimée"
-
-msgid "Are You Sure?"
-msgstr "Êtes-vous certain ?"
 
 #. HINT: ACL Name
 #, php-format
@@ -5463,6 +5487,13 @@ msgstr "Ne pas écraser un fichier existant: \"%s\""
 
 msgid " Stars"
 msgstr " Étoiles"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] "%d vote"
+msgstr[1] "%d votes"
+msgstr[2] "%d votes"
 
 msgid "Average from all users"
 msgstr "Moyenne de tous les utilisateurs"

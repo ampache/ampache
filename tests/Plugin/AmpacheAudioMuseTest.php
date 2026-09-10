@@ -152,7 +152,7 @@ class AmpacheAudioMuseTest extends TestCase
                 return true;
             }
 
-            public function resolvePinnedTarget(string $url): ?array
+            public function resolvePinnedTarget(string $url): array
             {
                 return ['host' => 'some-host', 'port' => 80, 'address' => '203.0.113.10'];
             }

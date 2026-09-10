@@ -130,7 +130,7 @@ final class ArtistPageView extends AbstractView
                         ($listed) ? $base . '&action=show_songs#albums' : '#albums'
                     )
                     : null,
-                ($artist->time > 0) ? new HeaderChip((string) $artist->get_f_time(), true, title: T_('Time')) : null,
+                ($artist->time > 0) ? new HeaderChip($artist->get_f_time(), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath('/client') . '/browse.php?action=tag&type=artist&show_tag='),
             rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist', true) : '',

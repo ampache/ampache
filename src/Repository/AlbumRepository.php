@@ -115,7 +115,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         try {
             // left over garbage, keyed on catalog like `unique_album_disk` so a disk left behind by a move goes too
-            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND CONCAT(`album_disk`.`album_id`, '_', `album_disk`.`disk`, '_', `album_disk`.`catalog`) NOT IN (SELECT CONCAT(`album`, '_', `disk`, '_', `catalog`) AS `id` FROM `song`);");
+            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`catalog` = `album_disk`.`catalog`);");
             while ($albumDiskId = $result->fetchColumn()) {
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
@@ -456,9 +456,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 // We assume undefined release type is album
                 $rtype = (string) ($row['release_type'] ?? 'album');
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = [];
-                }
+                $results[$rtype] ??= [];
 
                 $results[$rtype][] = (int) $row['id'];
 
@@ -527,6 +525,28 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         return $albumIds;
+    }
+
+    /**
+     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
+     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
+     * Unset/empty config keeps the default behavior and matches all columns
+     *
+     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
+     * matches it separately regardless of what's returned here
+     *
+     * @return list<string>
+     */
+    public function getIdentityColumns(): array
+    {
+        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
+        if (!is_string($configured) || trim($configured) === '') {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        $requested = array_map(trim(...), explode(',', $configured));
+
+        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
     }
 
     /**
@@ -710,7 +730,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             return [
                 'prefix' => $row['prefix'] ?? null,
                 'basename' => $basename,
-                'name' => ltrim(((string) ($row['prefix'] ?? '')) . ' ' . $basename),
+                'name' => ltrim((($row['prefix'] ?? '')) . ' ' . $basename),
             ];
         }
 
@@ -1158,25 +1178,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         foreach ($albumIds as $albumId) {
             Album::remove_from_cache('album_artists', $albumId);
         }
-    }
-
-    /**
-     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
-     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
-     * Unset/empty config keeps the default behavior and matches all columns
-     *
-     * @return list<string>
-     */
-    private function getIdentityColumns(): array
-    {
-        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
-        if (!is_string($configured) || trim($configured) === '') {
-            return self::IDENTITY_COLUMNS;
-        }
-
-        $requested = array_map('trim', explode(',', $configured));
-
-        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
     }
 
     /**

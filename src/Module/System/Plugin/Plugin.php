@@ -77,9 +77,7 @@ class Plugin
      */
     public static function get_plugin_version(string $plugin_name): int
     {
-        if (self::$_version_cache === null) {
-            self::$_version_cache = self::getUpdateInfoRepository()->getPluginVersions();
-        }
+        self::$_version_cache ??= self::getUpdateInfoRepository()->getPluginVersions();
 
         return self::$_version_cache['Plugin_' . $plugin_name] ?? 0;
     }

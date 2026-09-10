@@ -49,6 +49,6 @@ class LibraryItemEnumTest extends TestCase
     #[DataProvider('aliases')]
     public function testFromObjectTypeResolvesRolesAndAlternateSpellings(string $objectType, ?LibraryItemEnum $expected): void
     {
-        static::assertSame($expected, LibraryItemEnum::fromObjectType($objectType));
+        self::assertSame($expected, LibraryItemEnum::fromObjectType($objectType));
     }
 }

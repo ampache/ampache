@@ -97,7 +97,7 @@ class ShowDeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
         $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }
@@ -122,7 +122,7 @@ class ShowDeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
         $this->ui->shouldNotReceive('showConfirmation');
 
-        static::assertNull(
+        self::assertNull(
             $this->subject->run($request, $gatekeeper)
         );
     }

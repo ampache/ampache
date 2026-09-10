@@ -59,7 +59,7 @@ class SvgTemplateTest extends TestCase
 
     public function testAHostileNameCannotEscapeTheDocument(): void
     {
-        $svg = (new DarkTemplate())->render(
+        $svg = new DarkTemplate()->render(
             $this->recipe('</text><script>alert(1)</script><text x="0">'),
             300
         );
@@ -76,14 +76,14 @@ class SvgTemplateTest extends TestCase
 
     public function testAnEmptyNameStillDraws(): void
     {
-        $svg = (new DarkTemplate())->render($this->recipe(''), 300);
+        $svg = new DarkTemplate()->render($this->recipe(''), 300);
 
         $this->assertStringStartsWith('<svg', $svg);
     }
 
     public function testAWordWithNoSeparatorIsStillBroken(): void
     {
-        $drawn = $this->drawnText((new DarkTemplate())->render($this->recipe(str_repeat('x', 120)), 300));
+        $drawn = $this->drawnText(new DarkTemplate()->render($this->recipe(str_repeat('x', 120)), 300));
 
         foreach ($drawn as $line) {
             $this->assertLessThan(30, mb_strlen($line), 'an unbreakable word must not run off the tile');
@@ -93,7 +93,7 @@ class SvgTemplateTest extends TestCase
     #[DataProvider('motifProvider')]
     public function testEveryMotifProducesWellFormedXml(string $motif): void
     {
-        $svg = (new DarkTemplate())->render($this->recipe('Night Cartography', $motif, ['Vela', 'Aster']), 300);
+        $svg = new DarkTemplate()->render($this->recipe('Night Cartography', $motif, ['Vela', 'Aster']), 300);
 
         $previous = libxml_use_internal_errors(true);
         $parsed   = simplexml_load_string($svg);
@@ -105,14 +105,14 @@ class SvgTemplateTest extends TestCase
     #[DataProvider('breakProvider')]
     public function testLongNamesBreakOnTheirSeparators(string $name, string $expected): void
     {
-        $svg = (new DarkTemplate())->render($this->recipe($name), 300);
+        $svg = new DarkTemplate()->render($this->recipe($name), 300);
 
         $this->assertStringContainsString('>' . $expected . '<', $svg);
     }
 
     public function testTheAccessibleNameSurvivesTheSmallestSize(): void
     {
-        $svg = (new DarkTemplate())->render($this->recipe('Night Cartography'), 48);
+        $svg = new DarkTemplate()->render($this->recipe('Night Cartography'), 48);
 
         $this->assertStringContainsString('aria-label="Night Cartography"', $svg);
     }
@@ -143,8 +143,8 @@ class SvgTemplateTest extends TestCase
         $recipe = $this->recipe('Night Cartography');
 
         $this->assertNotSame(
-            (new DarkTemplate())->render($recipe, 300),
-            (new LightTemplate())->render($recipe, 300)
+            new DarkTemplate()->render($recipe, 300),
+            new LightTemplate()->render($recipe, 300)
         );
     }
 

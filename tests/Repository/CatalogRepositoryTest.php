@@ -56,7 +56,7 @@ class CatalogRepositoryTest extends TestCase
 
         $this->subject->tryAcquireActionLock(str_repeat('a', 200));
 
-        static::assertLessThanOrEqual(64, strlen((string) $lockName));
+        self::assertLessThanOrEqual(64, strlen((string) $lockName));
     }
 
     public function testCreateSubTypeTableRefusesAColumnNoBackendDeclares(): void

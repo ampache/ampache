@@ -65,11 +65,11 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        echo (new RegistrationView(
+        echo new RegistrationView(
             AmpConfig::get_web_path('/client'),
             $this->registrationAgreementRenderer,
             $this->powService
-        ))->render();
+        )->render();
 
         return null;
     }

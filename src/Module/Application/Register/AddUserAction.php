@@ -160,11 +160,11 @@ final class AddUserAction implements ApplicationActionInterface
 
         // If we've hit an error anywhere up there break!
         if (AmpError::occurred()) {
-            echo (new RegistrationView(
+            echo new RegistrationView(
                 AmpConfig::get_web_path('/client'),
                 $this->registrationAgreementRenderer,
                 $this->powService
-            ))->render();
+            )->render();
 
             return null;
         }
@@ -192,11 +192,11 @@ final class AddUserAction implements ApplicationActionInterface
         if ($userId <= 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
 
-            echo (new RegistrationView(
+            echo new RegistrationView(
                 AmpConfig::get_web_path('/client'),
                 $this->registrationAgreementRenderer,
                 $this->powService
-            ))->render();
+            )->render();
 
             return null;
         }

@@ -56,7 +56,9 @@ class Album extends database_object implements
 {
     protected const string DB_TABLENAME = 'album';
 
+    /** @var array<string, int> keyed by `check()`'s identity-column cache key, see there */
     private static array $_mapcache   = [];
+
     public ?int $addition_time        = null;
     public ?int $album_artist         = null;
     public int $artist_count          = 0;
@@ -284,10 +286,6 @@ class Album extends database_object implements
             $catalog_id    = 0;
         }
 
-        if (isset(self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''])) {
-            return self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''];
-        }
-
         $properties = [
             'name' => $name,
             'prefix' => $prefix,
@@ -304,10 +302,22 @@ class Album extends database_object implements
             'catalog' => $catalog_id,
         ];
 
-        $album_id = self::getAlbumRepository()->findByProperties($properties);
+        $albumRepository = self::getAlbumRepository();
+
+        // mirrors findByProperties()'s identity columns (config-driven) plus catalog, which is always matched but never droppable
+        $cacheKey = $catalog_id . '|' . implode('|', array_map(
+            static fn(string $column): string => (string) ($properties[$column] ?? ''),
+            $albumRepository->getIdentityColumns()
+        ));
+
+        if (isset(self::$_mapcache[$cacheKey])) {
+            return self::$_mapcache[$cacheKey];
+        }
+
+        $album_id = $albumRepository->findByProperties($properties);
         if ($album_id > 0) {
             // cache the album id against it's details
-            self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+            self::$_mapcache[$cacheKey] = $album_id;
 
             return $album_id;
         }
@@ -324,15 +334,15 @@ class Album extends database_object implements
         try {
             // whoever held the lock may have inserted this album while we waited for it
             if ($lock_taken) {
-                $album_id = self::getAlbumRepository()->findByProperties($properties);
+                $album_id = $albumRepository->findByProperties($properties);
                 if ($album_id > 0) {
-                    self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+                    self::$_mapcache[$cacheKey] = $album_id;
 
                     return $album_id;
                 }
             }
 
-            $album_id = self::getAlbumRepository()->create($properties, time());
+            $album_id = $albumRepository->create($properties, time());
             if (!$album_id) {
                 return 0;
             }
@@ -361,7 +371,7 @@ class Album extends database_object implements
             }
         }
 
-        self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+        self::$_mapcache[$cacheKey] = $album_id;
 
         return (int) $album_id;
     }

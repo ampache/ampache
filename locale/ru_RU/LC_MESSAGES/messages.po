@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: therealvanyek, 2023\n"
 "Language-Team: Russian (Russia) (http://app.transifex.com/ampache/ampache/language/ru_RU/)\n"
@@ -220,24 +220,6 @@ msgstr "Очистить статистику"
 msgid "Update User"
 msgstr "Обновить пользователя"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "Проигранный"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-
-msgid "Uploaded by"
-msgstr "Загружено пользователем"
-
-msgid "Actions"
-msgstr "Действия"
-
 msgid "Random to Temporary Playlist"
 msgstr "Случайный Временный плейлист"
 
@@ -340,6 +322,9 @@ msgstr "Редактировать исполнителя"
 
 msgid "Albums"
 msgstr "Альбомы"
+
+msgid "Songs"
+msgstr "Композиции"
 
 msgid "Top Tracks"
 msgstr ""
@@ -805,6 +790,9 @@ msgstr "Сохранить Имеющееся"
 msgid "Release Date"
 msgstr "Дата выпуска"
 
+msgid "Actions"
+msgstr "Действия"
+
 msgid "Add Current Host"
 msgstr "Добавить текущий хост"
 
@@ -1001,9 +989,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "Композиции"
-
 msgid "Artists"
 msgstr "Исполнители"
 
@@ -1130,6 +1115,9 @@ msgstr "Показать элементы локального воспроиз�
 
 msgid "Edit Instance"
 msgstr "Редактировать элемент"
+
+msgid "Are You Sure?"
+msgstr ""
 
 msgid "Localplay Control"
 msgstr "Управление локальным воспроизведением"
@@ -1933,6 +1921,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "Добавить в новый список композиций"
 
@@ -2038,16 +2029,7 @@ msgstr "Сохранить изменения"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "Рейтинг"
-
-msgid "Fav."
-msgstr "Избр."
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
@@ -2055,6 +2037,9 @@ msgstr "Синхронизация"
 
 msgid "Started"
 msgstr "Запущено"
+
+msgid "Podcast Episode Edit"
+msgstr ""
 
 msgid "Podcast Edit"
 msgstr ""
@@ -2252,15 +2237,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2462,6 +2438,9 @@ msgstr "Пользователь сейчас на сайте"
 msgid "User is Offline Now"
 msgstr "Пользователь сейчас не на сайте"
 
+msgid "Played"
+msgstr "Проигранный"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2480,11 +2459,11 @@ msgstr "Активный список композиций"
 msgid "Subtitle"
 msgstr "Подзаголовок"
 
-msgid "Video Edit"
-msgstr ""
-
 msgid "Video Information"
 msgstr "Информация о видео"
+
+msgid "Video Edit"
+msgstr ""
 
 msgid "Songs Played"
 msgstr ""
@@ -2537,6 +2516,28 @@ msgstr "Обновить"
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+msgid "Time"
+msgstr "Длина"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "Неизв. (Сирота)"
 
@@ -2549,8 +2550,16 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "Длина"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+msgid "Rating"
+msgstr "Рейтинг"
 
 msgid "Starts With"
 msgstr "Начинающиеся с"
@@ -2713,6 +2722,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "Потоковое вещание"
 
@@ -2826,6 +2838,14 @@ msgstr "Битрейд"
 msgid "Channels"
 msgstr "Каналы"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
 msgid "Return to Login Page"
 msgstr "На главную"
 
@@ -2926,11 +2946,15 @@ msgstr "Текст не найден."
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "Информация"
-
-msgid "Links"
-msgstr "Ссылки"
 
 msgid "Song Language"
 msgstr "Язык"
@@ -2970,6 +2994,12 @@ msgstr "Текст песни"
 
 msgid "Licensing"
 msgstr "Лицензирование"
+
+msgid "Uploaded by"
+msgstr "Загружено пользователем"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "Статистические Графики"
@@ -3213,9 +3243,6 @@ msgid "Your new Access Control List(s) have been created"
 msgstr "Создан новый список доступа"
 
 msgid "Your Access List entry has been removed"
-msgstr ""
-
-msgid "Are You Sure?"
 msgstr ""
 
 #. HINT: ACL Name
@@ -5445,6 +5472,14 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 msgid "Average from all users"
 msgstr ""

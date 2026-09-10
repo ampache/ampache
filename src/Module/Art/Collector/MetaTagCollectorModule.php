@@ -228,7 +228,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
         $data = $this->sortArtByPriority($data, $art->object_type);
 
         if ($limit && count($data) >= $limit) {
-            $data = array_slice($data, 0, $limit);
+            return array_slice($data, 0, $limit);
         }
 
         return $data;
@@ -294,7 +294,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
         $data = $this->sortArtByPriority($data, $art->object_type);
 
         if ($limit && count($data) >= $limit) {
-            $data = array_slice($data, 0, $limit);
+            return array_slice($data, 0, $limit);
         }
 
         return $data;

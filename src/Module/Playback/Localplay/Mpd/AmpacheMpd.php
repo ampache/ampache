@@ -317,11 +317,11 @@ class AmpacheMpd extends localplay_controller
 
         $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd` WHERE `id` = ?", [$instance]));
         // the active preference can point at an instance that has since been deleted; fall back to any available one
-        if (!$row) {
+        if ($row === []) {
             $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd`"));
         }
 
-        if ($row) {
+        if ($row !== []) {
             return [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],

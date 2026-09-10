@@ -31,7 +31,7 @@ class HeaderChipTest extends TestCase
 {
     public function testDecodesEntitiesInText(): void
     {
-        static::assertSame(
+        self::assertSame(
             'Mixgalaxy – Records & Co',
             new HeaderChip('Mixgalaxy &ndash; Records &amp; Co')->text
         );
@@ -48,10 +48,10 @@ class HeaderChipTest extends TestCase
             '/browse.php?action=tag&type=artist&show_tag='
         );
 
-        static::assertCount(2, $chips);
-        static::assertSame('/browse.php?action=tag&type=artist&show_tag=3', $chips[0]->url);
-        static::assertSame('Rock', $chips[1]->text);
-        static::assertTrue($chips[0]->genre);
+        self::assertCount(2, $chips);
+        self::assertSame('/browse.php?action=tag&type=artist&show_tag=3', $chips[0]->url);
+        self::assertSame('Rock', $chips[1]->text);
+        self::assertTrue($chips[0]->genre);
     }
 
     public function testListOfFlattensSkipsEmptyAndWrapsScalars(): void
@@ -66,6 +66,6 @@ class HeaderChipTest extends TestCase
             new HeaderChip(''),
         );
 
-        static::assertSame(['2007', 'kept'], array_map(static fn(HeaderChip $chip): string => $chip->text, $chips));
+        self::assertSame(['2007', 'kept'], array_map(static fn(HeaderChip $chip): string => $chip->text, $chips));
     }
 }

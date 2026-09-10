@@ -95,7 +95,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
         if (!$folder_id && $folder === null) {
             $this->logger->warning(
                 'Requested a folder that does not exist',
@@ -105,7 +104,9 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
-        } elseif ($folder instanceof Folder) {
+        }
+
+        if ($folder instanceof Folder) {
             $browse = $this->browseFactory->create();
             $browse->set_type('folder');
             $browse->set_use_pages(true);
@@ -114,10 +115,8 @@ final readonly class ShowAction implements ApplicationActionInterface
             $browse->add_supplemental_object('folder', $folder);
             $browse->set_sort('name', 'ASC', false);
             $browse->set_filter('int_id', $folder->id);
-
             $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
                 || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-
             echo new FolderView(
                 $folder,
                 $browse,
@@ -129,7 +128,6 @@ final readonly class ShowAction implements ApplicationActionInterface
                 Stream_Playlist::check_autoplay_next(),
                 Stream_Playlist::check_autoplay_append()
             )->render();
-
             $this->ui->showFooter();
 
             return null;

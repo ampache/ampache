@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Ernest Wagner <wagnered@comcast.net>, 2021\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/ampache/ampache/language/zh_CN/)\n"
@@ -220,21 +220,6 @@ msgstr "清除统计"
 msgid "Update User"
 msgstr "更新用户"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr "已播放"
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] ""
-
-msgid "Uploaded by"
-msgstr "上传自"
-
-msgid "Actions"
-msgstr "行为"
-
 msgid "Random to Temporary Playlist"
 msgstr ""
 
@@ -337,6 +322,9 @@ msgstr "编辑艺术家"
 
 msgid "Albums"
 msgstr "专辑"
+
+msgid "Songs"
+msgstr "歌曲"
 
 msgid "Top Tracks"
 msgstr ""
@@ -802,6 +790,9 @@ msgstr "保留现有"
 msgid "Release Date"
 msgstr "发布日期"
 
+msgid "Actions"
+msgstr "行为"
+
 msgid "Add Current Host"
 msgstr "添加当前主机"
 
@@ -998,9 +989,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "歌曲"
-
 msgid "Artists"
 msgstr "艺术家"
 
@@ -1127,6 +1115,9 @@ msgstr "显示本地播放实例"
 
 msgid "Edit Instance"
 msgstr "编辑实例"
+
+msgid "Are You Sure?"
+msgstr "你确定吗？"
 
 msgid "Localplay Control"
 msgstr "本地播放控制"
@@ -1930,6 +1921,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr "添加到新的播放列表"
 
@@ -2035,16 +2029,7 @@ msgstr "保存变更"
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "评级"
-
-msgid "Fav."
-msgstr "最爱。"
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
@@ -2052,6 +2037,9 @@ msgstr "同步"
 
 msgid "Started"
 msgstr "已开始"
+
+msgid "Podcast Episode Edit"
+msgstr ""
 
 msgid "Podcast Edit"
 msgstr ""
@@ -2249,15 +2237,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2459,6 +2438,9 @@ msgstr "用户在线"
 msgid "User is Offline Now"
 msgstr "用户离线"
 
+msgid "Played"
+msgstr "已播放"
+
 msgid "Skipped"
 msgstr ""
 
@@ -2477,11 +2459,11 @@ msgstr "激活播放列表"
 msgid "Subtitle"
 msgstr "子标题"
 
-msgid "Video Edit"
-msgstr ""
-
 msgid "Video Information"
 msgstr "视频信息"
+
+msgid "Video Edit"
+msgstr ""
 
 msgid "Songs Played"
 msgstr ""
@@ -2534,6 +2516,22 @@ msgstr "升级"
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+
+msgid "Time"
+msgstr "时间"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+
 msgid "Unknown (Orphaned)"
 msgstr "未知（或被孤立）"
 
@@ -2546,8 +2544,13 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "时间"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+
+msgid "Rating"
+msgstr "评级"
 
 msgid "Starts With"
 msgstr "始于"
@@ -2710,6 +2713,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "流"
 
@@ -2823,6 +2829,11 @@ msgstr "比特率"
 msgid "Channels"
 msgstr "通道"
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+
 msgid "Return to Login Page"
 msgstr "返回登录页面"
 
@@ -2917,11 +2928,15 @@ msgstr "未发现歌词"
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "曲目信息"
-
-msgid "Links"
-msgstr "链接"
 
 msgid "Song Language"
 msgstr "曲目语言"
@@ -2961,6 +2976,12 @@ msgstr "歌词"
 
 msgid "Licensing"
 msgstr "许可"
+
+msgid "Uploaded by"
+msgstr "上传自"
+
+msgid "Technical"
+msgstr ""
 
 msgid "Statistical Graphs"
 msgstr "统计图表"
@@ -3202,9 +3223,6 @@ msgstr "新的(多个)访问控制列表已创建"
 
 msgid "Your Access List entry has been removed"
 msgstr "您的访问列表条目已被删除"
-
-msgid "Are You Sure?"
-msgstr "你确定吗？"
 
 #. HINT: ACL Name
 #, php-format
@@ -5400,6 +5418,11 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
 
 msgid "Average from all users"
 msgstr ""

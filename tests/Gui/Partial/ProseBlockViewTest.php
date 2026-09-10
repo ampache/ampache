@@ -33,15 +33,15 @@ class ProseBlockViewTest extends TestCase
     {
         $short = str_repeat('a', 600);
 
-        static::assertFalse(new ProseBlockView($short, 'fold')->isFolded());
-        static::assertFalse(new ProseBlockView('<b>' . $short . '</b>', 'fold')->isFolded());
-        static::assertTrue(new ProseBlockView($short . 'a', 'fold')->isFolded());
+        self::assertFalse(new ProseBlockView($short, 'fold')->isFolded());
+        self::assertFalse(new ProseBlockView('<b>' . $short . '</b>', 'fold')->isFolded());
+        self::assertTrue(new ProseBlockView($short . 'a', 'fold')->isFolded());
     }
 
     public function testFromTextDecodesThenEscapesAndKeepsLineBreaks(): void
     {
         $view = ProseBlockView::fromText("a &ndash; b\n<script>", 'fold');
 
-        static::assertSame("a – b<br />\n&lt;script&gt;", $view->getHtml());
+        self::assertSame("a – b<br />\n&lt;script&gt;", $view->getHtml());
     }
 }

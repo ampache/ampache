@@ -284,29 +284,6 @@ class Rating extends database_object
     }
 
     /**
-     * The average and its number of voters, read once and cached for the request
-     *
-     * @return array{0: float, 1: int}|null
-     */
-    private static function average(string $type, int $objectId): ?array
-    {
-        $key = 'rating_' . $type . '_all';
-        // a cached 0 is the answer "nothing rated it enough", so it must not fall through to the query
-        if (parent::is_cached($key, $objectId)) {
-            $cached = parent::get_from_cache($key, $objectId);
-
-            return (((float) $cached[0]) > 0)
-                ? [(float) $cached[0], (int) ($cached[1] ?? 0)]
-                : null;
-        }
-
-        $average = self::getRatingRepository()->getAverageRating($objectId, $type);
-        parent::add_to_cache($key, $objectId, $average ?? [0, 0]);
-
-        return $average;
-    }
-
-    /**
      * @deprecated inject dependency
      */
     private static function getRatingRepository(): RatingRepositoryInterface
@@ -322,7 +299,7 @@ class Rating extends database_object
      */
     public function get_average_rating(): ?float
     {
-        return self::average($this->type, $this->id)[0] ?? null;
+        return $this->average($this->type, $this->id)[0] ?? null;
     }
 
     /**
@@ -330,7 +307,7 @@ class Rating extends database_object
      */
     public function get_rating_count(): int
     {
-        return (int) (self::average($this->type, $this->id)[1] ?? 0);
+        return (int) ($this->average($this->type, $this->id)[1] ?? 0);
     }
 
     /**
@@ -421,6 +398,29 @@ class Rating extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * The average and its number of voters, read once and cached for the request
+     *
+     * @return array{0: float, 1: int}|null
+     */
+    private function average(string $type, int $objectId): ?array
+    {
+        $key = 'rating_' . $type . '_all';
+        // a cached 0 is the answer "nothing rated it enough", so it must not fall through to the query
+        if (parent::is_cached($key, $objectId)) {
+            $cached = parent::get_from_cache($key, $objectId);
+
+            return (((float) $cached[0]) > 0)
+                ? [(float) $cached[0], (int) ($cached[1] ?? 0)]
+                : null;
+        }
+
+        $average = self::getRatingRepository()->getAverageRating($objectId, $type);
+        parent::add_to_cache($key, $objectId, $average ?? [0, 0]);
+
+        return $average;
     }
 
     /**
