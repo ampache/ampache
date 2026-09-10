@@ -68,6 +68,18 @@ class DisabledSearchTest extends TestCase
     }
 
     /**
+     * The counterpart of the browse rule: a smartlist of songs reaches the rows on its own, and it must not
+     * start filtering on the parent either, or a song published on its own would vanish from it.
+     */
+    public function testASongSmartlistNeverFiltersOnTheStateOfItsParents(): void
+    {
+        $where = $this->search('song', false)->to_sql()['where_sql'];
+
+        self::assertStringNotContainsString('`album`.`enabled`', $where);
+        self::assertStringNotContainsString('`artist`.`enabled`', $where);
+    }
+
+    /**
      * The rule is what lets the manager who can see withdrawn items list them; an unregistered name is
      * dropped by set_rules() without a word, so the registration is what has to be pinned.
      */

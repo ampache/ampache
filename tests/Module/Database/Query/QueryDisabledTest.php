@@ -80,6 +80,20 @@ class QueryDisabledTest extends TestCase
         self::assertStringContainsString('`album`.`enabled` = 1', $sql);
     }
 
+    /**
+     * Deliberate, and the reason the condition names its three types instead of walking up the tree: a song
+     * turned back on by hand stays listed even while the album it sits on is off. Closing that would take
+     * the only way there is to publish a single track of a withdrawn release.
+     */
+    public function testASongBrowseNeverConsultsTheStateOfItsAlbum(): void
+    {
+        $sql = $this->sqlFor('song', false);
+
+        self::assertStringNotContainsString('`album`.`enabled`', $sql);
+        self::assertStringNotContainsString('`artist`.`enabled`', $sql);
+        self::assertStringNotContainsString('`album_dis`', $sql);
+    }
+
     private function query(bool $isManager): Query
     {
         $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
