@@ -257,7 +257,7 @@ class Browse extends Query
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
-            $objects = [];
+            return [];
         }
 
         return $objects;

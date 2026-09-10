@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Generated\Template;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 /**
  * Designs are found by looking in the template directory rather than by keeping a list, so that adding
@@ -43,8 +44,8 @@ class TemplateRegistryTest extends TestCase
 
     public function testTheAbstractBaseIsNotOffered(): void
     {
-        foreach ((new TemplateRegistry())->all() as $template) {
-            $this->assertNotInstanceOf(\ReflectionClass::class, $template);
+        foreach (new TemplateRegistry()->all() as $template) {
+            $this->assertNotInstanceOf(ReflectionClass::class, $template);
             $this->assertNotSame('', $template->getId());
             $this->assertNotSame('', $template->getLabel());
         }
@@ -54,7 +55,7 @@ class TemplateRegistryTest extends TestCase
     {
         $registry = new TemplateRegistry();
         $first    = array_map(static fn(TemplateInterface $t): string => $t->getId(), $registry->all());
-        $second   = array_map(static fn(TemplateInterface $t): string => $t->getId(), (new TemplateRegistry())->all());
+        $second   = array_map(static fn(TemplateInterface $t): string => $t->getId(), new TemplateRegistry()->all());
 
         $this->assertSame($first, $second, 'the preferences page must not reshuffle between page loads');
     }
@@ -63,7 +64,7 @@ class TemplateRegistryTest extends TestCase
     {
         $ids = array_map(
             static fn(TemplateInterface $template): string => $template->getId(),
-            (new TemplateRegistry())->all()
+            new TemplateRegistry()->all()
         );
 
         $this->assertContains('dark', $ids);

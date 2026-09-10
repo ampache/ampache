@@ -180,7 +180,7 @@ final class PowChallengeView extends AbstractView
 
     public function renderWidget(): string
     {
-        return (new PowWidgetView($this->challenge, $this->webPath))->render();
+        return new PowWidgetView($this->challenge, $this->webPath)->render();
     }
 
     #[Override]

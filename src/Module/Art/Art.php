@@ -380,7 +380,7 @@ class Art extends database_object
         // alt text stays the plain name so a listing is not read out as a paragraph per row.
         // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
         $name  = scrub_out($name);
-        $hover = self::drawn_hover_title($name, $object_type, !$has_db);
+        $hover = self::drawn_hover_title($name, !$has_db);
         echo '<a href="' . $link . '" title="' . $hover . '"';
         if ($prettyPhoto) {
             echo ' rel="prettyPhoto"';
@@ -509,7 +509,7 @@ class Art extends database_object
         $extension = $data[1] ?? '';
 
         if ($extension === 'jpeg') {
-            $extension = 'jpg';
+            return 'jpg';
         }
 
         return $extension;
@@ -1073,7 +1073,8 @@ class Art extends database_object
             foreach ($scandir as $file) {
                 if ('.' === $file || '..' === $file) {
                     continue;
-                } elseif (is_dir($path . '/' . $file)) {
+                }
+                if (is_dir($path . '/' . $file)) {
                     self::_delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
                 } elseif ($has_size) {
                     // If we are deleting a specific size, check the file name
@@ -1212,7 +1213,7 @@ class Art extends database_object
      * and a browse page would load fifty of them just to write its html. So this understates rather
      * than risks calling a real cover a drawing.
      */
-    private static function drawn_hover_title(string $escapedName, string $type, bool $missing): string
+    private static function drawn_hover_title(string $escapedName, bool $missing): string
     {
         if (!$missing || self::generated_art_query() === '') {
             return $escapedName;

@@ -27,6 +27,7 @@ namespace Ampache\Gui\Song;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionMethod;
 
 /**
@@ -55,10 +56,10 @@ class SongPositionTest extends TestCase
     {
         $method = new ReflectionMethod(SongViewAdapter::class, 'position');
 
-        static::assertSame(
+        self::assertSame(
             $expected,
             $method->invoke(
-                (new \ReflectionClass(SongViewAdapter::class))->newInstanceWithoutConstructor(),
+                new ReflectionClass(SongViewAdapter::class)->newInstanceWithoutConstructor(),
                 $number,
                 $total
             )

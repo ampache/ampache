@@ -69,7 +69,7 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
                     '@type' => 'VideoObject',
                     'name' => (string) $video->get_fullname(),
                     'url' => $url,
-                    'duration' => PageMeta::duration((int) $video->time),
+                    'duration' => PageMeta::duration($video->time),
                     'thumbnailUrl' => $webPath . '/image.php?object_id=' . $video->getId() . '&object_type=video&size=600x600',
                     'uploadDate' => ($video->addition_time > 0) ? date('Y-m-d', $video->addition_time) : null,
                 ])

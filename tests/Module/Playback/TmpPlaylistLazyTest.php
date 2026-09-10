@@ -49,7 +49,7 @@ class TmpPlaylistLazyTest extends TestCase
         $this->repository->expects(static::never())
             ->method('create');
 
-        static::assertNull(Tmp_Playlist::find_from_session('a-session'));
+        self::assertNull(Tmp_Playlist::find_from_session('a-session'));
     }
 
     public function testFindFromSessionReturnsTheExistingQueue(): void
@@ -74,8 +74,8 @@ class TmpPlaylistLazyTest extends TestCase
 
         $playlist = Tmp_Playlist::find_from_session('a-session');
 
-        static::assertInstanceOf(Tmp_Playlist::class, $playlist);
-        static::assertSame(42, $playlist->id);
+        self::assertInstanceOf(Tmp_Playlist::class, $playlist);
+        self::assertSame(42, $playlist->id);
     }
 
     public function testGetFromSessionStillCreatesTheQueueWhenThereIsNone(): void
@@ -99,7 +99,7 @@ class TmpPlaylistLazyTest extends TestCase
                 'object_type' => 'song',
             ]);
 
-        static::assertSame(7, Tmp_Playlist::get_from_session('a-session')->id);
+        self::assertSame(7, Tmp_Playlist::get_from_session('a-session')->id);
     }
 
     protected function setUp(): void

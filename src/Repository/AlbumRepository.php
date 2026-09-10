@@ -456,9 +456,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 // We assume undefined release type is album
                 $rtype = (string) ($row['release_type'] ?? 'album');
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = [];
-                }
+                $results[$rtype] ??= [];
 
                 $results[$rtype][] = (int) $row['id'];
 
@@ -546,7 +544,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             return self::IDENTITY_COLUMNS;
         }
 
-        $requested = array_map('trim', explode(',', $configured));
+        $requested = array_map(trim(...), explode(',', $configured));
 
         return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
     }
@@ -732,7 +730,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             return [
                 'prefix' => $row['prefix'] ?? null,
                 'basename' => $basename,
-                'name' => ltrim(((string) ($row['prefix'] ?? '')) . ' ' . $basename),
+                'name' => ltrim((($row['prefix'] ?? '')) . ' ' . $basename),
             ];
         }
 

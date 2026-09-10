@@ -79,7 +79,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
                     '@type' => 'MusicRecording',
                     'name' => (string) $song->get_fullname(),
                     'url' => $webPath . '/song.php?action=show_song&song_id=' . $song->getId(),
-                    'duration' => PageMeta::duration((int) $song->time),
+                    'duration' => PageMeta::duration($song->time),
                     'byArtist' => ['@type' => 'MusicGroup', 'name' => $song->get_parent_fullname()],
                     'inAlbum' => ['@type' => 'MusicAlbum', 'name' => $song->get_album_fullname()],
                     'license' => $license?->getExternalLink(),

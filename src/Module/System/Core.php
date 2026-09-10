@@ -103,7 +103,8 @@ class Core
     {
         if ($length < 1) {
             return null;
-        } elseif (function_exists('random_bytes')) {
+        }
+        if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
@@ -255,14 +256,10 @@ class Core
             $tmp_dir = sys_get_temp_dir();
         } elseif (str_starts_with(PHP_OS, 'WIN')) {
             $tmp_dir = $_ENV['TMP'];
-            if (!isset($tmp_dir)) {
-                $tmp_dir = 'C:\Windows\Temp';
-            }
+            $tmp_dir ??= 'C:\Windows\Temp';
         } else {
             $tmp_dir = @$_ENV['TMPDIR'];
-            if (!isset($tmp_dir)) {
-                $tmp_dir = '/tmp';
-            }
+            $tmp_dir ??= '/tmp';
         }
 
         return $tmp_dir;

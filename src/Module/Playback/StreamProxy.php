@@ -106,9 +106,7 @@ final readonly class StreamProxy implements StreamProxyInterface
 
                         return strlen($data);
                     },
-                    CURLOPT_HEADERFUNCTION => function (CurlHandle $curl, string $header) use ($redirect): int {
-                        return $this->captureHeader($curl, $header, $redirect);
-                    },
+                    CURLOPT_HEADERFUNCTION => fn(CurlHandle $curl, string $header): int => $this->captureHeader($curl, $header, $redirect),
                     // Default trusted chain is crap anyway and currently no custom CA option
                     CURLOPT_SSL_VERIFYPEER => false,
                     CURLOPT_SSL_VERIFYHOST => 0,
@@ -119,7 +117,6 @@ final readonly class StreamProxy implements StreamProxyInterface
 
             $success = curl_exec($curl) !== false;
             $error   = curl_error($curl);
-            curl_close($curl);
 
             if ($redirect->location !== null) {
                 $url = $redirect->location;

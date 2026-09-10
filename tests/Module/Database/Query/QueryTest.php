@@ -27,6 +27,9 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\MockeryTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
+use ReflectionProperty;
+use RuntimeException;
 
 class QueryTest extends MockeryTestCase
 {
@@ -49,7 +52,7 @@ class QueryTest extends MockeryTestCase
         // an old serialized browse holds its custom query in `base` with the `custom` flag set;
         // that stored shape has to keep working after the upgrade
         $query = $this->subject();
-        $state = new \ReflectionProperty(Query::class, '_state');
+        $state = new ReflectionProperty(Query::class, '_state');
 
         $rebuilt           = $state->getValue($query);
         $rebuilt['type']   = 'song';
@@ -57,7 +60,7 @@ class QueryTest extends MockeryTestCase
         $rebuilt['base']   = 'SELECT `id` FROM `legacy_view` ';
         $state->setValue($query, $rebuilt);
 
-        $sql = (string) new \ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
+        $sql = (string) new ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
 
         self::assertSame('SELECT `id` FROM `legacy_view`', trim($sql));
     }
@@ -71,7 +74,7 @@ class QueryTest extends MockeryTestCase
         $query->set_type('song', 'SELECT `id` FROM `song` WHERE `user_upload` = 42', []);
         $query->set_filter('license', 3);
 
-        $sql = (string) new \ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
+        $sql = (string) new ReflectionMethod(Query::class, '_get_sql')->invoke($query, false, false);
 
         self::assertStringContainsString(
             'JOIN (SELECT `id` FROM `song` WHERE `user_upload` = 42) AS `custom_base` ON `custom_base`.`id` = `song`.`id`',
@@ -138,7 +141,7 @@ class QueryTest extends MockeryTestCase
             {
                 $this->overrideCalls++;
                 if ($this->overrideCalls > 3) {
-                    throw new \RuntimeException('recursed through the child set_type override');
+                    throw new RuntimeException('recursed through the child set_type override');
                 }
 
                 // what Browse does when the alpha view cookie says false
@@ -148,7 +151,7 @@ class QueryTest extends MockeryTestCase
         };
 
         // the state a rebuilt browse is in: a type on record, no query object resolved yet
-        $state           = new \ReflectionProperty(Query::class, '_state');
+        $state           = new ReflectionProperty(Query::class, '_state');
         $rebuilt         = $state->getValue($query);
         $rebuilt['type'] = 'song';
         $state->setValue($query, $rebuilt);

@@ -92,7 +92,7 @@ class HeaderViewTest extends TestCase
         $playlist->expects(static::never())
             ->method('get_fullname');
 
-        self::assertSame('Some site', $this->title('playlist', 'playlist_id', null));
+        self::assertSame('Some site', $this->title('playlist', 'playlist_id'));
     }
 
     protected function setUp(): void

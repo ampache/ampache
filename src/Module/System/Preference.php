@@ -1029,9 +1029,7 @@ class Preference extends database_object
         $results['theme_css_base'] = $theme_cfg['base'] ?? null;
 
         // Default theme color fallback
-        if (!isset($results['theme_color'])) {
-            $results['theme_color'] = 'dark';
-        }
+        $results['theme_color'] ??= 'dark';
 
         if (
             (string) $results['theme_color'] !== ''
@@ -1045,11 +1043,9 @@ class Preference extends database_object
             unset($results['theme_color']);
         }
 
-        if (!isset($results['theme_color'])) {
-            $results['theme_color'] = (isset($theme_cfg['colors']))
-                ? strtolower((string) $theme_cfg['colors'][0])
-                : 'dark';
-        }
+        $results['theme_color'] ??= (isset($theme_cfg['colors']))
+            ? strtolower((string) $theme_cfg['colors'][0])
+            : 'dark';
 
         // A preference with no value carries no information -- it is the seeded default, not a choice -- so it
         // must not replace a value the config file set. `encode_target` ships as "mp3" yet seeds an empty row,

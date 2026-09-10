@@ -51,10 +51,10 @@ class RatingCacheTest extends TestCase
 
         Rating::build_cache('song', [1, 2], -1);
 
-        static::assertSame([4.14, 7], database_object::get_from_cache('rating_song_all', 1));
-        static::assertSame(4.14, (new Rating(1, 'song'))->get_average_rating());
-        static::assertSame(7, (new Rating(1, 'song'))->get_rating_count());
-        static::assertSame(4, (new Rating(2, 'song'))->get_user_rating(-1));
+        self::assertSame([4.14, 7], database_object::get_from_cache('rating_song_all', 1));
+        self::assertSame(4.14, new Rating(1, 'song')->get_average_rating());
+        self::assertSame(7, new Rating(1, 'song')->get_rating_count());
+        self::assertSame(4, new Rating(2, 'song')->get_user_rating(-1));
     }
 
     public function testTheAbsenceOfARatingIsCachedSoNoRowAsksAgain(): void
@@ -66,11 +66,11 @@ class RatingCacheTest extends TestCase
 
         Rating::build_cache('album', [9], -1);
 
-        static::assertTrue(database_object::is_cached('rating_album_user-1', 9));
-        static::assertTrue(database_object::is_cached('rating_album_all', 9));
-        static::assertNull((new Rating(9, 'album'))->get_average_rating());
-        static::assertSame(0, (new Rating(9, 'album'))->get_rating_count());
-        static::assertNull((new Rating(9, 'album'))->get_user_rating(-1));
+        self::assertTrue(database_object::is_cached('rating_album_user-1', 9));
+        self::assertTrue(database_object::is_cached('rating_album_all', 9));
+        self::assertNull(new Rating(9, 'album')->get_average_rating());
+        self::assertSame(0, new Rating(9, 'album')->get_rating_count());
+        self::assertNull(new Rating(9, 'album')->get_user_rating(-1));
     }
 
     protected function setUp(): void

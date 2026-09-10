@@ -110,9 +110,7 @@ final class StylesheetsView extends AbstractView
     public function getThemeSheets(): array
     {
         $base = AmpConfig::get('theme_css_base', ['default.css', 'screen']);
-        if ($base === null) {
-            $base = ['default.css', 'screen'];
-        }
+        $base ??= ['default.css', 'screen'];
 
         if (is_string($base)) {
             $base = [$base];

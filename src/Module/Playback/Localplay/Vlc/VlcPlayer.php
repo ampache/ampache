@@ -256,7 +256,7 @@ class VlcPlayer
         }
 
         if ($currentstat == 'paused') {
-            $state = 'pause';
+            return 'pause';
         }
 
         return $state;
