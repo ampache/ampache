@@ -545,7 +545,7 @@ final class Stats
 
         // the newest lists reach the home page and the feeds without going through a browse, so the
         // withdrawn items have to be dropped here as well
-        if (in_array($base_type, ['album', 'artist'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
+        if (in_array($base_type, ['album', 'artist', 'song'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
             $where[] = sprintf('`%s`.`enabled` = 1', $base_type);
         }
 

@@ -77,7 +77,6 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 ### Fixed (8.1.0)
 
 * Album, album disk and artist song counts no longer include disabled songs, so an album whose tracks are all disabled stops advertising them
-
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work

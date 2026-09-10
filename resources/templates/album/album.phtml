@@ -111,7 +111,8 @@ Ui::show_box_top('', 'info-box'); ?>
         </li>
         <?php } ?>
         <li>
-            <a id="edit_album_<?php echo $albumId; ?>" onclick="showEditDialog('<?php echo $this->e($type); ?>_row', '<?php echo $albumId; ?>', 'edit_album_<?php echo $albumId; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+            <?php // the dialog names its form after the type it renders, and the save serialises that form by id?>
+            <a id="edit_<?php echo $this->e($type); ?>_<?php echo $albumId; ?>" onclick="showEditDialog('<?php echo $this->e($type); ?>_row', '<?php echo $albumId; ?>', 'edit_<?php echo $this->e($type); ?>_<?php echo $albumId; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                 <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>&nbsp;<?php echo T_('Edit Album'); ?>
             </a>
         </li>
