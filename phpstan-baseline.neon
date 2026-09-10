@@ -1885,12 +1885,6 @@ parameters:
 			path: src/Plugin/PluginStreamControlInterface.php
 
 		-
-			message: '#^Property Ampache\\Repository\\Model\\Album\:\:\$_mapcache type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: '#^Property Ampache\\Repository\\Model\\Artist\:\:\$_mapcache type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
