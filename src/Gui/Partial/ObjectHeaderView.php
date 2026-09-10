@@ -108,7 +108,10 @@ final class ObjectHeaderView extends AbstractView
     }
 
     /**
-     * The state a reader has to know before anything else on the page, such as an item withdrawn or unplayable.
+     * Names the state a reader has to know before anything else on the page, such as an unplayable item.
+     *
+     * Plain text, not markup: the heading turns it into both the badge beside the kind and the banner
+     * above, so the two can never drift apart.
      */
     public function getNotice(): string
     {

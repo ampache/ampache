@@ -186,9 +186,7 @@ final class AlbumPageView extends AbstractView
                 : '',
             links: $this->getExternalLinks()->render(),
             wideArt: true,
-            notice: ($this->album->isEnabled())
-                ? ''
-                : Ui::get_material_symbol('unpublished', T_('Disabled')) . '<strong>' . T_('Disabled') . '</strong>',
+            notice: ($this->album->isEnabled()) ? '' : T_('Disabled'),
         );
     }
 
