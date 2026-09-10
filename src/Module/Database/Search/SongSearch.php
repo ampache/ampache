@@ -318,6 +318,9 @@ final class SongSearch implements SearchInterface
                     }
 
                     break;
+                case 'enabled':
+                    $where[] = ($operator_sql == '1') ? "`song`.`enabled` = 1" : "`song`.`enabled` = 0";
+                    break;
                 case 'played':
                     $where[] = sprintf("`song`.`played` = '%s'", $operator_sql);
                     break;

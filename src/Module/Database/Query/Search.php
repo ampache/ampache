@@ -1960,6 +1960,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
         $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
         $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
                 $this->getLicenseRepository()->getList(false)

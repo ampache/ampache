@@ -3273,6 +3273,17 @@ a.option-list:hover {
     line-height: 1.5;
 }
 
+.editdialogstyle.ui-dialog .ui-dialog-buttonpane {
+    padding: 12px 16px;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    margin-left: 8px;
+    padding: 10px 22px;
+    font-size: 15px;
+    border-radius: 3px;
+}
+
 .confirmdialogstyle.ui-dialog .ui-dialog-buttonpane {
     background-image: none;
     border: 0;
