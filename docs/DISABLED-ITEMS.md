@@ -76,6 +76,17 @@ Smart lists reach their rows without a browse and carry the same condition in `A
 asking anyone's level. `getAllByArtist()` deliberately does not: re-reading the tags of a withdrawn file is
 still a thing a catalogue has to do, and it is also what the artist's "all songs" page reads for a manager.
 
+The home widgets and the newest, recent and popular pages build their own statements and hand the ids
+straight to a renderer, which does not filter them again, so `Stats` carries the condition itself in
+`get_newest_sql()`, `get_recent_sql()` and `get_top_sql()`. Two things there are deliberate: the top list
+leaves it out while writing the `cache_object_count` rows, because that cache is read by everybody
+afterwards and a run made under no level would freeze a truncated list for the whole instance; and a disk
+served from that cache is not filtered, since the cached row holds the disk id and not the album's.
+
+The artist page reads `AlbumRepository::getByArtist()`, and the api and upnp listings of the same thing
+read `getAlbumByArtist()`; neither goes through a browse, so both apply the condition themselves, level
+exemption included.
+
 Anything that resolves an item by id - the object pages and the `album`, `artist` and `song` API methods -
 answers with the response an id that was never there produces, so nothing tells the caller the item exists.
 The tab title follows the same rule through `VisibleItemInterface`, which a private list implements for the
