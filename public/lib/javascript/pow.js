@@ -340,8 +340,8 @@
      * The form targets a hidden iframe, so this document stays loaded: a zip is written in full
      * before its headers are sent, and unloading here would cancel the request. A download never
      * fires `load` on the frame, so a `load` means the endpoint answered with a page instead --
-     * an error, or a fresh challenge -- and the visitor should be looking at it rather than at a
-     * frame they cannot see.
+     * an error, or a fresh challenge -- and the answer that went with it is spent either way, so
+     * there is nothing left to replay and the visitor is told rather than sent round again.
      *
      * Returning waits for the acknowledgement cookie, which arrives with the download headers and at
      * no earlier moment. Before those headers the request is still a navigation the frame owns, and

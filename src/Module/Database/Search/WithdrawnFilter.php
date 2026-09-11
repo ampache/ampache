@@ -62,6 +62,15 @@ final class WithdrawnFilter
      */
     public static function condition(string $type, ?string $idColumn = null): string
     {
+        // a disk id has to be resolved to its album before the flag can be read, which is a second hop the
+        // plain form cannot make; `album_disk` here means "this column holds a disk id", not a table to read
+        if ($type === 'album_disk' && $idColumn !== null && !str_contains($idColumn, '`album_disk`.`album_id`')) {
+            return sprintf(
+                'EXISTS (SELECT 1 FROM `album_disk` AS `disk_wd` JOIN `album` AS `album_wd` ON `album_wd`.`id` = `disk_wd`.`album_id` WHERE `disk_wd`.`id` = %s AND `album_wd`.`enabled` = 1)',
+                $idColumn
+            );
+        }
+
         [$table, $column] = ($type === 'album_disk')
             ? ['album', $idColumn ?? '`album_disk`.`album_id`']
             : [$type, $idColumn];
@@ -79,5 +88,15 @@ final class WithdrawnFilter
                 $table,
                 $column
             );
+    }
+
+    /**
+     * The same question with the level asked first, for a caller that has a viewer rather than a where clause
+     */
+    public static function conditionFor(string $type, ?string $idColumn, ?int $userId): string
+    {
+        return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
+            ? ''
+            : self::condition($type, $idColumn);
     }
 }

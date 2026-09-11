@@ -546,7 +546,7 @@ final class Stats
 
         // the newest lists reach the home page and the feeds without going through a browse, so the
         // withdrawn items have to be dropped here as well
-        $withdrawn = self::_withdrawnSql($base_type, null, $user?->getId());
+        $withdrawn = WithdrawnFilter::conditionFor($base_type, null, $user?->getId());
         if ($withdrawn !== '') {
             $where[] = $withdrawn;
         }
@@ -748,7 +748,7 @@ final class Stats
         }
 
         // the recent widgets and the api hand these ids to a renderer as they are, so nothing filters them later
-        $withdrawn = self::_withdrawnSql(
+        $withdrawn = WithdrawnFilter::conditionFor(
             ($input_type === 'album_disk') ? 'album' : $type,
             '`object_count`.`object_id`',
             ($filter_user instanceof User) ? $filter_user->getId() : null
@@ -841,6 +841,23 @@ final class Stats
             $sql .= ($allowed === [])
                 ? "AND 1 = 0 "
                 : "AND `object_count`.`user` IN (" . implode(', ', $allowed) . ") ";
+        }
+
+        // the type varies row by row here, so each flag is asked for only of the rows that carry that type
+        $viewer = Core::get_global('user');
+        foreach (['album', 'album_disk', 'artist', 'song'] as $withdrawnType) {
+            if (!str_contains($object_string, sprintf("'%s'", $withdrawnType))) {
+                continue;
+            }
+
+            $withdrawn = WithdrawnFilter::conditionFor(
+                $withdrawnType,
+                '`object_count`.`object_id`',
+                ($viewer instanceof User) ? $viewer->getId() : null
+            );
+            if ($withdrawn !== '') {
+                $sql .= sprintf("AND (`object_count`.`object_type` <> '%s' OR %s) ", $withdrawnType, $withdrawn);
+            }
         }
 
         $sql .= "ORDER BY `date` DESC LIMIT " . $limit;
@@ -1000,7 +1017,7 @@ final class Stats
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
         ) {
             $sql       = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
-            $withdrawn = self::_withdrawnSql($type, '`cache_object_count`.`object_id`', $filter_user?->getId());
+            $withdrawn = WithdrawnFilter::conditionFor($type, '`cache_object_count`.`object_id`', $filter_user?->getId());
             if ($withdrawn !== '') {
                 $sql .= ' AND ' . $withdrawn;
             }
@@ -1051,8 +1068,8 @@ final class Stats
             // `$type` is rewritten above, and the cache written here is read by everybody afterwards
             if (!$addAdditionalColumns) {
                 $withdrawn = ($input_type === 'album_disk')
-                    ? self::_withdrawnSql('album', '`album_disk`.`album_id`', $filter_user?->getId())
-                    : self::_withdrawnSql($type, '`object_count`.`object_id`', $filter_user?->getId());
+                    ? WithdrawnFilter::conditionFor('album', '`album_disk`.`album_id`', $filter_user?->getId())
+                    : WithdrawnFilter::conditionFor($type, '`object_count`.`object_id`', $filter_user?->getId());
                 if ($withdrawn !== '') {
                     $sql .= ' AND ' . $withdrawn;
                 }
@@ -1437,7 +1454,7 @@ final class Stats
         }
 
         // the widget hands these ids straight to a browse renderer, which never filters them again
-        $withdrawn = self::_withdrawnSql(
+        $withdrawn = WithdrawnFilter::conditionFor(
             ($input_type === 'album_disk') ? 'album' : $type,
             ($input_type === 'album_disk') ? '`album_disk`.`album_id`' : null,
             ($filter_user instanceof User) ? $filter_user->getId() : null
@@ -1517,17 +1534,6 @@ final class Stats
                 Dba::write(sprintf('UPDATE `folder` SET `total_skip` = %s WHERE `id` IN (%s);', $decrement, implode(', ', $folder_ids)));
             }
         }
-    }
-
-    /**
-     * The withdrawal correlates on whichever id the query already carries, so a statement built on
-     * `object_count` drops a release taken off the shelves without joining the table that holds the flag.
-     */
-    private static function _withdrawnSql(string $table, ?string $idColumn, ?int $userId): string
-    {
-        return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
-            ? ''
-            : WithdrawnFilter::condition($table, $idColumn);
     }
 
     /**

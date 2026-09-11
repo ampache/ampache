@@ -84,21 +84,39 @@ class StatsTest extends TestCase
         self::assertSame(1500000000, $this->clamp(1500000000));
     }
 
-    /**
-     * The cron cache is read by the widgets whenever it is warm, so leaving it unfiltered would serve
-     * withdrawn releases on exactly the instances that turned the cache on
-     */
     public function testTheCachedTopListCarriesTheConditionToo(): void
     {
         $this->bootDic(false);
         AmpConfig::set('cron_cache', true, true);
 
-        self::assertStringContainsString(
-            '`id` = `cache_object_count`.`object_id`',
-            Stats::get_top_sql('song')
-        );
+        try {
+            self::assertStringContainsString('`id` = `cache_object_count`.`object_id`', Stats::get_top_sql('song'));
+        } finally {
+            AmpConfig::set('cron_cache', false, true);
+        }
+    }
 
-        AmpConfig::set('cron_cache', false, true);
+    /**
+     * The cron cache is read by the widgets whenever it is warm, so leaving it unfiltered would serve
+     * withdrawn releases on exactly the instances that turned the cache on
+     */
+    /**
+     * `cache_object_count` keys a disk row on the disk id, so the flag is two hops away: reading `album`
+     * against that id compares a disk id to an album id and keeps whatever happens to collide
+     */
+    public function testTheCachedTopListOfDisksResolvesTheDiskToItsAlbum(): void
+    {
+        $this->bootDic(false);
+        AmpConfig::set('cron_cache', true, true);
+
+        try {
+            $sql = Stats::get_top_sql('album_disk');
+
+            self::assertStringContainsString('`disk_wd`.`id` = `cache_object_count`.`object_id`', $sql);
+            self::assertStringContainsString('`album_wd`.`id` = `disk_wd`.`album_id`', $sql);
+        } finally {
+            AmpConfig::set('cron_cache', false, true);
+        }
     }
 
     /**
@@ -109,9 +127,13 @@ class StatsTest extends TestCase
     {
         $this->bootDic(false);
 
-        $sql = Stats::get_top_sql('song', 0, 'stream', null, false, 0, 0, true);
+        try {
+            $sql = Stats::get_top_sql('song', 0, 'stream', null, false, 0, 0, true);
 
-        self::assertStringNotContainsString('`song`.`enabled`', $sql);
+            self::assertStringNotContainsString('`song`.`enabled`', $sql);
+        } finally {
+            AmpConfig::set('cron_cache', false, true);
+        }
     }
 
     public function testTheRecentWidgetDropsWithdrawnItemsForAListener(): void

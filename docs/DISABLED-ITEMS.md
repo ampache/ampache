@@ -81,7 +81,8 @@ straight to a renderer, which does not filter them again, so `Stats` carries the
 `get_newest_sql()`, `get_recent_sql()` and `get_top_sql()`. Two things there are deliberate: the top list
 leaves it out while writing the `cache_object_count` rows, because that cache is read by everybody
 afterwards and a run made under no level would freeze a truncated list for the whole instance; and a disk
-served from that cache is not filtered, since the cached row holds the disk id and not the album's.
+read back from that cache is keyed on the disk id, so the condition resolves it through `album_disk` to
+reach the album holding the flag rather than comparing a disk id to an album id.
 
 The artist page reads `AlbumRepository::getByArtist()`, and the api and upnp listings of the same thing
 read `getAlbumByArtist()`; neither goes through a browse, so both apply the condition themselves, level

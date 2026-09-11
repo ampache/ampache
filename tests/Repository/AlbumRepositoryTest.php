@@ -483,6 +483,24 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->getAlbumByArtist(42);
     }
 
+    /**
+     * Deleting an artist takes its albums with it, and retagging one carries down to them, so those two read
+     * the whole list. A filtered one leaves a withdrawn album behind with nothing above it.
+     */
+    public function testGetAlbumByArtistKeepsTheWithdrawnOnesForMaintenance(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::logicalNot(self::stringContains('`album`.`enabled`')))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getAlbumByArtist(42, false);
+    }
+
     public function testGetArtistMapReturnsArtistList(): void
     {
         $album  = $this->createMock(Album::class);
