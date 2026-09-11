@@ -2,6 +2,10 @@
 
 ## Ampache 8.1.1
 
+### Changed (8.1.1)
+
+* Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
+
 ### Fixed (8.1.1)
 
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
