@@ -399,18 +399,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getAllByArtist(
         int $artistId,
     ): array {
-        $user_id = Core::get_global('user')?->getId();
-        $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`;"
-            : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`;";
-
-        $dbResults = $this->connection->query($sql, [$artistId]);
-        $results   = [];
-        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
+        return $this->byArtist($artistId, false);
     }
 
     /**
@@ -629,6 +618,17 @@ final readonly class SongRepository implements SongRepositoryInterface
         while ($rowId = $result->fetchColumn()) {
             yield new Song((int) $rowId);
         }
+    }
+
+    /**
+     * The songs of an artist a listener may be handed: unplayable ones are left out
+     *
+     * @return int[]
+     */
+    public function getEnabledByArtist(
+        int $artistId,
+    ): array {
+        return $this->byArtist($artistId, true);
     }
 
     /**
@@ -1414,6 +1414,35 @@ final readonly class SongRepository implements SongRepositoryInterface
             'UPDATE `song` SET `update_time` = ? WHERE `id` = ?;',
             [$time, $songId]
         );
+    }
+
+    /**
+     * The songs an artist is credited on, as a song artist or through one of its albums.
+     *
+     * `$enabledOnly` is what separates the two callers: a listener is handed what can be played, while a
+     * catalogue re-reading tags has to reach a withdrawn file as much as any other.
+     *
+     * @return list<int>
+     */
+    private function byArtist(int $artistId, bool $enabledOnly): array
+    {
+        $user_id  = Core::get_global('user')?->getId();
+        $enabled  = ($enabledOnly) ? 'AND `song`.`enabled` = 1 ' : '';
+        $catalogs = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? 'AND `song`.`catalog` IN (' . implode(',', Catalog::get_catalogs('', $user_id, true)) . ') '
+            : '';
+
+        $dbResults = $this->connection->query(
+            "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? " . $enabled . $catalogs . "ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`, `song`.`id`;",
+            [$artistId]
+        );
+
+        $results = [];
+        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
     }
 
     /**

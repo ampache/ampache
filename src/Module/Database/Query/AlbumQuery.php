@@ -39,6 +39,7 @@ final class AlbumQuery implements QueryInterface
         'artist',
         'catalog_enabled',
         'catalog',
+        'enabled',
         'equal',
         'exact_match',
         'genre',
@@ -139,6 +140,9 @@ final class AlbumQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'enabled':
+                $filter_sql = " `album`.`enabled` = " . (int) $value . " AND ";
+                break;
             case 'id':
                 $filter_sql = " `album`.`id` IN (";
                 foreach ($value as $uid) {

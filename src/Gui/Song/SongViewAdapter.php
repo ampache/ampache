@@ -368,6 +368,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             links: $this->getExternalLinks(),
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
+            notice: ($this->song->enabled) ? '' : T_('Disabled'),
         );
     }
 

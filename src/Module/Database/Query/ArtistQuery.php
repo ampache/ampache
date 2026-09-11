@@ -37,6 +37,7 @@ final class ArtistQuery implements QueryInterface
         'alpha_match',
         'catalog_enabled',
         'catalog',
+        'enabled',
         'equal',
         'exact_match',
         'genre',
@@ -124,6 +125,9 @@ final class ArtistQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'enabled':
+                $filter_sql = " `artist`.`enabled` = " . (int) $value . " AND ";
+                break;
             case 'id':
                 $filter_sql = " `artist`.`id` IN (";
                 foreach ($value as $uid) {

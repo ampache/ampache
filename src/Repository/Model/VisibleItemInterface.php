@@ -25,19 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Repository\ArtistRepositoryInterface;
-
 /**
- * The `artist` columns a single-field write is allowed to target.
+ * An item that may be kept from a viewer entirely, rather than merely filtered out of a listing.
  *
- * The column name is interpolated into the statement, so this is what stops it being caller-supplied.
- *
- * @see ArtistRepositoryInterface::setField()
+ * Two reasons answer to the same question: a list is private, or a release has been withdrawn. Callers that
+ * resolve an item by id ask this before showing anything, and refuse the way they refuse an id that was
+ * never there, so nothing tells the viewer the item exists.
  */
-enum ArtistFieldEnum: string
+interface VisibleItemInterface
 {
-    case ENABLED     = 'enabled';
-    case LAST_UPDATE = 'last_update';
-    case MBID        = 'mbid';
-    case USER        = 'user';
+    /**
+     * A null viewer is nobody in particular, which is what a public link has on the other end
+     */
+    public function isVisible(?User $user = null): bool;
 }

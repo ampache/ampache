@@ -2311,6 +2311,36 @@ a.option-list:hover {
     text-align: center;
 }
 
+/* a withdrawn or unplayable item keeps its page, so the page says so above everything else on it */
+.object-header-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgb(204 51 51 / 45%);
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 15px;
+    /* tinted rather than a flat fill, so the one rule reads on the light and the dark skin alike */
+    background-color: rgb(204 51 51 / 12%);
+    color: #c33;
+}
+
+/* the same state, named again where the kind is read, for anyone who lands mid-page */
+.object-header-badge {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background-color: #c33;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
 .find-duplicates strong {
     display: block;
 }
@@ -3241,6 +3271,17 @@ a.option-list:hover {
     padding: 18px 14px;
     font-size: 15px;
     line-height: 1.5;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-buttonpane {
+    padding: 12px 16px;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    margin-left: 8px;
+    padding: 10px 22px;
+    font-size: 15px;
+    border-radius: 3px;
 }
 
 .confirmdialogstyle.ui-dialog .ui-dialog-buttonpane {

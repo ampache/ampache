@@ -325,6 +325,11 @@ interface AlbumRepositoryInterface
     public function setField(int $albumId, AlbumFieldEnum $field, int|string|null $value): bool;
 
     /**
+     * Puts every song of an album into the state the album itself was just put into.
+     */
+    public function setSongsEnabled(int $albumId, bool $enabled): void;
+
+    /**
      * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed
      */
     public function updateAllCounts(): void;

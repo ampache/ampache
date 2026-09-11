@@ -103,6 +103,11 @@ final class ArtistEditFormRenderer extends AbstractEditFormRenderer
         return (string) $this->getItem()->yearformed;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->getItem()->enabled;
+    }
+
     public function mayEditMbid(): bool
     {
         $user = Core::get_global('user');

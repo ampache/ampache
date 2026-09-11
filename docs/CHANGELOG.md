@@ -42,6 +42,11 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
 * Folder and collection pages describe themselves in a shared link, like the other object pages do
+* Database 810011
+  * New `album`.`enabled` and `artist`.`enabled`, carrying the name and the promise `song`.`enabled` already had, so a release can be withdrawn without deleting it and losing its playlist entries, ratings and play history
+  * Set from a `State` menu in the album, artist and song edit dialogs by a catalog manager, who keeps seeing what is disabled; disabling an album or artist carries down to its songs, and enabling carries back
+  * Disabled items leave every browse, smartlist, API, Subsonic and RSS listing, and carry a marker in the rows only a manager still sees. An `Enabled` search rule lists them
+  * A song can still be enabled or disabled on its own; the next change of its album or artist state writes over it
 
 ### Changed (8.1.0)
 
@@ -71,6 +76,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 
 ### Fixed (8.1.0)
 
+* Album, album disk and artist song counts no longer include disabled songs, so an album whose tracks are all disabled stops advertising them
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work

@@ -92,7 +92,10 @@ if ($this->isShowRatings()) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-<?php if ($this->canPostShout()) { ?>
+<?php if ($this->isDisabled()) {
+    echo $this->raw(Ui::get_material_symbol('unpublished', T_('Disabled')));
+}
+if ($this->canPostShout()) { ?>
     <a href="<?php echo $this->e($this->getWebPath()); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $itemId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
     </a>

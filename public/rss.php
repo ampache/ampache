@@ -28,10 +28,12 @@ use Ampache\Module\Application\Rss\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
+// a feed reader carries an `rsstoken`, not a session, and `Init.php` reads this before it decides whether
+// to demand one: defined after the require, the constant arrives too late and every reader is redirected
+define('NO_SESSION', '1');
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
-
-define('NO_SESSION', '1');
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
