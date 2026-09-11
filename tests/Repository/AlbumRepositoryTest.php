@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\LegacyLogger;
@@ -34,6 +35,7 @@ use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
@@ -463,6 +465,24 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    /**
+     * The api and upnp listings of an artist's albums do not go through a browse either, so the withdrawal
+     * has to be read here or a release taken off the shelves is handed out by every device protocol.
+     */
+    public function testGetAlbumByArtistHidesAWithdrawnAlbumFromALowerLevel(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('AND `album`.`enabled` = 1'))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getAlbumByArtist(42);
+    }
+
     public function testGetArtistMapReturnsArtistList(): void
     {
         $album  = $this->createMock(Album::class);
@@ -492,6 +512,38 @@ class AlbumRepositoryTest extends TestCase
             [$artistId],
             $this->subject->getArtistMap($album, $objectType)
         );
+    }
+
+    /**
+     * An album taken off the shelves was still listed on the page of its artist, for everybody, because this
+     * listing builds its own sql instead of going through Query::_get_filter_sql()
+     */
+    public function testGetByArtistHidesAWithdrawnAlbumFromALowerLevel(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('AND `album`.`enabled` = 1'))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getByArtist(42);
+    }
+
+    public function testGetByArtistLeavesTheConditionOutForAManager(): void
+    {
+        $this->bootPrivilegeChecker(true);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::logicalNot(self::stringContains('`album`.`enabled`')))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getByArtist(42);
     }
 
     public function testGetByMbidGroupReturnsData(): void
@@ -963,6 +1015,25 @@ class AlbumRepositoryTest extends TestCase
 
         // the object cache is a process-wide static, so a leftover entry would leak between tests
         Album::clear_cache();
+    }
+
+    private function bootPrivilegeChecker(bool $isManager): void
+    {
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->method('check')->willReturn($isManager);
+
+        // `Catalog::get_catalogs()` reaches the same container on the way through, so it cannot all be the checker
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn([]);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === PrivilegeCheckerInterface::class)
+                ? $privilegeChecker
+                : $catalogRepository
+        );
+
+        $GLOBALS['dic'] = $dic;
     }
 
     /**
