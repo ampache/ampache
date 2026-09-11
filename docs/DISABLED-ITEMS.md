@@ -74,12 +74,14 @@ Smart lists reach their rows without a browse and carry the same condition in `A
 `ArtistRepository::getRowsByCatalogs()`, `AlbumRepository::getIdsByCatalogs()` and `getSongs()`,
 `SongRepository::getEnabledIds()`, `getEnabledIdsByCatalog()` and `getEnabledByArtist()` - filter without
 asking anyone's level. `getAllByArtist()` deliberately does not: re-reading the tags of a withdrawn file is
-still a thing a catalogue has to do.
+still a thing a catalogue has to do, and it is also what the artist's "all songs" page reads for a manager.
 
 Anything that resolves an item by id - the object pages and the `album`, `artist` and `song` API methods -
 answers with the response an id that was never there produces, so nothing tells the caller the item exists.
-The tab title and `Share::is_valid()` follow the same rule, through `VisibleItemInterface`, which a private
-list implements for the same reason a withdrawn release does.
+The tab title follows the same rule through `VisibleItemInterface`, which a private list implements for the
+same reason a withdrawn release does. `Share::is_valid()` asks the narrower `WithdrawableInterface`: a share
+link is how a private list gets published to somebody without an account, so reading visibility there would
+refuse every one of those links.
 
 ## Database
 

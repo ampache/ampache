@@ -67,6 +67,7 @@ use Traversable;
 class Song extends database_object implements
     Media,
     VisibleItemInterface,
+    WithdrawableInterface,
     displayable_item,
     container_item,
     GarbageCollectibleInterface,
@@ -2124,6 +2125,11 @@ class Song extends database_object implements
         }
 
         return $this->has_art ?? false;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
     }
 
     public function isNew(): bool
