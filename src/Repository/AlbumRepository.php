@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
@@ -39,10 +41,20 @@ use Psr\Log\LoggerInterface;
 final readonly class AlbumRepository implements AlbumRepositoryInterface
 {
     /**
-     * The optional half of an album's identity: each is matched exactly when set and must be NULL when not, so a
-     * partially tagged release can never be mistaken for a fully tagged one. Order decides the bound-parameter order.
+     * The full set of album-identity columns an admin can select via the `album_grouping_fields` config setting
+     * (see `getIdentityColumns()`); this is also the default when it's unset. Order decides the bound-parameter
+     * order. `name` and `year` get their own clause in `findByProperties()` (both are NOT NULL columns, always
+     * matched by equality when included; `name` also carries the prefix-concatenation dupe check). Every other column is
+     * nullable and matched exactly when set, NULL when not, so a partially tagged release isn't mistaken for a
+     * fully tagged one - unless the admin drops it from the list, which is allowed even when it merges albums
+     * that a stricter set would have kept apart. A column dropped this way is also never stored: `create()`
+     * writes NULL for it rather than fixing the new album to whichever song happened to create it. `catalog`
+     * is not on this list: albums are always scoped to their catalog, since the row itself is unique per
+     * catalog rather than shared.
      */
     private const array IDENTITY_COLUMNS = [
+        'name',
+        'year',
         'prefix',
         'mbid',
         'mbid_group',
@@ -74,6 +86,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
             [$albumId, $objectType, $objectId]
         );
+
+        $this->forgetCachedArtists([$albumId]);
     }
 
     /**
@@ -101,7 +115,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         try {
             // left over garbage, keyed on catalog like `unique_album_disk` so a disk left behind by a move goes too
-            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND CONCAT(`album_disk`.`album_id`, '_', `album_disk`.`disk`, '_', `album_disk`.`catalog`) NOT IN (SELECT CONCAT(`album`, '_', `disk`, '_', `catalog`) AS `id` FROM `song`);");
+            $result = $this->connection->query("SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`catalog` = `album_disk`.`catalog`);");
             while ($albumDiskId = $result->fetchColumn()) {
                 $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId], true);
             }
@@ -123,6 +137,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         $this->connection->query("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN ($idList);");
         $this->connection->query("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN ($idList);");
+
+        $this->forgetCachedArtists(array_values(array_map(intval(...), $albumIds)));
     }
 
     /**
@@ -147,6 +163,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
                 );
             }
         }
+
+        $this->forgetCachedArtists();
     }
 
     /**
@@ -156,6 +174,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function create(array $properties, int $additionTime): int
     {
+        // a field dropped from `album_grouping_fields` isn't stored at all, rather than fixing the new album to
+        // whichever song happened to create it - `name`/`year` are excluded from this since neither column is
+        // nullable, and the scanned value they'd still get is a better default than a placeholder like 0
+        foreach (array_diff(self::IDENTITY_COLUMNS, ['name', 'year'], $this->getIdentityColumns()) as $droppedColumn) {
+            $properties[$droppedColumn] = null;
+        }
+
         try {
             $this->connection->query(
                 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -207,6 +232,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ["DELETE FROM `artist_map` WHERE `object_id` = ? AND `object_type` = 'album'", [$albumId]],
         ];
 
+        $this->forgetCachedArtists([$albumId]);
+
         // a map that cannot be cleaned is not worth abandoning the rest of the sweep over
         foreach ($statements as $statement) {
             try {
@@ -227,31 +254,48 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function findByProperties(array $properties): ?int
     {
-        $sql = "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? ";
+        $clauses = [];
+        $params  = [];
 
-        $params = [
-            $properties['name'],
-            $properties['name'],
-            $properties['year'],
-        ];
+        foreach ($this->getIdentityColumns() as $column) {
+            if ($column === 'name') {
+                $clauses[] = "(`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
+                $params[]  = $properties['name'];
+                $params[]  = $properties['name'];
 
-        foreach (self::IDENTITY_COLUMNS as $column) {
+                continue;
+            }
+
+            if ($column === 'year') {
+                $clauses[] = '`album`.`year` = ?';
+                $params[]  = $properties['year'];
+
+                continue;
+            }
+
             if ($properties[$column]) {
-                $sql .= sprintf('AND `album`.`%s` = ? ', $column);
-                $params[] = $properties[$column];
+                $clauses[] = sprintf('`album`.`%s` = ?', $column);
+                $params[]  = $properties[$column];
             } else {
-                $sql .= sprintf('AND `album`.`%s` IS NULL ', $column);
+                $clauses[] = sprintf('`album`.`%s` IS NULL', $column);
             }
         }
 
-        $sql .= 'AND `album`.`catalog` = ?;';
-        $params[] = $properties['catalog'];
+        $clauses[] = '`album`.`catalog` = ?';
+        $params[]  = $properties['catalog'];
+
+        $sql = 'SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE ' . implode(' AND ', $clauses) . ';';
 
         $albumId = $this->connection->fetchOne($sql, $params);
+        if ($albumId === false) {
+            return null;
+        }
 
-        return ($albumId === false)
-            ? null
-            : (int) $albumId;
+        $albumId = (int) $albumId;
+
+        $this->logDroppedFieldDrift($albumId);
+
+        return $albumId;
     }
 
     /**
@@ -412,9 +456,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
                 // We assume undefined release type is album
                 $rtype = (string) ($row['release_type'] ?? 'album');
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = [];
-                }
+                $results[$rtype] ??= [];
 
                 $results[$rtype][] = (int) $row['id'];
 
@@ -486,6 +528,50 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
+     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
+     * Unset/empty config keeps the default behavior and matches all columns
+     *
+     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
+     * matches it separately regardless of what's returned here
+     *
+     * @return list<string>
+     */
+    public function getIdentityColumns(): array
+    {
+        $configured = AmpConfig::get(ConfigurationKeyEnum::ALBUM_GROUPING_FIELDS);
+        if (!is_string($configured) || trim($configured) === '') {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        $requested = array_map(trim(...), explode(',', $configured));
+
+        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
+    }
+
+    /**
+     * The album ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array
+    {
+        if ($artistIds === []) {
+            return [];
+        }
+
+        $userId = Core::get_global('user')?->getId();
+        $sql    = sprintf(
+            'SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` IN (%s) AND `album`.`catalog` IN (%s)',
+            implode(',', array_map(intval(...), $artistIds)),
+            implode(',', Catalog::get_catalogs('', $userId, true))
+        );
+
+        return array_values(array_map(intval(...), $this->connection->query($sql)->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
+    /**
      * Reads the albums of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>
@@ -516,10 +602,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         $sql = ($catalogIds !== null && $catalogIds !== [])
             ? sprintf(
-                'SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) ',
+                'SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (%s) AND `album`.`enabled` = 1 ',
                 implode(',', array_map(intval(...), $catalogIds))
             )
-            : 'SELECT `album`.`id` FROM `album` ';
+            : 'SELECT `album`.`id` FROM `album` WHERE `album`.`enabled` = 1 ';
 
         $result = $this->connection->query(
             $sql . 'GROUP BY `album`.`id` ORDER BY `album`.`name` ' . $this->limitClause($size, $offset)
@@ -543,11 +629,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     {
         if ($catalogIds !== null && $catalogIds !== []) {
             $sql = sprintf(
-                'SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
+                'SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (%s) AND `album`.`enabled` = 1 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ',
                 implode(',', array_map(intval(...), $catalogIds))
             );
         } else {
-            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ';
+            $sql = 'SELECT `album`.`id` FROM `album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`enabled` = 1 GROUP BY `album`.`id`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ';
         }
 
         $result = $this->connection->query(
@@ -603,12 +689,51 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
+     * The objects mapped onto a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, list<int>>
+     */
+    public function getMappedObjectIdsBulk(array $albumIds, string $objectType): array
+    {
+        if ($albumIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT `album_id`, `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` IN (%s)',
+                implode(',', array_fill(0, count($albumIds), '?'))
+            ),
+            array_merge([$objectType], $albumIds)
+        );
+
+        $mapped = array_fill_keys($albumIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $mapped[(int) $row['album_id']][] = (int) $row['object_id'];
+        }
+
+        return $mapped;
+    }
+
+    /**
      * Get item prefix, basename and name by the album id
      *
      * @return array{prefix: string, basename: string, name: string}
      */
     public function getNames(int $albumId): array
     {
+        if (database_object::is_cached('album', $albumId)) {
+            $row      = database_object::get_from_cache('album', $albumId);
+            $basename = (string) ($row['name'] ?? '');
+
+            return [
+                'prefix' => $row['prefix'] ?? null,
+                'basename' => $basename,
+                'name' => ltrim((($row['prefix'] ?? '')) . ' ' . $basename),
+            ];
+        }
+
         /** @var false|array{prefix: string, basename: string, name: string} $result */
         $result = $this->connection->fetchRow(
             "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?",
@@ -827,7 +952,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         int $albumId,
     ): array {
         $userId     = Core::get_global('user')?->getId();
-        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
+        // every caller is an output layer for a device protocol, which has no level to exempt anyone with
+        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`enabled` = 1 AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $dbResults  = $this->connection->query($sql, [$albumId]);
 
         $results = [];
@@ -920,6 +1046,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             'DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;',
             [$albumId, $objectType, $objectId]
         );
+
+        $this->forgetCachedArtists([$albumId]);
     }
 
     /**
@@ -958,6 +1086,21 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return true;
     }
 
+    public function setSongsEnabled(int $albumId, bool $enabled): void
+    {
+        $this->connection->query(
+            'UPDATE `song` SET `enabled` = ? WHERE `album` = ?',
+            [($enabled) ? 1 : 0, $albumId]
+        );
+
+        // the stored count is what every page reads, so it is brought back in the same breath rather than
+        // left announcing tracks nobody can play until the next maintenance sweep
+        $this->connection->query(
+            "UPDATE `album` SET `song_count` = (SELECT COUNT(`song`.`id`) FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = `album`.`id` AND `catalog`.`enabled` = '1' AND `song`.`enabled` = 1) WHERE `album`.`id` = ?",
+            [$albumId]
+        );
+    }
+
     /**
      * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed
      */
@@ -970,7 +1113,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;",
             "UPDATE `album`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'album' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;",
             "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'album' AND `count_type` = 'stream')) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;",
-            "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;",
+            "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`enabled` = 1 GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;",
             "UPDATE `album` SET `album`.`artist_count` = 0 WHERE `album_artist` IS NULL;",
             "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id` AND `album`.`album_artist` IS NOT NULL;",
             "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`song_artist_count` = `album_map`.`artist_count` WHERE `album`.`song_artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id`;",
@@ -978,7 +1121,11 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             "UPDATE `album`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `album_disk` SET `album`.`disk_count` = `album_disk`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;",
             "UPDATE `album_disk`, (SELECT `disk_count`, `id` FROM `album`) AS `album` SET `album_disk`.`disk_count` = `album`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;",
             "UPDATE `album_disk`, (SELECT SUM(`time`) AS `time`, `album`, `disk` FROM `song` GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`time` = `song`.`time` WHERE (`album_disk`.`time` != `song`.`time` OR `album_disk`.`time` IS NULL) AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;",
-            "UPDATE `album_disk`, (SELECT COUNT(DISTINCT `id`) AS `song_count`, `album`, `disk` FROM `song` GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`song_count` = `song`.`song_count` WHERE `album_disk`.`song_count` != `song`.`song_count` AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;",
+            "UPDATE `album_disk`, (SELECT COUNT(DISTINCT `id`) AS `song_count`, `album`, `disk` FROM `song` WHERE `song`.`enabled` = 1 GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`song_count` = `song`.`song_count` WHERE `album_disk`.`song_count` != `song`.`song_count` AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;",
+            // an album whose last playable song was disabled drops out of the join above, so the stale count
+            // it kept would go on advertising songs nobody can reach
+            "UPDATE `album` SET `song_count` = 0 WHERE `song_count` > 0 AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album`.`id` AND `song`.`enabled` = 1);",
+            "UPDATE `album_disk` SET `song_count` = 0 WHERE `song_count` > 0 AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`enabled` = 1);",
             "UPDATE `album_disk`, (SELECT SUM(`song`.`total_count`) AS `total_count`, `album_disk`.`id` AS `object_id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` GROUP BY `album_disk`.`id`) AS `object_count` SET `album_disk`.`total_count` = `object_count`.`total_count` WHERE `album_disk`.`total_count` != `object_count`.`total_count` AND `album_disk`.`id` = `object_count`.`object_id`;",
         ];
 
@@ -1016,19 +1163,44 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ["UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;", [$albumId]],
             ["UPDATE `album`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'album' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;", [$albumId, $albumId]],
             ["UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` = ? AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'album' AND `count_type` = 'stream')) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;", [$albumId, $albumId, $albumId]],
-            ["UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `album` = ? GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;", [$albumId]],
+            ["UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' AND `song`.`enabled` = 1 AND `album` = ? GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;", [$albumId]],
             ["UPDATE `album` SET `album`.`artist_count` = 0 WHERE `album`.`id` = ? AND `album_artist` IS NULL;", [$albumId]],
             ["UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' AND `album`.`id` = ? GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id` AND `album`.`album_artist` IS NOT NULL;", [$albumId]],
             ["UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' AND `album`.`id` = ? GROUP BY `album_id`) AS `album_map` SET `album`.`song_artist_count` = `album_map`.`artist_count` WHERE `album`.`song_artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id`;", [$albumId]],
             ["UPDATE `album`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` WHERE `album_disk`.`album_id` = ? GROUP BY `album_disk`.`album_id`) AS `album_disk` SET `album`.`disk_count` = `album_disk`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;", [$albumId]],
             ["UPDATE `album_disk`, (SELECT `album`.`disk_count`, `id` FROM `album` WHERE `album`.`id` = ?) AS `album` SET `album_disk`.`disk_count` = `album`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;", [$albumId]],
             ["UPDATE `album_disk`, (SELECT SUM(`time`) AS `time`, `album`, `disk` FROM `song` WHERE `song`.`album` = ? GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`time` = `song`.`time` WHERE (`album_disk`.`time` != `song`.`time` OR `album_disk`.`time` IS NULL) AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;", [$albumId]],
-            ["UPDATE `album_disk`, (SELECT COUNT(DISTINCT `id`) AS `song_count`, `album`, `disk` FROM `song` WHERE `song`.`album` = ? GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`song_count` = `song`.`song_count` WHERE `album_disk`.`song_count` != `song`.`song_count` AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;", [$albumId]],
+            ["UPDATE `album_disk`, (SELECT COUNT(DISTINCT `id`) AS `song_count`, `album`, `disk` FROM `song` WHERE `song`.`enabled` = 1 AND `song`.`album` = ? GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`song_count` = `song`.`song_count` WHERE `album_disk`.`song_count` != `song`.`song_count` AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;", [$albumId]],
+            // an album whose last playable song was disabled drops out of the join above, so the stale count
+            // it kept would go on advertising songs nobody can reach
+            ["UPDATE `album` SET `song_count` = 0 WHERE `id` = ? AND `song_count` > 0 AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album`.`id` AND `song`.`enabled` = 1);", [$albumId]],
+            ["UPDATE `album_disk` SET `song_count` = 0 WHERE `album_id` = ? AND `song_count` > 0 AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`enabled` = 1);", [$albumId]],
             ["UPDATE `album_disk`, (SELECT SUM(`song`.`total_count`) AS `total_count`, `album_disk`.`id` AS `object_id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `song`.`album` = ? GROUP BY `album_disk`.`id`) AS `object_count` SET `album_disk`.`total_count` = `object_count`.`total_count` WHERE `album_disk`.`total_count` != `object_count`.`total_count` AND `album_disk`.`id` = `object_count`.`object_id`;", [$albumId]],
         ];
 
         foreach ($statements as [$sql, $params]) {
             $this->runMaintenance($sql, $params);
+        }
+    }
+
+    /**
+     * Drops an album's cached artist list after its maps changed.
+     *
+     * `Album::build_cache()` fills this for a whole page and `get_parent_ids()` prefers it over a read, so a write
+     * that leaves it in place has every later read in the same request answering with the artists from before it.
+     *
+     * @param list<int>|null $albumIds Null forgets every album, for the sweeps that cannot name the rows they touched
+     */
+    private function forgetCachedArtists(?array $albumIds = null): void
+    {
+        if ($albumIds === null) {
+            Album::remove_from_cache('album_artists');
+
+            return;
+        }
+
+        foreach ($albumIds as $albumId) {
+            Album::remove_from_cache('album_artists', $albumId);
         }
     }
 
@@ -1049,6 +1221,27 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return ($offset > 0)
             ? sprintf('LIMIT %d, 18446744073709551615', $offset)
             : '';
+    }
+
+    /**
+     * Warns once per match that `album_grouping_fields` dropped some columns.
+     * We will never store a value for a dropped column and this log line is the only notification that grouping is narrowed.
+     */
+    private function logDroppedFieldDrift(int $albumId): void
+    {
+        $dropped = array_diff(self::IDENTITY_COLUMNS, $this->getIdentityColumns());
+        if ($dropped === []) {
+            return;
+        }
+
+        $this->logger->warning(
+            sprintf(
+                'album %d: matched with `album_grouping_fields` narrowed (dropped: %s) - not recommended, dropped fields are never stored on the album',
+                $albumId,
+                implode(', ', $dropped)
+            ),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
     }
 
     /**

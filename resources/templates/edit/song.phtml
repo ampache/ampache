@@ -127,6 +127,17 @@ $ownerId = $this->getOwnerId(); ?>
                 <?php // Mood::get_display() escapes the names itself and adds no markup without a link?>
                 <td><input type="text" name="edit_moods" id="edit_moods" value="<?php echo $this->raw($this->getMoods()); ?>" /></td>
             </tr>
+            <?php if ($this->mayDisable()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('State'); ?></td>
+                <td>
+                    <select name="enabled">
+                        <option value="1"<?php echo ($this->isEnabled()) ? ' selected="selected"' : ''; ?>><?php echo T_('Enabled'); ?></option>
+                        <option value="0"<?php echo ($this->isEnabled()) ? '' : ' selected="selected"'; ?>><?php echo T_('Disabled'); ?></option>
+                    </select>
+                </td>
+            </tr>
+            <?php } ?>
             <?php if ($this->showLicense()) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>

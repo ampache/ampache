@@ -48,6 +48,15 @@ interface PodcastRepositoryInterface
     public function findAll(): Traversable;
 
     /**
+     * Every podcast living in one of the given catalogs
+     *
+     * @param list<int> $catalogIds
+     *
+     * @return Traversable<Podcast>
+     */
+    public function findAllByCatalogs(array $catalogIds): Traversable;
+
+    /**
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(string $feedUrl): ?Podcast;

@@ -365,6 +365,11 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
             : ((property_exists($this->object, 'song_count')) ? $this->object->song_count : null);
     }
 
+    public function getTime(): string
+    {
+        return $this->object->get_f_time();
+    }
+
     public function getUserFlags(): string
     {
         return Userflag::show($this->object->getId(), $this->object_type);

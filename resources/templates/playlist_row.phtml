@@ -67,6 +67,7 @@ $playlistId = $playlist->getId(); ?>
     <td class="cel_type"><?php echo ($playlist->isPrivate())
         ? $this->raw(Ui::get_material_symbol('lock', T_('Private')))
         : ''; ?></td>
+    <td class="cel_time"><?php echo $this->e($playlist->getPlayDuration()); ?></td>
     <td class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
 <?php if ($this->isUsingRatings()) { ?>
     <td class="cel_ratings">

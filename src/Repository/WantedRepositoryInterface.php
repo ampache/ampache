@@ -44,13 +44,13 @@ use Ampache\Repository\Model\Wanted;
 interface WantedRepositoryInterface
 {
     /**
-     * This cleans out unused wanted items
-     */
-    /**
      * Marks a wanted item as accepted
      */
     public function accept(string $musicbrainzId): void;
 
+    /**
+     * This cleans out unused wanted items
+     */
     public function collectGarbage(): void;
 
     /**

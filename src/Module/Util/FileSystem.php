@@ -50,10 +50,12 @@ class FileSystem
      * @return array{id: string}
      * @throws Exception
      */
-    public function copy(string $fs_id, string $par): array
+    public function copy(string $fs_id, string $par, User $user): array
     {
         $dir = $this->path($fs_id);
+        $this->check($dir, $user);
         $par = $this->path($par);
+        $this->check($par, $user);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
@@ -64,7 +66,7 @@ class FileSystem
         if (is_dir($dir)) {
             mkdir($new, 0775);
             foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
-                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
+                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new), $user);
             }
         }
 
@@ -83,7 +85,7 @@ class FileSystem
     {
         $dir = $this->path($fs_id);
         debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
-        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
+        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name) || preg_match('/^\.+$/', $name)) {
             throw new Exception('Invalid name: ' . $name);
         }
 
@@ -180,11 +182,9 @@ class FileSystem
         }
 
         usort($res, fn($a, $b) => strcasecmp((string) $a['title'], (string) $b['title']));
-        if (
-            $with_root
-            && $this->id($dir) === '/'
-        ) {
-            $res = [
+        if ($with_root
+        && $this->id($dir) === '/') {
+            return [
                 [
                     'title' => basename((string) $this->base),
                     'children' => $res,
@@ -207,6 +207,7 @@ class FileSystem
         $dir = $this->path($fs_id);
         $this->check($dir, $user);
         $par = $this->path($par);
+        $this->check($par, $user);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
@@ -269,7 +270,7 @@ class FileSystem
             throw new Exception('Cannot rename root');
         }
 
-        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
+        if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name) || preg_match('/^\.+$/', $name)) {
             throw new Exception('Invalid name: ' . $name);
         }
 
@@ -294,15 +295,14 @@ class FileSystem
     {
         if (is_dir($dir)) {
             foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
-                $this->check($this->id($dir . DIRECTORY_SEPARATOR . $file), $user);
+                $this->check($dir . DIRECTORY_SEPARATOR . $file, $user);
             }
         }
 
         if (is_file($dir)) {
+            // only a catalogued song carries ownership; art and not-yet-scanned files are no one's to guard
             $object_id = Catalog::get_id_from_file($dir, 'song');
-            $song      = new Song($object_id);
-
-            if ($user->getId() !== $song->get_user_owner()) {
+            if ($object_id > 0 && new Song($object_id)->get_user_owner() !== $user->getId()) {
                 throw new Exception('You do not have permission to manage this folder');
             }
         }
@@ -346,7 +346,11 @@ class FileSystem
             throw new Exception('Path does not exist');
         }
 
-        if (!in_array($this->base, [null, '', '0'], true) && !str_starts_with($temp, $this->base)) {
+        if (
+            !in_array($this->base, [null, '', '0'], true)
+            && $temp !== $this->base
+            && !str_starts_with($temp, $this->base . DIRECTORY_SEPARATOR)
+        ) {
             throw new Exception('Path is not inside base');
         }
 

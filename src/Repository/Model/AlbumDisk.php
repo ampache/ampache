@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Statistics\Rating;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -38,6 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumDisk extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
@@ -178,6 +180,35 @@ class AlbumDisk extends database_object implements
         // warm parent albums so the constructor's new Album() hits cache
         if ($album_ids !== []) {
             Album::build_cache(array_values($album_ids));
+        }
+
+        // the rating widget on every row reads the average: one bulk read instead of one query per row
+        if (AmpConfig::get('ratings')) {
+            Rating::build_cache('album_disk', $ids);
+        }
+
+        return true;
+    }
+
+    /**
+     * Caches every disk of a set of albums in one read, and the disk list each album answers getDisks() with
+     *
+     * @param array<int|string> $albumIds
+     */
+    public static function build_cache_by_albums(array $albumIds): bool
+    {
+        if ($albumIds === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        $diskIds = array_fill_keys($albumIds, []);
+        foreach (self::getAlbumDiskRepository()->getRowsByAlbums($albumIds) as $row) {
+            parent::add_to_cache('album_disk', (int) $row['id'], $row);
+            $diskIds[(int) $row['album_id']][] = (int) $row['id'];
+        }
+
+        foreach ($diskIds as $albumId => $rowIds) {
+            parent::add_to_cache('album_disk_ids', $albumId, $rowIds);
         }
 
         return true;
@@ -324,7 +355,11 @@ class AlbumDisk extends database_object implements
      */
     public function get_f_time(): string
     {
-        return '';
+        $time = (int) $this->time;
+        $min  = sprintf("%02d", (floor($time / 60) % 60));
+        $sec  = sprintf("%02d", ($time % 60));
+
+        return ltrim(floor($time / 3600) . ':' . $min . ':' . $sec, '0:');
     }
 
     /**
@@ -564,9 +599,22 @@ class AlbumDisk extends database_object implements
         return $this->has_art;
     }
 
+    /**
+     * A disk is never withdrawn on its own; it reads the flag of the album it belongs to.
+     */
+    public function isEnabled(): bool
+    {
+        return $this->album->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->album->isVisible($user);
     }
 
     /**

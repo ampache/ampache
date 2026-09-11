@@ -83,7 +83,7 @@ if ($this->isShowRatings()) { ?>
         <td class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $itemId; ?>_artist">
-                    <?php echo $this->raw(Rating::show($itemId, 'artist')); ?>
+                    <?php echo $this->raw(Rating::show($itemId, 'artist', true)); ?>
                 </span>
                 <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_artist">
                     <?php echo $this->raw(Userflag::show($itemId, 'artist')); ?>
@@ -92,7 +92,10 @@ if ($this->isShowRatings()) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-<?php if ($this->canPostShout()) { ?>
+<?php if ($this->isDisabled()) {
+    echo $this->raw(Ui::get_material_symbol('unpublished', T_('Disabled')));
+}
+if ($this->canPostShout()) { ?>
     <a href="<?php echo $this->e($this->getWebPath()); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $itemId; ?>">
         <?php echo $this->raw(Ui::get_material_symbol('comment', T_('Post Shout'))); ?>
     </a>

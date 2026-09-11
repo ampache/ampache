@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -45,6 +46,7 @@ final class SelectArtAction extends AbstractArtAction
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly UiInterface $ui,
+        private readonly DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,10 +60,7 @@ final class SelectArtAction extends AbstractArtAction
             throw new AccessDeniedException();
         }
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
+        $burl = $this->deletionUrlResolver->resolveBurl(Core::get_get('burl'));
 
         if ($image_id === null || !isset($_SESSION['form']['images'][$image_id])) {
             $this->ui->showHeader();

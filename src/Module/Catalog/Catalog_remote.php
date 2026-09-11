@@ -33,6 +33,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -71,6 +72,7 @@ class Catalog_remote extends Catalog
     public string $password;
     public string $uri = '';
     public string $username;
+    private int $count                 = 0;
     private string $description        = 'Ampache Remote Catalog';
     private ?AmpacheApi $remote_handle = null;
 
@@ -129,6 +131,14 @@ class Catalog_remote extends Catalog
             return false;
         }
 
+        // refuses a uri naming the loopback interface, a private network or another address the server must not
+        // be made to request on an administrator's behalf; the same check runs again before every connection
+        if (!self::getUrlValidator()->isPublicHttpUrl($uri)) {
+            AmpError::add('general', T_('Remote Catalog type was selected, but the address is not reachable from this server'));
+
+            return false;
+        }
+
         if (!strlen($username) || !strlen($password)) {
             AmpError::add('general', T_('No username or password was specified'));
 
@@ -152,6 +162,16 @@ class Catalog_remote extends Catalog
             ['uri' => $uri, 'username' => $username, 'password' => $password],
             $catalog_id
         );
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUrlValidator(): UrlValidatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UrlValidatorInterface::class);
     }
 
     /**
@@ -404,7 +424,36 @@ class Catalog_remote extends Catalog
         return $dead;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void {}
+    /**
+     * count_scan_folders
+     */
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+        // insert object mapping after scanning new folders
+        $interactor?->info(
+            'remote.catalog: update_folder_map',
+            true
+        );
+        debug_event('remote.catalog', 'update_folder_map', 5);
+        self::getFolderRepository()->update_folder_map();
+
+        // update counts after update has finished
+        $interactor?->info(
+            'remote.catalog: update_folder_counts',
+            true
+        );
+        debug_event('remote.catalog', 'update_folder_counts', 5);
+        self::getFolderRepository()->update_folder_counts();
+
+        if ($this->count > 0) {
+            $interactor?->info(
+                'remote.catalog: collectGarbage',
+                true
+            );
+            debug_event('remote.catalog', 'collectGarbage', 5);
+            self::getFolderRepository()->collectGarbage();
+        }
+    }
 
     /**
      * get_create_help
@@ -474,12 +523,10 @@ class Catalog_remote extends Catalog
 
         $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
 
-        if (
-            $song instanceof SimpleXMLElement
-            && $song->song
-            && ((int) $song->song->attributes()->id) > 0
-        ) {
-            $results = $this->_gather_tags($song->song);
+        if ($song instanceof SimpleXMLElement
+        && $song->song
+        && ((int) $song->song->attributes()->id) > 0) {
+            return $this->_gather_tags($song->song);
         }
 
         return $results;
@@ -589,10 +636,37 @@ class Catalog_remote extends Catalog
 
     /**
      * scan_catalog_folders
+     *
+     * No directory to walk, so this maps the catalog's existing songs to their folders instead
      */
     public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
     {
-        return 0;
+        set_time_limit(0);
+
+        $interactor?->info(
+            'Scan starting on ' . $this->name,
+            true
+        );
+        debug_event('remote.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
+
+        $this->count = self::getFolderRepository()->mapObjectsUnderCatalogRoot(
+            'song',
+            self::getSongRepository()->getFilesByCatalog($this->getId()),
+            (string) $this->name,
+            $this->getId()
+        );
+
+        if (!$skipCounts) {
+            $this->count_scan_folders($interactor);
+        }
+
+        $interactor?->info(
+            sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
+            true
+        );
+        debug_event('remote.catalog', sprintf('Scan finished, %d updated in ', $this->count) . $this->name, 5);
+
+        return $this->count;
     }
 
     /**
@@ -625,6 +699,25 @@ class Catalog_remote extends Catalog
             return;
         }
 
+        // the remote client below has no address policy of its own, so the check that ran at catalog creation
+        // runs again here: the uri's dns answer isn't guaranteed to still be a public address at connect time
+        if (!self::getUrlValidator()->isPublicHttpUrl($this->uri)) {
+            debug_event('remote.catalog', 'Refusing to connect to ' . $this->uri, 1);
+            if (defined('CLI')) {
+                echo T_('Failed to connect to the remote server') . "\n";
+            }
+
+            if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                AmpError::add('general', T_('Failed to connect to the remote server'));
+                echo AmpError::display('general');
+                flush();
+            }
+
+            $this->remote_handle = null;
+
+            return;
+        }
+
         try {
             $this->remote_handle = new AmpacheApi(
                 [
@@ -636,7 +729,8 @@ class Catalog_remote extends Catalog
                     'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
                     // the remote server may be older than this one and ApiHandler only rolls a version up, so 6 is the highest all of them answer
-                    'server_version' => 6
+                    'server_version' => 6,
+                    'url_validator' => static fn(string $url): bool => self::getUrlValidator()->isPublicHttpUrl($url),
                 ]
             );
         } catch (Exception $exception) {
@@ -904,7 +998,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * update_remote_catalog
+     * _update_remote_catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
      */

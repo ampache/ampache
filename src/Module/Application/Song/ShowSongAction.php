@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Song;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
@@ -51,23 +53,55 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
-        $this->ui->showHeader();
-
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
+        $songId   = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $song     = $this->modelFactory->createSong($songId);
+        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
-        if ($song->isNew() || !in_array($song->catalog, $catalogs)) {
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $license = $song->getLicense();
+            PageMeta::set(
+                [
+                    $song->get_parent_fullname(),
+                    $song->get_album_fullname(),
+                    ($song->year > 0) ? $song->year : null,
+                    $song->get_f_tags(),
+                    $song->get_f_time(),
+                    $license?->getName(),
+                ],
+                'music.song',
+                (string) $song->get_fullname(),
+                $webPath . '/song.php?action=show_song&song_id=' . $song->getId(),
+                $webPath . '/image.php?object_id=' . $song->album . '&object_type=album&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MusicRecording',
+                    'name' => (string) $song->get_fullname(),
+                    'url' => $webPath . '/song.php?action=show_song&song_id=' . $song->getId(),
+                    'duration' => PageMeta::duration($song->time),
+                    'byArtist' => ['@type' => 'MusicGroup', 'name' => $song->get_parent_fullname()],
+                    'inAlbum' => ['@type' => 'MusicAlbum', 'name' => $song->get_album_fullname()],
+                    'license' => $license?->getExternalLink(),
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
-                'Requested a song that does not exist',
+                sprintf(
+                    'Refused song %d: %s',
+                    $songId,
+                    ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $this->ui->showBoxTop(
-                scrub_out($song->get_fullname()),
-                'box box_song_details'
-            );
+            $this->ui->showBoxTop('', 'box box_song_details');
 
             echo $this->guiFactory->createSongViewAdapter($gatekeeper, $song)->render();
 

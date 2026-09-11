@@ -30,11 +30,13 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Folder\FolderView;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
@@ -66,17 +68,33 @@ final readonly class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: folder features are not enabled.');
         }
 
-        $this->ui->showHeader();
-
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+        $user      = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $folder_id = (isset($input['folder'])) ? (int) $input['folder'] : -1;
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
             : new Folder(-1);
 
+        // a folder in a catalog you are filtered from is not yours to browse, and the check has to come
+        // before the header so nothing about it reaches the page
+        if ($folder instanceof Folder && $folder->id > 0) {
+            if (!Catalog::has_access($folder->getCatalogId(), $user->getId())) {
+                throw new AccessDeniedException('Access Denied: catalog filter');
+            }
+
+            $webPath = AmpConfig::get_web_path();
+            PageMeta::set(
+                [],
+                'website',
+                (string) $folder->get_fullname(),
+                $webPath . '/folders.php?action=show&folder=' . $folder->getId(),
+                $webPath . '/image.php?object_id=' . $folder->getId() . '&object_type=folder&size=600x600'
+            );
+        }
+
+        $this->ui->showHeader();
         if (!$folder_id && $folder === null) {
             $this->logger->warning(
                 'Requested a folder that does not exist',
@@ -86,7 +104,9 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
-        } elseif ($folder instanceof Folder) {
+        }
+
+        if ($folder instanceof Folder) {
             $browse = $this->browseFactory->create();
             $browse->set_type('folder');
             $browse->set_use_pages(true);
@@ -95,10 +115,8 @@ final readonly class ShowAction implements ApplicationActionInterface
             $browse->add_supplemental_object('folder', $folder);
             $browse->set_sort('name', 'ASC', false);
             $browse->set_filter('int_id', $folder->id);
-
             $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
                 || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-
             echo new FolderView(
                 $folder,
                 $browse,
@@ -110,7 +128,6 @@ final readonly class ShowAction implements ApplicationActionInterface
                 Stream_Playlist::check_autoplay_next(),
                 Stream_Playlist::check_autoplay_append()
             )->render();
-
             $this->ui->showFooter();
 
             return null;

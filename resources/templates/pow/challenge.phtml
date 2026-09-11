@@ -1,0 +1,124 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+// pow/challenge.phtml -- rendered by Ampache\Gui\Pow\PowChallengeView
+
+use Ampache\Gui\Asset\StylesheetsView;
+
+/** @var Ampache\Gui\Pow\PowChallengeView $this */
+?>
+<!DOCTYPE html>
+<html lang="<?php echo $this->e($this->getDocumentLanguage()); ?>">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $this->e($this->getSiteCharset()); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title><?php echo $this->e($this->getTitle()); ?></title>
+    <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render()); ?>
+    <style>
+        /* Self-contained so the page looks right whatever theme is installed. */
+        #powPage {
+            background-color: #000;
+            color: #ddd;
+        }
+
+        #powbox {
+            max-width: 34em;
+            margin: 4vh auto;
+            padding: 0 1em 2em;
+            text-align: center;
+        }
+
+        #pow-canvas {
+            display: block;
+            width: 100%;
+            height: min(60vh, 26em);
+            background-color: #000;
+            pointer-events: none;
+        }
+
+        #powbox .pow-status {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .04em;
+            opacity: .75;
+        }
+
+        #powbox .pow-explain {
+            opacity: .5;
+            font-size: .9em;
+        }
+
+        #powbox .pow-return a {
+            color: #8ecfff;
+        }
+    </style>
+</head>
+
+<body id="powPage">
+    <div id="powbox">
+        <h2><?php echo $this->e(T_('Checking your browser')); ?></h2>
+
+        <!-- The canvas is what turns the wait into something to look at; the check itself runs
+             perfectly well without it, which is why the script treats it as optional. -->
+        <canvas id="pow-canvas"></canvas>
+
+        <!-- Solved by the widget script, which then submits this form and lets the original request
+             resume. A GET form replaces the query string of its action, so the parameters of the
+             interrupted request are carried over as fields.
+
+             The submit targets the iframe below rather than this window: a zip is built in full
+             before its headers are sent, so unloading this document would cancel the request. -->
+        <form id="pow-form" method="get" action="<?php echo $this->e($this->getTargetPath()); ?>"
+              target="pow-sink" data-pow-autosubmit="1"
+              data-pow-return="<?php echo $this->e($this->getReturnUrl()); ?>"
+              data-pow-ack="<?php echo $this->confirmsDelivery() ? $this->e($this->getAckName()) : ''; ?>">
+            <?php foreach ($this->getTargetFields() as $field) { ?>
+                <input type="hidden" name="<?php echo $this->e($field['name']); ?>" value="<?php echo $this->e($field['value']); ?>" />
+            <?php } ?>
+            <?php echo $this->raw($this->renderWidget()); ?>
+            <!-- Filled in by the script just before submitting. The endpoint echoes it back as a
+                 cookie alongside the download headers, which is how the page learns the transfer has
+                 actually begun rather than guessing on a timer. The field's name carries the
+                 session-scoped ack name so the query param the server reads back matches; the id
+                 stays fixed since only the script looks it up. -->
+            <input type="hidden" name="<?php echo $this->e($this->getAckName()); ?>" id="pow_ack" value="" />
+        </form>
+
+        <?php // Nothing starts on its own without a script, so the promise is withdrawn rather than left standing.?>
+        <noscript><style>#pow-autostart { display: none; }</style></noscript>
+        <p id="pow-autostart" class="pow-explain"><?php echo $this->e(T_('This link is rate limited. Your download will start on its own.')); ?></p>
+
+        <!-- Revealed once the download is under way. A large archive can take a while to build, so
+             the visitor gets a way back straight away rather than waiting on the timer. -->
+        <p id="pow-return" class="pow-return" hidden>
+            <a href="<?php echo $this->e($this->getReturnUrl()); ?>"><?php echo $this->e(T_('Return to the previous page')); ?></a>
+        </p>
+    </div>
+
+    <!-- Receives the replayed request so this document stays loaded while the download starts. -->
+    <iframe id="pow-sink" name="pow-sink" title="<?php echo $this->e(T_('Download')); ?>" hidden></iframe>
+</body>
+
+</html>

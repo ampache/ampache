@@ -174,6 +174,11 @@ final class AlbumEditFormRenderer extends AbstractEditFormRenderer
         return $this->getItem() instanceof AlbumDisk;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->getItem()->isEnabled();
+    }
+
     public function mayEditMbid(): bool
     {
         $user = Core::get_global('user');

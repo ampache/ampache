@@ -55,6 +55,7 @@ final class SongListPanelView extends AbstractView
         private readonly bool $hideMoods,
         private readonly bool $albumGroup,
         private readonly bool $showLicense,
+        private readonly bool $showComposer,
         private readonly bool $showPlayedTimes,
         private readonly bool $showSkippedTimes,
         private readonly bool $maySeeDisabled,
@@ -81,6 +82,10 @@ final class SongListPanelView extends AbstractView
 
         if (!$this->isColumnHidden('cel_artist')) {
             $columns[] = ['class' => 'cel_artist optional', 'label' => T_('Song Artist')];
+        }
+
+        if ($this->showComposer) {
+            $columns[] = ['class' => 'cel_composer optional', 'label' => T_('Composer')];
         }
 
         if (!$this->isColumnHidden('cel_album')) {
@@ -167,6 +172,7 @@ final class SongListPanelView extends AbstractView
             $this->albumGroup,
             false,
             $this->showLicense,
+            $this->showComposer,
             $this->hideGenres,
             $this->hideMoods,
             $this->isColumnHidden('cel_artist'),

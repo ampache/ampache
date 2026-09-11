@@ -35,19 +35,8 @@ use Ampache\Module\Util\Ui;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo $this->e($this->getShareTitle() . ' - ' . $this->getSiteTitle()); ?></title>
-<?php if (!$this->isEmbed()) { ?>
-<meta property="og:type" content="music.song" />
-<meta property="og:title" content="<?php echo $this->e($this->getShareTitle()); ?>" />
-<meta property="og:image" content="<?php echo $this->e($this->getArtUrl()); ?>" />
-<meta property="og:description" content="<?php echo $this->e($this->getSharedByText()); ?>" />
-<meta property="og:url" content="<?php echo $this->e($this->getPublicUrl()); ?>" />
-<meta property="og:site_name" content="<?php echo $this->e($this->getSiteTitle()); ?>" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="<?php echo $this->e($this->getShareTitle()); ?>" />
-<meta name="twitter:description" content="<?php echo $this->e($this->getSharedByText()); ?>" />
-<meta name="twitter:image" content="<?php echo $this->e($this->getArtUrl()); ?>" />
-<?php }
-// Load the player CSS/JS into the head; the player itself is rendered as a fragment below.
+<?php
+// the head's CSS/JS and its branding and link-preview tags; the player itself is a fragment below
 echo $this->raw($this->renderPlayerHeaders()); ?>
 <style>
     body {

@@ -216,7 +216,7 @@ class UPnPPlayer
     }
 
     /**
-     * add
+     * PlayListAdd
      * append a song to the playlist
      * $name Name to be shown in the playlist
      * $link URL of the song
@@ -239,7 +239,7 @@ class UPnPPlayer
     }
 
     /**
-     * delete_pos
+     * PlaylistRemove
      * This deletes a specific track
      */
     public function PlaylistRemove(int $track): bool
@@ -250,7 +250,7 @@ class UPnPPlayer
     }
 
     /**
-     * play
+     * PlayShuffle
      * play a random song
      */
     public function PlayShuffle(bool $state): bool
@@ -382,9 +382,7 @@ class UPnPPlayer
      */
     private function Device(): UPnPDevice
     {
-        if ($this->_device === null) {
-            $this->_device = new UPnPDevice($this->_description_url);
-        }
+        $this->_device ??= new UPnPDevice($this->_description_url);
 
         return $this->_device;
     }
@@ -394,9 +392,7 @@ class UPnPPlayer
      */
     private function Playlist(): UPnPPlaylist
     {
-        if ($this->_playlist === null) {
-            $this->_playlist = new UPnPPlaylist($this->_description_url);
-        }
+        $this->_playlist ??= new UPnPPlaylist($this->_description_url);
 
         return $this->_playlist;
     }

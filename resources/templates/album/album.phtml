@@ -25,10 +25,9 @@ declare(strict_types=1);
 
 // album/album.phtml -- rendered by Ampache\Gui\Album\AlbumPageView
 
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
-use Ampache\Module\Statistics\Rating;
-use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Share;
@@ -38,32 +37,13 @@ use Ampache\Repository\Model\Share;
 $albumId = $this->getAlbumId();
 $webPath = $this->getWebPath();
 $type    = $this->getObjectType();
-Ui::show_box_top($this->getTitle(), 'info-box'); ?>
-<div class="item_right_info">
-    <?php echo $this->raw($this->getExternalLinks()->render()); ?>
-    <?php echo ($this->showArt()) ? $this->raw($this->getArt()) : ''; ?>
-</div>
-<?php if ($this->showRatings()) { ?>
-<span id="rating_<?php echo $albumId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Rating::show($albumId, $type, true)); ?></span>
-<span id="userflag_<?php echo $albumId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Userflag::show($albumId, $type)); ?></span>
-<?php } ?>
-<?php if ($this->showPlayedTimes()) { ?>
-<br />
-<div style="display:inline;">
-    <?php /* HINT: Number of times an object has been played */
-    echo T_('Played') . ' ' . sprintf(nT_('%d time', '%d times', $this->getPlayedTimes()), $this->getPlayedTimes()); ?>
-</div>
-<?php } ?>
-<?php if ($this->showUploader()) { ?>
-<div class="item_uploaded_by">
-    <?php echo T_('Uploaded by'); ?> <?php echo $this->raw($this->getOwner()?->get_f_link() ?? ''); ?>
-</div>
-<?php } ?>
+Ui::show_box_top('', 'info-box'); ?>
+<div class="object-page">
+<?php echo $this->raw($this->getHeader()->render()); ?>
 <div id="information_actions">
-    <h3><?php echo T_('Actions'); ?></h3>
     <ul>
         <?php if ($this->showDirectPlay()) { ?>
-        <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $albumId, 'play_circle', T_('Play'), 'directplay_full_' . $albumId)); ?></li>
+        <li class="primary"><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $albumId, 'play_circle', T_('Play'), 'directplay_full_' . $albumId)); ?></li>
         <?php if ($this->isAutoplayNext()) { ?>
         <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=' . $type . '&object_id=' . $albumId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_album_' . $albumId)); ?></li>
         <?php } ?>
@@ -82,7 +62,7 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
         </li>
         <?php } ?>
         <?php if ($this->showRss()) { ?>
-        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => $type, 'object_id' => (string) $albumId], $this->getTitle())); ?></li>
+        <li><?php echo $this->raw(Ui::getRssLink(RssFeedTypeEnum::LIBRARY_ITEM, $this->getUser(), T_('RSS Feed'), ['object_type' => $type, 'object_id' => (string) $albumId], $this->getFullname())); ?></li>
         <?php } ?>
         <?php if ($this->showShout()) { ?>
         <li>
@@ -131,7 +111,8 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
         </li>
         <?php } ?>
         <li>
-            <a id="edit_album_<?php echo $albumId; ?>" onclick="showEditDialog('<?php echo $this->e($type); ?>_row', '<?php echo $albumId; ?>', 'edit_album_<?php echo $albumId; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+            <?php // the dialog names its form after the type it renders, and the save serialises that form by id?>
+            <a id="edit_<?php echo $this->e($type); ?>_<?php echo $albumId; ?>" onclick="showEditDialog('<?php echo $this->e($type); ?>_row', '<?php echo $albumId; ?>', 'edit_<?php echo $this->e($type); ?>_<?php echo $albumId; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                 <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>&nbsp;<?php echo T_('Edit Album'); ?>
             </a>
         </li>
@@ -151,7 +132,9 @@ Ui::show_box_top($this->getTitle(), 'info-box'); ?>
             </a>
         </li>
         <?php } ?>
+        <?php echo $this->raw(ObjectHeaderView::actionsHelp()); ?>
     </ul>
+</div>
 </div>
 <?php Ui::show_box_bottom(); ?>
 <div id="additional_information">&nbsp;</div>

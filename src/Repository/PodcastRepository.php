@@ -89,6 +89,32 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
+     * Every podcast living in one of the given catalogs
+     *
+     * @param list<int> $catalogIds
+     *
+     * @return Generator<Podcast>
+     */
+    public function findAllByCatalogs(array $catalogIds): Generator
+    {
+        if ($catalogIds === []) {
+            return;
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT `id` FROM `podcast` WHERE `catalog` IN (%s)',
+                implode(',', array_fill(0, count($catalogIds), '?'))
+            ),
+            $catalogIds
+        );
+
+        while ($podcastId = $result->fetchColumn()) {
+            yield $this->modelFactory->createPodcast((int) $podcastId);
+        }
+    }
+
+    /**
      * Searches for an existing podcast object by the feed url
      */
     public function findByFeedUrl(

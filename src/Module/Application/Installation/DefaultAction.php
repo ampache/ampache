@@ -207,15 +207,23 @@ final class DefaultAction implements ApplicationActionInterface
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                        if ($download_htaccess_rest && $created_config) {
+                            // the rules have already been sent as a file download; rendering the page would append it
+                            return null;
+                        }
                     }
 
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
+                        if ($download_htaccess_play && $created_config) {
+                            return null;
+                        }
                     }
 
                     if ($write || $download || $all) {
                         $created_config = $created_config && $this->installationHelper->install_create_config($download);
-                        if ($download && !$created_config) {
+                        if ($download && $created_config) {
+                            // the file was already streamed as a download; on failure, fall through so the error shows
                             return null;
                         }
                     }
@@ -223,9 +231,7 @@ final class DefaultAction implements ApplicationActionInterface
                 // Intentional break fall-through
             case 'show_create_account':
                 $results = parse_ini_file($configfile);
-                if (!isset($created_config)) {
-                    $created_config = true;
-                }
+                $created_config ??= true;
 
                 /* Make sure we've got a valid config file */
                 if (

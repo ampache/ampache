@@ -54,7 +54,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->showBoxTop(T_('Create license'));
+        $this->ui->showBoxTop(T_('Create License'));
         echo new EditLicenseFormView(
             $this->configContainer->getWebPath('/admin'),
             $this->licenseRepository->prototype()

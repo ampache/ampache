@@ -26,10 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Search\AlbumDiskSearch;
 use Ampache\Module\Database\Search\AlbumSearch;
 use Ampache\Module\Database\Search\ArtistSearch;
@@ -258,7 +260,7 @@ class Search extends playlist_object
                             $this->limit = (int) $value;
                             break;
                         case 'logic_operator':
-                            $this->logic_operator = ($value === null) ? null : (string) $value;
+                            $this->logic_operator = ($value === null) ? null : self::normalizeLogicOperator($value);
                             break;
                         case 'random':
                             $this->random = ($value === null) ? null : (int) $value;
@@ -342,15 +344,39 @@ class Search extends playlist_object
     }
 
     /**
+     * Caches a page of smartlists, their owners and their art in three reads instead of three per list
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(array $ids): bool
+    {
+        if ($ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        global $dic;
+        $owners = [];
+        foreach ($dic->get(SearchRepositoryInterface::class)->getRowsByIds($ids) as $row) {
+            parent::add_to_cache('search', (int) $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
+        }
+
+        User::build_cache(array_values($owners));
+        Art::build_cache($ids, 'search');
+
+        return true;
+    }
+
+    /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
      * @return string[]
      */
     public static function get_search_array(?int $user_id = null): array
     {
-        if ($user_id === null) {
-            $user_id = (int) (Core::get_global('user')?->id);
-        }
+        $user_id ??= (int) (Core::get_global('user')?->id);
 
         $key = 'searcharray';
         if (parent::is_cached($key, $user_id)) {
@@ -388,9 +414,7 @@ class Search extends playlist_object
      */
     public static function get_searches(?int $user_id = null): array
     {
-        if ($user_id === null) {
-            $user_id = (int) (Core::get_global('user')?->id);
-        }
+        $user_id ??= (int) (Core::get_global('user')?->id);
 
         $key = 'searches';
         if (parent::is_cached($key, $user_id)) {
@@ -687,7 +711,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _set_basetypes
+     * get_basetypes
      *
      * Function called during construction to set the different types and rules for search
      * @return array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>>
@@ -819,7 +843,7 @@ class Search extends playlist_object
     }
 
     /**
-     * get_rule_type
+     * get_rule_type_by_name
      *
      * Validate the rule name and return the rule type (text, date, etc)
      *
@@ -844,7 +868,7 @@ class Search extends playlist_object
             'weight_podcast_episode' => 'numeric',
             'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
             'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'has_image',
-            'waveform' => 'boolean',
+            'enabled', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
             'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
@@ -1060,7 +1084,7 @@ class Search extends playlist_object
         $data                 = $this->_filter_request($data);
         $this->rules          = [];
         $user_rules           = [];
-        $this->logic_operator = strtolower($data['operator'] ?? 'and');
+        $this->logic_operator = self::normalizeLogicOperator($data['operator'] ?? 'and');
         // match the numeric rules you send (e.g. rule_1, rule_6000)
         foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
@@ -1457,6 +1481,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
         $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
@@ -1572,6 +1597,7 @@ class Search extends playlist_object
         $t_file_data = T_('File Data');
         $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
@@ -1934,6 +1960,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
         $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
         $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('enabled', T_('Enabled'), 'boolean', $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
                 $this->getLicenseRepository()->getList(false)
@@ -2061,7 +2088,7 @@ class Search extends playlist_object
     }
 
     /**
-     * _get_rule_name
+     * _set_rule_name
      *
      * Validate the rule name
      */

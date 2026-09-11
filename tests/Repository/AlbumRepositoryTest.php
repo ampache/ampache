@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
@@ -43,6 +45,23 @@ class AlbumRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private AlbumRepository $subject;
 
+    /**
+     * `Album::build_cache()` fills the artist list for a whole page and `get_parent_ids()` prefers it over a read,
+     * so a map write that leaves it in place has every later read in the same request answering with stale artists
+     */
+    public function testAddAlbumMapForgetsTheCachedArtistList(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1, 2, 3]);
+        self::assertTrue(Album::is_cached('album_artists', 666));
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->addAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+    }
+
     public function testAddAlbumMapInsertsIgnoringDuplicates(): void
     {
         $this->connection->expects(static::once())
@@ -53,6 +72,21 @@ class AlbumRepositoryTest extends TestCase
             );
 
         $this->subject->addAlbumMap(666, 'album', 42);
+    }
+
+    /**
+     * A song whose album row is gone used to contribute a NULL id through the outer join, and it sorts first.
+     * `while ($albumId = $result->fetchColumn())` reads that as the end of the result, so a single orphaned
+     * song emptied the whole album list -- which is what Subsonic and UPnP browse.
+     */
+    public function testAnOrphanedSongCannotContributeAnAlbumId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album`'))
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->getIdsByCatalogs([1]);
     }
 
     public function testCollectGarbageDeletes(): void
@@ -67,7 +101,7 @@ class AlbumRepositoryTest extends TestCase
                     ["DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`)"],
                     ['DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`)'],
                     ['DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)'],
-                    ["SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND CONCAT(`album_disk`.`album_id`, '_', `album_disk`.`disk`, '_', `album_disk`.`catalog`) NOT IN (SELECT CONCAT(`album`, '_', `disk`, '_', `catalog`) AS `id` FROM `song`);"],
+                    ["SELECT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE NOT (`album`.`catalog` = 0 AND `album_disk`.`catalog` = 0) AND NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = `album_disk`.`album_id` AND `song`.`disk` = `album_disk`.`disk` AND `song`.`catalog` = `album_disk`.`catalog`);"],
                 )
             );
 
@@ -117,6 +151,57 @@ class AlbumRepositoryTest extends TestCase
             ->willThrowException(new QueryFailedException('some-error'));
 
         self::assertSame(0, $this->subject->create($this->createProperties(), 123456));
+    }
+
+    public function testCreateStillWritesTheScannedNameAndYearWhenBothAreDroppedFromGroupingConfig(): void
+    {
+        // name/year aren't nullable, so dropping them from grouping doesn't null them out on create() - the
+        // scanned value they're written with is a better default than a placeholder like 0
+        AmpConfig::set('album_grouping_fields', 'album_artist', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    ['some-album', null, 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+                );
+
+            $this->connection->expects(static::once())
+                ->method('getLastInsertedId')
+                ->willReturn(666);
+
+            self::assertSame(666, $this->subject->create($this->createProperties(), 123456));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testCreateWritesNullForFieldsDroppedFromGroupingConfig(): void
+    {
+        // a column dropped from album_grouping_fields is never stored at all, rather than fixing the new
+        // album to whichever song happened to create it
+        AmpConfig::set('album_grouping_fields', 'name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,catalog_number,version', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(
+                    'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                    ['some-album', 'The', 1999, null, null, null, null, 42, null, null, null, null, 7, 123456]
+                );
+
+            $this->connection->expects(static::once())
+                ->method('getLastInsertedId')
+                ->willReturn(666);
+
+            $properties            = $this->createProperties();
+            $properties['barcode'] = '111';
+
+            self::assertSame(666, $this->subject->create($properties, 123456));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
     }
 
     public function testDeleteDeletes(): void
@@ -169,6 +254,97 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testFindByPropertiesCanDisableNameAndYearMatching(): void
+    {
+        // every column is configurable, including name/year - the admin can choose a value that merges albums
+        // a stricter set would have kept apart, and nothing here stops that
+        AmpConfig::set('album_grouping_fields', 'album_artist', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    'SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE `album`.`album_artist` = ? AND `album`.`catalog` = ?;',
+                    [42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesDoesNotLogWhenNothingIsDropped(): void
+    {
+        $this->connection->method('fetchOne')->willReturn('666');
+
+        $this->logger->expects(static::never())->method('warning');
+
+        self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesFallsBackToAllColumnsWhenConfigIsEmpty(): void
+    {
+        // an empty configured value keeps today's full-field behaviour rather than matching nothing
+        AmpConfig::set('album_grouping_fields', '', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 'The', 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesIgnoresUnknownConfiguredColumns(): void
+    {
+        // config content reaches a SQL identifier, so an unrecognised name must be dropped, not just left unbound
+        AmpConfig::set('album_grouping_fields', 'name, year, album_artist, nonexistent_column', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`album_artist` = ? AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesLogsWhenConfigDropsFields(): void
+    {
+        // dropped fields are never stored, so every narrowed match gets a warning
+        AmpConfig::set('album_grouping_fields', 'name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,catalog_number,version', true);
+
+        try {
+            $this->connection->method('fetchOne')->willReturn('666');
+
+            $this->logger->expects(static::once())
+                ->method('warning')
+                ->with(
+                    'album 666: matched with `album_grouping_fields` narrowed (dropped: barcode) - not recommended, dropped fields are never stored on the album',
+                    [LegacyLogger::CONTEXT_TYPE => AlbumRepository::class]
+                );
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
     public function testFindByPropertiesMatchesUnsetPropertiesAgainstNull(): void
     {
         // an unset property has to be matched as NULL, or a partially tagged release collides with a fully tagged one
@@ -181,6 +357,27 @@ class AlbumRepositoryTest extends TestCase
             ->willReturn('666');
 
         self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesNarrowsIdentityColumnsFromConfig(): void
+    {
+        // a column left out of `album_grouping_fields` is dropped entirely, not matched as NULL either,
+        // so albums differing only there merge into one instead of staying split
+        AmpConfig::set('album_grouping_fields', 'name,year,album_artist,mbid', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`mbid` IS NULL AND `album`.`album_artist` = ? AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
     }
 
     public function testFindByPropertiesReturnsNullWhenNothingMatched(): void
@@ -214,6 +411,20 @@ class AlbumRepositoryTest extends TestCase
             ],
             $this->subject->findEmpty()
         );
+    }
+
+    public function testForgettingOneAlbumLeavesTheOthersCached(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1]);
+        Album::add_to_cache('album_artists', 667, [2]);
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->addAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+        self::assertTrue(Album::is_cached('album_artists', 667));
     }
 
     public function testGetAlbumArtistIdReturnsAlbumArtistId(): void
@@ -359,7 +570,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
+            ->with('SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) AND `album`.`enabled` = 1 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -375,7 +586,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
+            ->with('SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) AND `album`.`enabled` = 1 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -391,7 +602,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `album` GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
+            ->with('SELECT `album`.`id` FROM `album` WHERE `album`.`enabled` = 1 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -399,6 +610,57 @@ class AlbumRepositoryTest extends TestCase
             ->willReturn(false);
 
         self::assertSame([], $this->subject->getIdsByCatalogs(null, 0, 5));
+    }
+
+    public function testGetMappedObjectIdsBulkDoesNothingForNoAlbums(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getMappedObjectIdsBulk([], 'song'));
+    }
+
+    public function testGetMappedObjectIdsBulkKeysTheRowsByAlbumAndKeepsTheEmptyOnes(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `album_id`, `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` IN (?,?)',
+                ['song', 1, 2]
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['album_id' => '2', 'object_id' => '10'],
+            ['album_id' => '2', 'object_id' => '11'],
+            false
+        );
+
+        self::assertSame(
+            [1 => [], 2 => [10, 11]],
+            $this->subject->getMappedObjectIdsBulk([1, 2], 'song')
+        );
+    }
+
+    public function testGetNamesReadsTheCachedRowInsteadOfTheDatabase(): void
+    {
+        Album::add_to_cache('album', 666, ['id' => 666, 'prefix' => null, 'name' => 'Some Album']);
+
+        $this->connection->expects(static::never())
+            ->method('fetchRow');
+
+        self::assertSame(
+            [
+                'prefix' => null,
+                'basename' => 'Some Album',
+                'name' => 'Some Album',
+            ],
+            $this->subject->getNames(666)
+        );
+
+        Album::clear_cache();
     }
 
     public function testGetNamesReturnsArrayWithDefaultsIfEmpty(): void
@@ -518,6 +780,18 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->removeAlbumMap(666, 'song', 42);
     }
 
+    public function testRemoveAlbumMapForgetsTheCachedArtistList(): void
+    {
+        Album::add_to_cache('album_artists', 666, [1, 2, 3]);
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->subject->removeAlbumMap(666, 'album', 42);
+
+        self::assertFalse(Album::is_cached('album_artists', 666));
+    }
+
     public function testRemoveUnusedAlbumMapKeepsTheRowWhileTheArtistMapBacksIt(): void
     {
         $this->connection->expects(static::once())
@@ -581,10 +855,40 @@ class AlbumRepositoryTest extends TestCase
         self::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
     }
 
+    public function testSetSongsEnabledCarriesTheAlbumStateDownToEverySong(): void
+    {
+        $bound = [];
+
+        $counts = 0;
+
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound, &$counts): PDOStatement {
+                if (str_contains($sql, '`song_count`')) {
+                    // the stored count is brought back in the same breath, or the album keeps announcing
+                    // tracks nobody can play until the next maintenance sweep
+                    self::assertSame([666], $params);
+                    $counts++;
+                } else {
+                    self::assertStringContainsString('UPDATE `song` SET `enabled` = ? WHERE `album` = ?', $sql);
+                    $bound[] = $params;
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->setSongsEnabled(666, false);
+        $this->subject->setSongsEnabled(666, true);
+
+        // the tell that the cascade runs both ways: the same statement carries 0 and then 1
+        self::assertSame([[0, 666], [1, 666]], $bound);
+        self::assertSame(2, $counts);
+    }
+
     public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
     {
         // a maintenance statement that dies must not take the rest of the sweep with it, as `Dba::write()` did not
-        $this->connection->expects(static::exactly(14))
+        $this->connection->expects(static::exactly(16))
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
@@ -632,7 +936,7 @@ class AlbumRepositoryTest extends TestCase
     {
         $bound = [];
 
-        $this->connection->expects(static::exactly(13))
+        $this->connection->expects(static::exactly(15))
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;
@@ -656,6 +960,9 @@ class AlbumRepositoryTest extends TestCase
             $this->connection,
             $this->logger,
         );
+
+        // the object cache is a process-wide static, so a leftover entry would leak between tests
+        Album::clear_cache();
     }
 
     /**

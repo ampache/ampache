@@ -1,5 +1,66 @@
 # API CHANGELOG
 
+## API 8.1.0
+
+### Added (810000)
+
+* `playlists`, `user_playlists`
+  * New `last_duration` sort, the playlist's total duration as of when it was last counted
+* `catalog_action` (ALL)
+  * New `scan_catalog_folders` task
+* REST
+  * `catalogs/{catalog_id}/scan` as an alias of `catalog_action` with `task=scan_catalog_folders`
+* `folders` (API8)
+  * New `time` field on the browsed folder, the summed duration of everything below it, subfolders included
+  * New `time` field on each item in the folder's contents, from the underlying object's own row; `null` for an object type that carries no duration
+* `player` (API6, API8)
+  * Resuming a track already recorded as the caller's last play now shifts that play's history back to when it actually started (now - position), matching the existing Subsonic `saveplayqueue` behaviour
+
+### Fixed (810000)
+
+* `timeline`, `friends_timeline` (ALL)
+  * Listed activity against songs, videos, albums and other catalog-scoped objects the caller's own catalog filter excludes; those entries are now omitted from the result, the same way the Now Playing widget already hides them
+* `friends_timeline` (API3, API4)
+  * Returned the caller's own activity instead of the activity of the users they follow, calling `getActivities()` instead of `getFriendsActivities()`
+* ALL
+  * `handshake`: A disabled user account could still complete the handshake and receive a valid session
+  * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honoured it
+  * `stats`: The `user_id`/`username` override handed back another user's `streamtoken` embedded in each item's play url; the response now carries the caller's own token
+  * `rate`: An out-of-range value (e.g. `127`) was stored as-is instead of being clamped to 0-5, and repeatedly rating `0` could drain an object's popularity weight below `0`
+  * Setting `api_force_version` reopened an API version the admin had disabled, bypassing the `api_enable_3`..`api_enable_8` check
+* `flag` (API4, API5, API6, API8)
+  * A future `date` parameter pinned a favourite to the top of every newest list until real time caught up
+* API3
+  * `playlist`, `playlist_songs`: A private playlist or smartlist you neither own nor collaborate on was readable by anyone who guessed its id
+* API5
+  * `ping`: `server_details` returned server-wide catalog counts scoped to user id `0` when the auth token didn't resolve to a real user, instead of being rejected like API8 already was
+* `playlist_add` (API6, API8)
+  * A private playlist or smartlist named as the source object was expanded into the caller's own playlist, leaking its songs; a non-public source you neither own nor collaborate on is now refused
+* `playlist_folder_items` (API8)
+  * A private playlist or smartlist filed into a folder leaked its metadata through the folder listing, which gated only on existence; a non-public list you neither own nor collaborate on is now hidden from the output
+
+## API 8.0.1
+
+### Added (801000)
+
+* `playlist_add` (API6 and API8), `playlist_remove` (API8)
+  * New `object_type` parameter (alias of `type`)
+  * Use it instead of `type` when calling over REST: `playlists/{playlist_id}/{add|remove}/` already bind `type` to the path's own resource name
+
+### Changed (801000)
+
+* API6, API8
+  * Deprecated parameters that will be removed in **API9**
+    * playlist_add: parameter `type`, use `object_type`
+    * playlist_remove: parameter `type`, use `object_type`
+
+### Fixed (801000)
+
+* `search_group` (ALL)
+  * The REST route `search/{search_type}/groups` delivers `{search_type}` as `filter`, but the method only read `type`, so it always searched `all` regardless of the path
+* `playlist_add` (API6 and API8), `playlist_remove` (API8)
+  * A REST call's path-derived `type` (e.g. `playlist`, from `playlists/{playlist_id}/{add|remove}/`) always overwrote a `type` sent in the request body
+
 ## API 8.0.0
 
 This version is being developed for Ampache8 **only**
@@ -143,7 +204,6 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `wanted` dropped its `username` sort, which named a column the table does not have
 * API5, API6
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
-  * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
 * API8
   * `Json8_Data`/`Xml8_Data` skip an object that no longer exists rather than returning it as an entry of empty fields, and a missing object no longer ends the list it appeared in. **NOTE** the same fix landed in Ampache7 for API3-6, which it serves as well
 * `preference_edit` (API6 and API8)

@@ -47,6 +47,28 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         );
     }
 
+    /**
+     * @param list<int> $objectIds
+     */
+    public function addItems(int $playlistId, array $objectIds, string $objectType): void
+    {
+        // queueing a random selection used to cost one statement per song
+        foreach (array_chunk($objectIds, 500) as $chunk) {
+            $params = [];
+            foreach ($chunk as $objectId) {
+                $params[] = $objectId;
+                $params[] = $playlistId;
+                $params[] = $objectType;
+            }
+
+            $this->connection->query(
+                'INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES '
+                . implode(', ', array_fill(0, count($chunk), '(?, ?, ?)')),
+                $params
+            );
+        }
+    }
+
     public function collectGarbage(): void
     {
         $statements = [
@@ -92,9 +114,13 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         }
     }
 
-    public function deleteItemByRowId(int $rowId): void
+    public function deleteItemByRowId(int $rowId, int $playlistId): void
     {
-        $this->connection->query('DELETE FROM `tmp_playlist_data` WHERE `id` = ?', [$rowId]);
+        // scope the delete to the caller's own queue, so a row id alone can't drop someone else's track
+        $this->connection->query(
+            'DELETE FROM `tmp_playlist_data` WHERE `id` = ? AND `tmp_playlist` = ?',
+            [$rowId, $playlistId]
+        );
     }
 
     public function deleteItems(int $playlistId): void

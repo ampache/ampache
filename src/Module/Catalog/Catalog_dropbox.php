@@ -114,7 +114,7 @@ class Catalog_dropbox extends Catalog
         $getchunk  = (bool) ($data['getchunk'] ?? 0);
 
         $dropbox = self::_connect_dropbox($apikey, $secret, $authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return false;
         }
 
@@ -303,7 +303,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * check_remote_song
+     * check_remote_file
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
@@ -325,7 +325,7 @@ class Catalog_dropbox extends Catalog
         $dead = 0;
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return $dead;
         }
 
@@ -407,7 +407,7 @@ class Catalog_dropbox extends Catalog
         }
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return false;
         }
 
@@ -521,7 +521,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * insert_local_video
+     * insert_video
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot here
      * @throws DropboxClientException|Exception
@@ -637,7 +637,7 @@ class Catalog_dropbox extends Catalog
     public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             throw new DropboxClientException('Could not connect to Dropbox.');
         }
 
@@ -689,7 +689,7 @@ class Catalog_dropbox extends Catalog
         $this->count = 0;
 
         $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return 0;
         }
 
@@ -714,7 +714,7 @@ class Catalog_dropbox extends Catalog
         $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
         $dropbox        = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
-        if (!$dropbox) {
+        if (!$dropbox instanceof Dropbox) {
             return 0;
         }
 
@@ -777,7 +777,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * _insert_local_song
+     * insert_song
      *
      * Insert a song that isn't already in the database.
      * @throws DropboxClientException|Exception

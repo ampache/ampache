@@ -62,6 +62,7 @@ $folderId = $folder->getId(); ?>
         </span>
     </td>
     <td class="cel_songs optional"><?php echo $this->e($folder->getSongCount()); ?></td>
+    <td class="cel_time optional"><?php echo $this->e($folder->getTime()); ?></td>
 <?php if ($this->isShowPlayedTimes()) { ?>
     <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($folder->getPlayedTimes()); ?></td>
 <?php }

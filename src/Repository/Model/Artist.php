@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -45,6 +48,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Artist extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
@@ -55,6 +59,7 @@ class Artist extends database_object implements
     public ?int $addition_time      = null;
     public int $album_count         = 0;
     public int $album_disk_count    = 0;
+    public bool $enabled            = true;
     public int $id                  = 0;
     public int $last_update;
     public ?string $lastfm_url  = null;
@@ -98,6 +103,7 @@ class Artist extends database_object implements
         }
 
         $this->id               = (int) ($info['id'] ?? 0);
+        $this->enabled          = (bool) ($info['enabled'] ?? true);
         $this->name             = $info['name'] ?? null;
         $this->prefix           = $info['prefix'] ?? null;
         $this->summary          = $info['summary'] ?? null;
@@ -144,12 +150,21 @@ class Artist extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($ids, static fn(int|string $id): bool => !parent::is_cached('artist_warm', (int) $id));
+        if (!$extra && $cold === []) {
+            return true;
+        }
+
         $artistRepository = self::getArtistRepository();
         foreach ($artistRepository->getRowsByIds($ids) as $row) {
             parent::add_to_cache('artist', $row['id'], $row);
         }
 
         Art::build_cache($ids, 'artist');
+
+        Tag::build_object_tag_cache('artist', $ids);
+        Mood::build_object_mood_cache('artist', $ids);
 
         // Preload full names so get_fullname_by_id() stops querying one row at a time.
         foreach ($artistRepository->getFullNamesByIds($ids) as $artist_id => $fullName) {
@@ -170,6 +185,10 @@ class Artist extends database_object implements
                     : ($played_counts[(int) $row['artist']] ?? 0);
                 parent::add_to_cache('artist_extra', $row['artist'], $row);
             }
+        }
+
+        foreach ($ids as $id) {
+            parent::add_to_cache('artist_warm', (int) $id, [true]);
         }
 
         return true;
@@ -205,7 +224,8 @@ class Artist extends database_object implements
         }
 
         if ($name == 'Various Artists') {
-            $mbid = '89ad4ac3-39f7-470e-963a-56509c546377';
+            $mbid   = '89ad4ac3-39f7-470e-963a-56509c546377';
+            $prefix = null;
         }
 
         if (isset(self::$_mapcache[$name][$prefix ?? ''][$mbid ?? ''])) {
@@ -502,12 +522,41 @@ class Artist extends database_object implements
             ];
         }
 
-        return self::getArtistRepository()->getNameArrayById((int) $artist_id) ?? [
+        $cache_id = (int) $artist_id;
+        if (parent::is_cached('artist_name_array', $cache_id)) {
+            /** @var array{id: string, name: string, prefix: string, basename: string} $cached */
+            $cached = parent::get_from_cache('artist_name_array', $cache_id);
+
+            return $cached;
+        }
+
+        // build_cache() already holds the row, so the name is derived instead of read again
+        if (parent::is_cached('artist', $cache_id)) {
+            $artist   = parent::get_from_cache('artist', $cache_id);
+            $prefix   = (string) ($artist['prefix'] ?? '');
+            $basename = (string) ($artist['name'] ?? '');
+            $row      = [
+                "id" => (string) $cache_id,
+                "name" => ltrim($prefix . ' ' . $basename),
+                "prefix" => $prefix,
+                "basename" => $basename,
+            ];
+            parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+            return $row;
+        }
+
+        $row = self::getArtistRepository()->getNameArrayById($cache_id) ?? [
             "id" => '',
             "name" => '',
             "prefix" => '',
             "basename" => '',
         ];
+
+        // a listing resolves the same artist for every track it renders
+        parent::add_to_cache('artist_name_array', $cache_id, $row);
+
+        return $row;
     }
 
     public static function is_upload(int $artist_id): bool
@@ -549,6 +598,25 @@ class Artist extends database_object implements
     {
         debug_event(self::class, 'update_artist_count ' . $artist_id, 5);
         self::getArtistRepository()->updateCounts($artist_id);
+    }
+
+    /**
+     * Take the artist off the shelves, or put it back, taking its albums and their songs along.
+     *
+     * The whole catalogue below the artist follows either way, so the word promises here what it promises
+     * on a song. A single album or song can still be flipped on its own afterwards; only the next change
+     * of the artist's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $artist_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        $artistRepository = self::getArtistRepository();
+        $artistRepository->setField($artist_id, ArtistFieldEnum::ENABLED, ($new_enabled) ? 1 : 0);
+        $artistRepository->setChildrenEnabled($artist_id, $new_enabled);
+        $artistRepository->updateCounts($artist_id);
     }
 
     /**
@@ -883,9 +951,20 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**
@@ -898,6 +977,7 @@ class Artist extends database_object implements
      *     placeformed?: ?string,
      *     yearformed?: ?int,
      *     user?: ?int,
+     *     enabled?: string,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -918,6 +998,12 @@ class Artist extends database_object implements
         $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int) $data['yearformed'] : null;
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
+
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
+        }
 
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {

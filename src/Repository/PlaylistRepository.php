@@ -114,6 +114,27 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
 
         // clamp the max id
         $this->connection->query('ALTER TABLE `playlist_data` AUTO_INCREMENT = 1');
+
+        // the deletes above shrink lists without going through the model, and `last_count`/`last_duration`
+        // are what the web sort and the API listings serve, so they have to be recomputed here or they
+        // drift a little further at every catalog clean
+        $this->connection->query(
+            'UPDATE `playlist` AS `p` '
+            . 'LEFT JOIN (SELECT `playlist`, COUNT(`id`) AS `total` FROM `playlist_data` '
+            . 'WHERE `object_type` IS NOT NULL GROUP BY `playlist`) AS `pd` ON `pd`.`playlist` = `p`.`id` '
+            . 'SET `p`.`last_count` = COALESCE(`pd`.`total`, 0);'
+        );
+        $this->connection->query(
+            'UPDATE `playlist` AS `p` '
+            . 'LEFT JOIN (SELECT `pd`.`playlist`, '
+            . 'SUM(COALESCE(`song`.`time`, 0) + COALESCE(`video`.`time`, 0) + COALESCE(`podcast_episode`.`time`, 0)) AS `total` '
+            . 'FROM `playlist_data` AS `pd` '
+            . "LEFT JOIN `song` ON `pd`.`object_type` = 'song' AND `pd`.`object_id` = `song`.`id` "
+            . "LEFT JOIN `video` ON `pd`.`object_type` = 'video' AND `pd`.`object_id` = `video`.`id` "
+            . "LEFT JOIN `podcast_episode` ON `pd`.`object_type` = 'podcast_episode' AND `pd`.`object_id` = `podcast_episode`.`id` "
+            . 'GROUP BY `pd`.`playlist`) AS `pd` ON `pd`.`playlist` = `p`.`id` '
+            . 'SET `p`.`last_duration` = COALESCE(`pd`.`total`, 0);'
+        );
     }
 
     /**
@@ -178,6 +199,27 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
             'DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1',
             [$playlist->getId(), $objectId]
         );
+    }
+
+    /**
+     * Reads the playlists a user may add items to: the ones they own, plus the ones naming them as a
+     * collaborator. `collaborate` holds a comma separated list of user ids, which is what FIND_IN_SET reads.
+     *
+     * @return list<int>
+     */
+    public function findEditableIds(int $userId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `playlist` WHERE `user` = ? OR FIND_IN_SET(?, `collaborate`) ORDER BY `name`',
+            [$userId, $userId]
+        );
+
+        $playlistIds = [];
+        while ($playlistId = $result->fetchColumn()) {
+            $playlistIds[] = (int) $playlistId;
+        }
+
+        return $playlistIds;
     }
 
     /**
@@ -266,6 +308,31 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
         $names = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $names[(int) $row['id']] = (string) $row['name'];
+        }
+
+        return $names;
+    }
+
+    /**
+     * Reads the saved smartlists a set of users own, as user => (id => name)
+     *
+     * @param list<int> $userIds
+     * @return array<int, array<int, string>>
+     */
+    public function findOwnedSearchNamesBulk(array $userIds): array
+    {
+        if ($userIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf('SELECT `id`, `name`, `user` FROM `search` WHERE `user` IN (%s)', implode(',', array_fill(0, count($userIds), '?'))),
+            $userIds
+        );
+
+        $names = array_fill_keys($userIds, []);
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $names[(int) $row['user']][(int) $row['id']] = (string) $row['name'];
         }
 
         return $names;
@@ -497,22 +564,6 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
-     * Sums the running time of a set of songs
-     *
-     * @param list<int> $songIds
-     */
-    public function getTotalDuration(array $songIds): int
-    {
-        if ($songIds === []) {
-            return 0;
-        }
-
-        return (int) $this->connection->fetchOne(
-            sprintf('SELECT SUM(`time`) FROM `song` WHERE `id` IN (%s)', implode(',', $songIds))
-        );
-    }
-
-    /**
      * Entry ids in their stored order, for renumbering
      *
      * @return int[]
@@ -605,11 +656,12 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     /**
      * Stores the position of one entry
      */
-    public function setTrackNumber(int $trackId, int $track): void
+    public function setTrackNumber(int $trackId, int $track, int $playlistId): void
     {
+        // scope to the caller's own playlist, so a row id alone can't reorder someone else's list
         $this->connection->query(
-            'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?',
-            [$track, $trackId]
+            'UPDATE `playlist_data` SET `track` = ? WHERE `id` = ? AND `playlist` = ?',
+            [$track, $trackId, $playlistId]
         );
     }
 

@@ -30,6 +30,7 @@ use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 
 final readonly class UserActivityRenderer implements UserActivityRendererInterface
 {
@@ -37,16 +38,22 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
-     * Show the activity entry.
+     * Show the activity entry, or an empty string when the viewer's own catalogs don't cover its object.
      */
     public function show(
         Useractivity $useractivity,
+        User $viewer,
     ): string {
         // If user flags aren't enabled don't do anything
         if (!$this->configContainer->get('ratings') || !$useractivity->id) {
+            return '';
+        }
+
+        if (!$this->userActivityAccessChecker->isVisibleTo($useractivity, $viewer)) {
             return '';
         }
 

@@ -97,6 +97,7 @@ final class SearchGroupMethod implements MethodInterface
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'all', 'music', 'song_artist', 'album_artist', 'podcast', 'video' //optional
+     * filter          = (string) same values as 'type'; used by the REST route `search/{search_type}/groups` //optional
      * random          = (boolean) 0, 1 //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
@@ -107,6 +108,7 @@ final class SearchGroupMethod implements MethodInterface
      *     rule_1_operator?: int,
      *     rule_1_input?: mixed,
      *     type?: string,
+     *     filter?: string,
      *     offset?: int,
      *     limit?: int,
      *     api_format: string,
@@ -130,7 +132,8 @@ final class SearchGroupMethod implements MethodInterface
             }
         }
 
-        $type = $input['type'] ?? 'all';
+        // REST route `GET /search/{search_type}/groups` delivers {search_type} as `filter`, not `type`
+        $type = $input['filter'] ?? $input['type'] ?? 'all';
 
         if (
             $type === 'video'

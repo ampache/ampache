@@ -33,6 +33,7 @@ use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -104,20 +105,28 @@ final class GetLyricsMethod implements MethodInterface
             'plugin' => [],
         ];
 
+        // the partial ext-info read skips the lyrics column, so load the full row before reading it
+        $libitem->fill_ext_info();
         $databaseLyrics = $libitem->get_lyrics(true);
         if (!empty($databaseLyrics)) {
             $results['plugin']['database'] = $databaseLyrics;
         }
 
-        if ((int) ($input['plugins'] ?? 1) === 1) {
+        // only search plugins when the database has nothing; a stored song is never re-fetched externally
+        if (empty($databaseLyrics) && (int) ($input['plugins'] ?? 1) === 1) {
+            $saved = false;
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $pluginName) {
                 $plugin = new Plugin($pluginName);
                 if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
                     $lyrics = $plugin->_plugin->get_lyrics($libitem);
 
-                    // save the lyrics if not set before
                     if ($lyrics && !empty($lyrics['text'])) {
                         $results['plugin'][$pluginName] = $lyrics;
+                        // cache the first hit so the same song isn't searched externally again
+                        if (!$saved) {
+                            Song::update_lyrics((string) $lyrics['text'], $libitem->getId());
+                            $saved = true;
+                        }
                     }
                 }
             }

@@ -64,6 +64,9 @@ $type   = $this->getObjectType(); ?>
     <div style="max-width: 80px;"><?php echo $this->raw($this->getArt()); ?></div>
 </td>
 <td class="cel_title"><?php echo $this->raw($this->getLink()); ?></td>
+<?php if ($this->showComposer()) { ?>
+<td class="cel_composer"><?php echo $this->e($this->getComposer()); ?></td>
+<?php } ?>
 <?php if ($this->showParent()) { ?>
 <td class="cel_artist"><?php echo $this->raw($this->getParentLink()); ?></td>
 <?php } ?>

@@ -268,6 +268,10 @@ final class Json6_Data
         Album::build_cache($objects);
         Rating::build_cache('album', $objects);
         Userflag::build_cache('album', $objects);
+        // the songs of every album on the page, read once instead of once per album
+        if (count($objects) > 1 && in_array('songs', $include, true)) {
+            Song::build_cache($this->songRepository->getIdsByAlbums($objects));
+        }
         $JSON = [];
         foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
@@ -433,6 +437,15 @@ final class Json6_Data
         Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
         Userflag::build_cache('artist', $objects);
+        // the albums and songs of every artist on the page, read once instead of once per artist
+        if (count($objects) > 1) {
+            if (in_array('albums', $include, true)) {
+                Album::build_cache($this->albumRepository->getIdsByArtists($objects));
+            }
+            if (in_array('songs', $include, true)) {
+                Song::build_cache($this->songRepository->getIdsByArtists($objects));
+            }
+        }
         $JSON = [];
         foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
@@ -821,7 +834,7 @@ final class Json6_Data
     }
 
     /**
-     * genres_string
+     * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
@@ -1101,7 +1114,7 @@ final class Json6_Data
     }
 
     /**
-     * labels_string
+     * labels
      *
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
@@ -1360,7 +1373,7 @@ final class Json6_Data
     }
 
     /**
-     * playlists_string
+     * playlists
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
@@ -1440,7 +1453,7 @@ final class Json6_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $playitem_total = $playlist->get_media_count('song');
+                $playitem_total = $playlist->last_count;
             }
             $art_url           = Art::url($playlist->id, $object_type, $auth);
             $playlist_name     = $playlist->get_fullname();
@@ -1944,6 +1957,10 @@ final class Json6_Data
         Stream::set_session($auth);
 
         $JSON = [];
+        // one song is not worth the page warm
+        if (count($objects) > 1) {
+            Song::build_cache($objects);
+        }
         foreach ($objects as $song_id) {
             $song = new Song((int) $song_id);
             // If the song id is invalid/null
@@ -2028,7 +2045,7 @@ final class Json6_Data
     }
 
     /**
-     * songs_string
+     * songs
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
@@ -2402,7 +2419,7 @@ final class Json6_Data
     }
 
     /**
-     * videos_string
+     * videos
      *
      * @param array<int|string> $objects Video id's to include
      * @param bool $object (whether to return as a named object array or regular array)

@@ -41,6 +41,7 @@ final class ConfigurationKeyEnum
     public const string ALBUM_ART_PREFERRED_FILENAME          = 'album_art_preferred_filename';
     public const string ALBUM_ART_STORE_DISK                  = 'album_art_store_disk';
     public const string ALBUM_GROUP                           = 'album_group';
+    public const string ALBUM_GROUPING_FIELDS                 = 'album_grouping_fields';
     public const string ALBUM_RELEASE_TYPE                    = 'album_release_type';
     public const string ALBUM_RELEASE_TYPE_SORT               = 'album_release_type_sort';
     public const string ALBUM_SORT                            = 'album_sort';
@@ -186,6 +187,12 @@ final class ConfigurationKeyEnum
     public const string PODCAST_KEEP                          = 'podcast_keep';
     public const string PODCAST_NEW_DOWNLOAD                  = 'podcast_new_download';
     public const string POPULAR_THRESHOLD                     = 'popular_threshold';
+    public const string POW_DIFFICULTY                        = 'pow_difficulty';
+    public const string POW_EXEMPT_LEVEL                      = 'pow_exempt_level';
+    public const string POW_LOG_FAILURES                      = 'pow_log_failures';
+    public const string POW_MODE                              = 'pow_mode';
+    public const string POW_PROTECTED                         = 'pow_protected';
+    public const string POW_TTL                               = 'pow_ttl';
     public const string PROXY_HOST                            = 'proxy_host';
     public const string PROXY_PASS                            = 'proxy_pass';
     public const string PROXY_PORT                            = 'proxy_port';

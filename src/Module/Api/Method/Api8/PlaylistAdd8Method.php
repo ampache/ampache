@@ -30,7 +30,7 @@ use Ampache\Module\Api\Method\AbstractPlaylistAddMethod;
 /**
  * Adds an object and its songs to a playlist
  *
- * Api version 8 defaults the `type` to `song` when it is not supplied.
+ * Api version 8 defaults the object type to `song` when it is not supplied.
  */
 final class PlaylistAdd8Method extends AbstractPlaylistAddMethod
 {

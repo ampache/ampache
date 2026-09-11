@@ -59,7 +59,13 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
-            $objectIds = $this->random->advanced($objectType->value, $_POST);
+            // reloading this url carries no form data, and no limit used to mean the whole catalogue
+            $rules = $_POST;
+            if (!array_key_exists('limit', $rules)) {
+                $rules['limit'] = AmpConfig::get_int('popular_threshold', 10);
+            }
+
+            $objectIds = $this->random->advanced($objectType->value, $rules);
             if ($objectIds !== []) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {
@@ -67,9 +73,7 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
                     default => $objectType,
                 };
                 // We need to add them to the active playlist
-                foreach ($objectIds as $object_id) {
-                    $user->playlist?->add_object($object_id, $objectType);
-                }
+                $user->getPlaylist()->add_objects(array_values($objectIds), $objectType);
             }
         }
 

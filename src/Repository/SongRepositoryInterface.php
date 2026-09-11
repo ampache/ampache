@@ -212,6 +212,16 @@ interface SongRepositoryInterface
     public function getDisabled(): Iterator;
 
     /**
+     * The songs of an artist a listener may be handed: unplayable ones are left out
+     *
+     * `getAllByArtist()` still hands back everything, because re-reading the tags of a disabled file is
+     * still a thing a catalogue has to do
+     *
+     * @return list<int>
+     */
+    public function getEnabledByArtist(int $artistId): array;
+
+    /**
      * Reads a page of the enabled songs across every catalog, or the given ones
      *
      * @param array<int|string>|null $catalogIds every catalog when null or empty
@@ -241,6 +251,22 @@ interface SongRepositoryInterface
     public function getFilesByCatalog(int $catalogId, int $limit = 0, int $offset = 0): array;
 
     /**
+     * The song ids of a set of albums, for warming a page that lists them
+     *
+     * @param array<int|string> $albumIds
+     * @return list<int>
+     */
+    public function getIdsByAlbums(array $albumIds): array;
+
+    /**
+     * The song ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array;
+
+    /**
      * Reads the ids of every song of one catalog, enabled or not
      *
      * @return list<int>
@@ -261,6 +287,13 @@ interface SongRepositoryInterface
      * @return list<int>
      */
     public function getIdsByFilePrefix(string $folderPath): array;
+
+    /**
+     * Reads the enabled songs of one catalog that have no original-size art, for a scoped gather_art sweep
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingArt(int $catalogId): array;
 
     /**
      * Reads the artists mapped onto a song, or the artists mapped onto an album
@@ -325,6 +358,14 @@ interface SongRepositoryInterface
      * @return list<string>
      */
     public function getSongMapValues(int $songId, string $objectType): array;
+
+    /**
+     * The song_map values of a set of songs, read in one go
+     *
+     * @param list<int> $songIds
+     * @return array<int, list<string>>
+     */
+    public function getSongMapValuesBulk(array $songIds, string $objectType): array;
 
     /**
      * gets the songs for this artist

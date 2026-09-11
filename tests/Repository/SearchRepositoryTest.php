@@ -83,6 +83,31 @@ class SearchRepositoryTest extends TestCase
         $this->subject->delete($this->smartlist(666));
     }
 
+    public function testGetRowsByIdsDoesNothingForNoIds(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame([], $this->subject->getRowsByIds([]));
+    }
+
+    public function testGetRowsByIdsReadsWholeRows(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT * FROM `search` WHERE `id` IN (?,?)', [1, 2])
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturnOnConsecutiveCalls(
+            ['id' => '1', 'name' => 'first', 'user' => '5'],
+            false
+        );
+
+        self::assertSame([['id' => '1', 'name' => 'first', 'user' => '5']], $this->subject->getRowsByIds([1, 2]));
+    }
+
     public function testInsertBindsTheRandomFlagAsAnIntAndReturnsTheId(): void
     {
         $user = $this->createMock(User::class);

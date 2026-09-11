@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,6 +44,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
 
     public function __construct(
         private UiInterface $ui,
+        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private ShoutRepositoryInterface $shoutRepository,
     ) {}
@@ -50,6 +52,10 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->requestParser->verifyForm('delete_shout') === false) {
             throw new AccessDeniedException();
         }
 

@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -79,6 +82,7 @@ class Query
     protected array $_state = [
         'base' => null,
         'custom' => false,
+        'custom_sql' => '', // an id-yielding query the browse is restricted to, joined as a derived table
         'filter' => [],
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
@@ -88,6 +92,7 @@ class Query
         'offset' => 0,
         'params' => [], // parameters for custom sql
         'select' => [],
+        'show_columns' => [], // opt-in columns a page asked for, e.g. the upload date
         'simple' => false,
         'skip_catalog_check' => false, // when you've already checked the parent object catalog is usable
         'sort' => [
@@ -1054,6 +1059,22 @@ class Query
     }
 
     /**
+     * _get_custom_join_sql
+     *
+     * A custom base is a query yielding ids. Joining it as a derived table keeps its scope separate, so an
+     * unqualified column inside it cannot bind to the outer query and silently correlate.
+     */
+    private function _get_custom_join_sql(): string
+    {
+        $custom = (string) ($this->_state['custom_sql'] ?? '');
+        if ($custom === '' || $this->queryType === null) {
+            return '';
+        }
+
+        return sprintf('JOIN (%s) AS `custom_base` ON `custom_base`.`id` = %s ', $custom, $this->queryType->get_select());
+    }
+
+    /**
      * _get_filter_sql
      * This returns the filter part of the sql statement
      */
@@ -1103,6 +1124,21 @@ class Query
                         : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
                     break;
             }
+        }
+
+        // a withdrawn item leaves every browse here, so no caller forgets it the way `album_songs` did
+        if (
+            in_array($type, ['album', 'album_disk', 'artist', 'song'], true)
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $this->user_id)
+        ) {
+            // `album_disk` carries no flag of its own, so it reads the one on the album it belongs to
+            $disabled_sql = ($type === 'album_disk')
+                ? "EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1) AND "
+                : sprintf('`%s`.`enabled` = 1 AND ', $type);
+
+            $sql .= ($sql === "WHERE")
+                ? ' ' . $disabled_sql
+                : $disabled_sql;
         }
 
         // each fragment ends in ' AND ', and a WHERE that collected no filters has to disappear completely
@@ -1231,8 +1267,8 @@ class Query
      */
     private function _get_sql(?bool $limit = true, bool $sort = true): string
     {
-        if ($this->_state['custom']) {
-            // custom queries are set by base and should not be added to
+        // a browse stored before custom_sql existed still holds its custom query in base
+        if ($this->_state['custom'] && empty($this->_state['custom_sql'])) {
             $final_sql = $this->_get_base_sql();
         } else {
             // filter and sort set joins as well as group so make sure you run those first
@@ -1240,6 +1276,7 @@ class Query
             $sort_sql   = $this->_get_sort_sql();
             // regular queries need to be joined with all the other parts
             $final_sql = $this->_get_base_sql()
+                . $this->_get_custom_join_sql()
                 . $this->_get_join_sql()
                 . $filter_sql
                 . $this->_get_having_sql();
@@ -1378,6 +1415,19 @@ class Query
     }
 
     /**
+     * Only the query object is missing after a stored browse was rebuilt. Going through the virtual
+     * set_type() would replay Browse's view cookies, and restoring the alpha one calls set_filter(),
+     * which lands right back here before queryType is set: an infinite recursion. self:: pins the
+     * plain type resolution this spot actually needs.
+     */
+    private function _restoreQueryType(): void
+    {
+        if ($this->queryType === null) {
+            self::set_type($this->_state['type']);
+        }
+    }
+
+    /**
      * _serialize
      *
      * Attempts to produce a more compact representation for large result
@@ -1399,30 +1449,28 @@ class Query
             return;
         }
 
-        // Custom sql base
+        // Custom sql restricts the normal base to the ids it yields, so the base itself stays intact
         if ($force && !empty($custom_base)) {
-            $this->_state['custom'] = true;
-            $this->_state['base']   = $custom_base;
-            $this->_state['params'] = $parameters;
-        } else {
-            // TODO we should remove this default fallback and rely on set_type()
-            if ($this->queryType === null) {
-                $this->queryType = new SongQuery();
-            }
-
-            $this->set_select($this->queryType->get_select());
-
-            // tag state should be set as they aren't really separate objects
-            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'], true)) {
-                $this->set_filter('hidden', 1);
-            }
-
-            if (in_array($this->get_type(), ['genre', 'license', 'tag'], true)) {
-                $this->set_filter('hidden', 0);
-            }
-
-            $this->_state['base'] = $this->queryType?->get_base_sql();
+            $this->_state['custom']     = true;
+            $this->_state['custom_sql'] = $custom_base;
+            $this->_state['params']     = $parameters;
         }
+
+        // TODO we should remove this default fallback and rely on set_type()
+        $this->queryType ??= new SongQuery();
+
+        $this->set_select($this->queryType->get_select());
+
+        // tag state should be set as they aren't really separate objects
+        if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'], true)) {
+            $this->set_filter('hidden', 1);
+        }
+
+        if (in_array($this->get_type(), ['genre', 'license', 'tag'], true)) {
+            $this->set_filter('hidden', 0);
+        }
+
+        $this->_state['base'] = $this->queryType?->get_base_sql();
     }
 
     /**
@@ -1433,9 +1481,7 @@ class Query
      */
     private function _sql_filter(string $filter, mixed $value): string
     {
-        if ($this->queryType === null) {
-            $this->set_type($this->_state['type']);
-        }
+        $this->_restoreQueryType();
 
         if ($this->queryType === null) {
             return '';
@@ -1462,9 +1508,7 @@ class Query
             return "RAND()";
         }
 
-        if ($this->queryType === null) {
-            $this->set_type($this->_state['type']);
-        }
+        $this->_restoreQueryType();
 
         if ($this->queryType === null) {
             return '';

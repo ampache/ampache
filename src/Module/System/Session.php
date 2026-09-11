@@ -70,10 +70,13 @@ final readonly class Session implements SessionInterface
         $cname = AmpConfig::get('session_name', 'ampache') . '_remember';
         if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', (string) $_COOKIE[$cname]);
-            if ($mac === hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key'))) {
+            if (hash_equals(hash_hmac('sha256', $username . ':' . $token, (string) AmpConfig::get('secret_key')), $mac)) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
-                if (Dba::num_rows($db_results) > 0) {
+                // a disabled account keeps its remember-me row until it expires, so the disabled flag
+                // still has to be checked here rather than trusting the row alone
+                $rememberedUser = User::get_from_username($username);
+                if (Dba::num_rows($db_results) > 0 && $rememberedUser instanceof User && !$rememberedUser->disabled) {
                     self::create_cookie();
                     self::create(
                         [
@@ -530,13 +533,23 @@ final readonly class Session implements SessionInterface
         if ($type == 'api' && AmpConfig::get('perpetual_api_session')) {
             $expire = 0;
         } elseif ($type == 'stream') {
-            $expire = $time + AmpConfig::get('stream_length', 7200);
+            $expire = $time + AmpConfig::get_int('stream_length', 7200);
         } else {
-            $expire = $time + AmpConfig::get('session_length', 3600);
+            $expire = $time + AmpConfig::get_int('session_length', 3600);
         }
 
-        $sql = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
-        if (($db_results = Dba::write($sql, [$expire, $sid])) instanceof PDOStatement) {
+        $sql    = 'UPDATE `session` SET `expire` = ? WHERE `id` = ?';
+        $params = [$expire, $sid];
+        if ($expire > 0) {
+            // every request would rewrite the row for a few seconds of drift
+            $sql .= ' AND `expire` < ?';
+            $params[] = $expire - 60;
+        } else {
+            // a perpetual session only needs the write that makes it perpetual
+            $sql .= ' AND `expire` != 0';
+        }
+
+        if (($db_results = Dba::write($sql, $params)) instanceof PDOStatement) {
             if ($expire !== 0) {
                 debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
             }
@@ -649,6 +662,21 @@ final readonly class Session implements SessionInterface
     public static function read(string $key): string
     {
         return self::_read($key, 'value');
+    }
+
+    /**
+     * remove_remember_token
+     *
+     * Invalidate a user's persistent "remember me" tokens server-side.
+     */
+    public static function remove_remember_token(string $username): void
+    {
+        if ($username === '') {
+            return;
+        }
+
+        $sql = 'DELETE FROM `session_remember` WHERE `username` = ?';
+        Dba::write($sql, [$username]);
     }
 
     /**
@@ -817,7 +845,14 @@ final readonly class Session implements SessionInterface
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
             $auth['access']       = ($defaultAuthLevel) ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
-            if (!array_key_exists((string) $sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
+            $hasSession           = array_key_exists((string) $sessionName, $_COOKIE)
+                && self::exists('interface', $_COOKIE[$sessionName]);
+            if (!$hasSession && defined('NO_SESSION_UPDATE')) {
+                // a request forbidden from touching session state has no business minting one either:
+                // otherwise every cover fetched without a cookie, by a crawler or a link preview,
+                // leaves a session row behind
+                $GLOBALS['user'] = null;
+            } elseif (!$hasSession) {
                 self::create_cookie();
                 self::create($auth);
                 self::check();

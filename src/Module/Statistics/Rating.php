@@ -96,24 +96,24 @@ class Rating extends database_object
             $user_id = $user->id ?? 0;
         }
 
-        if ($user_id === 0) {
-            return false;
-        }
-
-        $repository   = self::getRatingRepository();
+        $repository = self::getRatingRepository();
+        // -1 is the identity a visitor rates under, and on a public instance it can own most of the
+        // ratings there are, so its rows are read like anybody else's
         $user_ratings = $repository->getUserRatings($type, array_values($ids), $user_id);
         $ratings      = $repository->getAverageRatings($type, array_values($ids));
 
         foreach ($ids as $object_id) {
-            // First store the user-specific rating
+            // First store the user-specific rating. A visitor has none, but the zero still has to be
+            // cached: without it every row asks the database for a rating that cannot exist
             $rating = (isset($user_ratings[$object_id])) ? (int) $user_ratings[$object_id] : 0;
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
-            // Then store the average
-            // keep the float precision the query returned; 0 means "no average", as get_average_rating() reports
-            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 2) : 0;
 
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, [$rating]);
+            // Then store the average and how many voters it took
+            // keep the float precision the query returned; 0 means "no average", as get_average_rating() reports
+            $average = $ratings[$object_id] ?? [0, 0];
+
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, [round($average[0], 2), (int) $average[1]]);
         }
 
         return true;
@@ -255,10 +255,13 @@ class Rating extends database_object
         if ($show_global_rating) {
             $global_rating_value = $rating->get_average_rating();
             if ($global_rating_value > 0) {
+                $voters  = $rating->get_rating_count();
+                $counted = sprintf(nT_('%d vote', '%d votes', $voters), $voters);
                 $ratings .= sprintf(
-                    '<li><span class="global-rating" title="%s">(%s)</span></li>',
-                    T_('Average from all users'),
-                    $global_rating_value
+                    '<li><span class="global-rating" title="%s">%s<span class="global-rating-count"> &middot; %s</span></span></li>',
+                    T_('Average from all users') . ' &middot; ' . $counted,
+                    $global_rating_value,
+                    $counted
                 );
             }
         }
@@ -296,22 +299,15 @@ class Rating extends database_object
      */
     public function get_average_rating(): ?float
     {
-        $key = 'rating_' . $this->type . '_all';
-        // a cached 0 is the answer "nothing rated it enough", so it must not fall through to the query
-        if (parent::is_cached($key, $this->id)) {
-            $cached = (float) parent::get_from_cache($key, $this->id)[0];
+        return $this->average($this->type, $this->id)[0] ?? null;
+    }
 
-            return ($cached > 0) ? $cached : null;
-        }
-
-        $rating = self::getRatingRepository()->getAverageRating($this->id, $this->type);
-        if ($rating === null) {
-            return null;
-        }
-
-        parent::add_to_cache($key, $this->id, [$rating]);
-
-        return $rating;
+    /**
+     * How many people the average was taken from, or 0 when there is no average to show
+     */
+    public function get_rating_count(): int
+    {
+        return (int) ($this->average($this->type, $this->id)[1] ?? 0);
     }
 
     /**
@@ -372,7 +368,11 @@ class Rating extends database_object
             return false;
         }
 
-        if (self::get_user_rating($user_id) === $rating) {
+        // a rating is 0 to 5; this is the one door every writer passes through, so bound it here
+        $rating = max(0, min(5, $rating));
+
+        // an absent rating is 0, so setting 0 on an unrated object is a no-op, not a weight decrement
+        if ((self::get_user_rating($user_id) ?? 0) === $rating) {
             return true;
         }
 
@@ -398,6 +398,29 @@ class Rating extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * The average and its number of voters, read once and cached for the request
+     *
+     * @return array{0: float, 1: int}|null
+     */
+    private function average(string $type, int $objectId): ?array
+    {
+        $key = 'rating_' . $type . '_all';
+        // a cached 0 is the answer "nothing rated it enough", so it must not fall through to the query
+        if (parent::is_cached($key, $objectId)) {
+            $cached = parent::get_from_cache($key, $objectId);
+
+            return (((float) $cached[0]) > 0)
+                ? [(float) $cached[0], (int) ($cached[1] ?? 0)]
+                : null;
+        }
+
+        $average = self::getRatingRepository()->getAverageRating($objectId, $type);
+        parent::add_to_cache($key, $objectId, $average ?? [0, 0]);
+
+        return $average;
     }
 
     /**

@@ -59,10 +59,12 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
@@ -146,6 +148,8 @@ class Subsonic_Api
 
     public const string SUBID_CHAT = 'pm-';
 
+    public const string SUBID_FOLDER = 'fo-';
+
     public const string SUBID_GENRE = 'ta-';
 
     public const string SUBID_LIVESTREAM = 'li-';
@@ -199,6 +203,7 @@ class Subsonic_Api
         'getBookmarkSubId',
         'getCatalogSubId',
         'getChatSubId',
+        'getFolderSubId',
         'getGenreSubId',
         'getLiveStreamSubId',
         'getPlaylistSubId',
@@ -214,6 +219,7 @@ class Subsonic_Api
     private AlbumRepositoryInterface $albumRepository;
     private ArtistRepositoryInterface $artistRepository;
     private BookmarkRepositoryInterface $bookmarkRepository;
+    private FolderRepositoryInterface $folderRepository;
     private LiveStreamRepositoryInterface $liveStreamRepository;
     private PasswordGeneratorInterface $passwordGenerator;
     private PodcastCreatorInterface $podcastCreator;
@@ -233,6 +239,7 @@ class Subsonic_Api
         AlbumRepositoryInterface $albumRepository,
         ArtistRepositoryInterface $artistRepository,
         BookmarkRepositoryInterface $bookmarkRepository,
+        FolderRepositoryInterface $folderRepository,
         LiveStreamRepositoryInterface $liveStreamRepository,
         PasswordGeneratorInterface $passwordGenerator,
         PodcastCreatorInterface $podcastCreator,
@@ -251,6 +258,7 @@ class Subsonic_Api
         $this->albumRepository          = $albumRepository;
         $this->artistRepository         = $artistRepository;
         $this->bookmarkRepository       = $bookmarkRepository;
+        $this->folderRepository         = $folderRepository;
         $this->liveStreamRepository     = $liveStreamRepository;
         $this->passwordGenerator        = $passwordGenerator;
         $this->podcastCreator           = $podcastCreator;
@@ -320,6 +328,7 @@ class Subsonic_Api
             case self::SUBID_BOOKMARK:
             case self::SUBID_CATALOG:
             case self::SUBID_CHAT:
+            case self::SUBID_FOLDER:
             case self::SUBID_GENRE:
             case self::SUBID_LIVESTREAM:
             case self::SUBID_PLAYLIST:
@@ -391,6 +400,8 @@ class Subsonic_Api
                 return Catalog::create_from_id($ampache_id);
             case self::SUBID_CHAT:
                 return new PrivateMsg($ampache_id);
+            case self::SUBID_FOLDER:
+                return new Folder($ampache_id);
             case self::SUBID_GENRE:
                 return new Tag($ampache_id);
             case self::SUBID_LIVESTREAM:
@@ -482,6 +493,8 @@ class Subsonic_Api
                 return "catalog";
             case self::SUBID_CHAT:
                 return "private_message";
+            case self::SUBID_FOLDER:
+                return "folder";
             case self::SUBID_GENRE:
                 return "genre";
             case self::SUBID_LIVESTREAM:
@@ -513,6 +526,11 @@ class Subsonic_Api
     public static function getChatSubId(int|string $ampache_id): string
     {
         return self::SUBID_CHAT . $ampache_id;
+    }
+
+    public static function getFolderSubId(int|string $ampache_id): string
+    {
+        return self::SUBID_FOLDER . $ampache_id;
     }
 
     public static function getGenreSubId(int|string $ampache_id): string
@@ -1522,6 +1540,10 @@ class Subsonic_Api
         $artists = ($catalogs === [])
             ? []
             : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+
+        // one flag read for the whole index instead of one per artist
+        Userflag::build_cache('artist', array_column($artists, 'id'));
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -1743,7 +1765,11 @@ class Subsonic_Api
             return;
         }
 
-        $size = (isset($input['size']) && is_numeric($input['size'])) ? (int) $input['size'] : 'original';
+        // clients each pick their own pixel count, and every distinct one is stored and kept, so snap
+        // onto a size the interface already makes. Larger than anything we make serves the original.
+        $size = (isset($input['size']) && is_numeric($input['size']))
+            ? (Art::canonical_size((int) $input['size']) ?? 'original')
+            : 'original';
 
         // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
@@ -1836,14 +1862,14 @@ class Subsonic_Api
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
-                $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = $this->subsonicXmlData->addIndexes($response, $artists, $lastmodified);
+                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
+                $response = $this->subsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
             }
         } else {
             $response = $this->_addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
-                $artists  = Catalog::get_artist_arrays($fcatalogs);
-                $response = $this->subsonicJsonData->addIndexes($response, $artists, $lastmodified);
+                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
+                $response = $this->subsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
             }
         }
         $this->_responseOutput($input, __FUNCTION__, $response);
@@ -1966,7 +1992,6 @@ class Subsonic_Api
      */
     public function getmusicdirectory(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -1986,14 +2011,14 @@ class Subsonic_Api
             return;
         }
 
-        if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog) {
+        if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog || $object instanceof Folder) {
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->_addXmlResponse(__FUNCTION__);
-                $response = $this->subsonicXmlData->addDirectory($response, $object);
+                $response = $this->subsonicXmlData->addDirectory($response, $object, $user->getId());
             } else {
                 $response = $this->_addJsonResponse(__FUNCTION__);
-                $response = $this->subsonicJsonData->addDirectory($response, $object);
+                $response = $this->subsonicJsonData->addDirectory($response, $object, $user->getId());
             }
             $this->_responseOutput($input, __FUNCTION__, $response);
         } else {
@@ -2093,7 +2118,6 @@ class Subsonic_Api
      */
     public function getplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -2105,6 +2129,13 @@ class Subsonic_Api
             || $playlist->isNew()
         ) {
             $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // a private list you neither own nor collaborate on is not yours to read
+        if ($playlist->type !== 'public' && !$playlist->has_collaborate($user)) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
@@ -2130,7 +2161,8 @@ class Subsonic_Api
      */
     public function getplaylists(array $input, User $user): void
     {
-        $user = (isset($input['username']))
+        // only an admin may list another user's playlists; their private ones are not public
+        $user = (isset($input['username']) && $user->access >= AccessLevelEnum::ADMIN->value)
             ? User::get_from_username($input['username']) ?? $user
             : $user;
 
@@ -2152,6 +2184,10 @@ class Subsonic_Api
         }
 
         $results = $browse->get_objects();
+
+        // the serializer reads each playlist row and its art, so warm both in one pass
+        Playlist::build_cache(Playlist::split_mixed_ids($results)['playlist']);
+
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->_addXmlResponse(__FUNCTION__);
@@ -2820,6 +2856,16 @@ class Subsonic_Api
             return;
         }
 
+        // driving the server's own playback is gated like the native localplay method, nothing checked it here
+        if (
+            !AmpConfig::get('allow_localplay_playback')
+            || $user->access < (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        ) {
+            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
+            return;
+        }
+
         $object_id  = $input['id'] ?? [];
         $controller = AmpConfig::get('localplay_controller', '');
         $localplay  = ($controller) ? new LocalPlay($controller) : null;
@@ -3002,6 +3048,8 @@ class Subsonic_Api
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
+                // a client can send an out-of-range resume position; keep the now_playing row garbage-collectable
+                $position       = max(0, min($position, (int) $media->time));
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
                 if ($playqueue_time < ($time - 2)) {
@@ -3092,6 +3140,8 @@ class Subsonic_Api
         $now_time       = time();
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
+            // long pauses might cause your now_playing to hide, and the sweep is the same for every id
+            Stream::garbage_collection();
             foreach ($sub_ids as $sub_id) {
                 $time = (isset($input['time']))
                     ? (int) (((int) $input['time']) / 1000)
@@ -3105,8 +3155,6 @@ class Subsonic_Api
                     continue;
                 }
 
-                // long pauses might cause your now_playing to hide
-                Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
                 // submission is true: stream finished. Record the play locally
                 // (set_played is dedup-guarded) and notify scrobble plugins.
@@ -3705,7 +3753,7 @@ class Subsonic_Api
     }
 
     /**
-     * check_parameter
+     * _check_parameter
      * @param array<string, mixed> $input
      * @return false|mixed
      */

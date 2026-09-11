@@ -38,10 +38,13 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -66,14 +69,20 @@ use Exception;
 class Subsonic_Json_Data
 {
     private AlbumRepositoryInterface $albumRepository;
+    private FolderRepositoryInterface $folderRepository;
+    private OpenSubsonic_Fields $openSubsonicFields;
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
+        FolderRepositoryInterface $folderRepository,
         SongRepositoryInterface $songRepository,
+        OpenSubsonic_Fields $openSubsonicFields,
     ) {
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
+        $this->albumRepository    = $albumRepository;
+        $this->folderRepository   = $folderRepository;
+        $this->songRepository     = $songRepository;
+        $this->openSubsonicFields = $openSubsonicFields;
     }
 
     /**
@@ -135,6 +144,7 @@ class Subsonic_Json_Data
     public function addAlbumList(array $response, array $albums): array
     {
         $json = ['album' => []];
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -160,6 +170,7 @@ class Subsonic_Json_Data
     public function addAlbumList2(array $response, array $albums): array
     {
         $json = ['album' => []];
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -292,7 +303,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addArtistsID3
+     * addArtists
      *
      * A list of indexed Artists.
      * https://opensubsonic.netlify.app/docs/responses/artistsid3/
@@ -406,7 +417,7 @@ class Subsonic_Json_Data
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public function addDirectory(array $response, Artist|Album|Catalog $object): array
+    public function addDirectory(array $response, Artist|Album|Catalog|Folder $object, int $userId = -1): array
     {
         $json = [];
         if ($object instanceof Artist) {
@@ -415,6 +426,8 @@ class Subsonic_Json_Data
             $json = $this->_getDirectory_Album($object);
         } elseif ($object instanceof Catalog) {
             $json = $this->_getDirectory_Catalog($object);
+        } elseif ($object instanceof Folder) {
+            $json = $this->_getDirectory_Folder($object, $userId);
         }
 
         $response['subsonic-response']['directory'] = $json;
@@ -482,6 +495,56 @@ class Subsonic_Json_Data
         }
 
         return $error;
+    }
+
+    /**
+     * addFolderIndexes
+     *
+     * Real-folder-based getIndexes: a catalog's root folder's direct children, alphabetically bucketed.
+     * A sub-folder becomes an `Artist`-shaped index entry (the real Subsonic `Directory` server behavior);
+     * loose media sitting directly at that level becomes a top-level `child`, same as a stray file would.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public function addFolderIndexes(array $response, array $children, int $lastModified = 0): array
+    {
+        $this->_warmChildObjectCaches($children);
+
+        $folders = [];
+        $media   = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $entry = $this->_getChildObject($child);
+            if ($entry !== null) {
+                $media[] = $entry;
+            }
+        }
+
+        $json = [
+            'index' => $this->_getFolderIndex($folders),
+            'lastModified' => $lastModified * 1000,
+        ];
+        if (!empty($media)) {
+            $json['child'] = $media;
+        }
+
+        $ignored = $this->_getIgnoredArticles();
+        if (!empty($ignored)) {
+            $json['ignoredArticles'] = $ignored;
+        }
+
+        $response['subsonic-response']['indexes'] = $json;
+
+        return $response;
     }
 
     /**
@@ -579,7 +642,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addJukeboxPlaylistSubsonic
+     * addJukeboxPlaylist
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -606,7 +669,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addJukeboxStatusSubsonic
+     * addJukeboxStatus
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -837,6 +900,7 @@ class Subsonic_Json_Data
     public function addPlaylists(array $response, User $user, array $playlists): array
     {
         $json = ['playlist' => []];
+        $this->openSubsonicFields->warmPlaylists($playlists);
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -990,7 +1054,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addPodcastEpside
+     * addPodcastEpisode
      *
      * Podcasts.Subsonic
      * @param array{'subsonic-response': array<string, mixed>} $response
@@ -1038,7 +1102,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addRandomSongsSubsonic
+     * addRandomSongs
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1046,6 +1110,7 @@ class Subsonic_Json_Data
     public function addRandomSongs(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1125,6 +1190,7 @@ class Subsonic_Json_Data
         $json = [];
 
         if (!empty($songs)) {
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1158,6 +1224,7 @@ class Subsonic_Json_Data
 
         if (!empty($artists)) {
             $json['artist'] = [];
+            $this->openSubsonicFields->warmArtists($artists);
             foreach ($artists as $artist_id) {
                 $artist = new Artist($artist_id);
                 if ($artist->isNew()) {
@@ -1169,6 +1236,7 @@ class Subsonic_Json_Data
         }
         if (!empty($albums)) {
             $json['album'] = [];
+            $this->openSubsonicFields->warmAlbums($albums);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -1179,6 +1247,7 @@ class Subsonic_Json_Data
         }
         if (!empty($songs)) {
             $json['song'] = [];
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1210,6 +1279,7 @@ class Subsonic_Json_Data
 
         if (!empty($artists)) {
             $output_artists = [];
+            $this->openSubsonicFields->warmArtists($artists);
             foreach ($artists as $artist_id) {
                 $artist = new Artist($artist_id);
                 if ($artist->isNew()) {
@@ -1221,6 +1291,7 @@ class Subsonic_Json_Data
         }
         if (!empty($albums)) {
             $output_albums = [];
+            $this->openSubsonicFields->warmAlbums($albums);
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -1232,6 +1303,7 @@ class Subsonic_Json_Data
         }
         if (!empty($songs)) {
             $json['song'] = [];
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1372,7 +1444,7 @@ class Subsonic_Json_Data
      */
 
     /**
-     * addSongsByGenreSubsonic
+     * addSongsByGenre
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1380,6 +1452,7 @@ class Subsonic_Json_Data
     public function addSongsByGenre(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1411,6 +1484,7 @@ class Subsonic_Json_Data
             'song' => [],
         ];
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1423,6 +1497,7 @@ class Subsonic_Json_Data
             unset($json['artist']);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1434,6 +1509,7 @@ class Subsonic_Json_Data
             unset($json['album']);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1470,6 +1546,7 @@ class Subsonic_Json_Data
             'song' => [],
         ];
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1482,6 +1559,7 @@ class Subsonic_Json_Data
             unset($json['artist']);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1494,6 +1572,7 @@ class Subsonic_Json_Data
             unset($json['album']);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1538,6 +1617,7 @@ class Subsonic_Json_Data
     public function addTopSongs(array $response, array $songs): array
     {
         $json = ['song' => []];
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -1759,6 +1839,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $allsongs = $this->albumRepository->getSongs($album->getId());
             $entries  = [];
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1824,6 +1905,7 @@ class Subsonic_Json_Data
         if ($AlbumID3) {
             $allalbums = $this->albumRepository->getAlbumByArtist($artist->id);
             $albumJson = [];
+            $this->openSubsonicFields->warmAlbums($allalbums);
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -2195,7 +2277,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildArray
+     * _getChildArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -2230,7 +2312,59 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildPodcastEpisodeSubsonic
+     * A sub-folder shown as a `Child` directory stub, inside a `Directory` response
+     * @return array{
+     *     'id': string,
+     *     'parent': string,
+     *     'isDir': bool,
+     *     'title': string,
+     *     'coverArt'?: string
+     * }
+     */
+    private function _getChildFolder(Folder $folder): array
+    {
+        $sub_id = Subsonic_Api::getFolderSubId($folder->getId());
+        $json   = [
+            'id' => $sub_id,
+            'parent' => Subsonic_Api::getFolderSubId($folder->parent ?? -1),
+            'isDir' => true,
+            'title' => (string) $folder->name,
+        ];
+        if ($folder->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        return $json;
+    }
+
+    /**
+     * Dispatches a folder_map child (song, video or podcast_episode) to its existing `Child` serializer
+     *
+     * @param array{object_type: LibraryItemEnum, object_id: int} $child
+     * @return array<string, mixed>|null
+     */
+    private function _getChildObject(array $child): ?array
+    {
+        switch ($child['object_type']) {
+            case LibraryItemEnum::SONG:
+                $song = new Song($child['object_id']);
+
+                return (!$song->isNew() && $song->enabled) ? $this->_getChildSong($song) : null;
+            case LibraryItemEnum::VIDEO:
+                $video = new Video($child['object_id']);
+
+                return ($video->isNew()) ? null : $this->_getChildVideo($video);
+            case LibraryItemEnum::PODCAST_EPISODE:
+                $episode = new Podcast_Episode($child['object_id']);
+
+                return ($episode->isNew()) ? null : $this->_getChildPodcastEpisode($episode);
+        }
+
+        return null;
+    }
+
+    /**
+     * _getChildPodcastEpisode
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2448,7 +2582,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _getChildVideoSubsonic
+     * _getChildVideo
      * @return array{
      *     'id': string,
      *     'parent'?: string,
@@ -2587,6 +2721,7 @@ class Subsonic_Json_Data
 
         $media_ids     = $this->albumRepository->getSongs($album_id);
         $json['child'] = [];
+        Song::build_cache($media_ids);
         foreach ($media_ids as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew()) {
@@ -2632,6 +2767,7 @@ class Subsonic_Json_Data
 
         $allalbums     = $this->albumRepository->getAlbumByArtist($artist_id);
         $json['child'] = [];
+        $this->openSubsonicFields->warmAlbums($allalbums);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -2670,6 +2806,137 @@ class Subsonic_Json_Data
     }
 
     /**
+     * _getDirectory_Folder for a real filesystem folder; -1 is the virtual root above every catalog
+     * @return array{
+     *     'id': string,
+     *     'parent'?: string,
+     *     'name': string,
+     *     'child': array<int, array<string, mixed>>
+     * }
+     */
+    private function _getDirectory_Folder(Folder $folder, int $userId = -1): array
+    {
+        $json = [
+            'id' => Subsonic_Api::getFolderSubId($folder->getId()),
+        ];
+
+        if ($folder->parent !== null) {
+            $json['parent'] = Subsonic_Api::getFolderSubId($folder->parent);
+        } elseif ($folder->getId() !== -1) {
+            $json['parent'] = Subsonic_Api::getCatalogSubId($folder->catalog);
+        }
+
+        $json['name']  = (string) $folder->name;
+        $json['child'] = [];
+
+        $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
+        $children      = $this->folderRepository->getObjects($childFolderId, $userId);
+        $this->_warmChildObjectCaches($children);
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $childFolder = new Folder($child['object_id']);
+                if (!$childFolder->isNew()) {
+                    $json['child'][] = $this->_getChildFolder($childFolder);
+                }
+
+                continue;
+            }
+
+            $entry = $this->_getChildObject($child);
+            if ($entry !== null) {
+                $json['child'][] = $entry;
+            }
+        }
+
+        return $json;
+    }
+
+    /**
+     * A sub-folder shown as the `Artist` type inside an `Index`, exactly like `_getArtistArray`
+     * @param array<int, array{
+     *     'id': string,
+     *     'name': string,
+     *     'coverArt'?: string
+     * }> $folder_list
+     * @return array<int, array{
+     *     'id': string,
+     *     'name': string,
+     *     'coverArt'?: string
+     * }>
+     */
+    private function _getFolderArray(array $folder_list, Folder $folder): array
+    {
+        $sub_id = Subsonic_Api::getFolderSubId($folder->getId());
+
+        $json = [
+            'id' => $sub_id,
+            'name' => (string) $folder->name,
+        ];
+        if ($folder->has_art()) {
+            $json['coverArt'] = $sub_id;
+        }
+
+        $folder_list[] = $json;
+
+        return $folder_list;
+    }
+
+    /**
+     * Buckets folders by the first letter of their name, same rule `_getIndex` uses for artists
+     *
+     * @param Folder[] $folders
+     * @return array<int, mixed>
+     */
+    private function _getFolderIndex(array $folders): array
+    {
+        $sharpfolders = [];
+        $json         = [];
+        $index        = [];
+        foreach ($folders as $folder) {
+            $name = (string) $folder->name;
+            if (strlen($name) > 0) {
+                $letter = strtoupper($name[0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpfolders[] = $folder;
+                    continue;
+                }
+
+                if (!isset($index[$letter])) {
+                    $index[$letter] = [];
+                }
+
+                $index[$letter] = $this->_getFolderArray($index[$letter], $folder);
+            }
+        }
+
+        foreach ($index as $letter => $folder) {
+            $json[] = [
+                'name' => $letter,
+                'artist' => $folder,
+            ];
+        }
+
+        // Always add # index at the end
+        if (count($sharpfolders) > 0) {
+            $index = [];
+            foreach ($sharpfolders as $folder) {
+                $index = $this->_getFolderArray($index, $folder);
+            }
+
+            if (!empty($index)) {
+                $json[] = [
+                    'name' => '#',
+                    'artist' => $index,
+                ];
+            }
+        }
+
+        return $json;
+    }
+
+    /**
      * _getGenre
      *
      * A genre.
@@ -2690,7 +2957,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * _addIgnoredArticles
+     * _getIgnoredArticles
      */
     private function _getIgnoredArticles(): string
     {
@@ -2847,8 +3114,10 @@ class Subsonic_Json_Data
     private function _getPlaylist_Playlist(Playlist $playlist, bool $songs = false): array
     {
         $sub_id    = Subsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        // the stored totals, the same source the smartlists in this class already serve: a page of
+        // playlists used to pay two joined queries per row for these two numbers
+        $songcount = (int) $playlist->last_count;
+        $duration  = (int) $playlist->last_duration;
 
         $json = [
             'id' => $sub_id,
@@ -2868,6 +3137,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $json['entry'] = [];
             $allsongs      = $playlist->get_songs();
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -2918,6 +3188,7 @@ class Subsonic_Json_Data
         if ($songs) {
             $allsongs = $search->get_songs();
             $entries  = [];
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3097,6 +3368,7 @@ class Subsonic_Json_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3106,6 +3378,7 @@ class Subsonic_Json_Data
             }
         } elseif ($share->object_type == 'album') {
             $songs = $this->songRepository->getByAlbum($share->object_id);
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -3119,7 +3392,7 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addStructuredLyrics
+     * _getStructuredLyrics
      *
      * Structured lyricsSubsonic
      * @return array{
@@ -3226,5 +3499,27 @@ class Subsonic_Json_Data
             'shareRole' => (bool) Preference::get_by_user($user->id, 'share'),
             'videoConversionRole' => false,
         ];
+    }
+
+    /**
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    private function _warmChildObjectCaches(array $children): void
+    {
+        $songIds = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::SONG) {
+                $songIds[] = $child['object_id'];
+            }
+        }
+
+        if ($songIds === []) {
+            return;
+        }
+
+        Song::build_cache($songIds);
+        Rating::build_cache('song', $songIds);
+        Userflag::build_cache('song', $songIds);
+        Tag::build_cache($songIds);
     }
 }

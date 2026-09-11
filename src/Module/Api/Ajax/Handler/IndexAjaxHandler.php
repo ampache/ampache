@@ -427,7 +427,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($object_ids !== []) {
-                    $browse = $this->browseFactory->create();
+                    // dashboard boxes are never stored, so they need no tmp_browse row
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -440,7 +441,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_newest($object_type, $limit, 0, 0, $user)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = $this->browseFactory->create();
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -453,7 +454,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_recent($object_type, $limit)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = $this->browseFactory->create();
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -466,7 +467,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ? Stats::get_top($object_type, $limit, $threshold)
                     : [];
                 if ($object_ids !== []) {
-                    $browse = $this->browseFactory->create();
+                    $browse = $this->browseFactory->create(null, false);
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -481,7 +482,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if ($object_ids !== []) {
                     shuffle($object_ids);
                     $object_ids = array_slice($object_ids, 0, $limit);
-                    $browse     = $this->browseFactory->create();
+                    $browse     = $this->browseFactory->create(null, false);
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
@@ -660,6 +661,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             (bool) AmpConfig::get('hide_moods'),
             (bool) AmpConfig::get('album_group'),
             (bool) AmpConfig::get('licensing') && (bool) AmpConfig::get('show_license'),
+            (bool) AmpConfig::get('show_composer'),
             (bool) AmpConfig::get('show_played_times'),
             (bool) AmpConfig::get('show_skipped_times'),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),

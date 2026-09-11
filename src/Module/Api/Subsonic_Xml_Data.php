@@ -39,10 +39,13 @@ use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -68,14 +71,20 @@ use SimpleXMLElement;
 class Subsonic_Xml_Data
 {
     private AlbumRepositoryInterface $albumRepository;
+    private FolderRepositoryInterface $folderRepository;
+    private OpenSubsonic_Fields $openSubsonicFields;
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
+        FolderRepositoryInterface $folderRepository,
         SongRepositoryInterface $songRepository,
+        OpenSubsonic_Fields $openSubsonicFields,
     ) {
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
+        $this->albumRepository    = $albumRepository;
+        $this->folderRepository   = $folderRepository;
+        $this->songRepository     = $songRepository;
+        $this->openSubsonicFields = $openSubsonicFields;
     }
 
     /**
@@ -138,6 +147,7 @@ class Subsonic_Xml_Data
 
         if ($songs) {
             $media_ids = $this->albumRepository->getSongs($album->id);
+            Song::build_cache($media_ids);
             foreach ($media_ids as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -195,6 +205,7 @@ class Subsonic_Xml_Data
 
         if ($songs) {
             $media_ids = $this->albumRepository->getSongs($album->id);
+            Song::build_cache($media_ids);
             foreach ($media_ids as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -233,12 +244,13 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addAlbumListSubsoni
+     * addAlbumList
      * @param int[] $albums
      */
     public function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList'));
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -259,6 +271,7 @@ class Subsonic_Xml_Data
     public function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
         $xlist = $this->_addChildToResultXml($xml, htmlspecialchars('albumList2'));
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -315,6 +328,7 @@ class Subsonic_Xml_Data
         $this->_setIfStarred($xartist, 'artist', $artist->id);
         if ($albums) {
             $allalbums = $this->albumRepository->getAlbumByArtist($artist->id);
+            $this->openSubsonicFields->warmAlbums($allalbums);
             foreach ($allalbums as $album_id) {
                 $album = new Album($album_id);
                 if ($album->isNew()) {
@@ -451,7 +465,7 @@ class Subsonic_Xml_Data
     /**
      * addDirectory will create the directory element based on the type
      */
-    public function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
+    public function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog|Folder $object, int $userId = -1): SimpleXMLElement
     {
         if ($object instanceof Artist) {
             $this->_addDirectory_Artist($xml, $object);
@@ -459,6 +473,8 @@ class Subsonic_Xml_Data
             $this->_addDirectory_Album($xml, $object);
         } elseif ($object instanceof Catalog) {
             $this->_addDirectory_Catalog($xml, $object);
+        } elseif ($object instanceof Folder) {
+            $this->_addDirectory_Folder($xml, $object, $userId);
         }
 
         return $xml;
@@ -502,6 +518,42 @@ class Subsonic_Xml_Data
                 break;
         }
         $xerr->addAttribute('message', $message);
+
+        return $xml;
+    }
+
+    /**
+     * addFolderIndexes
+     *
+     * Real-folder-based getIndexes: a catalog's root folder's direct children, alphabetically bucketed.
+     * A sub-folder becomes an `Artist`-shaped index entry (the real Subsonic `Directory` server behavior);
+     * loose media sitting directly at that level becomes a top-level `child`, same as a stray file would.
+     *
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    public function addFolderIndexes(SimpleXMLElement $xml, array $children, ?int $lastModified = 0): SimpleXMLElement
+    {
+        $xindexes = $this->_addChildToResultXml($xml, 'indexes');
+        $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
+        $this->_addIgnoredArticles($xindexes);
+
+        $this->_warmChildObjectCaches($children);
+
+        $folders = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $this->_addChildObject($xindexes, $child);
+        }
+
+        $this->_addFolderIndex($xindexes, $folders);
 
         return $xml;
     }
@@ -655,7 +707,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addLyricsListSubsoni
+     * addLyricsList
      */
     public function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
     {
@@ -784,7 +836,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylistSubsoniSubsoni
+     * addPlaylist
      */
     public function addPlaylist(SimpleXMLElement $xml, Playlist|Search $playlist, bool $songs = false): SimpleXMLElement
     {
@@ -806,6 +858,7 @@ class Subsonic_Xml_Data
     public function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
     {
         $xplaylists = $this->_addChildToResultXml($xml, 'playlists');
+        $this->openSubsonicFields->warmPlaylists($playlists);
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -961,6 +1014,7 @@ class Subsonic_Xml_Data
     public function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'randomSongs');
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1005,6 +1059,7 @@ class Subsonic_Xml_Data
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult'));
         $xresult->addAttribute('offset', (string) $offset);
         $xresult->addAttribute('totalHits', (string) $total);
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1025,6 +1080,7 @@ class Subsonic_Xml_Data
     public function addSearchResult2(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult2'));
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1033,6 +1089,7 @@ class Subsonic_Xml_Data
 
             $this->addArtist($xresult, $artist);
         }
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1041,6 +1098,7 @@ class Subsonic_Xml_Data
 
             $this->addAlbum($xresult, $album);
         }
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1061,6 +1119,7 @@ class Subsonic_Xml_Data
     public function addSearchResult3(SimpleXMLElement $xml, array $artists, array $albums, array $songs): SimpleXMLElement
     {
         $xresult = $this->_addChildToResultXml($xml, htmlspecialchars('searchResult3'));
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1069,6 +1128,7 @@ class Subsonic_Xml_Data
 
             $this->addArtistID3($xresult, $artist);
         }
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1077,6 +1137,7 @@ class Subsonic_Xml_Data
 
             $this->addAlbumID3($xresult, $album);
         }
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1243,6 +1304,7 @@ class Subsonic_Xml_Data
     public function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'songsByGenre');
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1264,6 +1326,7 @@ class Subsonic_Xml_Data
     {
         $xstarred = $this->_addChildToResultXml($xml, htmlspecialchars('starred'));
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1273,6 +1336,7 @@ class Subsonic_Xml_Data
             $this->addArtist($xstarred, $artist);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1283,6 +1347,7 @@ class Subsonic_Xml_Data
             $this->addAlbum($xstarred, $album);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1304,6 +1369,7 @@ class Subsonic_Xml_Data
     {
         $xstarred = $this->_addChildToResultXml($xml, htmlspecialchars('starred2'));
 
+        $this->openSubsonicFields->warmArtists($artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
@@ -1313,6 +1379,7 @@ class Subsonic_Xml_Data
             $this->addArtistID3($xstarred, $artist);
         }
 
+        $this->openSubsonicFields->warmAlbums($albums);
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1322,6 +1389,7 @@ class Subsonic_Xml_Data
             $this->addAlbumID3($xstarred, $album);
         }
 
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1351,6 +1419,7 @@ class Subsonic_Xml_Data
     public function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
         $xsongs = $this->_addChildToResultXml($xml, 'topSongs');
+        Song::build_cache($songs);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1432,7 +1501,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addArtistArray
+     * _addArtistArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1459,7 +1528,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addBookmark
+     * _addBookmark
      */
     private function _addBookmark(SimpleXMLElement $xml, Bookmark $bookmark): void
     {
@@ -1482,7 +1551,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addChildArray
+     * _addChildArray
      * @param array{
      *     id: int,
      *     f_name: string,
@@ -1503,6 +1572,46 @@ class Subsonic_Xml_Data
         $xchild->addAttribute('artist', $child['f_name']);
         if ($child['has_art']) {
             $xchild->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * A sub-folder shown as a `Child` directory stub, inside a `Directory` response
+     */
+    private function _addChildFolder(SimpleXMLElement $xml, Folder $folder): void
+    {
+        $sub_id = Subsonic_Api::getFolderSubId($folder->getId());
+        $xchild = $this->_addChildToResultXml($xml, 'child');
+        $xchild->addAttribute('id', $sub_id);
+        $xchild->addAttribute('parent', Subsonic_Api::getFolderSubId($folder->parent ?? -1));
+        $xchild->addAttribute('isDir', 'true');
+        $xchild->addAttribute('title', (string) $folder->name);
+        if ($folder->has_art()) {
+            $xchild->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * Dispatches a folder_map child (song, video or podcast_episode) to its existing `Child` serializer
+     *
+     * @param array{object_type: LibraryItemEnum, object_id: int} $child
+     */
+    private function _addChildObject(SimpleXMLElement $xml, array $child): void
+    {
+        switch ($child['object_type']) {
+            case LibraryItemEnum::SONG:
+                $song = new Song($child['object_id']);
+                if (!$song->isNew() && $song->enabled) {
+                    $this->addSong($xml, $song, 'child');
+                }
+
+                break;
+            case LibraryItemEnum::VIDEO:
+                $this->_addVideo($xml, new Video($child['object_id']), 'child');
+                break;
+            case LibraryItemEnum::PODCAST_EPISODE:
+                $this->_addPodcastEpisode($xml, new Podcast_Episode($child['object_id']), 'child');
+                break;
         }
     }
 
@@ -1560,6 +1669,7 @@ class Subsonic_Xml_Data
         $xdir->addAttribute('name', (string) $data['f_name']);
         $this->_setIfStarred($xdir, 'artist', $artist_id);
         $allalbums = $this->albumRepository->getAlbumByArtist($artist_id);
+        $this->openSubsonicFields->warmAlbums($allalbums);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
@@ -1587,7 +1697,96 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addIgnoredArticles
+     * addDirectory_Folder for a real filesystem folder; -1 is the virtual root above every catalog
+     */
+    private function _addDirectory_Folder(SimpleXMLElement $xml, Folder $folder, int $userId = -1): void
+    {
+        $xdir = $this->_addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', Subsonic_Api::getFolderSubId($folder->getId()));
+        if ($folder->parent !== null) {
+            $xdir->addAttribute('parent', Subsonic_Api::getFolderSubId($folder->parent));
+        } elseif ($folder->getId() !== -1) {
+            $xdir->addAttribute('parent', Subsonic_Api::getCatalogSubId($folder->catalog));
+        }
+        $xdir->addAttribute('name', (string) $folder->name);
+
+        $childFolderId = ($folder->getId() === -1) ? null : $folder->getId();
+        $children      = $this->folderRepository->getObjects($childFolderId, $userId);
+        $this->_warmChildObjectCaches($children);
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $childFolder = new Folder($child['object_id']);
+                if (!$childFolder->isNew()) {
+                    $this->_addChildFolder($xdir, $childFolder);
+                }
+
+                continue;
+            }
+
+            $this->_addChildObject($xdir, $child);
+        }
+    }
+
+    /**
+     * A sub-folder shown as the `Artist` type inside an `Index`, exactly like `_addArtistArray`
+     */
+    private function _addFolderArray(SimpleXMLElement $xml, Folder $folder): void
+    {
+        $sub_id  = Subsonic_Api::getFolderSubId($folder->getId());
+        $xartist = $this->_addChildToResultXml($xml, 'artist');
+        $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('name', (string) $folder->name);
+        if ($folder->has_art()) {
+            $xartist->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * Buckets folders by the first letter of their name, same rule `_addIndex` uses for artists
+     *
+     * @param Folder[] $folders
+     */
+    private function _addFolderIndex(SimpleXMLElement $xml, array $folders): void
+    {
+        $xlastcat    = null;
+        $sharpletter = [];
+        $xlastletter = '';
+        foreach ($folders as $folder) {
+            $name = (string) $folder->name;
+            if (strlen($name) > 0) {
+                $letter = strtoupper($name[0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpletter[] = $folder;
+                    continue;
+                }
+
+                if ($letter != $xlastletter) {
+                    $xlastletter = $letter;
+                    $xlastcat    = $this->_addChildToResultXml($xml, 'index');
+                    $xlastcat->addAttribute('name', $xlastletter);
+                }
+            }
+
+            if ($xlastcat != null) {
+                $this->_addFolderArray($xlastcat, $folder);
+            }
+        }
+
+        // Always add # index at the end
+        if (count($sharpletter) > 0) {
+            $xsharpcat = $this->_addChildToResultXml($xml, 'index');
+            $xsharpcat->addAttribute('name', '#');
+
+            foreach ($sharpletter as $folder) {
+                $this->_addFolderArray($xsharpcat, $folder);
+            }
+        }
+    }
+
+    /**
+     * _addIgnoredArticles
      */
     private function _addIgnoredArticles(SimpleXMLElement $xml): void
     {
@@ -1599,7 +1798,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addIndex
+     * _addIndex
      * @param array<int, array{
      *     id: int,
      *     f_name: string,
@@ -1648,7 +1847,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addInternetRadioStation
+     * _addInternetRadioStation
      */
     private function _addInternetRadioStation(SimpleXMLElement $xml, Live_Stream $radio): void
     {
@@ -1660,7 +1859,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addMessage
+     * _addMessage
      */
     private function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
     {
@@ -1680,13 +1879,15 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Playlist
+     * _addPlaylist_Playlist
      */
     private function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = Subsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        // the stored totals, the same source the smartlists in this class already serve: a page of
+        // playlists used to pay two joined queries per row for these two numbers
+        $songcount = (int) $playlist->last_count;
+        $duration  = (int) $playlist->last_duration;
         $xplaylist = $this->_addChildToResultXml($xml, 'playlist');
         $xplaylist->addAttribute('id', $sub_id);
         $xplaylist->addAttribute('name', (string) $playlist->get_fullname());
@@ -1702,6 +1903,7 @@ class Subsonic_Xml_Data
 
         if ($songs) {
             $allsongs = $playlist->get_songs();
+            Song::build_cache($allsongs);
             foreach ($allsongs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1715,7 +1917,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Search
+     * _addPlaylist_Search
      */
     private function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
     {
@@ -1752,7 +1954,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addPodcastEpisode
+     * _addPodcastEpisode
      */
     private function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
     {
@@ -1792,7 +1994,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addShare
+     * _addShare
      */
     private function _addShare(SimpleXMLElement $xml, Share $share): void
     {
@@ -1819,6 +2021,7 @@ class Subsonic_Xml_Data
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1828,6 +2031,7 @@ class Subsonic_Xml_Data
             }
         } elseif ($share->object_type == 'album') {
             $songs = $this->songRepository->getByAlbum($share->object_id);
+            Song::build_cache($songs);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {
@@ -1839,7 +2043,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addVideo
+     * _addVideo
      */
     private function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {
@@ -1935,5 +2139,27 @@ class Subsonic_Xml_Data
                 }
             }
         }
+    }
+
+    /**
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     */
+    private function _warmChildObjectCaches(array $children): void
+    {
+        $songIds = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::SONG) {
+                $songIds[] = $child['object_id'];
+            }
+        }
+
+        if ($songIds === []) {
+            return;
+        }
+
+        Song::build_cache($songIds);
+        Rating::build_cache('song', $songIds);
+        Userflag::build_cache('song', $songIds);
+        Tag::build_cache($songIds);
     }
 }

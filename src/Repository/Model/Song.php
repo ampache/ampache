@@ -66,6 +66,7 @@ use Traversable;
 
 class Song extends database_object implements
     Media,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     GarbageCollectibleInterface,
@@ -211,6 +212,12 @@ class Song extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($song_ids, static fn(int|string $id): bool => !parent::is_cached('song_warm', (int) $id));
+        if ($cold === []) {
+            return true;
+        }
+
         $artists    = [];
         $albums     = [];
         $repository = self::getSongRepository();
@@ -256,6 +263,14 @@ class Song extends database_object implements
             parent::add_to_cache('album_artists', $albumId, $parentIds);
         }
 
+        // one read for the whole page instead of one per song
+        $intIds = array_map(intval(...), array_values($song_ids));
+        Tag::build_object_tag_cache('song', $intIds);
+        Mood::build_object_mood_cache('song', $intIds);
+        foreach ($repository->getSongMapValuesBulk($intIds, 'isrc') as $songId => $values) {
+            parent::add_to_cache('song_map_isrc', $songId, $values);
+        }
+
         // If we're rating this then cache them as well
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $song_ids);
@@ -265,6 +280,12 @@ class Song extends database_object implements
         // Build a cache for the song's extended table
         foreach ($repository->getDataRowsByIds(array_values($song_ids)) as $row) {
             parent::add_to_cache('song_data', $row['song_id'], $row);
+        }
+
+        // one tag read for the page instead of one per song
+
+        foreach ($song_ids as $id) {
+            parent::add_to_cache('song_warm', (int) $id, [true]);
         }
 
         return true;
@@ -564,6 +585,10 @@ class Song extends database_object implements
     {
         if (!$song_id) {
             return [];
+        }
+
+        if (parent::is_cached('song_map_' . $type, $song_id)) {
+            return parent::get_from_cache('song_map_' . $type, $song_id);
         }
 
         return self::getSongRepository()->getSongMapValues($song_id, (string) $type);
@@ -992,12 +1017,16 @@ class Song extends database_object implements
     }
 
     /**
-     * update_enabled
-     * sets the enabled flag
+     * Takes the song out of the listings and out of playback, or puts it back.
+     *
+     * The owner check every other field carries is deliberately absent: it drops the requirement to USER,
+     * which would let an uploader turn a withdrawn track of their own back on and undo the takedown that
+     * withdrew it. Every other field on a song asks for CONTENT_MANAGER; this one asks for MANAGER and
+     * means it.
      */
     public static function update_enabled(bool $new_enabled, int $song_id): void
     {
-        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER);
     }
 
     /**
@@ -1158,7 +1187,7 @@ class Song extends database_object implements
     }
 
     /**
-     * clean_string_field_value
+     * _clean_string_field_value
      * Accepts anything the compare loop lets through (string, numeric or bool) so let it through too if it gets here
      */
     private static function _clean_string_field_value(string|int|float|bool|null $value = null): string
@@ -1444,7 +1473,9 @@ class Song extends database_object implements
     public function get_album_artist(): ?int
     {
         if ($this->albumartist === null) {
-            $this->albumartist = $this->getAlbumRepository()->getAlbumArtistId($this->album);
+            $this->albumartist = (database_object::is_cached('album', $this->album))
+                ? (int) (database_object::get_from_cache('album', $this->album)['album_artist'] ?? 0)
+                : $this->getAlbumRepository()->getAlbumArtistId($this->album);
         }
 
         return $this->albumartist;
@@ -2100,6 +2131,12 @@ class Song extends database_object implements
         return $this->getId() === 0;
     }
 
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
+    }
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -2389,6 +2426,14 @@ class Song extends database_object implements
                         $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
+                case 'enabled':
+                    $new_enabled = (bool) $value;
+                    if ($new_enabled !== $this->enabled) {
+                        // update_enabled carries the manager check, so no caller can flip the state around it
+                        self::update_enabled($new_enabled, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'label':
                     if ($value != $this->label) {
                         self::update_label((string) $value, $this->id);
@@ -2513,12 +2558,13 @@ class Song extends database_object implements
             return $repository->getWaveformRow($this->id);
         }
 
-        if ($select !== '') {
-            return $repository->getPartialDataRow($this->id);
-        }
-
+        // a page warm already holds the whole row, which answers a partial read as well
         if (parent::is_cached('song_data', $this->id)) {
             return parent::get_from_cache('song_data', $this->id);
+        }
+
+        if ($select !== '') {
+            return $repository->getPartialDataRow($this->id);
         }
 
         $results = $repository->getDataRow($this->id);

@@ -143,6 +143,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $hide_moods     = (bool) AmpConfig::get('hide_moods');
                 $is_group       = (bool) AmpConfig::get('album_group');
                 $show_license   = (bool) (AmpConfig::get('licensing') && AmpConfig::get('show_license'));
+                $show_composer  = (bool) AmpConfig::get('show_composer');
                 $hide           = Core::get_request('hide');
                 $argument_param = '&hide=' . $hide;
                 $argument       = explode(',', $hide);
@@ -159,12 +160,14 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     $is_group,
                     (!empty($hide)),
                     $show_license,
+                    $show_composer,
                     $hide_genres,
                     $hide_moods,
                     $hide_artist,
                     $hide_album,
                     $hide_year,
-                    $hide_drag
+                    $hide_drag,
+                    in_array('cel_add_date', $this->browse->get_show_columns(), true)
                 )->render();
                 break;
             case 'playlist_row':

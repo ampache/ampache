@@ -156,7 +156,7 @@ class Democratic extends Tmp_Playlist
      */
     public static function get_current_playlist(?User $user = null): Democratic
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 
@@ -233,7 +233,7 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * vote
+     * add_vote
      * This function is called by users to vote on a system wide playlist
      * This adds the specified objects to the tmp_playlist and adds a 'vote'
      * by this user, naturally it checks to make sure that the user hasn't
@@ -277,7 +277,7 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * clean_votes
+     * clear_votes
      * This removes in left over garbage in the votes table
      */
     public function clear_votes(): bool

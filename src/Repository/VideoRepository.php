@@ -229,6 +229,26 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     }
 
     /**
+     * Reads the videos of one catalog that have no original-size art, for a scoped gather_art sweep
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingArt(int $catalogId): array
+    {
+        $result = $this->connection->query(
+            "SELECT `video`.`id` FROM `video` LEFT JOIN `image` ON `image`.`object_id` = `video`.`id` AND `image`.`object_type` = 'video' AND `image`.`size` = 'original' WHERE `video`.`catalog` = ? AND `image`.`object_id` IS NULL",
+            [$catalogId]
+        );
+
+        $videoIds = [];
+        while ($videoId = $result->fetchColumn()) {
+            $videoIds[] = (int) $videoId;
+        }
+
+        return $videoIds;
+    }
+
+    /**
      * Return the number of entries in the database...
      */
     public function getItemCount(): int

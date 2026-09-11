@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Ampache">
+<title>Ampache</title>
+<rect width="1200" height="630" fill="#000"/>
+<g transform="translate(409.5 124.5) scale(1.488281)">
+<defs>
+<linearGradient id="face" x1="25.8" y1="0" x2="229.2" y2="0" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#FDA83D"/><stop offset=".29" stop-color="#FDA83D"/><stop offset="1" stop-color="#EA870A"/>
+</linearGradient>
+</defs><circle cx="127.5" cy="127.5" r="112.55" fill="#FA8D03"/>
+<circle cx="127.5" cy="127.5" r="106.8" fill="#FDA93E"/>
+<circle cx="127.5" cy="127.5" r="101.7" fill="url(#face)"/>
+<path d="M26.6 129C61.5 169.6 89.5 178.4 115.5 178.4C154.8 178.4 180.9 141.8 226.5 150A101.7 101.7 0 0 1 26.6 129Z" fill="#fff" fill-opacity=".11"/><g fill="#422506" transform="translate(4.5 -0.7)">
+<path d="M120 60 H132 C168 74 190 96 180 128 C178 135 169 134 166 126 C162 107 152 92 132 100 V155.99 A35 25 -20 1 1 120 145.84 Z"/>
+</g>
+</g>
+</svg>

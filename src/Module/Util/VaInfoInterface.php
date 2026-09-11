@@ -71,7 +71,7 @@ interface VaInfoInterface
     public function forceSize(int $size): void;
 
     /**
-     * get_info
+     * gather_tags
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */

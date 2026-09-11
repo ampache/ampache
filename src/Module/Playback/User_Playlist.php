@@ -110,7 +110,7 @@ class User_Playlist extends database_object
         $items   = [];
         $results = $this->getUserPlaylistRepository()->getCurrentRow($this->user);
         if ($results !== []) {
-            $items = [
+            return [
                 'object_type' => $results['object_type'],
                 'object_id' => (int) $results['object_id'],
                 'track_id' => (int) $results['object_id'],

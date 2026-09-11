@@ -120,7 +120,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         if ($results) {
-            $data = [
+            return [
                 'name' => $results->getName(),
                 'mbid' => $results->getId(),
             ];
@@ -415,7 +415,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     }
 
     /**
-     * find
+     * _find
      * Lookup item by mbid or search by name / artist information
      * @param array<string, string|null> $media_info
      */

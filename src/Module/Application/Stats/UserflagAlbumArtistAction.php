@@ -55,7 +55,6 @@ final readonly class UserflagAlbumArtistAction implements ApplicationActionInter
 
         $this->ui->showHeader();
         echo $this->statsFormViewFactory->createUserflag($by_user)->render();
-        $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
 

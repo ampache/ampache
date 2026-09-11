@@ -29,6 +29,8 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
@@ -69,7 +71,9 @@ final class UpdateFromTags4Method implements MethodInterface
         if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return $response;
         }
-        unset($user);
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
+            return $response;
+        }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 

@@ -25,19 +25,41 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stream;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class DownloadAction extends AbstractStreamAction
 {
     public const string REQUEST_KEY = 'download';
 
+    public function __construct(
+        LoggerInterface $logger,
+        ConfigContainerInterface $configContainer,
+        private readonly PowServiceInterface $powService,
+    ) {
+        parent::__construct($logger, $configContainer);
+    }
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->preCheck($gatekeeper) === false) {
             return null;
+        }
+
+        // Off unless `download` is named in pow_protected. Worth knowing before turning it on: this
+        // guards the link the interface hands out, not the file itself, which play/index.php still
+        // serves to anything holding a valid session.
+        if (
+            !defined('NO_SESSION')
+            && $this->powService->isRequired('download', $gatekeeper->getUser())
+            && !$this->powService->verifyRequest($request, 'download', $gatekeeper->getUser())
+        ) {
+            return $this->powService->createChallengeResponse($request, 'download');
         }
 
         $mediaIds = [];

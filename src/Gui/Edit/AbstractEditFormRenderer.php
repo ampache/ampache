@@ -26,6 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Gui\Edit;
 
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use LogicException;
 use Override;
 
@@ -38,6 +43,16 @@ use Override;
 abstract class AbstractEditFormRenderer extends AbstractView implements EditFormRendererInterface
 {
     private ?EditFormContext $context = null;
+
+    /**
+     * Withdrawing an item sits with whoever can already disable its songs, whatever kind of item it is
+     */
+    public function mayDisable(): bool
+    {
+        $user = Core::get_global('user');
+
+        return $user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId());
+    }
 
     #[Override]
     final public function renderForm(EditFormContext $context): string

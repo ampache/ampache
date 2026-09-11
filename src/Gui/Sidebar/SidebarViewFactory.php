@@ -52,7 +52,8 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
     #[Override]
     public function createSidebarView(string $activeTab): SidebarView
     {
-        $user = Core::get_global('user');
+        $user       = Core::get_global('user');
+        $registered = User::is_registered();
 
         return new SidebarView(
             AmpConfig::get_web_path(),
@@ -63,8 +64,8 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
             $this->moodRepository,
             $activeTab,
             Session::get(),
-            User::is_registered(),
-            User::is_registered() && (($user instanceof User) ? $user->getId() : 0) > 0,
+            $registered,
+            $registered && (($user instanceof User) ? $user->getId() : 0) > 0,
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN),

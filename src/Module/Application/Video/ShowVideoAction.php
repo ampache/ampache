@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Video;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Gui\Video\VideoView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -49,9 +50,33 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $video = new Video((int) filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+
+        if (!$video->isNew()) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/video.php?action=show_video&video_id=' . $video->getId();
+            PageMeta::set(
+                [
+                    $video->get_f_time(),
+                    (string) $video->get_f_resolution(),
+                ],
+                'video.other',
+                (string) $video->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $video->getId() . '&object_type=video&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'VideoObject',
+                    'name' => (string) $video->get_fullname(),
+                    'url' => $url,
+                    'duration' => PageMeta::duration($video->time),
+                    'thumbnailUrl' => $webPath . '/image.php?object_id=' . $video->getId() . '&object_type=video&size=600x600',
+                    'uploadDate' => ($video->addition_time > 0) ? date('Y-m-d', $video->addition_time) : null,
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
 
         $mayInteract = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 

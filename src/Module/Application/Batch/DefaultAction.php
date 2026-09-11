@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -65,6 +66,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private SongRepositoryInterface $songRepository,
         private ResponseFactoryInterface $responseFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private PowServiceInterface $powService,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
@@ -107,6 +109,22 @@ final readonly class DefaultAction implements ApplicationActionInterface
             );
 
             throw new AccessDeniedException();
+        }
+
+        // A zip is expensive to build, so it is worth making a client prove it is a browser first.
+        // It comes after the cheap request checks above: a request that is going to be refused
+        // anyway should not first make a legitimate browser burn CPU on a challenge.
+        // Requests carrying a stream session are exempt: Ampache has already authenticated them and
+        // they come from players that cannot run the challenge.
+        if (!defined('NO_SESSION')) {
+            $user = $gatekeeper->getUser();
+
+            if (
+                $this->powService->isRequired('batch', $user)
+                && !$this->powService->verifyRequest($request, 'batch', $user)
+            ) {
+                return $this->powService->createChallengeResponse($request, 'batch');
+            }
         }
 
         $this->logger->debug(
@@ -223,11 +241,16 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        return $this->zipHandler->zip(
-            $this->responseFactory->createResponse(),
-            $name,
-            $this->getMediaFiles($media_ids),
-            $flat_path
+        // The archive is written in full before these headers go out, so the cookie riding along with
+        // them is the first moment the interstitial can know the transfer has begun.
+        return $this->powService->confirmDelivery(
+            $request,
+            $this->zipHandler->zip(
+                $this->responseFactory->createResponse(),
+                $name,
+                $this->getMediaFiles($media_ids),
+                $flat_path
+            )
         );
     }
 

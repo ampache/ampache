@@ -76,6 +76,10 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
         $columns[] = ['class' => $this->getCoverClass() . ' optional', 'label' => T_('Art'), 'header' => true];
         $columns[] = ['class' => 'cel_title essential persist', 'label' => T_('Title'), 'header' => true];
 
+        if ($this->showComposer()) {
+            $columns[] = ['class' => 'cel_composer optional', 'label' => T_('Composer'), 'header' => true];
+        }
+
         if ($this->showParent()) {
             $columns[] = ['class' => 'cel_artist essential persist', 'label' => T_('Artist'), 'header' => true];
         }
@@ -230,6 +234,7 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
             $this->getBrowse()->is_grid_view(),
             $this->showRatings(),
             $this->showParent(),
+            $this->showComposer(),
             (bool) $this->configContainer->get('extended_playlist_links'),
             $this->canMultiselect(),
             $this->showMultiselect(),
@@ -241,6 +246,11 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
             $this->mayAdd() && (bool) $this->configContainer->get('share'),
             $this->mayRemove()
         )->render();
+    }
+
+    public function showComposer(): bool
+    {
+        return (bool) $this->configContainer->get('show_composer');
     }
 
     public function showMultiselect(): bool

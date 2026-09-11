@@ -1558,10 +1558,10 @@ Kick off a catalog update or clean for the selected catalog
 
 **NOTE** `filter` is available in Ampache 7.9.0 and higher. `catalog` is deprecated and will be removed in **API9**.
 
-| Input    | Type   | Description                       | Optional |
-|----------|--------|-----------------------------------|---------:|
-| 'task'   | string | `add_to_catalog`, `clean_catalog` |       NO |
-| 'filter' | string | $catalog_id                       |       NO |
+| Input    | Type   | Description                                                                                                                    | Optional |
+|----------|--------|--------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'task'   | string | `add_to_catalog`, `clean_catalog`, `verify_catalog`, `update_catalog`, `gather_art`, `garbage_collect`, `scan_catalog_folders` |       NO |
+| 'filter' | string | $catalog_id                                                                                                                    |       NO |
 
 * return
 
@@ -3816,13 +3816,19 @@ Returns a single object.
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
-**NOTE** `type` is optional from Ampache8+
+**NOTE** `object_type` is optional from Ampache8+
 
-| Input    | Type   | Description                                           | Optional |
-|----------|--------|-------------------------------------------------------|---------:|
-| 'filter' | string | UID of Playlist                                       |       NO |
-| 'id'     | string | UID of the object to add to playlist                  |       NO |
-| 'type'   | string | 'song', 'album', 'artist', 'playlist' (Default: song) |      YES |
+**NOTE** `type` is **DEPRECATED**, use `object_type` instead. Will be removed in API9. REST callers
+should always use `object_type`: the path `playlists/{playlist_id}/add` already binds `type` to the
+resource name (`playlist`), so `type` sent in the request body only works via an explicit
+body-over-path precedence rule in the REST dispatcher
+
+| Input         | Type   | Description                                           | Optional |
+|---------------|--------|-------------------------------------------------------|---------:|
+| 'filter'      | string | UID of Playlist                                       |       NO |
+| 'id'          | string | UID of the object to add to playlist                  |       NO |
+| 'object_type' | string | 'song', 'album', 'artist', 'playlist' (Default: song) |      YES |
+| 'type'        | string | DEPRECATED alias of `object_type`                     |      YES |
 
 * return
 
@@ -4102,13 +4108,19 @@ Using clear will empty the entire list.
 
 **NOTE** this replaces `playlist_remove_song` in API8
 
-| Input    | Type    | Description                                           | Optional |
-|----------|---------|-------------------------------------------------------|---------:|
-| 'filter' | string  | UID of Playlist                                       |       NO |
-| 'id'     | string  | UID of object to remove from playlist                 |      YES |
-| 'type'   | string  | 'song', 'album', 'artist', 'playlist', default = song |      YES |
-| 'track'  | integer | Track number to remove from playlist                  |      YES |
-| 'clear'  | integer | 0,1 Clear the whole playlist                          |      YES |
+**NOTE** `type` is **DEPRECATED**, use `object_type` instead. Will be removed in API9. REST callers
+should always use `object_type`: the path `playlists/{playlist_id}/remove` already binds `type` to
+the resource name (`playlist`), so `type` sent in the request body only works via an explicit
+body-over-path precedence rule in the REST dispatcher
+
+| Input         | Type    | Description                                           | Optional |
+|---------------|---------|-------------------------------------------------------|---------:|
+| 'filter'      | string  | UID of Playlist                                       |       NO |
+| 'id'          | string  | UID of object to remove from playlist                 |      YES |
+| 'object_type' | string  | 'song', 'album', 'artist', 'playlist', default = song |      YES |
+| 'type'        | string  | DEPRECATED alias of `object_type`                     |      YES |
+| 'track'       | integer | Track number to remove from playlist                  |      YES |
+| 'clear'       | integer | 0,1 Clear the whole playlist                          |      YES |
 
 * return
 
@@ -6962,6 +6974,7 @@ One child of the folder being browsed. `parent` is always the id of that folder,
 | title         | string  |   YES    |    NO    |       |
 | parent        | string  |    NO    |    NO    |       |
 | path          | string  |   YES    |    NO    |       |
+| time          | integer |   YES    |    NO    |       |
 | art           | string  |   YES    |    NO    |       |
 | has_art       | boolean |    NO    |    NO    |       |
 | play_url      | string  |    NO    |    NO    |       |
@@ -6979,6 +6992,7 @@ The folder that was browsed, and its children. `parent` is the id of the folder 
 | parent  | string                                             |   YES    |    NO    |                                                  |
 | path    | string                                             |   YES    |    NO    |                                                  |
 | catalog | string                                             |    NO    |    NO    |                                                  |
+| time    | integer                                            |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
 ### GenreReference

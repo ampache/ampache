@@ -86,7 +86,7 @@ final class ScriptsView extends AbstractView
             return null;
         }
 
-        return ($entrypoint) ? (string) $entrypoint['url'] : null;
+        return ($entrypoint !== []) ? (string) $entrypoint['url'] : null;
     }
 
     /**

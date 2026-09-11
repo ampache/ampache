@@ -65,16 +65,14 @@ final readonly class InstallationHelper implements InstallationHelperInterface
     {
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
-        $handle   = fopen($distfile, 'r');
-        $length   = Core::get_filesize($distfile);
-        if (!$handle || $length <= 0) {
+        $dist     = (Core::is_readable($distfile))
+            ? file_get_contents($distfile)
+            : false;
+        if ($dist === false || $dist === '') {
             return '';
         }
 
-        $dist = fread($handle, $length);
-        fclose($handle);
-
-        $data  = explode("\n", (string) $dist);
+        $data  = explode("\n", $dist);
         $final = "";
         foreach ($data as $line) {
             if (
@@ -263,11 +261,11 @@ final readonly class InstallationHelper implements InstallationHelperInterface
         $trconfig = [
             'encode_target' => 'mp3',
             'encode_video_target' => 'webm',
-            'transcode_m4a' => 'required',
-            'transcode_flac' => 'required',
-            'transcode_mpc' => 'required',
+            'transcode_m4a' => 'allowed',
+            'transcode_flac' => 'allowed',
+            'transcode_mpc' => 'allowed',
             'transcode_ogg' => 'allowed',
-            'transcode_wav' => 'required',
+            'transcode_wav' => 'allowed',
             'transcode_avi' => 'allowed',
             'transcode_mpg' => 'allowed',
             'transcode_mkv' => 'allowed',
@@ -442,7 +440,8 @@ final readonly class InstallationHelper implements InstallationHelperInterface
                 AmpError::add('general', T_('Config file is not writable'));
 
                 return false;
-            } elseif (!file_put_contents($config_file, $final)) {
+            }
+            if (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
                 AmpError::add('general', T_('Failed writing config file'));
 
@@ -456,8 +455,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             }
 
             echo $final;
-
-            return false;
         }
 
         return true;
@@ -592,17 +589,11 @@ final readonly class InstallationHelper implements InstallationHelperInterface
         }
 
         if ($create_tables) {
-            $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $sql_handle = fopen($sql_file, 'r');
-            $length     = Core::get_filesize($sql_file);
-            if (!$sql_handle || $length <= 0) {
-                AmpError::add('general', T_('Unable to open ampache.sql'));
-
-                return false;
-            }
-
-            $query = fread($sql_handle, $length);
-            if (!$query) {
+            $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
+            $query    = (Core::is_readable($sql_file))
+                ? file_get_contents($sql_file)
+                : false;
+            if ($query === false || $query === '') {
                 AmpError::add('general', T_('Unable to open ampache.sql'));
 
                 return false;
@@ -674,8 +665,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             }
 
             echo $final;
-
-            return false;
         }
 
         return true;
@@ -696,21 +685,12 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
         $new_data = $this->generate_config(parse_ini_file($current_file_path) ?: []);
 
-        // Start writing into the current config file
-        $handle = fopen($current_file_path, 'w+');
-        $length = strlen($new_data);
-        if (
-            $new_data === '' || $new_data === '0'
-            || !$handle
-            || $length <= 0
-        ) {
+        if ($new_data === '' || $new_data === '0') {
             return false;
         }
 
-        fwrite($handle, $new_data, $length);
-        fclose($handle);
-
-        return true;
+        // Start writing into the current config file
+        return file_put_contents($current_file_path, $new_data) !== false;
     }
 
     /**

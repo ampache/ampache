@@ -33,7 +33,7 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
 class VlcPlayer
 {
     /**
-     * VlcPlayer
+     * __construct
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
@@ -256,7 +256,7 @@ class VlcPlayer
         }
 
         if ($currentstat == 'paused') {
-            $state = 'pause';
+            return 'pause';
         }
 
         return $state;

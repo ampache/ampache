@@ -58,9 +58,7 @@ final class CatalogLoader implements CatalogLoaderInterface
     ): array {
         $userId = $user?->getId();
 
-        if ($filterType === null) {
-            $filterType = '';
-        }
+        $filterType ??= '';
 
         $catalogIds = Catalog::get_catalogs($filterType, $userId);
 

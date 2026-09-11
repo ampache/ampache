@@ -1,0 +1,117 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// partial/object_header.phtml -- rendered by Ampache\Gui\Partial\ObjectHeaderView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Partial\ObjectHeaderView $this */
+
+$chips     = $this->getChips();
+$actions   = $this->getActions();
+$primary   = $this->getPrimaryAction();
+$art       = $this->getArt();
+$crumb     = $this->getBreadcrumb();
+$rating    = $this->getRating();
+$userflag  = $this->getUserflag();
+$ratingKey = $this->getRatingKey();
+$note      = $this->getNote();
+$links     = $this->getLinks();
+$tags      = $this->getTags();
+$notice    = $this->getNotice(); ?>
+<?php if ($notice !== '') { ?>
+<div class="object-header-notice"><?php echo $this->raw(Ui::get_material_symbol('unpublished', $notice)); ?><strong><?php echo $this->e($notice); ?></strong></div>
+<?php } ?>
+<div class="object-header<?php echo ($this->hasWideArt()) ? ' wide-art' : ''; ?>">
+<?php if ($art !== '') { ?>
+    <div class="object-header-art"><?php echo $this->raw($art); ?></div>
+<?php } ?>
+    <div class="object-header-id">
+        <p class="object-header-kind"><?php echo $this->e($this->getKind()); ?>
+<?php if ($notice !== '') { ?>
+            <span class="object-header-badge"><?php echo $this->e($notice); ?></span>
+<?php } ?>
+        </p>
+        <h2 class="object-header-title"><?php echo $this->raw($this->getTitle()); ?></h2>
+<?php if ($crumb !== '') { ?>
+        <p class="object-header-crumb"><?php echo $this->raw($crumb); ?></p>
+<?php } ?>
+<?php if ($chips !== []) { ?>
+        <ul class="object-header-chips">
+<?php foreach ($chips as $chip) { ?>
+            <li class="<?php echo $this->e(trim((($chip->numeric) ? 'numeric ' : '') . (($chip->accent) ? 'accent ' : '') . (($chip->genre) ? 'genre' : ''))); ?>"<?php echo ($chip->title !== '') ? ' title="' . $this->e($chip->title) . '"' : ''; ?>>
+<?php if ($chip->url !== '') { ?>
+                <a href="<?php echo $this->e($chip->url); ?>"<?php echo ($chip->external) ? ' target="_blank" rel="nofollow noopener"' : ''; ?>><?php echo $this->e($chip->text); ?></a>
+<?php } else {
+    echo $this->e($chip->text);
+} ?>
+            </li>
+<?php } ?>
+        </ul>
+<?php } ?>
+<?php if ($tags !== []) { ?>
+        <ul class="object-header-chips object-header-tags">
+<?php foreach ($tags as $tag) { ?>
+            <li class="genre">
+<?php if ($tag->url !== '') { ?>
+                <a href="<?php echo $this->e($tag->url); ?>"><?php echo $this->e($tag->text); ?></a>
+<?php } else {
+    echo $this->e($tag->text);
+} ?>
+            </li>
+<?php } ?>
+        </ul>
+<?php } ?>
+<?php if ($rating !== '' || $userflag !== '' || $note !== '') { ?>
+        <div class="object-header-meta">
+<?php if ($rating !== '') { ?>
+            <div id="rating_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($rating); ?></div>
+<?php } ?>
+<?php if ($userflag !== '') { ?>
+            <div id="userflag_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($userflag); ?></div>
+<?php } ?>
+<?php if ($note !== '') { ?>
+            <span class="object-header-note"><?php echo $this->e($note); ?></span>
+<?php } ?>
+        </div>
+<?php } ?>
+<?php if ($links !== '') { ?>
+        <div class="object-header-links"><?php echo $this->raw($links); ?></div>
+<?php } ?>
+    </div>
+</div>
+<?php if ($primary !== '' || $actions !== []) { ?>
+<div id="information_actions">
+    <ul>
+<?php if ($primary !== '') { ?>
+        <li class="primary"><?php echo $this->raw($primary); ?></li>
+<?php } ?>
+<?php foreach ($actions as $action) { ?>
+        <li><?php echo $this->raw($action); ?></li>
+<?php } ?>
+        <?php echo $this->raw(Ampache\Gui\Partial\ObjectHeaderView::actionsHelp()); ?>
+    </ul>
+</div>
+<?php } ?>

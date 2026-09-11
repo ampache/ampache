@@ -27,12 +27,16 @@ namespace Ampache\Gui\Artist;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\ExternalLinksView;
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
@@ -97,6 +101,47 @@ final class ArtistPageView extends AbstractView
     public function getFullname(): string
     {
         return (string) $this->artist->get_fullname();
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $artist = $this->artist;
+        $listed = $this->isAlbumType();
+        $base   = $this->getWebPath() . '/artists.php?artist=' . $this->getArtistId();
+
+        return new ObjectHeaderView(
+            kind: T_('Artist'),
+            title: $this->e($this->getFullname()),
+            art: $this->getArt(),
+            chips: HeaderChip::listOf(
+                new HeaderChip((string) $artist->placeformed, title: T_('Place Formed')),
+                ($artist->yearformed !== null && $artist->yearformed > 0) ? new HeaderChip((string) $artist->yearformed, true, title: T_('Year Formed')) : null,
+                ($artist->album_count > 0)
+                    ? new HeaderChip(
+                        sprintf(nT_('%d album', '%d albums', $artist->album_count), $artist->album_count),
+                        true,
+                        ($listed) ? '#albums' : $base . '&action=show#albums'
+                    )
+                    : null,
+                ($artist->song_count > 0)
+                    ? new HeaderChip(
+                        sprintf(nT_('%d song', '%d songs', $artist->song_count), $artist->song_count),
+                        true,
+                        ($listed) ? $base . '&action=show_songs#albums' : '#albums'
+                    )
+                    : null,
+                ($artist->time > 0) ? new HeaderChip($artist->get_f_time(), true, title: T_('Time')) : null,
+            ),
+            tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath() . '/browse.php?action=tag&type=artist&show_tag='),
+            rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist', true) : '',
+            userflag: ($this->showRatings()) ? Userflag::show($this->getArtistId(), 'artist') : '',
+            ratingKey: $this->getArtistId() . '_artist',
+            note: ($this->showPlayedTimes())
+                ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
+                : '',
+            links: $this->getExternalLinks()->render(),
+            notice: ($this->artist->isEnabled()) ? '' : T_('Disabled'),
+        );
     }
 
     /**

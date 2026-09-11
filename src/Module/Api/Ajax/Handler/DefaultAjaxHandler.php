@@ -27,11 +27,11 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -52,6 +53,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private SongRepositoryInterface $songRepository,
         private UiInterface $ui,
         private BrowseFactoryInterface $browseFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {}
 
     public function handle(User $user): void
@@ -70,7 +72,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
             case 'current_playlist':
                 if ($request_type === 'delete') {
                     $user->load_playlist();
-                    $user->playlist?->delete_track($request_id);
+                    $user->getPlaylist()->delete_track($request_id);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
@@ -93,17 +95,28 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         array_map('intval', explode(',', $request_ids)),
                         static fn(int $object_id): bool => $object_id > 0
                     );
-                    if ($object_ids !== []) {
-                        $className = ObjectTypeToClassNameMapper::map($object_type);
-                        $medias    = [];
+                    $itemType = LibraryItemEnum::fromObjectType($object_type);
+                    if ($object_ids !== [] && $itemType instanceof LibraryItemEnum) {
+                        $medias = [];
                         foreach ($object_ids as $object_id) {
-                            /** @var container_item $object */
-                            $object = new $className($object_id);
+                            $object = $this->libraryItemLoader->load($itemType, $object_id);
+                            if (!$object instanceof container_item) {
+                                continue;
+                            }
+
+                            // a private list you cannot see is not yours to expand into the queue here
+                            if (
+                                ($object instanceof Playlist || $object instanceof Search)
+                                && !$object->isVisible($user)
+                            ) {
+                                continue;
+                            }
+
                             $medias = array_merge($medias, $object->get_medias());
                         }
 
                         $user->load_playlist();
-                        $user->playlist?->add_medias($medias);
+                        $user->getPlaylist()->add_medias($medias);
                     }
                 } else {
                     switch ($request_type) {
@@ -124,8 +137,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 case 'artist':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->songRepository->getAllByArtist($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->songRepository->getAllByArtist((int) $object));
+                                            ? array_merge($songs, $this->songRepository->getEnabledByArtist($object['object_id'] ?? 0))
+                                            : array_merge($songs, $this->songRepository->getEnabledByArtist((int) $object));
                                     }
 
                                     break;
@@ -139,7 +152,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             }
 
                             foreach ($songs as $object) {
-                                $user->playlist?->add_object(
+                                $user->getPlaylist()->add_object(
                                     (is_array($object) && isset($object['object_id'])) ? $object['object_id'] : (int) $object,
                                     LibraryItemEnum::SONG
                                 );
@@ -149,27 +162,27 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'album_random':
                             $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
                         case 'album_disk_random':
                             $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
                         case 'folder_random':
                             $medias = (new Folder($request_id))->get_medias();
                             shuffle($medias);
-                            $user->playlist?->add_medias($medias);
+                            $user->getPlaylist()->add_medias($medias);
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
                             $songs  = $this->songRepository->getRandomByGenre($object);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
@@ -177,7 +190,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             $object = new Artist($request_id);
                             $songs  = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
-                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
+                                $user->getPlaylist()->add_object($song_id, LibraryItemEnum::SONG);
                             }
 
                             break;
@@ -185,12 +198,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             $playlist = new Playlist($request_id);
                             $items    = $playlist->get_random_items();
                             foreach ($items as $item) {
-                                $user->playlist?->add_object($item['object_id'], $item['object_type']);
+                                $user->getPlaylist()->add_object($item['object_id'], $item['object_type']);
                             }
 
                             break;
                         case 'clear_all':
-                            $user->playlist?->clear();
+                            $user->getPlaylist()->clear();
                             break;
                     }
                 }
@@ -199,7 +212,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_rating':
                 /* Setting ratings */
-                if (User::is_registered()) {
+                if (User::is_registered() && check_http_referer() === true) {
                     ob_start();
                     $object_id = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $rating    = new Rating($object_id, Core::get_get('rating_type'));
@@ -213,7 +226,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_userflag':
                 /* Setting userflags */
-                if (User::is_registered()) {
+                if (User::is_registered() && check_http_referer() === true) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -239,7 +252,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     echo "</span>";
                 }
 
-                $results['action_buttons'] = ob_get_contents();
+                $results['action_buttons_' . $rating_id . '_' . $rating_type] = ob_get_contents();
                 ob_end_clean();
         }
 

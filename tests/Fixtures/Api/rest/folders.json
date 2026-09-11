@@ -7,6 +7,7 @@
         "parent": null,
         "path": "\/",
         "catalog": "0",
+        "time": 0,
         "items": [
             {
                 "id": "1",
@@ -14,6 +15,7 @@
                 "title": "music",
                 "parent": "-1",
                 "path": "/media/music",
+                "time": 542639,
                 "art": "https:\/\/music.com.au\/image.php?object_id=1&object_type=folder&name=art.jpg",
                 "has_art": false,
                 "play_url": "",
@@ -26,6 +28,7 @@
                 "title": "boots",
                 "parent": "-1",
                 "path": "\/mnt\/files-music\/boots",
+                "time": 0,
                 "art": "https:\/\/music.com.au\/image.php?object_id=81554&object_type=folder&name=art.jpg",
                 "has_art": false,
                 "play_url": "",

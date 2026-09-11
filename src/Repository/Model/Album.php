@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -39,6 +42,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
@@ -49,13 +53,16 @@ use Exception;
  */
 class Album extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'album';
 
+    /** @var array<string, int> keyed by `check()`'s identity-column cache key, see there */
     private static array $_mapcache   = [];
+
     public ?int $addition_time        = null;
     public ?int $album_artist         = null;
     public int $artist_count          = 0;
@@ -66,6 +73,7 @@ class Album extends database_object implements
     public int $catalog_id            = 0;
     public ?string $catalog_number    = null;
     public int $disk_count            = 0;
+    public bool $enabled              = true;
     public int $id                    = 0;
     public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $link              = null;
@@ -135,6 +143,7 @@ class Album extends database_object implements
         $this->catalog_id        = (int) ($info['catalog_id'] ?? 0);
         $this->catalog_number    = $info['catalog_number'] ?? null;
         $this->disk_count        = (int) ($info['disk_count'] ?? 0);
+        $this->enabled           = (bool) ($info['enabled'] ?? true);
         $this->id                = (int) ($info['id'] ?? 0);
         $this->link              = $info['link'] ?? null;
         $this->mbid              = $info['mbid'] ?? null;
@@ -189,6 +198,12 @@ class Album extends database_object implements
             return false;
         }
 
+        // a page an outer call already warmed (an album's songs inside an artist) is not read again
+        $cold = array_filter($ids, static fn(int|string $id): bool => !parent::is_cached('album_warm', (int) $id));
+        if ($cold === []) {
+            return true;
+        }
+
         $artist_ids = [];
         foreach (self::getAlbumRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('album', $row['id'], $row);
@@ -197,10 +212,36 @@ class Album extends database_object implements
             }
         }
 
+        // one album_map read for the page instead of one per album; the mapped
+        // artists join the primary ones so the row render finds them cached too
+        global $dic;
+        foreach ($dic->get(SongRepositoryInterface::class)->getParentIdsBulk($ids, true) as $albumId => $parentIds) {
+            parent::add_to_cache('album_artists', $albumId, $parentIds);
+            foreach ($parentIds as $parentId) {
+                $artist_ids[$parentId] = $parentId;
+            }
+        }
+
+        // the song artists of an album are asked for the same way
+        foreach (self::getAlbumRepository()->getMappedObjectIdsBulk(array_map(intval(...), array_values($ids)), 'song') as $albumId => $objectIds) {
+            parent::add_to_cache('album_map_song', $albumId, $objectIds);
+        }
+
         // warm grouped caches the row render would otherwise hit per album
+        // (an album_disk row asks for its parent album's genres, so this covers both)
+        Tag::build_object_tag_cache('album', $ids);
+        Mood::build_object_mood_cache('album', $ids);
         Art::build_cache($ids, 'album');
+        AlbumDisk::build_cache_by_albums($ids);
+        foreach ($dic->get(LabelRepositoryInterface::class)->getByAlbums($ids) as $albumId => $labels) {
+            parent::add_to_cache('album_labels', $albumId, $labels);
+        }
         if ($artist_ids !== []) {
             Artist::build_cache(array_values($artist_ids));
+        }
+
+        foreach ($ids as $id) {
+            parent::add_to_cache('album_warm', (int) $id, [true]);
         }
 
         return true;
@@ -251,10 +292,6 @@ class Album extends database_object implements
             $catalog_id    = 0;
         }
 
-        if (isset(self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''])) {
-            return self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''];
-        }
-
         $properties = [
             'name' => $name,
             'prefix' => $prefix,
@@ -271,10 +308,22 @@ class Album extends database_object implements
             'catalog' => $catalog_id,
         ];
 
-        $album_id = self::getAlbumRepository()->findByProperties($properties);
+        $albumRepository = self::getAlbumRepository();
+
+        // mirrors findByProperties()'s identity columns (config-driven) plus catalog, which is always matched but never droppable
+        $cacheKey = $catalog_id . '|' . implode('|', array_map(
+            static fn(string $column): string => (string) ($properties[$column] ?? ''),
+            $albumRepository->getIdentityColumns()
+        ));
+
+        if (isset(self::$_mapcache[$cacheKey])) {
+            return self::$_mapcache[$cacheKey];
+        }
+
+        $album_id = $albumRepository->findByProperties($properties);
         if ($album_id > 0) {
             // cache the album id against it's details
-            self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+            self::$_mapcache[$cacheKey] = $album_id;
 
             return $album_id;
         }
@@ -291,15 +340,15 @@ class Album extends database_object implements
         try {
             // whoever held the lock may have inserted this album while we waited for it
             if ($lock_taken) {
-                $album_id = self::getAlbumRepository()->findByProperties($properties);
+                $album_id = $albumRepository->findByProperties($properties);
                 if ($album_id > 0) {
-                    self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+                    self::$_mapcache[$cacheKey] = $album_id;
 
                     return $album_id;
                 }
             }
 
-            $album_id = self::getAlbumRepository()->create($properties, time());
+            $album_id = $albumRepository->create($properties, time());
             if (!$album_id) {
                 return 0;
             }
@@ -328,7 +377,7 @@ class Album extends database_object implements
             }
         }
 
-        self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
+        self::$_mapcache[$cacheKey] = $album_id;
 
         return (int) $album_id;
     }
@@ -352,7 +401,10 @@ class Album extends database_object implements
      */
     public static function get_parent_array(int $album_id, ?int $primary_id = null, string $object_type = 'album'): array
     {
-        $results = self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
+        $key     = ($object_type === 'album') ? 'album_artists' : 'album_map_' . $object_type;
+        $results = (parent::is_cached($key, $album_id))
+            ? parent::get_from_cache($key, $album_id)
+            : self::getAlbumRepository()->getMappedObjectIds($album_id, $object_type);
         $primary = ((int) $primary_id > 0)
             ? [(int) $primary_id]
             : [];
@@ -430,6 +482,23 @@ class Album extends database_object implements
     {
         debug_event(self::class, 'update_album_count ' . $album_id, 5);
         self::getAlbumRepository()->updateCounts($album_id);
+    }
+
+    /**
+     * Take the album off the shelves, or put it back.
+     *
+     * The songs follow either way, so the word promises here what it promises on a song: what is disabled
+     * is neither listed nor playable. A single song can still be flipped on its own afterwards; only the
+     * next change of the album's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $album_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        self::_update_field(AlbumFieldEnum::ENABLED, ($new_enabled) ? 1 : 0, $album_id);
+        self::getAlbumRepository()->setSongsEnabled($album_id, $new_enabled);
     }
 
     /**
@@ -640,7 +709,11 @@ class Album extends database_object implements
      */
     public function get_f_time(): string
     {
-        return '';
+        $time = (int) $this->time;
+        $min  = sprintf("%02d", (floor($time / 60) % 60));
+        $sec  = sprintf("%02d", ($time % 60));
+
+        return ltrim(floor($time / 3600) . ':' . $min . ':' . $sec, '0:');
     }
 
     /**
@@ -887,6 +960,10 @@ class Album extends database_object implements
      */
     public function getDisks(): iterable
     {
+        if (parent::is_cached('album_disk_ids', $this->id)) {
+            return array_map(static fn(int $id): AlbumDisk => new AlbumDisk($id), parent::get_from_cache('album_disk_ids', $this->id));
+        }
+
         return $this->getAlbumDiskRepository()->getByAlbum($this);
     }
 
@@ -920,9 +997,20 @@ class Album extends database_object implements
         return $this->has_art ?? false;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**
@@ -946,6 +1034,12 @@ class Album extends database_object implements
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
+
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
+        }
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {

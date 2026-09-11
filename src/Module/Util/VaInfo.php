@@ -641,13 +641,17 @@ final class VaInfo implements VaInfoInterface
         if (AmpConfig::get('rating_file_tag_compatibility', false)) {
             if ($value === 255) {
                 return 5;
-            } elseif ($value >= 196) {
+            }
+            if ($value >= 196) {
                 return 4;
-            } elseif ($value >= 128) {
+            }
+            if ($value >= 128) {
                 return 3;
-            } elseif ($value >= 64) {
+            }
+            if ($value >= 64) {
                 return 2;
-            } elseif ($value >= 1) {
+            }
+            if ($value >= 1) {
                 return 1;
             }
         } else {
@@ -658,7 +662,7 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * translate_pattern_code
+     * _translate_pattern_code
      * This just contains a keyed array which it checks against to give you the
      * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
      */
@@ -720,7 +724,7 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * get_info
+     * gather_tags
      *
      * This function runs the various steps to gathering the metadata. Filling $this->tags
      */

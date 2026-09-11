@@ -140,6 +140,24 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
+     * Warm get_top_tags() for a whole page with one read
+     *
+     * @param array<int|string> $object_ids
+     */
+    public static function build_object_tag_cache(string $type, array $object_ids): bool
+    {
+        if ($object_ids === [] || !database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        foreach (self::getTagRepository()->getTopTagsBulk($type, $object_ids) as $object_id => $tags) {
+            parent::add_to_cache('object_tags_' . $type, (int) $object_id, $tags);
+        }
+
+        return true;
+    }
+
+    /**
      * clean_to_existing
      * Clean tag list to existing tag list only
      * @param string[]|string $tags
@@ -255,6 +273,22 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
+        // the page warm holds the same rows, heaviest first; this read lists them by id like the query does
+        if ($object_id !== null && parent::is_cached('object_tags_' . $type, $object_id)) {
+            $tags = [];
+            foreach (parent::get_from_cache('object_tags_' . $type, $object_id) as $tag) {
+                $tags[(int) $tag['id']] = [
+                    'id' => (int) $tag['id'],
+                    'name' => (string) $tag['name'],
+                    'is_hidden' => (int) $tag['is_hidden'],
+                    'user' => (int) $tag['user'],
+                ];
+            }
+            ksort($tags);
+
+            return array_values($tags);
+        }
+
         return self::getTagRepository()->getObjectTags($type, $object_id);
     }
 
@@ -294,17 +328,20 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * get_top_tags
-     * This gets the top tags for the specified object using limit
-     *
-     * `user` is the owner of the map: 0 for a genre read out of the file tags, otherwise whoever set it by hand.
-     *
-     * @return array<int, array{id: int, name: string, is_hidden: int, user: int, count: int}>
+     * @return list<array{id: int, name: string, is_hidden: int, user: int, count: int}>
      */
     public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
+        }
+
+        // build_cache() fills this for a whole page; the limit is applied here
+        $key = 'object_tags_' . $type;
+        if (parent::is_cached($key, $object_id)) {
+            $cached = array_values(parent::get_from_cache($key, $object_id));
+
+            return ((int) $limit > 0) ? array_slice($cached, 0, (int) $limit) : $cached;
         }
 
         return self::getTagRepository()->getTopTags($type, $object_id, (int) $limit);
@@ -316,6 +353,9 @@ class Tag extends database_object implements library_item, displayable_item, con
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         self::getTagRepository()->migrateMaps($object_type, $old_object_id, $new_object_id);
+
+        self::_forget_object_tags($object_type, $old_object_id);
+        self::_forget_object_tags($object_type, $new_object_id);
     }
 
     /**
@@ -432,7 +472,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag
+     * _add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      */
     private static function _add_tag(string $value): ?int
@@ -449,7 +489,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * add_tag_map
+     * _add_tag_map
      * This adds a specific tag to the map for specified object
      */
     private static function _add_tag_map(string $type, int|string $object_id, int|string $tag_id, int $user_id = self::NO_USER): int
@@ -496,7 +536,20 @@ class Tag extends database_object implements library_item, displayable_item, con
             }
         }
 
+        self::_forget_object_tags($type, $item_id);
+
         return $insert_id;
+    }
+
+    /**
+     * Drops an object's cached genre list after its maps changed.
+     *
+     * `build_object_tag_cache()` fills this for a whole page and `get_top_tags()` prefers it over a read, so a write
+     * that leaves it in place has every later read in the same request answering with the genres from before the edit.
+     */
+    private static function _forget_object_tags(string $object_type, int $object_id): void
+    {
+        parent::remove_from_cache('object_tags_' . $object_type, $object_id);
     }
 
     /**
@@ -512,7 +565,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     }
 
     /**
-     * remove_all_maps
+     * _remove_all_maps
      * Clear all the tags from an object when there isn't anything there
      */
     private static function _remove_all_maps(string $object_type, int $object_id, ?int $user_id = null): bool
@@ -530,11 +583,13 @@ class Tag extends database_object implements library_item, displayable_item, con
             $tagRepository->recountType($countType);
         }
 
+        self::_forget_object_tags($object_type, $object_id);
+
         return true;
     }
 
     /**
-     * tag_map_exists
+     * _tag_map_exists
      * This looks to see if the current mapping of the current object exists
      */
     private static function _tag_map_exists(string $type, int $object_id, int $tag_id, int $user_id = self::NO_USER): bool
@@ -773,6 +828,8 @@ class Tag extends database_object implements library_item, displayable_item, con
         if ($countType instanceof TagCountTypeEnum) {
             $tagRepository->decrementCount($this->id, $countType);
         }
+
+        self::_forget_object_tags($type, $object_id);
 
         return true;
     }

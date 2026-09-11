@@ -35,9 +35,6 @@ use Ampache\Repository\Model\Broadcast;
 interface BroadcastRepositoryInterface
 {
     /**
-     * Starts or stops the broadcast, resetting the current song and listener count
-     */
-    /**
      * Clears the started state of broadcasts that cannot be running, leaving live ones alone
      */
     public function collectGarbage(): void;
@@ -78,9 +75,6 @@ interface BroadcastRepositoryInterface
     public function getRowsByIds(array $broadcastIds): array;
 
     /**
-     * Writes the editable properties of an existing broadcast
-     */
-    /**
      * Writes the broadcast, inserting it when it has no id yet
      *
      * Returns the id a new row was given, or null when an existing one was updated.
@@ -94,6 +88,9 @@ interface BroadcastRepositoryInterface
      */
     public function resetStartedState(): int;
 
+    /**
+     * Writes the editable properties of an existing broadcast
+     */
     public function update(Broadcast $broadcast): void;
 
     /**
@@ -106,5 +103,8 @@ interface BroadcastRepositoryInterface
      */
     public function updateSong(Broadcast $broadcast, int $songId): void;
 
+    /**
+     * Starts or stops the broadcast, resetting the current song and listener count
+     */
     public function updateState(Broadcast $broadcast, int $started, string $key): void;
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-08-11 12:55+1000\n"
+"POT-Creation-Date: 2026-09-10 16:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Are you sure?"
+msgid "Confirm"
 msgstr ""
 
 msgid "OK"
@@ -216,22 +216,6 @@ msgstr ""
 msgid "Update User"
 msgstr ""
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr ""
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Uploaded by"
-msgstr ""
-
-msgid "Actions"
-msgstr ""
-
 msgid "Random to Temporary Playlist"
 msgstr ""
 
@@ -332,6 +316,9 @@ msgid "Edit Artist"
 msgstr ""
 
 msgid "Albums"
+msgstr ""
+
+msgid "Songs"
 msgstr ""
 
 msgid "Top Tracks"
@@ -798,6 +785,9 @@ msgstr ""
 msgid "Release Date"
 msgstr ""
 
+msgid "Actions"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr ""
 
@@ -994,9 +984,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr ""
-
 msgid "Artists"
 msgstr ""
 
@@ -1084,9 +1071,6 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-msgid "Confirm"
-msgstr ""
-
 msgid "Top Rated"
 msgstr ""
 
@@ -1124,6 +1108,9 @@ msgid "Show Localplay Instances"
 msgstr ""
 
 msgid "Edit Instance"
+msgstr ""
+
+msgid "Are You Sure?"
 msgstr ""
 
 msgid "Localplay Control"
@@ -1251,9 +1238,6 @@ msgid "Number of Users"
 msgstr ""
 
 msgid "Number of Catalogs"
-msgstr ""
-
-msgid "Filter name"
 msgstr ""
 
 msgid "Users"
@@ -1731,6 +1715,32 @@ msgid ""
 "necessary, but may result in a better experience (zip download)."
 msgstr ""
 
+msgid "WARNING"
+msgstr ""
+
+msgid "UNKNOWN"
+msgstr ""
+
+msgid "HTTP compression"
+msgstr ""
+
+msgid ""
+"This measures the page you are reading: your browser reports both the bytes "
+"it received and the bytes after decoding, so a smaller received size means "
+"the server compressed it. Compression is not required, but it makes a large "
+"difference to page and API response sizes."
+msgstr ""
+
+msgid ""
+"Enable gzip or brotli in your web server for html, css, javascript, json and "
+"xml. Do not compress audio streams: they are already compressed, so it only "
+"costs CPU on every listen."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript, which is why it reads as unknown right now."
+msgstr ""
+
 msgid "PHP SimpleXML extension"
 msgstr ""
 
@@ -1905,6 +1915,9 @@ msgstr ""
 msgid "%s selected"
 msgstr ""
 
+msgid "Show less"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr ""
 
@@ -2010,22 +2023,16 @@ msgstr ""
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr ""
-
-msgid "Fav."
-msgstr ""
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
 msgstr ""
 
 msgid "Started"
+msgstr ""
+
+msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Podcast Edit"
@@ -2041,6 +2048,45 @@ msgid "Update details from RSS feed"
 msgstr ""
 
 msgid "Episodes"
+msgstr ""
+
+msgid "Checking your browser"
+msgstr ""
+
+msgid "This link is rate limited. Your download will start on its own."
+msgstr ""
+
+msgid "Return to the previous page"
+msgstr ""
+
+msgid "Checking your browser..."
+msgstr ""
+
+#. HINT: %d is how far along the check is, as a percentage
+#, php-format
+msgid "Checking your browser... %d%%"
+msgstr ""
+
+msgid "Check passed."
+msgstr ""
+
+msgid "Your browser is too old to pass this check."
+msgstr ""
+
+msgid "The browser check failed to run. Please reload the page."
+msgstr ""
+
+msgid "Your download has started."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript and Web Workers, and this browser is not running "
+"them."
+msgstr ""
+
+msgid ""
+"Enable them and reload the page, or ask the administrator of this server for "
+"another way in."
 msgstr ""
 
 msgid "Confirm Subsonic Password"
@@ -2187,15 +2233,6 @@ msgstr ""
 msgid "Admin Disabled"
 msgstr ""
 
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
-msgstr ""
-
 msgid "Connected Users"
 msgstr ""
 
@@ -2262,10 +2299,13 @@ msgstr ""
 msgid "The last cron was completed"
 msgstr ""
 
-msgid "PHP Settings"
+msgid "Invalid configuration settings"
 msgstr ""
 
 msgid "Setting"
+msgstr ""
+
+msgid "PHP Settings"
 msgstr ""
 
 msgid "Version"
@@ -2331,9 +2371,6 @@ msgstr ""
 msgid "Leave the artist and album fields blank to read file tags"
 msgstr ""
 
-msgid "WARNING"
-msgstr ""
-
 msgid ""
 "The music license you choose may give away some rights in an irrevocable "
 "manner."
@@ -2395,6 +2432,9 @@ msgstr ""
 msgid "User is Offline Now"
 msgstr ""
 
+msgid "Played"
+msgstr ""
+
 msgid "Skipped"
 msgstr ""
 
@@ -2413,10 +2453,10 @@ msgstr ""
 msgid "Subtitle"
 msgstr ""
 
-msgid "Video Edit"
+msgid "Video Information"
 msgstr ""
 
-msgid "Video Information"
+msgid "Video Edit"
 msgstr ""
 
 msgid "Songs Played"
@@ -2469,6 +2509,24 @@ msgstr ""
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr ""
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2481,7 +2539,13 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
 msgstr ""
 
 msgid "Starts With"
@@ -2555,6 +2619,9 @@ msgid "Item Limit"
 msgstr ""
 
 msgid "License"
+msgstr ""
+
+msgid "Added"
 msgstr ""
 
 msgid "Registration Date"
@@ -2642,6 +2709,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr ""
 
@@ -2658,6 +2728,12 @@ msgid "Newest Songs"
 msgstr ""
 
 msgid "Newest Shouts"
+msgstr ""
+
+msgid "Smart Playlists"
+msgstr ""
+
+msgid "Private Messages"
 msgstr ""
 
 msgid "Smartlists"
@@ -2749,6 +2825,12 @@ msgstr ""
 msgid "Channels"
 msgstr ""
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Return to Login Page"
 msgstr ""
 
@@ -2827,16 +2909,13 @@ msgstr ""
 msgid "Shares"
 msgstr ""
 
-msgid "Smart Playlists"
-msgstr ""
-
 msgid "Allow Localplay Set to False"
 msgstr ""
 
-msgid "Localplay Controller Not Defined"
+msgid "Access Denied"
 msgstr ""
 
-msgid "Access Denied"
+msgid "Localplay Controller Not Defined"
 msgstr ""
 
 msgid "Account"
@@ -2848,10 +2927,14 @@ msgstr ""
 msgid "Song Edit"
 msgstr ""
 
-msgid "Song Information"
+#, php-format
+msgid "Track %d"
 msgstr ""
 
-msgid "Links"
+msgid "Play on the current player"
+msgstr ""
+
+msgid "Song Information"
 msgstr ""
 
 msgid "Song Language"
@@ -2887,13 +2970,19 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
-msgid "Added"
-msgstr ""
-
 msgid "Lyrics"
 msgstr ""
 
 msgid "Licensing"
+msgstr ""
+
+msgid "Uploaded by"
+msgstr ""
+
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3137,9 +3226,6 @@ msgstr ""
 msgid "Your Access List entry has been removed"
 msgstr ""
 
-msgid "Are You Sure?"
-msgstr ""
-
 #. HINT: ACL Name
 #, php-format
 msgid "This will permanently delete the %s ACL \"%s\""
@@ -3195,6 +3281,12 @@ msgid "The Catalog art search has started"
 msgstr ""
 
 msgid "The Catalog folder scan has started"
+msgstr ""
+
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
 msgstr ""
 
 msgid "This will permanently delete your Catalog"
@@ -3263,7 +3355,8 @@ msgstr ""
 msgid "A new License has been created"
 msgstr ""
 
-msgid "Create license"
+#, php-format
+msgid "This will permanently delete the license \"%s\""
 msgstr ""
 
 msgid "Edit license"
@@ -3320,12 +3413,24 @@ msgstr ""
 msgid "Shoutbox post has been updated"
 msgstr ""
 
+#, php-format
+msgid "This will permanently delete the shoutbox post \"%s\""
+msgstr ""
+
 msgid "Your cache has been cleared successfully"
 msgstr ""
 
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
+msgstr ""
+
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
 msgstr ""
 
 msgid "Your Passwords don't match"
@@ -3696,6 +3801,9 @@ msgstr ""
 msgid "Captcha failed"
 msgstr ""
 
+msgid "Browser check failed. Please reload the page and try again"
+msgstr ""
+
 msgid "You must accept the user agreement"
 msgstr ""
 
@@ -3778,6 +3886,15 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
+#. HINT: %1$s is the item name, %2$s says what the drawing was made from
+#. the name arrives escaped, so only the translated half is escaped here
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
+msgstr ""
+
 msgid "Unable to open"
 msgstr ""
 
@@ -3785,6 +3902,18 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
 
 msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
+#, php-format
+msgid "%d track"
+msgid_plural "%d tracks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Light"
 msgstr ""
 
 msgid "OpenID Connect requires an interactive browser login"
@@ -4175,6 +4304,9 @@ msgstr ""
 msgid "Reading Catalog: \"%s\""
 msgstr ""
 
+msgid "Skipping catalog, already being processed"
+msgstr ""
+
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -4243,9 +4375,6 @@ msgid "Reading File: \"%s\""
 msgstr ""
 
 msgid "Create a local media catalog"
-msgstr ""
-
-msgid "Catalog name"
 msgstr ""
 
 msgid "Catalog Media Type (optional)"
@@ -4443,9 +4572,6 @@ msgstr ""
 msgid ""
 "Your database version is higher than the Ampache version. Use -e|--execute "
 "to rollback"
-msgstr ""
-
-msgid "No update needed"
 msgstr ""
 
 msgid "Update Plugins automatically"
@@ -4932,9 +5058,6 @@ msgstr ""
 msgid "Playlist Items"
 msgstr ""
 
-msgid "Private Messages"
-msgstr ""
-
 msgid "Shoutbox Records"
 msgstr ""
 
@@ -5077,9 +5200,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5159,9 +5279,6 @@ msgid "Podcast Episode popularity score"
 msgstr ""
 
 msgid "Any searchable text"
-msgstr ""
-
-msgid "Song Data"
 msgstr ""
 
 msgid "Favorites (Album)"
@@ -5307,6 +5424,12 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Average from all users"
 msgstr ""
 
@@ -5345,9 +5468,6 @@ msgstr ""
 
 msgid ""
 "Unable to run the update: the PHP exec() function is disabled on this server"
-msgstr ""
-
-msgid "Invalid configuration settings"
 msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
@@ -5552,6 +5672,10 @@ msgid "File moved..."
 msgstr ""
 
 #, php-format
+msgid "%1$s on %2$s"
+msgstr ""
+
+#, php-format
 msgid "%s on %s"
 msgstr ""
 
@@ -5650,6 +5774,9 @@ msgstr ""
 #. HINT: Plugin Name
 #, php-format
 msgid "Click to grant %s access to Ampache"
+msgstr ""
+
+msgid "Match my theme"
 msgstr ""
 
 msgid "Unknown Artist"
@@ -6564,22 +6691,6 @@ msgstr ""
 msgid "Add to wanted list"
 msgstr ""
 
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
@@ -6634,10 +6745,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
 msgstr ""
 
 #: ./untranslated-strings.txt:134
@@ -6716,21 +6823,19 @@ msgstr ""
 msgid "ping"
 msgstr ""
 
-#: ./untranslated-strings.txt:256
-msgid "average"
-msgstr ""
-
 #: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
 msgstr ""
 
 #: ./untranslated-strings.txt:269
 msgid "Mpd"
-msgstr "" #######################################################################
+msgstr ""
+
+ #######################################################################
 
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
- # './gather-messages.sh [-gu|--getutds]' - descriptions come from
+ # ./gather-messages.sh [-gu|--getutds] - descriptions come from
  # Preference::translate_db() and subcategories from Preference::DEFAULTS,
  # so a live database is NOT required. Do not edit it by hand; re-run the script.
 
@@ -6929,7 +7034,11 @@ msgid "Custom datetime"
 msgstr ""
 
 #: Ampache preference description
-msgid "Custom URL - Favicon"
+msgid "Custom URL - Touch icon for phone home screens (PNG, 180x180, no transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
 msgstr ""
 
 #: Ampache preference description
@@ -6938,6 +7047,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Image shown when a link to this server is shared (PNG or JPEG, 1200x630)"
 msgstr ""
 
 #: Ampache preference description
@@ -7041,6 +7154,14 @@ msgid "Force HTTP playback regardless of port"
 msgstr ""
 
 #: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
 msgid "Allow Geolocation"
 msgstr ""
 
@@ -7125,6 +7246,10 @@ msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr ""
 
 #: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
+msgstr ""
+
+#: Ampache preference description
 msgid "API sessions do not expire"
 msgstr ""
 
@@ -7177,6 +7302,10 @@ msgid "Show 'Collections' link in the main sidebar"
 msgstr ""
 
 #: Ampache preference description
+msgid "Show Composer column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
 msgid "Show donate button in footer"
 msgstr ""
 
@@ -7190,10 +7319,6 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Show License"
-msgstr ""
-
-#: Ampache preference description
-msgid "Show lyrics"
 msgstr ""
 
 #: Ampache preference description
@@ -7282,6 +7407,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
 msgstr ""
 
 #: Ampache preference description
@@ -7418,6 +7547,10 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
 msgstr ""
 
 #: Ampache preference subcategory

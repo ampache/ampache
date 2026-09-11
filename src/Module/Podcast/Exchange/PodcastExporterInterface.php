@@ -27,9 +27,11 @@ namespace Ampache\Module\Podcast\Exchange;
 interface PodcastExporterInterface
 {
     /**
-     * Exports all podcasts-subscriptions and returns the result
+     * Exports the podcast subscriptions living in the given catalogs and returns the result
+     *
+     * @param list<int>|null $catalogIds Null exports every podcast in the system, for a caller with nobody to filter for
      */
-    public function export(): string;
+    public function export(?array $catalogIds = null): string;
 
     /**
      * Returns the content-type of the export result

@@ -150,6 +150,7 @@ echo $this->raw((new RecentlyPlayedView(RecentlyPlayedMode::SKIPPED, $skipped, $
         <div id="artists" class="tab_content">
             <?php $browse = $this->createBrowse();
             $browse->set_type('artist', $this->getUploadsSql());
+            $browse->set_sort('name', 'ASC', false);
             $browse->set_simple_browse(true);
             $browse->show_objects();
             $browse->store(); ?>

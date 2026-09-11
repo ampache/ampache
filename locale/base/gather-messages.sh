@@ -20,6 +20,9 @@
 
 PATH=$PATH:/bin:/usr/bin:/usr/local/bin
 
+# every relative path below assumes locale/base as cwd, so run from wherever this script lives
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
 # gettext package test
 if ! which xgettext &>/dev/null ; then
     echo "Xgettext was not found. Do you need to install gettext?"
@@ -156,10 +159,12 @@ generate_pot_utds() {
     echo "Deleting old $tdstxt"
     rm -f $tdstxt
     {
+        printf '\n'
+        printf '\n'
         printf ' #######################################################################\n\n'
         printf ' # This file lists all translatable strings from the Ampache preference table\n'
         printf ' # (descriptions and subcategories). It is generated from the source code by\n'
-        printf " # './gather-messages.sh [-gu|--getutds]' - descriptions come from\n"
+        printf ' # ./gather-messages.sh [-gu|--getutds] - descriptions come from\n'
         printf ' # Preference::translate_db() and subcategories from Preference::DEFAULTS,\n'
         printf ' # so a live database is NOT required. Do not edit it by hand; re-run the script.\n\n'
         printf ' #######################################################################\n'

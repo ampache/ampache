@@ -46,4 +46,18 @@ enum LibraryItemEnum: string
     case TAG             = 'tag';
     case TAG_HIDDEN      = 'tag_hidden';
     case VIDEO           = 'video';
+
+    /**
+     * Resolves an `ObjectTypeEnum` alias (`album_artist`, `song_artist`, `genre`, `smartlist`) onto the
+     * loadable case it is a role or alternate spelling of, in addition to a direct case match.
+     */
+    public static function fromObjectType(string $objectType): ?self
+    {
+        return self::tryFrom(match ($objectType) {
+            'album_artist', 'song_artist' => 'artist',
+            'genre' => 'tag',
+            'smartlist' => 'search',
+            default => $objectType,
+        });
+    }
 }

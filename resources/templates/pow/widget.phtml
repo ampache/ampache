@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+// pow/widget.phtml -- rendered by Ampache\Gui\Pow\PowWidgetView
+
+/** @var Ampache\Gui\Pow\PowWidgetView $this */
+?>
+<?php // xgettext only scans php/phtml/inc, so pow.js gets its strings from here.?>
+<div id="pow-widget" class="pow-widget"
+     data-challenge="<?php echo $this->e($this->getChallengeId()); ?>"
+     data-difficulty="<?php echo $this->e($this->getDifficulty()); ?>"
+     data-worker="<?php echo $this->e($this->getWorkerUrl()); ?>"
+     data-text-working="<?php echo $this->e(T_('Checking your browser...')); ?>"
+     <?php /* HINT: %d is how far along the check is, as a percentage */ ?>
+     data-text-progress="<?php echo $this->e(T_('Checking your browser... %d%%')); ?>"
+     data-text-passed="<?php echo $this->e(T_('Check passed.')); ?>"
+     data-text-unsupported="<?php echo $this->e(T_('Your browser is too old to pass this check.')); ?>"
+     data-text-error="<?php echo $this->e(T_('The browser check failed to run. Please reload the page.')); ?>"
+     data-text-started="<?php echo $this->e(T_('Your download has started.')); ?>">
+    <?php // The text is replaced as the search runs, so it has to be announced, not just repainted.?>
+    <p id="pow-status" class="pow-status" role="status" aria-live="polite"><?php echo $this->e(T_('Checking your browser...')); ?></p>
+    <noscript>
+        <?php // Without a script to update it, the status above is stuck mid-sentence and reads as a lie.?>
+        <style>#pow-status { display: none; }</style>
+        <p class="pow-status">
+            <?php echo $this->e(T_('This check needs JavaScript and Web Workers, and this browser is not running them.')); ?>
+        </p>
+        <p class="pow-explain">
+            <?php echo $this->e(T_('Enable them and reload the page, or ask the administrator of this server for another way in.')); ?>
+        </p>
+    </noscript>
+</div>
+<input type="hidden" name="pow_id" id="pow_id" value="<?php echo $this->e($this->getChallengeId()); ?>" />
+<input type="hidden" name="pow_exp" value="<?php echo $this->e($this->getExpire()); ?>" />
+<input type="hidden" name="pow_diff" value="<?php echo $this->e($this->getDifficulty()); ?>" />
+<input type="hidden" name="pow_sig" value="<?php echo $this->e($this->getSignature()); ?>" />
+<input type="hidden" name="pow_nonce" id="pow_nonce" value="" />
+<script src="<?php echo $this->e($this->getScriptUrl()); ?>" defer></script>

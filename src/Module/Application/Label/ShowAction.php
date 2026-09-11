@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\AddLabelFormView;
 use Ampache\Gui\Label\LabelView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -67,8 +68,6 @@ final readonly class ShowAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: label features are not enabled.');
         }
 
-        $this->ui->showHeader();
-
         $input = $request->getQueryParams();
 
         // lookup by ID
@@ -76,6 +75,26 @@ final readonly class ShowAction implements ApplicationActionInterface
         $label    = (is_int($label_id))
             ? $this->labelRepository->findById($label_id)
             : null;
+
+        if ($label !== null) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/labels.php?action=show&label=' . $label->id;
+            PageMeta::set(
+                [(string) $label->category, (string) $label->country, (string) $label->summary],
+                'website',
+                (string) $label->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $label->id . '&object_type=label&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'Organization',
+                    'name' => (string) $label->get_fullname(),
+                    'url' => $url,
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
         // lookup by name if ID didn't work
         $label_name = (isset($input['name'])) ? urldecode((string) $input['name']) : null;
         if (!$label && $label_name !== null) {
@@ -84,7 +103,6 @@ final readonly class ShowAction implements ApplicationActionInterface
                 ? $this->labelRepository->findById($label_id)
                 : null;
         }
-
         if ($label_id !== null && $label === null) {
             $this->logger->warning(
                 'Requested a label that does not exist',
@@ -94,16 +112,16 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->ui->showFooter();
 
             return null;
-        } elseif ($label instanceof Label) {
+        }
+
+        if ($label instanceof Label) {
             $browse = $this->browseFactory->create();
             $browse->set_type('artist');
             $browse->set_use_filters(false);
-
             $externalLinks = [];
             foreach (LabelView::getExternalLinkKeys() as $configKey) {
                 $externalLinks[$configKey] = (bool) AmpConfig::get($configKey);
             }
-
             echo new LabelView(
                 AmpConfig::get_web_path(),
                 $label,
@@ -115,7 +133,6 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $this->isEditable($gatekeeper->getUserId(), $label),
                 Catalog::can_remove($label)
             )->render();
-
             $this->ui->showFooter();
 
             return null;

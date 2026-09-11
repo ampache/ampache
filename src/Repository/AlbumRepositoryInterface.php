@@ -149,6 +149,26 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
+     * The identity columns actually matched, narrowed by `album_grouping_fields` (`config/ampache.cfg.php`).
+     * A column left out is not matched at all (not even as NULL), so albums differing only there merge into one.
+     * Unset/empty config keeps the default behavior and matches all columns
+     *
+     * `catalog` is deliberately not in this list: it is not configurable, and `findByProperties()` always
+     * matches it separately regardless of what's returned here
+     *
+     * @return list<string>
+     */
+    public function getIdentityColumns(): array;
+
+    /**
+     * The album ids of a set of artists, for warming a page that lists them
+     *
+     * @param array<int|string> $artistIds
+     * @return list<int>
+     */
+    public function getIdsByArtists(array $artistIds): array;
+
+    /**
      * Reads the albums of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>
@@ -184,6 +204,14 @@ interface AlbumRepositoryInterface
      * @return list<int>
      */
     public function getMappedObjectIds(int $albumId, string $objectType): array;
+
+    /**
+     * The objects mapped onto a set of albums, read in one go
+     *
+     * @param list<int> $albumIds
+     * @return array<int, list<int>>
+     */
+    public function getMappedObjectIdsBulk(array $albumIds, string $objectType): array;
 
     /**
      * Get item prefix, basename and name by the album id
@@ -295,6 +323,11 @@ interface AlbumRepositoryInterface
      * Writes a single album column, bounded by the enum because the column name goes into the statement
      */
     public function setField(int $albumId, AlbumFieldEnum $field, int|string|null $value): bool;
+
+    /**
+     * Puts every song of an album into the state the album itself was just put into.
+     */
+    public function setSongsEnabled(int $albumId, bool $enabled): void;
 
     /**
      * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed

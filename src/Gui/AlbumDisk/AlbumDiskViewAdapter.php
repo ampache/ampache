@@ -301,7 +301,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function getRating(): string
     {
-        return Rating::show($this->albumDisk->getId(), 'album_disk');
+        return Rating::show($this->albumDisk->getId(), 'album_disk', true);
     }
 
     public function getShareUi(): string

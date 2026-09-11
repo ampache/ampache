@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Album\AlbumPageView;
+use Ampache\Gui\Partial\PageMeta;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -60,16 +61,46 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $user        = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs    = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
+        $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
 
-        if ($albumDisk->isNew() || !in_array($albumDisk->catalog, $catalogs)) {
+        if ($shown) {
+            $webPath = AmpConfig::get_web_path();
+            $url     = $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId;
+            PageMeta::set(
+                [
+                    $albumDisk->get_parent_fullname(),
+                    ($albumDisk->year > 0) ? $albumDisk->year : null,
+                    ($albumDisk->song_count > 0) ? sprintf(nT_('%d song', '%d songs', $albumDisk->song_count), $albumDisk->song_count) : null,
+                    $albumDisk->get_f_time(),
+                ],
+                'music.album',
+                $albumDisk->get_fullname(),
+                $url,
+                $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=600x600',
+                array_filter([
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MusicAlbum',
+                    'name' => $albumDisk->get_fullname(),
+                    'url' => $url,
+                    'byArtist' => ['@type' => 'MusicGroup', 'name' => $albumDisk->get_parent_fullname()],
+                    'numTracks' => $albumDisk->song_count,
+                ])
+            );
+        }
+
+        $this->ui->showHeader();
+
+        if (!$shown) {
             $this->logger->warning(
-                'Requested an album_disk that does not exist',
+                sprintf(
+                    'Refused album_disk %d: %s',
+                    $albumDiskId,
+                    ($albumDisk->isNew()) ? 'no such disk' : 'withdrawn, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

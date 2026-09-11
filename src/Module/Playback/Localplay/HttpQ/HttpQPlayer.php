@@ -54,7 +54,7 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
 class HttpQPlayer
 {
     /**
-     * HttpQPlayer
+     * __construct
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
@@ -325,7 +325,7 @@ class HttpQPlayer
         }
 
         if ($results == '3') {
-            $state = 'pause';
+            return 'pause';
         }
 
         return $state;

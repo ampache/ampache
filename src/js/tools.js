@@ -431,6 +431,9 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             resizable: false,
             width: Math.min(666, $(window).width() - 20),
             autoOpen: false,
+            // the form arrives by ajax after the dialog opens, so a centred empty box grows downwards and
+            // ends up low: anchor it near the top instead and let it grow into the space below
+            position: { my: "center top", at: "center top+40", of: window },
             show: { effect: "fade", duration: 400 },
             open() {
                 $(this).load(parent.contentUrl, function() {
@@ -551,6 +554,10 @@ export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refre
     }
 }
 
+/**
+ * @deprecated No caller
+ * Always returns "": #play_setting_subtitle does not seem to exist anywhere.
+ */
 export function getPagePlaySettings() {
     var settings = "";
     var stg_subtitle = document.getElementById("play_setting_subtitle");

@@ -42,8 +42,9 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
      */
     public function update(int $user_id = 0): void
     {
-        // allow replacing empty values when not set on your tab
-        $null_allowed = match ($_REQUEST['tab'] ?? null) {
+        // a field of this tab that submits nothing means "empty", so it is written rather than skipped
+        $tab          = (string) ($_REQUEST['tab'] ?? '');
+        $null_allowed = match ($tab) {
             'plugins' => ['personalfav_playlist', 'personalfav_smartlist'],
             'interface' => ['custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_blankalbum'],
             default => [],
@@ -51,8 +52,8 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
 
         // Get current keys
         $sql = ($user_id == '-1')
-            ? "SELECT `id`, `name` FROM `preference`"
-            : "SELECT `id`, `name` FROM `preference` WHERE `category` != 'system'";
+            ? "SELECT `id`, `name`, `category` FROM `preference`"
+            : "SELECT `id`, `name`, `category` FROM `preference` WHERE `category` != 'system'";
 
         $db_results = Dba::read($sql);
         $results    = [];
@@ -61,6 +62,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
             $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
+                'category' => $row['category'],
             ];
         }
 
@@ -133,8 +135,10 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                 }
             }
 
-            // Run the update for this preference only if it's set
-            if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed, true)) {
+            // Run the update for this preference only if it's set. A preference of another tab was never
+            // rendered, so its absence says nothing: writing it would wipe what the other tab holds.
+            $onThisTab = ((string) $data['category'] === $tab && in_array($name, $null_allowed, true));
+            if (array_key_exists($name, $_REQUEST) || $onThisTab) {
                 $applyToAll = (isset($_REQUEST[$apply_to_all])) ? (bool) $_REQUEST[$apply_to_all] : null;
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }

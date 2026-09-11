@@ -73,7 +73,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
 
         $options = [
-            'gather_art' => false,
+            'gather_art' => ($addNew && $addArt),
             'parse_playlist' => $importPlaylists,
         ];
 
@@ -255,7 +255,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     }
                 }
 
-                if ($addArt) {
+                if ($addArt && !$addNew) {
                     ob_start();
 
                     // Look for media art

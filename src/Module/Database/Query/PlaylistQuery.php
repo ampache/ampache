@@ -57,6 +57,7 @@ final class PlaylistQuery implements QueryInterface
         'date',
         'id',
         'last_count',
+        'last_duration',
         'last_update',
         'name',
         'rand',
@@ -196,6 +197,7 @@ final class PlaylistQuery implements QueryInterface
             case 'date':
             case 'id':
             case 'last_count':
+            case 'last_duration':
             case 'last_update':
             case 'type':
             case 'user':

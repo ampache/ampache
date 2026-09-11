@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Edit;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -229,6 +230,46 @@ class EditObjectActionTest extends TestCase
 
         self::assertIsArray($captured);
         self::assertStringNotContainsString('<script>', (string) $captured['title']);
+    }
+
+    public function testRunStripsUserUploadWhenAnUploaderEditsTheirOwnSong(): void
+    {
+        // an uploader may not re-file their own upload onto another account, so user_upload never reaches update()
+        AmpConfig::set('upload_allow_edit', true, true);
+
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
+
+        $libitem = $this->createMock(library_item::class);
+        $libitem->method('get_user_owner')->willReturn(42);
+
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $gatekeeper->method('getUser')->willReturn($user);
+        // the owner passes the edit gate at USER level, but is below content manager, which triggers the stripping
+        $gatekeeper->method('mayAccess')
+            ->willReturnCallback(static fn(AccessTypeEnum $type, AccessLevelEnum $level): bool => $level === AccessLevelEnum::USER);
+
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::SONG, 666)
+            ->willReturn($libitem);
+
+        $libitem->expects(static::once())
+            ->method('update')
+            ->with(self::callback(static fn(array $data): bool => !array_key_exists('user_upload', $data) && $data['title'] === 'x'))
+            ->willReturn(666);
+
+        $this->subject->run(
+            $this->createRequest(
+                ['type' => 'song_row', 'id' => '666'],
+                ['id' => '666', 'title' => 'x', 'user_upload' => '99']
+            ),
+            $gatekeeper
+        );
     }
 
     protected function setUp(): void

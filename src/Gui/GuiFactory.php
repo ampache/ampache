@@ -339,12 +339,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
         bool $isAlbumGroup,
         bool $isShowTrack,
         bool $isShowLicense,
+        bool $isShowComposer,
         bool $isHideGenre,
         bool $isHideMood,
         bool $isHideArtist,
         bool $isHideAlbum,
         bool $isHideYear,
         bool $isHideDrag,
+        bool $isShowAddDate = false,
     ): SongRowView {
         return new SongRowView(
             $this->createSongViewAdapter($gatekeeper, $song),
@@ -355,12 +357,14 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $isAlbumGroup,
             $isShowTrack,
             $isShowLicense,
+            $isShowComposer,
             $isHideGenre,
             $isHideMood,
             $isHideArtist,
             $isHideAlbum,
             $isHideYear,
-            $isHideDrag
+            $isHideDrag,
+            $isShowAddDate
         );
     }
 

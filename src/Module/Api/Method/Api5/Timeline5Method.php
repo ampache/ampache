@@ -33,6 +33,8 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -52,6 +54,7 @@ final class Timeline5Method implements MethodInterface
         private ConfigContainerInterface $configContainer,
         private StreamFactoryInterface $streamFactory,
         private UserActivityRepositoryInterface $userActivityRepository,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
@@ -113,6 +116,10 @@ final class Timeline5Method implements MethodInterface
                     $limit,
                     $since
                 );
+                $results = array_values(array_filter(
+                    $results,
+                    fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $user)
+                ));
 
                 return $response->withBody(
                     $this->streamFactory->createStream(

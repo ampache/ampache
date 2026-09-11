@@ -78,15 +78,17 @@ interface RatingRepositoryInterface
     ): array;
 
     /**
-     * The average rating of one object, or `null` while fewer than two users have rated it
+     * The average rating of one object and its number of voters, or `null` while fewer than two users have rated it
+     *
+     * @return array{0: float, 1: int}|null
      */
-    public function getAverageRating(int $objectId, string $objectType): ?float;
+    public function getAverageRating(int $objectId, string $objectType): ?array;
 
     /**
      * The average rating of a set of objects, keyed by object id and skipping the unrated
      *
      * @param list<int|string> $objectIds
-     * @return array<int, float>
+     * @return array<int, array{0: float, 1: int}>
      */
     public function getAverageRatings(string $objectType, array $objectIds): array;
 

@@ -241,6 +241,11 @@
             "type": "string",
             "nullable": true
           },
+          "time": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Duration in seconds, straight from the underlying folder/song/video/podcast episode row. `null` only if a future object type carries no such column."
+          },
           "art": {
             "type": "string",
             "nullable": true
@@ -266,6 +271,7 @@
           "title",
           "parent",
           "path",
+          "time",
           "art",
           "has_art",
           "play_url",
@@ -297,6 +303,10 @@
           "catalog": {
             "type": "string"
           },
+          "time": {
+            "type": "integer",
+            "description": "The summed duration, in seconds, of every song/video/podcast episode below this folder, subfolders included."
+          },
           "items": {
             "type": "array",
             "items": {
@@ -310,6 +320,7 @@
           "parent",
           "path",
           "catalog",
+          "time",
           "items"
         ],
         "additionalProperties": true
@@ -4164,7 +4175,8 @@
               "verify_catalog",
               "update_catalog",
               "gather_art",
-              "garbage_collect"
+              "garbage_collect",
+              "scan_catalog_folders"
             ],
             "type": "string",
             "description": "Catalog task to run"
@@ -4407,6 +4419,16 @@
             "type": "string",
             "description": "UID of the object to add to playlist"
           },
+          "object_type": {
+            "enum": [
+              "song",
+              "album",
+              "artist",
+              "playlist"
+            ],
+            "type": "string",
+            "description": "Default: song"
+          },
           "type": {
             "enum": [
               "song",
@@ -4414,7 +4436,8 @@
               "artist",
               "playlist"
             ],
-            "type": "string"
+            "type": "string",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9"
           }
         },
         "required": [
@@ -4430,7 +4453,7 @@
             "type": "string",
             "description": "Object id"
           },
-          "type": {
+          "object_type": {
             "enum": [
               "song",
               "album",
@@ -4439,6 +4462,17 @@
             ],
             "type": "string",
             "default": "song"
+          },
+          "type": {
+            "enum": [
+              "song",
+              "album",
+              "artist",
+              "playlist"
+            ],
+            "type": "string",
+            "default": "song",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9"
           },
           "track": {
             "type": "string",
@@ -6218,6 +6252,7 @@
     "POST /catalogs/{catalog_id}/clean": "action=catalog_action&filter={catalog_id}&task=clean_catalog",
     "POST /catalogs/{catalog_id}/file": "action=catalog_file&filter={catalog_id}",
     "POST /catalogs/{catalog_id}/folder": "action=catalog_folder&filter={catalog_id}",
+    "POST /catalogs/{catalog_id}/scan": "action=catalog_action&filter={catalog_id}&task=scan_catalog_folders",
     "POST /catalogs/{catalog_id}/update": "action=catalog_action&filter={catalog_id}&task=update_catalog",
     "POST /catalogs/{catalog_id}/verify": "action=catalog_action&filter={catalog_id}&task=verify_catalog",
     "POST /democratic/{object_id}": "action=democratic&filter={object_id}",
@@ -11704,7 +11739,8 @@
                 "verify_catalog",
                 "update_catalog",
                 "gather_art",
-                "garbage_collect"
+                "garbage_collect",
+                "scan_catalog_folders"
               ],
               "type": "string"
             }
@@ -11745,7 +11781,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Kick off a catalog task (add/clean/verify/gather art) for the selected catalog",
+        "summary": "Kick off a catalog task (add/clean/verify/gather art/scan folders) for the selected catalog",
         "tags": [
           "Catalogs"
         ],
@@ -12485,6 +12521,56 @@
         },
         "operationId": "catalogFolderCatalogsFolderPost",
         "description": "Perform actions on local catalog folders. Single folder versions of catalog add, clean, verify and remove (delete) Make sure you remember to urlencode those folder names!"
+      }
+    },
+    "/catalogs/{catalog_id}/scan": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CatalogId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "catalog action",
+                    "value": {
+                      "success": "successfully started: scan_catalog_folders for music"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Run the scan_catalog_folders task on a catalog",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Convenience alias of `catalog_action` with `task=scan_catalog_folders`. The task is taken from the path, so no `task` parameter is sent.",
+        "operationId": "catalogActionScan"
       }
     },
     "/catalogs/{catalog_id}/update": {
@@ -13924,6 +14010,7 @@
                         "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
+                        "time": 227,
                         "items": [
                           {
                             "id": "2",
@@ -13931,6 +14018,7 @@
                             "title": "Rock",
                             "parent": "1",
                             "path": "/music/rock",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
                             "play_url": "",
@@ -13943,6 +14031,7 @@
                             "title": "Example Song.mp3",
                             "parent": "1",
                             "path": "/music",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
@@ -13955,6 +14044,7 @@
                             "title": "Example Video.mp4",
                             "parent": "1",
                             "path": "/music",
+                            "time": 415,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",
@@ -14037,6 +14127,7 @@
                         "parent": "-1",
                         "path": "/music",
                         "catalog": "1",
+                        "time": 227,
                         "items": [
                           {
                             "id": "2",
@@ -14044,6 +14135,7 @@
                             "title": "Rock",
                             "parent": "1",
                             "path": "/music/rock",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
                             "play_url": "",
@@ -14056,6 +14148,7 @@
                             "title": "Example Song.mp3",
                             "parent": "1",
                             "path": "/music",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
@@ -14068,6 +14161,7 @@
                             "title": "Example Video.mp4",
                             "parent": "1",
                             "path": "/music",
+                            "time": 415,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",
@@ -22097,6 +22191,23 @@
             }
           },
           {
+            "description": "Default: song",
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9",
+            "deprecated": true,
             "in": "query",
             "name": "type",
             "required": false,
@@ -22574,7 +22685,24 @@
           },
           {
             "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
             "name": "type",
+            "description": "DEPRECATED, use `object_type` instead. Will be removed in API9",
+            "deprecated": true,
             "required": false,
             "schema": {
               "enum": [

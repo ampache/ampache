@@ -41,7 +41,7 @@ $shout     = $this->getShout(); ?>
         <a href="<?php echo $this->e($adminPath); ?>/shout.php?action=show_edit&shout_id=<?php echo $this->e($shout->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
         </a>
-        <a href="<?php echo $this->e($adminPath); ?>/shout.php?action=delete&shout_id=<?php echo $this->e($shout->getId()); ?>">
+        <a href="<?php echo $this->e($adminPath); ?>/shout.php?action=show_delete&shout_id=<?php echo $this->e($shout->getId()); ?>">
             <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
         </a>
     </td>

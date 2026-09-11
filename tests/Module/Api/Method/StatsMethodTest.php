@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -33,7 +34,9 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -43,6 +46,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use ReflectionProperty;
 
 /**
  * Every result path runs through the Stats/Rating/Userflag/Random database statics, so only the
@@ -80,6 +84,64 @@ class StatsMethodTest extends MockeryTestCase
             'podcast' => ['podcast', ConfigurationKeyEnum::PODCAST, 'Enable: podcast'],
             'podcast_episode' => ['podcast_episode', ConfigurationKeyEnum::PODCAST, 'Enable: podcast'],
         ];
+    }
+
+    public function testHandleRendersNothingForAUserWhoKeepsRecentPrivate(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $viewer     = $this->mock(User::class);
+        $target     = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result = 'empty-result';
+
+        // filter=recent means a missing guard would call get_recently_played on the target; it is deliberately
+        // left unstubbed so that path fails the test. the guard must short-circuit to writeEmpty before it.
+        // force `allow_personal_info_recent` to 0 for the target without touching the database
+        AmpConfig::set('memory_cache', true, true);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
+        Preference::add_to_cache('get_by_user-allow_personal_info_recent', 7, [0]);
+
+        $viewer->shouldReceive('getId')->andReturn(1);
+        $target->shouldReceive('getId')->andReturn(7);
+        $target->shouldReceive('isNew')->andReturn(false);
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with(7)
+            ->once()
+            ->andReturn($target);
+
+        $this->configContainer->shouldReceive('getInt')
+            ->with(ConfigurationKeyEnum::POPULAR_THRESHOLD)
+            ->once()
+            ->andReturn(10);
+
+        $output->shouldReceive('writeEmpty')
+            ->with(6, 'song')
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                ['type' => 'song', 'user_id' => '7', 'filter' => 'recent', 'api_format' => 'json', 'auth' => 'some-auth'],
+                $viewer,
+                6
+            )
+        );
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]

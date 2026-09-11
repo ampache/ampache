@@ -229,6 +229,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         );
     }
 
+    public function getDisabledIcon(): string
+    {
+        return Ui::get_material_symbol('unpublished', T_('Disabled'));
+    }
+
     public function getDisplayYear(): int
     {
         return ($this->configContainer->get('use_original_year') && $this->album->original_year)
@@ -294,7 +299,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getRating(): string
     {
-        return Rating::show($this->album->getId(), 'album');
+        return Rating::show($this->album->getId(), 'album', true);
     }
 
     public function getShareUi(): string
@@ -310,6 +315,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getUserFlags(): string
     {
         return Userflag::show($this->album->getId(), 'album');
+    }
+
+    public function isDisabled(): bool
+    {
+        return !$this->album->enabled;
     }
 
     public function isEditable(): bool

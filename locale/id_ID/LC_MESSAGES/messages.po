@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-14 08:58+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: whenwesober, 2021\n"
 "Language-Team: Indonesian (Indonesia) (http://app.transifex.com/ampache/ampache/language/id_ID/)\n"
@@ -18,182 +18,11 @@ msgstr ""
 "Language: id_ID\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Filters"
-msgstr "Filter"
-
-msgid "Starts With"
-msgstr "Mulai Dengan"
-
-msgid "Minimum Count"
-msgstr "Perhitungan Minimum"
-
-msgid "Rated"
-msgstr "Telah dibintangi"
-
-msgid "Unplayed"
-msgstr "Belum Diputar"
-
-msgid "All Playlists"
-msgstr "Semua Daftar Putar"
-
-msgid "Catalog"
-msgstr "Katalog"
-
-msgid "All"
-msgstr "Semua"
-
-msgid "Toggle Artwork"
-msgstr "Alihkan SampulKarya"
-
-msgid "Use of cookies by Ampache"
-msgstr "Penggunaan cookie oleh Ampache"
-
-msgid ""
-"Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
-"site"
-msgstr "Cookie adalah file teks kecil yang ditempatkan di komputer Anda oleh situs web yang Anda kunjungi. Mereka banyak digunakan untuk membuat situs web bekerja, atau bekerja lebih efisien, serta memberikan informasi kepada pemilik situs"
-
-msgid "The table below explains the cookies we use and why"
-msgstr "Tabel dibawah menjelaskan cookie yang kami gunakan dan mengapa"
-
-msgid "Cookie"
-msgstr "Cookie"
-
-msgid "Name"
-msgstr "Nama"
-
-msgid "Purpose"
-msgstr "Tujuan"
-
-msgid "Ampache session"
-msgstr "Sesi Ampache"
-
-msgid "Ampache session username (if authenticated, information only)"
-msgstr "Nama pengguna sesi Ampache (jika ter-otentikasi, hanya informasi)"
-
-msgid "Automatically authenticate users"
-msgstr "Otentikasi pengguna secara otomatis"
-
-msgid "Keep latest web player volume"
-msgstr "Simpan volume pemutar web terakhir"
-
-msgid "Show/Hide column [column_index] when browsing [object_type] objects"
-msgstr "Tampilkan/Sembunyikan kolom [column_index] ketika menelusuri obyek [object_type]"
-
-msgid "Use alphabet when browsing [object_type] objects"
-msgstr "Gunakan alfabet ketika menelusuri obyek [object_type]"
-
-msgid "Use pages when browsing [object_type] objects"
-msgstr "Gunakan halaman ketika menelusuri obyek [object_type]"
-
-msgid "Collapse/Expand Sidebar [menu_section]"
-msgstr "Perkecil/Perluas [menu_section] Sidebar"
-
-msgid "Collapse/Expand Sidebar"
-msgstr "Perkecil/Perluas Sidebar"
-
-msgid "Ampache"
-msgstr "Ampache"
-
-msgid "Ampache Error Page"
-msgstr "Halaman Kesalahan Ampache"
-
-msgid "For the Love of Music"
-msgstr "Untuk Kecintaan Pada Musik"
-
-msgid "Error"
-msgstr "Kesalahan"
-
-msgid ""
-"The following error has occurred, you will be automatically redirected in 10"
-" seconds."
-msgstr "Kesalahan berikut telah terjadi, Anda akan secara otomatih dialihkan dalam 10 detik."
-
-msgid "Error Messages"
-msgstr "Pesan Kesalahan"
-
-msgid "Donate"
-msgstr "Donasi"
-
-msgid "Copyright"
-msgstr "Hak Cipta"
-
-msgid "Show/Hide Player"
-msgstr "Tampilkan/Sembunyikan Pemutar"
-
 msgid "Home"
 msgstr "Beranda"
 
-msgid "Play"
-msgstr "Putar"
-
-msgid "Artists"
-msgstr "Artis"
-
-msgid "Albums"
-msgstr "Album"
-
-msgid "Playlists"
-msgstr "Daftar Putar"
-
-msgid "Genres"
-msgstr "Genre"
-
-msgid "Favorites"
-msgstr "Favorit"
-
 msgid "Upload"
 msgstr "Unggah"
-
-msgid "Now Playing"
-msgstr "Sedang Diputar"
-
-msgid "Recently Played"
-msgstr "Diputar Baru-Baru Ini"
-
-msgid "Newest Albums"
-msgstr "Album Terbaru"
-
-msgid "Newest Artists"
-msgstr "Artis Terbaru"
-
-msgid "Newest Songs"
-msgstr ""
-
-msgid "Newest Shouts"
-msgstr "Shout Terbaru"
-
-msgid "Information"
-msgstr "Informasi"
-
-msgid "New messages"
-msgstr "Pesan baru"
-
-msgid "Login"
-msgstr "Masuk"
-
-msgid "Register"
-msgstr "Daftar"
-
-msgid "Show/Hide Playlist"
-msgstr "Tampilkan/Sembunyikan Daftar Putar"
-
-msgid "Loading"
-msgstr "Memuat"
-
-msgid "Your Ampache config file is out of date!"
-msgstr "Berkas konfigurasi Ampache Anda sudah usang!"
-
-msgid "Update your current config file automatically"
-msgstr ""
-
-msgid "Download a copy of the new version"
-msgstr ""
-
-msgid "Installation"
-msgstr "Pemasangan"
 
 msgid "Localplay"
 msgstr "Putarlokal"
@@ -279,6 +108,15 @@ msgstr "Simpan"
 msgid "Cancel"
 msgstr "Batal"
 
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Play"
+msgstr "Putar"
+
 msgid "Play next"
 msgstr "Putar berikutnya"
 
@@ -288,116 +126,20 @@ msgstr "Putar terakhir"
 msgid "Add to Temporary Playlist"
 msgstr "Tambah ke Daftar Putar Sementara"
 
-msgid "Add to playlist"
-msgstr "Tambah ke daftar putar"
+msgid "Editing Existing User"
+msgstr "Mengedit Pengguna yang Ada"
 
-msgid "Prev"
-msgstr "Sblm"
+msgid "User Properties"
+msgstr "Properti Pengguna"
 
-msgid "Page"
-msgstr "Halaman"
-
-msgid "of"
-msgstr "dari"
-
-msgid "Next"
-msgstr "Berikutnya"
-
-msgid "View"
-msgstr "Lihat"
-
-msgid "Pages"
-msgstr "Halaman"
-
-msgid "Infinite Scroll"
-msgstr "Gulir Tidak Tebatas"
-
-msgid "Grid View"
-msgstr "Tampilan Grid"
-
-msgid "Alphabet"
-msgstr "Alfabet"
-
-msgid "Limit"
-msgstr "Batas"
-
-msgid "Item Count"
-msgstr "Perhitungan Item"
-
-msgid "Add to New Playlist"
-msgstr "Tambah ke Daftar Putar Baru"
-
-msgid "Batch download"
-msgstr "Unduh masal"
-
-msgid "Clear Playlist"
-msgstr "Bersihkan Daftar Putar"
-
-msgid "Add dynamic items"
-msgstr "Tambah item dinamis"
-
-msgid "Random song"
-msgstr "Lagu acak"
-
-msgid "Random artist"
-msgstr "Artis acak"
-
-msgid "Random album"
-msgstr "Album acak"
-
-msgid "Random playlist"
-msgstr "Daftar Putar acak"
-
-msgid "Refresh"
-msgstr "Menyegarkan"
-
-msgid "Delete"
-msgstr "Hapus"
-
-msgid "No items"
-msgstr "Tidak ada item"
-
-msgid "More"
-msgstr "Lebih banyak"
-
-msgid "Add Current Host"
-msgstr "Tambah Host Saat Ini"
-
-msgid "Add API / RPC Host"
-msgstr "Tambah Host API / RPC"
-
-msgid "Add Local Network Definition"
-msgstr "Tambah Definisi Jaringan Lokal"
-
-msgid "Advanced Add"
-msgstr "Tambah Lanjutan"
-
-msgid "Access Control Entries"
-msgstr "Entri Kontrol Akses"
-
-msgid "Start Address"
-msgstr "Alamat Awal"
-
-msgid "End Address"
-msgstr "Alamat Akhir"
-
-msgid "Level"
-msgstr "Tingkat"
-
-msgid "User"
-msgstr "Pengguna"
-
-msgid "Type"
-msgstr "Jenis"
-
-msgid "Action"
-msgstr "Tindakan"
-
-msgid "Edit"
-msgstr "Edit"
+msgid "Username"
+msgstr "Nama Pengguna"
 
 msgid "Full Name"
 msgstr "Nama Lengkap"
+
+msgid "Public"
+msgstr "Publik"
 
 msgid "E-mail"
 msgstr "Email"
@@ -411,14 +153,35 @@ msgstr "Provinsi"
 msgid "City"
 msgstr "Kota"
 
-msgid "New Password"
-msgstr "Kata Sandi Baru"
+msgid "Password"
+msgstr "Kata Sandi"
 
 msgid "Confirm Password"
 msgstr "Konfirmasi Kata Sandi"
 
+msgid "Subsonic Password"
+msgstr ""
+
+msgid "Delete"
+msgstr "Hapus"
+
+msgid "Currently set"
+msgstr ""
+
+msgid "Not set"
+msgstr ""
+
+msgid "User Access Level"
+msgstr "Tingkat akses pengguna"
+
+msgid "Catalog Filter"
+msgstr ""
+
 msgid "Avatar"
 msgstr "Avatar"
+
+msgid "Other Options"
+msgstr "Opsi Lain"
 
 msgid "API key"
 msgstr "Kunci API"
@@ -438,527 +201,20 @@ msgstr "Token RSS"
 msgid "Generate new RSS token"
 msgstr "Hasilkan token RSS baru"
 
+msgid "Config Preset"
+msgstr "Preset Konfigurasi"
+
+msgid "This affects all non-admin accounts"
+msgstr ""
+
+msgid "Prevent Preset Override"
+msgstr ""
+
 msgid "Clear Stats"
 msgstr "Bersihkan Statistik"
 
-msgid "Update Account"
-msgstr "Perbarui Akun"
-
-msgid "Add Access Control List"
-msgstr "Tambah Daftar Kontrol Akses"
-
-msgid "API/RPC"
-msgstr "API/RPC"
-
-msgid "Local Network Definition"
-msgstr "Definisi Jaringan Lokal"
-
-msgid "Stream Access"
-msgstr "Akses Stream"
-
-msgid "Read"
-msgstr "Baca"
-
-msgid "Read/Write"
-msgstr "Baca/Tulis"
-
-msgid "Web Interface"
-msgstr "Antarmuka Web"
-
-msgid "IPv4 or IPv6 Addresses"
-msgstr "Alamat IPv4 atau IPv6"
-
-msgid "Start"
-msgstr "Mulai"
-
-msgid "End"
-msgstr "Hentikan"
-
-msgid "Create ACL"
-msgstr "Buat ACL"
-
-msgid "Add Catalog"
-msgstr "Tambah Katalog"
-
-msgid "New catalogs are added to the DEFAULT group when created"
-msgstr ""
-
-msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-
-msgid "Catalog Name"
-msgstr "Nama Katalog"
-
-msgid "Auto-inserted Fields"
-msgstr "Baris Otomatis Sisip"
-
-msgid "Album Artist"
-msgstr "Artis Album"
-
-msgid "Song Artist"
-msgstr "Artis Lagu"
-
-msgid "Song Title"
-msgstr "Judul Lagu"
-
-msgid "Track (0 padded)"
-msgstr "Trek (0 pad)"
-
-msgid "Disk"
-msgstr "Penyimpanan"
-
-msgid "Genre"
-msgstr "Genre"
-
-msgid "Year"
-msgstr "Tahun"
-
-msgid "Original Year"
-msgstr "Tahun Asli"
-
-msgid "Comment"
-msgstr "Komentar"
-
-msgid "Label"
-msgstr "Label"
-
-msgid "Release Type"
-msgstr "Jenis Rilis"
-
-msgid "Release Status"
-msgstr ""
-
-msgid "Release Comment"
-msgstr ""
-
-msgid "Catalog Number"
-msgstr "Jumlah Katalog"
-
-msgid "Barcode"
-msgstr "Barcode"
-
-msgid "Ignore"
-msgstr ""
-
-msgid "Catalog Type"
-msgstr "Jenis Katalog"
-
-msgid "Select"
-msgstr "Pilih"
-
-msgid "Filename Pattern"
-msgstr "Pola Nama Berkas"
-
-msgid "Folder Pattern"
-msgstr "Pola Folder"
-
-msgid "(no leading or ending '/')"
-msgstr "(tanpa awalan atau akhiran '/')"
-
-msgid "Gather Art"
-msgstr "Kumpulkan SampulKarya"
-
-msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr "Buat Daftar Putar dari Berkas Daftar Putar. (m3u, m3u8, asx, pls, xspf)"
-
-msgid "Catalog Media Type"
-msgstr "Jenis Media Katalog"
-
-msgid "Music"
-msgstr "Musik"
-
-msgid "Add Catalog Filter"
-msgstr ""
-
-msgid "Please enable 'catalog_filter' in your sever config file"
-msgstr ""
-
-msgid "Catalog filters are a way to stop users accessing different catalogs"
-msgstr ""
-
-msgid ""
-"If you do not tick a catalog, it will be hidden from users that you assign "
-"to this filter"
-msgstr ""
-
-msgid "Filter Name"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "Add Label"
-msgstr "Tambah Label"
-
-msgid "MusicBrainz ID"
-msgstr "ID MusicBrainz"
-
-msgid "Category"
-msgstr "Kategori"
-
-msgid "Personal"
-msgstr "Pribadi"
-
-msgid "Association"
-msgstr "Asosiasi"
-
-msgid "Company"
-msgstr "Perusahaan"
-
-msgid "Imprint"
-msgstr ""
-
-msgid "Production"
-msgstr ""
-
-msgid "Original Production"
-msgstr ""
-
-msgid "Bootleg Production"
-msgstr ""
-
-msgid "Reissue Production"
-msgstr ""
-
-msgid "Distributor"
-msgstr ""
-
-msgid "Holding"
-msgstr ""
-
-msgid "Rights Society"
-msgstr ""
-
-msgid "Tag Generated"
-msgstr ""
-
-msgid "Summary"
-msgstr "Ringkasan"
-
-msgid "Address"
-msgstr "Alamat"
-
-msgid "Country"
-msgstr ""
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Active"
-msgstr ""
-
-msgid "Inactive"
-msgstr ""
-
-msgid "Add"
-msgstr "Tambah"
-
-msgid "Add Radio Station"
-msgstr "Tambah Stasiun Radio"
-
-msgid "Stream URL"
-msgstr "Alamat URL Stream"
-
-msgid "Codec"
-msgstr "Kodek"
-
-msgid "Create Playlist"
-msgstr "Buat Daftar Putar"
-
-msgid "Private"
-msgstr "Pribadi"
-
-msgid "Public"
-msgstr "Publik"
-
-msgid "Create"
-msgstr "Buat"
-
-msgid "Subscribe to Podcast"
-msgstr "Langganan ke Podcast"
-
-msgid "Podcast Feed URL"
-msgstr "Alamat URL Umpan Podcast"
-
-msgid "Subscribe"
-msgstr "Langganan"
-
-msgid "Compose Message"
-msgstr "Buat Pesan"
-
-msgid "Recipient"
-msgstr "Penerima"
-
-msgid "Subject"
-msgstr "Judul"
-
-msgid "Message"
-msgstr "Pesan"
-
-msgid "Send"
-msgstr "Kirim"
-
-msgid "Starting New Media Search"
-msgstr "Memulai Pencarian Media Baru"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Starting New Media Search on \"%s\" Catalog"
-msgstr "Memulai Pencarian Media Baru pada Katalog \"%s\""
-
-msgid "Found"
-msgstr "Ditemukan"
-
-msgid "None"
-msgstr "Tidak ada"
-
-msgid "Reading"
-msgstr "Membaca"
-
-msgid "Create Share"
-msgstr "Buat Bagikan"
-
-msgid "Share"
-msgstr "Bagikan"
-
-msgid "Secret"
-msgstr "Rahasia"
-
-msgid "Max Counter"
-msgstr "Konter Maksimal"
-
-msgid "Expiry Days"
-msgstr "Hari Kadaluarsa"
-
-msgid "Allow Stream"
-msgstr "Izinkan Stream"
-
-msgid "Allow Download"
-msgstr "Izinkan Unduh"
-
-msgid "Post to Shoutbox"
-msgstr "Posting ke ShoutBox"
-
-msgid "Stick this comment"
-msgstr "Tempelkan komentar ini"
-
-msgid "Shoutbox"
-msgstr "Shoutbox"
-
-msgid "Target folder"
-msgstr "Folder Target"
-
-msgid "New folder"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Reload"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Leave the artist and album fields blank to read file tags"
-msgstr "Biarkan baris artis dan album kosong untuk membaca tag berkas"
-
-msgid "Music License"
-msgstr "Lisensi Musik"
-
-msgid "WARNING"
-msgstr "Peringatan"
-
-msgid ""
-"The music license you choose gives away rights in an irrevocable manner to "
-"the audience."
-msgstr ""
-
-msgid ""
-"Read the text of the license you choose carefully with the 'View License' "
-"link."
-msgstr ""
-
-msgid "Files"
-msgstr "Berkas"
-
-msgid "Max upload size"
-msgstr ""
-
-msgid "Allowed file type"
-msgstr "Jenis berkas yang diizinkan"
-
-msgid ""
-"Drag & Drop your files or <span class=\\\"filepond--label-action\\\"> Browse"
-" </span>"
-msgstr ""
-
-msgid "Field contains invalid files"
-msgstr ""
-
-msgid "Waiting for size"
-msgstr ""
-
-msgid "Size not available"
-msgstr ""
-
-msgid "Error during load"
-msgstr ""
-
-msgid "Uploading"
-msgstr ""
-
-msgid "Upload complete"
-msgstr ""
-
-msgid "Upload cancelled"
-msgstr ""
-
-msgid "Error during upload"
-msgstr ""
-
-msgid "Error during revert"
-msgstr ""
-
-msgid "Error during remove"
-msgstr ""
-
-msgid "tap to cancel"
-msgstr ""
-
-msgid "tap to retry"
-msgstr ""
-
-msgid "tap to undo"
-msgstr ""
-
-msgid "Remove"
-msgstr "Menghapus"
-
-msgid "Abort"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Undo"
-msgstr ""
-
-msgid "File is too large"
-msgstr ""
-
-msgid "Maximum file size is {filesize}"
-msgstr ""
-
-msgid "Maximum total size exceeded"
-msgstr ""
-
-msgid "Maximum total file size is {filesize}"
-msgstr ""
-
-msgid "File of invalid type"
-msgstr ""
-
-msgid "Expects {allButLastType} or {lastType}"
-msgstr ""
-
-msgid "Image type not supported"
-msgstr ""
-
-msgid "Image is too small"
-msgstr ""
-
-msgid "Image is too big"
-msgstr ""
-
-msgid "Minimum size is {minWidth} × {minHeight}"
-msgstr ""
-
-msgid "Maximum size is {maxWidth} × {maxHeight}"
-msgstr ""
-
-msgid "Resolution is too low"
-msgstr ""
-
-msgid "Resolution is too high"
-msgstr ""
-
-msgid "Minimum resolution is {minResolution}"
-msgstr ""
-
-msgid "Maximum resolution is {maxResolution}"
-msgstr ""
-
-msgid "Add User"
-msgstr "Tambahkan pengguna"
-
-msgid "Username"
-msgstr "Nama Pengguna"
-
-msgid "Password"
-msgstr "Kata Sandi"
-
-msgid "User Access Level"
-msgstr "Tingkat akses pengguna"
-
-msgid "Guest"
-msgstr "Pengunjung"
-
-msgid "Content Manager"
-msgstr "Manajer Konten"
-
-msgid "Catalog Manager"
-msgstr "Manajer Katalog"
-
-msgid "Admin"
-msgstr "Admin"
-
-msgid "User Catalog Filter"
-msgstr ""
-
-msgid "Search on Google ..."
-msgstr "Cari di Google ..."
-
-msgid "Search on DuckDuckGo ..."
-msgstr "Cari di DuckDuckGo ..."
-
-msgid "Search on Wikipedia ..."
-msgstr "Cari di Wikipedia ..."
-
-msgid "Search on Last.fm ..."
-msgstr "Cari di Last.fm ..."
-
-msgid "Search on Bandcamp ..."
-msgstr ""
-
-msgid "Search on Discogs ..."
-msgstr ""
-
-msgid "Search on Musicbrainz ..."
-msgstr "Cari di MusicBrainz ..."
-
-msgid "Played"
-msgstr "Dimainkan"
-
-#. HINT: Number of times an object has been played
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%dkali"
-
-msgid "Uploaded by"
-msgstr "Diunggah oleh"
-
-msgid "Actions"
-msgstr "Tindakan"
+msgid "Update User"
+msgstr "Perbarui Pengguna"
 
 msgid "Random to Temporary Playlist"
 msgstr "Acak ke Daftar Putar Sementara"
@@ -975,6 +231,9 @@ msgstr "Tautan"
 msgid "Graphs"
 msgstr "Grafik"
 
+msgid "Save Track Order"
+msgstr "Simpan Urutan Trek"
+
 msgid "Do you really want to update from tags?"
 msgstr "Apakah Anda benar ingin memperbarui dari tag?"
 
@@ -984,29 +243,38 @@ msgstr "Perbarui dari tag"
 msgid "Album Edit"
 msgstr "Edit Album"
 
+msgid "Edit"
+msgstr "Edit"
+
 msgid "Edit Album"
 msgstr "Edit Album"
 
 msgid "Download"
 msgstr "Unduh"
 
-msgid "Songs"
-msgstr "Lagu"
+msgid "Direct URL to Image"
+msgstr "URL Langsung ke Gambar"
 
-msgid "Rating"
-msgstr "Peringkat"
+msgid "Local Image"
+msgstr "Gambar Lokal"
 
-msgid "Art"
-msgstr "Sampul"
+msgid "Spotify Album Filters"
+msgstr "Filter Album Spotify"
 
-msgid "No Album found"
-msgstr "Album tidak ditemukan"
+msgid "Year"
+msgstr "Tahun"
 
-msgid "Unknown (Orphaned)"
-msgstr "Tidak diketahui (tanpa nama)"
+msgid "(e.g. '2001', '2001-2005')"
+msgstr "(mis. '2001', '2001-2005')"
 
-msgid "Save Track Order"
-msgstr "Simpan Urutan Trek"
+msgid "Limit"
+msgstr "Batas"
+
+msgid "Search Limit"
+msgstr "Batas Pencarian"
+
+msgid "Get Art"
+msgstr "Dapatkan Sampul"
 
 msgid "Loading..."
 msgstr "Memuat..."
@@ -1048,6 +316,12 @@ msgstr "Edit Artis"
 msgid "Edit Artist"
 msgstr "Edit Artis"
 
+msgid "Albums"
+msgstr "Album"
+
+msgid "Songs"
+msgstr "Lagu"
+
 msgid "Top Tracks"
 msgstr ""
 
@@ -1060,23 +334,26 @@ msgstr "Artis Serupa"
 msgid "Similar Songs"
 msgstr "Lagu serupa"
 
-msgid "Time"
-msgstr "Waktu"
-
-msgid "No Artist found"
-msgstr "Artis tidak ditemukan"
-
 msgid "Select New Art"
 msgstr "Pilih Sampul Baru"
+
+msgid "Art"
+msgstr "Sampul"
+
+msgid "Select"
+msgstr "Pilih"
 
 msgid "Invalid"
 msgstr "Tidak valid"
 
-msgid "Album Art"
-msgstr "Sampul Album"
-
 msgid "Click to close window"
 msgstr "Klik untuk menutup jendela"
+
+msgid "Broadcast"
+msgstr "Siaran"
+
+msgid "Unbroadcast"
+msgstr "Uncroadcast"
 
 msgid "Yes"
 msgstr "Ya"
@@ -1084,209 +361,20 @@ msgstr "Ya"
 msgid "No"
 msgstr "Tidak"
 
+msgid "Broadcast Edit"
+msgstr "Siaran Edit"
+
 msgid "New broadcast"
 msgstr "Siaran baru"
 
-msgid "Started"
-msgstr "Dimulai"
-
-msgid "Listeners"
-msgstr "Pendengar"
-
-msgid "No Broadcast found"
-msgstr "Siaran tidak ditemukan"
-
-msgid "Disable"
-msgstr "Nonaktifkan"
-
-msgid "Enable"
-msgstr "Aktifkan"
-
-msgid "Make it ready .."
-msgstr "Siapkan.."
-
-msgid "Verify"
-msgstr "Verifikasi"
-
-msgid "Clean"
-msgstr "Bersih"
-
-msgid "Update"
-msgstr "Perbarui"
-
-msgid "Import"
-msgstr "Impor"
-
-msgid "Update File Tags"
-msgstr "Perbarui Tag Berkas"
-
-msgid "Garbage Collection"
+msgid "Found nothing to show"
 msgstr ""
 
-msgid "Go"
-msgstr "Lanjutkan"
-
-msgid "Path"
-msgstr "Path"
-
-msgid "Last Verify"
-msgstr "Verifikasi terakhir"
-
-msgid "Last Add"
-msgstr "Tambah terakhir"
-
-msgid "Last Clean"
-msgstr "Bersih Terakhir"
-
-msgid "No Catalog found"
-msgstr "Katalog tidak ditemukan"
-
-msgid "Description"
-msgstr "Deskripsi"
-
-msgid "Version"
-msgstr "Versi"
-
-msgid "Activate"
-msgstr "Aktifkan"
-
-msgid "No records found"
-msgstr "Tidak ditemukan catatan"
-
-msgid "Clean Catalog"
-msgstr "Bersihkan Katalog"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Cleaning the \"%s\" Catalog"
-msgstr "Membersihkan Katalog \"%s\""
-
-msgid "Checking"
-msgstr "Memeriksa"
-
-msgid "Continue"
-msgstr "Lanjutkan"
-
-msgid "Ampache Debug"
-msgstr "Debug Ampache"
-
-msgid "Generate Configuration File"
-msgstr "Hasilkan Berkas Konfigurasi"
-
-msgid "Write New Config"
-msgstr "Tulis Konfigurasi Baru"
-
-msgid "Set Database Charset"
-msgstr "Atur Charset Database"
-
-msgid "Clear Songs Cache"
-msgstr "Hapus Cache Lagu"
-
-msgid "Clear Artists Cache"
-msgstr "Hapus Cache Artis"
-
-msgid "Clear Albums Cache"
-msgstr "Hapus Cache Album"
-
-msgid "Clear Perpetual API Sessions"
+msgid "Create Collection"
 msgstr ""
-
-msgid "Ampache Update"
-msgstr "Pembaruan Ampache"
-
-msgid "Installed Ampache version"
-msgstr "Versi Ampache yang dipasang"
-
-msgid "Latest Ampache version"
-msgstr "Versi Ampache terbaru"
-
-msgid "GitHub Branch"
-msgstr "Cabang GitHub"
-
-msgid "Force check"
-msgstr "Paksa Periksa"
-
-msgid "Ampache Cron"
-msgstr "Cron Ampache"
-
-msgid "The last cron was completed"
-msgstr "Cron terakhir selesai"
-
-msgid "PHP Settings"
-msgstr "Pengaturan PHP"
-
-msgid "Setting"
-msgstr "Pengaturan"
-
-msgid "Value"
-msgstr "Nilai"
-
-msgid "Memory Limit"
-msgstr "Batas Memori"
-
-msgid "Maximum Execution Time"
-msgstr "Waktu Eksekusi Maksimal"
-
-msgid "Override Execution Time"
-msgstr "Timpa Waktu Eksekusi"
-
-msgid "Failed"
-msgstr "Gagal"
-
-msgid "Succeeded"
-msgstr "Berhasil"
-
-msgid "Open Basedir"
-msgstr "Buka Basedir"
-
-msgid "Zlib Support"
-msgstr "Dukungan Zlib"
-
-msgid "GD Support"
-msgstr "Dukungan GD"
-
-msgid "Iconv Support"
-msgstr "Dukungan Iconv"
-
-msgid "Gettext Support"
-msgstr "Dukungan Gettext"
-
-msgid "PHP intl extension"
-msgstr "Ekstensi PHP intl"
-
-msgid "Current Configuration"
-msgstr "Konfigurasi Saat Ini"
-
-msgid "Preference"
-msgstr "Preferensi"
-
-#, php-format
-msgid "%s Playlist"
-msgstr "Daftar Putar %s"
-
-msgid "Democratic Playlist"
-msgstr "Daftar Putar Demokrasi"
-
-msgid "Cooldown"
-msgstr "Tenang/Cooldown"
-
-msgid "minutes"
-msgstr "menit"
-
-msgid "Configure Democratic Playlist"
-msgstr "Konfigurasikan Daftar Putar Demokrasi"
-
-msgid "Reload this page automatically"
-msgstr "Muat ulang halaman ini secara otomatis"
 
 msgid "Playing from base playlist"
 msgstr "Putar dari daftar putar dasar"
-
-msgid "Votes"
-msgstr "Voting"
-
-msgid "Title"
-msgstr "Judul"
 
 msgid "Remove Vote"
 msgstr "Hapus Votinh"
@@ -1294,54 +382,238 @@ msgstr "Hapus Votinh"
 msgid "Add Vote"
 msgstr "Tambah Voting"
 
-msgid "Debug Page"
-msgstr "Halaman Debug"
+msgid "Filters"
+msgstr "Filter"
 
-msgid "Access Denied"
-msgstr "Akses Ditolak"
+msgid "Name"
+msgstr "Nama"
 
-msgid "This event has been logged"
-msgstr "Hal ini telah dicatat/log"
+msgid "Minimum Count"
+msgstr "Perhitungan Minimum"
 
-msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function"
-msgstr "Anda telah diarahkan ke halaman ini karena Anda tidak memiliki akses ke fungsi ini"
+msgid "Rated"
+msgstr "Telah dibintangi"
 
-msgid ""
-"If you believe this is an error please contact an Ampache administrator"
-msgstr "Jika Anda yakin ini adalah kesalahan, silakan hubungi Administrator Ampache"
+msgid "Unplayed"
+msgstr "Belum Diputar"
 
-msgid "You will be automatically redirected in 10 seconds."
-msgstr "Kamu akan diarahkan secara otomatis dalam 10 detik."
+msgid "All Playlists"
+msgstr "Semua Daftar Putar"
 
-msgid ""
-"You have been redirected to this page because you attempted to access a "
-"function that is disabled in the demo."
-msgstr "Anda telah diarahkan ke halaman ini karena Anda mencoba mengakses fungsi yang dinonaktifkan dalam demo."
+msgid "Catalog"
+msgstr "Katalog"
 
-msgid "Permission Denied"
+msgid "All"
+msgstr "Semua"
+
+msgid "Toggle Artwork"
+msgstr "Alihkan SampulKarya"
+
+msgid "Add"
+msgstr "Tambah"
+
+msgid "Create Label"
+msgstr "Buat Label"
+
+msgid "Prev"
+msgstr "Sblm"
+
+msgid "Page"
+msgstr "Halaman"
+
+msgid "of"
+msgstr "dari"
+
+msgid "Next"
+msgstr "Berikutnya"
+
+msgid "View"
+msgstr "Lihat"
+
+msgid "Pages"
+msgstr "Halaman"
+
+msgid "Infinite Scroll"
+msgstr "Gulir Tidak Tebatas"
+
+msgid "Grid View"
+msgstr "Tampilan Grid"
+
+msgid "Alphabet"
+msgstr "Alfabet"
+
+msgid "Item Count"
+msgstr "Perhitungan Item"
+
+msgid "Manage"
+msgstr "Kelola"
+
+msgid "Add Radio Station"
+msgstr "Tambah Stasiun Radio"
+
+msgid "No live stream found"
+msgstr "Siaran langsung tidak ditemukan"
+
+msgid "Track"
+msgstr "Trek"
+
+msgid "Action"
+msgstr "Tindakan"
+
+msgid "Create License"
+msgstr "Buat Lisensi"
+
+msgid "Refresh"
+msgstr "Menyegarkan"
+
+msgid "Duration"
+msgstr "Durasi"
+
+msgid "Create Playlist"
+msgstr "Buat Daftar Putar"
+
+msgid "No podcast episode found"
+msgstr "Tidak ditemukan episode podcast"
+
+msgid "Subscribe to Podcast"
+msgstr "Langganan ke Podcast"
+
+msgid "Import"
+msgstr "Impor"
+
+msgid "Export"
+msgstr "Ekspor"
+
+msgid "Compose"
+msgstr "Menyusun"
+
+msgid "Compose a New Message"
+msgstr "Komposisikan pesan baru"
+
+msgid "Mark as Read"
+msgstr "Tandai sebagai membaca"
+
+msgid "Mark as Unread"
+msgstr "Tandai sebagai Belum dibaca"
+
+msgid "Add Smart Playlist"
+msgstr "Tambahkan daftar putar pintar"
+
+msgid "No smart playlist found"
+msgstr "Tidak ditemukan daftar putar pintar"
+
+msgid "Fullname"
+msgstr "Nama Lengkap"
+
+msgid "No User found"
 msgstr ""
 
-msgid "You do not have permission to write to this file or folder"
+msgid "No missing albums found"
+msgstr "Tidak ditemukan album yang hilang"
+
+msgid "Export Catalog"
+msgstr "Ekspor Katalog"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Make it ready .."
+msgstr "Siapkan.."
+
+msgid "Go"
+msgstr "Lanjutkan"
+
+msgid "Reorder"
+msgstr "Menyusun ulang"
+
+msgid "Owner"
+msgstr "Pemilik"
+
+msgid "Type"
+msgstr "Jenis"
+
+msgid "This Collection is empty"
 msgstr ""
 
-msgid "Filename"
-msgstr "Nama berkas"
+msgid "Private"
+msgstr "Pribadi"
 
-msgid "Addition Time"
-msgstr "Waktu Tambahan"
+msgid "Collection Edit"
+msgstr ""
 
-msgid "Edit Access Control List"
-msgstr "Edit Daftar Kontrol Akses"
+msgid "Do you really want to delete this Collection?"
+msgstr ""
+
+msgid "Configure Democratic Playlist"
+msgstr "Konfigurasikan Daftar Putar Demokrasi"
+
+msgid "Base Playlist"
+msgstr "Daftar Putar Dasar"
+
+msgid "Cooldown Time"
+msgstr "Waktu Tenang/Cooldown"
+
+msgid "minutes"
+msgstr "menit"
+
+msgid "Level"
+msgstr "Tingkat"
+
+msgid "Make Default"
+msgstr "Buat Default"
+
+msgid "Update"
+msgstr "Perbarui"
+
+msgid "Cooldown"
+msgstr "Tenang/Cooldown"
+
+msgid "Reload this page automatically"
+msgstr "Muat ulang halaman ini secara otomatis"
+
+msgid "Enable"
+msgstr "Aktifkan"
+
+msgid "Album Artist"
+msgstr "Artis Album"
 
 msgid "Additional Artists"
 msgstr ""
 
+msgid "MusicBrainz ID"
+msgstr "ID MusicBrainz"
+
 msgid "MusicBrainz Release Group ID"
 msgstr "ID Grup Rilis MusicBrainz"
 
+msgid "Release Type"
+msgstr "Jenis Rilis"
+
+msgid "Release Status"
+msgstr ""
+
+msgid "Release Comment"
+msgstr ""
+
+msgid "Disk"
+msgstr "Penyimpanan"
+
 msgid "Disk Subtitle"
+msgstr ""
+
+msgid "Catalog Number"
+msgstr "Jumlah Katalog"
+
+msgid "Barcode"
+msgstr "Barcode"
+
+msgid "Original Year"
+msgstr "Tahun Asli"
+
+msgid "Genres"
+msgstr "Genre"
+
+msgid "Moods"
 msgstr ""
 
 msgid "Overwrite tags of sub songs"
@@ -1349,6 +621,9 @@ msgstr "Timpa tag sub lagu"
 
 msgid "Add tags to sub songs"
 msgstr "Tambah tag ke sub lagu"
+
+msgid "Summary"
+msgstr "Ringkasan"
 
 msgid "Place Formed"
 msgstr "Tempat terbentuk"
@@ -1365,46 +640,74 @@ msgstr "Tambahkan tag ke sub album dan sub lagu"
 msgid "Authentication Required"
 msgstr "Otentikasi Diperlukan"
 
-#. HINT: Catalog Name
-#, php-format
-msgid "Settings for Catalog: %s"
-msgstr "Pengaturan untuk Katalog: %s"
+msgid "Genre"
+msgstr "Genre"
+
+msgid "Auto-inserted Fields"
+msgstr "Baris Otomatis Sisip"
+
+msgid "Catalog Type"
+msgstr "Jenis Katalog"
+
+msgid "Catalog Media Type"
+msgstr "Jenis Media Katalog"
+
+msgid "Filename Pattern"
+msgstr "Pola Nama Berkas"
+
+msgid "Folder Pattern"
+msgstr "Pola Folder"
+
+msgid "(no leading or ending '/')"
+msgstr "(tanpa awalan atau akhiran '/')"
 
 msgid "Save Catalog Settings"
 msgstr "Simpan Pengaturan Katalog"
 
-msgid "Base Playlist"
-msgstr "Daftar Putar Dasar"
+msgid "Object Type"
+msgstr "Jenis objek"
 
-msgid "Cooldown Time"
-msgstr "Waktu Tenang/Cooldown"
-
-msgid "Make Default"
-msgstr "Buat Default"
-
-msgid "Edit Catalog Filter"
+msgid "Mixed"
 msgstr ""
-
-msgid "Edit Filter"
-msgstr ""
-
-msgid "Description:"
-msgstr "Deskripsi:"
-
-msgid "External Link"
-msgstr "Tautan Eksternal"
-
-msgid "Order"
-msgstr ""
-
-msgid "Confirm"
-msgstr "Konfirmasi"
-
-msgid "Owner"
-msgstr "Pemilik"
 
 msgid "Collaborate"
 msgstr ""
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "Address"
+msgstr "Alamat"
+
+msgid "Country"
+msgstr ""
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Active"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Stream URL"
+msgstr "Alamat URL Stream"
+
+msgid "Codec"
+msgstr "Kodek"
+
+msgid "Random"
+msgstr "Acak"
+
+msgid "Item Limit (0 = unlimited)"
+msgstr "Batas Item (0 = tidak terbatas)"
+
+msgid "Title"
+msgstr "Judul"
+
+msgid "Description"
+msgstr "Deskripsi"
 
 msgid "GUID"
 msgstr "GUID"
@@ -1418,11 +721,23 @@ msgstr "Feed"
 msgid "Language"
 msgstr "Bahasa"
 
-msgid "Random"
-msgstr "Acak"
+msgid "Copyright"
+msgstr "Hak Cipta"
 
-msgid "Item Limit (0 = unlimited)"
-msgstr "Batas Item (0 = tidak terbatas)"
+msgid "Share"
+msgstr "Bagikan"
+
+msgid "Max Counter"
+msgstr "Konter Maksimal"
+
+msgid "Expiry Days"
+msgstr "Hari Kadaluarsa"
+
+msgid "Allow Stream"
+msgstr "Izinkan Stream"
+
+msgid "Allow Download"
+msgstr "Izinkan Unduh"
 
 msgid "Edit Existing Shoutbox Post"
 msgstr "Edit Posting Shoutbox yang telah Tersedia"
@@ -1435,14 +750,26 @@ msgstr "Dibuat oleh: %1$s untuk %2$s"
 msgid "Comment:"
 msgstr "Komentar:"
 
-msgid "Track"
-msgstr "Trek"
+msgid "Stick this comment"
+msgstr "Tempelkan komentar ini"
 
 msgid "Composer"
 msgstr "Komposer"
 
+msgid "Comment"
+msgstr "Komentar"
+
+msgid "Label"
+msgstr "Label"
+
+msgid "Music License"
+msgstr "Lisensi Musik"
+
 msgid "More Metadata"
 msgstr "Lebih Banyak Metadata"
+
+msgid "Less Metadata"
+msgstr ""
 
 msgid "Hidden"
 msgstr ""
@@ -1456,56 +783,210 @@ msgstr "Tetap"
 msgid "Keep Existing"
 msgstr "Tetapkan yang telah Ada"
 
-msgid "Editing Existing User"
-msgstr "Mengedit Pengguna yang Ada"
-
-msgid "User Properties"
-msgstr "Properti Pengguna"
-
-msgid "Catalog Filter"
-msgstr ""
-
-msgid "Other Options"
-msgstr "Opsi Lain"
-
-msgid "Config Preset"
-msgstr "Preset Konfigurasi"
-
-msgid "This affects all non-admin accounts"
-msgstr ""
-
-msgid "System"
-msgstr "Sistem"
-
-msgid "Default"
-msgstr "Default"
-
-msgid "Minimalist"
-msgstr "Minimalis"
-
-msgid "Community"
-msgstr "Komunitas"
-
-msgid "Prevent Preset Override"
-msgstr ""
-
-msgid "Update User"
-msgstr "Perbarui Pengguna"
-
 msgid "Release Date"
 msgstr "Tanggal Rilis"
 
-msgid "Export Catalog"
-msgstr "Ekspor Katalog"
+msgid "Actions"
+msgstr "Tindakan"
 
-msgid "Format"
-msgstr "Format"
+msgid "Add Current Host"
+msgstr "Tambah Host Saat Ini"
 
-msgid "Export"
-msgstr "Ekspor"
+msgid "Add API / RPC Host"
+msgstr "Tambah Host API / RPC"
+
+msgid "Add Local Network Definition"
+msgstr "Tambah Definisi Jaringan Lokal"
+
+msgid "Advanced Add"
+msgstr "Tambah Lanjutan"
+
+msgid "Access Control Entries"
+msgstr "Entri Kontrol Akses"
+
+msgid "Start Address"
+msgstr "Alamat Awal"
+
+msgid "End Address"
+msgstr "Alamat Akhir"
+
+msgid "User"
+msgstr "Pengguna"
+
+msgid "Add Access Control List"
+msgstr "Tambah Daftar Kontrol Akses"
+
+msgid "API/RPC"
+msgstr "API/RPC"
+
+msgid "Local Network Definition"
+msgstr "Definisi Jaringan Lokal"
+
+msgid "Stream Access"
+msgstr "Akses Stream"
+
+msgid "Read"
+msgstr "Baca"
+
+msgid "Read/Write"
+msgstr "Baca/Tulis"
+
+msgid "Web Interface"
+msgstr "Antarmuka Web"
+
+msgid "IPv4 or IPv6 Addresses"
+msgstr "Alamat IPv4 atau IPv6"
+
+msgid "Start"
+msgstr "Mulai"
+
+msgid "End"
+msgstr "Hentikan"
+
+msgid "Create ACL"
+msgstr "Buat ACL"
+
+msgid "Add Catalog Filter"
+msgstr ""
+
+msgid "Please enable 'catalog_filter' in your sever config file"
+msgstr ""
+
+msgid "Catalog filters are a way to stop users accessing different catalogs"
+msgstr ""
+
+msgid ""
+"If you do not tick a catalog, it will be hidden from users that you assign "
+"to this filter"
+msgstr ""
+
+msgid "Filter Name"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "Add Catalog"
+msgstr "Tambah Katalog"
+
+msgid "New catalogs are added to the DEFAULT group when created"
+msgstr ""
+
+msgid ""
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+
+msgid "Catalog Name"
+msgstr "Nama Katalog"
+
+msgid "Song Artist"
+msgstr "Artis Lagu"
+
+msgid "Song Title"
+msgstr "Judul Lagu"
+
+msgid "Track (0 padded)"
+msgstr "Trek (0 pad)"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Gather Art"
+msgstr "Kumpulkan SampulKarya"
+
+msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
+msgstr "Buat Daftar Putar dari Berkas Daftar Putar. (m3u, m3u8, asx, pls, xspf)"
+
+msgid "Music"
+msgstr "Musik"
+
+msgid "Add Label"
+msgstr "Tambah Label"
+
+msgid "Personal"
+msgstr "Pribadi"
+
+msgid "Association"
+msgstr "Asosiasi"
+
+msgid "Company"
+msgstr "Perusahaan"
+
+msgid "Imprint"
+msgstr ""
+
+msgid "Production"
+msgstr ""
+
+msgid "Original Production"
+msgstr ""
+
+msgid "Bootleg Production"
+msgstr ""
+
+msgid "Reissue Production"
+msgstr ""
+
+msgid "Distributor"
+msgstr ""
+
+msgid "Holding"
+msgstr ""
+
+msgid "Rights Society"
+msgstr ""
+
+msgid "Tag Generated"
+msgstr ""
+
+msgid "Podcast Feed URL"
+msgstr "Alamat URL Umpan Podcast"
+
+msgid "Subscribe"
+msgstr "Langganan"
+
+msgid "Compose Message"
+msgstr "Buat Pesan"
+
+msgid "Recipient"
+msgstr "Penerima"
+
+msgid "Subject"
+msgstr "Judul"
+
+msgid "Message"
+msgstr "Pesan"
+
+msgid "Send"
+msgstr "Kirim"
+
+msgid "Add User"
+msgstr "Tambahkan pengguna"
+
+msgid "Guest"
+msgstr "Pengunjung"
+
+msgid "Content Manager"
+msgstr "Manajer Konten"
+
+msgid "Catalog Manager"
+msgstr "Manajer Katalog"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "User Catalog Filter"
+msgstr ""
 
 msgid "Browse Ampache..."
 msgstr "Telusuri Ampache..."
+
+msgid "Folders"
+msgstr ""
+
+msgid "Artists"
+msgstr "Artis"
 
 msgid "Album Artists"
 msgstr ""
@@ -1522,182 +1003,87 @@ msgstr "Episode podcast"
 msgid "Videos"
 msgstr "Video"
 
+msgid "Continue"
+msgstr "Lanjutkan"
+
+msgid "Use of cookies by Ampache"
+msgstr "Penggunaan cookie oleh Ampache"
+
+msgid ""
+"Cookies are small text files that are placed on your computer by websites "
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
+msgstr "Cookie adalah file teks kecil yang ditempatkan di komputer Anda oleh situs web yang Anda kunjungi. Mereka banyak digunakan untuk membuat situs web bekerja, atau bekerja lebih efisien, serta memberikan informasi kepada pemilik situs"
+
+msgid "The table below explains the cookies we use and why"
+msgstr "Tabel dibawah menjelaskan cookie yang kami gunakan dan mengapa"
+
+msgid "Cookie"
+msgstr "Cookie"
+
+msgid "Purpose"
+msgstr "Tujuan"
+
+msgid "Ampache session"
+msgstr "Sesi Ampache"
+
+msgid "Ampache session username (if authenticated, information only)"
+msgstr "Nama pengguna sesi Ampache (jika ter-otentikasi, hanya informasi)"
+
+msgid "Automatically authenticate users"
+msgstr "Otentikasi pengguna secara otomatis"
+
+msgid "Keep latest web player volume"
+msgstr "Simpan volume pemutar web terakhir"
+
+msgid "Show/Hide column [column_index] when browsing [object_type] objects"
+msgstr "Tampilkan/Sembunyikan kolom [column_index] ketika menelusuri obyek [object_type]"
+
+msgid "Use alphabet when browsing [object_type] objects"
+msgstr "Gunakan alfabet ketika menelusuri obyek [object_type]"
+
+msgid "Use pages when browsing [object_type] objects"
+msgstr "Gunakan halaman ketika menelusuri obyek [object_type]"
+
+msgid "Collapse/Expand Sidebar [menu_section]"
+msgstr "Perkecil/Perluas [menu_section] Sidebar"
+
+msgid "Collapse/Expand Sidebar"
+msgstr "Perkecil/Perluas Sidebar"
+
+msgid "Create"
+msgstr "Buat"
+
+msgid "Edit Access Control List"
+msgstr "Edit Daftar Kontrol Akses"
+
+msgid "Edit Catalog Filter"
+msgstr ""
+
+msgid "Edit Filter"
+msgstr ""
+
+msgid "Description:"
+msgstr "Deskripsi:"
+
+msgid "External Link"
+msgstr "Tautan Eksternal"
+
+msgid "Order"
+msgstr ""
+
 msgid "Top Rated"
 msgstr "Peringkat teratas"
 
-msgid "Newest"
-msgstr "Terbaru"
-
-msgid "Popular"
-msgstr "Populer"
-
-msgid "Recent"
-msgstr "Baru"
-
-msgid "Search Ampache"
-msgstr "Cari Ampache"
-
-msgid "Maximum Results"
-msgstr "Hasil maksimal"
-
-msgid "Unlimited"
-msgstr "Tak terbatas"
-
-msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Simpan sebagai daftar putar pintar"
-
-msgid "Save as Playlist"
-msgstr ""
-
-msgid "Art Search"
-msgstr "Pencarian Sampul"
-
-msgid "Starting Art Search"
-msgstr "Memulai Pencarian Sampul"
-
-msgid "Searched"
-msgstr "Telah Dicari"
-
-msgid "Artist Art Search"
-msgstr "Pencarian Sampul Artis"
-
-msgid "Cover Art Search"
-msgstr "Pencariaan Karya Sampul"
-
-msgid "Direct URL to Image"
-msgstr "URL Langsung ke Gambar"
-
-msgid "Local Image"
-msgstr "Gambar Lokal"
-
-msgid "Spotify Album Filters"
-msgstr "Filter Album Spotify"
-
-msgid "(e.g. '2001', '2001-2005')"
-msgstr "(mis. '2001', '2001-2005')"
-
-msgid "Search Limit"
-msgstr "Batas Pencarian"
-
-msgid "Get Art"
-msgstr "Dapatkan Sampul"
-
-msgid "Statistical Graphs"
-msgstr "Grafik Statistik"
-
-msgid "Show large"
-msgstr "Tunjukkan besar"
-
-msgid "Start Date"
-msgstr "Tanggal Mulai"
-
-msgid "End Date"
-msgstr "Tanggal Akhir"
-
-msgid "Zoom"
-msgstr "Perbesar"
-
-msgid "Month"
-msgstr "Bulan"
-
-msgid "Day"
-msgstr "Hari"
-
-msgid "Hour"
-msgstr "Jam"
-
-msgid "Your browser doesn't support this feature."
-msgstr "Browser Anda tidak mendukung fitur ini."
-
-msgid "Full-Screen not supported by your browser"
-msgstr ""
-
-msgid "Media is currently playing, are you sure you want to close?"
-msgstr "Media saat ini sedang diputar, apakah Anda yakin ingin menutup?"
-
-msgid "Previous"
-msgstr "Sebelumnya"
-
-msgid "Pause"
-msgstr "Jeda"
-
-msgid "Stop"
-msgstr "Berhenti"
-
-msgid "Mute"
-msgstr "Bisu"
-
-msgid "Unmute"
-msgstr "Batal Bisu"
-
-msgid "Max Volume"
-msgstr "Volume Maks"
-
-msgid "Full Screen"
-msgstr "Layar Penuh"
-
-msgid "Restore Screen"
-msgstr "Kembalikan Layar"
-
-msgid "Shuffle"
-msgstr "Acak"
-
-msgid "Shuffle Off"
-msgstr "Acak NonAktif"
-
-msgid "Repeat"
-msgstr "Ulang"
-
-msgid "Repeat Off"
-msgstr "Ulang NonAktif"
-
-msgid "Show Album"
-msgstr "Tampilkan Album"
-
-msgid "Show Lyrics"
-msgstr "Tunjukkan Lirik"
-
-msgid "Double click to post a new shout"
-msgstr "Klik dua kali untuk memposting shout baru"
-
-msgid "Add All to playlist"
-msgstr "Tambahkan Semua ke daftar putar"
-
-msgid "Loop Playlist"
-msgstr ""
-
-msgid "Expand/Collapse playlist"
-msgstr "Perluas/Persempit Daftar Putar"
-
-msgid "Slideshow"
-msgstr "Slideshow"
-
-msgid "My Broadcast"
-msgstr "Siaran Saya"
-
-msgid "Visualizer"
-msgstr "Visualizer"
-
-msgid "ReplayGain"
-msgstr "ReplayGain"
-
-msgid "Visualizer full-screen"
-msgstr "Visualizer layar-penuh"
-
-msgid "Equalizer"
-msgstr "Equalizer"
-
-msgid "Unsupported"
-msgstr "Tidak didukung"
-
-msgid "This media is not supported by the player. Is your browser up to date?"
-msgstr "Media ini tidak didukung oleh pemutar. Apakah browser Anda terkini?"
+msgid "Playlists"
+msgstr "Daftar Putar"
 
 msgid "Importing a Playlist from a File"
 msgstr "Mengimpor sebuah Daftar Putar dari Berkas"
+
+msgid "Filename"
+msgstr "Nama berkas"
 
 msgid "Import Playlist"
 msgstr "Impor Daftar Putar"
@@ -1708,11 +1094,212 @@ msgstr "Mengajukan"
 msgid "Format: opml"
 msgstr ""
 
+msgid "Add Localplay Instance"
+msgstr "Tambahkan Instance Putarlokal"
+
+msgid "Add Instance"
+msgstr "Tambah Instance"
+
+msgid "Edit Localplay Instance"
+msgstr "Edit Instance Putarlokal"
+
+msgid "Update Instance"
+msgstr "Perbarui Instance"
+
+msgid "Show Localplay Instances"
+msgstr "Tampilkan Instance Putarlokal"
+
+msgid "Edit Instance"
+msgstr "Edit Instance"
+
+msgid "Are You Sure?"
+msgstr "Apakah Anda yakin?"
+
+msgid "Localplay Control"
+msgstr "Kontrol Putarlokal"
+
+msgid "Now Playing"
+msgstr "Sedang Diputar"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Repeat"
+msgstr "Ulang"
+
+msgid "Clear Playlist"
+msgstr "Bersihkan Daftar Putar"
+
+msgid "Ampache"
+msgstr "Ampache"
+
+msgid "Remember Me"
+msgstr "Ingat Saya"
+
+msgid "Login"
+msgstr "Masuk"
+
+msgid "Register"
+msgstr "Daftar"
+
+msgid "Lost Password"
+msgstr "Kata Sandi Hilang"
+
+msgid "Mini player"
+msgstr ""
+
+msgid ""
+"Ampache places cookies on your computer to help make this website better."
+msgstr "Ampache menempatkan cookie di komputer Anda untuk membantu membuat situs web ini lebih baik."
+
+msgid ""
+"Cookies are used for core site functionality and are not used for tracking "
+"or analytics."
+msgstr "Cookie digunakan untuk fungsionalitas situs inti dan tidak digunakan untuk pelacakan atau analitik."
+
+msgid "By logging in you agree to the use of cookies while using this site."
+msgstr "Dengan masuk/login, Anda menyetujui penggunaan cookie saat menggunakan situs ini."
+
+msgid "Submit"
+msgstr "Kirimkan"
+
+msgid "Mail to"
+msgstr "Kirim Email ke"
+
+msgid "Mail Everyone"
+msgstr "Kirim Semua Orang"
+
+msgid "Mail Users"
+msgstr "Kirim Pengguna"
+
+msgid "Mail Admins"
+msgstr "Kirim Admin"
+
+msgid "Mail Inactive Users"
+msgstr "Kirim Mail Pengguna Tidak Aktif"
+
+msgid "Inactive Users"
+msgstr "Pengguna Tidak Aktif"
+
+msgid "From"
+msgstr "Dari"
+
+msgid "Self"
+msgstr "Sendiri"
+
+msgid "Yourself"
+msgstr "Diri Sendiri"
+
+msgid "System"
+msgstr "Sistem"
+
+msgid "Send E-mail"
+msgstr "Kirim Email"
+
+msgid "Gather All Art"
+msgstr "Kumpulkan Semua Sampul"
+
+msgid "Update All File Tags"
+msgstr "Perbarui Semua Tag Berkas"
+
+msgid "Show Disabled Songs"
+msgstr "Tampilkan Lagu yang Dinonaktifkan"
+
+msgid "Add to All"
+msgstr "Tambahkan ke Semua"
+
+msgid "Verify All"
+msgstr "Verifikasi Semua"
+
+msgid "Clean All"
+msgstr "Bersihkan Semua"
+
+msgid "Scan All Folders"
+msgstr ""
+
+msgid "Update All"
+msgstr "Perbarui Semua"
+
+msgid "Garbage Collection"
+msgstr ""
+
+msgid "Add new files from:"
+msgstr ""
+
+msgid "Clean deleted files in:"
+msgstr ""
+
+msgid "Update existing files in:"
+msgstr ""
+
+#. HINT: example path /media/music
+msgid "Example path:"
+msgstr ""
+
+msgid "Number of Users"
+msgstr ""
+
+msgid "Number of Catalogs"
+msgstr ""
+
+msgid "Users"
+msgstr "Pengguna"
+
+msgid "Newest"
+msgstr "Terbaru"
+
+msgid "Popular"
+msgstr "Populer"
+
+msgid "Recent"
+msgstr "Baru"
+
+msgid "Update from tags complete"
+msgstr "Perbarui dari tag selesai"
+
+msgid "Favorites"
+msgstr "Favorit"
+
+msgid "No Genre"
+msgstr ""
+
+msgid "Do you really want to delete this Tag?"
+msgstr "Apakah kamu benar-benar ingin menghapus tag ini?"
+
+msgid "Not Enough Data"
+msgstr "Tidak cukup data"
+
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+msgid "End Date"
+msgstr "Tanggal Akhir"
+
+msgid "Zoom"
+msgstr "Perbesar"
+
 msgid "Albums of the Moment"
 msgstr "Album Saat Ini"
 
 msgid "Videos of the Moment"
 msgstr "Video Saat Ini"
+
+msgid "Ampache Error Page"
+msgstr "Halaman Kesalahan Ampache"
+
+msgid "For the Love of Music"
+msgstr "Untuk Kecintaan Pada Musik"
+
+msgid "Error"
+msgstr "Kesalahan"
+
+msgid ""
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
+msgstr "Kesalahan berikut telah terjadi, Anda akan secara otomatih dialihkan dalam 10 detik."
+
+msgid "Error Messages"
+msgstr "Pesan Kesalahan"
 
 msgid "Install Progress"
 msgstr "Progresi Pemasangan"
@@ -1797,6 +1384,9 @@ msgid ""
 "then manually place the config file in %s."
 msgstr "Langkah ini mengambil nilai/masukan konfigurasi dasar dan menghasilkan berkas konfigurasi. Jika direktori config/ Anda dapat ditulis, Anda dapat memilih \"write\" agar Ampache menulis berkas konfigurasi langsung ke lokasi yang benar. Jika Anda memilih \"download\" ini akan meminta Anda untuk mengunduh berkas konfigurasi, dan Anda kemudian dapat menempatkan berkas konfigurasi secara manual di %s."
 
+msgid "Generate Configuration File"
+msgstr "Hasilkan Berkas Konfigurasi"
+
 msgid "Various"
 msgstr "Campuran"
 
@@ -1832,13 +1422,22 @@ msgid ""
 "features automatically."
 msgstr "Optimalkan Ampache untuk kasus penggunaan Anda. Pemasang akan mengaktifkan/menonaktifkan fitur secara otomatis."
 
+msgid "Default"
+msgstr "Default"
+
 msgid "Ampache is configured for personal use with the best features."
 msgstr "Ampache dikonfigurasi untuk penggunaan pribadi dengan fitur-fitur terbaik."
+
+msgid "Minimalist"
+msgstr "Minimalis"
 
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
 " Interface."
 msgstr "Hanya fitur penting yang diaktifkan untuk hanya stream musik Anda dari Antarmuka Web."
+
+msgid "Community"
+msgstr "Komunitas"
 
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
@@ -1867,6 +1466,9 @@ msgstr "Lihat halaman wiki"
 
 msgid "Template Configuration"
 msgstr "Konfigurasi Template"
+
+msgid "None"
+msgstr "Tidak ada"
 
 msgid ""
 "No default transcoding application found. You may need to install a popular "
@@ -1932,6 +1534,12 @@ msgstr "Lewatkan"
 msgid "Create Config"
 msgstr "Buat Konfigurasi"
 
+msgid "Choose Installation Language"
+msgstr "Pilih Bahasa Instalasi"
+
+msgid "Start Configuration"
+msgstr "Mulai Konfigurasi"
+
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
@@ -1971,518 +1579,6 @@ msgstr "Kata Sandi Pengguna Database Ampache"
 msgid "Insert Database"
 msgstr "Masukkan Database"
 
-msgid "Choose Installation Language"
-msgstr "Pilih Bahasa Instalasi"
-
-msgid "Start Configuration"
-msgstr "Mulai Konfigurasi"
-
-msgid "Date"
-msgstr "Tanggal"
-
-msgid "IP Address"
-msgstr "Alamat IP"
-
-msgid "Agent"
-msgstr "Agen"
-
-msgid "Unknown"
-msgstr "Tidak diketahui"
-
-msgid "Send E-mail"
-msgstr "Kirim Email"
-
-msgid "Label Edit"
-msgstr "Edit Label"
-
-msgid "Edit Label"
-msgstr "Edit Label"
-
-msgid "Create Label"
-msgstr "Buat Label"
-
-msgid "No label found"
-msgstr "Label Tidak ditemukan"
-
-msgid "Stream"
-msgstr "Stream"
-
-msgid "Live Stream Edit"
-msgstr "Edit Stream Langsung"
-
-msgid "Manage"
-msgstr "Kelola"
-
-msgid "No live stream found"
-msgstr "Siaran langsung tidak ditemukan"
-
-msgid "Add Localplay Instance"
-msgstr "Tambahkan Instance Putarlokal"
-
-msgid "Add Instance"
-msgstr "Tambah Instance"
-
-msgid "Decrease Volume"
-msgstr "Turunkan Volume"
-
-msgid "Increase Volume"
-msgstr "Naikkan Volume"
-
-msgid "Edit Localplay Instance"
-msgstr "Edit Instance Putarlokal"
-
-msgid "Update Instance"
-msgstr "Perbarui Instance"
-
-msgid "Show Localplay Instances"
-msgstr "Tampilkan Instance Putarlokal"
-
-msgid "Edit Instance"
-msgstr "Edit Instance"
-
-msgid "Localplay Control"
-msgstr "Kontrol Putarlokal"
-
-msgid "Volume"
-msgstr "Volume"
-
-msgid "Remember Me"
-msgstr "Ingat Saya"
-
-msgid "Lost Password"
-msgstr "Kata Sandi Hilang"
-
-msgid ""
-"Ampache places cookies on your computer to help make this website better."
-msgstr "Ampache menempatkan cookie di komputer Anda untuk membantu membuat situs web ini lebih baik."
-
-msgid ""
-"Cookies are used for core site functionality and are not used for tracking "
-"or analytics."
-msgstr "Cookie digunakan untuk fungsionalitas situs inti dan tidak digunakan untuk pelacakan atau analitik."
-
-msgid "By logging in you agree to the use of cookies while using this site."
-msgstr "Dengan masuk/login, Anda menyetujui penggunaan cookie saat menggunakan situs ini."
-
-msgid "Submit"
-msgstr "Kirimkan"
-
-msgid "No lyrics found."
-msgstr "Lirik tidak ditemukan."
-
-msgid "Show more"
-msgstr "Tampilkan lebih banyak"
-
-msgid "Mail to"
-msgstr "Kirim Email ke"
-
-msgid "Mail Everyone"
-msgstr "Kirim Semua Orang"
-
-msgid "Mail Users"
-msgstr "Kirim Pengguna"
-
-msgid "Mail Admins"
-msgstr "Kirim Admin"
-
-msgid "Mail Inactive Users"
-msgstr "Kirim Mail Pengguna Tidak Aktif"
-
-msgid "Inactive Users"
-msgstr "Pengguna Tidak Aktif"
-
-msgid "From"
-msgstr "Dari"
-
-msgid "Self"
-msgstr "Sendiri"
-
-msgid "Yourself"
-msgstr "Diri Sendiri"
-
-msgid "Gather All Art"
-msgstr "Kumpulkan Semua Sampul"
-
-msgid "Update All File Tags"
-msgstr "Perbarui Semua Tag Berkas"
-
-msgid "Show Disabled Songs"
-msgstr "Tampilkan Lagu yang Dinonaktifkan"
-
-msgid "Add to All"
-msgstr "Tambahkan ke Semua"
-
-msgid "Verify All"
-msgstr "Verifikasi Semua"
-
-msgid "Clean All"
-msgstr "Bersihkan Semua"
-
-msgid "Update All"
-msgstr "Perbarui Semua"
-
-msgid "Are you sure?"
-msgstr ""
-
-msgid "Add new files from:"
-msgstr ""
-
-msgid "Clean deleted files in:"
-msgstr ""
-
-msgid "Update existing files in:"
-msgstr ""
-
-#. HINT: example path /media/music
-msgid "Example path:"
-msgstr ""
-
-msgid "Primary"
-msgstr "Utama"
-
-msgid "No democratic found"
-msgstr "Tidak ditemukan daftar putar demokrasi"
-
-msgid "Number of Users"
-msgstr ""
-
-msgid "Number of Catalogs"
-msgstr ""
-
-msgid "Filter name"
-msgstr ""
-
-msgid "Users"
-msgstr "Pengguna"
-
-msgid "Create License"
-msgstr "Buat Lisensi"
-
-msgid "No licenses found"
-msgstr "Tidak ada lisensi yang ditemukan"
-
-msgid "Object"
-msgstr "Obyek"
-
-msgid "Sticky"
-msgstr "Lengket"
-
-msgid "Date Added"
-msgstr "Tanggal Ditambahkan"
-
-msgid "Trending"
-msgstr "Tren"
-
-msgid "No missing albums found"
-msgstr "Tidak ditemukan album yang hilang"
-
-msgid "Missing Artists"
-msgstr "Artis yang hilang"
-
-msgid "No missing artists found"
-msgstr "Tidak ada artis yang hilang ditemukan"
-
-msgid "Sort Tracks by Artist, Album, Song"
-msgstr "Sortir Tracks by Artist, Album, Song"
-
-msgid "Remove Duplicates"
-msgstr "Hapus duplikat"
-
-msgid "Share playlist"
-msgstr ""
-
-msgid "Download Playlist"
-msgstr ""
-
-msgid "Refresh from Smartlist"
-msgstr ""
-
-msgid "Playlist Edit"
-msgstr "Edit Daftar Putar"
-
-msgid "Do you really want to delete this Playlist?"
-msgstr "Apakah Anda benar-benar ingin menghapus daftar putar ini?"
-
-msgid "Duration"
-msgstr "Durasi"
-
-msgid "Reorder"
-msgstr "Menyusun ulang"
-
-msgid "Playlist Name"
-msgstr "Nama Daftar Putar"
-
-msgid "Last Update"
-msgstr "Pembaharuan Terakhir"
-
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr "# Item"
-
-msgid "No playlist found"
-msgstr "Tidak ditemukan daftar putar"
-
-msgid "Web Player"
-msgstr "Pemutar web"
-
-msgid "Installed Version"
-msgstr "Versi yang dipasang"
-
-msgid "Deactivate"
-msgstr "Menonaktifkan"
-
-msgid "Upgrade"
-msgstr "Meningkatkan"
-
-msgid "Fav."
-msgstr "Fav."
-
-msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "Edit Episode Podcast"
-
-msgid "Publication Date"
-msgstr "Tanggal penerbitan"
-
-msgid "Length"
-msgstr "Durasi"
-
-msgid "Size"
-msgstr "Ukuran"
-
-msgid "Bitrate"
-msgstr "Bitrate"
-
-msgid "Channels"
-msgstr "Saluran"
-
-msgid "Sync"
-msgstr "Sinkronkan"
-
-msgid "No podcast episode found"
-msgstr "Tidak ditemukan episode podcast"
-
-msgid "Podcast Edit"
-msgstr "Podcast Edit"
-
-msgid "Edit Podcast"
-msgstr "Edit Podcast"
-
-msgid "Episodes"
-msgstr "Semua Episode"
-
-msgid "No podcast found"
-msgstr "Tidak ada podcast yang ditemukan"
-
-msgid "Apply to All"
-msgstr "Terapkan ke semua"
-
-msgid "Access Level"
-msgstr "Tingkat akses"
-
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr "Mengedit preferensi %s"
-
-msgid "Update Preferences"
-msgstr "Perbarui Preferensi"
-
-msgid "Sent by"
-msgstr "Dikirim oleh"
-
-msgid "Reply"
-msgstr "Balasan"
-
-msgid "Compose"
-msgstr "Menyusun"
-
-msgid "Compose a New Message"
-msgstr "Komposisikan pesan baru"
-
-msgid "Mark as Read"
-msgstr "Tandai sebagai membaca"
-
-msgid "Mark as Unread"
-msgstr "Tandai sebagai Belum dibaca"
-
-msgid "Sender"
-msgstr "Pengirim"
-
-msgid "No message found"
-msgstr "Tidak ditemukan pesan"
-
-msgid "Queries: "
-msgstr "Kueri: "
-
-msgid "Cache Hits: "
-msgstr "Cache Hits: "
-
-msgid "Load Time: "
-msgstr "Waktu Memuat: "
-
-msgid "Play Random Selection"
-msgstr "Mainkan pemilihan acak"
-
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d menit"
-
-#, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d jam"
-
-msgid "Size Limit"
-msgstr "Batas ukuran"
-
-msgid "Enqueue"
-msgstr "Antrikan"
-
-msgid "Last Played"
-msgstr "Putar terakhir"
-
-#, php-format
-msgid "%d second ago"
-msgid_plural "%d seconds ago"
-msgstr[0] "%d detik yang lalu"
-
-#, php-format
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d menit yang lalu"
-
-#, php-format
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d jam yang lalu"
-
-#, php-format
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d hari yang lalu"
-
-#, php-format
-msgid "%d week ago"
-msgid_plural "%d weeks ago"
-msgstr[0] "%d minggu yang lalu"
-
-#, php-format
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d bulan yang lalu"
-
-#, php-format
-msgid "%d year ago"
-msgid_plural "%d years ago"
-msgstr[0] "%d tahun yang lalu"
-
-#, php-format
-msgid "%d decade ago"
-msgid_plural "%d decades ago"
-msgstr[0] "%d dekade yang lalu"
-
-msgid "No recently played items found"
-msgstr "Tidak ada item yang baru diputar ditemukan"
-
-msgid "Recently Skipped"
-msgstr ""
-
-msgid "No similar artist found"
-msgstr "Tidak ditemukan artis yang sama"
-
-msgid "Registration"
-msgstr "Registrasi"
-
-msgid "Return to Login Page"
-msgstr "Kembali ke halaman login"
-
-msgid "Please wait for an administrator to activate your account"
-msgstr "Silakan tunggu administrator untuk mengaktifkan akun Anda"
-
-msgid ""
-"An activation key has been sent to the e-mail address you provided. Please "
-"check your e-mail for further information"
-msgstr "Kunci aktivasi telah dikirim ke alamat email yang Anda berikan. Silakan periksa email Anda untuk informasi lebih lanjut"
-
-msgid "Your account has been created"
-msgstr "Akun anda telah dibuat"
-
-msgid "Rules"
-msgstr "Aturan"
-
-msgid "Match"
-msgstr "Pertandingan"
-
-msgid "all rules"
-msgstr "semua aturan"
-
-msgid "any rule"
-msgstr "aturan apapun"
-
-msgid "Add Another Rule"
-msgstr "Tambahkan aturan lain"
-
-msgid "Anywhere"
-msgstr "Di mana saja"
-
-msgid "Add Smart Playlist"
-msgstr "Tambahkan daftar putar pintar"
-
-msgid "Item Limit"
-msgstr "Batas item"
-
-msgid "No smart playlist found"
-msgstr "Tidak ditemukan daftar putar pintar"
-
-msgid "Smart Playlist Edit"
-msgstr "Edit Daftar Putar Pintar"
-
-msgid "Save Changes"
-msgstr "Simpan perubahan"
-
-msgid "Options"
-msgstr "Pilihan"
-
-msgid "Object Type"
-msgstr "Jenis objek"
-
-msgid "Creation Date"
-msgstr "Tanggal Pembuatan"
-
-msgid "Last Visit"
-msgstr "Kunjungan terakhir"
-
-msgid "Counter"
-msgstr "Melawan"
-
-msgid "Public URL"
-msgstr "URL Publik"
-
-msgid "Shared by"
-msgstr "Dibagikan oleh"
-
-msgid "Skipped"
-msgstr ""
-
-msgid "No song found"
-msgstr "Tidak ditemukan lagu"
-
-msgid "License"
-msgstr "Lisensi"
-
-msgid "Do you really want to delete this Tag?"
-msgstr "Apakah kamu benar-benar ingin menghapus tag ini?"
-
-msgid "No Genre"
-msgstr ""
-
-msgid "Not Enough Data"
-msgstr "Tidak cukup data"
-
 msgid "Ampache -- Config Debug Page"
 msgstr "Halaman Debug Ampache - Konfigurasi"
 
@@ -2499,6 +1595,20 @@ msgstr "Anda mungkin telah mencapai halaman ini karena berkas konfigurasi %s And
 msgid "Please visit the wiki for help"
 msgstr "Silakan kunjungi wiki untuk bantuan"
 
+msgid "Installation"
+msgstr "Pemasangan"
+
+msgid ""
+"You may have reached this page because Ampache was unable to load the "
+"required dependencies"
+msgstr "Anda mungkin telah mencapai halaman ini karena Ampache tidak dapat memuat pustaka/dependensi yang diperlukan"
+
+msgid "Debug Page"
+msgstr "Halaman Debug"
+
+msgid "Ampache Debug"
+msgstr "Debug Ampache"
+
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
@@ -2506,9 +1616,6 @@ msgstr "Kamu mungkin telah mencapai halaman ini karena kesalahan konfigurasi tel
 
 msgid "Web Installation"
 msgstr "Instalasi Web"
-
-msgid "OK"
-msgstr "OK"
 
 msgid "PHP version"
 msgstr "Versi PHP"
@@ -2527,7 +1634,7 @@ msgstr "Ini menguji apakah library/dependencies Ampache dipasang."
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
 "mv composer.phar /usr/local/bin/composer). Then run `composer install --no-"
-"dev --prefer-source --no-interaction` on the Ampache directory."
+"dev --prefer-dist --no-interaction` on the Ampache directory."
 msgstr ""
 
 msgid "PHP hash extension"
@@ -2586,6 +1693,9 @@ msgid ""
 "required by Ampache."
 msgstr "Ini menguji apakah Anda memiliki ekstensi JSON diaktifkan. Ekstensi ini diperlukan oleh Ampache."
 
+msgid "PHP intl extension"
+msgstr "Ekstensi PHP intl"
+
 msgid ""
 "This tests whether you have the intl extension enabled. This extension is "
 "required by Ampache."
@@ -2606,6 +1716,32 @@ msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly"
 " necessary, but may result in a better experience (zip download)."
 msgstr "Ini menguji apakah Anda memiliki ekstensi ZLib diaktifkan. Ini tidak benar-benar diperlukan, tetapi dapat mengakibatkan pengalaman yang lebih baik (unduhan zip)."
+
+msgid "WARNING"
+msgstr "Peringatan"
+
+msgid "UNKNOWN"
+msgstr ""
+
+msgid "HTTP compression"
+msgstr ""
+
+msgid ""
+"This measures the page you are reading: your browser reports both the bytes "
+"it received and the bytes after decoding, so a smaller received size means "
+"the server compressed it. Compression is not required, but it makes a large "
+"difference to page and API response sizes."
+msgstr ""
+
+msgid ""
+"Enable gzip or brotli in your web server for html, css, javascript, json and"
+" xml. Do not compress audio streams: they are already compressed, so it only"
+" costs CPU on every listen."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript, which is why it reads as unknown right now."
+msgstr ""
 
 msgid "PHP SimpleXML extension"
 msgstr "Ekstensi Simplexml PHP"
@@ -2708,8 +1844,553 @@ msgid ""
 "then your web_path is not set correctly."
 msgstr "Tes ini memastikan bahwa variabel web_path Anda diatur dengan benar dan kami dapat sampai ke halaman indeks. Jika Anda tidak melihat tanda centang di sini maka web_path Anda tidak diatur dengan benar."
 
-msgid "Update from tags complete"
-msgstr "Perbarui dari tag selesai"
+msgid "Date"
+msgstr "Tanggal"
+
+msgid "IP Address"
+msgstr "Alamat IP"
+
+msgid "Agent"
+msgstr "Agen"
+
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+msgid "Label Edit"
+msgstr "Edit Label"
+
+msgid "Edit Label"
+msgstr "Edit Label"
+
+msgid "Live Stream Edit"
+msgstr "Edit Stream Langsung"
+
+msgid "Song Lyrics"
+msgstr ""
+
+msgid "Show more"
+msgstr "Tampilkan lebih banyak"
+
+msgid "Primary"
+msgstr "Utama"
+
+msgid "Missing Artists"
+msgstr "Artis yang hilang"
+
+msgid "No missing artists found"
+msgstr "Tidak ada artis yang hilang ditemukan"
+
+msgid "Donate"
+msgstr "Donasi"
+
+msgid "Show/Hide Player"
+msgstr "Tampilkan/Sembunyikan Pemutar"
+
+msgid "Information"
+msgstr "Informasi"
+
+msgid "Menu"
+msgstr ""
+
+msgid "New messages"
+msgstr "Pesan baru"
+
+msgid "Show/Hide Playlist"
+msgstr "Tampilkan/Sembunyikan Daftar Putar"
+
+msgid "Loading"
+msgstr "Memuat"
+
+msgid "Close"
+msgstr ""
+
+msgid "Your Ampache config file is out of date!"
+msgstr "Berkas konfigurasi Ampache Anda sudah usang!"
+
+msgid "Update your current config file automatically"
+msgstr ""
+
+msgid "Download a copy of the new version"
+msgstr ""
+
+#, php-format
+msgid "%s selected"
+msgstr ""
+
+msgid "Show less"
+msgstr ""
+
+msgid "Add to New Playlist"
+msgstr "Tambah ke Daftar Putar Baru"
+
+msgid "Add to New Collection"
+msgstr ""
+
+msgid "Batch download"
+msgstr "Unduh masal"
+
+msgid "Add dynamic items"
+msgstr "Tambah item dinamis"
+
+msgid "Random song"
+msgstr "Lagu acak"
+
+msgid "Random artist"
+msgstr "Artis acak"
+
+msgid "Random album"
+msgstr "Album acak"
+
+msgid "Random playlist"
+msgstr "Daftar Putar acak"
+
+msgid "No items"
+msgstr "Tidak ada item"
+
+msgid "More"
+msgstr "Lebih banyak"
+
+msgid "Log out"
+msgstr "Keluar"
+
+msgid "Show Lyrics"
+msgstr "Tunjukkan Lirik"
+
+msgid "Add All to playlist"
+msgstr "Tambahkan Semua ke daftar putar"
+
+msgid "Loop Playlist"
+msgstr ""
+
+msgid "Expand/Collapse playlist"
+msgstr "Perluas/Persempit Daftar Putar"
+
+msgid "Visualizer"
+msgstr "Visualizer"
+
+msgid "Slideshow"
+msgstr "Slideshow"
+
+msgid "My Broadcast"
+msgstr "Siaran Saya"
+
+msgid "Show Now Playing"
+msgstr ""
+
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+msgid "Equalizer"
+msgstr "Equalizer"
+
+msgid "Visualizer full-screen"
+msgstr "Visualizer layar-penuh"
+
+msgid "Unsupported"
+msgstr "Tidak didukung"
+
+msgid "This media is not supported by the player. Is your browser up to date?"
+msgstr "Media ini tidak didukung oleh pemutar. Apakah browser Anda terkini?"
+
+msgid "Are you sure? This will replace the current track order"
+msgstr ""
+
+msgid "Sort Tracks by Artist, Album, Song"
+msgstr "Sortir Tracks by Artist, Album, Song"
+
+msgid "Remove Duplicates"
+msgstr "Hapus duplikat"
+
+msgid "Share playlist"
+msgstr ""
+
+msgid "Download Playlist"
+msgstr ""
+
+msgid "Refresh from Smartlist"
+msgstr ""
+
+msgid "Playlist Edit"
+msgstr "Edit Daftar Putar"
+
+msgid "Do you really want to delete this Playlist?"
+msgstr "Apakah Anda benar-benar ingin menghapus daftar putar ini?"
+
+msgid "Smart Playlist Edit"
+msgstr "Edit Daftar Putar Pintar"
+
+msgid "Save Changes"
+msgstr "Simpan perubahan"
+
+msgid "Save as Playlist"
+msgstr ""
+
+msgid "Waveform"
+msgstr ""
+
+msgid "Sync"
+msgstr "Sinkronkan"
+
+msgid "Started"
+msgstr "Dimulai"
+
+msgid "Podcast Episode Edit"
+msgstr "Edit Episode Podcast"
+
+msgid "Podcast Edit"
+msgstr "Podcast Edit"
+
+msgid "Edit Podcast"
+msgstr "Edit Podcast"
+
+msgid "Are you sure? This will overwrite Podcast details using the RSS feed"
+msgstr ""
+
+msgid "Update details from RSS feed"
+msgstr ""
+
+msgid "Episodes"
+msgstr "Semua Episode"
+
+msgid "Checking your browser"
+msgstr ""
+
+msgid "This link is rate limited. Your download will start on its own."
+msgstr ""
+
+msgid "Return to the previous page"
+msgstr ""
+
+msgid "Checking your browser..."
+msgstr ""
+
+#. HINT: %d is how far along the check is, as a percentage
+#, php-format
+msgid "Checking your browser... %d%%"
+msgstr ""
+
+msgid "Check passed."
+msgstr ""
+
+msgid "Your browser is too old to pass this check."
+msgstr ""
+
+msgid "The browser check failed to run. Please reload the page."
+msgstr ""
+
+msgid "Your download has started."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript and Web Workers, and this browser is not running"
+" them."
+msgstr ""
+
+msgid ""
+"Enable them and reload the page, or ask the administrator of this server for"
+" another way in."
+msgstr ""
+
+msgid "Confirm Subsonic Password"
+msgstr ""
+
+msgid "Update Account"
+msgstr "Perbarui Akun"
+
+msgid "Update Preferences"
+msgstr "Perbarui Preferensi"
+
+msgid "Preference"
+msgstr "Preferensi"
+
+msgid "Value"
+msgstr "Nilai"
+
+msgid "Apply to All"
+msgstr "Terapkan ke semua"
+
+msgid "Access Level"
+msgstr "Tingkat akses"
+
+msgid "Sent by"
+msgstr "Dikirim oleh"
+
+msgid "Reply"
+msgstr "Balasan"
+
+msgid "Queries: "
+msgstr "Kueri: "
+
+msgid "Cache Hits: "
+msgstr "Cache Hits: "
+
+msgid "Load Time: "
+msgstr "Waktu Memuat: "
+
+msgid "No recently played items found"
+msgstr "Tidak ada item yang baru diputar ditemukan"
+
+msgid "No similar artist found"
+msgstr "Tidak ditemukan artis yang sama"
+
+msgid "Registration"
+msgstr "Registrasi"
+
+msgid "User Agreement"
+msgstr "Perjanjian Pengguna"
+
+msgid "Required fields"
+msgstr "Bidang Wajib"
+
+msgid "Captcha is required"
+msgstr "Captcha diperlukan"
+
+msgid "I Accept"
+msgstr "Saya menerima"
+
+msgid "Search Ampache"
+msgstr "Cari Ampache"
+
+msgid "Maximum Results"
+msgstr "Hasil maksimal"
+
+msgid "Unlimited"
+msgstr "Tak terbatas"
+
+msgid "Permalink"
+msgstr ""
+
+msgid "Save as Smart Playlist"
+msgstr "Simpan sebagai daftar putar pintar"
+
+msgid "Options"
+msgstr "Pilihan"
+
+msgid "Play Random Selection"
+msgstr "Mainkan pemilihan acak"
+
+msgid "Length"
+msgstr "Durasi"
+
+msgid "Size Limit"
+msgstr "Batas ukuran"
+
+msgid "Enqueue"
+msgstr "Antrikan"
+
+msgid "Rules"
+msgstr "Aturan"
+
+msgid "Match"
+msgstr "Pertandingan"
+
+msgid "all rules"
+msgstr "semua aturan"
+
+msgid "any rule"
+msgstr "aturan apapun"
+
+msgid "Add Another Rule"
+msgstr "Tambahkan aturan lain"
+
+msgid "Create Share"
+msgstr "Buat Bagikan"
+
+msgid "Secret"
+msgstr "Rahasia"
+
+msgid "Shoutbox"
+msgstr "Shoutbox"
+
+msgid "Expand/Collapse"
+msgstr "Perluas/kecilkan"
+
+msgid "Show Instances"
+msgstr "Tunjukkan instance"
+
+msgid "Show Playlist"
+msgstr "Tampilkan daftar putar"
+
+msgid "Active Instance"
+msgstr "Instance aktif"
+
+msgid "Localplay Disabled"
+msgstr "Localplay Dinonaktifkan"
+
+msgid "Uploads"
+msgstr "Unggah"
+
+msgid "Help"
+msgstr "Bantuan"
+
+msgid "Ampache Wiki"
+msgstr "WikiAmpache"
+
+msgid "API Documentation"
+msgstr "Dokumentasi API"
+
+msgid "Cookie Information"
+msgstr "Informasi Cookie"
+
+msgid "Admin Disabled"
+msgstr "Admin dinonaktifkan"
+
+msgid "Connected Users"
+msgstr ""
+
+msgid "Total Users"
+msgstr ""
+
+msgid "Catalog Size"
+msgstr ""
+
+msgid "Catalog Time"
+msgstr ""
+
+msgid "Path"
+msgstr "Path"
+
+msgid "Last Verify"
+msgstr "Verifikasi terakhir"
+
+msgid "Last Add"
+msgstr "Tambah terakhir"
+
+msgid "Last Clean"
+msgstr "Bersih Terakhir"
+
+msgid "Write New Config"
+msgstr "Tulis Konfigurasi Baru"
+
+msgid "Set Database Charset"
+msgstr "Atur Charset Database"
+
+msgid "Clear Songs Cache"
+msgstr "Hapus Cache Lagu"
+
+msgid "Clear Artists Cache"
+msgstr "Hapus Cache Artis"
+
+msgid "Clear Albums Cache"
+msgstr "Hapus Cache Album"
+
+msgid "Clear Perpetual API Sessions"
+msgstr ""
+
+msgid "Ampache Update"
+msgstr "Pembaruan Ampache"
+
+msgid "Installed Ampache version"
+msgstr "Versi Ampache yang dipasang"
+
+msgid "Latest Ampache version"
+msgstr "Versi Ampache terbaru"
+
+msgid "GitHub Branch"
+msgstr "Cabang GitHub"
+
+msgid "Last Update"
+msgstr "Pembaharuan Terakhir"
+
+msgid "Force check"
+msgstr "Paksa Periksa"
+
+msgid "Ampache Cron"
+msgstr "Cron Ampache"
+
+msgid "The last cron was completed"
+msgstr "Cron terakhir selesai"
+
+msgid "Invalid configuration settings"
+msgstr "Pengaturan konfigurasi tidak valid"
+
+msgid "Setting"
+msgstr "Pengaturan"
+
+msgid "PHP Settings"
+msgstr "Pengaturan PHP"
+
+msgid "Version"
+msgstr "Versi"
+
+msgid "Memory Limit"
+msgstr "Batas Memori"
+
+msgid "Maximum Execution Time"
+msgstr "Waktu Eksekusi Maksimal"
+
+msgid "Override Execution Time"
+msgstr "Timpa Waktu Eksekusi"
+
+msgid "Succeeded"
+msgstr "Berhasil"
+
+msgid "Failed"
+msgstr "Gagal"
+
+msgid "Open Basedir"
+msgstr "Buka Basedir"
+
+msgid "PHP Modules"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Current Configuration"
+msgstr "Konfigurasi Saat Ini"
+
+msgid "The following updates need to be performed:"
+msgstr "Pembaruan berikut perlu untuk dilakukan:"
+
+msgid "Warning"
+msgstr ""
+
+msgid "Update Now!"
+msgstr ""
+
+msgid "Target folder"
+msgstr "Folder Target"
+
+msgid "New folder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Leave the artist and album fields blank to read file tags"
+msgstr "Biarkan baris artis dan album kosong untuk membaca tag berkas"
+
+msgid ""
+"The music license you choose may give away some rights in an irrevocable "
+"manner."
+msgstr ""
+
+msgid ""
+"Read the text of the license you choose carefully with the 'View License' "
+"link."
+msgstr ""
+
+msgid "Files"
+msgstr "Berkas"
+
+msgid "Max upload size"
+msgstr ""
+
+msgid "Allowed file type"
+msgstr "Jenis berkas yang diizinkan"
 
 msgid "Registration Validation"
 msgstr "Validasi Pendaftaran"
@@ -2726,14 +2407,14 @@ msgstr "Validasi gagal"
 msgid "The validation key used isn't correct"
 msgstr "Kunci validasi yang digunakan salah"
 
-msgid "Never"
-msgstr "Tidak pernah"
+msgid "Send private message"
+msgstr "Kirim pesan pribadi"
+
+msgid "Disable"
+msgstr "Nonaktifkan"
 
 msgid "Display Name"
 msgstr "Nama tampilan"
-
-msgid "Send private message"
-msgstr "Kirim pesan pribadi"
 
 msgid "Wrapped"
 msgstr ""
@@ -2753,6 +2434,12 @@ msgstr "Pengguna online sekarang"
 msgid "User is Offline Now"
 msgstr "Pengguna sedang offline sekarang"
 
+msgid "Played"
+msgstr "Dimainkan"
+
+msgid "Skipped"
+msgstr ""
+
 msgid "Following"
 msgstr "Berikutnya"
 
@@ -2765,14 +2452,177 @@ msgstr "Linimasa"
 msgid "Active Playlist"
 msgstr "Daftar putar aktif"
 
-msgid "User Agreement"
-msgstr "Perjanjian Pengguna"
+msgid "Subtitle"
+msgstr "Subtitle"
 
-msgid "Required fields"
-msgstr "Bidang Wajib"
+msgid "Video Information"
+msgstr "Informasi video"
 
-msgid "I Accept"
-msgstr "Saya menerima"
+msgid "Video Edit"
+msgstr "Video Edit"
+
+msgid "Songs Played"
+msgstr ""
+
+msgid "Minutes Played"
+msgstr ""
+
+#, php-format
+msgid "Tried to clobber '%s' without setting clobber"
+msgstr "Mencoba Clobber '%s' tanpa mengatur Clobber"
+
+#. HINT: File
+#, php-format
+msgid "Unknown %s"
+msgstr "Tidak diketahui %s"
+
+msgid "Add New"
+msgstr "Tambah baru"
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Not Found: %s"
+msgstr "Tidak Ditemukan: %s"
+
+msgid "View License"
+msgstr "Lihat Lisensi"
+
+msgid "Activate"
+msgstr "Aktifkan"
+
+msgid "Addition Time"
+msgstr "Waktu Tambahan"
+
+#, php-format
+msgid "Settings for Catalog: %s"
+msgstr "Pengaturan untuk Katalog: %s"
+
+msgid "Installed Version"
+msgstr "Versi yang dipasang"
+
+msgid "Deactivate"
+msgstr "Menonaktifkan"
+
+msgid "Upgrade"
+msgstr "Meningkatkan"
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr "Mengedit preferensi %s"
+
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+
+msgid "Time"
+msgstr "Waktu"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+
+msgid "Unknown (Orphaned)"
+msgstr "Tidak diketahui (tanpa nama)"
+
+msgid "Album Art"
+msgstr "Sampul Album"
+
+msgid "Artist Art Search"
+msgstr "Pencarian Sampul Artis"
+
+msgid "Cover Art Search"
+msgstr "Pencariaan Karya Sampul"
+
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+
+msgid "Rating"
+msgstr "Peringkat"
+
+msgid "Starts With"
+msgstr "Mulai Dengan"
+
+msgid "Contains"
+msgstr ""
+
+msgid "Listeners"
+msgstr "Pendengar"
+
+msgid "Live"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Remove from collection"
+msgstr ""
+
+msgid "Remove {count} selected items from this collection?"
+msgstr ""
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr "# Item"
+
+msgid "Holds"
+msgstr ""
+
+msgid "Votes"
+msgstr "Voting"
+
+msgid "Playlist Name"
+msgstr "Nama Daftar Putar"
+
+msgid "Remove from playlist"
+msgstr ""
+
+msgid "Remove {count} selected items from this playlist?"
+msgstr ""
+
+msgid "Publication Date"
+msgstr "Tanggal penerbitan"
+
+msgid "Sender"
+msgstr "Pengirim"
+
+msgid "Object"
+msgstr "Obyek"
+
+msgid "Creation Date"
+msgstr "Tanggal Pembuatan"
+
+msgid "Last Visit"
+msgstr "Kunjungan terakhir"
+
+msgid "Counter"
+msgstr "Melawan"
+
+msgid "Public URL"
+msgstr "URL Publik"
+
+msgid "Sticky"
+msgstr "Lengket"
+
+msgid "Date Added"
+msgstr "Tanggal Ditambahkan"
+
+msgid "Item Limit"
+msgstr "Batas item"
+
+msgid "License"
+msgstr "Lisensi"
+
+msgid "Added"
+msgstr "Ditambahkan"
 
 msgid "Registration Date"
 msgstr "Tanggal registrasi"
@@ -2783,61 +2633,242 @@ msgstr "IP terakhir"
 msgid "Online"
 msgstr "Online"
 
-msgid "Verify Catalog"
-msgstr "Verifikasi Katalog"
+msgid "Resolution"
+msgstr "Resolusi"
+
+msgid "Trending"
+msgstr "Tren"
+
+msgid "Found"
+msgstr "Ditemukan"
+
+msgid "Searched"
+msgstr "Telah Dicari"
+
+msgid "Checking"
+msgstr "Memeriksa"
+
+msgid "Verified"
+msgstr "Diverifikasi"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Starting New Media Search on \"%s\" Catalog"
+msgstr "Memulai Pencarian Media Baru pada Katalog \"%s\""
+
+msgid "Starting Art Search"
+msgstr "Memulai Pencarian Sampul"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Cleaning the \"%s\" Catalog"
+msgstr "Membersihkan Katalog \"%s\""
 
 #. HINT: Catalog Name
 #, php-format
 msgid "Updating the %s Catalog"
 msgstr "Memperbarui Katalog %s"
 
-msgid "Verified"
-msgstr "Diverifikasi"
+msgid "Reading"
+msgstr "Membaca"
 
-msgid "Subtitle"
-msgstr "Subtitle"
+msgid "Starting New Media Search"
+msgstr "Memulai Pencarian Media Baru"
 
-msgid "Video Edit"
-msgstr "Video Edit"
+msgid "Art Search"
+msgstr "Pencarian Sampul"
 
-msgid "Resolution"
-msgstr "Resolusi"
+msgid "Clean Catalog"
+msgstr "Bersihkan Katalog"
 
-msgid "Display"
-msgstr "Tampilan"
+msgid "Verify Catalog"
+msgstr "Verifikasi Katalog"
 
-msgid "Audio Bitrate"
-msgstr "Audio bitrate"
+msgid "Verify"
+msgstr "Verifikasi"
 
-msgid "Video Bitrate"
-msgstr "Video Bitrate"
+msgid "Clean"
+msgstr "Bersih"
 
-msgid "Frame Rate"
-msgstr "Frame rate"
-
-msgid "Last Updated"
-msgstr "Terakhir Diperbarui"
-
-msgid "Added"
-msgstr "Ditambahkan"
-
-msgid "Video Information"
-msgstr "Informasi video"
-
-msgid "No video found"
-msgstr "Tidak ada video yang ditemukan"
-
-msgid "Ampache Wrapped"
+msgid "Scan Folders"
 msgstr ""
 
-msgid "Songs Played"
+msgid "Update File Tags"
+msgstr "Perbarui Tag Berkas"
+
+msgid "Save the current order of this collection?"
 msgstr ""
 
-msgid "Minutes Played"
+msgid "Folder Edit"
 msgstr ""
 
-msgid "Ratings"
+msgid "Sign in with OpenID Connect"
 msgstr ""
+
+#, php-format
+msgid "Search on %s ..."
+msgstr ""
+
+msgid "Radio Station"
+msgstr ""
+
+msgid "Stream"
+msgstr "Stream"
+
+msgid "Recently Played"
+msgstr "Diputar Baru-Baru Ini"
+
+msgid "Newest Albums"
+msgstr "Album Terbaru"
+
+msgid "Newest Artists"
+msgstr "Artis Terbaru"
+
+msgid "Newest Songs"
+msgstr ""
+
+msgid "Newest Shouts"
+msgstr "Shout Terbaru"
+
+msgid "Smart Playlists"
+msgstr "Daftar putar pintar"
+
+msgid "Private Messages"
+msgstr "Pesan pribadi"
+
+msgid "Smartlists"
+msgstr "DaftarPinta"
+
+msgid "Radio"
+msgstr "Radio"
+
+#, php-format
+msgid "%s Playlist"
+msgstr "Daftar Putar %s"
+
+msgid "Democratic Playlist"
+msgstr "Daftar Putar Demokrasi"
+
+msgid "Previous"
+msgstr "Sebelumnya"
+
+msgid "Stop"
+msgstr "Berhenti"
+
+msgid "Pause"
+msgstr "Jeda"
+
+msgid "Mute"
+msgstr "Bisu"
+
+msgid "Decrease Volume"
+msgstr "Turunkan Volume"
+
+msgid "Increase Volume"
+msgstr "Naikkan Volume"
+
+msgid "Web Player"
+msgstr "Pemutar web"
+
+msgid "Could not connect to the broadcast. Resuming normal playback."
+msgstr ""
+
+msgid "Media is currently playing, are you sure you want to close?"
+msgstr "Media saat ini sedang diputar, apakah Anda yakin ingin menutup?"
+
+msgid "Full-Screen not supported by your browser"
+msgstr ""
+
+msgid ""
+"The visualizer and equalizer are not available for remote catalog streams."
+msgstr ""
+
+msgid "Your browser doesn't support this feature."
+msgstr "Browser Anda tidak mendukung fitur ini."
+
+msgid "Unmute"
+msgstr "Batal Bisu"
+
+msgid "Max Volume"
+msgstr "Volume Maks"
+
+msgid "Full Screen"
+msgstr "Layar Penuh"
+
+msgid "Restore Screen"
+msgstr "Kembalikan Layar"
+
+msgid "Shuffle"
+msgstr "Acak"
+
+msgid "Shuffle Off"
+msgstr "Acak NonAktif"
+
+msgid "Repeat Off"
+msgstr "Ulang NonAktif"
+
+msgid "Show Album"
+msgstr "Tampilkan Album"
+
+msgid "Collections"
+msgstr ""
+
+msgid "Collection Name"
+msgstr ""
+
+msgid "Size"
+msgstr "Ukuran"
+
+msgid "Bitrate"
+msgstr "Bitrate"
+
+msgid "Channels"
+msgstr "Saluran"
+
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+
+msgid "Return to Login Page"
+msgstr "Kembali ke halaman login"
+
+msgid "Please wait for an administrator to activate your account"
+msgstr "Silakan tunggu administrator untuk mengaktifkan akun Anda"
+
+msgid ""
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information"
+msgstr "Kunci aktivasi telah dikirim ke alamat email yang Anda berikan. Silakan periksa email Anda untuk informasi lebih lanjut"
+
+msgid "Your account has been created"
+msgstr "Akun anda telah dibuat"
+
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d menit"
+
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d jam"
+
+msgid "Anywhere"
+msgstr "Di mana saja"
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Post to Shoutbox"
+msgstr "Posting ke ShoutBox"
+
+msgid "Add ACL"
+msgstr "Tambahkan ACL"
+
+msgid "Show ACL(s)"
+msgstr "Tampilkan ACL (s)"
 
 msgid "Show Catalogs"
 msgstr "Tampilkan Katalog"
@@ -2847,6 +2878,15 @@ msgstr ""
 
 msgid "Manage Licenses"
 msgstr "Kelola lisensi"
+
+msgid "Localplay Controllers"
+msgstr "Pengendali Localplay"
+
+msgid "Catalog Types"
+msgstr "Jenis katalog"
+
+msgid "Manage Plugins"
+msgstr "Kelola Plugin"
 
 msgid "Browse Users"
 msgstr "Telusuri pengguna"
@@ -2860,62 +2900,17 @@ msgstr "Kelola Shoutbox"
 msgid "Clear Now Playing"
 msgstr "Bersihkan Sedang Diputar Sekarang"
 
-msgid "Add ACL"
-msgstr "Tambahkan ACL"
-
-msgid "Show ACL(s)"
-msgstr "Tampilkan ACL (s)"
-
-msgid "Localplay Controllers"
-msgstr "Pengendali Localplay"
-
-msgid "Catalog Types"
-msgstr "Jenis katalog"
-
-msgid "Manage Plugins"
-msgstr "Kelola Plugin"
-
-msgid "Expand/Collapse"
-msgstr "Perluas/kecilkan"
-
-msgid "Radio"
-msgstr "Radio"
-
-msgid "Uploads"
-msgstr "Unggah"
-
-msgid "Smart Playlists"
-msgstr "Daftar putar pintar"
-
-msgid "Smartlists"
-msgstr "DaftarPinta"
-
 msgid "Wanted"
 msgstr "Ingin"
 
 msgid "Shares"
 msgstr "Saham"
 
-msgid "Log out"
-msgstr "Keluar"
-
-msgid "Admin Disabled"
-msgstr "Admin dinonaktifkan"
-
-msgid "Show Instances"
-msgstr "Tunjukkan instance"
-
-msgid "Show Playlist"
-msgstr "Tampilkan daftar putar"
-
-msgid "Active Instance"
-msgstr "Instance aktif"
-
-msgid "Localplay Disabled"
-msgstr "Localplay Dinonaktifkan"
-
 msgid "Allow Localplay Set to False"
 msgstr "Biarkan LocalPlay diatur ke False"
+
+msgid "Access Denied"
+msgstr "Akses Ditolak"
 
 msgid "Localplay Controller Not Defined"
 msgstr "Pengontrol Localplay tidak didefinisikan"
@@ -2923,22 +2918,265 @@ msgstr "Pengontrol Localplay tidak didefinisikan"
 msgid "Account"
 msgstr "Akun"
 
-msgid "Help"
-msgstr "Bantuan"
+msgid "No lyrics found."
+msgstr "Lirik tidak ditemukan."
 
-msgid "Ampache Wiki"
-msgstr "WikiAmpache"
+msgid "Song Edit"
+msgstr "Edit Lagu"
 
-msgid "API Documentation"
-msgstr "Dokumentasi API"
+#, php-format
+msgid "Track %d"
+msgstr ""
 
-msgid "Cookie Information"
-msgstr "Informasi Cookie"
+msgid "Play on the current player"
+msgstr ""
+
+msgid "Song Information"
+msgstr "Informasi Lagu"
+
+msgid "Song Language"
+msgstr "Bahasa Lagu"
+
+msgid "BPM"
+msgstr ""
+
+msgid "Song MBID"
+msgstr "Lagu Mbid"
+
+msgid "Album MBID"
+msgstr "Album Mbid"
+
+msgid "Artist MBID"
+msgstr "Artis Mbid"
+
+msgid "ReplayGain Track Gain"
+msgstr "Replaygain Track Gain"
+
+msgid "ReplayGain Album Gain"
+msgstr "Replaygain Album Gain"
+
+msgid "R128 Track Gain"
+msgstr ""
+
+msgid "R128 Album Gain"
+msgstr ""
+
+msgid "ISRC"
+msgstr ""
+
+msgid "Last Updated"
+msgstr "Terakhir Diperbarui"
+
+msgid "Lyrics"
+msgstr "Lirik"
+
+msgid "Licensing"
+msgstr "LISENSI"
+
+msgid "Uploaded by"
+msgstr "Diunggah oleh"
+
+msgid "Technical"
+msgstr ""
+
+msgid "Statistical Graphs"
+msgstr "Grafik Statistik"
+
+msgid "Month"
+msgstr "Bulan"
+
+msgid "Day"
+msgstr "Hari"
+
+msgid "Hour"
+msgstr "Jam"
+
+msgid "Recently Skipped"
+msgstr ""
+
+msgid "Last Played"
+msgstr "Putar terakhir"
+
+#, php-format
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
+msgstr[0] "%d dekade yang lalu"
+
+msgid "Ampache Wrapped"
+msgstr ""
 
 msgid ""
-"You may have reached this page because Ampache was unable to load the "
-"required dependencies"
-msgstr "Anda mungkin telah mencapai halaman ini karena Ampache tidak dapat memuat pustaka/dependensi yang diperlukan"
+"You have been redirected to this page because you attempted to access a "
+"function that is disabled in the demo."
+msgstr "Anda telah diarahkan ke halaman ini karena Anda mencoba mengakses fungsi yang dinonaktifkan dalam demo."
+
+msgid ""
+"You have been redirected to this page because you do not have access to this"
+" function"
+msgstr "Anda telah diarahkan ke halaman ini karena Anda tidak memiliki akses ke fungsi ini"
+
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
+msgstr "Jika Anda yakin ini adalah kesalahan, silakan hubungi Administrator Ampache"
+
+msgid "This event has been logged"
+msgstr "Hal ini telah dicatat/log"
+
+msgid "You will be automatically redirected in 10 seconds."
+msgstr "Kamu akan diarahkan secara otomatis dalam 10 detik."
+
+msgid "Something went wrong. Please check the logs for further information."
+msgstr ""
+
+msgid "You do not have permission to write to this file or folder"
+msgstr ""
+
+msgid "Permission Denied"
+msgstr ""
+
+msgid "Ampache :: For the Love of Music - Installation"
+msgstr "Ampache :: Untuk Kecintaan Pada Musik - Pemasangan"
+
+#, php-format
+msgid "%s - Update"
+msgstr "%s - pembaruan"
+
+#, php-format
+msgid ""
+"This page handles all database updates to Ampache starting with %1$s. Your "
+"current version is %2$s with database version %3$s"
+msgstr "Halaman ini menangani semua pembaruan database ke Ampache mulai dengan %1$s. Versi Anda saat ini adalah %2$s dengan versi database %3$s"
+
+msgid ""
+"Drag & Drop your files or <span class=\"filepond--label-action\"> Browse "
+"</span>"
+msgstr ""
+
+msgid "Field contains invalid files"
+msgstr ""
+
+msgid "Waiting for size"
+msgstr ""
+
+msgid "Size not available"
+msgstr ""
+
+msgid "Error during load"
+msgstr ""
+
+msgid "Uploading"
+msgstr ""
+
+msgid "Upload complete"
+msgstr ""
+
+msgid "Upload cancelled"
+msgstr ""
+
+msgid "Error during upload"
+msgstr ""
+
+msgid "Error during revert"
+msgstr ""
+
+msgid "Error during remove"
+msgstr ""
+
+msgid "tap to cancel"
+msgstr ""
+
+msgid "tap to retry"
+msgstr ""
+
+msgid "tap to undo"
+msgstr ""
+
+msgid "Remove"
+msgstr "Menghapus"
+
+msgid "Abort"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "File is too large"
+msgstr ""
+
+msgid "Maximum file size is {filesize}"
+msgstr ""
+
+msgid "Maximum total size exceeded"
+msgstr ""
+
+msgid "Maximum total file size is {filesize}"
+msgstr ""
+
+msgid "File of invalid type"
+msgstr ""
+
+msgid "Expects {allButLastType} or {lastType}"
+msgstr ""
+
+msgid "Image type not supported"
+msgstr ""
+
+msgid "Image is too small"
+msgstr ""
+
+msgid "Image is too big"
+msgstr ""
+
+msgid "Minimum size is {minWidth} × {minHeight}"
+msgstr ""
+
+msgid "Maximum size is {maxWidth} × {maxHeight}"
+msgstr ""
+
+msgid "Resolution is too low"
+msgstr ""
+
+msgid "Resolution is too high"
+msgstr ""
+
+msgid "Minimum resolution is {minResolution}"
+msgstr ""
+
+msgid "Maximum resolution is {maxResolution}"
+msgstr ""
+
+msgid "Never"
+msgstr "Tidak pernah"
+
+msgid "Display"
+msgstr "Tampilan"
+
+msgid "Audio Bitrate"
+msgstr "Audio bitrate"
+
+msgid "Video Bitrate"
+msgstr "Video Bitrate"
+
+msgid "Frame Rate"
+msgstr "Frame rate"
+
+#, php-format
+msgid "Unable to open `%s` for writing"
+msgstr "Tidak dapat membuka`%s` untuk ditulis"
+
+#, php-format
+msgid "Unable to write to `%s`"
+msgstr "Tidak dapat menulis ke `%s`"
+
+#, php-format
+msgid "Art files written: %d"
+msgstr "Berkas SampulKarya ditulis: %d"
+
+msgid "Added to collection"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -2964,308 +3202,6 @@ msgstr "Lagu selanjutnya gagal dimulai"
 msgid "UPnP"
 msgstr "UPNP"
 
-#, php-format
-msgid "Tried to clobber '%s' without setting clobber"
-msgstr "Mencoba Clobber '%s' tanpa mengatur Clobber"
-
-#. HINT: File
-#, php-format
-msgid "Unknown %s"
-msgstr "Tidak diketahui %s"
-
-msgid "Add New"
-msgstr "Tambah baru"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Not Found: %s"
-msgstr "Tidak Ditemukan: %s"
-
-msgid "View License"
-msgstr "Lihat Lisensi"
-
-msgid "Song Edit"
-msgstr "Edit Lagu"
-
-msgid "Links"
-msgstr "Tautan"
-
-msgid "Song Language"
-msgstr "Bahasa Lagu"
-
-msgid "Song MBID"
-msgstr "Lagu Mbid"
-
-msgid "Album MBID"
-msgstr "Album Mbid"
-
-msgid "Artist MBID"
-msgstr "Artis Mbid"
-
-msgid "ReplayGain Track Gain"
-msgstr "Replaygain Track Gain"
-
-msgid "ReplayGain Album Gain"
-msgstr "Replaygain Album Gain"
-
-msgid "R128 Track Gain"
-msgstr ""
-
-msgid "R128 Album Gain"
-msgstr ""
-
-msgid "Lyrics"
-msgstr "Lirik"
-
-msgid "Licensing"
-msgstr "LISENSI"
-
-msgid "Song Information"
-msgstr "Informasi Lagu"
-
-#, php-format
-msgid "%s - Update"
-msgstr "%s - pembaruan"
-
-msgid "Ampache :: For the Love of Music - Installation"
-msgstr "Ampache :: Untuk Kecintaan Pada Musik - Pemasangan"
-
-#, php-format
-msgid ""
-"This page handles all database updates to Ampache starting with %1$s. Your "
-"current version is %2$s with database version %3$s"
-msgstr "Halaman ini menangani semua pembaruan database ke Ampache mulai dengan %1$s. Versi Anda saat ini adalah %2$s dengan versi database %3$s"
-
-#, php-format
-msgid "Unable to open `%s` for writing"
-msgstr "Tidak dapat membuka`%s` untuk ditulis"
-
-#, php-format
-msgid "Unable to write to `%s`"
-msgstr "Tidak dapat menulis ke `%s`"
-
-#, php-format
-msgid "Art files written: %d"
-msgstr "Berkas SampulKarya ditulis: %d"
-
-msgid "Missing mandatory parameter"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Bad Request: %s"
-msgstr "Permintaan Buruk: %s"
-
-#. HINT: Access level, eg 75, 100
-#, php-format
-msgid "Require: %s"
-msgstr "Memerlukan: %s"
-
-msgid "Access Control not Enabled"
-msgstr "Kontrol akses tidak diaktifkan"
-
-msgid "Session Expired"
-msgstr "Sesi berakhir"
-
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr "Upaya akses tidak valid untuk kesalahan API - ACL"
-
-msgid "Invalid Request"
-msgstr "Permintaan tidak valid"
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Wrong object type "
-msgstr ""
-
-msgid "Media Object Invalid or Not Specified"
-msgstr ""
-
-msgid "Login Failed: version too old"
-msgstr ""
-
-msgid "Login Failed: timestamp out of range"
-msgstr ""
-
-msgid "Error Invalid Handshake - "
-msgstr ""
-
-msgid "Invalid Username/Password"
-msgstr ""
-
-msgid "Access denied to this playlist."
-msgstr ""
-
-msgid "Wrong library item type."
-msgstr ""
-
-msgid "Library item not found."
-msgstr ""
-
-msgid "Incorrect catalog task"
-msgstr ""
-
-msgid "The requested item was not found"
-msgstr ""
-
-msgid "Access Denied: delete from disk is not enabled."
-msgstr ""
-
-msgid "Incorrect file task"
-msgstr ""
-
-msgid "File not found"
-msgstr ""
-
-msgid "Catalog not found"
-msgstr ""
-
-msgid "The requested catalog was not found"
-msgstr ""
-
-msgid "Media object invalid or not specified"
-msgstr ""
-
-msgid "Invalid request"
-msgstr ""
-
-msgid "Access Denied: Rating features are not enabled."
-msgstr ""
-
-msgid "Incorrect object type"
-msgstr ""
-
-msgid "Wrong library item type"
-msgstr ""
-
-msgid "Library item not found"
-msgstr ""
-
-msgid "Access Denied: social features are not enabled."
-msgstr ""
-
-msgid "Access Denied: allow_video is not enabled."
-msgstr ""
-
-msgid "Access Denied: podcast features are not enabled."
-msgstr ""
-
-msgid "Access Denied: sharing features are not enabled."
-msgstr ""
-
-msgid "Login failed, API version is too old"
-msgstr "Gagal Masuk, versi API terlalu tua"
-
-msgid "Login Failed, timestamp is out of range"
-msgstr ""
-
-msgid "Received Invalid Handshake"
-msgstr "Menerima jabat tangan yang tidak valid"
-
-msgid "Login failed, timestamp is out of range"
-msgstr "Masuk Gagal, stempel waktu berada di luar jangkauan"
-
-msgid "Server"
-msgstr "Server"
-
-msgid "Incorrect username or password"
-msgstr "Nama pengguna atau kata sandi salah"
-
-msgid "Access Denied: licensing features are not enabled."
-msgstr ""
-
-msgid "Error Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Access denied to this playlist"
-msgstr ""
-
-msgid "Can't add a duplicate item when check is enabled"
-msgstr ""
-
-msgid "Nothing was changed"
-msgstr ""
-
-msgid "Song not found in playlist"
-msgstr ""
-
-msgid "Track ID not found in playlist"
-msgstr ""
-
-msgid "Bad Request"
-msgstr "Permintaan yang buruk"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-msgid "Ratings must be between [0-5]. "
-msgstr ""
-
-msgid "User_id not found"
-msgstr ""
-
-msgid "Invalid input options"
-msgstr ""
-
-msgid "Failed to scrobble: No item found!"
-msgstr ""
-
-msgid "Failed to update_art for "
-msgstr ""
-
-msgid "Failed to update_artist_info or recommendations for "
-msgstr ""
-
-msgid "Failed to sync episodes for podcast: "
-msgstr ""
-
-msgid "Enable: video"
-msgstr "Aktifkan: video"
-
-msgid "Not Found"
-msgstr "Tidak ditemukan"
-
-msgid "Enable: delete_from_disk"
-msgstr "Aktifkan: delete_from_disk"
-
-msgid "Enable: podcast"
-msgstr "Aktifkan: podcast"
-
-msgid "Enable: ratings"
-msgstr "Aktifkan: ratings"
-
-msgid "Enable: sociable"
-msgstr "Aktifkan: sociable"
-
-msgid "Enable: share"
-msgstr "Aktifkan: share"
-
-msgid "Enable: live_stream"
-msgstr "Aktifkan: live_steam"
-
-msgid "Enable: label"
-msgstr "Aktifkan: label"
-
-msgid "Enable: licensing"
-msgstr "Aktifkan: licensing"
-
-msgid "Unable to connect to localplay controller"
-msgstr "Tidak dapat terhubung ke pengontrol localplay"
-
-msgid "Require: 100"
-msgstr "Memerlukan: 100"
-
-msgid "Require: 75"
-msgstr "Memerlukan: 75"
-
-msgid "Access denied"
-msgstr ""
-
-msgid "Ampache XSPF Playlist"
-msgstr "Daftar Putar XSPF Ampache"
-
 msgid "IP Address version mismatch"
 msgstr "Versi alamat IP tidka cocok"
 
@@ -3283,9 +3219,6 @@ msgstr "Daftar Kontrol Akses Baru Anda telah dibuat"
 
 msgid "Your Access List entry has been removed"
 msgstr "Entri Daftar Akses Anda telah dihapus"
-
-msgid "Are You Sure?"
-msgstr "Apakah Anda yakin?"
 
 #. HINT: ACL Name
 #, php-format
@@ -3340,6 +3273,15 @@ msgstr "Pemrosesan lagu yang selesai"
 msgid "The Catalog art search has started"
 msgstr "Pencarian seni katalog telah dimulai"
 
+msgid "The Catalog folder scan has started"
+msgstr ""
+
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr "Ini akan menghapus katalog Anda secara permanen"
 
@@ -3361,7 +3303,7 @@ msgstr "iTunes"
 msgid "A filter name is required"
 msgstr ""
 
-msgid "That filter name already exists"
+msgid "That name already exists"
 msgstr ""
 
 msgid "The new filter was not created"
@@ -3406,7 +3348,8 @@ msgstr "Lisensi telah diperbarui"
 msgid "A new License has been created"
 msgstr "Lisensi baru telah dibuat"
 
-msgid "Create license"
+#, php-format
+msgid "This will permanently delete the license \"%s\""
 msgstr ""
 
 msgid "Edit license"
@@ -3463,6 +3406,10 @@ msgstr "Shoutbox Post telah dihapus"
 msgid "Shoutbox post has been updated"
 msgstr "Shoutbox Post telah diperbarui"
 
+#, php-format
+msgid "This will permanently delete the shoutbox post \"%s\""
+msgstr ""
+
 msgid "Your cache has been cleared successfully"
 msgstr "Cache Anda telah berhasil dihapus"
 
@@ -3471,14 +3418,19 @@ msgid ""
 "currently configured charset"
 msgstr "Basis data dan tabel terkait Anda telah diperbarui untuk mencocokkan charset Anda yang saat ini dikonfigurasi"
 
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
+msgstr ""
+
 msgid "Your Passwords don't match"
 msgstr "Kata sandi Anda tidak cocok"
 
 msgid "A Username is required"
 msgstr "Nama pengguna diperlukan"
-
-msgid "That Username already exists"
-msgstr "Nama pengguna itu sudah ada"
 
 msgid "You entered an invalid e-mail address"
 msgstr "Anda memasukkan alamat email yang salah"
@@ -3541,6 +3493,10 @@ msgstr ""
 msgid "This Avatar will be deleted"
 msgstr "Avatar ini akan dihapus"
 
+msgid ""
+"This will remove the Subsonic password and disconnect any client using it"
+msgstr ""
+
 msgid "This will replace your existing API key"
 msgstr "Ini akan menggantikan kunci API yang ada"
 
@@ -3552,6 +3508,17 @@ msgstr ""
 #, php-format
 msgid "%s IP History"
 msgstr "Riwayat IP %s"
+
+msgid "That Username already exists"
+msgstr "Nama pengguna itu sudah ada"
+
+msgid "Passwords do not match"
+msgstr "Sandi tidak cocok"
+
+msgid ""
+"Could not store the Subsonic password. Check that secret_key is set in your "
+"Ampache config"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -3596,6 +3563,9 @@ msgstr ""
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr ""
+
 msgid "Art file failed size check"
 msgstr "Berkas Art Gagal Ukuran Centang"
 
@@ -3607,14 +3577,49 @@ msgstr "Seni tidak dapat ditemukan pada saat ini. Ini mungkin karena menulis kes
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
 
+msgid "Failed to update_art for "
+msgstr ""
+
+#, php-format
+msgid "%s and %d more item"
+msgid_plural "%s and %d more items"
+msgstr[0] ""
+
 msgid "Broadcast has been deleted"
 msgstr "Siaran telah dihapus"
 
 msgid "This Broadcast will be deleted"
 msgstr "Siaran ini akan dihapus"
 
+msgid "This collection does not accept items of that type"
+msgstr ""
+
+msgid "Object added to collection"
+msgstr ""
+
+msgid "Name is required"
+msgstr "Nama diperlukan"
+
+msgid "Not a valid item type"
+msgstr ""
+
+msgid "Failed to create collection"
+msgstr ""
+
+msgid "Collection created"
+msgstr ""
+
+msgid "Object removed from collection"
+msgstr ""
+
 msgid "The Playlist has been deleted"
 msgstr "Daftar putar telah dihapus"
+
+msgid "Folder"
+msgstr ""
+
+msgid "This Folder will be deleted"
+msgstr ""
 
 msgid "The Ampache database username or password is missing"
 msgstr "Nama pengguna atau kata sandi basis data Ampache hilang"
@@ -3634,6 +3639,9 @@ msgstr "Label ini akan dihapus"
 msgid "The Label cannot be found"
 msgstr "Label tidak dapat ditemukan"
 
+msgid "Incorrect username or password"
+msgstr "Nama pengguna atau kata sandi salah"
+
 msgid "Account is disabled, please contact the administrator"
 msgstr "Akun dinonaktifkan, silakan hubungi administrator"
 
@@ -3643,17 +3651,18 @@ msgstr "Pengguna sudah masuk"
 msgid "Unable to create a local account"
 msgstr "Tidak dapat membuat akun lokal"
 
+msgid "OpenID Connect is not configured correctly"
+msgstr ""
+
+msgid "Ratings"
+msgstr ""
+
 #, php-format
 msgid "%s - Now Playing"
 msgstr ""
 
 msgid "Playlist created"
 msgstr "Daftar putar dibuat"
-
-#. HINT: %1 playlist name, %2 playlist type
-#, php-format
-msgid "%1$s (%2$s) has been created"
-msgstr "%1$s (%2$s) telah dibuat"
 
 #. HINT: Number of songs
 #, php-format
@@ -3675,6 +3684,9 @@ msgstr "Tidak ada lagu yang valid dalam berkas daftar putar"
 
 msgid "Podcast has been deleted"
 msgstr "Podcast telah dihapus"
+
+msgid "Catalog not found"
+msgstr ""
 
 msgid "Feed URL is invalid"
 msgstr "URL pakan tidak valid"
@@ -3712,6 +3724,15 @@ msgstr ""
 
 msgid "Import Podcasts"
 msgstr ""
+
+msgid "Podcast information updated from the feed"
+msgstr ""
+
+msgid "The feed could not be read"
+msgstr ""
+
+msgid "Server"
+msgstr "Server"
 
 msgid "Your account has been updated"
 msgstr "Akun anda telah diperbaharui"
@@ -3768,11 +3789,11 @@ msgstr "KEMBALI"
 msgid "Radio Station created"
 msgstr "Stasiun Radio Dibuat"
 
-msgid "Captcha is required"
-msgstr "Captcha diperlukan"
-
 msgid "Captcha failed"
 msgstr "Captcha gagal"
+
+msgid "Browser check failed. Please reload the page and try again"
+msgstr ""
 
 msgid "You must accept the user agreement"
 msgstr "Anda harus menerima Perjanjian Pengguna"
@@ -3785,9 +3806,6 @@ msgstr "Alamat email salah"
 
 msgid "You must enter a password"
 msgstr "Kamu harus memasukkan kata sandi"
-
-msgid "Passwords do not match"
-msgstr "Sandi tidak cocok"
 
 msgid "Failed to create user"
 msgstr "Gagal membuat pengguna"
@@ -3850,6 +3868,24 @@ msgstr "Video telah dihapus"
 msgid "The Video will be deleted"
 msgstr "Video akan dihapus"
 
+msgid "Edit/Find Art"
+msgstr "Edit / temukan seni"
+
+msgid "Do you really want to reset art?"
+msgstr "Apakah kamu benar-benar ingin mengatur ulang seni?"
+
+msgid "Reset Art"
+msgstr "Reset Seni"
+
+#. HINT: %1$s is the item name, %2$s says what the drawing was made from
+#. the name arrives escaped, so only the translated half is escaped here
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
+msgstr ""
+
 msgid "Unable to open"
 msgstr "Tidak dapat dibuka"
 
@@ -3857,6 +3893,26 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
 
 msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
+#, php-format
+msgid "%d track"
+msgid_plural "%d tracks"
+msgstr[0] ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "OpenID Connect requires an interactive browser login"
+msgstr ""
+
+msgid "OpenID Connect authentication failed"
+msgstr ""
+
+msgid "The identity provider did not return a username"
 msgstr ""
 
 msgid "Running Beets Update"
@@ -3867,9 +3923,6 @@ msgstr "Menjalankan pembaruan bit"
 msgid "Unable to add Song - %s"
 msgstr "Tidak dapat menambahkan lagu - %s"
 
-msgid "Beets Database File"
-msgstr "Berkas basis data bit"
-
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "Katalog bit dipilih, tetapi tidak ada berkas db bit yang disediakan"
 
@@ -3877,11 +3930,39 @@ msgstr "Katalog bit dipilih, tetapi tidak ada berkas db bit yang disediakan"
 msgid "This path belongs to an existing Beets Catalog: %s"
 msgstr "Path ini milik katalog Beets yang telah tersedia: %s"
 
-msgid "Beets Server URI"
-msgstr "Bits Server URI"
+msgid "Beets Database File"
+msgstr "Berkas basis data bit"
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr "Jenis katalog jarak jauh dipilih, tetapi jalur bukan URL"
+
+msgid "Beets Server URI"
+msgstr "Bits Server URI"
+
+msgid "Invalid \"dropbox-path\": "
+msgstr "\"path-dropbox\" tidak valid: "
+
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "Kesalahan: Katalog dengan %s telah tersedia"
+
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr "Kesalahan: Kunci API, Token Akses dan Kunci Rahasia yang Diperlukan untuk Katalog Dropbox"
+
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr "\"Kunci API\", \"kunci rahasia\", or \"token akses\" tidak valid: "
+
+msgid "Running Dropbox Remote Update"
+msgstr "Menjalankan pembaruan jarak jauh Dropbox"
+
+msgid "Access Token"
+msgstr "Akses Token"
+
+msgid "Get chunked files on analyze"
+msgstr "Dapatkan berkas chunked pada analisis"
+
+msgid "API Error: cannot connect to Dropbox."
+msgstr "Keslahan API: tidak dapat terhubung ke Dropbox."
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "Pergi ke https://www.dropbox.com/developers/apps/create"
@@ -3902,28 +3983,6 @@ msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr "Salin kunci aplikasi dan rahasia aplikasi Anda dan akses Token ke bidang-bidang berikut."
 
-msgid "Access Token"
-msgstr "Akses Token"
-
-msgid "Get chunked files on analyze"
-msgstr "Dapatkan berkas chunked pada analisis"
-
-msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr "Kesalahan: Kunci API, Token Akses dan Kunci Rahasia yang Diperlukan untuk Katalog Dropbox"
-
-msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr "\"Kunci API\", \"kunci rahasia\", or \"token akses\" tidak valid: "
-
-msgid "Invalid \"dropbox-path\": "
-msgstr "\"path-dropbox\" tidak valid: "
-
-#, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr "Kesalahan: Katalog dengan %s telah tersedia"
-
-msgid "Running Dropbox Remote Update"
-msgstr "Menjalankan pembaruan jarak jauh Dropbox"
-
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "Pembaruan Katalog Selesai. Total Media: [%s]"
@@ -3941,21 +4000,21 @@ msgstr "Lagu terkini: \"%s\""
 msgid "Removing song: \"%s\""
 msgstr "Menghapus lagu: \"%s\""
 
-msgid "API Error: cannot connect to Dropbox."
-msgstr "Keslahan API: tidak dapat terhubung ke Dropbox."
-
 msgid "Path was not specified"
 msgstr "PAthtidak ditentukan"
+
+msgid "Specified path is inside an existing catalog"
+msgstr "Path yang ditentukan ada di dalam katalog yang ada"
+
+#. HINT: directory (file path)
+#, php-format
+msgid "The folder couldn't be read. Does it exist? %s"
+msgstr "Folder itu tidak bisa dibaca. Apakah itu ada? %s"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
 msgstr "Path ini milik sebuah Katalog lokal: %s"
-
-#. HINT: directory (file path)
-#, php-format
-msgid "Unable to open: %s"
-msgstr "Tidak dapat membuka: %s"
 
 #. HINT: directory (file path)
 #, php-format
@@ -3977,6 +4036,11 @@ msgstr "Berkas tidak bisa dibaca. Apakah itu ada? %s"
 msgid "\"%s\" does not match site charset"
 msgstr "\"%s\" tidak cocok dengan charset situs"
 
+#. HINT: directory (file path)
+#, php-format
+msgid "Unable to open: %s"
+msgstr "Tidak dapat membuka: %s"
+
 msgid "N/A"
 msgstr "T/A"
 
@@ -3987,8 +4051,7 @@ msgstr "Katalog diperbarui"
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "Waktu Total: [%s] Media Total: [%s] Media Per Detik: [%s]"
 
-#, php-format
-msgid "File count: %d"
+msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
 msgid "Catalog root unreadable, stopping clean"
@@ -4002,19 +4065,70 @@ msgstr "Semua berkas akan dihapus. Tidak melakukan apa-apa"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Berkas tidak ditemukan atau 0 Bytes: %s"
 
-msgid "Specified path is inside an existing catalog"
-msgstr "Path yang ditentukan ada di dalam katalog yang ada"
-
-#. HINT: directory (file path)
 #, php-format
-msgid "The folder couldn't be read. Does it exist? %s"
-msgstr "Folder itu tidak bisa dibaca. Apakah itu ada? %s"
-
-msgid "Catalog root unreadable, stopping check"
+msgid "File count: %d"
 msgstr ""
 
-msgid "URI"
-msgstr "URI"
+#, php-format
+msgid "Create directory \"%s\""
+msgstr "Buat direktori \"%s\""
+
+msgid "File already exists"
+msgstr ""
+
+#, php-format
+msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr "Menyalin \"%1$s\" ke \"%2$s\""
+
+#, php-format
+msgid "There was an error trying to copy file to \"%s\""
+msgstr "Terdapat kesalahan saat mecoba menyalin berkas ke \"%s\""
+
+#, php-format
+msgid "Size comparison failed. Not deleting \"%s\""
+msgstr "Perbandingan ukuran gagal. Tidak menghapus \"%s\""
+
+#, php-format
+msgid "There was an error trying to delete \"%s\""
+msgstr "Ada kesalahan yang mencoba menghapus \"%s\""
+
+msgid "Failed to create the catalog, check the debug logs"
+msgstr "Gagal membuat katalog, periksa log debug"
+
+msgid "day"
+msgid_plural "days"
+msgstr[0] "hari"
+
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "jam"
+
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr "Subdirektori ini tidak ada di dalam katalog yang ada. Pembaruan tidak dapat diproses."
+
+msgid "Updated"
+msgstr "Diperbarui"
+
+msgid "No Update Needed"
+msgstr "Tidak diperlukan pembaruan"
+
+msgid "Catalog Cleaned"
+msgstr "Katalog dibersihkan"
+
+#, php-format
+msgid "%d file removed."
+msgid_plural "%d files removed."
+msgstr[0] "%d berkas dihapus."
+
+msgid "Catalog Verified"
+msgstr "Katalog Terverifikasi"
+
+#, php-format
+msgid "%d file updated."
+msgid_plural "%d files updated."
+msgstr[0] "%d berkas dipebarui."
 
 msgid "No username or password was specified"
 msgstr "Tidak ada nama pengguna atau kata sandi yang ditentukan"
@@ -4026,6 +4140,9 @@ msgstr "Path ini milik sebuah Katalog jarak jauh: %s"
 
 msgid "Running Remote Update"
 msgstr "Menjalankan pembaruan jarak jauh"
+
+msgid "URI"
+msgstr "URI"
 
 msgid "Failed to connect to the remote server"
 msgstr "Gagal terhubung ke server jarak jauh"
@@ -4039,47 +4156,8 @@ msgstr[0] "%s lagu telah ditemukan"
 msgid "Remote Catalog Updated"
 msgstr "Remote Catalog Diperbarui"
 
-msgid "Updated"
-msgstr "Diperbarui"
-
 msgid "Completed updating remote Catalog(s)."
 msgstr "Selesai memperbarui katalog jarak jauh."
-
-msgid "Install a Seafile server as described in the documentation"
-msgstr "Pasang server seafile seperti yang dijelaskan dalam dokumentasi"
-
-msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
-"(e.g. 'Music')."
-msgstr "Masukkan URL ke server (mis. https://seafile.example.com') dan nama perpustakaan (mis. 'Musik')."
-
-msgid ""
-"API Call Delay is the delay inserted between repeated requests to Seafile "
-"(such as during an Add or Clean action) to accommodate Seafile's Rate "
-"Limiting."
-msgstr "Tunda panggilan API adalah penundaan yang dimasukkan antara permintaan berulang ke Seafile (seperti selama Tindakan Tambah atau Bersihkan) untuk mengakomodasi batas tingkat Seafile."
-
-msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr "Standarnya disetel menuju pengaturan batas tingkat default Seafile."
-
-msgid ""
-"After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr "Setelah membuat katalog, Anda harus 'membuatnya siap' di atas meja katalog."
-
-msgid "Server URI"
-msgstr "Server URI"
-
-msgid "Library Name"
-msgstr "Nama Perpustakaan"
-
-msgid "API Call Delay"
-msgstr "Tunda Panggilan API"
-
-msgid "Seafile Username/Email"
-msgstr "Nama Pengguna / Email Seafile"
-
-msgid "Seafile Password"
-msgstr "Kata sandi Seafile"
 
 msgid "Seafile server URL is required"
 msgstr "URL Server Seafile diperlukan"
@@ -4111,20 +4189,20 @@ msgstr "Media Total: [%s]"
 msgid "No media was updated, did you respect the patterns?"
 msgstr "Tidak ada media yang diperbarui, apakah Anda mengikuti pola?"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Skipping existing song: %s"
-msgstr "Melewatkan lagu yang ada: %s"
+msgid "Server URI"
+msgstr "Server URI"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Adding a new song: %s"
-msgstr "Menambahkan sebuah lagu baru: %s"
+msgid "Library Name"
+msgstr "Nama Perpustakaan"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Could not add song: %s"
-msgstr "Tidak dapat menambahkan lagu: %s"
+msgid "API Call Delay"
+msgstr "Tunda Panggilan API"
+
+msgid "Seafile Username/Email"
+msgstr "Nama Pengguna / Email Seafile"
+
+msgid "Seafile Password"
+msgstr "Kata sandi Seafile"
 
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
@@ -4134,6 +4212,42 @@ msgstr "Terdapat sebuah kesalahan saat memeriksa lagu ini \"%1$s\": %2$s"
 #, php-format
 msgid "Keeping song: %s"
 msgstr "Menyimpan lagu: %s"
+
+msgid "Install a Seafile server as described in the documentation"
+msgstr "Pasang server seafile seperti yang dijelaskan dalam dokumentasi"
+
+msgid ""
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr "Masukkan URL ke server (mis. https://seafile.example.com') dan nama perpustakaan (mis. 'Musik')."
+
+msgid ""
+"API Call Delay is the delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accommodate Seafile's Rate "
+"Limiting."
+msgstr "Tunda panggilan API adalah penundaan yang dimasukkan antara permintaan berulang ke Seafile (seperti selama Tindakan Tambah atau Bersihkan) untuk mengakomodasi batas tingkat Seafile."
+
+msgid "The default is tuned towards Seafile's default rate limit settings."
+msgstr "Standarnya disetel menuju pengaturan batas tingkat default Seafile."
+
+msgid ""
+"After creating the Catalog, you must 'Make it ready' on the Catalog table."
+msgstr "Setelah membuat katalog, Anda harus 'membuatnya siap' di atas meja katalog."
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Could not add song: %s"
+msgstr "Tidak dapat menambahkan lagu: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Skipping existing song: %s"
+msgstr "Melewatkan lagu yang ada: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Adding a new song: %s"
+msgstr "Menambahkan sebuah lagu baru: %s"
 
 #. HINT: subsonic catalog URI
 #, php-format
@@ -4164,9 +4278,6 @@ msgstr "Tidak dapat meng-otentikasi dengan Seafile"
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr "Tidak dapat menemukan pustaka/library seafile bernama \"%s\", tidak ada media yang diperbarui"
 
-msgid "Failed to create the catalog, check the debug logs"
-msgstr "Gagal membuat katalog, periksa log debug"
-
 msgid "Catalog created"
 msgstr ""
 
@@ -4177,9 +4288,13 @@ msgstr "Batas memori PHP yang dinonaktifkan"
 msgid "Reading Catalog: \"%s\""
 msgstr "Membaca Katalog: \"%s\""
 
+msgid "Skipping catalog, already being processed"
+msgstr ""
+
 msgid "Look for missing file media entries"
 msgstr ""
 
+#. HINT: filename (File path) OR table name (podcast, video, etc)
 #, php-format
 msgid "Missing: %s"
 msgstr ""
@@ -4192,6 +4307,9 @@ msgstr "Mulailah menambahkan media baru"
 
 msgid "Start verifying media related to Catalog entries"
 msgstr "Mulai memverifikasi media yang terkait dengan entri katalog"
+
+msgid "Start scanning folders"
+msgstr ""
 
 msgid "Start searching new media art"
 msgstr "Mulai mencari seni media baru"
@@ -4225,6 +4343,15 @@ msgstr "Terdapat kesalahan dengan parameter Anda"
 msgid "Catalog `%s` not found"
 msgstr "Katalog` %s` tidak ditemukan"
 
+msgid "File not found"
+msgstr ""
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Updated: %s"
+msgstr ""
+
 #, php-format
 msgid "Removing File: \"%s\""
 msgstr "Menghapus Berkas: \"%s\""
@@ -4234,9 +4361,6 @@ msgid "Reading File: \"%s\""
 msgstr "Membaca Berkas: \"%s\""
 
 msgid "Create a local media catalog"
-msgstr ""
-
-msgid "Catalog name"
 msgstr ""
 
 msgid "Catalog Media Type (optional)"
@@ -4264,17 +4388,100 @@ msgstr "Menciptakan %s pengguna %s dengan kata sandi %s"
 msgid "User creation failed"
 msgstr "Pembuatan pengguna gagal"
 
-msgid "Users List"
+msgid ""
+"Clear a cache. Only `perpetual_api_session` persists; object caches live for"
+" one process"
+msgstr ""
+
+msgid "Destroy stored perpetual API sessions"
+msgstr ""
+
+#, php-format
+msgid "Unknown cache type: %s"
+msgstr ""
+
+#, php-format
+msgid "Cleared cache: %s"
+msgstr ""
+
+msgid "Delete a User"
 msgstr ""
 
 msgid "User ID"
 msgstr "Identitas pengguna"
+
+msgid "Delete the User with the name `some-user`"
+msgstr ""
+
+msgid "Disable a User"
+msgstr ""
+
+msgid "Disable the User with the name `some-user`"
+msgstr ""
+
+msgid "Enable a User"
+msgstr ""
+
+msgid "Enable the User with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Database version: %s"
+msgstr ""
+
+msgid "Install a catalog type"
+msgstr ""
+
+msgid "Enable the subsonic catalog type"
+msgstr ""
+
+msgid "Install a localplay controller"
+msgstr ""
+
+msgid "User ID to receive the localplay preferences"
+msgstr ""
+
+msgid "Localplay Type"
+msgstr ""
+
+msgid "Enable the mpd localplay controller"
+msgstr ""
+
+msgid "Install a plugin"
+msgstr ""
+
+msgid "Install the Last.FM plugin"
+msgstr ""
+
+msgid "List plugins, catalog types and localplay controllers"
+msgstr ""
+
+msgid "List all pluggable modules and their installed state"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Enabled"
+msgstr "Diaktifkan"
+
+msgid "Users List"
+msgstr ""
 
 msgid "Find a User with the name `some-user`"
 msgstr ""
 
 #, php-format
 msgid "%s (%d)"
+msgstr ""
+
+msgid "Send an e-mail to a group of users"
+msgstr ""
+
+msgid "Mail all standard users"
+msgstr ""
+
+msgid "Mail is not enabled"
 msgstr ""
 
 msgid "Reset preference values for users"
@@ -4291,6 +4498,24 @@ msgstr ""
 
 msgid "No changes have been made"
 msgstr "Tidak ada perubahan yang dibuat"
+
+msgid "Uninstall a catalog type"
+msgstr ""
+
+msgid "Disable the subsonic catalog type"
+msgstr ""
+
+msgid "Uninstall a localplay controller"
+msgstr ""
+
+msgid "Disable the mpd localplay controller"
+msgstr ""
+
+msgid "Uninstall a plugin"
+msgstr ""
+
+msgid "Uninstall the Last.FM plugin"
+msgstr ""
 
 msgid "Update the Ampache config file"
 msgstr ""
@@ -4316,9 +4541,8 @@ msgstr ""
 msgid "Config version: %s"
 msgstr ""
 
-#, php-format
-msgid "Database version: %s"
-msgstr ""
+msgid "Unable to query the database, check your Ampache config"
+msgstr "Tidak dapat menanyakan basis data, periksa konfigurasi Ampache Anda"
 
 msgid "Missing database tables have been created"
 msgstr ""
@@ -4336,15 +4560,6 @@ msgid ""
 "to rollback"
 msgstr ""
 
-msgid "Update Now!"
-msgstr ""
-
-msgid "The following updates need to be performed:"
-msgstr "Pembaruan berikut perlu untuk dilakukan:"
-
-msgid "No update needed"
-msgstr "Tidak diperlukan pembaruan"
-
 msgid "Update Plugins automatically"
 msgstr ""
 
@@ -4352,6 +4567,22 @@ msgid "Update available"
 msgstr "Pembaruan tersedia"
 
 msgid "Update Preference Access Level"
+msgstr ""
+
+msgid "Set the Subsonic password"
+msgstr ""
+
+msgid "Update API key for user with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Bad Request: %s"
+msgstr "Permintaan Buruk: %s"
+
+msgid "Upgrade a plugin"
+msgstr ""
+
+msgid "Upgrade the Last.FM plugin"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"
@@ -4415,6 +4646,16 @@ msgstr "Mulai proses cache"
 msgid "Completed cache process"
 msgstr "Proses cache yang lengkap"
 
+msgid "Re-enable all disabled songs"
+msgstr ""
+
+msgid "Re-enable every disabled song"
+msgstr ""
+
+#, php-format
+msgid "Re-enabled %d songs"
+msgstr ""
+
 msgid "Update the object cache tables"
 msgstr "Perbarui tabel cache objek"
 
@@ -4441,6 +4682,24 @@ msgstr "Cron cache tidak diaktifkan"
 
 msgid "Cron process finished"
 msgstr "Proses cron selesai"
+
+msgid "Delete a media catalog"
+msgstr ""
+
+msgid "Delete the catalog with ID 3"
+msgstr ""
+
+msgid "Disable a media catalog"
+msgstr ""
+
+msgid "Disable the catalog with ID 3"
+msgstr ""
+
+msgid "Enable a media catalog"
+msgstr ""
+
+msgid "Enable the catalog with ID 3"
+msgstr ""
 
 msgid "Export album art"
 msgstr "Ekspor karyaseni album"
@@ -4469,6 +4728,16 @@ msgstr ""
 msgid "Art Dump Complete"
 msgstr ""
 
+msgid "Export catalog metadata to a file"
+msgstr ""
+
+msgid "Export all catalogs as CSV"
+msgstr ""
+
+#, php-format
+msgid "Exported catalog metadata to %s"
+msgstr ""
+
 msgid "Export Playlists"
 msgstr "Ekspor Daftar Putar"
 
@@ -4493,6 +4762,9 @@ msgid "Export playlists as m3u files to /tmp"
 msgstr "Ekspor daftar putar sebagai berkas M3U ke /tmp"
 
 msgid "Create .htaccess files"
+msgstr ""
+
+msgid "Include the optional web root .htaccess"
 msgstr ""
 
 msgid "Recreate Ampache .htaccess files"
@@ -4549,6 +4821,9 @@ msgstr "Duplikat yang Mungkin"
 msgid "Possible Duplicate Albums"
 msgstr ""
 
+msgid "Invalid Request"
+msgstr "Permintaan tidak valid"
+
 msgid "Print file tags"
 msgstr "Cetak Tag Berkas"
 
@@ -4569,14 +4844,29 @@ msgstr "Hasil mentah:"
 msgid "Final results seen by Ampache using %s:"
 msgstr "Hasil final terlihat oleh Ampache menggunakan %s:"
 
-msgid "Run a Websocket"
-msgstr "Jalankan Webset"
+msgid "Run the websocket server that listen-along broadcasting needs"
+msgstr ""
 
 msgid "Listening port, default 8100"
 msgstr "Port mendengarkan, standar 8100"
 
 msgid "Run the websocket on port 8888"
 msgstr "Jalankan Webset pada port 8888"
+
+msgid "Show a system status and environment report"
+msgstr ""
+
+msgid "Query the remote version (network access required)"
+msgstr ""
+
+msgid "Print a headless status report"
+msgstr ""
+
+msgid "up to date"
+msgstr ""
+
+msgid "Environment"
+msgstr ""
 
 msgid "Delete disabled songs"
 msgstr "Hapus lagu-lagu yang dinonaktifkan"
@@ -4605,11 +4895,61 @@ msgstr ""
 msgid "Sets the default name for `Various Artists`"
 msgstr "Tetapkan nama standar untuk `Berbagai Artis`"
 
+msgid "Sort a single file or folder path"
+msgstr ""
+
 msgid "Name of Catalog (optional)"
 msgstr "Nama katalog (opsional)"
 
 msgid "Sort song files"
 msgstr "Urutkan berkas lagu"
+
+msgid "Consolidate old play history into summary counts"
+msgstr ""
+
+msgid "Only consolidate this count type (stream, skip, download)"
+msgstr ""
+
+msgid "Show what would be consolidated (dry-run)"
+msgstr ""
+
+msgid ""
+"Stats consolidation is disabled. Set stats_consolidate_threshold in your "
+"ampache.cfg.php to the number of days of detailed play history to keep"
+msgstr ""
+
+#, php-format
+msgid "%d rows consolidated into %d summary rows"
+msgstr ""
+
+msgid "Run OPTIMIZE TABLE on object_count to reclaim disk space"
+msgstr ""
+
+#. HINT: %1 row count, %2 group count
+#, php-format
+msgid "%d rows would be consolidated into %d summary rows (dry-run)"
+msgstr ""
+
+msgid "Restore consolidated play history from the archive"
+msgstr ""
+
+msgid "Show what would be restored (dry-run)"
+msgstr ""
+
+msgid "The play history archive is empty, there is nothing to restore"
+msgstr ""
+
+#. HINT: %1 archived row count, %2 rebuilt album/artist/podcast row count
+#, php-format
+msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
+msgstr ""
+
+msgid "Updating counts"
+msgstr ""
+
+#, php-format
+msgid "%d rows would be restored (dry-run)"
+msgstr ""
 
 msgid ""
 "Perform catalog actions for all files of a catalog. If no options are given,"
@@ -4637,6 +4977,9 @@ msgstr ""
 msgid "Optimizes database tables"
 msgstr "Mengoptimalkan tabel database"
 
+msgid "Scan Local Catalog folders for folder browsing"
+msgstr ""
+
 msgid "Temporarily deactivates PHP memory limit"
 msgstr "Untuk sementara waktu, menonaktifkan batas memori PHP"
 
@@ -4646,9 +4989,25 @@ msgstr "Perbarui katalog lokal yang disebut `beberapa katalog`"
 msgid "Perform catalog actions for a single file"
 msgstr "Lakukan tindakan katalog untuk satu berkas"
 
+msgid "Move file in the database to a new location"
+msgstr ""
+
+msgid "Update file path in the database to a new location"
+msgstr ""
+
 #. HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album)
 #, php-format
 msgid "Update %s in the catalog `some-catalog`"
+msgstr ""
+
+#, php-format
+msgid "Rename %s to %s in the catalog `some-catalog`"
+msgstr ""
+
+msgid "Move (-m|--move) cannot be used with other options enabled"
+msgstr ""
+
+msgid "Rename (-r|--rename) cannot be used with other options enabled"
 msgstr ""
 
 msgid "Perform catalog actions for a single folder"
@@ -4675,6 +5034,283 @@ msgstr "Perbandingan target: %s"
 #, php-format
 msgid "Table engine: %s"
 msgstr "Mesin tabel: %s"
+
+msgid "Collection Items"
+msgstr ""
+
+msgid "Current Playlist"
+msgstr "Daftar putar saat ini"
+
+msgid "Playlist Items"
+msgstr "Item daftar putar"
+
+msgid "Shoutbox Records"
+msgstr "Catatan Shoutbox"
+
+msgid "Wanted Albums"
+msgstr "Dicari Album"
+
+#, php-format
+msgid ""
+"This view has %d item and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgid_plural ""
+"This view has %d items and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgstr[0] ""
+
+msgid "Browse was not found or expired, try reloading the page"
+msgstr "Browse tidak ditemukan atau kadaluwarsa, cobalah memuat ulang halaman"
+
+msgid "0 Stars"
+msgstr "0 Bintang"
+
+msgid "1 Star"
+msgstr "1 bintang"
+
+msgid "2 Stars"
+msgstr "2 bintang"
+
+msgid "3 Stars"
+msgstr "3 Bintang"
+
+msgid "4 Stars"
+msgstr "4 Bintang"
+
+msgid "5 Stars"
+msgstr "5 Bintang"
+
+msgid "Album Data"
+msgstr ""
+
+msgid "Length (in minutes)"
+msgstr "Panjang (dalam hitungan menit)"
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
+msgstr ""
+
+msgid "Database ID"
+msgstr ""
+
+msgid "My Rating"
+msgstr "Rating saya"
+
+msgid "Rating (Average)"
+msgstr "Rating (rata-rata)"
+
+msgid "My Rating (Song)"
+msgstr ""
+
+msgid "My Rating (Artist)"
+msgstr "Peringkat Saya (Artis)"
+
+msgid "My Favorite Songs"
+msgstr ""
+
+msgid "My Favorite Albums"
+msgstr ""
+
+msgid "My Favorite Artists"
+msgstr ""
+
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
+msgstr ""
+
+msgid "Another User"
+msgstr "Pengguna lain"
+
+msgid "Play History"
+msgstr ""
+
+#. HINT: Number of times object has been played
+msgid "# Played"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped"
+msgstr "# Dimainkan atau dilewati"
+
+msgid "My Last Play"
+msgstr "Permainan terakhirku"
+
+msgid "My Last Skip"
+msgstr "Lewati terakhirku"
+
+msgid "My Last Play or Skip"
+msgstr "Putar terakhir saya atau lewati"
+
+msgid "Played by Me"
+msgstr "Dimainkan olehku"
+
+msgid "Played by Me (Artist)"
+msgstr "Diputar olehku (artis)"
+
+#. HINT: Number of times object has been played
+msgid "# Played by Me"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped by Me"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped by Me"
+msgstr ""
+
+msgid "Mood"
+msgstr ""
+
+msgid "Song Genre"
+msgstr ""
+
+msgid "Song Count (Genre)"
+msgstr ""
+
+msgid "Album Count (Genre)"
+msgstr ""
+
+msgid "Artist Count (Genre)"
+msgstr ""
+
+msgid "File Data"
+msgstr ""
+
+msgid "Date Updated"
+msgstr ""
+
+msgid "Image Width"
+msgstr "Lebar gambar"
+
+msgid "Image Height"
+msgstr "Tinggi gambar"
+
+msgid "Recently Added"
+msgstr ""
+
+msgid "Duplicate Album Tracks"
+msgstr ""
+
+msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr "ID MusicBrainz (artis)"
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "Album Count"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr "Peringkat Saya (Album)"
+
+msgid "MusicBrainz ID (Album)"
+msgstr "ID musicbrainz (album)"
+
+msgid "public"
+msgstr ""
+
+msgid "private"
+msgstr ""
+
+msgid "Episode Count"
+msgstr ""
+
+msgid "skipped"
+msgstr ""
+
+msgid "pending"
+msgstr ""
+
+msgid "completed"
+msgstr ""
+
+msgid "My Rating (Podcast)"
+msgstr ""
+
+msgid "My Rating (Podcast Episode)"
+msgstr ""
+
+msgid "My Favorite Podcasts"
+msgstr ""
+
+msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
+msgstr ""
+
+msgid "Any searchable text"
+msgstr "Teks yang dapat dicari"
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr ""
+
+msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Another User (Album)"
+msgstr "Pengguna lain (album)"
+
+msgid "Another User (Artist)"
+msgstr "Pengguna lain (artis)"
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr "Rasio bermain / dilewati"
+
+msgid "Played by Me (Album)"
+msgstr "Dimainkan oleh saya (album)"
+
+msgid "Album Genre"
+msgstr ""
+
+msgid "Artist Genre"
+msgstr ""
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
+msgid "Artist Count"
+msgstr ""
+
+msgid "Video Count"
+msgstr ""
 
 msgid "HTTPQ Active Instance"
 msgstr "Instance aktif httpq"
@@ -4730,15 +5366,6 @@ msgstr "Daftar putar dibuat \"%s\""
 msgid "Ampache podcast subscriptions"
 msgstr ""
 
-msgid "skipped"
-msgstr ""
-
-msgid "pending"
-msgstr ""
-
-msgid "completed"
-msgstr ""
-
 msgid "Advanced Share"
 msgstr "Bagikan pintar"
 
@@ -4766,11 +5393,6 @@ msgstr "Memulai Katalog: %s"
 msgid "Catalog Block: %s"
 msgstr ""
 
-#, php-format
-msgid "%d file updated."
-msgid_plural "%d files updated."
-msgstr[0] "%d berkas dipebarui."
-
 msgid "Examine File..."
 msgstr "Periksa berkas ..."
 
@@ -4787,34 +5409,38 @@ msgid "Destin: %s"
 msgstr "Destinasi: %s"
 
 #, php-format
-msgid "Create directory \"%s\""
-msgstr "Buat direktori \"%s\""
-
-#, php-format
 msgid "Don't overwrite an existing file: \"%s\""
 msgstr "Jangan menimpa sebuah berkas yang sudah ada: \"%s\""
 
-#, php-format
-msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr "Menyalin \"%1$s\" ke \"%2$s\""
+msgid " Stars"
+msgstr ""
 
 #, php-format
-msgid "There was an error trying to copy file to \"%s\""
-msgstr "Terdapat kesalahan saat mecoba menyalin berkas ke \"%s\""
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+
+msgid "Average from all users"
+msgstr ""
+
+msgid "not rated yet"
+msgstr "belum dinilai"
 
 #, php-format
-msgid "Size comparison failed. Not deleting \"%s\""
-msgstr "Perbandingan ukuran gagal. Tidak menghapus \"%s\""
+msgid "%s of 5"
+msgstr "%s dari 5"
 
-#, php-format
-msgid "There was an error trying to delete \"%s\""
-msgstr "Ada kesalahan yang mencoba menghapus \"%s\""
+msgid "Current rating"
+msgstr "Peringkat saat ini"
+
+msgid "Unfavorite"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
 
 msgid "View changes"
 msgstr "Lihat Perubahan"
-
-msgid "Updating Ampache sources with `"
-msgstr "Memperbarui sumber ampache dengan `"
 
 msgid "Updating dependencies with `"
 msgstr "Memperbarui dependensi dengan `"
@@ -4822,20 +5448,48 @@ msgstr "Memperbarui dependensi dengan `"
 msgid "Updating npm build with `"
 msgstr ""
 
-msgid "Invalid configuration settings"
-msgstr "Pengaturan konfigurasi tidak valid"
+#. HINT: comma separated list of filesystem paths
+#, php-format
+msgid "Unable to update dependencies: the web server user cannot write to %s"
+msgstr ""
+
+msgid "Updating Ampache sources with `"
+msgstr "Memperbarui sumber ampache dengan `"
+
+msgid ""
+"Unable to run the update: the PHP exec() function is disabled on this server"
+msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
 msgstr "Tidak dapat terhubung ke database, periksa konfigurasi Ampache Anda"
 
-msgid "Unable to query the database, check your Ampache config"
-msgstr "Tidak dapat menanyakan basis data, periksa konfigurasi Ampache Anda"
-
 msgid "Existing database was detected, unable to continue the installation"
 msgstr "Database yang tersedia tidak terdeteksi, tidak dapat melanjutkan pemasangan"
 
+#. HINT: Database error message
+#, php-format
+msgid "Connection to the database failed: %s"
+msgstr "Koneksi ke database gagal : %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Database select failed: %s"
+msgstr "Pilih database gagal : %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Administrative user creation failed: %s"
+msgstr "Pembuatan pengguna administrasi gagal : %s"
+
+msgid ""
+"Connection to the database failed: Check hostname, username and password"
+msgstr "Koneksi ke database gagal : periksa nama host, nama pengguna dan kata sandi"
+
 msgid "Config file is not writable"
 msgstr "Berkas konfigurasi tidak dapat ditulis"
+
+msgid "Failed writing config file"
+msgstr "Menulis Berkas Konfigurasi gagal"
 
 msgid "Database name is invalid"
 msgstr "Nama database tidak valid"
@@ -4866,32 +5520,12 @@ msgstr "Tidak dapat memberikan izin untuk \"%1$s\" untuk pengguna \"%2$s\" di \"
 msgid "Unable to open ampache.sql"
 msgstr ""
 
-msgid ""
-"Connection to the database failed: Check hostname, username and password"
-msgstr "Koneksi ke database gagal : periksa nama host, nama pengguna dan kata sandi"
-
-msgid "Failed writing config file"
-msgstr "Menulis Berkas Konfigurasi gagal"
-
-#. HINT: Database error message
+#. HINT: Database version number
 #, php-format
-msgid "Connection to the database failed: %s"
-msgstr "Koneksi ke database gagal : %s"
+msgid "Unable to update the database schema from version %s"
+msgstr ""
 
-#. HINT: Database error message
-#, php-format
-msgid "Database select failed: %s"
-msgstr "Pilih database gagal : %s"
-
-#. HINT: Database error message
-#, php-format
-msgid "Administrative user creation failed: %s"
-msgstr "Pembuatan pengguna administrasi gagal : %s"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Updated: %s"
+msgid "You have Plugins that need an update!"
 msgstr ""
 
 msgid "commented on"
@@ -4958,9 +5592,6 @@ msgstr "Untuk mulai menggunakan akun Anda, Anda harus memverifikasi alamat email
 msgid "A new user has registered, the following values were entered:"
 msgstr "\"Pengguna baru telah mendaftar, nilai berikut yang telah dimasukkan:"
 
-msgid "Fullname"
-msgstr "Nama Lengkap"
-
 #, php-format
 msgid "Account enabled at %s"
 msgstr "Akun diaktifkan pada %s"
@@ -4979,6 +5610,9 @@ msgstr "Memeriksa %1$s (%2$s)"
 
 msgid "Finished checking file names for valid characters"
 msgstr "Selesai memeriksa nama berkas untuk karakter yang valid"
+
+msgid "There was an error trying to check the file names for valid characters"
+msgstr ""
 
 #, php-format
 msgid "There was an error trying to open \"%s\""
@@ -5024,20 +5658,39 @@ msgid "File moved..."
 msgstr "Berkas pindah ..."
 
 #, php-format
+msgid "%1$s on %2$s"
+msgstr ""
+
+#, php-format
 msgid "%s on %s"
 msgstr ""
 
 msgid "Play date"
 msgstr ""
 
-msgid "Enabled"
-msgstr "Diaktifkan"
+msgid "Add to playlist"
+msgstr "Tambah ke daftar putar"
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Add to playlist / collection"
+msgstr ""
 
 msgid "On"
 msgstr "Di"
 
 msgid "Off"
 msgstr "Nonaktif"
+
+msgid "bps"
+msgstr ""
+
+msgid "0 = use the source file rate"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
 
 msgid "M3U"
 msgstr "M3u"
@@ -5068,21 +5721,6 @@ msgstr ""
 
 msgid "Allow API6 Only"
 msgstr ""
-
-msgid "1 Star"
-msgstr "1 bintang"
-
-msgid "2 Stars"
-msgstr "2 bintang"
-
-msgid "3 Stars"
-msgstr "3 Bintang"
-
-msgid "4 Stars"
-msgstr "4 Bintang"
-
-msgid "5 Stars"
-msgstr "5 Bintang"
 
 msgid "Keep last played track"
 msgstr ""
@@ -5124,17 +5762,11 @@ msgstr "Sorot Nama turun"
 msgid "Click to grant %s access to Ampache"
 msgstr "Klik untuk memberikan %s akses ke Ampache"
 
+msgid "Match my theme"
+msgstr ""
+
 msgid "Unknown Artist"
 msgstr "Artis Tidak Dikenal"
-
-msgid "Song preview from 7digital"
-msgstr "Lagu Pratinjau dari 7Digital"
-
-msgid "7digital consumer key"
-msgstr "Kunci Konsumen 7Digital"
-
-msgid "7digital secret"
-msgstr "Rahasia 7Digital"
 
 msgid "Amazon art search"
 msgstr "Pencarian Seni Amazon"
@@ -5154,6 +5786,12 @@ msgstr "Kunci Akses Rahasia Amazon"
 msgid "Amazon associate tag"
 msgstr "Tag Associate Amazon"
 
+msgid "Sonic similarity from an AudioMuse-AI server"
+msgstr ""
+
+msgid "AudioMuse-AI server URL"
+msgstr ""
+
 msgid "URL shorteners on shared links with Bit.ly"
 msgstr "Pengendaraan URL pada tautan bersama dengan bit.ly"
 
@@ -5169,6 +5807,9 @@ msgstr ""
 msgid "Catalog favorites on homepage"
 msgstr "Katalog Favorit di Homepage"
 
+msgid "Highlight"
+msgstr "Menyoroti"
+
 msgid "Catalog favorites max items"
 msgstr "Katalog Favorit Item Max"
 
@@ -5181,11 +5822,11 @@ msgstr ""
 msgid "Catalog favorites media row display"
 msgstr ""
 
-msgid "Highlight"
-msgstr "Menyoroti"
-
 msgid "Get lyrics from ChartLyrics"
 msgstr "Dapatkan lirik dari Chartllyrics"
+
+msgid "Song preview from Deezer"
+msgstr ""
 
 msgid "Discogs metadata integration"
 msgstr "Discogs Metadata Integration"
@@ -5208,11 +5849,11 @@ msgstr "Kunci Api Flickr"
 msgid "Friend's Timeline on homepage"
 msgstr "Timeline teman di beranda"
 
-msgid "Friends timeline max items"
-msgstr "Friends Timeline Max Item"
-
 msgid "Friends Timeline"
 msgstr "Timeline Teman"
+
+msgid "Friends timeline max items"
+msgstr "Friends Timeline Max Item"
 
 msgid "Google Analytics statistics"
 msgstr "Statistik Google Analytics"
@@ -5223,14 +5864,14 @@ msgstr "ID Pelacakan Google Analytics"
 msgid "Show user's location with Google Maps"
 msgstr "Tampilkan lokasi pengguna dengan Google Maps"
 
-msgid "Google Maps API key"
-msgstr "Kunci Google Maps API"
-
 msgid "Hits"
 msgstr "Hits"
 
 msgid "Last activity"
 msgstr "Aktivitas terakhir"
+
+msgid "Google Maps API key"
+msgstr "Kunci Google Maps API"
 
 msgid "User's avatars from Gravatar"
 msgstr "Avatar Pengguna dari Gravatar"
@@ -5248,6 +5889,9 @@ msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
 msgid "Home Dashboard max items"
+msgstr ""
+
+msgid "Song preview from the iTunes Search API"
 msgstr ""
 
 msgid "Scrobble songs you play to your Last.FM account"
@@ -5280,6 +5924,12 @@ msgstr "Mendengar token pengguna"
 msgid "ListenBrainz API URL"
 msgstr ""
 
+msgid "Get lyrics from an LrcLib compatible server"
+msgstr ""
+
+msgid "LrcLib site URL"
+msgstr ""
+
 msgid "Get lyrics from a public Lyrist instance"
 msgstr ""
 
@@ -5304,20 +5954,23 @@ msgstr "Integrasi Metadata MusicBrainz"
 msgid "PayPal donation button on user page"
 msgstr "Tombol Donasi Paypal pada Halaman Pengguna"
 
-msgid "PayPal ID"
-msgstr "ID Paypal"
-
-msgid "PayPal Currency Code"
-msgstr "Kode Mata Uang Paypal"
-
 msgid "on"
 msgstr "pada"
 
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr "Paypal - cara yang lebih aman, lebih mudah untuk membayar online!"
 
+msgid "PayPal ID"
+msgstr "ID Paypal"
+
+msgid "PayPal Currency Code"
+msgstr "Kode Mata Uang Paypal"
+
 msgid "Personal favorites on homepage"
 msgstr "Favorit pribadi di beranda"
+
+msgid "Favorite Lists"
+msgstr "Daftar Favorit"
 
 msgid "Personal favorites on the homepage"
 msgstr "Favorit pribadi di beranda"
@@ -5327,9 +5980,6 @@ msgstr "Daftar putar favorit"
 
 msgid "Favorite Smartlists"
 msgstr "SmartLists favorit"
-
-msgid "Favorite Lists"
-msgstr "Daftar Favorit"
 
 msgid "Piwik statistics"
 msgstr "Statistik Piwik"
@@ -5442,378 +6092,19 @@ msgstr "Rilis Group MusicBrainzid"
 msgid "Artist MusicBrainzID"
 msgstr "Artis musicbrainzid"
 
-msgid "Edit/Find Art"
-msgstr "Edit / temukan seni"
-
-msgid "Do you really want to reset art?"
-msgstr "Apakah kamu benar-benar ingin mengatur ulang seni?"
-
-msgid "Reset Art"
-msgstr "Reset Seni"
-
-msgid "Broadcast Edit"
-msgstr "Siaran Edit"
-
-msgid "Broadcast"
-msgstr "Siaran"
-
-msgid "Unbroadcast"
-msgstr "Uncroadcast"
-
-msgid "Playlist Items"
-msgstr "Item daftar putar"
-
-msgid "Current Playlist"
-msgstr "Daftar putar saat ini"
-
-msgid "Shoutbox Records"
-msgstr "Catatan Shoutbox"
-
-msgid "Wanted Albums"
-msgstr "Dicari Album"
-
-msgid "Private Messages"
-msgstr "Pesan pribadi"
-
-msgid "day"
-msgid_plural "days"
-msgstr[0] "hari"
-
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "jam"
-
-msgid "No Update Needed"
-msgstr "Tidak diperlukan pembaruan"
-
-msgid "Catalog Cleaned"
-msgstr "Katalog dibersihkan"
-
-#, php-format
-msgid "%d file removed."
-msgid_plural "%d files removed."
-msgstr[0] "%d berkas dihapus."
-
-msgid "Catalog Verified"
-msgstr "Katalog Terverifikasi"
-
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
-msgstr "Subdirektori ini tidak ada di dalam katalog yang ada. Pembaruan tidak dapat diproses."
-
-msgid "Name is required"
-msgstr "Nama diperlukan"
-
-msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr ""
+msgid "Codec is required (e.g. MP3, OGG...)"
+msgstr "Codec diperlukan (mis. Mp3, Ogg ...)"
 
 msgid "URL is invalid, must be http:// or https://"
 msgstr "URL tidak valid, harus http:// atau https://"
 
-msgid "Codec is required (e.g. MP3, OGG...)"
-msgstr "Codec diperlukan (mis. Mp3, Ogg ...)"
-
 msgid "Catalog is invalid"
 msgstr "Katalog tidak valid"
 
-msgid "You have Plugins that need an update!"
+msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-msgid "Browse was not found or expired, try reloading the page"
-msgstr "Browse tidak ditemukan atau kadaluwarsa, cobalah memuat ulang halaman"
-
-msgid "0 Stars"
-msgstr "0 Bintang"
-
-msgid " Stars"
-msgstr ""
-
-msgid "Average from all users"
-msgstr ""
-
-msgid "not rated yet"
-msgstr "belum dinilai"
-
-#, php-format
-msgid "%s of 5"
-msgstr "%s dari 5"
-
-msgid "Current rating"
-msgstr "Peringkat saat ini"
-
-msgid "is greater than or equal to"
-msgstr "lebih besar atau sama dengan"
-
-msgid "is less than or equal to"
-msgstr "kurang dari atau sama dengan"
-
-msgid "equals"
-msgstr "sama"
-
-msgid "does not equal"
-msgstr "tidak sama"
-
-msgid "is greater than"
-msgstr "lebih besar dari"
-
-msgid "is less than"
-msgstr "kurang dari"
-
-msgid "is true"
-msgstr "adalah benar"
-
-msgid "is false"
-msgstr "salah"
-
-msgid "contains"
-msgstr "mengandung"
-
-msgid "does not contain"
-msgstr "tidak mengandung"
-
-msgid "starts with"
-msgstr "dimulai dengan"
-
-msgid "ends with"
-msgstr "berakhir dengan"
-
-msgid "is"
-msgstr "aku s"
-
-msgid "is not"
-msgstr "tidak"
-
-msgid "sounds like"
-msgstr "terdengar seperti"
-
-msgid "does not sound like"
-msgstr "tidak terdengar seperti"
-
-msgid "matches regular expression"
-msgstr "cocok dengan ekspresi reguler"
-
-msgid "does not match regular expression"
-msgstr "tidak cocok dengan ekspresi reguler"
-
-msgid "before"
-msgstr "sebelum"
-
-msgid "after"
-msgstr "setelah"
-
-msgid "before (x) days ago"
-msgstr "sebelum (x) hari yang lalu"
-
-msgid "after (x) days ago"
-msgstr "setelah (x) hari yang lalu"
-
-msgid "has loved"
-msgstr "sudah Dicintai"
-
-msgid "has rated 5 stars"
-msgstr "nilai 5 bintang"
-
-msgid "has rated 4 stars"
-msgstr "nilai 4 bintang"
-
-msgid "has rated 3 stars"
-msgstr "nilai 3 bintang"
-
-msgid "has rated 2 stars"
-msgstr "nilai 2 bintang"
-
-msgid "has rated 1 star"
-msgstr "telah memberi peringkat 1 bintang"
-
-msgid "has not rated"
-msgstr "belum dinilai"
-
-msgid "Any searchable text"
-msgstr "Teks yang dapat dicari"
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Length (in minutes)"
-msgstr "Panjang (dalam hitungan menit)"
-
-msgid "Database ID"
-msgstr ""
-
-msgid "My Rating"
-msgstr "Rating saya"
-
-msgid "Rating (Average)"
-msgstr "Rating (rata-rata)"
-
-msgid "My Rating (Album)"
-msgstr "Peringkat Saya (Album)"
-
-msgid "My Rating (Artist)"
-msgstr "Peringkat Saya (Artis)"
-
-msgid "My Favorite Songs"
-msgstr ""
-
-msgid "My Favorite Albums"
-msgstr ""
-
-msgid "My Favorite Artists"
-msgstr ""
-
-msgid "Favorites (Album)"
-msgstr ""
-
-msgid "Favorites (Artist)"
-msgstr ""
-
-msgid "Another User"
-msgstr "Pengguna lain"
-
-msgid "Another User (Album)"
-msgstr "Pengguna lain (album)"
-
-msgid "Another User (Artist)"
-msgstr "Pengguna lain (artis)"
-
-msgid "Play History"
-msgstr ""
-
-#. HINT: Number of times object has been played
-msgid "# Played"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped"
-msgstr "# Dimainkan atau dilewati"
-
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr "Rasio bermain / dilewati"
-
-msgid "My Last Play"
-msgstr "Permainan terakhirku"
-
-msgid "My Last Skip"
-msgstr "Lewati terakhirku"
-
-msgid "My Last Play or Skip"
-msgstr "Putar terakhir saya atau lewati"
-
-msgid "Played by Me"
-msgstr "Dimainkan olehku"
-
-msgid "Played by Me (Album)"
-msgstr "Dimainkan oleh saya (album)"
-
-msgid "Played by Me (Artist)"
-msgstr "Diputar olehku (artis)"
-
-#. HINT: Number of times object has been played
-msgid "# Played by Me"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped by Me"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped by Me"
-msgstr ""
-
-msgid "Recently played"
-msgstr ""
-
-msgid "Album Genre"
-msgstr ""
-
-msgid "Artist Genre"
-msgstr ""
-
-msgid "Song Count"
-msgstr ""
-
-msgid "Album Count"
-msgstr ""
-
-msgid "Artist Count"
-msgstr ""
-
-msgid "File Data"
-msgstr ""
-
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently added"
-msgstr "Baru-baru ini ditambahkan"
-
-msgid "Recently updated"
-msgstr "Baru-baru ini Diperbarui"
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr "ID musicbrainz (album)"
-
-msgid "MusicBrainz ID (Artist)"
-msgstr "ID MusicBrainz (artis)"
-
-msgid "Metadata"
-msgstr "Metadata"
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "Album Title"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
-msgid "Image Width"
-msgstr "Lebar gambar"
-
-msgid "Image Height"
-msgstr "Tinggi gambar"
-
-msgid "MusicBrainz ID (Song)"
-msgstr ""
-
-msgid "Album Data"
-msgstr ""
-
-msgid "Disk Count"
-msgstr ""
-
-msgid "Duplicate MusicBrainz Release Group"
-msgstr ""
-
-msgid "public"
-msgstr ""
-
-msgid "private"
-msgstr ""
-
-msgid "Episode Count"
-msgstr ""
-
-msgid "Video Count"
+msgid "User set"
 msgstr ""
 
 msgid "Share Edit"
@@ -5822,17 +6113,11 @@ msgstr "Bagikan Edit"
 msgid "Track MusicBrainzID"
 msgstr "Trek MusicBrainzid"
 
-msgid "Unfavorite"
-msgstr ""
-
-msgid "Favorite"
-msgstr ""
+msgid "User avatar"
+msgstr "Pengguna Avatar"
 
 msgid "Username is required"
 msgstr ""
-
-msgid "User avatar"
-msgstr "Pengguna Avatar"
 
 msgid "Afar"
 msgstr "Afar"
@@ -6392,682 +6677,6 @@ msgstr "Menerima"
 msgid "Add to wanted list"
 msgstr "Tambahkan ke daftar yang diinginkan"
 
-# This file lists all description strings from your Ampache-database ->
-# preference-table.
-# Please do not delete or modify the content by yourself. It will be
-# automatically (re)generated
-# if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 08.07.2025 09:44:34 AEST
-# 
-#: Database preference table id 1
-msgid "Allow Downloads"
-msgstr ""
-
-#: Database preference table id 4
-msgid "Popular Threshold"
-msgstr ""
-
-#: Database preference table id 19
-msgid "Transcode Bitrate"
-msgstr ""
-
-#: Database preference table id 22
-msgid "Website Title"
-msgstr ""
-
-#: Database preference table id 23
-msgid "Lock Songs"
-msgstr ""
-
-#: Database preference table id 24
-msgid "Force HTTP playback regardless of port"
-msgstr ""
-
-#: Database preference table id 29
-msgid "Playback Type"
-msgstr ""
-
-#: Database preference table id 32
-msgid "Playlist Type"
-msgstr ""
-
-#: Database preference table id 33
-msgid "Theme"
-msgstr ""
-
-#: Database preference table id 40
-msgid "Localplay Access"
-msgstr ""
-
-#: Database preference table id 41
-msgid "Localplay Type"
-msgstr ""
-
-#: Database preference table id 44
-msgid "Allow Streaming"
-msgstr ""
-
-#: Database preference table id 45
-msgid "Allow Democratic Play"
-msgstr ""
-
-#: Database preference table id 46
-msgid "Allow Localplay Play"
-msgstr ""
-
-#: Database preference table id 47
-msgid "Statistics Day Threshold"
-msgstr ""
-
-#: Database preference table id 51
-msgid "Offset Limit"
-msgstr ""
-
-#: Database preference table id 52
-msgid "Rate Limit"
-msgstr ""
-
-#: Database preference table id 53
-msgid "Playlist Method"
-msgstr ""
-
-#: Database preference table id 69
-msgid "Show lyrics"
-msgstr ""
-
-#: Database preference table id 71
-msgid "httpQ Active Instance"
-msgstr ""
-
-#: Database preference table id 82
-msgid "Now Playing filtered per user"
-msgstr ""
-
-#: Database preference table id 83
-msgid "Album - Default sort"
-msgstr ""
-
-#: Database preference table id 84
-msgid "Show # played"
-msgstr ""
-
-#: Database preference table id 85
-msgid "Show current song in Web Player page title"
-msgstr ""
-
-#: Database preference table id 86
-msgid "Use Subsonic backend"
-msgstr ""
-
-#: Database preference table id 88
-msgid "Authorize Flash Web Player"
-msgstr ""
-
-#: Database preference table id 89
-msgid "Authorize HTML5 Web Player"
-msgstr ""
-
-#: Database preference table id 90
-msgid "Share Now Playing information"
-msgstr ""
-
-#: Database preference table id 91
-msgid "Share Recently Played information"
-msgstr ""
-
-#: Database preference table id 92
-msgid ""
-"Share Recently Played information - Allow access to streaming date/time"
-msgstr ""
-
-#: Database preference table id 93
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Database preference table id 94
-msgid "Fix header position on compatible themes"
-msgstr ""
-
-#: Database preference table id 95
-msgid "Check for Ampache updates automatically"
-msgstr ""
-
-#: Database preference table id 96
-msgid "AutoUpdate last check time"
-msgstr ""
-
-#: Database preference table id 97
-msgid "AutoUpdate last version from last check"
-msgstr ""
-
-#: Database preference table id 98
-msgid "AutoUpdate last version from last check is newer"
-msgstr ""
-
-#: Database preference table id 99
-msgid "Confirmation when closing current playing window"
-msgstr ""
-
-#: Database preference table id 100
-msgid "Auto-pause between tabs"
-msgstr ""
-
-#: Database preference table id 101
-msgid "Enable URL Rewriting"
-msgstr ""
-
-#: Database preference table id 102
-msgid "Allow Share"
-msgstr ""
-
-#: Database preference table id 103
-msgid "Share links default expiration days (0=never)"
-msgstr ""
-
-#: Database preference table id 104
-msgid "Artist slideshow inactivity time"
-msgstr ""
-
-#: Database preference table id 105
-msgid "Broadcast web player by default"
-msgstr ""
-
-#: Database preference table id 108
-msgid "Album - Group multiple disks"
-msgstr ""
-
-#: Database preference table id 109
-msgid "Top menu"
-msgstr ""
-
-#: Database preference table id 110
-msgid "Democratic - Clear votes for expired user sessions"
-msgstr ""
-
-#: Database preference table id 111
-msgid "Show donate button in footer"
-msgstr ""
-
-#: Database preference table id 113
-msgid "Allow user uploads"
-msgstr ""
-
-#: Database preference table id 114
-msgid "Create a subdirectory per user"
-msgstr ""
-
-#: Database preference table id 115
-msgid "Consider the user sender as the track's artist"
-msgstr ""
-
-#: Database preference table id 116
-msgid "Post-upload script (current directory = upload target directory)"
-msgstr ""
-
-#: Database preference table id 117
-msgid "Allow users to edit uploaded songs"
-msgstr ""
-
-#: Database preference table id 118
-msgid "Use DAAP backend"
-msgstr ""
-
-#: Database preference table id 119
-msgid "DAAP backend password"
-msgstr ""
-
-#: Database preference table id 120
-msgid "Use UPnP backend"
-msgstr ""
-
-#: Database preference table id 121
-msgid "Allow Video Features"
-msgstr ""
-
-#: Database preference table id 122
-msgid "Album - Group per release type"
-msgstr ""
-
-#: Database preference table id 123
-msgid "Ajax page load"
-msgstr ""
-
-#: Database preference table id 124
-msgid "Limit direct play to maximum media count"
-msgstr ""
-
-#: Database preference table id 125
-msgid "Show Albums of the Moment"
-msgstr ""
-
-#: Database preference table id 126
-msgid "Show Videos of the Moment"
-msgstr ""
-
-#: Database preference table id 127
-msgid "Show Recently Played"
-msgstr ""
-
-#: Database preference table id 128
-msgid "Show Now Playing"
-msgstr ""
-
-#: Database preference table id 129
-msgid "Custom URL - Logo"
-msgstr ""
-
-#: Database preference table id 130
-msgid "Album - Group per release type sort"
-msgstr ""
-
-#: Database preference table id 131
-msgid "Web Player browser notifications"
-msgstr ""
-
-#: Database preference table id 132
-msgid "Web Player browser notifications timeout (seconds)"
-msgstr ""
-
-#: Database preference table id 133
-msgid "Allow Geolocation"
-msgstr ""
-
-#: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
-msgstr ""
-
-#: Database preference table id 135
-msgid "Allow users to remove uploaded songs"
-msgstr ""
-
-#: Database preference table id 136
-msgid "Custom URL - Login page logo"
-msgstr ""
-
-#: Database preference table id 137
-msgid "Custom URL - Favicon"
-msgstr ""
-
-#: Database preference table id 138
-msgid "Custom text footer"
-msgstr ""
-
-#: Database preference table id 139
-msgid "Use WebDAV backend"
-msgstr ""
-
-#: Database preference table id 140
-msgid "Allow E-mail notifications"
-msgstr ""
-
-#: Database preference table id 141
-msgid "Theme color"
-msgstr ""
-
-#: Database preference table id 142
-msgid "Custom metadata - Disable these fields"
-msgstr ""
-
-#: Database preference table id 143
-msgid "Custom metadata - Define field list"
-msgstr ""
-
-#: Database preference table id 144
-msgid "# latest episodes to keep"
-msgstr ""
-
-#: Database preference table id 145
-msgid "# episodes to download when new episodes are available"
-msgstr ""
-
-#: Database preference table id 146
-msgid "Library item context menu"
-msgstr ""
-
-#: Database preference table id 147
-msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
-
-#: Database preference table id 148
-msgid "Check library item at import time and disable duplicates"
-msgstr ""
-
-#: Database preference table id 149
-msgid "Show filter box on browse"
-msgstr ""
-
-#: Database preference table id 150
-msgid "Light sidebar by default"
-msgstr ""
-
-#: Database preference table id 151
-msgid "Custom blank album default image"
-msgstr ""
-
-#: Database preference table id 153
-msgid ""
-"Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 154
-msgid "Show # skipped"
-msgstr ""
-
-#: Database preference table id 155
-msgid "Custom datetime"
-msgstr ""
-
-#: Database preference table id 156
-msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr ""
-
-#: Database preference table id 157
-msgid "Only add unique items to playlists"
-msgstr ""
-
-#: Database preference table id 158
-msgid "Set the amount of items Album/Video of the Moment will display"
-msgstr ""
-
-#: Database preference table id 159
-msgid "Custom URL - Login page background"
-msgstr ""
-
-#: Database preference table id 160
-msgid "Show License"
-msgstr ""
-
-#: Database preference table id 161
-msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr ""
-
-#: Database preference table id 162
-msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr ""
-
-#: Database preference table id 163
-msgid "Hide the Genre column in browse table rows"
-msgstr ""
-
-#: Database preference table id 164
-msgid ""
-"Force Subsonic streams to download. (Enable scrobble in your client to "
-"record stats)"
-msgstr ""
-
-#: Database preference table id 165
-msgid "Allow Ampache API3 responses"
-msgstr ""
-
-#: Database preference table id 166
-msgid "Allow Ampache API4 responses"
-msgstr ""
-
-#: Database preference table id 167
-msgid "Allow Ampache API5 responses"
-msgstr ""
-
-#: Database preference table id 168
-msgid "Force a specific API response no matter what version you send"
-msgstr ""
-
-#: Database preference table id 169
-msgid "Show playlist owner username in titles"
-msgstr ""
-
-#: Database preference table id 170
-msgid "Hide playlists in Subsonic and API clients that start with this string"
-msgstr ""
-
-#: Database preference table id 171
-msgid "Hide smartlists that match playlist names in Subsonic and API clients"
-msgstr ""
-
-#: Database preference table id 172
-msgid "Show 'Album Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 173
-msgid "Show 'Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 174
-msgid "Democratic - Use smartlists for base playlist"
-msgstr ""
-
-#: Database preference table id 175
-msgid ""
-"Remove tracks before the current playlist item in the webplayer when played"
-msgstr ""
-
-#: Database preference table id 176
-msgid "Allow Ampache API6 responses"
-msgstr ""
-
-#: Database preference table id 177
-msgid "Upload Access Level"
-msgstr ""
-
-#: Database preference table id 178
-msgid "Show Album subtitle on links (if available)"
-msgstr ""
-
-#: Database preference table id 179
-msgid "Show Album original year on links (if available)"
-msgstr ""
-
-#: Database preference table id 180
-msgid "Show the login / registration links in the site header"
-msgstr ""
-
-#: Database preference table id 181
-msgid ""
-"Use an alternative playback action for streaming if you have issues with "
-"playing music"
-msgstr ""
-
-#: Database preference table id 182
-msgid "Custom timezone (Override PHP date.timezone)"
-msgstr ""
-
-#: Database preference table id 183
-msgid "Only keep the latest media bookmark"
-msgstr ""
-
-#: Database preference table id 184
-msgid "Default webplayer volume"
-msgstr ""
-
-#: Database preference table id 185
-msgid "API sessions do not expire"
-msgstr ""
-
-#: Database preference table id 186
-msgid "Show all media types in Recently Played"
-msgstr ""
-
-#: Database preference table id 187
-msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr ""
-
-#: Database preference table id 188
-msgid "Hide sidebar switcher arrows"
-msgstr ""
-
-#: Database preference table id 189
-msgid "Hide the Browse menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 190
-msgid "Hide the Dashboard menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 191
-msgid "Hide the Video menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 192
-msgid "Hide the Search menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 193
-msgid "Hide the Playlist menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 194
-msgid "Hide the Information menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 195
-msgid "Destination catalog"
-msgstr ""
-
-#: Database preference table id 196
-msgid "Custom URL - Use your avatar for header logo"
-msgstr ""
-
-#: Database preference table id 197
-msgid "Use Dashboard links for the index page header"
-msgstr ""
-
-#: Database preference table id 198
-msgid "Custom CSS Order - Browse"
-msgstr ""
-
-#: Database preference table id 199
-msgid "Custom CSS Order - Dashboard"
-msgstr ""
-
-#: Database preference table id 200
-msgid "Custom CSS Order - Video"
-msgstr ""
-
-#: Database preference table id 201
-msgid "Custom CSS Order - Playlist"
-msgstr ""
-
-#: Database preference table id 202
-msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Database preference table id 203
-msgid "Custom CSS Order - Information"
-msgstr ""
-
-#: Database preference table id 204
-msgid ""
-"Force API streams to download. (Enable scrobble in your client to record "
-"stats)"
-msgstr ""
-
-#: Database preference table id 205
-msgid "Show Google search icon on library items"
-msgstr ""
-
-#: Database preference table id 206
-msgid "Show DuckDuckGo search icon on library items"
-msgstr ""
-
-#: Database preference table id 207
-msgid "Show Wikipedia search icon on library items"
-msgstr ""
-
-#: Database preference table id 208
-msgid "Show Last.fm search icon on library items"
-msgstr ""
-
-#: Database preference table id 209
-msgid "Show Bandcamp search icon on library items"
-msgstr ""
-
-#: Database preference table id 210
-msgid "Show MusicBrainz search icon on library items"
-msgstr ""
-
-#: Database preference table id 211
-msgid "Show extended links for playlist media"
-msgstr ""
-
-#: Database preference table id 212
-msgid "Show Discogs search icon on library items"
-msgstr ""
-
-#: Database preference table id 213
-msgid "Force Grid View on Song browse"
-msgstr ""
-
-#: Database preference table id 214
-msgid "Force Grid View on Album browse"
-msgstr ""
-
-#: Database preference table id 215
-msgid "Force Grid View on Album Disk browse"
-msgstr ""
-
-#: Database preference table id 216
-msgid "Force Grid View on Artist browse"
-msgstr ""
-
-#: Database preference table id 217
-msgid "Force Grid View on Radio Station browse"
-msgstr ""
-
-#: Database preference table id 218
-msgid "Force Grid View on Playlist browse"
-msgstr ""
-
-#: Database preference table id 219
-msgid "Force Grid View on Video browse"
-msgstr ""
-
-#: Database preference table id 220
-msgid "Force Grid View on Podcast browse"
-msgstr ""
-
-#: Database preference table id 221
-msgid "Force Grid View on Podcast Episode browse"
-msgstr ""
-
-#: Database preference table id 222
-msgid "Show Artist column on playlist media rows"
-msgstr ""
-
-#: Database preference table id 223
-msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr ""
-
-#: Database preference subcategory table id 77
-msgid "last.fm"
-msgstr ""
-
-#: Database preference subcategory table id 138
-msgid "interface"
-msgstr ""
-
-#: Database preference subcategory table id 164
-msgid "api"
-msgstr ""
-
-#: Database preference subcategory table id 213
-msgid "cookies"
-msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
@@ -7122,10 +6731,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
 msgstr ""
 
 #: ./untranslated-strings.txt:134
@@ -7204,10 +6809,798 @@ msgstr ""
 msgid "ping"
 msgstr ""
 
-#: ./untranslated-strings.txt:250
+#: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
 msgstr ""
 
-#: ./untranslated-strings.txt:256
-msgid "average"
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
+msgstr ""
+
+# This file lists all translatable strings from the Ampache preference table
+# (descriptions and subcategories). It is generated from the source code by
+# ./gather-messages.sh [-gu|--getutds] - descriptions come from
+# Preference::translate_db() and subcategories from Preference::DEFAULTS,
+# so a live database is NOT required. Do not edit it by hand; re-run the
+# script.
+# 
+#: Ampache preference description
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Default sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information - Allow access to streaming agent"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Now Playing information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Streaming"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow user uploads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Video Features"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force API streams to download. (Enable scrobble in your client to record "
+"stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API3 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API4 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API5 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API6 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API8 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force a specific API response no matter what version you send"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide playlists in Subsonic and API clients that start with this string"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide smartlists that match playlist names in Subsonic and API clients"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly API key"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly Username"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only keep the latest media bookmark"
+msgstr ""
+
+#: Ampache preference description
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Require a session to listen to my broadcasts"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album Disk browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Artist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Radio Station browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Playlist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast Episode browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Song browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Video browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications timeout (seconds)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check library item at import time and disable duplicates"
+msgstr ""
+
+#: Ampache preference description
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Add live plays to the cached count for accurate stats (Require: Cron Cache)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom datetime"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Touch icon for phone home screens (PNG, 180x180, no "
+"transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page background"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Image shown when a link to this server is shared (PNG or JPEG, "
+"1200x630)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Use your avatar for header logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom text footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom timezone (Override PHP date.timezone)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "DAAP backend password"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Clear votes for expired user sessions"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Use smartlists for base playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Additional fields to disable"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Disable these fields"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Downloads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Audio Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Video Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show extended links for playlist media"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Google search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Discogs search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show DuckDuckGo search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Wikipedia search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Last.fm search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Bandcamp search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show MusicBrainz search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force HTTP playback regardless of port"
+msgstr ""
+
+#: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Geolocation"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Mood column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Albums of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Videos of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show all media types in Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Dashboard links for the index page header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Default webplayer volume"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Library item context menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Localplay Access"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock Songs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Minimum transcode bitrate for dynamic downsampling in bps"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow E-mail notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Now Playing filtered per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Offset Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
+msgstr ""
+
+#: Ampache preference description
+msgid "API sessions do not expire"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Method"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playback Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "# latest episodes to keep"
+msgstr ""
+
+#: Ampache preference description
+msgid "# episodes to download when new episodes are available"
+msgstr ""
+
+#: Ampache preference description
+msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Share"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Album Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Collections' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Composer column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Folders' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show the login / registration links in the site header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show License"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Moods' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album original year on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Artist column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show playlist owner username in titles"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # skipped"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album subtitle on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
+msgstr ""
+
+#: Ampache preference description
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Browse menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Dashboard menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Information menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Playlist menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Search menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide sidebar switcher arrows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Video menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable URL Rewriting"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force Subsonic streams to download. (Enable scrobble in your client to "
+"record stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Subsonic backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Album Artist for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable legacy Subsonic API responses for compatibility issues"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use single user data for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme color"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme"
+msgstr ""
+
+#: Ampache preference description
+msgid "Top menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Fix header position on compatible themes"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Ampache preference description
+msgid "Upload Access Level"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to edit uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to remove uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Ampache preference description
+msgid "Destination catalog"
+msgstr ""
+
+#: Ampache preference description
+msgid "Post-upload script (current directory = upload target directory)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Create a subdirectory per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Consider the user sender as the track's artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use WebDAV backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Ampache preference description
+msgid "Auto-pause between tabs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Remove tracks before the current playlist item in the webplayer when played"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Api"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Cookies"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Custom"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Feature"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Httpq"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Interface"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Last.fm"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Library"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Metadata"
+msgstr "Metadata"
+
+#: Ampache preference subcategory
+msgid "Notification"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Player"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Privacy"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Sidebar"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Transcoding"
 msgstr ""

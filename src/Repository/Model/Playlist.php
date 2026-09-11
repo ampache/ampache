@@ -37,6 +37,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\PlaylistRepositoryInterface;
+use Override;
 
 /**
  * This class handles playlists in ampache. it references the playlist* tables
@@ -96,11 +97,25 @@ class Playlist extends playlist_object
             return false;
         }
 
-        foreach (self::getPlaylistRepository()->getRowsByIds(array_values($ids)) as $row) {
+        $repository = self::getPlaylistRepository();
+        $owners     = [];
+        foreach ($repository->getRowsByIds(array_values($ids)) as $row) {
             parent::add_to_cache('playlist', $row['id'], $row);
+            if (!empty($row['user'])) {
+                $owners[(int) $row['user']] = (int) $row['user'];
+            }
         }
 
         Art::build_cache($ids, 'playlist');
+
+        // has_search() compares every row against the owner's smartlists and the public ones: read once per page
+        if ($owners !== []) {
+            $global_user = (int) (Core::get_global('user')?->getId());
+            $public      = $repository->findSearchNames($global_user, false);
+            foreach ($repository->findOwnedSearchNamesBulk(array_values($owners)) as $owner => $owned) {
+                parent::add_to_cache('playlist_search_names', $owner . '/' . $global_user, [$owned, $public]);
+            }
+        }
 
         return true;
     }
@@ -243,6 +258,27 @@ class Playlist extends playlist_object
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         self::getPlaylistRepository()->migrateObject($object_type, $old_object_id, $new_object_id);
+    }
+
+    /**
+     * Splits the id list of a playlist_search browse, which mixes playlist ids with `smart_` prefixed search ids
+     *
+     * @param array<int|string> $object_ids
+     *
+     * @return array{playlist: list<int>, search: list<int>}
+     */
+    public static function split_mixed_ids(array $object_ids): array
+    {
+        $split = ['playlist' => [], 'search' => []];
+        foreach ($object_ids as $object_id) {
+            if (is_string($object_id) && str_starts_with($object_id, 'smart_')) {
+                $split['search'][] = (int) substr($object_id, 6);
+            } else {
+                $split['playlist'][] = (int) $object_id;
+            }
+        }
+
+        return $split;
     }
 
     /**
@@ -400,6 +436,20 @@ class Playlist extends playlist_object
     }
 
     /**
+     * Get item f_time, from the cached last_duration rather than summing the songs on every call
+     */
+    #[Override]
+    public function get_f_time(): string
+    {
+        $duration = (int) $this->last_duration;
+        $min      = sprintf("%02d", (floor($duration / 60) % 60));
+        $sec      = sprintf("%02d", ($duration % 60));
+        $hours    = floor($duration / 3600);
+
+        return ltrim($hours . ':' . $min . ':' . $sec, '0:');
+    }
+
+    /**
      * get_items
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
@@ -518,11 +568,23 @@ class Playlist extends playlist_object
 
     /**
      * get_total_duration
-     * Get the total duration of all songs.
+     * Get the total duration of every item in the playlist that has a duration (songs, videos, podcast episodes).
      */
     public function get_total_duration(): int
     {
-        return self::getPlaylistRepository()->getTotalDuration(array_values($this->get_songs()));
+        $user          = Core::get_global('user');
+        $userId        = $user->id ?? -1;
+        $repository    = self::getPlaylistRepository();
+        $catalogFilter = (bool) AmpConfig::get('catalog_filter');
+
+        $total = 0;
+        foreach ($repository->getObjectTypes($this->id) as $type) {
+            foreach ($repository->getItemsOfType($this->id, $type, $userId, $catalogFilter, true, false) as $row) {
+                $total += (int) $row['time'];
+            }
+        }
+
+        return $total;
     }
 
     public function getMediaType(): LibraryItemEnum
@@ -549,10 +611,23 @@ class Playlist extends playlist_object
      */
     public function has_search(int $playlist_user): int
     {
-        $repository = self::getPlaylistRepository();
+        $repository  = self::getPlaylistRepository();
+        $global_user = (int) (Core::get_global('user')?->getId());
+
+        // the name lists are the same for every row of a page, so read them once
+        $cache_key = $playlist_user . '/' . $global_user;
+        if (parent::is_cached('playlist_search_names', $cache_key)) {
+            $name_lists = parent::get_from_cache('playlist_search_names', $cache_key);
+        } else {
+            $name_lists = [
+                $repository->findSearchNames($playlist_user, true),
+                $repository->findSearchNames($global_user, false),
+            ];
+            parent::add_to_cache('playlist_search_names', $cache_key, $name_lists);
+        }
 
         // search for your own playlist, then for the public ones
-        foreach ([$repository->findSearchNames($playlist_user, true), $repository->findSearchNames((int) (Core::get_global('user')?->getId()), false)] as $names) {
+        foreach ($name_lists as $names) {
             $searchId = array_search($this->name, $names, true);
             if ($searchId !== false) {
                 return (int) $searchId;
@@ -631,7 +706,7 @@ class Playlist extends playlist_object
      */
     public function update_track_number(int $track_id, int $index): void
     {
-        self::getPlaylistRepository()->setTrackNumber($track_id, $index);
+        self::getPlaylistRepository()->setTrackNumber($track_id, $index, $this->id);
     }
 
     /**

@@ -40,14 +40,16 @@ final readonly class PodcastOpmlExporter implements PodcastExporterInterface
     ) {}
 
     /**
-     * Exports all podcasts-subscriptions and returns the result
+     * Exports the podcast subscriptions living in the given catalogs and returns the result
+     *
+     * @param list<int>|null $catalogIds
      */
-    public function export(): string
+    public function export(?array $catalogIds = null): string
     {
         $view = new PodcastOpmlView(
             T_('Ampache podcast subscriptions'),
             date(DATE_RFC822),
-            $this->retrievePodcasts()
+            $this->retrievePodcasts($catalogIds)
         );
 
         return $view->render();
@@ -62,6 +64,8 @@ final readonly class PodcastOpmlExporter implements PodcastExporterInterface
     }
 
     /**
+     * @param list<int>|null $catalogIds
+     *
      * @return Generator<array{
      *     title: string,
      *     feedUrl: string,
@@ -70,9 +74,13 @@ final readonly class PodcastOpmlExporter implements PodcastExporterInterface
      *     description: string
      * }>
      */
-    private function retrievePodcasts(): Generator
+    private function retrievePodcasts(?array $catalogIds): Generator
     {
-        $podcasts = $this->podcastRepository->findAll();
+        // an export is a read of the library like any other, so it stops at the same catalog boundary the rest
+        // of the interface does; a caller with nobody to filter for passes null and gets everything as before
+        $podcasts = ($catalogIds === null)
+            ? $this->podcastRepository->findAll()
+            : $this->podcastRepository->findAllByCatalogs($catalogIds);
 
         /** @var Podcast $podcast */
         foreach ($podcasts as $podcast) {

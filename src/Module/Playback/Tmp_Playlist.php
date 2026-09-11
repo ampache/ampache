@@ -96,6 +96,19 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * The session's playlist if it has one, without creating an empty row for
+     * visitors who never queue anything
+     */
+    public static function find_from_session(string $session_id): ?Tmp_Playlist
+    {
+        $playlistId = self::getTmpPlaylistRepository()->findBySession($session_id);
+
+        return ($playlistId === null)
+            ? null
+            : new Tmp_Playlist($playlistId);
+    }
+
+    /**
      * garbage_collection
      * This cleans up old data
      */
@@ -174,6 +187,16 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * Adds a whole selection of one type to this tmp playlist
+     *
+     * @param list<int> $object_ids
+     */
+    public function add_objects(array $object_ids, LibraryItemEnum $object_type): void
+    {
+        self::getTmpPlaylistRepository()->addItems($this->id, $object_ids, $object_type->value);
+    }
+
+    /**
      * clear
      * This clears all the objects out of a single playlist
      */
@@ -201,7 +224,7 @@ class Tmp_Playlist extends database_object
     public function delete_track(int $object_id): bool
     {
         /* delete the track its self */
-        self::getTmpPlaylistRepository()->deleteItemByRowId($object_id);
+        self::getTmpPlaylistRepository()->deleteItemByRowId($object_id, $this->id);
 
         return true;
     }

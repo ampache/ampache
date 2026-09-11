@@ -219,7 +219,7 @@ final class InstallerCommand extends Command
 
             $interactor->ok(T_('Updated'), true);
         } else {
-            $interactor->info(T_('No update needed'), true);
+            $interactor->info(T_('No Update Needed'), true);
         }
 
         // Preferences live in the application, not the schema, so migrations never fill their rows in

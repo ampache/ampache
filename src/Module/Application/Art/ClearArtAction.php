@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Art;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,7 @@ final class ClearArtAction extends AbstractArtAction
     public function __construct(
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UiInterface $ui,
+        private readonly DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -50,10 +52,7 @@ final class ClearArtAction extends AbstractArtAction
             $kind = 'default';
         }
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
+        $burl = $this->deletionUrlResolver->resolveBurl(Core::get_get('burl'));
 
         $item = $this->getItem($gatekeeper);
 

@@ -89,8 +89,7 @@ $ownerId  = $this->getOwnerId(); ?>
             <?php if ($this->showLabels()) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels'); ?></td>
-                <?php // Label::get_display() escapes each name itself?>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo $this->raw($this->getLabels()); ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo $this->e($this->getLabels()); ?>" /></td>
             </tr>
             <?php } ?>
             <tr>
@@ -101,6 +100,17 @@ $ownerId  = $this->getOwnerId(); ?>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="add_to_childs" value="checked" />&nbsp;<?php echo T_('Add tags to sub albums and sub songs'); ?></td>
             </tr>
+            <?php if ($this->mayDisable()) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('State'); ?></td>
+                <td>
+                    <select name="enabled">
+                        <option value="1"<?php echo ($this->isEnabled()) ? ' selected="selected"' : ''; ?>><?php echo T_('Enabled'); ?></option>
+                        <option value="0"<?php echo ($this->isEnabled()) ? '' : ' selected="selected"'; ?>><?php echo T_('Disabled'); ?></option>
+                    </select>
+                </td>
+            </tr>
+            <?php } ?>
         </table>
         <input type="hidden" name="id" value="<?php echo $artistId; ?>" />
         <input type="hidden" name="type" value="artist_row" />

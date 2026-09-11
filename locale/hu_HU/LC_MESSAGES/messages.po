@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2025-07-14 08:58+1000\n"
+"POT-Creation-Date: 2026-09-10 14:56+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Nite <shunite@gmail.com>, 2019-2020\n"
 "Language-Team: Hungarian (Hungary) (http://app.transifex.com/ampache/ampache/language/hu_HU/)\n"
@@ -19,182 +19,11 @@ msgstr ""
 "Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Filters"
-msgstr "Szűrők"
-
-msgid "Starts With"
-msgstr "A kezdete"
-
-msgid "Minimum Count"
-msgstr "Minimum szám"
-
-msgid "Rated"
-msgstr "Értékelt"
-
-msgid "Unplayed"
-msgstr "Lejátszatlan"
-
-msgid "All Playlists"
-msgstr "Összes Lejátszási lista"
-
-msgid "Catalog"
-msgstr "Katalógus"
-
-msgid "All"
-msgstr "Mind"
-
-msgid "Toggle Artwork"
-msgstr "Borító ki/be kapcsolása"
-
-msgid "Use of cookies by Ampache"
-msgstr "Az Ampache által használt sütik"
-
-msgid ""
-"Cookies are small text files that are placed on your computer by websites "
-"that you visit. They are widely used in order to make websites work, or work"
-" more efficiently, as well as to provide information to the owners of the "
-"site"
-msgstr "A sütik kis szöveges fájlok, melyeket az általad meglátogatott weboldalak helyeznek el a számítógépeden. Gyakran használják őket weboldalak helyes vagy hatékonyabb működéséhez, emellett az oldal tulajdonosa információkhoz juthat belőlük"
-
-msgid "The table below explains the cookies we use and why"
-msgstr "A lenti táblázat elmagyarázza, milyen sütiket használunk és miért"
-
-msgid "Cookie"
-msgstr "Süti"
-
-msgid "Name"
-msgstr "Név"
-
-msgid "Purpose"
-msgstr "Cél"
-
-msgid "Ampache session"
-msgstr "Ampache munkamenet"
-
-msgid "Ampache session username (if authenticated, information only)"
-msgstr "Ampache munkamenet felhasználónév (ha belépett, csak információ)"
-
-msgid "Automatically authenticate users"
-msgstr "Felhasználók automatikus beléptetése"
-
-msgid "Keep latest web player volume"
-msgstr "Emlékezzen a web lejátszó utolsó hangerőbeállítására"
-
-msgid "Show/Hide column [column_index] when browsing [object_type] objects"
-msgstr "[column_index] oszlop mutatása/elrejtése [object_type] objektumok böngészésekor"
-
-msgid "Use alphabet when browsing [object_type] objects"
-msgstr "Ábécérend használata [object_type] objektumok böngészésekor"
-
-msgid "Use pages when browsing [object_type] objects"
-msgstr "Lapozás használata [object_type] objektumok böngészésekor"
-
-msgid "Collapse/Expand Sidebar [menu_section]"
-msgstr "Oldaldoboz megjelenítése/elrejtése [menu_section]"
-
-msgid "Collapse/Expand Sidebar"
-msgstr "Oldaldoboz megjelenítése/elrejtése"
-
-msgid "Ampache"
-msgstr "Ampache"
-
-msgid "Ampache Error Page"
-msgstr "Ampache hibaoldal"
-
-msgid "For the Love of Music"
-msgstr "A Zene Szeretetéért"
-
-msgid "Error"
-msgstr "Hiba"
-
-msgid ""
-"The following error has occurred, you will be automatically redirected in 10"
-" seconds."
-msgstr "A következő hiba történt, 10 másodpercen belül automatikusan át leszel irányítva"
-
-msgid "Error Messages"
-msgstr "Hibaüzenetek"
-
-msgid "Donate"
-msgstr "Támogatás"
-
-msgid "Copyright"
-msgstr "Copyright"
-
-msgid "Show/Hide Player"
-msgstr "Lejátszó megjelenítése/elrejtése"
-
 msgid "Home"
 msgstr "Kezdőlap"
 
-msgid "Play"
-msgstr "Lejátszás"
-
-msgid "Artists"
-msgstr "Előadó"
-
-msgid "Albums"
-msgstr "Albumok"
-
-msgid "Playlists"
-msgstr "Lejátszási listák"
-
-msgid "Genres"
-msgstr "Műfajok"
-
-msgid "Favorites"
-msgstr "Kedvencek"
-
 msgid "Upload"
 msgstr "Feltöltés"
-
-msgid "Now Playing"
-msgstr "Most Lejátszott"
-
-msgid "Recently Played"
-msgstr "Nemrég Lejátszott"
-
-msgid "Newest Albums"
-msgstr "Legújabb Albumok"
-
-msgid "Newest Artists"
-msgstr "Legújabb Előadók"
-
-msgid "Newest Songs"
-msgstr ""
-
-msgid "Newest Shouts"
-msgstr "Legújabb Shout-ok"
-
-msgid "Information"
-msgstr "Információ"
-
-msgid "New messages"
-msgstr "Új üzenetek"
-
-msgid "Login"
-msgstr "Belépés"
-
-msgid "Register"
-msgstr "Regisztráció"
-
-msgid "Show/Hide Playlist"
-msgstr "Lejátszási lista megjelenítése/elrejtése"
-
-msgid "Loading"
-msgstr "Betöltés"
-
-msgid "Your Ampache config file is out of date!"
-msgstr "Az Ampache config fájlod elavult!"
-
-msgid "Update your current config file automatically"
-msgstr ""
-
-msgid "Download a copy of the new version"
-msgstr ""
-
-msgid "Installation"
-msgstr "Telepítés"
 
 msgid "Localplay"
 msgstr "Localplay"
@@ -280,6 +109,15 @@ msgstr "Mentés"
 msgid "Cancel"
 msgstr "Mégsem"
 
+msgid "Confirm"
+msgstr "Jóváhagy"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Play"
+msgstr "Lejátszás"
+
 msgid "Play next"
 msgstr "Lejátszás következőnek"
 
@@ -289,116 +127,20 @@ msgstr "Lejátszás utolsónak"
 msgid "Add to Temporary Playlist"
 msgstr "Hozzáadás átmeneti lejátszási listához"
 
-msgid "Add to playlist"
-msgstr "Hozzáadás Lejátszási listához"
+msgid "Editing Existing User"
+msgstr "Létező felhasználó szerkesztése"
 
-msgid "Prev"
-msgstr "Előző"
+msgid "User Properties"
+msgstr "Felhasználó tulajdonságai"
 
-msgid "Page"
-msgstr "Oldal"
-
-msgid "of"
-msgstr "-"
-
-msgid "Next"
-msgstr "Következő"
-
-msgid "View"
-msgstr "Nézet"
-
-msgid "Pages"
-msgstr "Oldalak"
-
-msgid "Infinite Scroll"
-msgstr "Végtelenített görgetés"
-
-msgid "Grid View"
-msgstr "Rács nézet"
-
-msgid "Alphabet"
-msgstr "Ábécérend"
-
-msgid "Limit"
-msgstr "Korlát"
-
-msgid "Item Count"
-msgstr "Elemek száma"
-
-msgid "Add to New Playlist"
-msgstr "Hozzáadás új Lejátszási listához"
-
-msgid "Batch download"
-msgstr "Csoportos letöltés"
-
-msgid "Clear Playlist"
-msgstr "Lejátszási lista ürítése"
-
-msgid "Add dynamic items"
-msgstr "Dinamikus elemek hozzáadása"
-
-msgid "Random song"
-msgstr "Véletlenszerű Dal"
-
-msgid "Random artist"
-msgstr "Véletlenszerű Előadó"
-
-msgid "Random album"
-msgstr "Véletlenszerű Album"
-
-msgid "Random playlist"
-msgstr "Véletlenszerű Lejátszási lista"
-
-msgid "Refresh"
-msgstr "Frissítés"
-
-msgid "Delete"
-msgstr "Törlés"
-
-msgid "No items"
-msgstr "Nincsenek elemek"
-
-msgid "More"
-msgstr "Több"
-
-msgid "Add Current Host"
-msgstr "Jelenlegi kiszolgáló hozzáadása"
-
-msgid "Add API / RPC Host"
-msgstr "API / RPC kiszolgáló hozzáadása"
-
-msgid "Add Local Network Definition"
-msgstr "Helyi Hálózati Definíció hozzáadása"
-
-msgid "Advanced Add"
-msgstr "Összetett hozzáadás"
-
-msgid "Access Control Entries"
-msgstr "Hozzáférés szabályzás bejegyzések"
-
-msgid "Start Address"
-msgstr "Kezdő cím"
-
-msgid "End Address"
-msgstr "Vég cím"
-
-msgid "Level"
-msgstr "Szint"
-
-msgid "User"
+msgid "Username"
 msgstr "Felhasználó"
-
-msgid "Type"
-msgstr "Típus"
-
-msgid "Action"
-msgstr "Akció"
-
-msgid "Edit"
-msgstr "Szerkesztés"
 
 msgid "Full Name"
 msgstr "Teljes név"
+
+msgid "Public"
+msgstr "Nyilvános"
 
 msgid "E-mail"
 msgstr "E-mail"
@@ -412,14 +154,35 @@ msgstr "Állam"
 msgid "City"
 msgstr "Város"
 
-msgid "New Password"
-msgstr "Új jelszó"
+msgid "Password"
+msgstr "Jelszó"
 
 msgid "Confirm Password"
 msgstr "Jelszó újra"
 
+msgid "Subsonic Password"
+msgstr ""
+
+msgid "Delete"
+msgstr "Törlés"
+
+msgid "Currently set"
+msgstr ""
+
+msgid "Not set"
+msgstr ""
+
+msgid "User Access Level"
+msgstr "Felhasználó hozzáférési szintje"
+
+msgid "Catalog Filter"
+msgstr ""
+
 msgid "Avatar"
 msgstr "Avatár"
+
+msgid "Other Options"
+msgstr "Egyéb lehetőségek"
 
 msgid "API key"
 msgstr ""
@@ -439,528 +202,20 @@ msgstr "RSS Token"
 msgid "Generate new RSS token"
 msgstr "Új RSS token létrehozása"
 
+msgid "Config Preset"
+msgstr "Előre beállított config"
+
+msgid "This affects all non-admin accounts"
+msgstr ""
+
+msgid "Prevent Preset Override"
+msgstr ""
+
 msgid "Clear Stats"
 msgstr "Statisztikák törlése"
 
-msgid "Update Account"
-msgstr "Fiók frissítése"
-
-msgid "Add Access Control List"
-msgstr "Hozzáférési lista (ACL) hozzáadása"
-
-msgid "API/RPC"
-msgstr "API/RPC"
-
-msgid "Local Network Definition"
-msgstr "Helyi Hálózati Definíció"
-
-msgid "Stream Access"
-msgstr "Stream Hozzáférés"
-
-msgid "Read"
-msgstr "Olvasás"
-
-msgid "Read/Write"
-msgstr "Olvasás/Írás"
-
-msgid "Web Interface"
-msgstr "Web Interfész"
-
-msgid "IPv4 or IPv6 Addresses"
-msgstr "IPv4 vagy IPv6 címek"
-
-msgid "Start"
-msgstr "Kezdet"
-
-msgid "End"
-msgstr "Vég"
-
-msgid "Create ACL"
-msgstr "ACL létrehozása"
-
-msgid "Add Catalog"
-msgstr "Katalógus hozzáadása"
-
-msgid "New catalogs are added to the DEFAULT group when created"
-msgstr ""
-
-msgid ""
-"In the form below enter either a local path (i.e. /data/music) or the URL to"
-" a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr ""
-
-msgid "Catalog Name"
-msgstr "Katalógusnév"
-
-msgid "Auto-inserted Fields"
-msgstr "Mezők automatikus beszúrása"
-
-msgid "Album Artist"
-msgstr "Album Előadó"
-
-msgid "Song Artist"
-msgstr ""
-
-msgid "Song Title"
-msgstr "Dal cím"
-
-msgid "Track (0 padded)"
-msgstr "Szám (0-val feltöltve)"
-
-msgid "Disk"
-msgstr "Lemez"
-
-msgid "Genre"
-msgstr "Műfaj"
-
-msgid "Year"
-msgstr "Év"
-
-msgid "Original Year"
-msgstr "Megjelenés éve"
-
-msgid "Comment"
-msgstr "Megjegyzés"
-
-msgid "Label"
-msgstr "Címke"
-
-msgid "Release Type"
-msgstr "Kiadás típusa"
-
-msgid "Release Status"
-msgstr ""
-
-msgid "Release Comment"
-msgstr ""
-
-msgid "Catalog Number"
-msgstr "Katalógus szám"
-
-msgid "Barcode"
-msgstr "Vonalkód"
-
-msgid "Ignore"
-msgstr ""
-
-msgid "Catalog Type"
-msgstr "Katalógus típus"
-
-msgid "Select"
-msgstr "Kiválaszt"
-
-msgid "Filename Pattern"
-msgstr "Fájlnév minta"
-
-msgid "Folder Pattern"
-msgstr "Mappa minta"
-
-msgid "(no leading or ending '/')"
-msgstr "(kezdő és záró '/' nélkül)"
-
-msgid "Gather Art"
-msgstr "Borítók összegyűjtése"
-
-msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr "Lejátszási listák építése lejátszásilista-fájlokból. (m3u, m3u8, asx, pls, xspf)"
-
-msgid "Catalog Media Type"
-msgstr "Katalógus médiatípus"
-
-msgid "Music"
-msgstr "Zene"
-
-msgid "Add Catalog Filter"
-msgstr ""
-
-msgid "Please enable 'catalog_filter' in your sever config file"
-msgstr ""
-
-msgid "Catalog filters are a way to stop users accessing different catalogs"
-msgstr ""
-
-msgid ""
-"If you do not tick a catalog, it will be hidden from users that you assign "
-"to this filter"
-msgstr ""
-
-msgid "Filter Name"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "Add Label"
-msgstr "Címke hozzáadása"
-
-msgid "MusicBrainz ID"
-msgstr "MusicBrainz ID"
-
-msgid "Category"
-msgstr "Kategória"
-
-msgid "Personal"
-msgstr "Személyes"
-
-msgid "Association"
-msgstr "Egyesület"
-
-msgid "Company"
-msgstr "Vállalat"
-
-msgid "Imprint"
-msgstr ""
-
-msgid "Production"
-msgstr ""
-
-msgid "Original Production"
-msgstr ""
-
-msgid "Bootleg Production"
-msgstr ""
-
-msgid "Reissue Production"
-msgstr ""
-
-msgid "Distributor"
-msgstr ""
-
-msgid "Holding"
-msgstr ""
-
-msgid "Rights Society"
-msgstr ""
-
-msgid "Tag Generated"
-msgstr ""
-
-msgid "Summary"
-msgstr "Összefoglaló"
-
-msgid "Address"
-msgstr "Cím"
-
-msgid "Country"
-msgstr ""
-
-msgid "Status"
-msgstr "Állapot"
-
-msgid "Active"
-msgstr ""
-
-msgid "Inactive"
-msgstr ""
-
-msgid "Add"
-msgstr "Hozzáad"
-
-msgid "Add Radio Station"
-msgstr "Rádióállomás hozzáadása"
-
-msgid "Stream URL"
-msgstr "Stream URL"
-
-msgid "Codec"
-msgstr "Kodek"
-
-msgid "Create Playlist"
-msgstr "Lejátszási lista létrehozása"
-
-msgid "Private"
-msgstr "Saját"
-
-msgid "Public"
-msgstr "Nyilvános"
-
-msgid "Create"
-msgstr "Létrehoz"
-
-msgid "Subscribe to Podcast"
-msgstr "Feliratkozás a Podcast-re"
-
-msgid "Podcast Feed URL"
-msgstr "Podcast hírfolyam URL"
-
-msgid "Subscribe"
-msgstr "Feliratkozás"
-
-msgid "Compose Message"
-msgstr "Üzenet írása"
-
-msgid "Recipient"
-msgstr "Címzett"
-
-msgid "Subject"
-msgstr "Tárgy"
-
-msgid "Message"
-msgstr "Üzenet"
-
-msgid "Send"
-msgstr "Küldés"
-
-msgid "Starting New Media Search"
-msgstr "Új média keresésének indítása"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Starting New Media Search on \"%s\" Catalog"
-msgstr "Új média keresésének indítása a \"%s\" Katalógusban"
-
-msgid "Found"
-msgstr "Megtalálva"
-
-msgid "None"
-msgstr "Nincs"
-
-msgid "Reading"
-msgstr "Olvasás"
-
-msgid "Create Share"
-msgstr "Megosztás létrehozása"
-
-msgid "Share"
-msgstr "Megosztás"
-
-msgid "Secret"
-msgstr "Secret"
-
-msgid "Max Counter"
-msgstr "Max. számláló"
-
-msgid "Expiry Days"
-msgstr "Lejárati napok"
-
-msgid "Allow Stream"
-msgstr "Stream engedélyezése"
-
-msgid "Allow Download"
-msgstr "Letöltés engedélyezése"
-
-msgid "Post to Shoutbox"
-msgstr "Küldés Shoutbox-ba"
-
-msgid "Stick this comment"
-msgstr "Megjegyzés kiragasztása"
-
-msgid "Shoutbox"
-msgstr "Shoutbox"
-
-msgid "Target folder"
-msgstr "Cél mappa"
-
-msgid "New folder"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Reload"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Leave the artist and album fields blank to read file tags"
-msgstr "Hagyd üresen az előadó és album mezőket a fájl tagek felolvasásához"
-
-msgid "Music License"
-msgstr "Zene Licensz"
-
-msgid "WARNING"
-msgstr "FIGYELMEZTETÉS"
-
-msgid ""
-"The music license you choose gives away rights in an irrevocable manner to "
-"the audience."
-msgstr ""
-
-msgid ""
-"Read the text of the license you choose carefully with the 'View License' "
-"link."
-msgstr ""
-
-msgid "Files"
-msgstr "Fájlok"
-
-msgid "Max upload size"
-msgstr ""
-
-msgid "Allowed file type"
-msgstr "Engedélyezett fájltípusok"
-
-msgid ""
-"Drag & Drop your files or <span class=\\\"filepond--label-action\\\"> Browse"
-" </span>"
-msgstr ""
-
-msgid "Field contains invalid files"
-msgstr ""
-
-msgid "Waiting for size"
-msgstr ""
-
-msgid "Size not available"
-msgstr ""
-
-msgid "Error during load"
-msgstr ""
-
-msgid "Uploading"
-msgstr ""
-
-msgid "Upload complete"
-msgstr ""
-
-msgid "Upload cancelled"
-msgstr ""
-
-msgid "Error during upload"
-msgstr ""
-
-msgid "Error during revert"
-msgstr ""
-
-msgid "Error during remove"
-msgstr ""
-
-msgid "tap to cancel"
-msgstr ""
-
-msgid "tap to retry"
-msgstr ""
-
-msgid "tap to undo"
-msgstr ""
-
-msgid "Remove"
-msgstr "Eltávolít"
-
-msgid "Abort"
-msgstr ""
-
-msgid "Retry"
-msgstr ""
-
-msgid "Undo"
-msgstr ""
-
-msgid "File is too large"
-msgstr ""
-
-msgid "Maximum file size is {filesize}"
-msgstr ""
-
-msgid "Maximum total size exceeded"
-msgstr ""
-
-msgid "Maximum total file size is {filesize}"
-msgstr ""
-
-msgid "File of invalid type"
-msgstr ""
-
-msgid "Expects {allButLastType} or {lastType}"
-msgstr ""
-
-msgid "Image type not supported"
-msgstr ""
-
-msgid "Image is too small"
-msgstr ""
-
-msgid "Image is too big"
-msgstr ""
-
-msgid "Minimum size is {minWidth} × {minHeight}"
-msgstr ""
-
-msgid "Maximum size is {maxWidth} × {maxHeight}"
-msgstr ""
-
-msgid "Resolution is too low"
-msgstr ""
-
-msgid "Resolution is too high"
-msgstr ""
-
-msgid "Minimum resolution is {minResolution}"
-msgstr ""
-
-msgid "Maximum resolution is {maxResolution}"
-msgstr ""
-
-msgid "Add User"
-msgstr "Felhasználó hozzáadása"
-
-msgid "Username"
-msgstr "Felhasználó"
-
-msgid "Password"
-msgstr "Jelszó"
-
-msgid "User Access Level"
-msgstr "Felhasználó hozzáférési szintje"
-
-msgid "Guest"
-msgstr "Vendég"
-
-msgid "Content Manager"
-msgstr "Tartalom kezelő"
-
-msgid "Catalog Manager"
-msgstr "Katalógus kezelő"
-
-msgid "Admin"
-msgstr "Admin"
-
-msgid "User Catalog Filter"
-msgstr ""
-
-msgid "Search on Google ..."
-msgstr "Keresés a Google-ön ..."
-
-msgid "Search on DuckDuckGo ..."
-msgstr "Keresés a DuckDuckGo-n ..."
-
-msgid "Search on Wikipedia ..."
-msgstr "Keresés a Wikipedián ..."
-
-msgid "Search on Last.fm ..."
-msgstr "Keresés a Last.fm-en ..."
-
-msgid "Search on Bandcamp ..."
-msgstr ""
-
-msgid "Search on Discogs ..."
-msgstr ""
-
-msgid "Search on Musicbrainz ..."
-msgstr ""
-
-msgid "Played"
-msgstr "Lejátszva"
-
-#. HINT: Number of times an object has been played
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] "%d alkalommal"
-msgstr[1] "%d alkalommal"
-
-msgid "Uploaded by"
-msgstr "Feltöltötte"
-
-msgid "Actions"
-msgstr "Akciók"
+msgid "Update User"
+msgstr "Felhasználó frissítése"
 
 msgid "Random to Temporary Playlist"
 msgstr "Átmeneti lejátszási listára véletlenszerűen"
@@ -977,6 +232,9 @@ msgstr "Link"
 msgid "Graphs"
 msgstr "Grafikonok"
 
+msgid "Save Track Order"
+msgstr "Számsorrend mentése"
+
 msgid "Do you really want to update from tags?"
 msgstr "Biztosan frissíteni szeretnél címkékből?"
 
@@ -986,29 +244,38 @@ msgstr "Frissítés címkékből"
 msgid "Album Edit"
 msgstr "Album szerkesztés"
 
+msgid "Edit"
+msgstr "Szerkesztés"
+
 msgid "Edit Album"
 msgstr "Album szerkesztése"
 
 msgid "Download"
 msgstr "Letöltés"
 
-msgid "Songs"
-msgstr "Dalok"
+msgid "Direct URL to Image"
+msgstr "Direkt URL a képhez"
 
-msgid "Rating"
-msgstr "Értékelés"
+msgid "Local Image"
+msgstr "Helyi kép"
 
-msgid "Art"
-msgstr "Borító"
+msgid "Spotify Album Filters"
+msgstr "Spotify Album szűrők"
 
-msgid "No Album found"
-msgstr "Album nem található"
+msgid "Year"
+msgstr "Év"
 
-msgid "Unknown (Orphaned)"
-msgstr "Ismeretlen (Árva)"
+msgid "(e.g. '2001', '2001-2005')"
+msgstr "(pl. '2001', '2001-2005')"
 
-msgid "Save Track Order"
-msgstr "Számsorrend mentése"
+msgid "Limit"
+msgstr "Korlát"
+
+msgid "Search Limit"
+msgstr "Keresési korlát"
+
+msgid "Get Art"
+msgstr "Borító beszerzése"
 
 msgid "Loading..."
 msgstr "Betöltés..."
@@ -1050,6 +317,12 @@ msgstr "Előadó szerkesztés"
 msgid "Edit Artist"
 msgstr "Előadó szerkesztése"
 
+msgid "Albums"
+msgstr "Albumok"
+
+msgid "Songs"
+msgstr "Dalok"
+
 msgid "Top Tracks"
 msgstr ""
 
@@ -1062,23 +335,26 @@ msgstr "Hasonló Előadók"
 msgid "Similar Songs"
 msgstr "Hasonló Dalok"
 
-msgid "Time"
-msgstr "Hossz"
-
-msgid "No Artist found"
-msgstr "Előadó nem található"
-
 msgid "Select New Art"
 msgstr "Új Borító kiválasztása"
+
+msgid "Art"
+msgstr "Borító"
+
+msgid "Select"
+msgstr "Kiválaszt"
 
 msgid "Invalid"
 msgstr "Érvénytelen"
 
-msgid "Album Art"
-msgstr "Albumborító"
-
 msgid "Click to close window"
 msgstr "Kattints ide az ablak bezárásához"
+
+msgid "Broadcast"
+msgstr "Műsorszórás"
+
+msgid "Unbroadcast"
+msgstr "Műsorszórás vége"
 
 msgid "Yes"
 msgstr "Igen"
@@ -1086,209 +362,20 @@ msgstr "Igen"
 msgid "No"
 msgstr "Nem"
 
+msgid "Broadcast Edit"
+msgstr "Műsorszórás szerkesztése"
+
 msgid "New broadcast"
 msgstr "Új műsorszórás"
 
-msgid "Started"
-msgstr "Elindult"
-
-msgid "Listeners"
-msgstr "Hallgatók"
-
-msgid "No Broadcast found"
-msgstr "Műsorszórás nem található"
-
-msgid "Disable"
-msgstr "Letilt"
-
-msgid "Enable"
-msgstr "Engedélyez"
-
-msgid "Make it ready .."
-msgstr "Elkészít .."
-
-msgid "Verify"
-msgstr "Ellenőriz"
-
-msgid "Clean"
-msgstr "Takarít"
-
-msgid "Update"
-msgstr "Frissítés"
-
-msgid "Import"
-msgstr "Importálás"
-
-msgid "Update File Tags"
+msgid "Found nothing to show"
 msgstr ""
 
-msgid "Garbage Collection"
+msgid "Create Collection"
 msgstr ""
-
-msgid "Go"
-msgstr "Indít"
-
-msgid "Path"
-msgstr "Elérési út"
-
-msgid "Last Verify"
-msgstr "Utolsó ellenőrzés"
-
-msgid "Last Add"
-msgstr "Utolsó hozzáadás"
-
-msgid "Last Clean"
-msgstr "Utolsó takarítás"
-
-msgid "No Catalog found"
-msgstr "Katalógus nem található"
-
-msgid "Description"
-msgstr "Leírás"
-
-msgid "Version"
-msgstr "Verzió"
-
-msgid "Activate"
-msgstr "Aktiválás"
-
-msgid "No records found"
-msgstr "Bejegyzés nem található"
-
-msgid "Clean Catalog"
-msgstr "Katalógus takarítása"
-
-#. HINT: Catalog Name
-#, php-format
-msgid "Cleaning the \"%s\" Catalog"
-msgstr "\"%s\" Katalógus takarítása"
-
-msgid "Checking"
-msgstr "Ellenőrzés"
-
-msgid "Continue"
-msgstr "Folytatás"
-
-msgid "Ampache Debug"
-msgstr "Ampache Debug"
-
-msgid "Generate Configuration File"
-msgstr "Konfigurációs fájl generálása"
-
-msgid "Write New Config"
-msgstr "Új config írása"
-
-msgid "Set Database Charset"
-msgstr "Adatbázis karakterkészlet beállítása"
-
-msgid "Clear Songs Cache"
-msgstr "Dal gyorsítótár ürítése"
-
-msgid "Clear Artists Cache"
-msgstr "Előadó gyorsítótár ürítése"
-
-msgid "Clear Albums Cache"
-msgstr "Album gyorsítótár ürítése"
-
-msgid "Clear Perpetual API Sessions"
-msgstr ""
-
-msgid "Ampache Update"
-msgstr "Ampache frissítése"
-
-msgid "Installed Ampache version"
-msgstr "Telepített Ampache verzió"
-
-msgid "Latest Ampache version"
-msgstr "Legfrissebb Ampache verzió"
-
-msgid "GitHub Branch"
-msgstr "GitHub Branch"
-
-msgid "Force check"
-msgstr "Ellenőrzés kényszerítése"
-
-msgid "Ampache Cron"
-msgstr "Ampache Cron"
-
-msgid "The last cron was completed"
-msgstr "A legutolsó cron folyamat befejeződött"
-
-msgid "PHP Settings"
-msgstr "PHP beállítások"
-
-msgid "Setting"
-msgstr "Beállítások"
-
-msgid "Value"
-msgstr "Érték"
-
-msgid "Memory Limit"
-msgstr "Memóriakorlát"
-
-msgid "Maximum Execution Time"
-msgstr "Leghosszabb végrehajtási idő"
-
-msgid "Override Execution Time"
-msgstr "Végrehajtási idő felülírása"
-
-msgid "Failed"
-msgstr "Nem sikerült"
-
-msgid "Succeeded"
-msgstr "Sikeres"
-
-msgid "Open Basedir"
-msgstr "Kezdőmappa megnyitása"
-
-msgid "Zlib Support"
-msgstr "Zlib támogatás"
-
-msgid "GD Support"
-msgstr "GD támogatás"
-
-msgid "Iconv Support"
-msgstr "Iconv támogatás"
-
-msgid "Gettext Support"
-msgstr "Gettext támogatás"
-
-msgid "PHP intl extension"
-msgstr "PHP intl kiterjesztés"
-
-msgid "Current Configuration"
-msgstr "Aktuális konfiguráció"
-
-msgid "Preference"
-msgstr "Beállítás"
-
-#, php-format
-msgid "%s Playlist"
-msgstr "%s Lejátszási lista"
-
-msgid "Democratic Playlist"
-msgstr "Demokratikus Lejátszási lista"
-
-msgid "Cooldown"
-msgstr "Kihűlés"
-
-msgid "minutes"
-msgstr "perc"
-
-msgid "Configure Democratic Playlist"
-msgstr "Demokratikus Lejátszási lista beállítása"
-
-msgid "Reload this page automatically"
-msgstr "Oldal automatikus újratöltése"
 
 msgid "Playing from base playlist"
 msgstr "Lejátszás az alap Lejátszási listáról"
-
-msgid "Votes"
-msgstr "Szavazatok"
-
-msgid "Title"
-msgstr "Cím"
 
 msgid "Remove Vote"
 msgstr "Szavazat eltávolítása"
@@ -1296,54 +383,238 @@ msgstr "Szavazat eltávolítása"
 msgid "Add Vote"
 msgstr "Szavazat hozzáadása"
 
-msgid "Debug Page"
-msgstr "Debug oldal"
+msgid "Filters"
+msgstr "Szűrők"
 
-msgid "Access Denied"
-msgstr "Hozzáférés megtagadva"
+msgid "Name"
+msgstr "Név"
 
-msgid "This event has been logged"
-msgstr "Az esemény logolva"
+msgid "Minimum Count"
+msgstr "Minimum szám"
 
-msgid ""
-"You have been redirected to this page because you do not have access to this"
-" function"
-msgstr "Azért lettél átirányítva erre az oldalra, mert nincs hozzáférésed ehhez a funkcióhoz"
+msgid "Rated"
+msgstr "Értékelt"
 
-msgid ""
-"If you believe this is an error please contact an Ampache administrator"
-msgstr "Ha úgy hiszed, hiba történt, lépj kapcsolatba egy Ampache adminisztrátorral"
+msgid "Unplayed"
+msgstr "Lejátszatlan"
 
-msgid "You will be automatically redirected in 10 seconds."
-msgstr "10 másodpercen belül automatikusan át leszel irányítva."
+msgid "All Playlists"
+msgstr "Összes Lejátszási lista"
 
-msgid ""
-"You have been redirected to this page because you attempted to access a "
-"function that is disabled in the demo."
-msgstr "Azért lettél átirányítva erre az oldalra, mert az elérni kívánt funkció letiltott a demóban."
+msgid "Catalog"
+msgstr "Katalógus"
 
-msgid "Permission Denied"
+msgid "All"
+msgstr "Mind"
+
+msgid "Toggle Artwork"
+msgstr "Borító ki/be kapcsolása"
+
+msgid "Add"
+msgstr "Hozzáad"
+
+msgid "Create Label"
+msgstr "Címke létrehozása"
+
+msgid "Prev"
+msgstr "Előző"
+
+msgid "Page"
+msgstr "Oldal"
+
+msgid "of"
+msgstr "-"
+
+msgid "Next"
+msgstr "Következő"
+
+msgid "View"
+msgstr "Nézet"
+
+msgid "Pages"
+msgstr "Oldalak"
+
+msgid "Infinite Scroll"
+msgstr "Végtelenített görgetés"
+
+msgid "Grid View"
+msgstr "Rács nézet"
+
+msgid "Alphabet"
+msgstr "Ábécérend"
+
+msgid "Item Count"
+msgstr "Elemek száma"
+
+msgid "Manage"
+msgstr "Kezelés"
+
+msgid "Add Radio Station"
+msgstr "Rádióállomás hozzáadása"
+
+msgid "No live stream found"
+msgstr "Élő stream nem található"
+
+msgid "Track"
+msgstr "Szám"
+
+msgid "Action"
+msgstr "Akció"
+
+msgid "Create License"
+msgstr "Licensz létrehozása"
+
+msgid "Refresh"
+msgstr "Frissítés"
+
+msgid "Duration"
 msgstr ""
 
-msgid "You do not have permission to write to this file or folder"
+msgid "Create Playlist"
+msgstr "Lejátszási lista létrehozása"
+
+msgid "No podcast episode found"
+msgstr "Podcast Epizód nem található"
+
+msgid "Subscribe to Podcast"
+msgstr "Feliratkozás a Podcast-re"
+
+msgid "Import"
+msgstr "Importálás"
+
+msgid "Export"
+msgstr "Exportálás"
+
+msgid "Compose"
+msgstr "Írás"
+
+msgid "Compose a New Message"
+msgstr "Új üzenet írása"
+
+msgid "Mark as Read"
+msgstr "Olvasottnak jelöl"
+
+msgid "Mark as Unread"
+msgstr "Olvasatlannak jelöl"
+
+msgid "Add Smart Playlist"
+msgstr "Okos Lejátszási lista hozzáadása"
+
+msgid "No smart playlist found"
+msgstr "Okos Lejátszási lista nem található"
+
+msgid "Fullname"
+msgstr "Teljes név"
+
+msgid "No User found"
 msgstr ""
 
-msgid "Filename"
-msgstr "Fájlnév"
+msgid "No missing albums found"
+msgstr "Hiányzó Albumok nem találhatók"
 
-msgid "Addition Time"
-msgstr "Hozzáadás ideje"
+msgid "Export Catalog"
+msgstr "Katalógus exportálása"
 
-msgid "Edit Access Control List"
-msgstr "Hozzáférési Lista (ACL) szerkesztése"
+msgid "Format"
+msgstr "Formátum"
+
+msgid "Make it ready .."
+msgstr "Elkészít .."
+
+msgid "Go"
+msgstr "Indít"
+
+msgid "Reorder"
+msgstr "Felvevő"
+
+msgid "Owner"
+msgstr "Tulajdonos"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "This Collection is empty"
+msgstr ""
+
+msgid "Private"
+msgstr "Saját"
+
+msgid "Collection Edit"
+msgstr ""
+
+msgid "Do you really want to delete this Collection?"
+msgstr ""
+
+msgid "Configure Democratic Playlist"
+msgstr "Demokratikus Lejátszási lista beállítása"
+
+msgid "Base Playlist"
+msgstr "Alap Lejátszási lista"
+
+msgid "Cooldown Time"
+msgstr "Kihűlési idő"
+
+msgid "minutes"
+msgstr "perc"
+
+msgid "Level"
+msgstr "Szint"
+
+msgid "Make Default"
+msgstr "Alapértelmezetté tesz"
+
+msgid "Update"
+msgstr "Frissítés"
+
+msgid "Cooldown"
+msgstr "Kihűlés"
+
+msgid "Reload this page automatically"
+msgstr "Oldal automatikus újratöltése"
+
+msgid "Enable"
+msgstr "Engedélyez"
+
+msgid "Album Artist"
+msgstr "Album Előadó"
 
 msgid "Additional Artists"
 msgstr ""
 
+msgid "MusicBrainz ID"
+msgstr "MusicBrainz ID"
+
 msgid "MusicBrainz Release Group ID"
 msgstr "MusicBrainz Release Group ID"
 
+msgid "Release Type"
+msgstr "Kiadás típusa"
+
+msgid "Release Status"
+msgstr ""
+
+msgid "Release Comment"
+msgstr ""
+
+msgid "Disk"
+msgstr "Lemez"
+
 msgid "Disk Subtitle"
+msgstr ""
+
+msgid "Catalog Number"
+msgstr "Katalógus szám"
+
+msgid "Barcode"
+msgstr "Vonalkód"
+
+msgid "Original Year"
+msgstr "Megjelenés éve"
+
+msgid "Genres"
+msgstr "Műfajok"
+
+msgid "Moods"
 msgstr ""
 
 msgid "Overwrite tags of sub songs"
@@ -1351,6 +622,9 @@ msgstr "Hozzátartozó dalok címkéinek felülírása"
 
 msgid "Add tags to sub songs"
 msgstr "Hozzátartozó dalok címkéinek felvétele"
+
+msgid "Summary"
+msgstr "Összefoglaló"
 
 msgid "Place Formed"
 msgstr "Alakulás helye"
@@ -1367,46 +641,74 @@ msgstr "Hozzátartozó Albumok és Dalok címkéinek felvétele"
 msgid "Authentication Required"
 msgstr "Hitelesítés szükséges"
 
-#. HINT: Catalog Name
-#, php-format
-msgid "Settings for Catalog: %s"
-msgstr "%s Katalógus beállításai"
+msgid "Genre"
+msgstr "Műfaj"
+
+msgid "Auto-inserted Fields"
+msgstr "Mezők automatikus beszúrása"
+
+msgid "Catalog Type"
+msgstr "Katalógus típus"
+
+msgid "Catalog Media Type"
+msgstr "Katalógus médiatípus"
+
+msgid "Filename Pattern"
+msgstr "Fájlnév minta"
+
+msgid "Folder Pattern"
+msgstr "Mappa minta"
+
+msgid "(no leading or ending '/')"
+msgstr "(kezdő és záró '/' nélkül)"
 
 msgid "Save Catalog Settings"
 msgstr "Katalógusbeállítások mentése"
 
-msgid "Base Playlist"
-msgstr "Alap Lejátszási lista"
+msgid "Object Type"
+msgstr "Objektum típusa"
 
-msgid "Cooldown Time"
-msgstr "Kihűlési idő"
-
-msgid "Make Default"
-msgstr "Alapértelmezetté tesz"
-
-msgid "Edit Catalog Filter"
+msgid "Mixed"
 msgstr ""
-
-msgid "Edit Filter"
-msgstr ""
-
-msgid "Description:"
-msgstr "Leírás:"
-
-msgid "External Link"
-msgstr "Külső hivatkozás"
-
-msgid "Order"
-msgstr ""
-
-msgid "Confirm"
-msgstr "Jóváhagy"
-
-msgid "Owner"
-msgstr "Tulajdonos"
 
 msgid "Collaborate"
 msgstr ""
+
+msgid "Category"
+msgstr "Kategória"
+
+msgid "Address"
+msgstr "Cím"
+
+msgid "Country"
+msgstr ""
+
+msgid "Status"
+msgstr "Állapot"
+
+msgid "Active"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Stream URL"
+msgstr "Stream URL"
+
+msgid "Codec"
+msgstr "Kodek"
+
+msgid "Random"
+msgstr "Véletlenszerű"
+
+msgid "Item Limit (0 = unlimited)"
+msgstr "Elemszám korlát (0 = korlátlan)"
+
+msgid "Title"
+msgstr "Cím"
+
+msgid "Description"
+msgstr "Leírás"
 
 msgid "GUID"
 msgstr "GUID"
@@ -1420,11 +722,23 @@ msgstr "Hírfolyam"
 msgid "Language"
 msgstr "Nyelv"
 
-msgid "Random"
-msgstr "Véletlenszerű"
+msgid "Copyright"
+msgstr "Copyright"
 
-msgid "Item Limit (0 = unlimited)"
-msgstr "Elemszám korlát (0 = korlátlan)"
+msgid "Share"
+msgstr "Megosztás"
+
+msgid "Max Counter"
+msgstr "Max. számláló"
+
+msgid "Expiry Days"
+msgstr "Lejárati napok"
+
+msgid "Allow Stream"
+msgstr "Stream engedélyezése"
+
+msgid "Allow Download"
+msgstr "Letöltés engedélyezése"
 
 msgid "Edit Existing Shoutbox Post"
 msgstr "Létező Shoutbox bejegyzés szerkesztése"
@@ -1437,14 +751,26 @@ msgstr "Létrehozta: %1$s Kinek: %2$s"
 msgid "Comment:"
 msgstr "Megjegyzés:"
 
-msgid "Track"
-msgstr "Szám"
+msgid "Stick this comment"
+msgstr "Megjegyzés kiragasztása"
 
 msgid "Composer"
 msgstr "Szerző"
 
+msgid "Comment"
+msgstr "Megjegyzés"
+
+msgid "Label"
+msgstr "Címke"
+
+msgid "Music License"
+msgstr "Zene Licensz"
+
 msgid "More Metadata"
 msgstr "További Metaadatok"
+
+msgid "Less Metadata"
+msgstr ""
 
 msgid "Hidden"
 msgstr ""
@@ -1458,56 +784,210 @@ msgstr "Állandó"
 msgid "Keep Existing"
 msgstr "Létező megtartása"
 
-msgid "Editing Existing User"
-msgstr "Létező felhasználó szerkesztése"
-
-msgid "User Properties"
-msgstr "Felhasználó tulajdonságai"
-
-msgid "Catalog Filter"
-msgstr ""
-
-msgid "Other Options"
-msgstr "Egyéb lehetőségek"
-
-msgid "Config Preset"
-msgstr "Előre beállított config"
-
-msgid "This affects all non-admin accounts"
-msgstr ""
-
-msgid "System"
-msgstr "Rendszer"
-
-msgid "Default"
-msgstr "Alapértelmezett"
-
-msgid "Minimalist"
-msgstr "Minimalista"
-
-msgid "Community"
-msgstr "Közösségi"
-
-msgid "Prevent Preset Override"
-msgstr ""
-
-msgid "Update User"
-msgstr "Felhasználó frissítése"
-
 msgid "Release Date"
 msgstr "Kiadás dátuma"
 
-msgid "Export Catalog"
-msgstr "Katalógus exportálása"
+msgid "Actions"
+msgstr "Akciók"
 
-msgid "Format"
-msgstr "Formátum"
+msgid "Add Current Host"
+msgstr "Jelenlegi kiszolgáló hozzáadása"
 
-msgid "Export"
-msgstr "Exportálás"
+msgid "Add API / RPC Host"
+msgstr "API / RPC kiszolgáló hozzáadása"
+
+msgid "Add Local Network Definition"
+msgstr "Helyi Hálózati Definíció hozzáadása"
+
+msgid "Advanced Add"
+msgstr "Összetett hozzáadás"
+
+msgid "Access Control Entries"
+msgstr "Hozzáférés szabályzás bejegyzések"
+
+msgid "Start Address"
+msgstr "Kezdő cím"
+
+msgid "End Address"
+msgstr "Vég cím"
+
+msgid "User"
+msgstr "Felhasználó"
+
+msgid "Add Access Control List"
+msgstr "Hozzáférési lista (ACL) hozzáadása"
+
+msgid "API/RPC"
+msgstr "API/RPC"
+
+msgid "Local Network Definition"
+msgstr "Helyi Hálózati Definíció"
+
+msgid "Stream Access"
+msgstr "Stream Hozzáférés"
+
+msgid "Read"
+msgstr "Olvasás"
+
+msgid "Read/Write"
+msgstr "Olvasás/Írás"
+
+msgid "Web Interface"
+msgstr "Web Interfész"
+
+msgid "IPv4 or IPv6 Addresses"
+msgstr "IPv4 vagy IPv6 címek"
+
+msgid "Start"
+msgstr "Kezdet"
+
+msgid "End"
+msgstr "Vég"
+
+msgid "Create ACL"
+msgstr "ACL létrehozása"
+
+msgid "Add Catalog Filter"
+msgstr ""
+
+msgid "Please enable 'catalog_filter' in your sever config file"
+msgstr ""
+
+msgid "Catalog filters are a way to stop users accessing different catalogs"
+msgstr ""
+
+msgid ""
+"If you do not tick a catalog, it will be hidden from users that you assign "
+"to this filter"
+msgstr ""
+
+msgid "Filter Name"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "Add Catalog"
+msgstr "Katalógus hozzáadása"
+
+msgid "New catalogs are added to the DEFAULT group when created"
+msgstr ""
+
+msgid ""
+"In the form below enter either a local path (i.e. /data/music) or the URL to"
+" a remote Ampache installation (i.e http://theotherampache.com)"
+msgstr ""
+
+msgid "Catalog Name"
+msgstr "Katalógusnév"
+
+msgid "Song Artist"
+msgstr ""
+
+msgid "Song Title"
+msgstr "Dal cím"
+
+msgid "Track (0 padded)"
+msgstr "Szám (0-val feltöltve)"
+
+msgid "Ignore"
+msgstr ""
+
+msgid "Gather Art"
+msgstr "Borítók összegyűjtése"
+
+msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
+msgstr "Lejátszási listák építése lejátszásilista-fájlokból. (m3u, m3u8, asx, pls, xspf)"
+
+msgid "Music"
+msgstr "Zene"
+
+msgid "Add Label"
+msgstr "Címke hozzáadása"
+
+msgid "Personal"
+msgstr "Személyes"
+
+msgid "Association"
+msgstr "Egyesület"
+
+msgid "Company"
+msgstr "Vállalat"
+
+msgid "Imprint"
+msgstr ""
+
+msgid "Production"
+msgstr ""
+
+msgid "Original Production"
+msgstr ""
+
+msgid "Bootleg Production"
+msgstr ""
+
+msgid "Reissue Production"
+msgstr ""
+
+msgid "Distributor"
+msgstr ""
+
+msgid "Holding"
+msgstr ""
+
+msgid "Rights Society"
+msgstr ""
+
+msgid "Tag Generated"
+msgstr ""
+
+msgid "Podcast Feed URL"
+msgstr "Podcast hírfolyam URL"
+
+msgid "Subscribe"
+msgstr "Feliratkozás"
+
+msgid "Compose Message"
+msgstr "Üzenet írása"
+
+msgid "Recipient"
+msgstr "Címzett"
+
+msgid "Subject"
+msgstr "Tárgy"
+
+msgid "Message"
+msgstr "Üzenet"
+
+msgid "Send"
+msgstr "Küldés"
+
+msgid "Add User"
+msgstr "Felhasználó hozzáadása"
+
+msgid "Guest"
+msgstr "Vendég"
+
+msgid "Content Manager"
+msgstr "Tartalom kezelő"
+
+msgid "Catalog Manager"
+msgstr "Katalógus kezelő"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "User Catalog Filter"
+msgstr ""
 
 msgid "Browse Ampache..."
 msgstr "Ampache böngészése"
+
+msgid "Folders"
+msgstr ""
+
+msgid "Artists"
+msgstr "Előadó"
 
 msgid "Album Artists"
 msgstr ""
@@ -1524,182 +1004,87 @@ msgstr "Podcast epizódok"
 msgid "Videos"
 msgstr "Videók"
 
+msgid "Continue"
+msgstr "Folytatás"
+
+msgid "Use of cookies by Ampache"
+msgstr "Az Ampache által használt sütik"
+
+msgid ""
+"Cookies are small text files that are placed on your computer by websites "
+"that you visit. They are widely used in order to make websites work, or work"
+" more efficiently, as well as to provide information to the owners of the "
+"site"
+msgstr "A sütik kis szöveges fájlok, melyeket az általad meglátogatott weboldalak helyeznek el a számítógépeden. Gyakran használják őket weboldalak helyes vagy hatékonyabb működéséhez, emellett az oldal tulajdonosa információkhoz juthat belőlük"
+
+msgid "The table below explains the cookies we use and why"
+msgstr "A lenti táblázat elmagyarázza, milyen sütiket használunk és miért"
+
+msgid "Cookie"
+msgstr "Süti"
+
+msgid "Purpose"
+msgstr "Cél"
+
+msgid "Ampache session"
+msgstr "Ampache munkamenet"
+
+msgid "Ampache session username (if authenticated, information only)"
+msgstr "Ampache munkamenet felhasználónév (ha belépett, csak információ)"
+
+msgid "Automatically authenticate users"
+msgstr "Felhasználók automatikus beléptetése"
+
+msgid "Keep latest web player volume"
+msgstr "Emlékezzen a web lejátszó utolsó hangerőbeállítására"
+
+msgid "Show/Hide column [column_index] when browsing [object_type] objects"
+msgstr "[column_index] oszlop mutatása/elrejtése [object_type] objektumok böngészésekor"
+
+msgid "Use alphabet when browsing [object_type] objects"
+msgstr "Ábécérend használata [object_type] objektumok böngészésekor"
+
+msgid "Use pages when browsing [object_type] objects"
+msgstr "Lapozás használata [object_type] objektumok böngészésekor"
+
+msgid "Collapse/Expand Sidebar [menu_section]"
+msgstr "Oldaldoboz megjelenítése/elrejtése [menu_section]"
+
+msgid "Collapse/Expand Sidebar"
+msgstr "Oldaldoboz megjelenítése/elrejtése"
+
+msgid "Create"
+msgstr "Létrehoz"
+
+msgid "Edit Access Control List"
+msgstr "Hozzáférési Lista (ACL) szerkesztése"
+
+msgid "Edit Catalog Filter"
+msgstr ""
+
+msgid "Edit Filter"
+msgstr ""
+
+msgid "Description:"
+msgstr "Leírás:"
+
+msgid "External Link"
+msgstr "Külső hivatkozás"
+
+msgid "Order"
+msgstr ""
+
 msgid "Top Rated"
 msgstr "Legtöbbre értékelt"
 
-msgid "Newest"
-msgstr "Legújabb"
-
-msgid "Popular"
-msgstr "Népszerű"
-
-msgid "Recent"
-msgstr "Mostanában"
-
-msgid "Search Ampache"
-msgstr "Ampache keresése"
-
-msgid "Maximum Results"
-msgstr "Eredmények max. száma"
-
-msgid "Unlimited"
-msgstr "Korlátlan"
-
-msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Mentés Okos Lejátszási listaként"
-
-msgid "Save as Playlist"
-msgstr ""
-
-msgid "Art Search"
-msgstr "Borító keresése"
-
-msgid "Starting Art Search"
-msgstr "Borító keresése indul"
-
-msgid "Searched"
-msgstr "Átnézve"
-
-msgid "Artist Art Search"
-msgstr ""
-
-msgid "Cover Art Search"
-msgstr ""
-
-msgid "Direct URL to Image"
-msgstr "Direkt URL a képhez"
-
-msgid "Local Image"
-msgstr "Helyi kép"
-
-msgid "Spotify Album Filters"
-msgstr "Spotify Album szűrők"
-
-msgid "(e.g. '2001', '2001-2005')"
-msgstr "(pl. '2001', '2001-2005')"
-
-msgid "Search Limit"
-msgstr "Keresési korlát"
-
-msgid "Get Art"
-msgstr "Borító beszerzése"
-
-msgid "Statistical Graphs"
-msgstr "Statisztikai grafikonok"
-
-msgid "Show large"
-msgstr "Mutatás nagyban"
-
-msgid "Start Date"
-msgstr "Kezdő dátum"
-
-msgid "End Date"
-msgstr "Vég dátum"
-
-msgid "Zoom"
-msgstr "Nagyít"
-
-msgid "Month"
-msgstr "Hónap"
-
-msgid "Day"
-msgstr "Nap"
-
-msgid "Hour"
-msgstr "Óra"
-
-msgid "Your browser doesn't support this feature."
-msgstr "A böngésződ nem támogatja ezt a funkciót."
-
-msgid "Full-Screen not supported by your browser"
-msgstr ""
-
-msgid "Media is currently playing, are you sure you want to close?"
-msgstr "Média lejátszása folyamatban, biztosan be akarod zárni?"
-
-msgid "Previous"
-msgstr "Előző"
-
-msgid "Pause"
-msgstr "Szünet"
-
-msgid "Stop"
-msgstr "Leállít"
-
-msgid "Mute"
-msgstr "Némít"
-
-msgid "Unmute"
-msgstr "Némítás ki"
-
-msgid "Max Volume"
-msgstr "Max. hangerő"
-
-msgid "Full Screen"
-msgstr "Teljes képernyő"
-
-msgid "Restore Screen"
-msgstr "Képernyő visszaállítása"
-
-msgid "Shuffle"
-msgstr "Összekeverés"
-
-msgid "Shuffle Off"
-msgstr "Összekeverés ki"
-
-msgid "Repeat"
-msgstr "Ismétlés"
-
-msgid "Repeat Off"
-msgstr "Ismétlés ki"
-
-msgid "Show Album"
-msgstr "Album mutatása"
-
-msgid "Show Lyrics"
-msgstr "Dalszöveg mutatása"
-
-msgid "Double click to post a new shout"
-msgstr "Kattints duplán egy új Shout küldéséhez"
-
-msgid "Add All to playlist"
-msgstr "Mind hozzáadása Lejátszási listához"
-
-msgid "Loop Playlist"
-msgstr ""
-
-msgid "Expand/Collapse playlist"
-msgstr ""
-
-msgid "Slideshow"
-msgstr "Diavetítés"
-
-msgid "My Broadcast"
-msgstr "Műsorszórásom"
-
-msgid "Visualizer"
-msgstr "Vizualizáló"
-
-msgid "ReplayGain"
-msgstr "ReplayGain"
-
-msgid "Visualizer full-screen"
-msgstr "Teljes képernyős vizualizáló"
-
-msgid "Equalizer"
-msgstr "Equalizer"
-
-msgid "Unsupported"
-msgstr "Nem támogatott"
-
-msgid "This media is not supported by the player. Is your browser up to date?"
-msgstr "A lejátszó nem támogatja ezt a médiát. Friss a böngésződ?"
+msgid "Playlists"
+msgstr "Lejátszási listák"
 
 msgid "Importing a Playlist from a File"
 msgstr "Lejátszási lista importálása fájlból"
+
+msgid "Filename"
+msgstr "Fájlnév"
 
 msgid "Import Playlist"
 msgstr "Lejátszási lista importálása"
@@ -1710,11 +1095,212 @@ msgstr "Fájl"
 msgid "Format: opml"
 msgstr ""
 
+msgid "Add Localplay Instance"
+msgstr "Localplay példány hozzáadása"
+
+msgid "Add Instance"
+msgstr "Példány hozzáadása"
+
+msgid "Edit Localplay Instance"
+msgstr "Localplay példány szerkesztése"
+
+msgid "Update Instance"
+msgstr "Példány frissítése"
+
+msgid "Show Localplay Instances"
+msgstr "Localplay példányok mutatása"
+
+msgid "Edit Instance"
+msgstr "Példány szerkesztése"
+
+msgid "Are You Sure?"
+msgstr "Biztos vagy benne?"
+
+msgid "Localplay Control"
+msgstr "Localplay vezérlés"
+
+msgid "Now Playing"
+msgstr "Most Lejátszott"
+
+msgid "Volume"
+msgstr "Hangerő"
+
+msgid "Repeat"
+msgstr "Ismétlés"
+
+msgid "Clear Playlist"
+msgstr "Lejátszási lista ürítése"
+
+msgid "Ampache"
+msgstr "Ampache"
+
+msgid "Remember Me"
+msgstr "Emlékezz rám"
+
+msgid "Login"
+msgstr "Belépés"
+
+msgid "Register"
+msgstr "Regisztráció"
+
+msgid "Lost Password"
+msgstr "Elfelejtett jelszó"
+
+msgid "Mini player"
+msgstr ""
+
+msgid ""
+"Ampache places cookies on your computer to help make this website better."
+msgstr ""
+
+msgid ""
+"Cookies are used for core site functionality and are not used for tracking "
+"or analytics."
+msgstr ""
+
+msgid "By logging in you agree to the use of cookies while using this site."
+msgstr ""
+
+msgid "Submit"
+msgstr "Küldés"
+
+msgid "Mail to"
+msgstr "Levél küldése"
+
+msgid "Mail Everyone"
+msgstr "Levél mindenkinek"
+
+msgid "Mail Users"
+msgstr "Levél felhasználóknak"
+
+msgid "Mail Admins"
+msgstr "Levél adminoknak"
+
+msgid "Mail Inactive Users"
+msgstr "Levél inaktív felhasználóknak"
+
+msgid "Inactive Users"
+msgstr "Inaktív felhasználók"
+
+msgid "From"
+msgstr "Feladó"
+
+msgid "Self"
+msgstr "Önmaga"
+
+msgid "Yourself"
+msgstr "Önmagad"
+
+msgid "System"
+msgstr "Rendszer"
+
+msgid "Send E-mail"
+msgstr "E-mail küldése"
+
+msgid "Gather All Art"
+msgstr "Minden Borító összegyűjtése"
+
+msgid "Update All File Tags"
+msgstr ""
+
+msgid "Show Disabled Songs"
+msgstr "Letiltott Dalok mutatása"
+
+msgid "Add to All"
+msgstr "Hozzáadás mindhez"
+
+msgid "Verify All"
+msgstr "Összes ellenőrzése"
+
+msgid "Clean All"
+msgstr "Összes takarítása"
+
+msgid "Scan All Folders"
+msgstr ""
+
+msgid "Update All"
+msgstr "Összes frissítése"
+
+msgid "Garbage Collection"
+msgstr ""
+
+msgid "Add new files from:"
+msgstr ""
+
+msgid "Clean deleted files in:"
+msgstr ""
+
+msgid "Update existing files in:"
+msgstr ""
+
+#. HINT: example path /media/music
+msgid "Example path:"
+msgstr ""
+
+msgid "Number of Users"
+msgstr ""
+
+msgid "Number of Catalogs"
+msgstr ""
+
+msgid "Users"
+msgstr "Felhasználók"
+
+msgid "Newest"
+msgstr "Legújabb"
+
+msgid "Popular"
+msgstr "Népszerű"
+
+msgid "Recent"
+msgstr "Mostanában"
+
+msgid "Update from tags complete"
+msgstr "Frissítés címkékből kész"
+
+msgid "Favorites"
+msgstr "Kedvencek"
+
+msgid "No Genre"
+msgstr ""
+
+msgid "Do you really want to delete this Tag?"
+msgstr "Biztosan törlöd a Címkét?"
+
+msgid "Not Enough Data"
+msgstr "Nincs elég adat"
+
+msgid "Start Date"
+msgstr "Kezdő dátum"
+
+msgid "End Date"
+msgstr "Vég dátum"
+
+msgid "Zoom"
+msgstr "Nagyít"
+
 msgid "Albums of the Moment"
 msgstr "Aktuális Albumok"
 
 msgid "Videos of the Moment"
 msgstr "Aktuális Videók"
+
+msgid "Ampache Error Page"
+msgstr "Ampache hibaoldal"
+
+msgid "For the Love of Music"
+msgstr "A Zene Szeretetéért"
+
+msgid "Error"
+msgstr "Hiba"
+
+msgid ""
+"The following error has occurred, you will be automatically redirected in 10"
+" seconds."
+msgstr "A következő hiba történt, 10 másodpercen belül automatikusan át leszel irányítva"
+
+msgid "Error Messages"
+msgstr "Hibaüzenetek"
 
 msgid "Install Progress"
 msgstr "Telepítés folyamata"
@@ -1799,6 +1385,9 @@ msgid ""
 "then manually place the config file in %s."
 msgstr "Ez a lépés az alapbeállítás értékeivel elkészíti a config fájlt. Ha a config/ mappa írható, az \"írás\" kiválasztásakor az Ampache közvetlenül a megfelelő helyre beírja a config fájlt. Ha \"letöltés\"-t választasz, letöltheted a config fájlt, és kézzel bemásolhatod a helyére: %s ."
 
+msgid "Generate Configuration File"
+msgstr "Konfigurációs fájl generálása"
+
 msgid "Various"
 msgstr "Különféle"
 
@@ -1834,13 +1423,22 @@ msgid ""
 "features automatically."
 msgstr "Ampache optimizálása a használati szokásaidnak megfelelően. A telepítő automatikusan engedélyez/letilt egyes funkciókat."
 
+msgid "Default"
+msgstr "Alapértelmezett"
+
 msgid "Ampache is configured for personal use with the best features."
 msgstr "Ampache beállítva személyes használatra a legjobb funkciókkal."
+
+msgid "Minimalist"
+msgstr "Minimalista"
 
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
 " Interface."
 msgstr "Csak a legszükségesebb funkciók elérhetőek, egyszerű streameléshez a webfelületről."
+
+msgid "Community"
+msgstr "Közösségi"
 
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
@@ -1869,6 +1467,9 @@ msgstr "Lásd a wiki oldalt"
 
 msgid "Template Configuration"
 msgstr "Sablon konfiguráció"
+
+msgid "None"
+msgstr "Nincs"
 
 msgid ""
 "No default transcoding application found. You may need to install a popular "
@@ -1934,6 +1535,12 @@ msgstr "Átugrás"
 msgid "Create Config"
 msgstr "Config létrehozása"
 
+msgid "Choose Installation Language"
+msgstr "Telepítés nyelvének kiválasztása"
+
+msgid "Start Configuration"
+msgstr "Konfiguráció indítása"
+
 msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
@@ -1973,528 +1580,6 @@ msgstr "Ampache adatbázis-felhasználó jelszava"
 msgid "Insert Database"
 msgstr "Adatbázis beszúrása"
 
-msgid "Choose Installation Language"
-msgstr "Telepítés nyelvének kiválasztása"
-
-msgid "Start Configuration"
-msgstr "Konfiguráció indítása"
-
-msgid "Date"
-msgstr "Dátum"
-
-msgid "IP Address"
-msgstr "IP cím"
-
-msgid "Agent"
-msgstr ""
-
-msgid "Unknown"
-msgstr "Ismeretlen"
-
-msgid "Send E-mail"
-msgstr "E-mail küldése"
-
-msgid "Label Edit"
-msgstr "Címke szerkesztés"
-
-msgid "Edit Label"
-msgstr "Címke szerkesztése"
-
-msgid "Create Label"
-msgstr "Címke létrehozása"
-
-msgid "No label found"
-msgstr "Címke nem található"
-
-msgid "Stream"
-msgstr "Stream"
-
-msgid "Live Stream Edit"
-msgstr "Élő stream szerkesztése"
-
-msgid "Manage"
-msgstr "Kezelés"
-
-msgid "No live stream found"
-msgstr "Élő stream nem található"
-
-msgid "Add Localplay Instance"
-msgstr "Localplay példány hozzáadása"
-
-msgid "Add Instance"
-msgstr "Példány hozzáadása"
-
-msgid "Decrease Volume"
-msgstr "Hangerő csökkentése"
-
-msgid "Increase Volume"
-msgstr "Hangerő növelése"
-
-msgid "Edit Localplay Instance"
-msgstr "Localplay példány szerkesztése"
-
-msgid "Update Instance"
-msgstr "Példány frissítése"
-
-msgid "Show Localplay Instances"
-msgstr "Localplay példányok mutatása"
-
-msgid "Edit Instance"
-msgstr "Példány szerkesztése"
-
-msgid "Localplay Control"
-msgstr "Localplay vezérlés"
-
-msgid "Volume"
-msgstr "Hangerő"
-
-msgid "Remember Me"
-msgstr "Emlékezz rám"
-
-msgid "Lost Password"
-msgstr "Elfelejtett jelszó"
-
-msgid ""
-"Ampache places cookies on your computer to help make this website better."
-msgstr ""
-
-msgid ""
-"Cookies are used for core site functionality and are not used for tracking "
-"or analytics."
-msgstr ""
-
-msgid "By logging in you agree to the use of cookies while using this site."
-msgstr ""
-
-msgid "Submit"
-msgstr "Küldés"
-
-msgid "No lyrics found."
-msgstr "Dalszöveg nem található."
-
-msgid "Show more"
-msgstr "Több mutatása"
-
-msgid "Mail to"
-msgstr "Levél küldése"
-
-msgid "Mail Everyone"
-msgstr "Levél mindenkinek"
-
-msgid "Mail Users"
-msgstr "Levél felhasználóknak"
-
-msgid "Mail Admins"
-msgstr "Levél adminoknak"
-
-msgid "Mail Inactive Users"
-msgstr "Levél inaktív felhasználóknak"
-
-msgid "Inactive Users"
-msgstr "Inaktív felhasználók"
-
-msgid "From"
-msgstr "Feladó"
-
-msgid "Self"
-msgstr "Önmaga"
-
-msgid "Yourself"
-msgstr "Önmagad"
-
-msgid "Gather All Art"
-msgstr "Minden Borító összegyűjtése"
-
-msgid "Update All File Tags"
-msgstr ""
-
-msgid "Show Disabled Songs"
-msgstr "Letiltott Dalok mutatása"
-
-msgid "Add to All"
-msgstr "Hozzáadás mindhez"
-
-msgid "Verify All"
-msgstr "Összes ellenőrzése"
-
-msgid "Clean All"
-msgstr "Összes takarítása"
-
-msgid "Update All"
-msgstr "Összes frissítése"
-
-msgid "Are you sure?"
-msgstr ""
-
-msgid "Add new files from:"
-msgstr ""
-
-msgid "Clean deleted files in:"
-msgstr ""
-
-msgid "Update existing files in:"
-msgstr ""
-
-#. HINT: example path /media/music
-msgid "Example path:"
-msgstr ""
-
-msgid "Primary"
-msgstr "Elsődleges"
-
-msgid "No democratic found"
-msgstr "Demokratikus nem található"
-
-msgid "Number of Users"
-msgstr ""
-
-msgid "Number of Catalogs"
-msgstr ""
-
-msgid "Filter name"
-msgstr ""
-
-msgid "Users"
-msgstr "Felhasználók"
-
-msgid "Create License"
-msgstr "Licensz létrehozása"
-
-msgid "No licenses found"
-msgstr "Licensz nem található"
-
-msgid "Object"
-msgstr "Tárgy"
-
-msgid "Sticky"
-msgstr "Kiragasztott"
-
-msgid "Date Added"
-msgstr "Hozzáadás dátuma"
-
-msgid "Trending"
-msgstr "Felkapott"
-
-msgid "No missing albums found"
-msgstr "Hiányzó Albumok nem találhatók"
-
-msgid "Missing Artists"
-msgstr "Hiányzó Előadó"
-
-msgid "No missing artists found"
-msgstr "Hiányzó Előadók nem találhatók"
-
-msgid "Sort Tracks by Artist, Album, Song"
-msgstr "Számok rendezése Előadó, Album, Dal szerint"
-
-msgid "Remove Duplicates"
-msgstr "Duplikátumok eltávolítása"
-
-msgid "Share playlist"
-msgstr ""
-
-msgid "Download Playlist"
-msgstr ""
-
-msgid "Refresh from Smartlist"
-msgstr ""
-
-msgid "Playlist Edit"
-msgstr "Lejátszási lista szerkesztés"
-
-msgid "Do you really want to delete this Playlist?"
-msgstr "Biztosan törölni szeretnéd a Lejátszási listát?"
-
-msgid "Duration"
-msgstr ""
-
-msgid "Reorder"
-msgstr "Felvevő"
-
-msgid "Playlist Name"
-msgstr "Lejátszási lista neve"
-
-msgid "Last Update"
-msgstr "Utolsó frissítés"
-
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr "# elemek"
-
-msgid "No playlist found"
-msgstr "Lejátszási lista nem található"
-
-msgid "Web Player"
-msgstr "Web Lejátszó"
-
-msgid "Installed Version"
-msgstr "Telepített verzió"
-
-msgid "Deactivate"
-msgstr "Kikapcsol"
-
-msgid "Upgrade"
-msgstr "Frissít"
-
-msgid "Fav."
-msgstr "Kedv."
-
-msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
-msgstr "Podcast Epizód szerkesztés"
-
-msgid "Publication Date"
-msgstr "Publikálás dátuma"
-
-msgid "Length"
-msgstr "Hossz"
-
-msgid "Size"
-msgstr "Méret"
-
-msgid "Bitrate"
-msgstr "Bitrate"
-
-msgid "Channels"
-msgstr "Csatornák"
-
-msgid "Sync"
-msgstr "Szinkronizál"
-
-msgid "No podcast episode found"
-msgstr "Podcast Epizód nem található"
-
-msgid "Podcast Edit"
-msgstr "Podcast szerkesztés"
-
-msgid "Edit Podcast"
-msgstr "Podcast szerkesztése"
-
-msgid "Episodes"
-msgstr "Epizódok"
-
-msgid "No podcast found"
-msgstr "Podcast nem található"
-
-msgid "Apply to All"
-msgstr "Alkalmaz mindre"
-
-msgid "Access Level"
-msgstr "Elérési szint"
-
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr "%s beállításainak szerkesztése"
-
-msgid "Update Preferences"
-msgstr "Beállítások frissítése"
-
-msgid "Sent by"
-msgstr "Küldte"
-
-msgid "Reply"
-msgstr "Válasz"
-
-msgid "Compose"
-msgstr "Írás"
-
-msgid "Compose a New Message"
-msgstr "Új üzenet írása"
-
-msgid "Mark as Read"
-msgstr "Olvasottnak jelöl"
-
-msgid "Mark as Unread"
-msgstr "Olvasatlannak jelöl"
-
-msgid "Sender"
-msgstr "Küldő"
-
-msgid "No message found"
-msgstr "Üzenet nem található"
-
-msgid "Queries: "
-msgstr "Lekérdezések:"
-
-msgid "Cache Hits: "
-msgstr "Gyorsítótár találatok:"
-
-msgid "Load Time: "
-msgstr "Betöltési idő:"
-
-msgid "Play Random Selection"
-msgstr "Véletlenszerűen kiválasztottak lejátszása"
-
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d perc"
-msgstr[1] "%d perc"
-
-#, php-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d óra"
-msgstr[1] "%d óra"
-
-msgid "Size Limit"
-msgstr "Méretkorlát"
-
-msgid "Enqueue"
-msgstr "Várakozókhoz ad"
-
-msgid "Last Played"
-msgstr "Lejátszva"
-
-#, php-format
-msgid "%d second ago"
-msgid_plural "%d seconds ago"
-msgstr[0] "%d másodperce"
-msgstr[1] "%d másodperce"
-
-#, php-format
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d perce"
-msgstr[1] "%d perce"
-
-#, php-format
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d órája"
-msgstr[1] "%d órája"
-
-#, php-format
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d napja"
-msgstr[1] "%d napja"
-
-#, php-format
-msgid "%d week ago"
-msgid_plural "%d weeks ago"
-msgstr[0] "%d hete"
-msgstr[1] "%d hete"
-
-#, php-format
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d hónapja"
-msgstr[1] "%d hónapja"
-
-#, php-format
-msgid "%d year ago"
-msgid_plural "%d years ago"
-msgstr[0] "%d éve"
-msgstr[1] "%d éve"
-
-#, php-format
-msgid "%d decade ago"
-msgid_plural "%d decades ago"
-msgstr[0] "%d évtizede"
-msgstr[1] "%d évtizede"
-
-msgid "No recently played items found"
-msgstr "Mostanában lejátszott elemek nem találhatók"
-
-msgid "Recently Skipped"
-msgstr ""
-
-msgid "No similar artist found"
-msgstr "Hasonló Előadók nem találhatók"
-
-msgid "Registration"
-msgstr "Regisztráció"
-
-msgid "Return to Login Page"
-msgstr "Vissza a belépés oldalra"
-
-msgid "Please wait for an administrator to activate your account"
-msgstr "Kérjük, várd meg, hogy egy adminisztrátor aktiválja a fiókod"
-
-msgid ""
-"An activation key has been sent to the e-mail address you provided. Please "
-"check your e-mail for further information"
-msgstr "Az aktivációs kulcs elküldve az általad megadott e-mail címre. Kérjük, ellenőrizd a leveleid további információkért"
-
-msgid "Your account has been created"
-msgstr ""
-
-msgid "Rules"
-msgstr "Szabályok"
-
-msgid "Match"
-msgstr "Egyezés"
-
-msgid "all rules"
-msgstr "minden szabály"
-
-msgid "any rule"
-msgstr "bármely szabály"
-
-msgid "Add Another Rule"
-msgstr "Újabb szabály hozzáadása"
-
-msgid "Anywhere"
-msgstr "Bárhol"
-
-msgid "Add Smart Playlist"
-msgstr "Okos Lejátszási lista hozzáadása"
-
-msgid "Item Limit"
-msgstr "Elemszám korlát"
-
-msgid "No smart playlist found"
-msgstr "Okos Lejátszási lista nem található"
-
-msgid "Smart Playlist Edit"
-msgstr "Okos Lejátszási lista szerkesztés"
-
-msgid "Save Changes"
-msgstr "Változtatások mentése"
-
-msgid "Options"
-msgstr "Lehetőségek"
-
-msgid "Object Type"
-msgstr "Objektum típusa"
-
-msgid "Creation Date"
-msgstr "Létrehozás dátuma"
-
-msgid "Last Visit"
-msgstr "Utolsó látogatás"
-
-msgid "Counter"
-msgstr "Számláló"
-
-msgid "Public URL"
-msgstr "Nyilvános URL"
-
-msgid "Shared by"
-msgstr "Megosztotta"
-
-msgid "Skipped"
-msgstr ""
-
-msgid "No song found"
-msgstr "Dal nem található"
-
-msgid "License"
-msgstr "Licensz"
-
-msgid "Do you really want to delete this Tag?"
-msgstr "Biztosan törlöd a Címkét?"
-
-msgid "No Genre"
-msgstr ""
-
-msgid "Not Enough Data"
-msgstr "Nincs elég adat"
-
 msgid "Ampache -- Config Debug Page"
 msgstr "Ampache -- Config Debug Oldal"
 
@@ -2511,6 +1596,20 @@ msgstr "Azért kerülhettél erre az oldalra, mert a %s konfigurációs fájl ne
 msgid "Please visit the wiki for help"
 msgstr "Kérjük, segítségért látogasd meg a wikit"
 
+msgid "Installation"
+msgstr "Telepítés"
+
+msgid ""
+"You may have reached this page because Ampache was unable to load the "
+"required dependencies"
+msgstr "Azért kerülhettél erre az oldalra, mert az Ampache nem tudta betölteni a szükséges függőségeket"
+
+msgid "Debug Page"
+msgstr "Debug oldal"
+
+msgid "Ampache Debug"
+msgstr "Ampache Debug"
+
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
@@ -2518,9 +1617,6 @@ msgstr "Azért kerülhettél erre az oldalra, mert konfigurációs hiba történ
 
 msgid "Web Installation"
 msgstr "Web telepítés"
-
-msgid "OK"
-msgstr "OK"
 
 msgid "PHP version"
 msgstr "PHP verzió"
@@ -2539,7 +1635,7 @@ msgstr "Ellenőrzi, hogy az Ampache függőségei installálva vannak-e."
 msgid ""
 "Please download Composer from http://getcomposer.org, and install it (e.g: "
 "mv composer.phar /usr/local/bin/composer). Then run `composer install --no-"
-"dev --prefer-source --no-interaction` on the Ampache directory."
+"dev --prefer-dist --no-interaction` on the Ampache directory."
 msgstr ""
 
 msgid "PHP hash extension"
@@ -2598,6 +1694,9 @@ msgid ""
 "required by Ampache."
 msgstr "Ellenőrzi, hogy a JSON kiterjesztés engedélyezve van-e. Ez a kiterjesztés szükséges az Ampache-nak."
 
+msgid "PHP intl extension"
+msgstr "PHP intl kiterjesztés"
+
 msgid ""
 "This tests whether you have the intl extension enabled. This extension is "
 "required by Ampache."
@@ -2618,6 +1717,32 @@ msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly"
 " necessary, but may result in a better experience (zip download)."
 msgstr "Ellenőrzi, hogy a zlib kiterjesztés engedélyezve van-e. Ez nem feltétlenül szükséges, de a felhasználói élményt jobbá teheti (zip letöltés)."
+
+msgid "WARNING"
+msgstr "FIGYELMEZTETÉS"
+
+msgid "UNKNOWN"
+msgstr ""
+
+msgid "HTTP compression"
+msgstr ""
+
+msgid ""
+"This measures the page you are reading: your browser reports both the bytes "
+"it received and the bytes after decoding, so a smaller received size means "
+"the server compressed it. Compression is not required, but it makes a large "
+"difference to page and API response sizes."
+msgstr ""
+
+msgid ""
+"Enable gzip or brotli in your web server for html, css, javascript, json and"
+" xml. Do not compress audio streams: they are already compressed, so it only"
+" costs CPU on every listen."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript, which is why it reads as unknown right now."
+msgstr ""
 
 msgid "PHP SimpleXML extension"
 msgstr "PHP SimpleXML kiterjesztés"
@@ -2720,8 +1845,553 @@ msgid ""
 "then your web_path is not set correctly."
 msgstr "Ez a teszt ellenőrzi, hogy a web_path változó helyesen van-e beállítva, és a kezdőlap megjeleníthető. Ha nem látsz pipát, a web_path nincs helyesen beállítva."
 
-msgid "Update from tags complete"
-msgstr "Frissítés címkékből kész"
+msgid "Date"
+msgstr "Dátum"
+
+msgid "IP Address"
+msgstr "IP cím"
+
+msgid "Agent"
+msgstr ""
+
+msgid "Unknown"
+msgstr "Ismeretlen"
+
+msgid "Label Edit"
+msgstr "Címke szerkesztés"
+
+msgid "Edit Label"
+msgstr "Címke szerkesztése"
+
+msgid "Live Stream Edit"
+msgstr "Élő stream szerkesztése"
+
+msgid "Song Lyrics"
+msgstr ""
+
+msgid "Show more"
+msgstr "Több mutatása"
+
+msgid "Primary"
+msgstr "Elsődleges"
+
+msgid "Missing Artists"
+msgstr "Hiányzó Előadó"
+
+msgid "No missing artists found"
+msgstr "Hiányzó Előadók nem találhatók"
+
+msgid "Donate"
+msgstr "Támogatás"
+
+msgid "Show/Hide Player"
+msgstr "Lejátszó megjelenítése/elrejtése"
+
+msgid "Information"
+msgstr "Információ"
+
+msgid "Menu"
+msgstr ""
+
+msgid "New messages"
+msgstr "Új üzenetek"
+
+msgid "Show/Hide Playlist"
+msgstr "Lejátszási lista megjelenítése/elrejtése"
+
+msgid "Loading"
+msgstr "Betöltés"
+
+msgid "Close"
+msgstr ""
+
+msgid "Your Ampache config file is out of date!"
+msgstr "Az Ampache config fájlod elavult!"
+
+msgid "Update your current config file automatically"
+msgstr ""
+
+msgid "Download a copy of the new version"
+msgstr ""
+
+#, php-format
+msgid "%s selected"
+msgstr ""
+
+msgid "Show less"
+msgstr ""
+
+msgid "Add to New Playlist"
+msgstr "Hozzáadás új Lejátszási listához"
+
+msgid "Add to New Collection"
+msgstr ""
+
+msgid "Batch download"
+msgstr "Csoportos letöltés"
+
+msgid "Add dynamic items"
+msgstr "Dinamikus elemek hozzáadása"
+
+msgid "Random song"
+msgstr "Véletlenszerű Dal"
+
+msgid "Random artist"
+msgstr "Véletlenszerű Előadó"
+
+msgid "Random album"
+msgstr "Véletlenszerű Album"
+
+msgid "Random playlist"
+msgstr "Véletlenszerű Lejátszási lista"
+
+msgid "No items"
+msgstr "Nincsenek elemek"
+
+msgid "More"
+msgstr "Több"
+
+msgid "Log out"
+msgstr "Kilépés"
+
+msgid "Show Lyrics"
+msgstr "Dalszöveg mutatása"
+
+msgid "Add All to playlist"
+msgstr "Mind hozzáadása Lejátszási listához"
+
+msgid "Loop Playlist"
+msgstr ""
+
+msgid "Expand/Collapse playlist"
+msgstr ""
+
+msgid "Visualizer"
+msgstr "Vizualizáló"
+
+msgid "Slideshow"
+msgstr "Diavetítés"
+
+msgid "My Broadcast"
+msgstr "Műsorszórásom"
+
+msgid "Show Now Playing"
+msgstr ""
+
+msgid "ReplayGain"
+msgstr "ReplayGain"
+
+msgid "Equalizer"
+msgstr "Equalizer"
+
+msgid "Visualizer full-screen"
+msgstr "Teljes képernyős vizualizáló"
+
+msgid "Unsupported"
+msgstr "Nem támogatott"
+
+msgid "This media is not supported by the player. Is your browser up to date?"
+msgstr "A lejátszó nem támogatja ezt a médiát. Friss a böngésződ?"
+
+msgid "Are you sure? This will replace the current track order"
+msgstr ""
+
+msgid "Sort Tracks by Artist, Album, Song"
+msgstr "Számok rendezése Előadó, Album, Dal szerint"
+
+msgid "Remove Duplicates"
+msgstr "Duplikátumok eltávolítása"
+
+msgid "Share playlist"
+msgstr ""
+
+msgid "Download Playlist"
+msgstr ""
+
+msgid "Refresh from Smartlist"
+msgstr ""
+
+msgid "Playlist Edit"
+msgstr "Lejátszási lista szerkesztés"
+
+msgid "Do you really want to delete this Playlist?"
+msgstr "Biztosan törölni szeretnéd a Lejátszási listát?"
+
+msgid "Smart Playlist Edit"
+msgstr "Okos Lejátszási lista szerkesztés"
+
+msgid "Save Changes"
+msgstr "Változtatások mentése"
+
+msgid "Save as Playlist"
+msgstr ""
+
+msgid "Waveform"
+msgstr ""
+
+msgid "Sync"
+msgstr "Szinkronizál"
+
+msgid "Started"
+msgstr "Elindult"
+
+msgid "Podcast Episode Edit"
+msgstr "Podcast Epizód szerkesztés"
+
+msgid "Podcast Edit"
+msgstr "Podcast szerkesztés"
+
+msgid "Edit Podcast"
+msgstr "Podcast szerkesztése"
+
+msgid "Are you sure? This will overwrite Podcast details using the RSS feed"
+msgstr ""
+
+msgid "Update details from RSS feed"
+msgstr ""
+
+msgid "Episodes"
+msgstr "Epizódok"
+
+msgid "Checking your browser"
+msgstr ""
+
+msgid "This link is rate limited. Your download will start on its own."
+msgstr ""
+
+msgid "Return to the previous page"
+msgstr ""
+
+msgid "Checking your browser..."
+msgstr ""
+
+#. HINT: %d is how far along the check is, as a percentage
+#, php-format
+msgid "Checking your browser... %d%%"
+msgstr ""
+
+msgid "Check passed."
+msgstr ""
+
+msgid "Your browser is too old to pass this check."
+msgstr ""
+
+msgid "The browser check failed to run. Please reload the page."
+msgstr ""
+
+msgid "Your download has started."
+msgstr ""
+
+msgid ""
+"This check needs JavaScript and Web Workers, and this browser is not running"
+" them."
+msgstr ""
+
+msgid ""
+"Enable them and reload the page, or ask the administrator of this server for"
+" another way in."
+msgstr ""
+
+msgid "Confirm Subsonic Password"
+msgstr ""
+
+msgid "Update Account"
+msgstr "Fiók frissítése"
+
+msgid "Update Preferences"
+msgstr "Beállítások frissítése"
+
+msgid "Preference"
+msgstr "Beállítás"
+
+msgid "Value"
+msgstr "Érték"
+
+msgid "Apply to All"
+msgstr "Alkalmaz mindre"
+
+msgid "Access Level"
+msgstr "Elérési szint"
+
+msgid "Sent by"
+msgstr "Küldte"
+
+msgid "Reply"
+msgstr "Válasz"
+
+msgid "Queries: "
+msgstr "Lekérdezések:"
+
+msgid "Cache Hits: "
+msgstr "Gyorsítótár találatok:"
+
+msgid "Load Time: "
+msgstr "Betöltési idő:"
+
+msgid "No recently played items found"
+msgstr "Mostanában lejátszott elemek nem találhatók"
+
+msgid "No similar artist found"
+msgstr "Hasonló Előadók nem találhatók"
+
+msgid "Registration"
+msgstr "Regisztráció"
+
+msgid "User Agreement"
+msgstr "Felhasználói szerződés"
+
+msgid "Required fields"
+msgstr "Kötelező mezők"
+
+msgid "Captcha is required"
+msgstr "Captcha szükséges"
+
+msgid "I Accept"
+msgstr "Elfogadom"
+
+msgid "Search Ampache"
+msgstr "Ampache keresése"
+
+msgid "Maximum Results"
+msgstr "Eredmények max. száma"
+
+msgid "Unlimited"
+msgstr "Korlátlan"
+
+msgid "Permalink"
+msgstr ""
+
+msgid "Save as Smart Playlist"
+msgstr "Mentés Okos Lejátszási listaként"
+
+msgid "Options"
+msgstr "Lehetőségek"
+
+msgid "Play Random Selection"
+msgstr "Véletlenszerűen kiválasztottak lejátszása"
+
+msgid "Length"
+msgstr "Hossz"
+
+msgid "Size Limit"
+msgstr "Méretkorlát"
+
+msgid "Enqueue"
+msgstr "Várakozókhoz ad"
+
+msgid "Rules"
+msgstr "Szabályok"
+
+msgid "Match"
+msgstr "Egyezés"
+
+msgid "all rules"
+msgstr "minden szabály"
+
+msgid "any rule"
+msgstr "bármely szabály"
+
+msgid "Add Another Rule"
+msgstr "Újabb szabály hozzáadása"
+
+msgid "Create Share"
+msgstr "Megosztás létrehozása"
+
+msgid "Secret"
+msgstr "Secret"
+
+msgid "Shoutbox"
+msgstr "Shoutbox"
+
+msgid "Expand/Collapse"
+msgstr "Kinyitás/Összecsukás"
+
+msgid "Show Instances"
+msgstr "Példányok mutatása"
+
+msgid "Show Playlist"
+msgstr "Lejátszási listák mutatása"
+
+msgid "Active Instance"
+msgstr "Aktív Példány"
+
+msgid "Localplay Disabled"
+msgstr "Localplay letiltva"
+
+msgid "Uploads"
+msgstr "Feltöltések"
+
+msgid "Help"
+msgstr ""
+
+msgid "Ampache Wiki"
+msgstr ""
+
+msgid "API Documentation"
+msgstr ""
+
+msgid "Cookie Information"
+msgstr ""
+
+msgid "Admin Disabled"
+msgstr "Adminisztrátor letiltva"
+
+msgid "Connected Users"
+msgstr ""
+
+msgid "Total Users"
+msgstr ""
+
+msgid "Catalog Size"
+msgstr ""
+
+msgid "Catalog Time"
+msgstr ""
+
+msgid "Path"
+msgstr "Elérési út"
+
+msgid "Last Verify"
+msgstr "Utolsó ellenőrzés"
+
+msgid "Last Add"
+msgstr "Utolsó hozzáadás"
+
+msgid "Last Clean"
+msgstr "Utolsó takarítás"
+
+msgid "Write New Config"
+msgstr "Új config írása"
+
+msgid "Set Database Charset"
+msgstr "Adatbázis karakterkészlet beállítása"
+
+msgid "Clear Songs Cache"
+msgstr "Dal gyorsítótár ürítése"
+
+msgid "Clear Artists Cache"
+msgstr "Előadó gyorsítótár ürítése"
+
+msgid "Clear Albums Cache"
+msgstr "Album gyorsítótár ürítése"
+
+msgid "Clear Perpetual API Sessions"
+msgstr ""
+
+msgid "Ampache Update"
+msgstr "Ampache frissítése"
+
+msgid "Installed Ampache version"
+msgstr "Telepített Ampache verzió"
+
+msgid "Latest Ampache version"
+msgstr "Legfrissebb Ampache verzió"
+
+msgid "GitHub Branch"
+msgstr "GitHub Branch"
+
+msgid "Last Update"
+msgstr "Utolsó frissítés"
+
+msgid "Force check"
+msgstr "Ellenőrzés kényszerítése"
+
+msgid "Ampache Cron"
+msgstr "Ampache Cron"
+
+msgid "The last cron was completed"
+msgstr "A legutolsó cron folyamat befejeződött"
+
+msgid "Invalid configuration settings"
+msgstr "Érvénytelen konfigurációs beállítás"
+
+msgid "Setting"
+msgstr "Beállítások"
+
+msgid "PHP Settings"
+msgstr "PHP beállítások"
+
+msgid "Version"
+msgstr "Verzió"
+
+msgid "Memory Limit"
+msgstr "Memóriakorlát"
+
+msgid "Maximum Execution Time"
+msgstr "Leghosszabb végrehajtási idő"
+
+msgid "Override Execution Time"
+msgstr "Végrehajtási idő felülírása"
+
+msgid "Succeeded"
+msgstr "Sikeres"
+
+msgid "Failed"
+msgstr "Nem sikerült"
+
+msgid "Open Basedir"
+msgstr "Kezdőmappa megnyitása"
+
+msgid "PHP Modules"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Current Configuration"
+msgstr "Aktuális konfiguráció"
+
+msgid "The following updates need to be performed:"
+msgstr "A következő frissítéseket kell végrehajtani:"
+
+msgid "Warning"
+msgstr ""
+
+msgid "Update Now!"
+msgstr ""
+
+msgid "Target folder"
+msgstr "Cél mappa"
+
+msgid "New folder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Leave the artist and album fields blank to read file tags"
+msgstr "Hagyd üresen az előadó és album mezőket a fájl tagek felolvasásához"
+
+msgid ""
+"The music license you choose may give away some rights in an irrevocable "
+"manner."
+msgstr ""
+
+msgid ""
+"Read the text of the license you choose carefully with the 'View License' "
+"link."
+msgstr ""
+
+msgid "Files"
+msgstr "Fájlok"
+
+msgid "Max upload size"
+msgstr ""
+
+msgid "Allowed file type"
+msgstr "Engedélyezett fájltípusok"
 
 msgid "Registration Validation"
 msgstr "Regisztráció érvényessége"
@@ -2738,14 +2408,14 @@ msgstr "Ellenőrzés nem sikerült"
 msgid "The validation key used isn't correct"
 msgstr "A használt ellenőrzőkulcs nem megfelelő"
 
-msgid "Never"
-msgstr "Soha"
+msgid "Send private message"
+msgstr "Személyes üzenet küldése"
+
+msgid "Disable"
+msgstr "Letilt"
 
 msgid "Display Name"
 msgstr "Megjelenített név"
-
-msgid "Send private message"
-msgstr "Személyes üzenet küldése"
 
 msgid "Wrapped"
 msgstr ""
@@ -2765,6 +2435,12 @@ msgstr "Felhasználó jelenleg onlájn"
 msgid "User is Offline Now"
 msgstr "Felhasználó jelenleg offlájn"
 
+msgid "Played"
+msgstr "Lejátszva"
+
+msgid "Skipped"
+msgstr ""
+
 msgid "Following"
 msgstr "Követve"
 
@@ -2777,14 +2453,180 @@ msgstr "Idővonal"
 msgid "Active Playlist"
 msgstr "Aktív Lejátszási lista"
 
-msgid "User Agreement"
-msgstr "Felhasználói szerződés"
+msgid "Subtitle"
+msgstr "Felirat"
 
-msgid "Required fields"
-msgstr "Kötelező mezők"
+msgid "Video Information"
+msgstr "Videó információ"
 
-msgid "I Accept"
-msgstr "Elfogadom"
+msgid "Video Edit"
+msgstr "Videószerkesztés"
+
+msgid "Songs Played"
+msgstr ""
+
+msgid "Minutes Played"
+msgstr ""
+
+#, php-format
+msgid "Tried to clobber '%s' without setting clobber"
+msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
+
+#. HINT: File
+#, php-format
+msgid "Unknown %s"
+msgstr "Ismeretlen %s"
+
+msgid "Add New"
+msgstr "Új hozzáadása"
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Not Found: %s"
+msgstr ""
+
+msgid "View License"
+msgstr "Licensz megtekintése"
+
+msgid "Activate"
+msgstr "Aktiválás"
+
+msgid "Addition Time"
+msgstr "Hozzáadás ideje"
+
+#, php-format
+msgid "Settings for Catalog: %s"
+msgstr "%s Katalógus beállításai"
+
+msgid "Installed Version"
+msgstr "Telepített verzió"
+
+msgid "Deactivate"
+msgstr "Kikapcsol"
+
+msgid "Upgrade"
+msgstr "Frissít"
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr "%s beállításainak szerkesztése"
+
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Time"
+msgstr "Hossz"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Unknown (Orphaned)"
+msgstr "Ismeretlen (Árva)"
+
+msgid "Album Art"
+msgstr "Albumborító"
+
+msgid "Artist Art Search"
+msgstr ""
+
+msgid "Cover Art Search"
+msgstr ""
+
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Rating"
+msgstr "Értékelés"
+
+msgid "Starts With"
+msgstr "A kezdete"
+
+msgid "Contains"
+msgstr ""
+
+msgid "Listeners"
+msgstr "Hallgatók"
+
+msgid "Live"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Remove from collection"
+msgstr ""
+
+msgid "Remove {count} selected items from this collection?"
+msgstr ""
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr "# elemek"
+
+msgid "Holds"
+msgstr ""
+
+msgid "Votes"
+msgstr "Szavazatok"
+
+msgid "Playlist Name"
+msgstr "Lejátszási lista neve"
+
+msgid "Remove from playlist"
+msgstr ""
+
+msgid "Remove {count} selected items from this playlist?"
+msgstr ""
+
+msgid "Publication Date"
+msgstr "Publikálás dátuma"
+
+msgid "Sender"
+msgstr "Küldő"
+
+msgid "Object"
+msgstr "Tárgy"
+
+msgid "Creation Date"
+msgstr "Létrehozás dátuma"
+
+msgid "Last Visit"
+msgstr "Utolsó látogatás"
+
+msgid "Counter"
+msgstr "Számláló"
+
+msgid "Public URL"
+msgstr "Nyilvános URL"
+
+msgid "Sticky"
+msgstr "Kiragasztott"
+
+msgid "Date Added"
+msgstr "Hozzáadás dátuma"
+
+msgid "Item Limit"
+msgstr "Elemszám korlát"
+
+msgid "License"
+msgstr "Licensz"
+
+msgid "Added"
+msgstr "Hozzáadva"
 
 msgid "Registration Date"
 msgstr "Regisztráció dátuma"
@@ -2795,61 +2637,245 @@ msgstr "Utolsó IP cím"
 msgid "Online"
 msgstr "Onlájn"
 
-msgid "Verify Catalog"
-msgstr "Katalógus ellenőrzése"
+msgid "Resolution"
+msgstr "Felbontás"
+
+msgid "Trending"
+msgstr "Felkapott"
+
+msgid "Found"
+msgstr "Megtalálva"
+
+msgid "Searched"
+msgstr "Átnézve"
+
+msgid "Checking"
+msgstr "Ellenőrzés"
+
+msgid "Verified"
+msgstr "Ellenőrizve"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Starting New Media Search on \"%s\" Catalog"
+msgstr "Új média keresésének indítása a \"%s\" Katalógusban"
+
+msgid "Starting Art Search"
+msgstr "Borító keresése indul"
+
+#. HINT: Catalog Name
+#, php-format
+msgid "Cleaning the \"%s\" Catalog"
+msgstr "\"%s\" Katalógus takarítása"
 
 #. HINT: Catalog Name
 #, php-format
 msgid "Updating the %s Catalog"
 msgstr "%s Katalógus frissítése"
 
-msgid "Verified"
-msgstr "Ellenőrizve"
+msgid "Reading"
+msgstr "Olvasás"
 
-msgid "Subtitle"
-msgstr "Felirat"
+msgid "Starting New Media Search"
+msgstr "Új média keresésének indítása"
 
-msgid "Video Edit"
-msgstr "Videószerkesztés"
+msgid "Art Search"
+msgstr "Borító keresése"
 
-msgid "Resolution"
-msgstr "Felbontás"
+msgid "Clean Catalog"
+msgstr "Katalógus takarítása"
 
-msgid "Display"
-msgstr "Megjelenítés"
+msgid "Verify Catalog"
+msgstr "Katalógus ellenőrzése"
 
-msgid "Audio Bitrate"
-msgstr "Audió Bitrate"
+msgid "Verify"
+msgstr "Ellenőriz"
 
-msgid "Video Bitrate"
-msgstr "Videó Bitrate"
+msgid "Clean"
+msgstr "Takarít"
 
-msgid "Frame Rate"
-msgstr "Képkockák másodpercenként"
-
-msgid "Last Updated"
-msgstr "Utoljára frissítve"
-
-msgid "Added"
-msgstr "Hozzáadva"
-
-msgid "Video Information"
-msgstr "Videó információ"
-
-msgid "No video found"
-msgstr "Videó nem található"
-
-msgid "Ampache Wrapped"
+msgid "Scan Folders"
 msgstr ""
 
-msgid "Songs Played"
+msgid "Update File Tags"
 msgstr ""
 
-msgid "Minutes Played"
+msgid "Save the current order of this collection?"
 msgstr ""
 
-msgid "Ratings"
+msgid "Folder Edit"
 msgstr ""
+
+msgid "Sign in with OpenID Connect"
+msgstr ""
+
+#, php-format
+msgid "Search on %s ..."
+msgstr ""
+
+msgid "Radio Station"
+msgstr ""
+
+msgid "Stream"
+msgstr "Stream"
+
+msgid "Recently Played"
+msgstr "Nemrég Lejátszott"
+
+msgid "Newest Albums"
+msgstr "Legújabb Albumok"
+
+msgid "Newest Artists"
+msgstr "Legújabb Előadók"
+
+msgid "Newest Songs"
+msgstr ""
+
+msgid "Newest Shouts"
+msgstr "Legújabb Shout-ok"
+
+msgid "Smart Playlists"
+msgstr "Okos Lejátszási listák"
+
+msgid "Private Messages"
+msgstr "Személyes üzenetek"
+
+msgid "Smartlists"
+msgstr "Okos listák"
+
+msgid "Radio"
+msgstr "Rádió"
+
+#, php-format
+msgid "%s Playlist"
+msgstr "%s Lejátszási lista"
+
+msgid "Democratic Playlist"
+msgstr "Demokratikus Lejátszási lista"
+
+msgid "Previous"
+msgstr "Előző"
+
+msgid "Stop"
+msgstr "Leállít"
+
+msgid "Pause"
+msgstr "Szünet"
+
+msgid "Mute"
+msgstr "Némít"
+
+msgid "Decrease Volume"
+msgstr "Hangerő csökkentése"
+
+msgid "Increase Volume"
+msgstr "Hangerő növelése"
+
+msgid "Web Player"
+msgstr "Web Lejátszó"
+
+msgid "Could not connect to the broadcast. Resuming normal playback."
+msgstr ""
+
+msgid "Media is currently playing, are you sure you want to close?"
+msgstr "Média lejátszása folyamatban, biztosan be akarod zárni?"
+
+msgid "Full-Screen not supported by your browser"
+msgstr ""
+
+msgid ""
+"The visualizer and equalizer are not available for remote catalog streams."
+msgstr ""
+
+msgid "Your browser doesn't support this feature."
+msgstr "A böngésződ nem támogatja ezt a funkciót."
+
+msgid "Unmute"
+msgstr "Némítás ki"
+
+msgid "Max Volume"
+msgstr "Max. hangerő"
+
+msgid "Full Screen"
+msgstr "Teljes képernyő"
+
+msgid "Restore Screen"
+msgstr "Képernyő visszaállítása"
+
+msgid "Shuffle"
+msgstr "Összekeverés"
+
+msgid "Shuffle Off"
+msgstr "Összekeverés ki"
+
+msgid "Repeat Off"
+msgstr "Ismétlés ki"
+
+msgid "Show Album"
+msgstr "Album mutatása"
+
+msgid "Collections"
+msgstr ""
+
+msgid "Collection Name"
+msgstr ""
+
+msgid "Size"
+msgstr "Méret"
+
+msgid "Bitrate"
+msgstr "Bitrate"
+
+msgid "Channels"
+msgstr "Csatornák"
+
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Return to Login Page"
+msgstr "Vissza a belépés oldalra"
+
+msgid "Please wait for an administrator to activate your account"
+msgstr "Kérjük, várd meg, hogy egy adminisztrátor aktiválja a fiókod"
+
+msgid ""
+"An activation key has been sent to the e-mail address you provided. Please "
+"check your e-mail for further information"
+msgstr "Az aktivációs kulcs elküldve az általad megadott e-mail címre. Kérjük, ellenőrizd a leveleid további információkért"
+
+msgid "Your account has been created"
+msgstr ""
+
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d perc"
+msgstr[1] "%d perc"
+
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d óra"
+msgstr[1] "%d óra"
+
+msgid "Anywhere"
+msgstr "Bárhol"
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Post to Shoutbox"
+msgstr "Küldés Shoutbox-ba"
+
+msgid "Add ACL"
+msgstr "ACL hozzáadása"
+
+msgid "Show ACL(s)"
+msgstr "ACL(ek) mutatása"
 
 msgid "Show Catalogs"
 msgstr "Katalógusok mutatása"
@@ -2859,6 +2885,15 @@ msgstr ""
 
 msgid "Manage Licenses"
 msgstr "Licenszek kezelése"
+
+msgid "Localplay Controllers"
+msgstr "Localplay Vezérlők"
+
+msgid "Catalog Types"
+msgstr "Katalógus típusok"
+
+msgid "Manage Plugins"
+msgstr "Pluginek kezelése"
 
 msgid "Browse Users"
 msgstr "Felhasználók böngészése"
@@ -2872,62 +2907,17 @@ msgstr "Shoutbox kezelése"
 msgid "Clear Now Playing"
 msgstr "Most Lejátszott ürítése"
 
-msgid "Add ACL"
-msgstr "ACL hozzáadása"
-
-msgid "Show ACL(s)"
-msgstr "ACL(ek) mutatása"
-
-msgid "Localplay Controllers"
-msgstr "Localplay Vezérlők"
-
-msgid "Catalog Types"
-msgstr "Katalógus típusok"
-
-msgid "Manage Plugins"
-msgstr "Pluginek kezelése"
-
-msgid "Expand/Collapse"
-msgstr "Kinyitás/Összecsukás"
-
-msgid "Radio"
-msgstr "Rádió"
-
-msgid "Uploads"
-msgstr "Feltöltések"
-
-msgid "Smart Playlists"
-msgstr "Okos Lejátszási listák"
-
-msgid "Smartlists"
-msgstr "Okos listák"
-
 msgid "Wanted"
 msgstr "Keresett"
 
 msgid "Shares"
 msgstr "Megosztások"
 
-msgid "Log out"
-msgstr "Kilépés"
-
-msgid "Admin Disabled"
-msgstr "Adminisztrátor letiltva"
-
-msgid "Show Instances"
-msgstr "Példányok mutatása"
-
-msgid "Show Playlist"
-msgstr "Lejátszási listák mutatása"
-
-msgid "Active Instance"
-msgstr "Aktív Példány"
-
-msgid "Localplay Disabled"
-msgstr "Localplay letiltva"
-
 msgid "Allow Localplay Set to False"
 msgstr "Localplay engedélyezése \"Nem\"-re állítva"
+
+msgid "Access Denied"
+msgstr "Hozzáférés megtagadva"
 
 msgid "Localplay Controller Not Defined"
 msgstr "Localplay Vezérlő nincs definiálva"
@@ -2935,22 +2925,266 @@ msgstr "Localplay Vezérlő nincs definiálva"
 msgid "Account"
 msgstr "Fiók"
 
-msgid "Help"
+msgid "No lyrics found."
+msgstr "Dalszöveg nem található."
+
+msgid "Song Edit"
+msgstr "Dal szerkesztés"
+
+#, php-format
+msgid "Track %d"
 msgstr ""
 
-msgid "Ampache Wiki"
+msgid "Play on the current player"
 msgstr ""
 
-msgid "API Documentation"
+msgid "Song Information"
+msgstr "Dal információ"
+
+msgid "Song Language"
+msgstr "Dal nyelve"
+
+msgid "BPM"
 msgstr ""
 
-msgid "Cookie Information"
+msgid "Song MBID"
+msgstr "Dal MBID"
+
+msgid "Album MBID"
+msgstr "Album MBID"
+
+msgid "Artist MBID"
+msgstr "Előadó MBID"
+
+msgid "ReplayGain Track Gain"
+msgstr "ReplayGain Szám erősítés"
+
+msgid "ReplayGain Album Gain"
+msgstr "ReplayGain Album erősítés"
+
+msgid "R128 Track Gain"
+msgstr ""
+
+msgid "R128 Album Gain"
+msgstr ""
+
+msgid "ISRC"
+msgstr ""
+
+msgid "Last Updated"
+msgstr "Utoljára frissítve"
+
+msgid "Lyrics"
+msgstr "Dalszöveg"
+
+msgid "Licensing"
+msgstr "Licenszelés"
+
+msgid "Uploaded by"
+msgstr "Feltöltötte"
+
+msgid "Technical"
+msgstr ""
+
+msgid "Statistical Graphs"
+msgstr "Statisztikai grafikonok"
+
+msgid "Month"
+msgstr "Hónap"
+
+msgid "Day"
+msgstr "Nap"
+
+msgid "Hour"
+msgstr "Óra"
+
+msgid "Recently Skipped"
+msgstr ""
+
+msgid "Last Played"
+msgstr "Lejátszva"
+
+#, php-format
+msgid "%d decade ago"
+msgid_plural "%d decades ago"
+msgstr[0] "%d évtizede"
+msgstr[1] "%d évtizede"
+
+msgid "Ampache Wrapped"
 msgstr ""
 
 msgid ""
-"You may have reached this page because Ampache was unable to load the "
-"required dependencies"
-msgstr "Azért kerülhettél erre az oldalra, mert az Ampache nem tudta betölteni a szükséges függőségeket"
+"You have been redirected to this page because you attempted to access a "
+"function that is disabled in the demo."
+msgstr "Azért lettél átirányítva erre az oldalra, mert az elérni kívánt funkció letiltott a demóban."
+
+msgid ""
+"You have been redirected to this page because you do not have access to this"
+" function"
+msgstr "Azért lettél átirányítva erre az oldalra, mert nincs hozzáférésed ehhez a funkcióhoz"
+
+msgid ""
+"If you believe this is an error please contact an Ampache administrator"
+msgstr "Ha úgy hiszed, hiba történt, lépj kapcsolatba egy Ampache adminisztrátorral"
+
+msgid "This event has been logged"
+msgstr "Az esemény logolva"
+
+msgid "You will be automatically redirected in 10 seconds."
+msgstr "10 másodpercen belül automatikusan át leszel irányítva."
+
+msgid "Something went wrong. Please check the logs for further information."
+msgstr ""
+
+msgid "You do not have permission to write to this file or folder"
+msgstr ""
+
+msgid "Permission Denied"
+msgstr ""
+
+msgid "Ampache :: For the Love of Music - Installation"
+msgstr ""
+
+#, php-format
+msgid "%s - Update"
+msgstr ""
+
+#, php-format
+msgid ""
+"This page handles all database updates to Ampache starting with %1$s. Your "
+"current version is %2$s with database version %3$s"
+msgstr "Ez az oldal kezel minden Ampache adatbázis frissítést %1$s -től. A jelenlegi verzió %2$s, adatbázis verzió %3$s"
+
+msgid ""
+"Drag & Drop your files or <span class=\"filepond--label-action\"> Browse "
+"</span>"
+msgstr ""
+
+msgid "Field contains invalid files"
+msgstr ""
+
+msgid "Waiting for size"
+msgstr ""
+
+msgid "Size not available"
+msgstr ""
+
+msgid "Error during load"
+msgstr ""
+
+msgid "Uploading"
+msgstr ""
+
+msgid "Upload complete"
+msgstr ""
+
+msgid "Upload cancelled"
+msgstr ""
+
+msgid "Error during upload"
+msgstr ""
+
+msgid "Error during revert"
+msgstr ""
+
+msgid "Error during remove"
+msgstr ""
+
+msgid "tap to cancel"
+msgstr ""
+
+msgid "tap to retry"
+msgstr ""
+
+msgid "tap to undo"
+msgstr ""
+
+msgid "Remove"
+msgstr "Eltávolít"
+
+msgid "Abort"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "File is too large"
+msgstr ""
+
+msgid "Maximum file size is {filesize}"
+msgstr ""
+
+msgid "Maximum total size exceeded"
+msgstr ""
+
+msgid "Maximum total file size is {filesize}"
+msgstr ""
+
+msgid "File of invalid type"
+msgstr ""
+
+msgid "Expects {allButLastType} or {lastType}"
+msgstr ""
+
+msgid "Image type not supported"
+msgstr ""
+
+msgid "Image is too small"
+msgstr ""
+
+msgid "Image is too big"
+msgstr ""
+
+msgid "Minimum size is {minWidth} × {minHeight}"
+msgstr ""
+
+msgid "Maximum size is {maxWidth} × {maxHeight}"
+msgstr ""
+
+msgid "Resolution is too low"
+msgstr ""
+
+msgid "Resolution is too high"
+msgstr ""
+
+msgid "Minimum resolution is {minResolution}"
+msgstr ""
+
+msgid "Maximum resolution is {maxResolution}"
+msgstr ""
+
+msgid "Never"
+msgstr "Soha"
+
+msgid "Display"
+msgstr "Megjelenítés"
+
+msgid "Audio Bitrate"
+msgstr "Audió Bitrate"
+
+msgid "Video Bitrate"
+msgstr "Videó Bitrate"
+
+msgid "Frame Rate"
+msgstr "Képkockák másodpercenként"
+
+#, php-format
+msgid "Unable to open `%s` for writing"
+msgstr ""
+
+#, php-format
+msgid "Unable to write to `%s`"
+msgstr ""
+
+#, php-format
+msgid "Art files written: %d"
+msgstr ""
+
+msgid "Added to collection"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -2976,308 +3210,6 @@ msgstr "A következő Dal indítása sikertelen"
 msgid "UPnP"
 msgstr "UPnP"
 
-#, php-format
-msgid "Tried to clobber '%s' without setting clobber"
-msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
-
-#. HINT: File
-#, php-format
-msgid "Unknown %s"
-msgstr "Ismeretlen %s"
-
-msgid "Add New"
-msgstr "Új hozzáadása"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Not Found: %s"
-msgstr ""
-
-msgid "View License"
-msgstr "Licensz megtekintése"
-
-msgid "Song Edit"
-msgstr "Dal szerkesztés"
-
-msgid "Links"
-msgstr "Linkek"
-
-msgid "Song Language"
-msgstr "Dal nyelve"
-
-msgid "Song MBID"
-msgstr "Dal MBID"
-
-msgid "Album MBID"
-msgstr "Album MBID"
-
-msgid "Artist MBID"
-msgstr "Előadó MBID"
-
-msgid "ReplayGain Track Gain"
-msgstr "ReplayGain Szám erősítés"
-
-msgid "ReplayGain Album Gain"
-msgstr "ReplayGain Album erősítés"
-
-msgid "R128 Track Gain"
-msgstr ""
-
-msgid "R128 Album Gain"
-msgstr ""
-
-msgid "Lyrics"
-msgstr "Dalszöveg"
-
-msgid "Licensing"
-msgstr "Licenszelés"
-
-msgid "Song Information"
-msgstr "Dal információ"
-
-#, php-format
-msgid "%s - Update"
-msgstr ""
-
-msgid "Ampache :: For the Love of Music - Installation"
-msgstr ""
-
-#, php-format
-msgid ""
-"This page handles all database updates to Ampache starting with %1$s. Your "
-"current version is %2$s with database version %3$s"
-msgstr "Ez az oldal kezel minden Ampache adatbázis frissítést %1$s -től. A jelenlegi verzió %2$s, adatbázis verzió %3$s"
-
-#, php-format
-msgid "Unable to open `%s` for writing"
-msgstr ""
-
-#, php-format
-msgid "Unable to write to `%s`"
-msgstr ""
-
-#, php-format
-msgid "Art files written: %d"
-msgstr ""
-
-msgid "Missing mandatory parameter"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Bad Request: %s"
-msgstr ""
-
-#. HINT: Access level, eg 75, 100
-#, php-format
-msgid "Require: %s"
-msgstr ""
-
-msgid "Access Control not Enabled"
-msgstr "Hozzáférés Szabályzás nincs engedélyezve"
-
-msgid "Session Expired"
-msgstr "A munkamenet lejárt"
-
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr "Jogosulatlan hozzáférési kísérlet az API-hoz - ACL Hiba"
-
-msgid "Invalid Request"
-msgstr "Érvénytelen kérés"
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Wrong object type "
-msgstr ""
-
-msgid "Media Object Invalid or Not Specified"
-msgstr ""
-
-msgid "Login Failed: version too old"
-msgstr ""
-
-msgid "Login Failed: timestamp out of range"
-msgstr ""
-
-msgid "Error Invalid Handshake - "
-msgstr ""
-
-msgid "Invalid Username/Password"
-msgstr ""
-
-msgid "Access denied to this playlist."
-msgstr ""
-
-msgid "Wrong library item type."
-msgstr ""
-
-msgid "Library item not found."
-msgstr ""
-
-msgid "Incorrect catalog task"
-msgstr ""
-
-msgid "The requested item was not found"
-msgstr ""
-
-msgid "Access Denied: delete from disk is not enabled."
-msgstr ""
-
-msgid "Incorrect file task"
-msgstr ""
-
-msgid "File not found"
-msgstr ""
-
-msgid "Catalog not found"
-msgstr ""
-
-msgid "The requested catalog was not found"
-msgstr ""
-
-msgid "Media object invalid or not specified"
-msgstr ""
-
-msgid "Invalid request"
-msgstr ""
-
-msgid "Access Denied: Rating features are not enabled."
-msgstr ""
-
-msgid "Incorrect object type"
-msgstr ""
-
-msgid "Wrong library item type"
-msgstr ""
-
-msgid "Library item not found"
-msgstr ""
-
-msgid "Access Denied: social features are not enabled."
-msgstr ""
-
-msgid "Access Denied: allow_video is not enabled."
-msgstr ""
-
-msgid "Access Denied: podcast features are not enabled."
-msgstr ""
-
-msgid "Access Denied: sharing features are not enabled."
-msgstr ""
-
-msgid "Login failed, API version is too old"
-msgstr "A belépés sikertelen, az API verzió túl régi"
-
-msgid "Login Failed, timestamp is out of range"
-msgstr ""
-
-msgid "Received Invalid Handshake"
-msgstr "Érvénytelen Handshake érkezett"
-
-msgid "Login failed, timestamp is out of range"
-msgstr "A belépés sikertelen, az időbélyeg nincs a tartományon belül"
-
-msgid "Server"
-msgstr "Szerver"
-
-msgid "Incorrect username or password"
-msgstr "Hibás felhasználónév vagy jelszó"
-
-msgid "Access Denied: licensing features are not enabled."
-msgstr ""
-
-msgid "Error Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Access denied to this playlist"
-msgstr ""
-
-msgid "Can't add a duplicate item when check is enabled"
-msgstr ""
-
-msgid "Nothing was changed"
-msgstr ""
-
-msgid "Song not found in playlist"
-msgstr ""
-
-msgid "Track ID not found in playlist"
-msgstr ""
-
-msgid "Bad Request"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-msgid "Ratings must be between [0-5]. "
-msgstr ""
-
-msgid "User_id not found"
-msgstr ""
-
-msgid "Invalid input options"
-msgstr ""
-
-msgid "Failed to scrobble: No item found!"
-msgstr ""
-
-msgid "Failed to update_art for "
-msgstr ""
-
-msgid "Failed to update_artist_info or recommendations for "
-msgstr ""
-
-msgid "Failed to sync episodes for podcast: "
-msgstr ""
-
-msgid "Enable: video"
-msgstr ""
-
-msgid "Not Found"
-msgstr ""
-
-msgid "Enable: delete_from_disk"
-msgstr ""
-
-msgid "Enable: podcast"
-msgstr ""
-
-msgid "Enable: ratings"
-msgstr ""
-
-msgid "Enable: sociable"
-msgstr ""
-
-msgid "Enable: share"
-msgstr ""
-
-msgid "Enable: live_stream"
-msgstr ""
-
-msgid "Enable: label"
-msgstr ""
-
-msgid "Enable: licensing"
-msgstr ""
-
-msgid "Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Require: 100"
-msgstr ""
-
-msgid "Require: 75"
-msgstr ""
-
-msgid "Access denied"
-msgstr ""
-
-msgid "Ampache XSPF Playlist"
-msgstr "Ampache XSPF Lejátszási lista"
-
 msgid "IP Address version mismatch"
 msgstr "IP cím verzió nem egyezik"
 
@@ -3295,9 +3227,6 @@ msgstr "Az új Hozzáférési Listád/Listáid (ACL) létrejött(ek)"
 
 msgid "Your Access List entry has been removed"
 msgstr "A Hozzáférési Lista (ACL) bejegyzés törölve"
-
-msgid "Are You Sure?"
-msgstr "Biztos vagy benne?"
 
 #. HINT: ACL Name
 #, php-format
@@ -3353,6 +3282,15 @@ msgstr "A letiltott Dalok feldolgozása befejeződött"
 msgid "The Catalog art search has started"
 msgstr "A Katalógusborító keresés elkezdődött"
 
+msgid "The Catalog folder scan has started"
+msgstr ""
+
+msgid "This will clear all Now Playing data"
+msgstr ""
+
+msgid "This will permanently delete all catalog statistics"
+msgstr ""
+
 msgid "This will permanently delete your Catalog"
 msgstr "Ezzel véglegesen törlöd a Katalógust"
 
@@ -3374,7 +3312,7 @@ msgstr "iTunes"
 msgid "A filter name is required"
 msgstr ""
 
-msgid "That filter name already exists"
+msgid "That name already exists"
 msgstr ""
 
 msgid "The new filter was not created"
@@ -3419,7 +3357,8 @@ msgstr "A Licensz frissítve"
 msgid "A new License has been created"
 msgstr "Új Licensz lett létrehozva"
 
-msgid "Create license"
+#, php-format
+msgid "This will permanently delete the license \"%s\""
 msgstr ""
 
 msgid "Edit license"
@@ -3476,6 +3415,10 @@ msgstr "Shoutbox bejegyzés törölve"
 msgid "Shoutbox post has been updated"
 msgstr "Shoutbox bejegyzés frissítve"
 
+#, php-format
+msgid "This will permanently delete the shoutbox post \"%s\""
+msgstr ""
+
 msgid "Your cache has been cleared successfully"
 msgstr "A gyorsítótár sikeresen törölve"
 
@@ -3484,14 +3427,19 @@ msgid ""
 "currently configured charset"
 msgstr "Az adatbázis és benne a táblák frissítve lettek a jelenleg beállított karakterkészletnek megfelelően"
 
+msgid "This will clear the selected cache"
+msgstr ""
+
+msgid ""
+"This will alter your database and associated tables to match your currently "
+"configured charset"
+msgstr ""
+
 msgid "Your Passwords don't match"
 msgstr "A Jelszavak nem egyeznek meg"
 
 msgid "A Username is required"
 msgstr "Felhasználónév szükséges"
-
-msgid "That Username already exists"
-msgstr "A Felhasználónév már létezik"
 
 msgid "You entered an invalid e-mail address"
 msgstr "Érvénytelen e-mail címet adtál meg"
@@ -3554,6 +3502,10 @@ msgstr ""
 msgid "This Avatar will be deleted"
 msgstr "Az Avatár törölve lesz"
 
+msgid ""
+"This will remove the Subsonic password and disconnect any client using it"
+msgstr ""
+
 msgid "This will replace your existing API key"
 msgstr ""
 
@@ -3565,6 +3517,17 @@ msgstr ""
 #, php-format
 msgid "%s IP History"
 msgstr "%s IP történet"
+
+msgid "That Username already exists"
+msgstr "A Felhasználónév már létezik"
+
+msgid "Passwords do not match"
+msgstr "A jelszavak nem egyeznek"
+
+msgid ""
+"Could not store the Subsonic password. Check that secret_key is set in your "
+"Ampache config"
+msgstr ""
 
 #, php-format
 msgid ""
@@ -3609,6 +3572,9 @@ msgstr ""
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr ""
+
 msgid "Art file failed size check"
 msgstr "A borítófájl mérete nem megfelelő"
 
@@ -3620,14 +3586,50 @@ msgstr "Nem sikerült borítót találni. Lehet, hogy írási jog hiánya miatt,
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
 
+msgid "Failed to update_art for "
+msgstr ""
+
+#, php-format
+msgid "%s and %d more item"
+msgid_plural "%s and %d more items"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Broadcast has been deleted"
 msgstr "A Műsorszórás törölve"
 
 msgid "This Broadcast will be deleted"
 msgstr "Ez a Műsorszórás törölve lesz"
 
+msgid "This collection does not accept items of that type"
+msgstr ""
+
+msgid "Object added to collection"
+msgstr ""
+
+msgid "Name is required"
+msgstr "Név szükséges"
+
+msgid "Not a valid item type"
+msgstr ""
+
+msgid "Failed to create collection"
+msgstr ""
+
+msgid "Collection created"
+msgstr ""
+
+msgid "Object removed from collection"
+msgstr ""
+
 msgid "The Playlist has been deleted"
 msgstr "A Lejátszási lista törölve"
+
+msgid "Folder"
+msgstr ""
+
+msgid "This Folder will be deleted"
+msgstr ""
 
 msgid "The Ampache database username or password is missing"
 msgstr "Az Ampache adatbázis felhasználónév és jelszó hiányzik"
@@ -3647,6 +3649,9 @@ msgstr "Ez a Címke törölve lesz"
 msgid "The Label cannot be found"
 msgstr "A Címke nem található"
 
+msgid "Incorrect username or password"
+msgstr "Hibás felhasználónév vagy jelszó"
+
 msgid "Account is disabled, please contact the administrator"
 msgstr "A fiók letiltva, kérjük, lépj kapcsolatba egy adminisztrátorral"
 
@@ -3656,17 +3661,18 @@ msgstr "A felhasználó már belépett"
 msgid "Unable to create a local account"
 msgstr "Nem sikerült a helyi fiók létrehozása"
 
+msgid "OpenID Connect is not configured correctly"
+msgstr ""
+
+msgid "Ratings"
+msgstr ""
+
 #, php-format
 msgid "%s - Now Playing"
 msgstr ""
 
 msgid "Playlist created"
 msgstr "Lejátszási lista létrehozva"
-
-#. HINT: %1 playlist name, %2 playlist type
-#, php-format
-msgid "%1$s (%2$s) has been created"
-msgstr "%1$s (%2$s) létrehozva"
 
 #. HINT: Number of songs
 #, php-format
@@ -3689,6 +3695,9 @@ msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
 
 msgid "Podcast has been deleted"
 msgstr "Podcast törölve"
+
+msgid "Catalog not found"
+msgstr ""
 
 msgid "Feed URL is invalid"
 msgstr "A Feed URL érvénytelen"
@@ -3726,6 +3735,15 @@ msgstr ""
 
 msgid "Import Podcasts"
 msgstr ""
+
+msgid "Podcast information updated from the feed"
+msgstr ""
+
+msgid "The feed could not be read"
+msgstr ""
+
+msgid "Server"
+msgstr "Szerver"
 
 msgid "Your account has been updated"
 msgstr "A fiókod frissítve"
@@ -3782,11 +3800,11 @@ msgstr "RE"
 msgid "Radio Station created"
 msgstr "Rádióállomás létrejött"
 
-msgid "Captcha is required"
-msgstr "Captcha szükséges"
-
 msgid "Captcha failed"
 msgstr "Captcha ellenőrzése sikertelen"
+
+msgid "Browser check failed. Please reload the page and try again"
+msgstr ""
 
 msgid "You must accept the user agreement"
 msgstr "El kell fogadnod a felhasználói szerződést"
@@ -3799,9 +3817,6 @@ msgstr "Érvénytelen e-mail cím"
 
 msgid "You must enter a password"
 msgstr "Meg kell adnod egy jelszót"
-
-msgid "Passwords do not match"
-msgstr "A jelszavak nem egyeznek"
 
 msgid "Failed to create user"
 msgstr "Nem sikerült a felhasználó létrehozása"
@@ -3864,6 +3879,24 @@ msgstr "Videó törölve"
 msgid "The Video will be deleted"
 msgstr "A Videó törölve lesz"
 
+msgid "Edit/Find Art"
+msgstr "Borító szerkesztése/keresése"
+
+msgid "Do you really want to reset art?"
+msgstr "Biztosan vissza akarod állítani a borítót?"
+
+msgid "Reset Art"
+msgstr "Borító visszaállítása"
+
+#. HINT: %1$s is the item name, %2$s says what the drawing was made from
+#. the name arrives escaped, so only the translated half is escaped here
+#, php-format
+msgid "%1$s — %2$s"
+msgstr ""
+
+msgid "no cover yet"
+msgstr ""
+
 msgid "Unable to open"
 msgstr "Megnyitás nem lehetséges"
 
@@ -3871,6 +3904,27 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
 
 msgid "local_metadata_dir setting is required to store art on disk"
+msgstr ""
+
+#, php-format
+msgid "%d track"
+msgid_plural "%d tracks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "OpenID Connect requires an interactive browser login"
+msgstr ""
+
+msgid "OpenID Connect authentication failed"
+msgstr ""
+
+msgid "The identity provider did not return a username"
 msgstr ""
 
 msgid "Running Beets Update"
@@ -3881,9 +3935,6 @@ msgstr "Beets frissítés futtatása"
 msgid "Unable to add Song - %s"
 msgstr "Nem sikerült a Dal hozzáadása - %s"
 
-msgid "Beets Database File"
-msgstr "Beets adatbázisfájl"
-
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "Beets Katalógus került kiválasztásra, de nem lett Beets DB fájl megadva"
 
@@ -3891,11 +3942,39 @@ msgstr "Beets Katalógus került kiválasztásra, de nem lett Beets DB fájl meg
 msgid "This path belongs to an existing Beets Catalog: %s"
 msgstr "Ez az elérési út egy létező Beets Katalógushoz tartozik: %s"
 
-msgid "Beets Server URI"
-msgstr "Beets kiszolgáló URI"
+msgid "Beets Database File"
+msgstr "Beets adatbázisfájl"
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr "Távoli Katalógus típus került kiválasztásra, de az elérési út nem URL"
+
+msgid "Beets Server URI"
+msgstr "Beets kiszolgáló URI"
+
+msgid "Invalid \"dropbox-path\": "
+msgstr "Érvénytelen \"dropbox-path\":"
+
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr "Hiba: a Katalógus %s már létezik"
+
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr "Hiba: API Key, Secret és Access Token szükséges a Dropbox Katalógusokhoz"
+
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr "Érvénytelen \"API key\", \"secret\" vagy \"Access token\":"
+
+msgid "Running Dropbox Remote Update"
+msgstr "Dropbox távoli frissítés futtatása"
+
+msgid "Access Token"
+msgstr "Access Token"
+
+msgid "Get chunked files on analyze"
+msgstr "Feldarabolt fájlok kérése elemzéskor"
+
+msgid "API Error: cannot connect to Dropbox."
+msgstr "API Hiba: nem sikerült csatlakozni a Dropbox-hoz"
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr "Nyisd meg: https://www.dropbox.com/developers/apps/create"
@@ -3916,28 +3995,6 @@ msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr "Másold be az API key, App secret és az Access Token értékét a következő mezőkbe."
 
-msgid "Access Token"
-msgstr "Access Token"
-
-msgid "Get chunked files on analyze"
-msgstr "Feldarabolt fájlok kérése elemzéskor"
-
-msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr "Hiba: API Key, Secret és Access Token szükséges a Dropbox Katalógusokhoz"
-
-msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr "Érvénytelen \"API key\", \"secret\" vagy \"Access token\":"
-
-msgid "Invalid \"dropbox-path\": "
-msgstr "Érvénytelen \"dropbox-path\":"
-
-#, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr "Hiba: a Katalógus %s már létezik"
-
-msgid "Running Dropbox Remote Update"
-msgstr "Dropbox távoli frissítés futtatása"
-
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "Katalógusfrissítés befejeződött. Összes média: [%s]"
@@ -3955,21 +4012,21 @@ msgstr "A Dal naprakész: \"%s\""
 msgid "Removing song: \"%s\""
 msgstr ""
 
-msgid "API Error: cannot connect to Dropbox."
-msgstr "API Hiba: nem sikerült csatlakozni a Dropbox-hoz"
-
 msgid "Path was not specified"
 msgstr "Elérési út nem lett megadva"
+
+msgid "Specified path is inside an existing catalog"
+msgstr "A megadott elérési út egy már létező Katalógusban van"
+
+#. HINT: directory (file path)
+#, php-format
+msgid "The folder couldn't be read. Does it exist? %s"
+msgstr "A mappa nem olvasható. Létezik egyáltalán? %s"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
 msgstr "Ez az elérési út egy már létező helyi Katalógushoz tartozik: %s"
-
-#. HINT: directory (file path)
-#, php-format
-msgid "Unable to open: %s"
-msgstr "Nem sikerült megnyitni: %s"
 
 #. HINT: directory (file path)
 #, php-format
@@ -3991,6 +4048,11 @@ msgstr "A fájl nem olvasható. Létezik egyáltalán? %s"
 msgid "\"%s\" does not match site charset"
 msgstr "\"%s\" nem egyezik az oldal karakterkészletével"
 
+#. HINT: directory (file path)
+#, php-format
+msgid "Unable to open: %s"
+msgstr "Nem sikerült megnyitni: %s"
+
 msgid "N/A"
 msgstr "Nem elérhető"
 
@@ -4001,8 +4063,7 @@ msgstr "Katalógus frissítve"
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr "Teljes idő: [%s] Összes Média: [%s] Média másodpercenként: [%s]"
 
-#, php-format
-msgid "File count: %d"
+msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
 msgid "Catalog root unreadable, stopping clean"
@@ -4016,19 +4077,74 @@ msgstr "Minden fájl el lenne távolítva. Nem történt változás"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "A fájl nem található, vagy 0 bájt hosszú: %s"
 
-msgid "Specified path is inside an existing catalog"
-msgstr "A megadott elérési út egy már létező Katalógusban van"
-
-#. HINT: directory (file path)
 #, php-format
-msgid "The folder couldn't be read. Does it exist? %s"
-msgstr "A mappa nem olvasható. Létezik egyáltalán? %s"
-
-msgid "Catalog root unreadable, stopping check"
+msgid "File count: %d"
 msgstr ""
 
-msgid "URI"
-msgstr "URI"
+#, php-format
+msgid "Create directory \"%s\""
+msgstr "\"%s\" mappa létrehozása"
+
+msgid "File already exists"
+msgstr ""
+
+#, php-format
+msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr "\"%1$s\" másolása ide: \"%2$s\""
+
+#, php-format
+msgid "There was an error trying to copy file to \"%s\""
+msgstr "Hiba történt a fájl \"%s\" útvonalra másolása közben"
+
+#, php-format
+msgid "Size comparison failed. Not deleting \"%s\""
+msgstr "A méretek összehasonlítása nem sikerült. \"%s\" nem lesz törölve"
+
+#, php-format
+msgid "There was an error trying to delete \"%s\""
+msgstr "Hiba történt \"%s\" törlése közben"
+
+msgid "Failed to create the catalog, check the debug logs"
+msgstr "Nem sikerült a katalógus létrehozása, ellenőrizd a debug logokat"
+
+msgid "day"
+msgid_plural "days"
+msgstr[0] "nap"
+msgstr[1] "napok"
+
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "óra"
+msgstr[1] "órák"
+
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr "Ez a mappa nem része egyik létező Katalógusnak sem. A frissítés nem dolgozható fel."
+
+msgid "Updated"
+msgstr "Frissítve"
+
+msgid "No Update Needed"
+msgstr "Frissítés nem szükséges"
+
+msgid "Catalog Cleaned"
+msgstr "Katalógus megtisztítva"
+
+#, php-format
+msgid "%d file removed."
+msgid_plural "%d files removed."
+msgstr[0] "%d fájl eltávolítva."
+msgstr[1] "%d fájl eltávolítva."
+
+msgid "Catalog Verified"
+msgstr "Katalógus ellenőrizve"
+
+#, php-format
+msgid "%d file updated."
+msgid_plural "%d files updated."
+msgstr[0] "%d fájl frissítve."
+msgstr[1] "%d fájl frissítve."
 
 msgid "No username or password was specified"
 msgstr "Nem volt megadva felhasználónév vagy jelszó"
@@ -4040,6 +4156,9 @@ msgstr "Ez az elérési út egy létező távoli Katalógushoz tartozik: %s"
 
 msgid "Running Remote Update"
 msgstr "Távoli frissítés futtatása"
+
+msgid "URI"
+msgstr "URI"
 
 msgid "Failed to connect to the remote server"
 msgstr "Nem sikerült kapcsolódni a távoli kiszolgálóhoz"
@@ -4054,47 +4173,8 @@ msgstr[1] "%s Dal megtalálva"
 msgid "Remote Catalog Updated"
 msgstr "Távoli Katalógus frissítve"
 
-msgid "Updated"
-msgstr "Frissítve"
-
 msgid "Completed updating remote Catalog(s)."
 msgstr "A távoli Katalógus(ok) frissítése befejeződött"
-
-msgid "Install a Seafile server as described in the documentation"
-msgstr "Telepíts egy Seafile szervert a dokumentációban leírt módon"
-
-msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
-"(e.g. 'Music')."
-msgstr "Írd be a szerver URL-jét (pl. 'https://seafile.example.com') és a könyvtár nevét (pl. 'Music')."
-
-msgid ""
-"API Call Delay is the delay inserted between repeated requests to Seafile "
-"(such as during an Add or Clean action) to accommodate Seafile's Rate "
-"Limiting."
-msgstr "Az \"API híváskésleltetés\" a késleltetés két ismételt Seafile hívás között (például Hozzáadás vagy Takarítás műveletekkor), a Seafile hívássűrűség korlátozása miatt."
-
-msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr "Az alapértelmezés a Seafile hívássűrűség korlátozásainak megfelelően került beállításra."
-
-msgid ""
-"After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr "A katalógus létrehozása után végezd el a 'Make it readonly' műveletet a Katalógus táblán."
-
-msgid "Server URI"
-msgstr "Szerver URI"
-
-msgid "Library Name"
-msgstr "Könyvtár neve"
-
-msgid "API Call Delay"
-msgstr "API híváskésleltetés"
-
-msgid "Seafile Username/Email"
-msgstr "Seafile felhasználónév/email cím"
-
-msgid "Seafile Password"
-msgstr "Seafile jelszó"
 
 msgid "Seafile server URL is required"
 msgstr "Seafile szerver URL szükséges"
@@ -4126,20 +4206,20 @@ msgstr "Összes Média: [%s]"
 msgid "No media was updated, did you respect the patterns?"
 msgstr "Média nem lett frissítve, megfelelsz a mintáknak? "
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Skipping existing song: %s"
-msgstr "Létező Dal átugrása: %s"
+msgid "Server URI"
+msgstr "Szerver URI"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Adding a new song: %s"
-msgstr "Új Dal hozzáadása: %s"
+msgid "Library Name"
+msgstr "Könyvtár neve"
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Could not add song: %s"
-msgstr "Nem sikerült a Dal hozzáadása: %s"
+msgid "API Call Delay"
+msgstr "API híváskésleltetés"
+
+msgid "Seafile Username/Email"
+msgstr "Seafile felhasználónév/email cím"
+
+msgid "Seafile Password"
+msgstr "Seafile jelszó"
 
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
@@ -4149,6 +4229,42 @@ msgstr "Hiba történt a \"%1$s\" Dal ellenőrzése közben: %2$s"
 #, php-format
 msgid "Keeping song: %s"
 msgstr "Dal megtartása: %s"
+
+msgid "Install a Seafile server as described in the documentation"
+msgstr "Telepíts egy Seafile szervert a dokumentációban leírt módon"
+
+msgid ""
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr "Írd be a szerver URL-jét (pl. 'https://seafile.example.com') és a könyvtár nevét (pl. 'Music')."
+
+msgid ""
+"API Call Delay is the delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accommodate Seafile's Rate "
+"Limiting."
+msgstr "Az \"API híváskésleltetés\" a késleltetés két ismételt Seafile hívás között (például Hozzáadás vagy Takarítás műveletekkor), a Seafile hívássűrűség korlátozása miatt."
+
+msgid "The default is tuned towards Seafile's default rate limit settings."
+msgstr "Az alapértelmezés a Seafile hívássűrűség korlátozásainak megfelelően került beállításra."
+
+msgid ""
+"After creating the Catalog, you must 'Make it ready' on the Catalog table."
+msgstr "A katalógus létrehozása után végezd el a 'Make it readonly' műveletet a Katalógus táblán."
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Could not add song: %s"
+msgstr "Nem sikerült a Dal hozzáadása: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Skipping existing song: %s"
+msgstr "Létező Dal átugrása: %s"
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Adding a new song: %s"
+msgstr "Új Dal hozzáadása: %s"
 
 #. HINT: subsonic catalog URI
 #, php-format
@@ -4180,9 +4296,6 @@ msgstr "Nem sikerült a belépés a Seafile-hoz"
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr "A \"%s\" nevű Seafile könyvtár nem található, média frissítés nem történt"
 
-msgid "Failed to create the catalog, check the debug logs"
-msgstr "Nem sikerült a katalógus létrehozása, ellenőrizd a debug logokat"
-
 msgid "Catalog created"
 msgstr ""
 
@@ -4193,9 +4306,13 @@ msgstr "PHP memórialimit kikapcsolva"
 msgid "Reading Catalog: \"%s\""
 msgstr "\"%s\" Katalógus olvasása"
 
+msgid "Skipping catalog, already being processed"
+msgstr ""
+
 msgid "Look for missing file media entries"
 msgstr ""
 
+#. HINT: filename (File path) OR table name (podcast, video, etc)
 #, php-format
 msgid "Missing: %s"
 msgstr ""
@@ -4208,6 +4325,9 @@ msgstr "Új média hozzáadásának indítása"
 
 msgid "Start verifying media related to Catalog entries"
 msgstr "A Katalógusbejegyzésekhez tartozó média ellenőrzésének indítása"
+
+msgid "Start scanning folders"
+msgstr ""
 
 msgid "Start searching new media art"
 msgstr "Új médiaborító keresésének indítása"
@@ -4241,6 +4361,15 @@ msgstr ""
 msgid "Catalog `%s` not found"
 msgstr ""
 
+msgid "File not found"
+msgstr ""
+
+#. HINT: Requested object string/id/type ("album", "myusername", "some song
+#. title", 1298376)
+#, php-format
+msgid "Updated: %s"
+msgstr ""
+
 #, php-format
 msgid "Removing File: \"%s\""
 msgstr "Fájl eltávolítása: \"%s\""
@@ -4250,9 +4379,6 @@ msgid "Reading File: \"%s\""
 msgstr "Fájl olvasása: \"%s\""
 
 msgid "Create a local media catalog"
-msgstr ""
-
-msgid "Catalog name"
 msgstr ""
 
 msgid "Catalog Media Type (optional)"
@@ -4280,17 +4406,100 @@ msgstr ""
 msgid "User creation failed"
 msgstr "A felhasználó létrehozása nem sikerült"
 
-msgid "Users List"
+msgid ""
+"Clear a cache. Only `perpetual_api_session` persists; object caches live for"
+" one process"
+msgstr ""
+
+msgid "Destroy stored perpetual API sessions"
+msgstr ""
+
+#, php-format
+msgid "Unknown cache type: %s"
+msgstr ""
+
+#, php-format
+msgid "Cleared cache: %s"
+msgstr ""
+
+msgid "Delete a User"
 msgstr ""
 
 msgid "User ID"
 msgstr "Felhasználói azonosító"
+
+msgid "Delete the User with the name `some-user`"
+msgstr ""
+
+msgid "Disable a User"
+msgstr ""
+
+msgid "Disable the User with the name `some-user`"
+msgstr ""
+
+msgid "Enable a User"
+msgstr ""
+
+msgid "Enable the User with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Database version: %s"
+msgstr ""
+
+msgid "Install a catalog type"
+msgstr ""
+
+msgid "Enable the subsonic catalog type"
+msgstr ""
+
+msgid "Install a localplay controller"
+msgstr ""
+
+msgid "User ID to receive the localplay preferences"
+msgstr ""
+
+msgid "Localplay Type"
+msgstr ""
+
+msgid "Enable the mpd localplay controller"
+msgstr ""
+
+msgid "Install a plugin"
+msgstr ""
+
+msgid "Install the Last.FM plugin"
+msgstr ""
+
+msgid "List plugins, catalog types and localplay controllers"
+msgstr ""
+
+msgid "List all pluggable modules and their installed state"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Enabled"
+msgstr "Engedélyezve"
+
+msgid "Users List"
+msgstr ""
 
 msgid "Find a User with the name `some-user`"
 msgstr ""
 
 #, php-format
 msgid "%s (%d)"
+msgstr ""
+
+msgid "Send an e-mail to a group of users"
+msgstr ""
+
+msgid "Mail all standard users"
+msgstr ""
+
+msgid "Mail is not enabled"
 msgstr ""
 
 msgid "Reset preference values for users"
@@ -4307,6 +4516,24 @@ msgstr ""
 
 msgid "No changes have been made"
 msgstr "Nem történt változtatás"
+
+msgid "Uninstall a catalog type"
+msgstr ""
+
+msgid "Disable the subsonic catalog type"
+msgstr ""
+
+msgid "Uninstall a localplay controller"
+msgstr ""
+
+msgid "Disable the mpd localplay controller"
+msgstr ""
+
+msgid "Uninstall a plugin"
+msgstr ""
+
+msgid "Uninstall the Last.FM plugin"
+msgstr ""
 
 msgid "Update the Ampache config file"
 msgstr ""
@@ -4332,9 +4559,8 @@ msgstr ""
 msgid "Config version: %s"
 msgstr ""
 
-#, php-format
-msgid "Database version: %s"
-msgstr ""
+msgid "Unable to query the database, check your Ampache config"
+msgstr "Az adatbázis lekérdezése nem sikerült, ellenőrizd az Ampache configot"
 
 msgid "Missing database tables have been created"
 msgstr ""
@@ -4352,15 +4578,6 @@ msgid ""
 "to rollback"
 msgstr ""
 
-msgid "Update Now!"
-msgstr ""
-
-msgid "The following updates need to be performed:"
-msgstr "A következő frissítéseket kell végrehajtani:"
-
-msgid "No update needed"
-msgstr ""
-
 msgid "Update Plugins automatically"
 msgstr ""
 
@@ -4368,6 +4585,22 @@ msgid "Update available"
 msgstr "Frissítés elérhető"
 
 msgid "Update Preference Access Level"
+msgstr ""
+
+msgid "Set the Subsonic password"
+msgstr ""
+
+msgid "Update API key for user with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Bad Request: %s"
+msgstr ""
+
+msgid "Upgrade a plugin"
+msgstr ""
+
+msgid "Upgrade the Last.FM plugin"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"
@@ -4431,6 +4664,16 @@ msgstr ""
 msgid "Completed cache process"
 msgstr ""
 
+msgid "Re-enable all disabled songs"
+msgstr ""
+
+msgid "Re-enable every disabled song"
+msgstr ""
+
+#, php-format
+msgid "Re-enabled %d songs"
+msgstr ""
+
 msgid "Update the object cache tables"
 msgstr ""
 
@@ -4456,6 +4699,24 @@ msgid "Cron cache not enabled"
 msgstr ""
 
 msgid "Cron process finished"
+msgstr ""
+
+msgid "Delete a media catalog"
+msgstr ""
+
+msgid "Delete the catalog with ID 3"
+msgstr ""
+
+msgid "Disable a media catalog"
+msgstr ""
+
+msgid "Disable the catalog with ID 3"
+msgstr ""
+
+msgid "Enable a media catalog"
+msgstr ""
+
+msgid "Enable the catalog with ID 3"
 msgstr ""
 
 msgid "Export album art"
@@ -4485,6 +4746,16 @@ msgstr ""
 msgid "Art Dump Complete"
 msgstr ""
 
+msgid "Export catalog metadata to a file"
+msgstr ""
+
+msgid "Export all catalogs as CSV"
+msgstr ""
+
+#, php-format
+msgid "Exported catalog metadata to %s"
+msgstr ""
+
 msgid "Export Playlists"
 msgstr ""
 
@@ -4509,6 +4780,9 @@ msgid "Export playlists as m3u files to /tmp"
 msgstr ""
 
 msgid "Create .htaccess files"
+msgstr ""
+
+msgid "Include the optional web root .htaccess"
 msgstr ""
 
 msgid "Recreate Ampache .htaccess files"
@@ -4565,6 +4839,9 @@ msgstr ""
 msgid "Possible Duplicate Albums"
 msgstr ""
 
+msgid "Invalid Request"
+msgstr "Érvénytelen kérés"
+
 msgid "Print file tags"
 msgstr ""
 
@@ -4585,13 +4862,28 @@ msgstr "Nyers eredmények:"
 msgid "Final results seen by Ampache using %s:"
 msgstr "Végleges eredmények, ahogy az Ampache látja %s használatával:"
 
-msgid "Run a Websocket"
+msgid "Run the websocket server that listen-along broadcasting needs"
 msgstr ""
 
 msgid "Listening port, default 8100"
 msgstr "Hallgató port, alapbeállítás 8100"
 
 msgid "Run the websocket on port 8888"
+msgstr ""
+
+msgid "Show a system status and environment report"
+msgstr ""
+
+msgid "Query the remote version (network access required)"
+msgstr ""
+
+msgid "Print a headless status report"
+msgstr ""
+
+msgid "up to date"
+msgstr ""
+
+msgid "Environment"
 msgstr ""
 
 msgid "Delete disabled songs"
@@ -4621,10 +4913,60 @@ msgstr ""
 msgid "Sets the default name for `Various Artists`"
 msgstr ""
 
+msgid "Sort a single file or folder path"
+msgstr ""
+
 msgid "Name of Catalog (optional)"
 msgstr "Katalógus neve (nem kötelező)"
 
 msgid "Sort song files"
+msgstr ""
+
+msgid "Consolidate old play history into summary counts"
+msgstr ""
+
+msgid "Only consolidate this count type (stream, skip, download)"
+msgstr ""
+
+msgid "Show what would be consolidated (dry-run)"
+msgstr ""
+
+msgid ""
+"Stats consolidation is disabled. Set stats_consolidate_threshold in your "
+"ampache.cfg.php to the number of days of detailed play history to keep"
+msgstr ""
+
+#, php-format
+msgid "%d rows consolidated into %d summary rows"
+msgstr ""
+
+msgid "Run OPTIMIZE TABLE on object_count to reclaim disk space"
+msgstr ""
+
+#. HINT: %1 row count, %2 group count
+#, php-format
+msgid "%d rows would be consolidated into %d summary rows (dry-run)"
+msgstr ""
+
+msgid "Restore consolidated play history from the archive"
+msgstr ""
+
+msgid "Show what would be restored (dry-run)"
+msgstr ""
+
+msgid "The play history archive is empty, there is nothing to restore"
+msgstr ""
+
+#. HINT: %1 archived row count, %2 rebuilt album/artist/podcast row count
+#, php-format
+msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
+msgstr ""
+
+msgid "Updating counts"
+msgstr ""
+
+#, php-format
+msgid "%d rows would be restored (dry-run)"
 msgstr ""
 
 msgid ""
@@ -4653,6 +4995,9 @@ msgstr ""
 msgid "Optimizes database tables"
 msgstr "Adatbázistáblák optimizálása"
 
+msgid "Scan Local Catalog folders for folder browsing"
+msgstr ""
+
 msgid "Temporarily deactivates PHP memory limit"
 msgstr "A PHP memórialimit átmeneti kikapcsolása"
 
@@ -4662,9 +5007,25 @@ msgstr ""
 msgid "Perform catalog actions for a single file"
 msgstr ""
 
+msgid "Move file in the database to a new location"
+msgstr ""
+
+msgid "Update file path in the database to a new location"
+msgstr ""
+
 #. HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album)
 #, php-format
 msgid "Update %s in the catalog `some-catalog`"
+msgstr ""
+
+#, php-format
+msgid "Rename %s to %s in the catalog `some-catalog`"
+msgstr ""
+
+msgid "Move (-m|--move) cannot be used with other options enabled"
+msgstr ""
+
+msgid "Rename (-r|--rename) cannot be used with other options enabled"
 msgstr ""
 
 msgid "Perform catalog actions for a single folder"
@@ -4690,6 +5051,284 @@ msgstr ""
 
 #, php-format
 msgid "Table engine: %s"
+msgstr ""
+
+msgid "Collection Items"
+msgstr ""
+
+msgid "Current Playlist"
+msgstr "Jelenlegi Lejátszási lista"
+
+msgid "Playlist Items"
+msgstr "Lejátszásilista-elemek"
+
+msgid "Shoutbox Records"
+msgstr "Shoutbox Bejegyzések"
+
+msgid "Wanted Albums"
+msgstr "Keresett Albumok"
+
+#, php-format
+msgid ""
+"This view has %d item and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgid_plural ""
+"This view has %d items and is too large to show all at once (limit %d). "
+"Enable paging or narrow your filters."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Browse was not found or expired, try reloading the page"
+msgstr "A böngészés nem található vagy lejárt, próbáld újratölteni az oldalt"
+
+msgid "0 Stars"
+msgstr "0 Csillag"
+
+msgid "1 Star"
+msgstr "1 Csillag"
+
+msgid "2 Stars"
+msgstr "2 Csillag"
+
+msgid "3 Stars"
+msgstr "3 Csillag"
+
+msgid "4 Stars"
+msgstr "4 Csillag"
+
+msgid "5 Stars"
+msgstr "5 Csillag"
+
+msgid "Album Data"
+msgstr ""
+
+msgid "Length (in minutes)"
+msgstr "Hossz (percben)"
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
+msgstr ""
+
+msgid "Database ID"
+msgstr ""
+
+msgid "My Rating"
+msgstr "Értékelésem"
+
+msgid "Rating (Average)"
+msgstr "Értékelés (Átlag)"
+
+msgid "My Rating (Song)"
+msgstr ""
+
+msgid "My Rating (Artist)"
+msgstr "Értékelésem (Előadó)"
+
+msgid "My Favorite Songs"
+msgstr ""
+
+msgid "My Favorite Albums"
+msgstr ""
+
+msgid "My Favorite Artists"
+msgstr ""
+
+msgid "Song popularity score"
+msgstr ""
+
+msgid "Album popularity score"
+msgstr ""
+
+msgid "Artist popularity score"
+msgstr ""
+
+msgid "Another User"
+msgstr "Másik felhasználó"
+
+msgid "Play History"
+msgstr ""
+
+#. HINT: Number of times object has been played
+msgid "# Played"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped"
+msgstr ""
+
+msgid "My Last Play"
+msgstr "Utolsó Lejátszásom"
+
+msgid "My Last Skip"
+msgstr ""
+
+msgid "My Last Play or Skip"
+msgstr ""
+
+msgid "Played by Me"
+msgstr "Általam lejátszva"
+
+msgid "Played by Me (Artist)"
+msgstr "Általam lejátszva (Előadó)"
+
+#. HINT: Number of times object has been played
+msgid "# Played by Me"
+msgstr ""
+
+#. HINT: Number of times object has been skipped
+msgid "# Skipped by Me"
+msgstr ""
+
+#. HINT: Number of times object has been played OR skipped
+msgid "# Played or Skipped by Me"
+msgstr ""
+
+msgid "Mood"
+msgstr ""
+
+msgid "Song Genre"
+msgstr ""
+
+msgid "Song Count (Genre)"
+msgstr ""
+
+msgid "Album Count (Genre)"
+msgstr ""
+
+msgid "Artist Count (Genre)"
+msgstr ""
+
+msgid "File Data"
+msgstr ""
+
+msgid "Date Updated"
+msgstr ""
+
+msgid "Image Width"
+msgstr "Kép szélesség"
+
+msgid "Image Height"
+msgstr "Kép magasság"
+
+msgid "Recently Added"
+msgstr ""
+
+msgid "Duplicate Album Tracks"
+msgstr ""
+
+msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr "MusicBrainz ID (Előadó)"
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "Album Count"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr "Értékelésem (Album)"
+
+msgid "MusicBrainz ID (Album)"
+msgstr "MusicBrainz ID (Album)"
+
+msgid "public"
+msgstr ""
+
+msgid "private"
+msgstr ""
+
+msgid "Episode Count"
+msgstr ""
+
+msgid "skipped"
+msgstr ""
+
+msgid "pending"
+msgstr ""
+
+msgid "completed"
+msgstr ""
+
+msgid "My Rating (Podcast)"
+msgstr ""
+
+msgid "My Rating (Podcast Episode)"
+msgstr ""
+
+msgid "My Favorite Podcasts"
+msgstr ""
+
+msgid "My Favorite Podcast Episodes"
+msgstr ""
+
+msgid "Podcast popularity score"
+msgstr ""
+
+msgid "Podcast Episode popularity score"
+msgstr ""
+
+msgid "Any searchable text"
+msgstr "Bármely kereshető szöveg"
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr ""
+
+msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Another User (Album)"
+msgstr "Másik felhasználó (Album)"
+
+msgid "Another User (Artist)"
+msgstr "Másik felhasználó (Előadó)"
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr "Lejátszás / Átugrás aránya"
+
+msgid "Played by Me (Album)"
+msgstr "Általam lejátszva (Album)"
+
+msgid "Album Genre"
+msgstr ""
+
+msgid "Artist Genre"
+msgstr ""
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
+msgid "Artist Count"
+msgstr ""
+
+msgid "Video Count"
 msgstr ""
 
 msgid "HTTPQ Active Instance"
@@ -4746,15 +5385,6 @@ msgstr "\"%s\" lejátszási lista létrehozva"
 msgid "Ampache podcast subscriptions"
 msgstr ""
 
-msgid "skipped"
-msgstr ""
-
-msgid "pending"
-msgstr ""
-
-msgid "completed"
-msgstr ""
-
 msgid "Advanced Share"
 msgstr "Összetett megosztás"
 
@@ -4782,12 +5412,6 @@ msgstr "Katalógus elkezdése: %s"
 msgid "Catalog Block: %s"
 msgstr ""
 
-#, php-format
-msgid "%d file updated."
-msgid_plural "%d files updated."
-msgstr[0] "%d fájl frissítve."
-msgstr[1] "%d fájl frissítve."
-
 msgid "Examine File..."
 msgstr "Fájl vizsgálata..."
 
@@ -4804,34 +5428,39 @@ msgid "Destin: %s"
 msgstr "Cél: %s"
 
 #, php-format
-msgid "Create directory \"%s\""
-msgstr "\"%s\" mappa létrehozása"
-
-#, php-format
 msgid "Don't overwrite an existing file: \"%s\""
 msgstr ""
 
-#, php-format
-msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr "\"%1$s\" másolása ide: \"%2$s\""
+msgid " Stars"
+msgstr ""
 
 #, php-format
-msgid "There was an error trying to copy file to \"%s\""
-msgstr "Hiba történt a fájl \"%s\" útvonalra másolása közben"
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
+msgstr ""
+
+msgid "not rated yet"
+msgstr "nincs értékelve"
 
 #, php-format
-msgid "Size comparison failed. Not deleting \"%s\""
-msgstr "A méretek összehasonlítása nem sikerült. \"%s\" nem lesz törölve"
+msgid "%s of 5"
+msgstr "%s az 5-ből"
 
-#, php-format
-msgid "There was an error trying to delete \"%s\""
-msgstr "Hiba történt \"%s\" törlése közben"
+msgid "Current rating"
+msgstr "Jelenlegi értékelés"
+
+msgid "Unfavorite"
+msgstr ""
+
+msgid "Favorite"
+msgstr ""
 
 msgid "View changes"
 msgstr "Módosítások megtekintése"
-
-msgid "Updating Ampache sources with `"
-msgstr "Ampache források frissítése a következővel: `"
 
 msgid "Updating dependencies with `"
 msgstr "Függőségek frissítése a következővel: `"
@@ -4839,20 +5468,48 @@ msgstr "Függőségek frissítése a következővel: `"
 msgid "Updating npm build with `"
 msgstr ""
 
-msgid "Invalid configuration settings"
-msgstr "Érvénytelen konfigurációs beállítás"
+#. HINT: comma separated list of filesystem paths
+#, php-format
+msgid "Unable to update dependencies: the web server user cannot write to %s"
+msgstr ""
+
+msgid "Updating Ampache sources with `"
+msgstr "Ampache források frissítése a következővel: `"
+
+msgid ""
+"Unable to run the update: the PHP exec() function is disabled on this server"
+msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
 msgstr "Az adatbázishoz kapcsolódás nem sikerült, ellenőrizd az Ampache configot"
 
-msgid "Unable to query the database, check your Ampache config"
-msgstr "Az adatbázis lekérdezése nem sikerült, ellenőrizd az Ampache configot"
-
 msgid "Existing database was detected, unable to continue the installation"
 msgstr "Már létező adatbázis észlelve, a telepítés nem folytatható"
 
+#. HINT: Database error message
+#, php-format
+msgid "Connection to the database failed: %s"
+msgstr "A kapcsolódás az adatbázishoz sikertelen: %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Database select failed: %s"
+msgstr "Adatbázis kiválasztása nem sikerült: %s"
+
+#. HINT: Database error message
+#, php-format
+msgid "Administrative user creation failed: %s"
+msgstr "Adminisztratív felhasználó létrehozása nem sikerült: %s"
+
+msgid ""
+"Connection to the database failed: Check hostname, username and password"
+msgstr "Nem sikerült kapcsolódni az adatbázishoz. Ellenőrizd a kiszolgáló nevét, a felhasználónevet és a jelszót"
+
 msgid "Config file is not writable"
 msgstr "A config fájl nem írható"
+
+msgid "Failed writing config file"
+msgstr "Nem sikerült a config fájl írása"
 
 msgid "Database name is invalid"
 msgstr "Az adatbázis neve érvénytelen"
@@ -4883,32 +5540,12 @@ msgstr "Nem sikerült a \"%1$s\" jogosultság hozzárendelése \"%2$s\" felhaszn
 msgid "Unable to open ampache.sql"
 msgstr ""
 
-msgid ""
-"Connection to the database failed: Check hostname, username and password"
-msgstr "Nem sikerült kapcsolódni az adatbázishoz. Ellenőrizd a kiszolgáló nevét, a felhasználónevet és a jelszót"
-
-msgid "Failed writing config file"
-msgstr "Nem sikerült a config fájl írása"
-
-#. HINT: Database error message
+#. HINT: Database version number
 #, php-format
-msgid "Connection to the database failed: %s"
-msgstr "A kapcsolódás az adatbázishoz sikertelen: %s"
+msgid "Unable to update the database schema from version %s"
+msgstr ""
 
-#. HINT: Database error message
-#, php-format
-msgid "Database select failed: %s"
-msgstr "Adatbázis kiválasztása nem sikerült: %s"
-
-#. HINT: Database error message
-#, php-format
-msgid "Administrative user creation failed: %s"
-msgstr "Adminisztratív felhasználó létrehozása nem sikerült: %s"
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
-#, php-format
-msgid "Updated: %s"
+msgid "You have Plugins that need an update!"
 msgstr ""
 
 msgid "commented on"
@@ -4975,9 +5612,6 @@ msgstr "Ahhoz, hogy a fiókot használatba vedd, meg kell erősítened az e-mail
 msgid "A new user has registered, the following values were entered:"
 msgstr "Egy új felhasználó regisztrált, a következő értékeket adta meg:"
 
-msgid "Fullname"
-msgstr "Teljes név"
-
 #, php-format
 msgid "Account enabled at %s"
 msgstr "Fiók engedélyezve itt: %s"
@@ -4996,6 +5630,9 @@ msgstr "Ellenőrzés alatt %1$s (%2$s)"
 
 msgid "Finished checking file names for valid characters"
 msgstr "A fájlnevekben szereplő karakterek érvényességének ellenőrzése befejeződött"
+
+msgid "There was an error trying to check the file names for valid characters"
+msgstr ""
 
 #, php-format
 msgid "There was an error trying to open \"%s\""
@@ -5041,20 +5678,39 @@ msgid "File moved..."
 msgstr "Fájl áthelyezve..."
 
 #, php-format
+msgid "%1$s on %2$s"
+msgstr ""
+
+#, php-format
 msgid "%s on %s"
 msgstr ""
 
 msgid "Play date"
 msgstr ""
 
-msgid "Enabled"
-msgstr "Engedélyezve"
+msgid "Add to playlist"
+msgstr "Hozzáadás Lejátszási listához"
+
+msgid "Add to list"
+msgstr ""
+
+msgid "Add to playlist / collection"
+msgstr ""
 
 msgid "On"
 msgstr "Be"
 
 msgid "Off"
 msgstr "Ki"
+
+msgid "bps"
+msgstr ""
+
+msgid "0 = use the source file rate"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
 
 msgid "M3U"
 msgstr "M3U"
@@ -5085,21 +5741,6 @@ msgstr ""
 
 msgid "Allow API6 Only"
 msgstr ""
-
-msgid "1 Star"
-msgstr "1 Csillag"
-
-msgid "2 Stars"
-msgstr "2 Csillag"
-
-msgid "3 Stars"
-msgstr "3 Csillag"
-
-msgid "4 Stars"
-msgstr "4 Csillag"
-
-msgid "5 Stars"
-msgstr "5 Csillag"
 
 msgid "Keep last played track"
 msgstr ""
@@ -5141,17 +5782,11 @@ msgstr "Név csökkenő"
 msgid "Click to grant %s access to Ampache"
 msgstr "Klikkelj a %s jogosultság hozzáadásához az Ampache-hoz"
 
+msgid "Match my theme"
+msgstr ""
+
 msgid "Unknown Artist"
 msgstr "Ismeretlen Előadó"
-
-msgid "Song preview from 7digital"
-msgstr "Dal előnézet a 7digital-tól"
-
-msgid "7digital consumer key"
-msgstr "7digital consumer key"
-
-msgid "7digital secret"
-msgstr "7digital secret"
 
 msgid "Amazon art search"
 msgstr "Amazon borítókeresés"
@@ -5171,6 +5806,12 @@ msgstr "Amazon Secret Access Key"
 msgid "Amazon associate tag"
 msgstr "Amazon hozzárendelt címke"
 
+msgid "Sonic similarity from an AudioMuse-AI server"
+msgstr ""
+
+msgid "AudioMuse-AI server URL"
+msgstr ""
+
 msgid "URL shorteners on shared links with Bit.ly"
 msgstr "A megosztott linkek URL-jének rövidítése Bit.ly-vel"
 
@@ -5186,6 +5827,9 @@ msgstr ""
 msgid "Catalog favorites on homepage"
 msgstr "Katalóguskedvencek a kezdőlapon"
 
+msgid "Highlight"
+msgstr "Kiemelt"
+
 msgid "Catalog favorites max items"
 msgstr "Katalóguskedvencek max. elemszáma"
 
@@ -5198,11 +5842,11 @@ msgstr ""
 msgid "Catalog favorites media row display"
 msgstr ""
 
-msgid "Highlight"
-msgstr "Kiemelt"
-
 msgid "Get lyrics from ChartLyrics"
 msgstr "Dalszöveg beszerzése a ChartLyrics-ről"
+
+msgid "Song preview from Deezer"
+msgstr ""
 
 msgid "Discogs metadata integration"
 msgstr "Discogs metaadatok beépítése"
@@ -5225,11 +5869,11 @@ msgstr "Flickr API key"
 msgid "Friend's Timeline on homepage"
 msgstr "Barátok idővonala a kezdőlapon"
 
-msgid "Friends timeline max items"
-msgstr "Barátok idővonalán megjelenő max. elemek száma"
-
 msgid "Friends Timeline"
 msgstr "Barátok idővonala"
+
+msgid "Friends timeline max items"
+msgstr "Barátok idővonalán megjelenő max. elemek száma"
 
 msgid "Google Analytics statistics"
 msgstr "Google Analytics statisztikák"
@@ -5240,14 +5884,14 @@ msgstr "Google Analytics Tracking ID"
 msgid "Show user's location with Google Maps"
 msgstr "Felhasználó helyzetének megjelenítése Google Maps-en"
 
-msgid "Google Maps API key"
-msgstr "Google Maps API key"
-
 msgid "Hits"
 msgstr "Slágerek"
 
 msgid "Last activity"
 msgstr "Utolsó aktivitás"
+
+msgid "Google Maps API key"
+msgstr "Google Maps API key"
 
 msgid "User's avatars from Gravatar"
 msgstr "Felhasználóavatárok Gravatar-ról"
@@ -5265,6 +5909,9 @@ msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
 msgid "Home Dashboard max items"
+msgstr ""
+
+msgid "Song preview from the iTunes Search API"
 msgstr ""
 
 msgid "Scrobble songs you play to your Last.FM account"
@@ -5297,6 +5944,12 @@ msgstr "ListenBrainz User Token"
 msgid "ListenBrainz API URL"
 msgstr ""
 
+msgid "Get lyrics from an LrcLib compatible server"
+msgstr ""
+
+msgid "LrcLib site URL"
+msgstr ""
+
 msgid "Get lyrics from a public Lyrist instance"
 msgstr ""
 
@@ -5321,20 +5974,23 @@ msgstr "MusicBrainz metaadatok beépítése"
 msgid "PayPal donation button on user page"
 msgstr "PayPal támogatás gomb a felhasználó oldalán"
 
-msgid "PayPal ID"
-msgstr "PayPal ID"
-
-msgid "PayPal Currency Code"
-msgstr "PayPal Currency Code"
-
 msgid "on"
 msgstr "-"
 
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr "PayPal - Biztonságos, egyszerű módja az online fizetésnek!"
 
+msgid "PayPal ID"
+msgstr "PayPal ID"
+
+msgid "PayPal Currency Code"
+msgstr "PayPal Currency Code"
+
 msgid "Personal favorites on homepage"
 msgstr "Személyes kedvencek a kezdőlapon"
+
+msgid "Favorite Lists"
+msgstr "Kedvenc listák"
 
 msgid "Personal favorites on the homepage"
 msgstr "Személyes kedvencek a kezdőlapon"
@@ -5344,9 +6000,6 @@ msgstr ""
 
 msgid "Favorite Smartlists"
 msgstr ""
-
-msgid "Favorite Lists"
-msgstr "Kedvenc listák"
 
 msgid "Piwik statistics"
 msgstr "Piwik statisztikák"
@@ -5459,381 +6112,19 @@ msgstr "Kiadó Csoport MusicBrainzID"
 msgid "Artist MusicBrainzID"
 msgstr "Előadó MusicBrainzID"
 
-msgid "Edit/Find Art"
-msgstr "Borító szerkesztése/keresése"
-
-msgid "Do you really want to reset art?"
-msgstr "Biztosan vissza akarod állítani a borítót?"
-
-msgid "Reset Art"
-msgstr "Borító visszaállítása"
-
-msgid "Broadcast Edit"
-msgstr "Műsorszórás szerkesztése"
-
-msgid "Broadcast"
-msgstr "Műsorszórás"
-
-msgid "Unbroadcast"
-msgstr "Műsorszórás vége"
-
-msgid "Playlist Items"
-msgstr "Lejátszásilista-elemek"
-
-msgid "Current Playlist"
-msgstr "Jelenlegi Lejátszási lista"
-
-msgid "Shoutbox Records"
-msgstr "Shoutbox Bejegyzések"
-
-msgid "Wanted Albums"
-msgstr "Keresett Albumok"
-
-msgid "Private Messages"
-msgstr "Személyes üzenetek"
-
-msgid "day"
-msgid_plural "days"
-msgstr[0] "nap"
-msgstr[1] "napok"
-
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "óra"
-msgstr[1] "órák"
-
-msgid "No Update Needed"
-msgstr "Frissítés nem szükséges"
-
-msgid "Catalog Cleaned"
-msgstr "Katalógus megtisztítva"
-
-#, php-format
-msgid "%d file removed."
-msgid_plural "%d files removed."
-msgstr[0] "%d fájl eltávolítva."
-msgstr[1] "%d fájl eltávolítva."
-
-msgid "Catalog Verified"
-msgstr "Katalógus ellenőrizve"
-
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
-msgstr "Ez a mappa nem része egyik létező Katalógusnak sem. A frissítés nem dolgozható fel."
-
-msgid "Name is required"
-msgstr "Név szükséges"
-
-msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr ""
+msgid "Codec is required (e.g. MP3, OGG...)"
+msgstr "Codec szükséges (pl. MP3, OGG...)"
 
 msgid "URL is invalid, must be http:// or https://"
 msgstr "Érvénytelen URL, http:// vagy https:// -nek kell lennie"
 
-msgid "Codec is required (e.g. MP3, OGG...)"
-msgstr "Codec szükséges (pl. MP3, OGG...)"
-
 msgid "Catalog is invalid"
 msgstr "Érvénytelen Katalógus"
 
-msgid "You have Plugins that need an update!"
+msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-msgid "Browse was not found or expired, try reloading the page"
-msgstr "A böngészés nem található vagy lejárt, próbáld újratölteni az oldalt"
-
-msgid "0 Stars"
-msgstr "0 Csillag"
-
-msgid " Stars"
-msgstr ""
-
-msgid "Average from all users"
-msgstr ""
-
-msgid "not rated yet"
-msgstr "nincs értékelve"
-
-#, php-format
-msgid "%s of 5"
-msgstr "%s az 5-ből"
-
-msgid "Current rating"
-msgstr "Jelenlegi értékelés"
-
-msgid "is greater than or equal to"
-msgstr "nagyobb vagy egyenlő"
-
-msgid "is less than or equal to"
-msgstr "kisebb vagy egyenlő"
-
-msgid "equals"
-msgstr "egyenlő"
-
-msgid "does not equal"
-msgstr "nem egyenlő"
-
-msgid "is greater than"
-msgstr "nagyobb"
-
-msgid "is less than"
-msgstr "kisebb"
-
-msgid "is true"
-msgstr "igaz"
-
-msgid "is false"
-msgstr "hamis"
-
-msgid "contains"
-msgstr "tartalmaz"
-
-msgid "does not contain"
-msgstr "nem tartalmaz"
-
-msgid "starts with"
-msgstr "a kezdete"
-
-msgid "ends with"
-msgstr "végződik"
-
-msgid "is"
-msgstr "pontosan"
-
-msgid "is not"
-msgstr "nem egyezik"
-
-msgid "sounds like"
-msgstr "hasonlít"
-
-msgid "does not sound like"
-msgstr "nem hasonlít"
-
-msgid "matches regular expression"
-msgstr "megfelel a reguláris kifejezésnek"
-
-msgid "does not match regular expression"
-msgstr "nem felel meg a reguláris kifejezésnek"
-
-msgid "before"
-msgstr "előtt"
-
-msgid "after"
-msgstr "után"
-
-msgid "before (x) days ago"
-msgstr "(x) napnál régebben"
-
-msgid "after (x) days ago"
-msgstr "(x) napnál frissebb"
-
-msgid "has loved"
-msgstr "kedvelte"
-
-msgid "has rated 5 stars"
-msgstr "5 csillagra értékelte"
-
-msgid "has rated 4 stars"
-msgstr "4 csillagra értékelte"
-
-msgid "has rated 3 stars"
-msgstr "3 csillagra értékelte"
-
-msgid "has rated 2 stars"
-msgstr "2 csillagra értékelte"
-
-msgid "has rated 1 star"
-msgstr "1 csillagra értékelte"
-
-msgid "has not rated"
-msgstr "nem értékelte"
-
-msgid "Any searchable text"
-msgstr "Bármely kereshető szöveg"
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Length (in minutes)"
-msgstr "Hossz (percben)"
-
-msgid "Database ID"
-msgstr ""
-
-msgid "My Rating"
-msgstr "Értékelésem"
-
-msgid "Rating (Average)"
-msgstr "Értékelés (Átlag)"
-
-msgid "My Rating (Album)"
-msgstr "Értékelésem (Album)"
-
-msgid "My Rating (Artist)"
-msgstr "Értékelésem (Előadó)"
-
-msgid "My Favorite Songs"
-msgstr ""
-
-msgid "My Favorite Albums"
-msgstr ""
-
-msgid "My Favorite Artists"
-msgstr ""
-
-msgid "Favorites (Album)"
-msgstr ""
-
-msgid "Favorites (Artist)"
-msgstr ""
-
-msgid "Another User"
-msgstr "Másik felhasználó"
-
-msgid "Another User (Album)"
-msgstr "Másik felhasználó (Album)"
-
-msgid "Another User (Artist)"
-msgstr "Másik felhasználó (Előadó)"
-
-msgid "Play History"
-msgstr ""
-
-#. HINT: Number of times object has been played
-msgid "# Played"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped"
-msgstr ""
-
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr "Lejátszás / Átugrás aránya"
-
-msgid "My Last Play"
-msgstr "Utolsó Lejátszásom"
-
-msgid "My Last Skip"
-msgstr ""
-
-msgid "My Last Play or Skip"
-msgstr ""
-
-msgid "Played by Me"
-msgstr "Általam lejátszva"
-
-msgid "Played by Me (Album)"
-msgstr "Általam lejátszva (Album)"
-
-msgid "Played by Me (Artist)"
-msgstr "Általam lejátszva (Előadó)"
-
-#. HINT: Number of times object has been played
-msgid "# Played by Me"
-msgstr ""
-
-#. HINT: Number of times object has been skipped
-msgid "# Skipped by Me"
-msgstr ""
-
-#. HINT: Number of times object has been played OR skipped
-msgid "# Played or Skipped by Me"
-msgstr ""
-
-msgid "Recently played"
-msgstr ""
-
-msgid "Album Genre"
-msgstr ""
-
-msgid "Artist Genre"
-msgstr ""
-
-msgid "Song Count"
-msgstr ""
-
-msgid "Album Count"
-msgstr ""
-
-msgid "Artist Count"
-msgstr ""
-
-msgid "File Data"
-msgstr ""
-
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently added"
-msgstr "Nemrég hozzáadott"
-
-msgid "Recently updated"
-msgstr "Nemrég frissített"
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr "MusicBrainz ID (Album)"
-
-msgid "MusicBrainz ID (Artist)"
-msgstr "MusicBrainz ID (Előadó)"
-
-msgid "Metadata"
-msgstr "Metaadat"
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "Album Title"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
-msgid "Image Width"
-msgstr "Kép szélesség"
-
-msgid "Image Height"
-msgstr "Kép magasság"
-
-msgid "MusicBrainz ID (Song)"
-msgstr ""
-
-msgid "Album Data"
-msgstr ""
-
-msgid "Disk Count"
-msgstr ""
-
-msgid "Duplicate MusicBrainz Release Group"
-msgstr ""
-
-msgid "public"
-msgstr ""
-
-msgid "private"
-msgstr ""
-
-msgid "Episode Count"
-msgstr ""
-
-msgid "Video Count"
+msgid "User set"
 msgstr ""
 
 msgid "Share Edit"
@@ -5842,17 +6133,11 @@ msgstr "Megosztás szerkesztés"
 msgid "Track MusicBrainzID"
 msgstr "Szám MusicBrainzID"
 
-msgid "Unfavorite"
-msgstr ""
-
-msgid "Favorite"
-msgstr ""
+msgid "User avatar"
+msgstr "Felhasználó avatár"
 
 msgid "Username is required"
 msgstr ""
-
-msgid "User avatar"
-msgstr "Felhasználó avatár"
 
 msgid "Afar"
 msgstr "Afar"
@@ -6412,682 +6697,6 @@ msgstr "Elfogad"
 msgid "Add to wanted list"
 msgstr "Hozzáadás a keresett listához"
 
-# This file lists all description strings from your Ampache-database ->
-# preference-table.
-# Please do not delete or modify the content by yourself. It will be
-# automatically (re)generated
-# if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 08.07.2025 09:44:34 AEST
-# 
-#: Database preference table id 1
-msgid "Allow Downloads"
-msgstr ""
-
-#: Database preference table id 4
-msgid "Popular Threshold"
-msgstr ""
-
-#: Database preference table id 19
-msgid "Transcode Bitrate"
-msgstr ""
-
-#: Database preference table id 22
-msgid "Website Title"
-msgstr ""
-
-#: Database preference table id 23
-msgid "Lock Songs"
-msgstr ""
-
-#: Database preference table id 24
-msgid "Force HTTP playback regardless of port"
-msgstr ""
-
-#: Database preference table id 29
-msgid "Playback Type"
-msgstr ""
-
-#: Database preference table id 32
-msgid "Playlist Type"
-msgstr ""
-
-#: Database preference table id 33
-msgid "Theme"
-msgstr ""
-
-#: Database preference table id 40
-msgid "Localplay Access"
-msgstr ""
-
-#: Database preference table id 41
-msgid "Localplay Type"
-msgstr ""
-
-#: Database preference table id 44
-msgid "Allow Streaming"
-msgstr ""
-
-#: Database preference table id 45
-msgid "Allow Democratic Play"
-msgstr ""
-
-#: Database preference table id 46
-msgid "Allow Localplay Play"
-msgstr ""
-
-#: Database preference table id 47
-msgid "Statistics Day Threshold"
-msgstr ""
-
-#: Database preference table id 51
-msgid "Offset Limit"
-msgstr ""
-
-#: Database preference table id 52
-msgid "Rate Limit"
-msgstr ""
-
-#: Database preference table id 53
-msgid "Playlist Method"
-msgstr ""
-
-#: Database preference table id 69
-msgid "Show lyrics"
-msgstr ""
-
-#: Database preference table id 71
-msgid "httpQ Active Instance"
-msgstr ""
-
-#: Database preference table id 82
-msgid "Now Playing filtered per user"
-msgstr ""
-
-#: Database preference table id 83
-msgid "Album - Default sort"
-msgstr ""
-
-#: Database preference table id 84
-msgid "Show # played"
-msgstr ""
-
-#: Database preference table id 85
-msgid "Show current song in Web Player page title"
-msgstr ""
-
-#: Database preference table id 86
-msgid "Use Subsonic backend"
-msgstr ""
-
-#: Database preference table id 88
-msgid "Authorize Flash Web Player"
-msgstr ""
-
-#: Database preference table id 89
-msgid "Authorize HTML5 Web Player"
-msgstr ""
-
-#: Database preference table id 90
-msgid "Share Now Playing information"
-msgstr ""
-
-#: Database preference table id 91
-msgid "Share Recently Played information"
-msgstr ""
-
-#: Database preference table id 92
-msgid ""
-"Share Recently Played information - Allow access to streaming date/time"
-msgstr ""
-
-#: Database preference table id 93
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Database preference table id 94
-msgid "Fix header position on compatible themes"
-msgstr ""
-
-#: Database preference table id 95
-msgid "Check for Ampache updates automatically"
-msgstr ""
-
-#: Database preference table id 96
-msgid "AutoUpdate last check time"
-msgstr ""
-
-#: Database preference table id 97
-msgid "AutoUpdate last version from last check"
-msgstr ""
-
-#: Database preference table id 98
-msgid "AutoUpdate last version from last check is newer"
-msgstr ""
-
-#: Database preference table id 99
-msgid "Confirmation when closing current playing window"
-msgstr ""
-
-#: Database preference table id 100
-msgid "Auto-pause between tabs"
-msgstr ""
-
-#: Database preference table id 101
-msgid "Enable URL Rewriting"
-msgstr ""
-
-#: Database preference table id 102
-msgid "Allow Share"
-msgstr ""
-
-#: Database preference table id 103
-msgid "Share links default expiration days (0=never)"
-msgstr ""
-
-#: Database preference table id 104
-msgid "Artist slideshow inactivity time"
-msgstr ""
-
-#: Database preference table id 105
-msgid "Broadcast web player by default"
-msgstr ""
-
-#: Database preference table id 108
-msgid "Album - Group multiple disks"
-msgstr ""
-
-#: Database preference table id 109
-msgid "Top menu"
-msgstr ""
-
-#: Database preference table id 110
-msgid "Democratic - Clear votes for expired user sessions"
-msgstr ""
-
-#: Database preference table id 111
-msgid "Show donate button in footer"
-msgstr ""
-
-#: Database preference table id 113
-msgid "Allow user uploads"
-msgstr ""
-
-#: Database preference table id 114
-msgid "Create a subdirectory per user"
-msgstr ""
-
-#: Database preference table id 115
-msgid "Consider the user sender as the track's artist"
-msgstr ""
-
-#: Database preference table id 116
-msgid "Post-upload script (current directory = upload target directory)"
-msgstr ""
-
-#: Database preference table id 117
-msgid "Allow users to edit uploaded songs"
-msgstr ""
-
-#: Database preference table id 118
-msgid "Use DAAP backend"
-msgstr ""
-
-#: Database preference table id 119
-msgid "DAAP backend password"
-msgstr ""
-
-#: Database preference table id 120
-msgid "Use UPnP backend"
-msgstr ""
-
-#: Database preference table id 121
-msgid "Allow Video Features"
-msgstr ""
-
-#: Database preference table id 122
-msgid "Album - Group per release type"
-msgstr ""
-
-#: Database preference table id 123
-msgid "Ajax page load"
-msgstr ""
-
-#: Database preference table id 124
-msgid "Limit direct play to maximum media count"
-msgstr ""
-
-#: Database preference table id 125
-msgid "Show Albums of the Moment"
-msgstr ""
-
-#: Database preference table id 126
-msgid "Show Videos of the Moment"
-msgstr ""
-
-#: Database preference table id 127
-msgid "Show Recently Played"
-msgstr ""
-
-#: Database preference table id 128
-msgid "Show Now Playing"
-msgstr ""
-
-#: Database preference table id 129
-msgid "Custom URL - Logo"
-msgstr ""
-
-#: Database preference table id 130
-msgid "Album - Group per release type sort"
-msgstr ""
-
-#: Database preference table id 131
-msgid "Web Player browser notifications"
-msgstr ""
-
-#: Database preference table id 132
-msgid "Web Player browser notifications timeout (seconds)"
-msgstr ""
-
-#: Database preference table id 133
-msgid "Allow Geolocation"
-msgstr ""
-
-#: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
-msgstr ""
-
-#: Database preference table id 135
-msgid "Allow users to remove uploaded songs"
-msgstr ""
-
-#: Database preference table id 136
-msgid "Custom URL - Login page logo"
-msgstr ""
-
-#: Database preference table id 137
-msgid "Custom URL - Favicon"
-msgstr ""
-
-#: Database preference table id 138
-msgid "Custom text footer"
-msgstr ""
-
-#: Database preference table id 139
-msgid "Use WebDAV backend"
-msgstr ""
-
-#: Database preference table id 140
-msgid "Allow E-mail notifications"
-msgstr ""
-
-#: Database preference table id 141
-msgid "Theme color"
-msgstr ""
-
-#: Database preference table id 142
-msgid "Custom metadata - Disable these fields"
-msgstr ""
-
-#: Database preference table id 143
-msgid "Custom metadata - Define field list"
-msgstr ""
-
-#: Database preference table id 144
-msgid "# latest episodes to keep"
-msgstr ""
-
-#: Database preference table id 145
-msgid "# episodes to download when new episodes are available"
-msgstr ""
-
-#: Database preference table id 146
-msgid "Library item context menu"
-msgstr ""
-
-#: Database preference table id 147
-msgid "Rename uploaded file according to catalog pattern"
-msgstr ""
-
-#: Database preference table id 148
-msgid "Check library item at import time and disable duplicates"
-msgstr ""
-
-#: Database preference table id 149
-msgid "Show filter box on browse"
-msgstr ""
-
-#: Database preference table id 150
-msgid "Light sidebar by default"
-msgstr ""
-
-#: Database preference table id 151
-msgid "Custom blank album default image"
-msgstr ""
-
-#: Database preference table id 153
-msgid ""
-"Alphabet browsing by default for following library items (album,artist,...)"
-msgstr ""
-
-#: Database preference table id 154
-msgid "Show # skipped"
-msgstr ""
-
-#: Database preference table id 155
-msgid "Custom datetime"
-msgstr ""
-
-#: Database preference table id 156
-msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr ""
-
-#: Database preference table id 157
-msgid "Only add unique items to playlists"
-msgstr ""
-
-#: Database preference table id 158
-msgid "Set the amount of items Album/Video of the Moment will display"
-msgstr ""
-
-#: Database preference table id 159
-msgid "Custom URL - Login page background"
-msgstr ""
-
-#: Database preference table id 160
-msgid "Show License"
-msgstr ""
-
-#: Database preference table id 161
-msgid "Browse by Original Year for albums (falls back to Year)"
-msgstr ""
-
-#: Database preference table id 162
-msgid "Hide the Song Artist column for Albums with one Artist"
-msgstr ""
-
-#: Database preference table id 163
-msgid "Hide the Genre column in browse table rows"
-msgstr ""
-
-#: Database preference table id 164
-msgid ""
-"Force Subsonic streams to download. (Enable scrobble in your client to "
-"record stats)"
-msgstr ""
-
-#: Database preference table id 165
-msgid "Allow Ampache API3 responses"
-msgstr ""
-
-#: Database preference table id 166
-msgid "Allow Ampache API4 responses"
-msgstr ""
-
-#: Database preference table id 167
-msgid "Allow Ampache API5 responses"
-msgstr ""
-
-#: Database preference table id 168
-msgid "Force a specific API response no matter what version you send"
-msgstr ""
-
-#: Database preference table id 169
-msgid "Show playlist owner username in titles"
-msgstr ""
-
-#: Database preference table id 170
-msgid "Hide playlists in Subsonic and API clients that start with this string"
-msgstr ""
-
-#: Database preference table id 171
-msgid "Hide smartlists that match playlist names in Subsonic and API clients"
-msgstr ""
-
-#: Database preference table id 172
-msgid "Show 'Album Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 173
-msgid "Show 'Artists' link in the main sidebar"
-msgstr ""
-
-#: Database preference table id 174
-msgid "Democratic - Use smartlists for base playlist"
-msgstr ""
-
-#: Database preference table id 175
-msgid ""
-"Remove tracks before the current playlist item in the webplayer when played"
-msgstr ""
-
-#: Database preference table id 176
-msgid "Allow Ampache API6 responses"
-msgstr ""
-
-#: Database preference table id 177
-msgid "Upload Access Level"
-msgstr ""
-
-#: Database preference table id 178
-msgid "Show Album subtitle on links (if available)"
-msgstr ""
-
-#: Database preference table id 179
-msgid "Show Album original year on links (if available)"
-msgstr ""
-
-#: Database preference table id 180
-msgid "Show the login / registration links in the site header"
-msgstr ""
-
-#: Database preference table id 181
-msgid ""
-"Use an alternative playback action for streaming if you have issues with "
-"playing music"
-msgstr ""
-
-#: Database preference table id 182
-msgid "Custom timezone (Override PHP date.timezone)"
-msgstr ""
-
-#: Database preference table id 183
-msgid "Only keep the latest media bookmark"
-msgstr ""
-
-#: Database preference table id 184
-msgid "Default webplayer volume"
-msgstr ""
-
-#: Database preference table id 185
-msgid "API sessions do not expire"
-msgstr ""
-
-#: Database preference table id 186
-msgid "Show all media types in Recently Played"
-msgstr ""
-
-#: Database preference table id 187
-msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr ""
-
-#: Database preference table id 188
-msgid "Hide sidebar switcher arrows"
-msgstr ""
-
-#: Database preference table id 189
-msgid "Hide the Browse menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 190
-msgid "Hide the Dashboard menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 191
-msgid "Hide the Video menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 192
-msgid "Hide the Search menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 193
-msgid "Hide the Playlist menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 194
-msgid "Hide the Information menu in the sidebar"
-msgstr ""
-
-#: Database preference table id 195
-msgid "Destination catalog"
-msgstr ""
-
-#: Database preference table id 196
-msgid "Custom URL - Use your avatar for header logo"
-msgstr ""
-
-#: Database preference table id 197
-msgid "Use Dashboard links for the index page header"
-msgstr ""
-
-#: Database preference table id 198
-msgid "Custom CSS Order - Browse"
-msgstr ""
-
-#: Database preference table id 199
-msgid "Custom CSS Order - Dashboard"
-msgstr ""
-
-#: Database preference table id 200
-msgid "Custom CSS Order - Video"
-msgstr ""
-
-#: Database preference table id 201
-msgid "Custom CSS Order - Playlist"
-msgstr ""
-
-#: Database preference table id 202
-msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Database preference table id 203
-msgid "Custom CSS Order - Information"
-msgstr ""
-
-#: Database preference table id 204
-msgid ""
-"Force API streams to download. (Enable scrobble in your client to record "
-"stats)"
-msgstr ""
-
-#: Database preference table id 205
-msgid "Show Google search icon on library items"
-msgstr ""
-
-#: Database preference table id 206
-msgid "Show DuckDuckGo search icon on library items"
-msgstr ""
-
-#: Database preference table id 207
-msgid "Show Wikipedia search icon on library items"
-msgstr ""
-
-#: Database preference table id 208
-msgid "Show Last.fm search icon on library items"
-msgstr ""
-
-#: Database preference table id 209
-msgid "Show Bandcamp search icon on library items"
-msgstr ""
-
-#: Database preference table id 210
-msgid "Show MusicBrainz search icon on library items"
-msgstr ""
-
-#: Database preference table id 211
-msgid "Show extended links for playlist media"
-msgstr ""
-
-#: Database preference table id 212
-msgid "Show Discogs search icon on library items"
-msgstr ""
-
-#: Database preference table id 213
-msgid "Force Grid View on Song browse"
-msgstr ""
-
-#: Database preference table id 214
-msgid "Force Grid View on Album browse"
-msgstr ""
-
-#: Database preference table id 215
-msgid "Force Grid View on Album Disk browse"
-msgstr ""
-
-#: Database preference table id 216
-msgid "Force Grid View on Artist browse"
-msgstr ""
-
-#: Database preference table id 217
-msgid "Force Grid View on Radio Station browse"
-msgstr ""
-
-#: Database preference table id 218
-msgid "Force Grid View on Playlist browse"
-msgstr ""
-
-#: Database preference table id 219
-msgid "Force Grid View on Video browse"
-msgstr ""
-
-#: Database preference table id 220
-msgid "Force Grid View on Podcast browse"
-msgstr ""
-
-#: Database preference table id 221
-msgid "Force Grid View on Podcast Episode browse"
-msgstr ""
-
-#: Database preference table id 222
-msgid "Show Artist column on playlist media rows"
-msgstr ""
-
-#: Database preference table id 223
-msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr ""
-
-#: Database preference subcategory table id 77
-msgid "last.fm"
-msgstr ""
-
-#: Database preference subcategory table id 138
-msgid "interface"
-msgstr ""
-
-#: Database preference subcategory table id 164
-msgid "api"
-msgstr ""
-
-#: Database preference subcategory table id 213
-msgid "cookies"
-msgstr ""
-
-#: ./untranslated-strings.txt:3
-msgid "Connected Users"
-msgstr ""
-
-#: ./untranslated-strings.txt:7
-msgid "Catalog Size"
-msgstr ""
-
-#: ./untranslated-strings.txt:11
-msgid "Catalog Time"
-msgstr ""
-
-#: ./untranslated-strings.txt:15
-msgid "Total Users"
-msgstr ""
-
 #: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""
@@ -7142,10 +6751,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
-msgstr ""
-
-#: ./untranslated-strings.txt:133
-msgid "Last.FM"
 msgstr ""
 
 #: ./untranslated-strings.txt:134
@@ -7224,10 +6829,798 @@ msgstr ""
 msgid "ping"
 msgstr ""
 
-#: ./untranslated-strings.txt:250
+#: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
 msgstr ""
 
-#: ./untranslated-strings.txt:256
-msgid "average"
+#: ./untranslated-strings.txt:269
+msgid "Mpd"
+msgstr ""
+
+# This file lists all translatable strings from the Ampache preference table
+# (descriptions and subcategories). It is generated from the source code by
+# ./gather-messages.sh [-gu|--getutds] - descriptions come from
+# Preference::translate_db() and subcategories from Preference::DEFAULTS,
+# so a live database is NOT required. Do not edit it by hand; re-run the
+# script.
+# 
+#: Ampache preference description
+msgid "Album - Group multiple disks"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Group per release type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Album - Default sort"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Democratic Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Localplay Play"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information - Allow access to streaming agent"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Now Playing information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share Recently Played information"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Share Recently Played information - Allow access to streaming date/time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Streaming"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow user uploads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Video Features"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force API streams to download. (Enable scrobble in your client to record "
+"stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API3 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API4 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API5 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API6 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Ampache API8 responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force a specific API response no matter what version you send"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide playlists in Subsonic and API clients that start with this string"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide smartlists that match playlist names in Subsonic and API clients"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last check time"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check is newer"
+msgstr ""
+
+#: Ampache preference description
+msgid "AutoUpdate last version from last check"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check for Ampache updates automatically"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly API key"
+msgstr ""
+
+#: Ampache preference description
+msgid "Bit.ly Username"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only keep the latest media bookmark"
+msgstr ""
+
+#: Ampache preference description
+msgid "Broadcast web player by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Require a session to listen to my broadcasts"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album Disk browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Album browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Artist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show filter box on browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Radio Station browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Playlist browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast Episode browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Podcast browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Song browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Grid View on Video browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications timeout (seconds)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Web Player browser notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Check library item at import time and disable duplicates"
+msgstr ""
+
+#: Ampache preference description
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Add live plays to the cached count for accurate stats (Require: Cron Cache)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom blank album default image"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom datetime"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Touch icon for phone home screens (PNG, 180x180, no "
+"transparency)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Favicon (SVG, PNG or ICO)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page background"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Login page logo"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Custom URL - Image shown when a link to this server is shared (PNG or JPEG, "
+"1200x630)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom URL - Use your avatar for header logo"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom text footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom timezone (Override PHP date.timezone)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use DAAP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "DAAP backend password"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Clear votes for expired user sessions"
+msgstr ""
+
+#: Ampache preference description
+msgid "Democratic - Use smartlists for base playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Limit direct play to maximum media count"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Additional fields to disable"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom metadata - Disable these fields"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Downloads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Audio Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Video Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode output format - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show extended links for playlist media"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Google search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Discogs search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show DuckDuckGo search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Wikipedia search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Last.fm search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Bandcamp search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show MusicBrainz search icon on library items"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force HTTP playback regardless of port"
+msgstr ""
+
+#: Ampache preference description
+msgid "Draw artwork for items that have no cover"
+msgstr ""
+
+#: Ampache preference description
+msgid "Drawn artwork template"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Geolocation"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Genre column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Mood column in browse table rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Song Artist column for Albums with one Artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Albums of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Videos of the Moment"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show all media types in Recently Played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Dashboard links for the index page header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Default webplayer volume"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Library item context menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Localplay Access"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock Songs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Minimum transcode bitrate for dynamic downsampling in bps"
+msgstr ""
+
+#: Ampache preference description
+msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow E-mail notifications"
+msgstr ""
+
+#: Ampache preference description
+msgid "Now Playing filtered per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Offset Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show an icon for the page type in the browser tab title"
+msgstr ""
+
+#: Ampache preference description
+msgid "API sessions do not expire"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Method"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playlist Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "Playback Type"
+msgstr ""
+
+#: Ampache preference description
+msgid "# latest episodes to keep"
+msgstr ""
+
+#: Ampache preference description
+msgid "# episodes to download when new episodes are available"
+msgstr ""
+
+#: Ampache preference description
+msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Share links default expiration days (0=never)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow Share"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Album Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Artists' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Collections' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Composer column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show donate button in footer"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Folders' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show the login / registration links in the site header"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show License"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show 'Moods' link in the main sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album original year on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # played"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Artist column on playlist media rows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show playlist owner username in titles"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show # skipped"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show Album subtitle on links (if available)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
+msgstr ""
+
+#: Ampache preference description
+msgid "Light sidebar by default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Browse menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Dashboard menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Information menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Playlist menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Search menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide sidebar switcher arrows"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hide the Video menu in the sidebar"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: Ampache preference description
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Description - shown when a link to this server is shared"
+msgstr ""
+
+#: Ampache preference description
+msgid "Website Title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Artist slideshow inactivity time"
+msgstr ""
+
+#: Ampache preference description
+msgid "Show current song in Web player page title"
+msgstr ""
+
+#: Ampache preference description
+msgid "Statistics Day Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable URL Rewriting"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Force Subsonic streams to download. (Enable scrobble in your client to "
+"record stats)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Subsonic backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Force Album Artist for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable legacy Subsonic API responses for compatibility issues"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use single user data for Subsonic API responses"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme color"
+msgstr ""
+
+#: Ampache preference description
+msgid "Theme"
+msgstr ""
+
+#: Ampache preference description
+msgid "Top menu"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - API (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Web Player (overrides default)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Transcode bitrate - Default"
+msgstr ""
+
+#: Ampache preference description
+msgid "Fix header position on compatible themes"
+msgstr ""
+
+#: Ampache preference description
+msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Ampache preference description
+msgid "Upload Access Level"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to edit uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow users to remove uploaded songs"
+msgstr ""
+
+#: Ampache preference description
+msgid "Rename uploaded file according to catalog pattern"
+msgstr ""
+
+#: Ampache preference description
+msgid "Destination catalog"
+msgstr ""
+
+#: Ampache preference description
+msgid "Post-upload script (current directory = upload target directory)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Create a subdirectory per user"
+msgstr ""
+
+#: Ampache preference description
+msgid "Consider the user sender as the track's artist"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use UPnP backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Browse by Original Year for albums (falls back to Year)"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use WebDAV backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Confirmation when closing current playing window"
+msgstr ""
+
+#: Ampache preference description
+msgid "Auto-pause between tabs"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Remove tracks before the current playlist item in the webplayer when played"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Api"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Backend"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Branding"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Cookies"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Custom"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Feature"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Httpq"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Interface"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Last.fm"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Library"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Metadata"
+msgstr "Metaadat"
+
+#: Ampache preference subcategory
+msgid "Notification"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Player"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Privacy"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Sidebar"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Transcoding"
 msgstr ""

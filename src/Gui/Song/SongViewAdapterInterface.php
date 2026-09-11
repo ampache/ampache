@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\View\TemplateInterface;
 
@@ -50,6 +51,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function canToggleState(): bool;
 
+    public function getAdditionTime(): string;
+
     public function getAddToPlaylistIcon(): string;
 
     public function getAlbumDiskLink(): string;
@@ -58,11 +61,18 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getAppendNextButton(): string;
 
+    public function getArt(): string;
+
     public function getArtistLink(): string;
 
     public function getAutoplayNextButton(): string;
 
     public function getAverageRating(): string;
+
+    /**
+     * Composer is a plain `song`.`composer` text field.
+     */
+    public function getComposer(): string;
 
     public function getConfig(): ConfigViewAdapterInterface;
 
@@ -86,11 +96,18 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getEditIcon(): string;
 
-    public function getExternalPlayIcon(): string;
+    public function getExternalLinks(): string;
 
     public function getExternalPlayUrl(): string;
 
     public function getGenre(): string;
+
+    public function getHeader(): ObjectHeaderView;
+
+    /**
+     * @return list<string>
+     */
+    public function getHeaderActions(): array;
 
     public function getId(): int;
 
@@ -104,14 +121,23 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getPlayDuration(): string;
 
+    public function getPlayNote(): string;
+
     public function getPostShoutIcon(): string;
 
     public function getPostShoutUrl(): string;
+
+    public function getPrimaryHeaderAction(): string;
 
     /**
      * @return array<string, float|int|string|null>
      */
     public function getProperties(): array;
+
+    /**
+     * @return list<array{label: string, properties: array<string, string>}>
+     */
+    public function getPropertyGroups(): array;
 
     public function getRating(): string;
 

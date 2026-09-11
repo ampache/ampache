@@ -64,6 +64,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Metadata/service_definition.php',
     require_once __DIR__ . '/../Module/Statistics/service_definition.php',
     require_once __DIR__ . '/../Module/Playback/service_definition.php',
+    require_once __DIR__ . '/../Module/Pow/service_definition.php',
 );
 
 return $builder->build();

@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `song_artist_count` smallint(5) unsigned DEFAULT 0,
   `weight` int(11) NOT NULL DEFAULT 0,
   `last_played` int(11) unsigned DEFAULT NULL,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `year` (`year`),
@@ -130,8 +131,6 @@ CREATE TABLE IF NOT EXISTS `album_disk` (
   `weight` int(11) NOT NULL DEFAULT 0,
   `last_played` int(11) unsigned DEFAULT NULL,
   UNIQUE KEY `unique_album_disk` (`album_id`,`disk`,`catalog`),
-  KEY `id_index` (`id`),
-  KEY `album_id_type_index` (`album_id`,`disk`),
   KEY `id_disk_index` (`id`,`disk`),
   KEY `album_disk_last_played_IDX` (`last_played`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -148,10 +147,7 @@ CREATE TABLE IF NOT EXISTS `album_map` (
   `object_id` int(11) unsigned NOT NULL,
   `object_type` varchar(16) DEFAULT NULL,
   UNIQUE KEY `unique_album_map` (`object_id`,`object_type`,`album_id`),
-  KEY `object_id_index` (`object_id`),
   KEY `album_id_type_index` (`album_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`),
-  KEY `object_type_IDX` (`object_type`) USING BTREE,
   KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -183,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `weight` int(11) NOT NULL DEFAULT 0,
   `last_played` int(11) unsigned DEFAULT NULL,
   `lastfm_url` varchar(255) DEFAULT NULL,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `artist_last_played_IDX` (`last_played`),
@@ -202,10 +199,6 @@ CREATE TABLE IF NOT EXISTS `artist_map` (
   `object_id` int(11) unsigned NOT NULL,
   `object_type` varchar(16) DEFAULT NULL,
   UNIQUE KEY `unique_artist_map` (`object_id`,`object_type`,`artist_id`),
-  KEY `object_id_index` (`object_id`),
-  KEY `artist_id_index` (`artist_id`),
-  KEY `artist_id_type_index` (`artist_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`),
   KEY `artist_id_object_type_id_IDX` (`artist_id`,`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -357,7 +350,6 @@ CREATE TABLE IF NOT EXISTS `catalog_map` (
   `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   UNIQUE KEY `unique_catalog_map` (`object_id`,`object_type`,`catalog_id`),
   KEY `object_type_IDX` (`object_type`) USING BTREE,
-  KEY `catalog_id_object_type_IDX` (`catalog_id`,`object_type`) USING BTREE,
   KEY `catalog_id_object_id_IDX` (`catalog_id`,`object_id`) USING BTREE,
   KEY `catalog_id_object_type_id_IDX` (`catalog_id`,`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -537,11 +529,11 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `path` varchar(255) DEFAULT NULL,
   `path_name` varchar(512) DEFAULT NULL,
   `weight` int(11) NOT NULL DEFAULT 0,
+  `time` bigint(20) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
-  KEY `folder_catalog_IDX` (`catalog`,`path_name`),
-  KEY `catalog` (`catalog`),
-  KEY `user` (`user`)
+  KEY `user` (`user`),
+  KEY `folder_catalog_IDX` (`catalog`,`path_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -560,11 +552,9 @@ CREATE TABLE IF NOT EXISTS `folder_map` (
   `path_name` varchar(512) DEFAULT NULL,
   UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`),
   KEY `folder_catalog_IDX` (`catalog`,`path_name`),
-  KEY `object_id_index` (`object_id`),
   KEY `folder_id_type_index` (`folder_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`),
-  KEY `object_type_IDX` (`object_type`) USING BTREE,
-  KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE
+  KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE,
+  KEY `path_name_index` (`path_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -586,10 +576,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `kind` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_image` (`width`,`height`,`mime`,`size`,`object_type`,`object_id`,`kind`),
-  KEY `object_type` (`object_type`),
-  KEY `object_id` (`object_id`),
   KEY `object_type_size_kind_IDX` (`object_type`,`size`,`kind`) USING BTREE,
-  KEY `object_type_size_mime_IDX` (`object_type`,`size`,`mime`) USING BTREE
+  KEY `object_type_size_mime_IDX` (`object_type`,`size`,`mime`) USING BTREE,
+  KEY `object_id_type_IDX` (`object_id`,`object_type`,`size`,`mime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -767,7 +756,6 @@ CREATE TABLE IF NOT EXISTS `metadata` (
   `type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `field` (`field`),
-  KEY `object_id` (`object_id`),
   KEY `type` (`type`),
   KEY `objecttype` (`object_id`,`type`),
   KEY `objectfield` (`object_id`,`field`,`type`)
@@ -872,7 +860,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
   KEY `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`) USING BTREE,
   KEY `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`) USING BTREE,
-  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`)
+  KEY `object_count_geo_IDX` (`geo_latitude`,`geo_longitude`),
+  KEY `object_count_history_IDX` (`count_type`,`user`,`object_type`,`object_id`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -971,7 +960,6 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
   `object_type` enum('broadcast','democratic','live_stream','podcast_episode','song','song_preview','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `track` int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `playlist` (`playlist`),
   KEY `playlist_object_type_IDX` (`playlist`,`object_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1086,6 +1074,20 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pow_challenge`
+--
+
+DROP TABLE IF EXISTS `pow_challenge`;
+CREATE TABLE IF NOT EXISTS `pow_challenge` (
+  `id` char(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `expire` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `expire_index` (`expire`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `preference`
 --
 
@@ -1101,8 +1103,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   `subcategory` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_UN` (`name`),
-  KEY `category` (`category`),
-  KEY `name` (`name`)
+  KEY `category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1122,7 +1123,6 @@ CREATE TABLE IF NOT EXISTS `rating` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_rating` (`user`,`object_type`,`object_id`),
   KEY `object_id` (`object_id`),
-  KEY `user_object_type_IDX` (`user`,`object_type`) USING BTREE,
   KEY `user_object_id_IDX` (`user`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1139,8 +1139,7 @@ CREATE TABLE IF NOT EXISTS `recommendation` (
   `object_id` int(11) unsigned NOT NULL,
   `last_update` int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `object_type_object_id_IDX` (`object_type`,`object_id`) USING BTREE,
-  KEY `object_type_IDX` (`object_type`) USING BTREE
+  KEY `object_type_object_id_IDX` (`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1332,6 +1331,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE,
   KEY `album_disk_IDX` (`album_disk`) USING BTREE,
   KEY `song_last_played_IDX` (`last_played`),
+  KEY `user_upload` (`user_upload`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1372,9 +1372,7 @@ CREATE TABLE IF NOT EXISTS `song_map` (
   `object_id` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   UNIQUE KEY `unique_song_map` (`object_id`,`object_type`,`song_id`),
-  KEY `object_id_index` (`object_id`),
-  KEY `song_id_type_index` (`song_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`)
+  KEY `song_id_type_index` (`song_id`,`object_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1563,7 +1561,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `catalog_filter_group` int(11) unsigned NOT NULL DEFAULT 0,
   `subsonic_secret` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username` (`username`),
+  KEY `apikey` (`apikey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1597,7 +1596,6 @@ CREATE TABLE IF NOT EXISTS `user_data` (
   `key` varchar(128) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_data` (`user`,`key`),
-  KEY `user` (`user`),
   KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1617,7 +1615,6 @@ CREATE TABLE IF NOT EXISTS `user_flag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`),
   KEY `object_id` (`object_id`),
-  KEY `user_object_type_IDX` (`user`,`object_type`) USING BTREE,
   KEY `user_object_id_IDX` (`user`,`object_id`) USING BTREE,
   KEY `object_type_date_IDX` (`object_type`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1823,7 +1820,7 @@ CREATE TABLE IF NOT EXISTS `wanted` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '800050');
+('db_version', '810011');
 
 COMMIT;
 

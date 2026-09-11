@@ -31,6 +31,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
@@ -43,6 +44,7 @@ class FriendsTimelineMethodTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
     private ?FriendsTimelineMethod $subject;
+    private MockInterface|UserActivityAccessCheckerInterface|null $userActivityAccessChecker;
     private MockInterface|UserActivityRepositoryInterface|null $userActivityRepository;
 
     /**
@@ -185,6 +187,10 @@ class FriendsTimelineMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($results);
 
+        $this->userActivityAccessChecker->shouldReceive('isVisibleTo')
+            ->times(3)
+            ->andReturnTrue();
+
         // the resolved api version must reach the output untouched
         $output->shouldReceive('timeline')
             ->with($apiVersion, $results)
@@ -220,12 +226,14 @@ class FriendsTimelineMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer        = $this->mock(ConfigContainerInterface::class);
-        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+        $this->configContainer           = $this->mock(ConfigContainerInterface::class);
+        $this->userActivityRepository    = $this->mock(UserActivityRepositoryInterface::class);
+        $this->userActivityAccessChecker = $this->mock(UserActivityAccessCheckerInterface::class);
 
         $this->subject = new FriendsTimelineMethod(
             $this->configContainer,
-            $this->userActivityRepository
+            $this->userActivityRepository,
+            $this->userActivityAccessChecker
         );
     }
 }

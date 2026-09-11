@@ -68,6 +68,7 @@ class Folder extends database_object implements
     /** @var int[] $songs */
     public array $songs = [];
 
+    public int $time         = 0;
     public int $total_count  = 0;
     public int $total_skip   = 0;
     public ?int $update_time = null;
@@ -108,6 +109,7 @@ class Folder extends database_object implements
         $this->path          = $info['path'] ?? null;
         $this->path_name     = $info['path_name'] ?? null;
         $this->playable      = (bool) ($info['playable'] ?? false);
+        $this->time          = (int) ($info['time'] ?? 0);
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
         $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;
@@ -156,7 +158,7 @@ class Folder extends database_object implements
         $path          = '';
         $user          = null;
         $addition_time = time();
-        $update_time   = filemtime($data['path_name']) ?: time();
+        $update_time   = is_dir($data['path_name']) ? (filemtime($data['path_name']) ?: time()) : time();
 
         // Build the folder paths
         if ($parent) {
@@ -172,7 +174,9 @@ class Folder extends database_object implements
         }
 
         if (!$parent && $path_name) {
-            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
+            // lookup() returns -1 for a blank name and 0 when nothing matches; only a positive id is a real parent
+            $found  = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog);
+            $parent = ($found > 0) ? $found : null;
         }
 
         $folder                = new Folder();
@@ -204,13 +208,12 @@ class Folder extends database_object implements
         $results = '';
         // Iterate through the folders, format them according to type and element id
         foreach ($folders as $folder_id => $value) {
+            // only when emitting html, so the plain form stays usable as an input value
             if ($link) {
-                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $value . '">';
-            }
-
-            $results .= $value;
-            if ($link) {
-                $results .= '</a>';
+                $name = scrub_out($value);
+                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $name . '">' . $name . '</a>';
+            } else {
+                $results .= $value;
             }
 
             $results .= ', ';
@@ -366,7 +369,11 @@ class Folder extends database_object implements
      */
     public function get_f_time(): string
     {
-        return '';
+        $time = $this->time;
+        $min  = sprintf('%02d', (floor($time / 60) % 60));
+        $sec  = sprintf('%02d', ($time % 60));
+
+        return ltrim(floor($time / 3600) . ':' . $min . ':' . $sec, '0:');
     }
 
     /**

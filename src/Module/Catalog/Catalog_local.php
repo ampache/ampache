@@ -1002,7 +1002,8 @@ class Catalog_local extends Catalog
             };
 
             return true;
-        } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
+        }
+        if (!Core::is_readable(Core::conv_lc_file($file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
 
@@ -1027,12 +1028,14 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        $interactor?->info(
-            'local.catalog: collectGarbage',
-            true
-        );
-        debug_event('local.catalog', 'collectGarbage', 5);
-        self::getFolderRepository()->collectGarbage();
+        if ($this->count > 0) {
+            $interactor?->info(
+                'local.catalog: collectGarbage',
+                true
+            );
+            debug_event('local.catalog', 'collectGarbage', 5);
+            self::getFolderRepository()->collectGarbage();
+        }
     }
 
     /**
@@ -1226,7 +1229,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * scan_catalog_folder
+     * scan_catalog
      * This is the clean function and is broken into chunks to try to save a little memory
      */
     public function scan_catalog(?Interactor $interactor = null): void
@@ -1557,7 +1560,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * get_catalog_id_from_file
+     * _get_catalog_id_from_file
      *
      * Get catalog id from the file path.
      */
@@ -1567,7 +1570,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * insert_local_song
+     * _insert_local_song
      *
      * Insert a song that isn't already in the database.
      * @param array<string, mixed> $options
@@ -1723,7 +1726,7 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * insert_local_video
+     * _insert_local_video
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here

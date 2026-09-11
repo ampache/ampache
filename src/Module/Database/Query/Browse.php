@@ -29,7 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -122,6 +125,21 @@ class Browse extends Query
         'podcast',
         'podcast_episode',
         'smartplaylist',
+        'song',
+        'video',
+    ];
+
+    /** Types whose rows read a rating/userflag/art one object at a time, so those caches get warmed in bulk */
+    private const array INTERACTION_CACHE_TYPES = [
+        'album',
+        'album_disk',
+        'artist',
+        'collection',
+        'folder',
+        'live_stream',
+        'playlist',
+        'podcast',
+        'podcast_episode',
         'song',
         'video',
     ];
@@ -222,6 +240,14 @@ class Browse extends Query
     }
 
     /**
+     * @return string[]
+     */
+    public function get_show_columns(): array
+    {
+        return $this->_state['show_columns'] ?? [];
+    }
+
+    /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
      * @return array<string, Playlist|Search|Folder|Collection>
@@ -231,7 +257,7 @@ class Browse extends Query
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
-            $objects = [];
+            return [];
         }
 
         return $objects;
@@ -315,7 +341,7 @@ class Browse extends Query
     }
 
     /**
-     * is_mashup
+     * is_use_filters
      */
     public function is_use_filters(): bool
     {
@@ -376,6 +402,16 @@ class Browse extends Query
     public function set_mashup(bool $mashup): void
     {
         $this->_state['mashup'] = $mashup;
+    }
+
+    /**
+     * Columns a page opts into. They ride the browse state, so an ajax page or sort keeps them.
+     *
+     * @param string[] $columns
+     */
+    public function set_show_columns(array $columns): void
+    {
+        $this->_state['show_columns'] = $columns;
     }
 
     /**
@@ -613,7 +649,15 @@ class Browse extends Query
         $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
         if ($renderer === null) {
-            debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            if ($type === '') {
+                // An unknown browse id leaves the type empty, which is what a crawler replaying an expired
+                // url looks like. Reporting that as a missing renderer filled the log with level 1 lines
+                // for something entirely routine.
+                debug_event(self::class, 'show_objects: browse {' . $this->id . '} not found or expired', 5);
+            } else {
+                // a type that is set but has no renderer is a real gap, and worth the severity
+                debug_event(self::class, 'show_objects: no renderer for browse type {' . $type . '}', 1);
+            }
         }
 
         // an album list may be titled and grouped by whatever asked for it
@@ -826,6 +870,16 @@ class Browse extends Query
     }
 
     /**
+     * @param array<int|string> $ids
+     */
+    private function _prefetchInteractionCaches(string $type, array $ids): void
+    {
+        Rating::build_cache($type, $ids);
+        Userflag::build_cache($type, $ids);
+        Art::build_cache($ids, $type);
+    }
+
+    /**
      * Warms the cache for a page whose rows are not a uniform list of one type's ids — a folder browse's entries
      * are each either a bare numeric folder id or an encoded "type-id" string, and a collection_items browse's
      * entries are each a shaped {object_type, object_id} record. Group by the embedded type, then reuse each
@@ -860,11 +914,16 @@ class Browse extends Query
                 'song' => Song::build_cache($ids),
                 'album' => Album::build_cache($ids),
                 'artist' => Artist::build_cache($ids),
+                'album_disk' => AlbumDisk::build_cache($ids),
                 'video' => Video::build_cache($ids),
                 'playlist' => Playlist::build_cache($ids),
                 'podcast_episode' => Podcast_Episode::build_cache($ids),
                 default => null,
             };
+
+            if (in_array($entryType, self::INTERACTION_CACHE_TYPES, true)) {
+                $this->_prefetchInteractionCaches($entryType, $ids);
+            }
         }
     }
 
@@ -898,6 +957,11 @@ class Browse extends Query
             'wanted' => Wanted::build_cache($this->_squashList($object_ids)),
             default => null,
         };
+
+        // 'folder'/'collection_items' already warmed their own split-by-type groups above
+        if ($type !== 'folder' && $type !== 'collection_items' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+            $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
+        }
     }
 
     /**

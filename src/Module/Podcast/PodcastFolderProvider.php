@@ -85,7 +85,7 @@ final readonly class PodcastFolderProvider implements PodcastFolderProviderInter
     {
         $name = str_replace(['/', '\\'], '_', trim($title));
         if (in_array($name, ['', '.', '..'], true)) {
-            $name = '_' . $name;
+            return '_' . $name;
         }
 
         return $name;

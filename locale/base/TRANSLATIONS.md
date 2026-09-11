@@ -52,6 +52,15 @@ check for dupes using grep.
 grep -E '^msgid "[^"]+"$' messages.pot | sort | uniq -d -w 100 | awk '{print "Duplicate entry:", $0}'
 ```
 
+## GitHub Integration
+
+The repository is also linked to Transifex's GitHub App, which syncs `locale/base/messages.pot`
+and the per-language `locale/<lang>/LC_MESSAGES/messages.po` files automatically via `transifex.yml`
+at the repository root. This is a separate mechanism from the `tx` CLI below: `transifex.yml` is only
+read by the Transifex GitHub App itself, while `.tx/config` is only read by the CLI a developer runs
+locally. Both files describe the same resource mapping and both need to stay; removing either one
+breaks the workflow that reads it.
+
 ## Transifex Client
 
 To configure and use translations you need to have access tothe project and an API token to use for the client.

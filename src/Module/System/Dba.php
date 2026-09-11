@@ -519,10 +519,25 @@ class Dba
             $dsn .= ';port=' . (int) ($port);
         }
 
+        // PDO::quote() and the emulated prepares escape with the charset the dsn names; the later `SET NAMES` never
+        // reaches them, so a connection charset whose trail bytes include 0x5c would let an escaped quote break out.
+        $charset  = (string) self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'))['charset'];
+        $base_dsn = $dsn;
+        $dsn .= (preg_match('/^[a-zA-Z0-9_]+$/', $charset) === 1) ? ';charset=' . $charset : '';
+
         try {
             debug_event(self::class, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $pdoException) {
+            // A charset valid for `SET NAMES` is not always valid in a dsn (utf8mb3, ucs2, utf16). Retry without it
+            // rather than break a working install; credentials come from config, so the extra attempt is harmless.
+            if ($dsn !== $base_dsn) {
+                try {
+                    return new PDO($base_dsn, $username, $password);
+                } catch (PDOException) {
+                }
+            }
+
             self::$_error = $pdoException->getMessage();
             debug_event(self::class, 'Connection failed: ' . $pdoException->getMessage(), 1);
 
@@ -625,7 +640,9 @@ class Dba
 
         $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset', 'UTF-8'));
         $charset = $charset['charset'];
-        if ($dbh->exec('SET NAMES ' . $charset) === false) {
+        try {
+            $dbh->exec('SET NAMES ' . $charset);
+        } catch (PDOException) {
             debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
         }
 
@@ -637,9 +654,14 @@ class Dba
         }
 
         if (AmpConfig::get('sql_profiling')) {
-            $dbh->exec('SET profiling=1');
-            $dbh->exec('SET profiling_history_size=50');
-            $dbh->exec('SET query_cache_type=0');
+            try {
+                $dbh->exec('SET profiling=1');
+                $dbh->exec('SET profiling_history_size=50');
+                // gone in mysql 8, still there in mariadb
+                $dbh->exec('SET query_cache_type=0');
+            } catch (PDOException $pdoException) {
+                debug_event(self::class, 'Unable to enable sql profiling: ' . $pdoException->getMessage(), 1);
+            }
         }
 
         return true;

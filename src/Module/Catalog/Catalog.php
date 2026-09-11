@@ -199,7 +199,9 @@ abstract class Catalog extends database_object
                 // check for lost catalogs
                 if ('.' === $file || '..' === $file) {
                     continue;
-                } elseif (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
+                }
+                // check for lost catalogs
+                if (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
                     debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $cache_path . '/' . $file, 5);
                     $interactor?->warn(
                         sprintf('WARNING: Orphaned catalog cache %s/%s', $cache_path, $file),
@@ -822,12 +824,23 @@ abstract class Catalog extends database_object
             ? self::_check_length($results['albumartist'])
             : null;
         $results['albumartist_mbid'] = $results['mb_albumartistid'] ?? null;
-        if (empty($results['albumartist'])) {
+        if (empty($results['albumartist']) && !isset($results['albumartist_id'])) {
             $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
 
-            $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album'])))
-                ? $song->get_album_artist()
-                : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+            if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
+                $results['albumartist_id'] = $song->get_album_artist();
+            } elseif (empty($results['album'])) {
+                // nothing to group under, so an orphaned song still needs an album artist of its own.
+                // Named rather than created here: the row belongs to whoever inserts the song, who knows
+                // the uploader. Creating it here made it before they could, and it landed with no owner.
+                $results['albumartist'] = $song?->get_parent_fullname() ?? $results['artist'];
+            } else {
+                // One file cannot tell whether a named album has one artist or many. Taking the song artist
+                // here gave every artist on a compilation an album of the same name, because album_artist is
+                // part of an album's identity. update_album_artist() decides once every track is in, and only
+                // when they all agree on one artist.
+                $results['albumartist_id'] = null;
+            }
         }
 
         if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {
@@ -1564,9 +1577,7 @@ abstract class Catalog extends database_object
     public static function getLastUpdate(?array $catalogs = null): int
     {
         $last_update = 0;
-        if ($catalogs === null) {
-            $catalogs = self::get_all_catalogs();
-        }
+        $catalogs ??= self::get_all_catalogs();
 
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
@@ -1591,7 +1602,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_name
+     * getName
      * Returns the name of the catalog matching the given ID
      */
     public static function getName(int $catalog_id): string
@@ -1715,7 +1726,11 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->add_to_catalog($options)) {
+                            if (
+                                $catalog !== null
+                                && $catalog->add_to_catalog($options)
+                                && !in_array($catalog->gather_types, $catalog_media_types, true)
+                            ) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -2010,14 +2025,17 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'scan_catalog_folders':
                 if ($catalogs) {
+                    $count = 0;
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        $catalog?->scan_catalog_folders(null, true);
+                        $count += $catalog?->scan_catalog_folders(null, true);
                     }
 
                     self::getFolderRepository()->update_folder_map();
                     self::getFolderRepository()->update_folder_counts();
-                    self::getFolderRepository()->collectGarbage();
+                    if ($count > 0) {
+                        self::getFolderRepository()->collectGarbage();
+                    }
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                         echo AmpError::display('catalog_scan');
@@ -2060,6 +2078,19 @@ abstract class Catalog extends database_object
             : str_replace(['/', '\\'], '_', (string) $string);
 
         return (string) $string;
+    }
+
+    /**
+     * Neutralises path traversal in a sort/rename pattern once the tag values have been substituted in.
+     *
+     * A tag value can be exactly `..` (or `.`), which with the pattern's own `/` separators would climb out
+     * of the catalog. Any segment made only of dots becomes `_`; every other character, unicode included, is
+     * left untouched so international names sort unchanged. Null bytes are stripped so they cannot truncate
+     * the path handed to the filesystem.
+     */
+    public static function sort_clean_path(string $path): string
+    {
+        return (string) preg_replace('~(^|/)\\.+(?=/|$)~', '$1_', str_replace("\0", '', $path));
     }
 
     /**
@@ -3151,7 +3182,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * check_length
+     * _check_length
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      */
@@ -3159,16 +3190,14 @@ abstract class Catalog extends database_object
     {
         $string = (string) $string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
-            $string = trim(mb_substr($string, 0, $max_length, $encoding));
-        } else {
-            $string = trim(substr($string, 0, $max_length));
+            return trim(mb_substr($string, 0, $max_length, $encoding));
         }
 
-        return $string;
+        return trim(substr($string, 0, $max_length));
     }
 
     /**
-     * check_title
+     * _check_title
      * this checks to make sure something is
      * set on the title, if it isn't it looks at the
      * filename and tries to set the title based on that
@@ -3176,14 +3205,14 @@ abstract class Catalog extends database_object
     private static function _check_title(string $title, string $file = ''): string
     {
         if (strlen(trim($title)) < 1) {
-            $title = $file;
+            return $file;
         }
 
         return $title;
     }
 
     /**
-     * check_track
+     * _check_track
      * Check to make sure the track number fits into the database: max 32767, min -32767
      */
     private static function _check_track(string $track): int
@@ -3197,7 +3226,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_catalog
+     * _count_catalog
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @return array{items: int, time: int, size: int}
@@ -3217,7 +3246,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_tags
+     * _count_tags
      *
      * This returns the current number of unique tags in the database.
      */
@@ -3759,7 +3788,7 @@ abstract class Catalog extends database_object
             $searches['artist']   = $this->get_artist_ids('art');
             $searches['playlist'] = $this->get_playlist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_song_ids();
+                $searches['song'] = $this->get_song_ids('art');
             }
         } else {
             $searches['album']    = [];
@@ -3787,7 +3816,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $videos ?? $this->get_video_ids();
+        $searches['video'] = $videos ?? $this->get_video_ids('art');
         $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist']) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
@@ -3926,9 +3955,7 @@ abstract class Catalog extends database_object
     public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
-        }
+        $this->f_link ??= '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
 
         return $this->f_link;
     }
@@ -3971,7 +3998,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type === "music") {
-            $types = array_diff($types, ['video']);
+            return array_diff($types, ['video']);
         }
 
         return $types;
@@ -4100,9 +4127,11 @@ abstract class Catalog extends database_object
      * Returns an array of song ids.
      * @return int[]
      */
-    public function get_song_ids(): array
+    public function get_song_ids(string $filter = ''): array
     {
-        return self::getSongRepository()->getEnabledIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getSongRepository()->getIdsMissingArt($this->id)
+            : self::getSongRepository()->getEnabledIdsByCatalog($this->id);
     }
 
     /**
@@ -4141,9 +4170,11 @@ abstract class Catalog extends database_object
      * This returns an array of ids of videos in this catalog
      * @return int[]
      */
-    public function get_video_ids(): array
+    public function get_video_ids(string $filter = ''): array
     {
-        return self::getVideoRepository()->getIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getVideoRepository()->getIdsMissingArt($this->id)
+            : self::getVideoRepository()->getIdsByCatalog($this->id);
     }
 
     public function getId(): int
@@ -4251,7 +4282,7 @@ abstract class Catalog extends database_object
         $version        = self::sort_clean_name($album->version, '%s');
         $genre          = ($album->get_tags() === [])
             ? '%b'
-            : Tag::get_display($album->get_tags());
+            : self::sort_clean_name(Tag::get_display($album->get_tags()), '%g', $windowsCompat);
 
         // Replace everything we can find
         $replace_array = [
@@ -4290,8 +4321,7 @@ abstract class Catalog extends database_object
         ];
         $sort_pattern = str_replace($replace_array, $content_array, $sort_pattern);
 
-        // Remove non A-Z0-9 chars
-        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
+        $sort_pattern = self::sort_clean_path((string) $sort_pattern);
 
         // Replace non-critical search patterns
         $post_replace_array = [
@@ -4317,7 +4347,7 @@ abstract class Catalog extends database_object
             '',
             '',
         ];
-        $sort_pattern = str_replace($post_replace_array, $post_content_array, (string) $sort_pattern);
+        $sort_pattern = str_replace($post_replace_array, $post_content_array, $sort_pattern);
 
         $home .= '/' . $sort_pattern;
 

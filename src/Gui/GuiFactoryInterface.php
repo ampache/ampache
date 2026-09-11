@@ -177,12 +177,14 @@ interface GuiFactoryInterface
         bool $isAlbumGroup,
         bool $isShowTrack,
         bool $isShowLicense,
+        bool $isShowComposer,
         bool $isHideGenre,
         bool $isHideMood,
         bool $isHideArtist,
         bool $isHideAlbum,
         bool $isHideYear,
         bool $isHideDrag,
+        bool $isShowAddDate = false,
     ): SongRowView;
 
     public function createSongViewAdapter(

@@ -82,6 +82,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             ? match ((string) ($input['action'] ?? '')) {
                 'add' => 'add_to_catalog',
                 'clean' => 'clean_catalog',
+                'scan' => 'scan_catalog_folders',
                 'update' => 'update_catalog',
                 'verify' => 'verify_catalog',
                 default => null,
@@ -110,15 +111,15 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             'api_format' => 'xml'
         ];
 
-        if ($type !== null && $type !== '') {
-            $parameters['type'] = $type;
-        }
-
         if ($task !== null) {
             $parameters['task'] = $task;
         }
 
         $post = $this->parseRequestBody($request);
+
+        if (($type !== null && $type !== '') && !array_key_exists('type', $post)) {
+            $parameters['type'] = $type;
+        }
 
         $request = $request->withQueryParams(
             array_merge(

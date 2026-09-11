@@ -46,11 +46,14 @@ final class PlaylistRemove8Method extends AbstractPlaylistRemoveMethod
     protected const string ITEM_KEY = 'id';
 
     /**
+     * Reads `object_type` first, falling back to the deprecated `type` (see
+     * AbstractPlaylistRemoveMethod); `type` will be removed in API9
+     *
      * @param array<string, mixed> $input
      */
     #[Override]
     protected function hasItem(Playlist $playlist, int $track, array $input): bool
     {
-        return $playlist->has_item($track, null, (string) ($input['type'] ?? 'song'));
+        return $playlist->has_item($track, null, (string) ($input['object_type'] ?? $input['type'] ?? 'song'));
     }
 }

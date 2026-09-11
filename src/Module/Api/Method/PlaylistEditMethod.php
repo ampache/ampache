@@ -32,6 +32,8 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -46,11 +48,14 @@ final class PlaylistEditMethod implements MethodInterface
     public const string REST_ACTION = 'playlists_edit';
 
     private ModelFactoryInterface $modelFactory;
+    private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
+        PrivilegeCheckerInterface $privilegeChecker,
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory     = $modelFactory;
+        $this->privilegeChecker = $privilegeChecker;
     }
 
     /**
@@ -117,6 +122,16 @@ final class PlaylistEditMethod implements MethodInterface
         $hasAccess = $playlist->has_access($user);
         $hasCollab = $playlist->has_collaborate($user);
 
+        // has_collaborate allows reordering, but only an owner or admin may edit the metadata below; refuse before any reorder is applied
+        if (
+            !$hasAccess
+            && (isset($input['name']) || isset($input['type']) || isset($input['owner']) || isset($input['sort']))
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
+        }
+
         $changeMade = false;
         if (
             $hasCollab
@@ -130,10 +145,9 @@ final class PlaylistEditMethod implements MethodInterface
             }
         }
 
-        // don't continue if you don't actually have the access level to edit
+        // No metadata field reached this point, per the guard above, so a collaborator with no reorder either has nothing to do or sent a malformed request
         if (!$hasAccess) {
             if ($changeMade) {
-                // has_collaborate allows playlist track editing
                 $response->getBody()->write(
                     $output->success($apiVersion, 'playlist track changes saved')
                 );
@@ -153,6 +167,16 @@ final class PlaylistEditMethod implements MethodInterface
         if ((int) $owner === 0) {
             $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
+        }
+
+        // handing a list's ownership to somebody else is an admin's call, not the current owner's to make
+        if (
+            (int) $owner !== (int) $playlist->user
+            && !$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->getId())
+        ) {
+            throw new AccessFailedException(
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
+            );
         }
 
         // update name/type

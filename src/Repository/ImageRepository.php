@@ -296,7 +296,7 @@ final readonly class ImageRepository implements ImageRepositoryInterface
         }
 
         $sql = sprintf(
-            'SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN (%s)',
+            'SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN (%s)',
             implode(',', array_map(intval(...), $objectIds))
         );
 

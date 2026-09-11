@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\User;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Stats\RecentlyPlayedView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
@@ -42,7 +43,6 @@ use Ampache\Module\Util\Upload;
 use Ampache\Plugin\PluginDisplayUserFieldInterface;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -84,9 +84,10 @@ final class UserPageView extends AbstractView
         }
 
         Useractivity::build_cache($this->activities);
+        $viewer = $this->currentUser ?? new User(-1);
         $output = '';
         foreach ($this->activities as $activityId) {
-            $output .= $this->userActivityRenderer->show(new Useractivity($activityId));
+            $output .= $this->userActivityRenderer->show(new Useractivity($activityId), $viewer);
         }
 
         return $output;
@@ -195,9 +196,7 @@ final class UserPageView extends AbstractView
         $data     = ($allTypes)
             ? Stats::get_recently_played($this->getClientId(), 'stream', null, true)
             : Stats::get_recently_played($this->getClientId(), 'stream', 'song', true);
-        if (!$allTypes) {
-            Song::build_cache(array_keys($data));
-        }
+        RecentlyPlayedView::warm($data);
 
         return new RecentlyPlayedViewFactoryResult($allTypes, $data);
     }

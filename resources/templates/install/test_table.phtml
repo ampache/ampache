@@ -95,6 +95,95 @@ if (!$this->getEnvironment()->check_dependencies_folder()) { ?>
     <td><?php echo $this->raw($this->debugWarning($this->getEnvironment()->check_php_zlib())); ?></td>
     <td><?php echo $this->e(T_('This tests whether you have the zlib extension enabled. This is not strictly necessary, but may result in a better experience (zip download).')); ?></td>
 </tr>
+<tr id="http-compression-row"
+    data-label-ok="<?php echo $this->e(T_('OK')); ?>"
+    data-label-warning="<?php echo $this->e(T_('WARNING')); ?>"
+    data-label-unknown="<?php echo $this->e(T_('UNKNOWN')); ?>">
+    <td><?php echo $this->e(T_('HTTP compression')); ?></td>
+    <td id="http-compression-result"><button type="button" class="btn btn-warning"><?php echo $this->e(T_('UNKNOWN')); ?></button></td>
+    <td>
+        <?php echo $this->e(T_('This measures the page you are reading: your browser reports both the bytes it received and the bytes after decoding, so a smaller received size means the server compressed it. Compression is not required, but it makes a large difference to page and API response sizes.')); ?>
+        <span id="http-compression-advice" hidden>
+            <br />
+            <b><?php echo $this->e(T_('Enable gzip or brotli in your web server for html, css, javascript, json and xml. Do not compress audio streams: they are already compressed, so it only costs CPU on every listen.')); ?></b>
+        </span>
+        <span id="http-compression-nojs">
+            <br />
+            <b><?php echo $this->e(T_('This check needs JavaScript, which is why it reads as unknown right now.')); ?></b>
+        </span>
+    </td>
+</tr>
+<script>
+    // Measured in the browser rather than by asking the server about itself: only the client sees the whole
+    // delivery path, proxies and CDNs included. A server side probe cannot, and a HEAD request is worse still,
+    // since mod_deflate sets no Content-Encoding on a response that carries no body.
+    (function () {
+        var measure = function () {
+        var row = document.getElementById('http-compression-row');
+        var cell = document.getElementById('http-compression-result');
+        var advice = document.getElementById('http-compression-advice');
+        var noJs = document.getElementById('http-compression-nojs');
+        if (!row || !cell) {
+            return;
+        }
+
+        noJs.hidden = true;
+
+        var render = function (cssClass, label) {
+            cell.innerHTML = '';
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn btn-' + cssClass;
+            button.textContent = label;
+            cell.appendChild(button);
+        };
+
+        var entry = (performance.getEntriesByType('navigation') || [])[0];
+
+        // without a decoded size there is nothing to compare against and the check has to say so
+        if (!entry || !entry.decodedBodySize) {
+            render('warning', row.dataset.labelUnknown);
+
+            return;
+        }
+
+        if (entry.encodedBodySize > 0 && entry.encodedBodySize < entry.decodedBodySize) {
+            var saved = Math.round((1 - entry.encodedBodySize / entry.decodedBodySize) * 100);
+            render('success', row.dataset.labelOk + ' (-' + saved + '%)');
+
+            return;
+        }
+
+        // fallback for a browser that leaves the encoded size at zero: transferSize counts the headers too,
+        // so anything below the decoded size can only have arrived compressed
+        if (entry.transferSize > 0 && entry.transferSize < entry.decodedBodySize) {
+            render('success', row.dataset.labelOk);
+
+            return;
+        }
+
+        // nothing was reported about what arrived, so nothing can be concluded
+        if (entry.encodedBodySize === 0 && entry.transferSize === 0) {
+            render('warning', row.dataset.labelUnknown);
+
+            return;
+        }
+
+        render('warning', row.dataset.labelWarning);
+        advice.hidden = false;
+        };
+
+        // Only run once the response is complete. Mid-parse, Firefox reports the two sizes as equal and the check
+        // reads a compressed page as uncompressed; Chrome happens to fill them in early enough to get away with it.
+        if (document.readyState === 'complete') {
+            setTimeout(measure, 0);
+        } else {
+            window.addEventListener('load', function () {
+                setTimeout(measure, 0);
+            });
+        }
+    })();
+</script>
 <tr>
     <td><?php echo $this->e(T_('PHP SimpleXML extension')); ?></td>
     <td><?php echo $this->raw($this->debugWarning($this->getEnvironment()->check_php_simplexml())); ?></td>
