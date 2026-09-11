@@ -110,6 +110,9 @@ final class AlbumDiskSearch implements SearchInterface
                     $where[]      = "`album`.`" . $rule[0] . sprintf('` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
+                case 'enabled':
+                    $where[] = ($operator_sql == '1') ? "`album`.`enabled` = 1" : "`album`.`enabled` = 0";
+                    break;
                 case 'original_year':
                     $where[]    = sprintf('(`album`.`original_year` %s ? OR (`album`.`original_year` IS NULL AND `album`.`year` %s ?))', $operator_sql, $operator_sql);
                     $parameters = array_merge($parameters, [$input, $input]);

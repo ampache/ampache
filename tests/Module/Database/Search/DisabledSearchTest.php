@@ -43,10 +43,24 @@ class DisabledSearchTest extends TestCase
     /**
      * @return list<array{0: string, 1: string}>
      */
+    public static function ruleProvider(): array
+    {
+        return [
+            ['album', '`album`.`enabled` = 0'],
+            ['album_disk', '`album`.`enabled` = 0'],
+            ['artist', '`artist`.`enabled` = 0'],
+            ['song', '`song`.`enabled` = 0'],
+        ];
+    }
+
+    /**
+     * @return list<array{0: string, 1: string}>
+     */
     public static function typeProvider(): array
     {
         return [
             ['album', '`album`.`enabled` = 1'],
+            ['album_disk', 'EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)'],
             ['artist', '`artist`.`enabled` = 1'],
             ['song', '`song`.`enabled` = 1'],
         ];
@@ -91,6 +105,20 @@ class DisabledSearchTest extends TestCase
 
         self::assertSame('boolean', $search->get_rule_type_by_name('enabled'));
         self::assertContains('enabled', array_column($search->get_rule_types(), 'name'));
+    }
+
+    /**
+     * Being offered is not the same as working: `album_disk` was served the rule and had no case to answer it,
+     * so a smartlist of disks asking for withdrawn releases quietly returned the whole catalogue.
+     */
+    #[DataProvider(methodName: 'ruleProvider')]
+    public function testTheRuleProducesItsConditionOnEveryType(string $type, string $expected): void
+    {
+        $search = $this->search($type, true);
+        // set_rules() reaches an access check, so the rules are given in the shape it would have produced
+        $search->rules = [['enabled', 'equal', 0]];
+
+        self::assertStringContainsString($expected, $search->to_sql()['where_sql']);
     }
 
     private function search(string $type, bool $isManager): Search
