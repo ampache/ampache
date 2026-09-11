@@ -13,9 +13,13 @@
 * `folders` (API8)
   * New `time` field on the browsed folder, the summed duration of everything below it, subfolders included
   * New `time` field on each item in the folder's contents, from the underlying object's own row; `null` for an object type that carries no duration
+* `player` (API6, API8)
+  * Resuming a track already recorded as the caller's last play now shifts that play's history back to when it actually started (now - position), matching the existing Subsonic `saveplayqueue` behaviour
 
 ### Fixed (810000)
 
+* `timeline`, `friends_timeline` (ALL)
+  * Listed activity against songs, videos, albums and other catalog-scoped objects the caller's own catalog filter excludes; those entries are now omitted from the result, the same way the Now Playing widget already hides them
 * ALL
   * `handshake`: A disabled user account could still complete the handshake and receive a valid session
   * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honoured it

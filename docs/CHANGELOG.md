@@ -79,6 +79,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Album, album disk and artist song counts no longer include disabled songs, so an album whose tracks are all disabled stops advertising them
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
+* A user's timeline, the Friends Timeline widget, and the `timeline`/`friends_timeline` API methods listed activity against songs, videos, albums and other catalog-scoped objects the viewer's own catalog filter excludes; those entries are now hidden the same way the Now Playing widget already hides them
+* The public Now Playing page (`use_now_playing_embedded`, viewable while logged out) still linked an unauthenticated viewer straight to the song/album/artist/video being played, and to a right-click play menu on the album art, even though the row itself was already catalog-filtered; both now require being logged in
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
@@ -142,6 +144,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A share link announced every object as a song, so an album, artist or playlist preview claimed to be one
 * A folder was served no cover at all: the image action asked for a placeholder file that was never shipped
 * A shared link showed no image for an item without a cover while generated art was on: the drawn tile is an svg, which no preview scraper renders
+* An RSS feed's beautiful-url slug relied on `iconv(...//TRANSLIT...)` to fold accented characters, whose output differs by platform; a title like "Café" could slug to `caf-e` instead of `cafe` depending on the server's iconv build. Folding now uses Unicode normalization instead, which is portable
 
 ## Ampache 8.0.1
 

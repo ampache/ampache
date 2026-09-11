@@ -27,10 +27,14 @@ namespace Ampache\Module\User\Activity;
 
 use Ampache\Repository\Model\User;
 
-interface UserActivityRendererInterface
+interface UserActivityAccessCheckerInterface
 {
     /**
-     * Show the activity entry, or an empty string when the viewer's own catalogs don't cover its object.
+     * Whether the viewer's own catalogs cover the object an activity was recorded against.
+     *
+     * An activity whose object carries no catalog of its own (a `follow`'s target user, a playlist, a
+     * type the loader doesn't recognise) is always visible; only a `CatalogItemInterface` object with a
+     * real catalog id is checked against the viewer's catalog list.
      */
-    public function show(Useractivity $useractivity, User $viewer): string;
+    public function isVisibleTo(Useractivity $useractivity, User $viewer): bool;
 }
