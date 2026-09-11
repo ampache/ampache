@@ -20,6 +20,8 @@
 
 * `timeline`, `friends_timeline` (ALL)
   * Listed activity against songs, videos, albums and other catalog-scoped objects the caller's own catalog filter excludes; those entries are now omitted from the result, the same way the Now Playing widget already hides them
+* `friends_timeline` (API3, API4)
+  * Returned the caller's own activity instead of the activity of the users they follow, calling `getActivities()` instead of `getFriendsActivities()`
 * ALL
   * `handshake`: A disabled user account could still complete the handshake and receive a valid session
   * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honoured it

@@ -75,7 +75,7 @@ final class FriendsTimeline4Method implements MethodInterface
             $since = (int) ($input['since'] ?? 0);
 
             if ($user->id > 0) {
-                $results = $this->useractivityRepository->getActivities($user->id, $limit, $since);
+                $results = $this->useractivityRepository->getFriendsActivities($user->id, $limit, $since);
                 $results = array_values(array_filter(
                     $results,
                     fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $user)

@@ -69,7 +69,7 @@ final class FriendsTimeline3Method implements MethodInterface
             $limit = (int) ($input['limit'] ?? 0);
             $since = (int) ($input['since'] ?? 0);
 
-            $results = $this->useractivityRepository->getActivities(
+            $results = $this->useractivityRepository->getFriendsActivities(
                 $user->id,
                 $limit,
                 $since
