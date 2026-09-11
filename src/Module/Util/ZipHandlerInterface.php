@@ -43,6 +43,8 @@ interface ZipHandlerInterface
      * takes array of full paths to medias
      * zips them and sends them
      *
+     * Answers 404 when nothing could be added, which is what a withdrawn release or a missing file leaves behind.
+     *
      * @param string $name name of the zip file to be created
      * @param array{total_size: int, files: iterable<iterable<string>>} $files array of full paths to medias to zip create w/ call to get_media_files
      * @param bool $flat_path put the files into a single folder
