@@ -32,6 +32,8 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,14 +56,17 @@ abstract class AbstractTimelineMethod implements MethodInterface
     protected const string FILTER_KEY = 'filter';
 
     private ConfigContainerInterface $configContainer;
+    private UserActivityAccessCheckerInterface $userActivityAccessChecker;
     private UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UserActivityRepositoryInterface $userActivityRepository,
+        UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {
-        $this->configContainer        = $configContainer;
-        $this->userActivityRepository = $userActivityRepository;
+        $this->configContainer           = $configContainer;
+        $this->userActivityRepository    = $userActivityRepository;
+        $this->userActivityAccessChecker = $userActivityAccessChecker;
     }
 
     /**
@@ -125,6 +130,10 @@ abstract class AbstractTimelineMethod implements MethodInterface
             (int) ($input['limit'] ?? 0),
             (int) ($input['since'] ?? 0)
         );
+        $results = array_values(array_filter(
+            $results,
+            fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $user)
+        ));
 
         $response->getBody()->write(
             $output->timeline($apiVersion, $results)

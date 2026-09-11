@@ -31,6 +31,8 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,6 +45,7 @@ final class Timeline4Method implements MethodInterface
     public function __construct(
         private UserActivityRepositoryInterface $useractivityRepository,
         private StreamFactoryInterface $streamFactory,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
@@ -72,6 +75,7 @@ final class Timeline4Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
+        $viewer = $user;
         unset($user);
         if (AmpConfig::get('sociable')) {
             if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
@@ -92,6 +96,10 @@ final class Timeline4Method implements MethodInterface
                         $limit,
                         $since
                     );
+                    $results = array_values(array_filter(
+                        $results,
+                        fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $viewer)
+                    ));
                     ob_end_clean();
 
                     return $response->withBody(

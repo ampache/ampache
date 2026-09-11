@@ -59,6 +59,50 @@ class AlbumMethodTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * A withdrawn release is refused exactly like an id that was never there, so nothing in the response
+     * tells a listener that the album exists at all.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleRefusesAnAlbumTheCallerCannotSee(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
+
+        $albumId = 666;
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $album->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnFalse();
+
+        // the tell that the guard fired: the same exception and message an absent id produces
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage((string) $albumId);
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $albumId],
+            $user,
+            $apiVersion
+        );
+    }
+
     #[DataProvider(methodName: 'apiVersionProvider')]
     public function testHandleReturnsOutput(int $apiVersion): void
     {
@@ -82,6 +126,10 @@ class AlbumMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $album->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnTrue();
         $album->shouldReceive('getId')
             ->withNoArgs()
             ->once()

@@ -44,6 +44,9 @@ class UrlValidatorTest extends TestCase
             ['https://[2606:2800:220:1:248:1893:25c8:1946]/feed.xml', ['host' => '2606:2800:220:1:248:1893:25c8:1946', 'port' => 443, 'address' => '2606:2800:220:1:248:1893:25c8:1946']],
             ['http://127.0.0.1/', null],
             ['http://169.254.169.254/latest/meta-data/', null],
+            ['http://100.64.2.1/a.png', null],
+            ['http://198.18.2.1/a.png', null],
+            ['http://[64:ff9b::a00:1]/a.png', null],
             ['not-a-url', null],
         ];
     }
@@ -68,6 +71,16 @@ class UrlValidatorTest extends TestCase
             ['http://169.254.169.254/latest/meta-data/', false],
             ['http://[::1]/', false],
             ['http://[fd00::1]/', false],
+            // carrier-grade NAT (RFC 6598), benchmarking (RFC 2544) and NAT64/IPv4-mapped transition forms
+            ['http://100.64.2.1/a.png', false],
+            ['http://100.127.255.254/a.png', false],
+            ['http://198.18.2.1/a.png', false],
+            ['http://198.19.255.254/a.png', false],
+            ['http://[64:ff9b::a00:1]/episode.mp3', false],
+            ['http://[64:ff9b::10.0.0.1]/episode.mp3', false],
+            ['http://[::ffff:10.0.0.1]/episode.mp3', false],
+            // a public address is not rejected merely for resembling a transition form (93.184.216.34 embedded)
+            ['http://[64:ff9b::5db8:d822]/a.png', true],
             // schemes the server must not fetch
             ['file:///etc/passwd', false],
             ['ftp://93.184.216.34/x', false],

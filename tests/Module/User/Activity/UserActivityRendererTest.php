@@ -36,6 +36,8 @@ class UserActivityRendererTest extends TestCase
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
     private ModelFactoryInterface&MockObject $modelFactory;
     private UserActivityRenderer $subject;
+    private UserActivityAccessCheckerInterface&MockObject $userActivityAccessChecker;
+    private User&MockObject $viewer;
 
     public function testShowRendersFollowActivityAgainstTheFollowedUser(): void
     {
@@ -49,6 +51,9 @@ class UserActivityRendererTest extends TestCase
 
         $this->configContainer->method('get')
             ->with('ratings')
+            ->willReturn(true);
+
+        $this->userActivityAccessChecker->method('isVisibleTo')
             ->willReturn(true);
 
         $actor = $this->createMock(User::class);
@@ -67,7 +72,7 @@ class UserActivityRendererTest extends TestCase
         $this->libraryItemLoader->expects(static::never())
             ->method('load');
 
-        $result = $this->subject->show($useractivity);
+        $result = $this->subject->show($useractivity, $this->viewer);
 
         self::assertStringContainsString('<a>actor</a>', $result);
         self::assertStringContainsString('<a>followed</a>', $result);
@@ -82,7 +87,7 @@ class UserActivityRendererTest extends TestCase
             ->with('ratings')
             ->willReturn(true);
 
-        self::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity, $this->viewer));
     }
 
     public function testShowReturnsEmptyStringWhenFollowedUserIsGone(): void
@@ -97,6 +102,9 @@ class UserActivityRendererTest extends TestCase
             ->with('ratings')
             ->willReturn(true);
 
+        $this->userActivityAccessChecker->method('isVisibleTo')
+            ->willReturn(true);
+
         $followed = $this->createMock(User::class);
         $followed->method('isNew')
             ->willReturn(true);
@@ -104,7 +112,7 @@ class UserActivityRendererTest extends TestCase
         $this->modelFactory->method('createUser')
             ->willReturnMap([[21, $this->createMock(User::class)], [42, $followed]]);
 
-        self::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity, $this->viewer));
     }
 
     public function testShowReturnsEmptyStringWhenLibraryItemCannotBeLoaded(): void
@@ -119,6 +127,9 @@ class UserActivityRendererTest extends TestCase
             ->with('ratings')
             ->willReturn(true);
 
+        $this->userActivityAccessChecker->method('isVisibleTo')
+            ->willReturn(true);
+
         $user = $this->createMock(User::class);
 
         $this->modelFactory->expects(static::once())
@@ -131,7 +142,7 @@ class UserActivityRendererTest extends TestCase
             ->with(LibraryItemEnum::SONG, 42)
             ->willReturn(null);
 
-        self::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity, $this->viewer));
     }
 
     public function testShowReturnsEmptyStringWhenRatingsDisabled(): void
@@ -146,19 +157,47 @@ class UserActivityRendererTest extends TestCase
         $this->modelFactory->expects(static::never())
             ->method('createUser');
 
-        self::assertSame('', $this->subject->show($useractivity));
+        self::assertSame('', $this->subject->show($useractivity, $this->viewer));
+    }
+
+    public function testShowReturnsEmptyStringWhenViewerCannotAccessTheObjectsCatalog(): void
+    {
+        $useractivity              = $this->createMock(Useractivity::class);
+        $useractivity->id          = 1;
+        $useractivity->user        = 21;
+        $useractivity->object_type = 'song';
+        $useractivity->object_id   = 42;
+
+        $this->configContainer->method('get')
+            ->with('ratings')
+            ->willReturn(true);
+
+        $this->userActivityAccessChecker->expects(static::once())
+            ->method('isVisibleTo')
+            ->with($useractivity, $this->viewer)
+            ->willReturn(false);
+
+        $this->modelFactory->expects(static::never())
+            ->method('createUser');
+        $this->libraryItemLoader->expects(static::never())
+            ->method('load');
+
+        self::assertSame('', $this->subject->show($useractivity, $this->viewer));
     }
 
     protected function setUp(): void
     {
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
+        $this->configContainer             = $this->createMock(ConfigContainerInterface::class);
+        $this->modelFactory                = $this->createMock(ModelFactoryInterface::class);
+        $this->libraryItemLoader           = $this->createMock(LibraryItemLoaderInterface::class);
+        $this->userActivityAccessChecker   = $this->createMock(UserActivityAccessCheckerInterface::class);
+        $this->viewer                      = $this->createMock(User::class);
 
         $this->subject = new UserActivityRenderer(
             $this->configContainer,
             $this->modelFactory,
             $this->libraryItemLoader,
+            $this->userActivityAccessChecker,
         );
     }
 }

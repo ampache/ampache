@@ -40,6 +40,7 @@ enum AlbumFieldEnum: string
     case BARCODE        = 'barcode';
     case CATALOG        = 'catalog';
     case CATALOG_NUMBER = 'catalog_number';
+    case ENABLED        = 'enabled';
     case MBID           = 'mbid';
     case MBID_GROUP     = 'mbid_group';
     case NAME           = 'name';

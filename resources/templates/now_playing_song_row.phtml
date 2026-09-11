@@ -67,9 +67,15 @@ $songId = $this->getSongId(); ?>
     <?php } ?>
 </div>
 <div class="np_group" id="np_group_3">
+    <?php if ($this->showLinks()) { ?>
     <div id="album_<?php echo $this->e($this->getAlbumId()); ?>" class="np_cell cel_albumart libitem_menu" data-object-type="album" data-object-id="<?php echo $this->e($this->getAlbumId()); ?>">
         <?php echo $this->raw($this->getArt()); ?>
     </div>
+    <?php } else { ?>
+    <div id="album_<?php echo $this->e($this->getAlbumId()); ?>" class="np_cell cel_albumart">
+        <?php echo $this->raw($this->getArt()); ?>
+    </div>
+    <?php } ?>
 </div>
 <?php if ($this->showSimilar()) { ?>
 <div class="np_group similars" id="similar_items_<?php echo $songId; ?>">

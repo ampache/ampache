@@ -83,6 +83,11 @@ final class SongMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
+        // a disabled song is refused like an id that was never there, so nothing says it exists
+        if (!$song->isVisible($user)) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
         $response->getBody()->write(
             $output->songs($apiVersion, [$objectId], $user, $input['auth'], true, false)
         );

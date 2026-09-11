@@ -67,7 +67,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
-        $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs));
+        $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs)) && $album->isVisible($user);
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path();
@@ -100,7 +100,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested an album that does not exist',
+                sprintf(
+                    'Refused album %d: %s',
+                    $albumId,
+                    ($album->isNew()) ? 'no such album' : 'withdrawn, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

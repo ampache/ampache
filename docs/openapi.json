@@ -241,6 +241,11 @@
             "type": "string",
             "nullable": true
           },
+          "time": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Duration in seconds, straight from the underlying folder/song/video/podcast episode row. `null` only if a future object type carries no such column."
+          },
           "art": {
             "type": "string",
             "nullable": true
@@ -266,6 +271,7 @@
           "title",
           "parent",
           "path",
+          "time",
           "art",
           "has_art",
           "play_url",
@@ -14012,6 +14018,7 @@
                             "title": "Rock",
                             "parent": "1",
                             "path": "/music/rock",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
                             "play_url": "",
@@ -14024,6 +14031,7 @@
                             "title": "Example Song.mp3",
                             "parent": "1",
                             "path": "/music",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
@@ -14036,6 +14044,7 @@
                             "title": "Example Video.mp4",
                             "parent": "1",
                             "path": "/music",
+                            "time": 415,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",
@@ -14126,6 +14135,7 @@
                             "title": "Rock",
                             "parent": "1",
                             "path": "/music/rock",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
                             "has_art": false,
                             "play_url": "",
@@ -14138,6 +14148,7 @@
                             "title": "Example Song.mp3",
                             "parent": "1",
                             "path": "/music",
+                            "time": 227,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
@@ -14150,6 +14161,7 @@
                             "title": "Example Video.mp4",
                             "parent": "1",
                             "path": "/music",
+                            "time": 415,
                             "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
                             "has_art": true,
                             "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",

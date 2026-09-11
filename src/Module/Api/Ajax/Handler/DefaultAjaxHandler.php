@@ -137,8 +137,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                 case 'artist':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
-                                            ? array_merge($songs, $this->songRepository->getAllByArtist($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->songRepository->getAllByArtist((int) $object));
+                                            ? array_merge($songs, $this->songRepository->getEnabledByArtist($object['object_id'] ?? 0))
+                                            : array_merge($songs, $this->songRepository->getEnabledByArtist((int) $object));
                                     }
 
                                     break;

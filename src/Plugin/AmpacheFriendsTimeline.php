@@ -82,8 +82,8 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
-            if ($user_id !== 0) {
+            $user_id = ($user instanceof User) ? $user->id : 0;
+            if ($user instanceof User && $user_id !== 0) {
                 $divString = ($this->order > 0)
                     ? '<div class="ftl" style="order: ' . $this->order . '">'
                     : '<div class="ftl">';
@@ -100,7 +100,8 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
 
                     foreach ($activities as $activity_id) {
                         echo $activityRenderer->show(
-                            new Useractivity($activity_id)
+                            new Useractivity($activity_id),
+                            $user
                         );
                     }
 

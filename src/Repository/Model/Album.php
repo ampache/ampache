@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -50,6 +53,7 @@ use Exception;
  */
 class Album extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
@@ -69,6 +73,7 @@ class Album extends database_object implements
     public int $catalog_id            = 0;
     public ?string $catalog_number    = null;
     public int $disk_count            = 0;
+    public bool $enabled              = true;
     public int $id                    = 0;
     public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $link              = null;
@@ -138,6 +143,7 @@ class Album extends database_object implements
         $this->catalog_id        = (int) ($info['catalog_id'] ?? 0);
         $this->catalog_number    = $info['catalog_number'] ?? null;
         $this->disk_count        = (int) ($info['disk_count'] ?? 0);
+        $this->enabled           = (bool) ($info['enabled'] ?? true);
         $this->id                = (int) ($info['id'] ?? 0);
         $this->link              = $info['link'] ?? null;
         $this->mbid              = $info['mbid'] ?? null;
@@ -476,6 +482,23 @@ class Album extends database_object implements
     {
         debug_event(self::class, 'update_album_count ' . $album_id, 5);
         self::getAlbumRepository()->updateCounts($album_id);
+    }
+
+    /**
+     * Take the album off the shelves, or put it back.
+     *
+     * The songs follow either way, so the word promises here what it promises on a song: what is disabled
+     * is neither listed nor playable. A single song can still be flipped on its own afterwards; only the
+     * next change of the album's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $album_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        self::_update_field(AlbumFieldEnum::ENABLED, ($new_enabled) ? 1 : 0, $album_id);
+        self::getAlbumRepository()->setSongsEnabled($album_id, $new_enabled);
     }
 
     /**
@@ -974,9 +997,20 @@ class Album extends database_object implements
         return $this->has_art ?? false;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**
@@ -1000,6 +1034,12 @@ class Album extends database_object implements
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
+
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
+        }
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {

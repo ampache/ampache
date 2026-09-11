@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -174,6 +175,8 @@ class SearchTest extends MockeryTestCase
         $globalDic = $this->createMock(ContainerInterface::class);
         $globalDic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             CatalogRepositoryInterface::class => $catalogRepository,
+            // the searches ask whether the searcher may see withdrawn items before adding their condition
+            PrivilegeCheckerInterface::class => $this->createMock(PrivilegeCheckerInterface::class),
             default => $this->createMock(LoggerInterface::class),
         });
         $GLOBALS['dic'] = $globalDic;

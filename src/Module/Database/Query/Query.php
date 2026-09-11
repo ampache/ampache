@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -1121,6 +1124,21 @@ class Query
                         : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
                     break;
             }
+        }
+
+        // a withdrawn item leaves every browse here, so no caller forgets it the way `album_songs` did
+        if (
+            in_array($type, ['album', 'album_disk', 'artist', 'song'], true)
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $this->user_id)
+        ) {
+            // `album_disk` carries no flag of its own, so it reads the one on the album it belongs to
+            $disabled_sql = ($type === 'album_disk')
+                ? "EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1) AND "
+                : sprintf('`%s`.`enabled` = 1 AND ', $type);
+
+            $sql .= ($sql === "WHERE")
+                ? ' ' . $disabled_sql
+                : $disabled_sql;
         }
 
         // each fragment ends in ' AND ', and a WHERE that collected no filters has to disappear completely

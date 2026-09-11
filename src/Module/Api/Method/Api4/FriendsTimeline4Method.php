@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,6 +43,7 @@ final class FriendsTimeline4Method implements MethodInterface
     public function __construct(
         private UserActivityRepositoryInterface $useractivityRepository,
         private StreamFactoryInterface $streamFactory,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
@@ -72,7 +75,11 @@ final class FriendsTimeline4Method implements MethodInterface
             $since = (int) ($input['since'] ?? 0);
 
             if ($user->id > 0) {
-                $results = $this->useractivityRepository->getActivities($user->id, $limit, $since);
+                $results = $this->useractivityRepository->getFriendsActivities($user->id, $limit, $since);
+                $results = array_values(array_filter(
+                    $results,
+                    fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $user)
+                ));
                 ob_end_clean();
 
                 return $response->withBody(

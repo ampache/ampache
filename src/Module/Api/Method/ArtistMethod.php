@@ -84,6 +84,11 @@ final class ArtistMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
+        // a withdrawn artist is refused like an id that was never there, so nothing says it exists
+        if (!$artist->isVisible($user)) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
         $include = [];
         if (array_key_exists('include', $input)) {
             $includeInput = (is_array($input['include']))
