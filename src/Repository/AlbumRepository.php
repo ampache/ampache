@@ -34,6 +34,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
@@ -1268,13 +1269,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * The artist page and the API listings below never reach Query::_get_filter_sql(), so they read the
-     * withdrawal themselves; a manager keeps seeing the release, marked, the way every other listing shows it.
+     * The artist page and the api listing of the same thing never reach Query::_get_filter_sql(), so they read
+     * the withdrawal themselves; a manager keeps seeing the release, marked, the way every other listing does.
      */
     private function withdrawnAlbumSql(?int $userId): string
     {
         return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
             ? ''
-            : ' AND `album`.`enabled` = 1';
+            : ' AND ' . WithdrawnFilter::condition('album');
     }
 }

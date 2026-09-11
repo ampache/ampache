@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
@@ -545,8 +546,9 @@ final class Stats
 
         // the newest lists reach the home page and the feeds without going through a browse, so the
         // withdrawn items have to be dropped here as well
-        if (in_array($base_type, ['album', 'artist', 'song'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
-            $where[] = sprintf('`%s`.`enabled` = 1', $base_type);
+        $withdrawn = self::_withdrawnSql($base_type, null, $user?->getId());
+        if ($withdrawn !== '') {
+            $where[] = $withdrawn;
         }
 
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
@@ -1437,7 +1439,7 @@ final class Stats
         // the widget hands these ids straight to a browse renderer, which never filters them again
         $withdrawn = self::_withdrawnSql(
             ($input_type === 'album_disk') ? 'album' : $type,
-            ($input_type === 'album_disk') ? '`album_disk`.`album_id`' : $idColumn,
+            ($input_type === 'album_disk') ? '`album_disk`.`album_id`' : null,
             ($filter_user instanceof User) ? $filter_user->getId() : null
         );
         if ($withdrawn !== '') {
@@ -1521,23 +1523,11 @@ final class Stats
      * The withdrawal correlates on whichever id the query already carries, so a statement built on
      * `object_count` drops a release taken off the shelves without joining the table that holds the flag.
      */
-    private static function _withdrawnSql(string $table, string $idColumn, ?int $userId): string
+    private static function _withdrawnSql(string $table, ?string $idColumn, ?int $userId): string
     {
-        if (
-            !in_array($table, ['album', 'artist', 'song'], true)
-            || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
-        ) {
-            return '';
-        }
-
-        // a statement already reading that table says so directly; the subquery is for the ones that do not join it
-        return ($idColumn === sprintf('`%s`.`id`', $table))
-            ? sprintf('`%s`.`enabled` = 1', $table)
-            : sprintf(
-                'EXISTS (SELECT 1 FROM `%1$s` WHERE `%1$s`.`id` = %2$s AND `%1$s`.`enabled` = 1)',
-                $table,
-                $idColumn
-            );
+        return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
+            ? ''
+            : WithdrawnFilter::condition($table, $idColumn);
     }
 
     /**

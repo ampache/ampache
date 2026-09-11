@@ -60,7 +60,7 @@ class DisabledSearchTest extends TestCase
     {
         return [
             ['album', '`album`.`enabled` = 1'],
-            ['album_disk', 'EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)'],
+            ['album_disk', 'EXISTS (SELECT 1 FROM `album` AS `album_wd` WHERE `album_wd`.`id` = `album_disk`.`album_id` AND `album_wd`.`enabled` = 1)'],
             ['artist', '`artist`.`enabled` = 1'],
             ['song', '`song`.`enabled` = 1'],
         ];

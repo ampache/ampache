@@ -74,6 +74,8 @@ class Song extends database_object implements
     CatalogItemInterface,
     MetadataEnabledInterface
 {
+    use WithdrawableTrait;
+
     // the value a player or an api response passes to fill_ext_info() for the scalars, without the comment or lyrics
     public const string PARTIAL_FILTER  = 'partial';
     protected const string DB_TABLENAME = 'song';
@@ -2127,20 +2129,9 @@ class Song extends database_object implements
         return $this->has_art ?? false;
     }
 
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
     public function isNew(): bool
     {
         return $this->getId() === 0;
-    }
-
-    public function isVisible(?User $user = null): bool
-    {
-        return $this->enabled
-            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**
