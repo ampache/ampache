@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 8.1.1
+
+### Fixed (8.1.1)
+
+* The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
+
 ## Ampache 8.1.0
 
 **Subsonic Users** The Subsonic API now fully implements folder browsing.
