@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity;
 
+use Ampache\Repository\Model\User;
+
 interface UserActivityRendererInterface
 {
     /**
-     * Show the activity entry.
+     * Show the activity entry, or an empty string when the viewer's own catalogs don't cover its object.
      */
-    public function show(Useractivity $useractivity): string;
+    public function show(Useractivity $useractivity, User $viewer): string;
 }

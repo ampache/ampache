@@ -229,12 +229,7 @@ class Upload
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            if (Artist::check($artist_name, '', $user_id, true)) {
-                debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
-
-                return null;
-            }
-
+            // Create or reuse an artist by name; the caller checks the returned artist's ownership afterward.
             $artist_id = (int) Artist::check($artist_name, '', $user_id);
             if (!$artist_id) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);

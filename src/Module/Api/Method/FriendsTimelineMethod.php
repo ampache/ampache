@@ -30,6 +30,8 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,6 +49,7 @@ final class FriendsTimelineMethod implements MethodInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UserActivityRepositoryInterface $userActivityRepository,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
@@ -92,6 +95,10 @@ final class FriendsTimelineMethod implements MethodInterface
             (int) ($input['limit'] ?? 0),
             (int) ($input['since'] ?? 0)
         );
+        $results = array_values(array_filter(
+            $results,
+            fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $user)
+        ));
 
         // no empty-envelope short circuit: an empty result renders as `activity: []`, matching `timeline`
         $response->getBody()->write(

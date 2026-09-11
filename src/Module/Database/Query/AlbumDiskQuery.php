@@ -40,6 +40,7 @@ final class AlbumDiskQuery implements QueryInterface
         'artist',
         'catalog_enabled',
         'catalog',
+        'enabled',
         'equal',
         'exact_match',
         'genre',
@@ -143,6 +144,9 @@ final class AlbumDiskQuery implements QueryInterface
         $filter_sql = '';
         $query->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 10);
         switch ($filter) {
+            case 'enabled':
+                $filter_sql = " `album`.`enabled` = " . (int) $value . " AND ";
+                break;
             case 'id':
                 $filter_sql = " `album_disk`.`id` IN (";
                 foreach ($value as $uid) {

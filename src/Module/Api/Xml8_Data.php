@@ -805,6 +805,7 @@ final class Xml8_Data
                 $filename = $libitem->get_fullname();
                 $dirname  = $libitem->path_name ?? '';
             }
+            $time = property_exists($libitem, 'time') ? $libitem->time : null;
 
             $item = $xml_items->addChild('item');
             $item->addAttribute('id', (string) $libitem->id);
@@ -813,6 +814,7 @@ final class Xml8_Data
             $item->addChild('title', str_replace('&', '&amp;', (string) $filename));
             $item->addChild('parent', (string) $folder->getId());
             $item->addChild('path', str_replace('&', '&amp;', $dirname));
+            $item->addChild('time', (string) ($time ?? ''));
             $item->addChild('art', str_replace('&', '&amp;', (string) $art_url));
             $item->addChild('has_art', $libitem->has_art() ? '1' : '0');
             $item->addChild('play_url', str_replace('&', '&amp;', (string) $play_url));

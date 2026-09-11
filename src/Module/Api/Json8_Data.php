@@ -1615,6 +1615,7 @@ final class Json8_Data
                 $filename = $libitem->get_fullname();
                 $dirname  = $libitem->path_name;
             }
+            $time = property_exists($libitem, 'time') ? $libitem->time : null;
 
             $JSON["items"][] = [
                 "id" => (string) $libitem->id,
@@ -1622,6 +1623,7 @@ final class Json8_Data
                 "title" => $filename,
                 "parent" => (string) $folder->getId(),
                 "path" => $dirname,
+                "time" => $time,
                 "art" => $art_url,
                 "has_art" => $libitem->has_art(),
                 "play_url" => $play_url,

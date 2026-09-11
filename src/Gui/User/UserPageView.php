@@ -84,9 +84,10 @@ final class UserPageView extends AbstractView
         }
 
         Useractivity::build_cache($this->activities);
+        $viewer = $this->currentUser ?? new User(-1);
         $output = '';
         foreach ($this->activities as $activityId) {
-            $output .= $this->userActivityRenderer->show(new Useractivity($activityId));
+            $output .= $this->userActivityRenderer->show(new Useractivity($activityId), $viewer);
         }
 
         return $output;

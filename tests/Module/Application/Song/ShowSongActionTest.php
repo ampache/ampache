@@ -54,7 +54,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song       = $this->mock(Song::class);
         $user       = $this->mock(User::class);
 
-        $song_id       = 0;
+        $song_id       = 666;
         $song->catalog = 1;
 
         $user->catalogs['music'] = [1];
@@ -80,7 +80,7 @@ class ShowSongActionTest extends MockeryTestCase
 
         $song->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
+            ->twice()
             ->andReturn(true);
 
         $this->ui->shouldReceive('showQueryStats')
@@ -92,7 +92,7 @@ class ShowSongActionTest extends MockeryTestCase
 
         $this->logger->shouldReceive('warning')
             ->with(
-                'Requested a song that does not exist',
+                'Refused song 666: no such song',
                 [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
             )
             ->once();
@@ -146,6 +146,10 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(false);
+        $song->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturn(true);
 
         // the head metadata reads the song before the page starts
         $song->year  = 2008;

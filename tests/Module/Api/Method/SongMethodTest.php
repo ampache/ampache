@@ -57,6 +57,49 @@ class SongMethodTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * A disabled song is refused exactly like an id that was never there, so nothing in the response tells
+     * a listener that the song exists at all.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleRefusesASongTheCallerCannotSee(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $item       = $this->mock(Song::class);
+
+        $objectId = 666;
+
+        $this->modelFactory->shouldReceive('createSong')
+            ->with($objectId)
+            ->once()
+            ->andReturn($item);
+
+        $item->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $item->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnFalse();
+
+        // the tell that the guard fired: the same exception and message an absent id produces
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage((string) $objectId);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+            $user,
+            $apiVersion
+        );
+    }
+
     #[DataProvider(methodName: 'apiVersionProvider')]
     public function testHandleReturnsResult(int $apiVersion): void
     {
@@ -79,6 +122,10 @@ class SongMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $item->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnTrue();
 
         // the resolved api version must reach the output untouched
         $output->shouldReceive('songs')

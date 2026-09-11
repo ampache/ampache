@@ -30,6 +30,8 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Preference;
+use Ampache\Module\User\Activity\Useractivity;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +44,7 @@ final class Timeline3Method implements MethodInterface
     public function __construct(
         private UserActivityRepositoryInterface $useractivityRepository,
         private StreamFactoryInterface $streamFactory,
+        private UserActivityAccessCheckerInterface $userActivityAccessChecker,
     ) {}
 
     /**
@@ -66,6 +69,7 @@ final class Timeline3Method implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         if (AmpConfig::get('sociable')) {
+            $viewer   = $user;
             $username = $input['username'];
             $limit    = (int) ($input['limit'] ?? 0);
             $since    = (int) ($input['since'] ?? 0);
@@ -81,6 +85,10 @@ final class Timeline3Method implements MethodInterface
                         $limit,
                         $since
                     );
+                    $results = array_values(array_filter(
+                        $results,
+                        fn(int $activityId): bool => $this->userActivityAccessChecker->isVisibleTo(new Useractivity($activityId), $viewer)
+                    ));
                     ob_end_clean();
 
                     return $response->withBody(

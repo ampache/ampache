@@ -58,6 +58,30 @@ class ShareTest extends TestCase
     }
 
     /**
+     * A link handed out before a takedown has to stop working with it. The visitor has no account, so the
+     * withdrawal is read off the item rather than from whoever is on the other end.
+     */
+    public function testIsValidRefusesAShareWhoseObjectWasWithdrawn(): void
+    {
+        AmpConfig::set('share', true, true);
+
+        $withdrawn = $this->createMock(Album::class);
+        $withdrawn->method('isVisible')->willReturn(false);
+        $this->bootLoader($withdrawn);
+
+        $subject                 = new Share();
+        $subject->id             = 666;
+        $subject->object_type    = 'album';
+        $subject->object_id      = 42;
+        $subject->expire_days    = 0;
+        $subject->max_counter    = 0;
+        $subject->allow_stream   = false;
+        $subject->allow_download = false;
+
+        self::assertFalse($subject->is_valid('', ''));
+    }
+
+    /**
      * The secret is compared with `hash_equals()`; a wrong guess must fail even when both the stored secret and
      * the guess are "magic hash" shaped (`0e` followed only by digits), which PHP's loose `!=` treats as equal
      * numbers rather than as the different strings they are
@@ -68,11 +92,15 @@ class ShareTest extends TestCase
 
         $subject                 = new Share();
         $subject->id             = 666;
+        $subject->object_type    = 'song';
+        $subject->object_id      = 42;
         $subject->secret         = '0e123456';
         $subject->expire_days    = 0;
         $subject->max_counter    = 0;
         $subject->allow_stream   = false;
         $subject->allow_download = false;
+
+        $this->bootLoader(null);
 
         self::assertFalse($subject->is_valid('0e000000', ''));
         self::assertTrue($subject->is_valid('0e123456', ''));
@@ -179,5 +207,21 @@ class ShareTest extends TestCase
         // the model reaches its repository through the `global $dic` bridge; phpunit.xml sets
         // backupGlobals so the real container is restored after every test
         $GLOBALS['dic'] = $this->dic;
+    }
+
+    private function bootLoader(?object $item): void
+    {
+        $loader = $this->createMock(LibraryItemLoaderInterface::class);
+        $loader->method('load')->willReturn($item);
+
+        // `debug_event()` reaches the same container, so it cannot all resolve to the loader
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === LibraryItemLoaderInterface::class)
+                ? $loader
+                : $this->createMock(LoggerInterface::class)
+        );
+
+        $GLOBALS['dic'] = $dic;
     }
 }

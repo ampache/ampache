@@ -66,6 +66,7 @@ use Traversable;
 
 class Song extends database_object implements
     Media,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     GarbageCollectibleInterface,
@@ -1016,12 +1017,16 @@ class Song extends database_object implements
     }
 
     /**
-     * update_enabled
-     * sets the enabled flag
+     * Takes the song out of the listings and out of playback, or puts it back.
+     *
+     * The owner check every other field carries is deliberately absent: it drops the requirement to USER,
+     * which would let an uploader turn a withdrawn track of their own back on and undo the takedown that
+     * withdrew it. Every other field on a song asks for CONTENT_MANAGER; this one asks for MANAGER and
+     * means it.
      */
     public static function update_enabled(bool $new_enabled, int $song_id): void
     {
-        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER);
     }
 
     /**
@@ -2126,6 +2131,12 @@ class Song extends database_object implements
         return $this->getId() === 0;
     }
 
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
+    }
+
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -2412,6 +2423,14 @@ class Song extends database_object implements
                 case 'composer':
                     if ($value != $this->composer) {
                         self::update_composer((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
+                case 'enabled':
+                    $new_enabled = (bool) $value;
+                    if ($new_enabled !== $this->enabled) {
+                        // update_enabled carries the manager check, so no caller can flip the state around it
+                        self::update_enabled($new_enabled, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
