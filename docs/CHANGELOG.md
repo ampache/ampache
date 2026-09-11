@@ -23,7 +23,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Database 810001
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
 * Database 810010
-  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
+  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time` on the browsed folder and on each item in its contents
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
 * Add `Time` column on folder browses
   * `php bin/cli run:updateCatalog -s` skips the folder count/time rollup on a run that finds no changes
@@ -130,6 +130,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
 * Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
+* `run:updateCatalog -a -g` (the cron's nightly `-cag`) ran `Catalog::gather_art()`'s full-catalog sweep instead of scoping the gather to the files `-a` just added, re-checking every album/artist/song/video already missing art on every run; a full sweep is now reserved for `-g` requested without `-a`
 * `Catalog::gather_art()`'s full-catalog sweep (`run:updateCatalog -g` without `-a`) gathered art for every song and video, not just the ones missing it, unlike its already-scoped album/artist/playlist searches; with `gather_song_art` enabled this could look like the whole library was being reimported
 * A free-text user preference (e.g. `custom_datetime`) rendered unescaped into the admin preference-edit page (XSS)
 * `PlaylistUrlResolver` (radio station playback) fetched a station's playlist url without checking it was a public address first

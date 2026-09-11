@@ -12,6 +12,7 @@
   * `catalogs/{catalog_id}/scan` as an alias of `catalog_action` with `task=scan_catalog_folders`
 * `folders` (API8)
   * New `time` field on the browsed folder, the summed duration of everything below it, subfolders included
+  * New `time` field on each item in the folder's contents, from the underlying object's own row; `null` for an object type that carries no duration
 
 ### Fixed (810000)
 
