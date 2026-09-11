@@ -55,8 +55,9 @@ final readonly class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
-        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs);
+        $songId   = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $song     = $this->modelFactory->createSong($songId);
+        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path('/client');
@@ -91,7 +92,11 @@ final readonly class ShowSongAction implements ApplicationActionInterface
 
         if (!$shown) {
             $this->logger->warning(
-                'Requested a song that does not exist',
+                sprintf(
+                    'Refused song %d: %s',
+                    $songId,
+                    ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogues this user may see'
+                ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');

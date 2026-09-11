@@ -830,8 +830,10 @@ abstract class Catalog extends database_object
             if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
                 $results['albumartist_id'] = $song->get_album_artist();
             } elseif (empty($results['album'])) {
-                // nothing to group under, so an orphaned song still needs an album artist of its own
-                $results['albumartist_id'] = Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+                // nothing to group under, so an orphaned song still needs an album artist of its own.
+                // Named rather than created here: the row belongs to whoever inserts the song, who knows
+                // the uploader. Creating it here made it before they could, and it landed with no owner.
+                $results['albumartist'] = $song?->get_parent_fullname() ?? $results['artist'];
             } else {
                 // One file cannot tell whether a named album has one artist or many. Taking the song artist
                 // here gave every artist on a compilation an album of the same name, because album_artist is
@@ -3786,7 +3788,7 @@ abstract class Catalog extends database_object
             $searches['artist']   = $this->get_artist_ids('art');
             $searches['playlist'] = $this->get_playlist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_song_ids();
+                $searches['song'] = $this->get_song_ids('art');
             }
         } else {
             $searches['album']    = [];
@@ -3814,7 +3816,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $videos ?? $this->get_video_ids();
+        $searches['video'] = $videos ?? $this->get_video_ids('art');
         $total_count       = (count($searches['album']) + count($searches['artist']) + count($searches['song'] ?? []) + count($searches['playlist']) + count($searches['video']));
         $interactor?->info(
             'gather_art found ' . $total_count . ' items missing art',
@@ -4125,9 +4127,11 @@ abstract class Catalog extends database_object
      * Returns an array of song ids.
      * @return int[]
      */
-    public function get_song_ids(): array
+    public function get_song_ids(string $filter = ''): array
     {
-        return self::getSongRepository()->getEnabledIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getSongRepository()->getIdsMissingArt($this->id)
+            : self::getSongRepository()->getEnabledIdsByCatalog($this->id);
     }
 
     /**
@@ -4166,9 +4170,11 @@ abstract class Catalog extends database_object
      * This returns an array of ids of videos in this catalog
      * @return int[]
      */
-    public function get_video_ids(): array
+    public function get_video_ids(string $filter = ''): array
     {
-        return self::getVideoRepository()->getIdsByCatalog($this->id);
+        return ($filter === 'art')
+            ? self::getVideoRepository()->getIdsMissingArt($this->id)
+            : self::getVideoRepository()->getIdsByCatalog($this->id);
     }
 
     public function getId(): int

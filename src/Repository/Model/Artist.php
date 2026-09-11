@@ -28,6 +28,9 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseLockInterface;
@@ -45,6 +48,7 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Artist extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
@@ -55,6 +59,7 @@ class Artist extends database_object implements
     public ?int $addition_time      = null;
     public int $album_count         = 0;
     public int $album_disk_count    = 0;
+    public bool $enabled            = true;
     public int $id                  = 0;
     public int $last_update;
     public ?string $lastfm_url  = null;
@@ -98,6 +103,7 @@ class Artist extends database_object implements
         }
 
         $this->id               = (int) ($info['id'] ?? 0);
+        $this->enabled          = (bool) ($info['enabled'] ?? true);
         $this->name             = $info['name'] ?? null;
         $this->prefix           = $info['prefix'] ?? null;
         $this->summary          = $info['summary'] ?? null;
@@ -595,6 +601,25 @@ class Artist extends database_object implements
     }
 
     /**
+     * Take the artist off the shelves, or put it back, taking its albums and their songs along.
+     *
+     * The whole catalogue below the artist follows either way, so the word promises here what it promises
+     * on a song. A single album or song can still be flipped on its own afterwards; only the next change
+     * of the artist's own state writes over it again.
+     */
+    public static function update_enabled(bool $new_enabled, int $artist_id): void
+    {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            return;
+        }
+
+        $artistRepository = self::getArtistRepository();
+        $artistRepository->setField($artist_id, ArtistFieldEnum::ENABLED, ($new_enabled) ? 1 : 0);
+        $artistRepository->setChildrenEnabled($artist_id, $new_enabled);
+        $artistRepository->updateCounts($artist_id);
+    }
+
+    /**
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
@@ -926,9 +951,20 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->enabled
+            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**
@@ -941,6 +977,7 @@ class Artist extends database_object implements
      *     placeformed?: ?string,
      *     yearformed?: ?int,
      *     user?: ?int,
+     *     enabled?: string,
      *     overwrite_childs?: string,
      *     add_to_childs?: string,
      *     edit_tags?: string,
@@ -961,6 +998,12 @@ class Artist extends database_object implements
         $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int) $data['yearformed'] : null;
         $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
+
+        // the form always carries the menu, so the cascade only runs when the state actually moved: a save
+        // that only fixed a typo must not sweep away a song someone had turned back on by hand
+        if (array_key_exists('enabled', $data) && (bool) $data['enabled'] !== $this->enabled) {
+            self::update_enabled((bool) $data['enabled'], $this->id);
+        }
 
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {

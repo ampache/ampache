@@ -90,6 +90,13 @@ interface VideoRepositoryInterface
     public function getIdsByFilePrefix(string $folderPath): array;
 
     /**
+     * Reads the videos of one catalog that have no original-size art, for a scoped gather_art sweep
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingArt(int $catalogId): array;
+
+    /**
      * Return the number of entries in the database...
      */
     public function getItemCount(): int;

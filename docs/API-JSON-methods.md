@@ -6391,6 +6391,7 @@ One child of the folder being browsed. `parent` is always the id of that folder,
 | title         | string  |   YES    |    NO    |       |
 | parent        | string  |    NO    |    NO    |       |
 | path          | string  |   YES    |    NO    |       |
+| time          | integer |   YES    |    NO    |       |
 | art           | string  |   YES    |    NO    |       |
 | has_art       | boolean |    NO    |    NO    |       |
 | play_url      | string  |    NO    |    NO    |       |

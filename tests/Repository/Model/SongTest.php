@@ -26,7 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 
 class SongTest extends MockeryTestCase
@@ -192,6 +197,41 @@ class SongTest extends MockeryTestCase
         $method = new ReflectionMethod(Song::class, '_scrub_custom_play_arg');
 
         $this->assertSame($expected, $method->invoke(null, $value));
+    }
+
+    /**
+     * Every other field on a song lets its uploader through by lowering the level to USER. `enabled` must
+     * not, or an artist could turn a withdrawn track of their own back on and undo the takedown.
+     */
+    public function testUpdateEnabledNeverConsultsTheOwnerToLowerTheLevel(): void
+    {
+        $owner     = $this->mock(User::class);
+        $owner->id = 42;
+
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        // the owner path would ask at USER, which this instance grants; the field itself asks at MANAGER
+        $privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER, null)
+            ->andReturnTrue();
+        $privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, null)
+            ->andReturnFalse();
+
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('findOwnerId')->andReturn(42);
+        // the tell that the exemption is gone: the write never happens even though the caller owns the song
+        $songRepository->shouldNotReceive('setField');
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(PrivilegeCheckerInterface::class)->andReturn($privilegeChecker);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+
+        $GLOBALS['dic']  = $dic;
+        $GLOBALS['user'] = $owner;
+
+        Song::update_enabled(true, 666);
+
+        unset($GLOBALS['user']);
     }
 
     /**

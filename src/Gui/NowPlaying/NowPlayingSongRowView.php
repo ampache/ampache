@@ -61,6 +61,10 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getAlbumLink(): string
     {
+        if (!$this->showLinks()) {
+            return scrub_out((string) $this->media->get_album_fullname());
+        }
+
         return ($this->isAlbumGrouped())
             ? $this->media->get_f_album_link()
             : $this->media->get_f_album_disk_link();
@@ -86,6 +90,10 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getArtistLink(): string
     {
+        if (!$this->showLinks()) {
+            return scrub_out($this->media->get_parent_fullname());
+        }
+
         return (string) $this->media->get_f_parent_link();
     }
 
@@ -124,6 +132,10 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function getSongLink(): string
     {
+        if (!$this->showLinks()) {
+            return scrub_out($this->media->get_fullname());
+        }
+
         return $this->media->get_f_link();
     }
 
@@ -145,6 +157,15 @@ final class NowPlayingSongRowView extends AbstractView
     public function isAlbumGrouped(): bool
     {
         return (bool) AmpConfig::get('album_group');
+    }
+
+    /**
+     * Only an authenticated viewer gets a clickable link to the song/album/artist; a public, unauthenticated
+     * viewer of this page (`use_now_playing_embedded`) sees the plain title only.
+     */
+    public function showLinks(): bool
+    {
+        return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
     public function showRatings(): bool

@@ -31,6 +31,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -163,6 +164,17 @@ final class PlayerMethod implements MethodInterface
         $agent = scrub_in((string) ($input['client'] ?? 'api'));
 
         if ($state === 'play') {
+            // resuming the track already recorded as the last play shifts that play's history back to when
+            // it actually started (now - position), instead of leaving it stamped at the earlier save/pause
+            $previous = Stats::get_last_play($user->getId(), $agent);
+            if ((int) $previous['object_id'] === $media->id && $previous['object_type'] === $type) {
+                $time_diff = $time - (int) $previous['date'];
+                $old_play  = $time_diff > $media->time * 5;
+                if ($position >= 1 || $old_play) {
+                    Stats::shift_last_play($user->getId(), $agent, (int) $previous['date'], $time - $position);
+                }
+            }
+
             // make sure the now_playing state is set
             Stream::garbage_collection();
             Stream::insert_now_playing(

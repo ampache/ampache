@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 // partial/object_header.phtml -- rendered by Ampache\Gui\Partial\ObjectHeaderView
 
+use Ampache\Module\Util\Ui;
+
 /** @var Ampache\Gui\Partial\ObjectHeaderView $this */
 
 $chips     = $this->getChips();
@@ -37,13 +39,21 @@ $userflag  = $this->getUserflag();
 $ratingKey = $this->getRatingKey();
 $note      = $this->getNote();
 $links     = $this->getLinks();
-$tags      = $this->getTags(); ?>
+$tags      = $this->getTags();
+$notice    = $this->getNotice(); ?>
+<?php if ($notice !== '') { ?>
+<div class="object-header-notice"><?php echo $this->raw(Ui::get_material_symbol('unpublished', $notice)); ?><strong><?php echo $this->e($notice); ?></strong></div>
+<?php } ?>
 <div class="object-header<?php echo ($this->hasWideArt()) ? ' wide-art' : ''; ?>">
 <?php if ($art !== '') { ?>
     <div class="object-header-art"><?php echo $this->raw($art); ?></div>
 <?php } ?>
     <div class="object-header-id">
-        <p class="object-header-kind"><?php echo $this->e($this->getKind()); ?></p>
+        <p class="object-header-kind"><?php echo $this->e($this->getKind()); ?>
+<?php if ($notice !== '') { ?>
+            <span class="object-header-badge"><?php echo $this->e($notice); ?></span>
+<?php } ?>
+        </p>
         <h2 class="object-header-title"><?php echo $this->raw($this->getTitle()); ?></h2>
 <?php if ($crumb !== '') { ?>
         <p class="object-header-crumb"><?php echo $this->raw($crumb); ?></p>

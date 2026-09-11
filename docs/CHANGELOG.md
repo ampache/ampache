@@ -23,7 +23,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Database 810001
   * New `show_composer` preference (off by default) for a Composer column on playlist media and Song rows
 * Database 810010
-  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time`
+  * New `folder`.`time` column with the summed duration of everything below each folder, subfolders included, rolled up the same way as `total_count`/`total_skip`; the API folder browse response now reports it as `time` on the browsed folder and on each item in its contents
 * Remote and Subsonic catalogs now build folder data during a scan (`-s`, or "Scan Folders"/"Scan All Folders"), so folder browsing works for them like local catalogs
 * Add `Time` column on folder browses
   * `php bin/cli run:updateCatalog -s` skips the folder count/time rollup on a run that finds no changes
@@ -42,6 +42,11 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
 * Folder and collection pages describe themselves in a shared link, like the other object pages do
+* Database 810011
+  * New `album`.`enabled` and `artist`.`enabled`, carrying the name and the promise `song`.`enabled` already had, so a release can be withdrawn without deleting it and losing its playlist entries, ratings and play history
+  * Set from a `State` menu in the album, artist and song edit dialogs by a catalog manager, who keeps seeing what is disabled; disabling an album or artist carries down to its songs, and enabling carries back
+  * Disabled items leave every browse, smartlist, API, Subsonic and RSS listing, and carry a marker in the rows only a manager still sees. An `Enabled` search rule lists them
+  * A song can still be enabled or disabled on its own; the next change of its album or artist state writes over it
 
 ### Changed (8.1.0)
 
@@ -71,8 +76,11 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 
 ### Fixed (8.1.0)
 
+* Album, album disk and artist song counts no longer include disabled songs, so an album whose tracks are all disabled stops advertising them
 * The page-wide caches for album artists and object genres were never dropped when their maps changed, so a read after a write in the same request answered with the state from before it
 * The OPML export of podcast subscriptions read every podcast in the system regardless of the caller's catalog filter, letting a restricted user enumerate the subscriptions of catalogs they cannot browse
+* A user's timeline, the Friends Timeline widget, and the `timeline`/`friends_timeline` API methods listed activity against songs, videos, albums and other catalog-scoped objects the viewer's own catalog filter excludes; those entries are now hidden the same way the Now Playing widget already hides them
+* The public Now Playing page (`use_now_playing_embedded`, viewable while logged out) still linked an unauthenticated viewer straight to the song/album/artist/video being played, and to a right-click play menu on the album art, even though the row itself was already catalog-filtered; both now require being logged in
 * Subsonic/OpenSubsonic `getIndexes`/`getMusicDirectory` now browse the real folder tree instead of a fake artist/album list so folder based clients work
 * A playlist's total duration only summed its songs, leaving videos and podcast episodes uncounted
 * Uploading new art didn't update the image already on the page: its cache-busting id was looked up per-size, which is empty right after an upload, so the browser kept its cached copy
@@ -124,6 +132,8 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS view plugin, artist summary, label/folder autocomplete and `Wanted::f_link` echoed untrusted values unescaped (XSS)
 * Downloading a file the server could not open answered with an empty file and a success status rather than an error
 * Catalog actions started from the web interface (scan, clean, gather art) stopped with a connection error on MySQL, which rejects a user-level lock name longer than 64 characters
+* `run:updateCatalog -a -g` (the cron's nightly `-cag`) ran `Catalog::gather_art()`'s full-catalog sweep instead of scoping the gather to the files `-a` just added, re-checking every album/artist/song/video already missing art on every run; a full sweep is now reserved for `-g` requested without `-a`
+* `Catalog::gather_art()`'s full-catalog sweep (`run:updateCatalog -g` without `-a`) gathered art for every song and video, not just the ones missing it, unlike its already-scoped album/artist/playlist searches; with `gather_song_art` enabled this could look like the whole library was being reimported
 * A free-text user preference (e.g. `custom_datetime`) rendered unescaped into the admin preference-edit page (XSS)
 * `PlaylistUrlResolver` (radio station playback) fetched a station's playlist url without checking it was a public address first
 * `UrlValidator`'s check and the later curl fetch could resolve a hostname to different addresses (DNS rebinding); the fetch is now pinned to the address that was actually checked
@@ -134,6 +144,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * A share link announced every object as a song, so an album, artist or playlist preview claimed to be one
 * A folder was served no cover at all: the image action asked for a placeholder file that was never shipped
 * A shared link showed no image for an item without a cover while generated art was on: the drawn tile is an svg, which no preview scraper renders
+* An RSS feed's beautiful-url slug relied on `iconv(...//TRANSLIT...)` to fold accented characters, whose output differs by platform; a title like "Café" could slug to `caf-e` instead of `cafe` depending on the server's iconv build. Folding now uses Unicode normalization instead, which is portable
 
 ## Ampache 8.0.1
 

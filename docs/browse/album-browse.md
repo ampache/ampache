@@ -25,6 +25,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `artist`          | artist id      | Only albums this artist appears on, as the album artist or on one of the songs.                                                      |
 | `catalog`         | catalog id     | Only albums in this catalog. `0` is ignored rather than matching catalog zero, so it means every catalog.                            |
 | `catalog_enabled` | none           | Only albums in an enabled catalog. Needs no value.                                                                                   |
+| `enabled`         | 0 or 1         | Send `1` for enabled albums, `0` for disabled ones.                                                                                  |
 | `equal`           | string         | The album name is exactly this value. Matching is case insensitive.                                                                  |
 | `exact_match`     | string         | Alias of `equal`.                                                                                                                    |
 | `genre`           | genre id       | Only albums tagged with this genre.                                                                                                  |

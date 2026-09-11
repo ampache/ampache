@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss;
 
 use Ampache\Config\AmpConfig;
+use Normalizer;
 
 /**
  * Feed urls, in the query form every install understands and in the path form
@@ -102,12 +103,18 @@ final class RssUrl
 
     /**
      * A readable, ascii only path segment. Purely decorative, feeds resolve without it
+     *
+     * Accents are folded via Unicode NFD decomposition (splitting a letter from its combining diacritical
+     * mark) rather than `iconv(...//TRANSLIT...)`, whose output for the same input differs across iconv
+     * implementations (glibc vs. Windows), previously leaving a stray separator character where the
+     * platform's TRANSLIT table substituted an apostrophe instead of folding the accent away.
      */
     public static function slug(string $text): string
     {
-        $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $slug = (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
-        $slug = strtolower((string) preg_replace('/[^a-zA-Z0-9]+/', '-', $slug));
+        $text       = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $normalized = Normalizer::normalize($text, Normalizer::FORM_D) ?: $text;
+        $slug       = (string) preg_replace('/\p{Mn}/u', '', $normalized);
+        $slug       = strtolower((string) preg_replace('/[^a-zA-Z0-9]+/', '-', $slug));
 
         return trim(substr($slug, 0, 96), '-');
     }

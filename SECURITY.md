@@ -21,14 +21,9 @@ vulnerability.
 
 ## Reporting a Vulnerability
 
-Report all security issues directly to me security \[at] ampache \[dot] dev
+Report all security issues through GitHub's private vulnerability reporting:
+https://github.com/ampache/ampache/security/advisories/new
 
-Use the following format
-
-Subject:
-Security Issue, Ampache \[version number or git branch]
-
-Body:
-Description, execution steps and contact information to reply. (A github account to tag in the created issue would be good)
+Include a description, execution steps to reproduce, and the affected version or git branch.
 
 All reported issues will be examined and an issue will be created to track against.

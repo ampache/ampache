@@ -28,6 +28,9 @@ namespace Ampache\Gui\NowPlaying;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Override;
@@ -54,14 +57,18 @@ final class NowPlayingVideoRowView extends AbstractView
      */
     public function getArt(): string
     {
+        // An unauthenticated viewer gets the plain thumbnail; only an authenticated one gets the video's own
+        // page as its link, matching getVideoLink().
+        $link = ($this->showLinks()) ? $this->media->get_link() : null;
+
         ob_start();
         $shown = false;
         if ($this->media->get_default_art_kind() === 'preview') {
-            $shown = Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 150, 'height' => 84], $this->media->get_link(), false, true, 'preview');
+            $shown = Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 150, 'height' => 84], $link, false, true, 'preview');
         }
 
         if (!$shown) {
-            Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $this->media->get_link());
+            Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $link);
         }
 
         return (string) ob_get_clean();
@@ -89,7 +96,20 @@ final class NowPlayingVideoRowView extends AbstractView
 
     public function getVideoLink(): string
     {
+        if (!$this->showLinks()) {
+            return scrub_out($this->media->get_fullname());
+        }
+
         return $this->media->get_f_link();
+    }
+
+    /**
+     * Only an authenticated viewer gets a clickable link to the video; a public, unauthenticated viewer
+     * of this page (`use_now_playing_embedded`) sees the plain title and a non-linked thumbnail.
+     */
+    public function showLinks(): bool
+    {
+        return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
     public function showRatings(): bool

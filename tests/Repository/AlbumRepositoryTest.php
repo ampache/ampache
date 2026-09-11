@@ -74,6 +74,21 @@ class AlbumRepositoryTest extends TestCase
         $this->subject->addAlbumMap(666, 'album', 42);
     }
 
+    /**
+     * A song whose album row is gone used to contribute a NULL id through the outer join, and it sorts first.
+     * `while ($albumId = $result->fetchColumn())` reads that as the end of the result, so a single orphaned
+     * song emptied the whole album list -- which is what Subsonic and UPnP browse.
+     */
+    public function testAnOrphanedSongCannotContributeAnAlbumId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album`'))
+            ->willReturn($this->createMock(PDOStatement::class));
+
+        $this->subject->getIdsByCatalogs([1]);
+    }
+
     public function testCollectGarbageDeletes(): void
     {
         $this->connection->expects(static::exactly(7))
@@ -555,7 +570,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
+            ->with('SELECT `album`.`id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` WHERE `song`.`catalog` IN (1,0) AND `album`.`enabled` = 1 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 20, 10')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -571,7 +586,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `song`.`album` AS `id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
+            ->with('SELECT `song`.`album` AS `id` FROM `song` INNER JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `song`.`catalog` IN (3) AND `album`.`enabled` = 1 GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name`, `album`.`mbid` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` ')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -587,7 +602,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `album`.`id` FROM `album` GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
+            ->with('SELECT `album`.`id` FROM `album` WHERE `album`.`enabled` = 1 GROUP BY `album`.`id` ORDER BY `album`.`name` LIMIT 5, 18446744073709551615')
             ->willReturn($result);
 
         $result->expects(static::once())
@@ -840,10 +855,40 @@ class AlbumRepositoryTest extends TestCase
         self::assertTrue($this->subject->setField(666, AlbumFieldEnum::CATALOG_NUMBER, 'some-number'));
     }
 
+    public function testSetSongsEnabledCarriesTheAlbumStateDownToEverySong(): void
+    {
+        $bound = [];
+
+        $counts = 0;
+
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$bound, &$counts): PDOStatement {
+                if (str_contains($sql, '`song_count`')) {
+                    // the stored count is brought back in the same breath, or the album keeps announcing
+                    // tracks nobody can play until the next maintenance sweep
+                    self::assertSame([666], $params);
+                    $counts++;
+                } else {
+                    self::assertStringContainsString('UPDATE `song` SET `enabled` = ? WHERE `album` = ?', $sql);
+                    $bound[] = $params;
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->setSongsEnabled(666, false);
+        $this->subject->setSongsEnabled(666, true);
+
+        // the tell that the cascade runs both ways: the same statement carries 0 and then 1
+        self::assertSame([[0, 666], [1, 666]], $bound);
+        self::assertSame(2, $counts);
+    }
+
     public function testUpdateAllCountsRunsTheWholeSweepEvenWhenOneStatementFails(): void
     {
         // a maintenance statement that dies must not take the rest of the sweep with it, as `Dba::write()` did not
-        $this->connection->expects(static::exactly(14))
+        $this->connection->expects(static::exactly(16))
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
@@ -891,7 +936,7 @@ class AlbumRepositoryTest extends TestCase
     {
         $bound = [];
 
-        $this->connection->expects(static::exactly(13))
+        $this->connection->expects(static::exactly(15))
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use (&$bound): PDOStatement {
                 $bound[] = $params;

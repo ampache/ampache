@@ -63,7 +63,7 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
         $this->ui->showHeader();
         echo new ArtistPageView(
             $artist,
-            ['' => $this->songRepository->getAllByArtist($artistId)],
+            ['' => $this->songRepository->getEnabledByArtist($artistId)],
             'song',
             $this->browseFactory,
             $gatekeeper->getUser(),

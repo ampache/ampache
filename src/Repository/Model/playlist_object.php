@@ -49,6 +49,7 @@ use Random\Randomizer;
  */
 abstract class playlist_object extends database_object implements
     library_item,
+    VisibleItemInterface,
     container_item,
     displayable_item
 {

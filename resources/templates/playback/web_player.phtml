@@ -523,9 +523,26 @@ if ($this->showSongPageTitle()) {
             }
         });
 
+        // Every play action rebuilds jplaylist against a fresh <audio> element, so the previous Web Audio chain
+        // must be disconnected here or it keeps rendering into audioContext.destination alongside the new one.
+        if (typeof mediaSource !== 'undefined' && mediaSource !== null) {
+            try { mediaSource.disconnect(); } catch (e) {}
+        }
+        if (typeof eqFilters !== 'undefined' && eqFilters.length) {
+            eqFilters.forEach(function (filter) {
+                try { filter.disconnect(); } catch (e) {}
+            });
+        }
+        if (typeof replaygainNode !== 'undefined' && replaygainNode !== null) {
+            try { replaygainNode.disconnect(); } catch (e) {}
+        }
+        if (typeof analyserNode !== 'undefined' && analyserNode !== null) {
+            try { analyserNode.disconnect(); } catch (e) {}
+        }
         mediaSource = null;
         analyserNode = null;
         replaygainNode = null;
+        eqFilters = [];
         replaygainEnabled = false;
         <?php echo $this->raw(WebPlayer::add_media_js($this->getPlaylist())); ?>
     });

@@ -85,12 +85,12 @@ class ShowActionTest extends MockeryTestCase
 
         $artist->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
+            ->twice()
             ->andReturnTrue();
 
         $this->logger->shouldReceive('warning')
             ->with(
-                'Requested an artist that does not exist',
+                'Refused artist 0: no such artist',
                 [LegacyLogger::CONTEXT_TYPE => ShowAction::class]
             )
             ->once();

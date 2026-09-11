@@ -339,6 +339,25 @@ class SongRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getIdsByFilePrefix("/music/o'brien"));
     }
 
+    public function testGetIdsMissingArtOnlyReturnsEnabledSongsWithoutOriginalArt(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT `song`.`id` FROM `song` LEFT JOIN `image` ON `image`.`object_id` = `song`.`id` AND `image`.`object_type` = 'song' AND `image`.`size` = 'original' WHERE `song`.`catalog` = ? AND `song`.`enabled` = '1' AND `image`.`object_id` IS NULL",
+                [7]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn('666', false);
+
+        self::assertSame([666], $this->subject->getIdsMissingArt(7));
+    }
+
     public function testGetSongMapValuesBulkDoesNothingForNoSongs(): void
     {
         $this->connection->expects(static::never())

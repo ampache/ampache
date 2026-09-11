@@ -27,6 +27,8 @@ namespace Ampache\Module\User;
 
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapper;
 use Ampache\Module\User\Activity\TypeHandler\ActivityTypeHandlerMapperInterface;
+use Ampache\Module\User\Activity\UserActivityAccessChecker;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Module\User\Activity\UserActivityPoster;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\User\Activity\UserActivityRenderer;
@@ -51,6 +53,7 @@ return [
     NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
     UserStateTogglerInterface::class => autowire(UserStateToggler::class),
     UserActivityRendererInterface::class => autowire(UserActivityRenderer::class),
+    UserActivityAccessCheckerInterface::class => autowire(UserActivityAccessChecker::class),
     UserActivityPosterInterface::class => autowire(UserActivityPoster::class),
     ActivityTypeHandlerMapperInterface::class => autowire(ActivityTypeHandlerMapper::class),
     UserFollowTogglerInterface::class => autowire(UserFollowToggler::class),

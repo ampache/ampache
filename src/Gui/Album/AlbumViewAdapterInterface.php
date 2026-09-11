@@ -69,6 +69,11 @@ interface AlbumViewAdapterInterface
 
     public function getDirectplayButton(): string;
 
+    /**
+     * The marker shown on a withdrawn album; only a manager ever sees a row that carries one
+     */
+    public function getDisabledIcon(): string;
+
     public function getDisplayYear(): int;
 
     public function getEditButtonTitle(): string;
@@ -96,6 +101,8 @@ interface AlbumViewAdapterInterface
     public function getSongCount(): int;
 
     public function getUserFlags(): string;
+
+    public function isDisabled(): bool;
 
     public function isEditable(): bool;
 }

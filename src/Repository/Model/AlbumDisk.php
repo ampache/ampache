@@ -39,6 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class AlbumDisk extends database_object implements
     library_item,
+    VisibleItemInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
@@ -598,9 +599,22 @@ class AlbumDisk extends database_object implements
         return $this->has_art;
     }
 
+    /**
+     * A disk is never withdrawn on its own; it reads the flag of the album it belongs to.
+     */
+    public function isEnabled(): bool
+    {
+        return $this->album->enabled;
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    public function isVisible(?User $user = null): bool
+    {
+        return $this->album->isVisible($user);
     }
 
     /**
