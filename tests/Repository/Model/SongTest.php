@@ -77,6 +77,27 @@ class SongTest extends MockeryTestCase
     }
 
     /**
+     * A player asks for bpm first, and that read must not be mistaken for the whole row afterwards
+     */
+    public function testAPartialReadDoesNotBlockTheWholeRowLater(): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getPartialDataRow')
+            ->with(4495002)
+            ->once()
+            ->andReturn(['bpm' => 120]);
+        $songRepository->shouldReceive('getDataRow')
+            ->with(4495002)
+            ->once()
+            ->andReturn(['lyrics' => 'Hey Joe']);
+
+        $song = $this->songWithRepository(4495002, $songRepository);
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
+
+        self::assertSame(['text' => 'Hey Joe'], $song->get_lyrics(true));
+    }
+
+    /**
      * @param list<string> $tags
      * @param list<string> $new_tags
      */
@@ -182,6 +203,29 @@ class SongTest extends MockeryTestCase
         $this->assertFalse($method->invoke(null, ''));
     }
 
+    /**
+     * Every other field on a song lets its uploader through by lowering the level to USER. `enabled` must
+     * not, or an artist could turn a withdrawn track of their own back on and undo the takedown.
+     */
+    /**
+     * The partial row carries the replaygain scalars and bpm, and no lyrics column at all: a read routed there
+     * answers nothing, which reads exactly like a song that has no lyrics.
+     */
+    public function testLyricsComeFromTheWholeRowNotThePartialOne(): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getDataRow')
+            ->with(4495001)
+            ->once()
+            ->andReturn(['lyrics' => '[00:09.12] Hey Joe']);
+        $songRepository->shouldNotReceive('getPartialDataRow');
+
+        $song     = $this->songWithRepository(4495001, $songRepository);
+        $lyrics   = $song->get_lyrics(true);
+
+        self::assertSame(['text' => '[00:09.12] Hey Joe'], $lyrics);
+    }
+
     public function testRunCustomPlayActionIgnoresAnIndexOutsideTheActionList(): void
     {
         $song = new Song();
@@ -200,9 +244,23 @@ class SongTest extends MockeryTestCase
     }
 
     /**
-     * Every other field on a song lets its uploader through by lowering the level to USER. `enabled` must
-     * not, or an artist could turn a withdrawn track of their own back on and undo the takedown.
+     * The narrow read is the point of PARTIAL_FILTER, so it has to stay narrow
      */
+    public function testThePartialFilterStillTakesTheNarrowRead(): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getPartialDataRow')
+            ->with(4495003)
+            ->once()
+            ->andReturn(['bpm' => 120]);
+        $songRepository->shouldNotReceive('getDataRow');
+
+        $song = $this->songWithRepository(4495003, $songRepository);
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
+
+        self::assertSame(120.0, $song->bpm);
+    }
+
     public function testUpdateEnabledNeverConsultsTheOwnerToLowerTheLevel(): void
     {
         $owner     = $this->mock(User::class);
@@ -232,6 +290,21 @@ class SongTest extends MockeryTestCase
         Song::update_enabled(true, 666);
 
         unset($GLOBALS['user']);
+    }
+
+    /**
+     * A song that exists as far as the model is concerned, reading through the given repository
+     */
+    private function songWithRepository(int $songId, mixed $songRepository): Song
+    {
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+        $GLOBALS['dic'] = $dic;
+
+        $song     = new Song();
+        $song->id = $songId;
+
+        return $song;
     }
 
     /**
