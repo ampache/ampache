@@ -669,6 +669,7 @@ class OpenSubsonic_Xml_Data
         $this->_warmChildObjectCaches($children);
 
         $folders = [];
+        $media   = [];
         foreach ($children as $child) {
             if ($child['object_type'] === LibraryItemEnum::FOLDER) {
                 $folder = new Folder($child['object_id']);
@@ -679,10 +680,15 @@ class OpenSubsonic_Xml_Data
                 continue;
             }
 
-            $this->_addChildObject($xindexes, $child);
+            $media[] = $child;
         }
 
+        // `Indexes` is an ordered sequence of shortcut, index then child: a client that reads the document as it
+        // arrives has stopped looking for indexes by the time the children start, and lists no folder at all
         $this->_addFolderIndex($xindexes, $folders);
+        foreach ($media as $child) {
+            $this->_addChildObject($xindexes, $child);
+        }
 
         return $xml;
     }
@@ -1711,6 +1717,28 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * @param array{object_type: LibraryItemEnum, object_id: int} $child
+     */
+    protected function _addChildObject(SimpleXMLElement $xml, array $child): void
+    {
+        switch ($child['object_type']) {
+            case LibraryItemEnum::SONG:
+                $song = new Song($child['object_id']);
+                if (!$song->isNew() && $song->enabled) {
+                    $this->addSong($xml, $song, 'child');
+                }
+
+                break;
+            case LibraryItemEnum::VIDEO:
+                $this->_addVideo($xml, new Video($child['object_id']), 'child');
+                break;
+            case LibraryItemEnum::PODCAST_EPISODE:
+                $this->_addPodcastEpisode($xml, new Podcast_Episode($child['object_id']), 'child');
+                break;
+        }
+    }
+
+    /**
      * _addArtistArray
      * @param array{
      *     id: int,
@@ -1821,28 +1849,6 @@ class OpenSubsonic_Xml_Data
         $xchild->addAttribute('title', (string) $folder->name);
         if ($folder->has_art()) {
             $xchild->addAttribute('coverArt', $sub_id);
-        }
-    }
-
-    /**
-     * @param array{object_type: LibraryItemEnum, object_id: int} $child
-     */
-    private function _addChildObject(SimpleXMLElement $xml, array $child): void
-    {
-        switch ($child['object_type']) {
-            case LibraryItemEnum::SONG:
-                $song = new Song($child['object_id']);
-                if (!$song->isNew() && $song->enabled) {
-                    $this->addSong($xml, $song, 'child');
-                }
-
-                break;
-            case LibraryItemEnum::VIDEO:
-                $this->_addVideo($xml, new Video($child['object_id']), 'child');
-                break;
-            case LibraryItemEnum::PODCAST_EPISODE:
-                $this->_addPodcastEpisode($xml, new Podcast_Episode($child['object_id']), 'child');
-                break;
         }
     }
 
