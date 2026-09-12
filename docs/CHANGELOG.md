@@ -8,6 +8,8 @@
 
 ### Fixed (8.1.1)
 
+* Garbage collection deleted any folder holding nothing but other folders
+* Subsonic folder browsing missed sub-folders added since the last map rebuild, and folder was not returned listed
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
 
