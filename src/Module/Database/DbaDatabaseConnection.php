@@ -111,7 +111,9 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
                 );
             }
 
-            throw new QueryFailedException();
+            // the SQL and the driver error travel with the exception, so a failing query names itself in the
+            // stack trace instead of pointing here with nothing
+            throw new QueryFailedException(trim(Dba::error() . ' ' . $sql));
         }
 
         return $result;
