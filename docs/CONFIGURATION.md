@@ -4,6 +4,42 @@
 
 Ampache strives to have sane defaults while providing the ability to change the configuration to meet a majority of people's needs. Ampache has two main locations for its config. The Config file located at ```/config/ampache.cfg.php``` and the Database preferences which are per user and modified via the web interface.
 
+## Database Server Requirements
+
+Ampache runs against MySQL 5.x, MySQL 8.x or MariaDB 10.x and later. Beyond the credentials in the config file
+it expects two things of the server itself.
+
+### autocommit must be on
+
+`autocommit` is on by default in both MySQL and MariaDB, and Ampache expects that. It opens an explicit
+transaction in only two places, the `stats:consolidate` and `stats:restore` command line tools, and commits
+nowhere else.
+
+With `autocommit = 0` every connection sits in one transaction that is never committed. The first `SELECT` a
+process makes pins a read view for as long as that connection lives, which on a long running task such as the
+cron means locks are held and undo log is kept for the whole run. On MariaDB 11.6.2 and later, where
+`innodb_snapshot_isolation` is on by default, it also turns an ordinary concurrent write into a hard failure:
+
+```text
+SQLSTATE[HY000]: General error: 1020 Record has changed since last read in table 'song'
+```
+
+Ampache forces `autocommit` back on for its own connections, so this does not break it, but the setting still
+affects everything else using that server. If `/test.php` warns about it, set it back to the default:
+
+```ini
+[mysqld]
+autocommit = 1
+```
+
+Note that `PDO::ATTR_AUTOCOMMIT` does not help here: pdo_mysql assumes the connection is already in autocommit
+and sends nothing, so only an explicit `SET SESSION autocommit = 1` puts it back.
+
+### Storage engine
+
+The install schema creates every table as InnoDB. Tables left on MyISAM or Aria from a much older install still
+work, but they take a table lock for the whole of each write, so a catalog update blocks playback.
+
 ## Enable Debug Logging
 
 Ampache has a very in depth logging system that requires a few config options to be configured before you can log.

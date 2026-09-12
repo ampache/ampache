@@ -73,7 +73,7 @@ class Dba
     {
         $dbh = self::_connect();
 
-        if (!$dbh || $dbh->errorCode()) {
+        if (!$dbh instanceof PDO || self::_has_error($dbh)) {
             if ($dbh instanceof PDO) {
                 self::$_error = (string) json_encode($dbh->errorInfo());
             }
@@ -533,7 +533,7 @@ class Dba
             // rather than break a working install; credentials come from config, so the extra attempt is harmless.
             if ($dsn !== $base_dsn) {
                 try {
-                    return new PDO($base_dsn, $username, $password);
+                    return self::_prepare(new PDO($base_dsn, $username, $password));
                 } catch (PDOException) {
                 }
             }
@@ -544,7 +544,18 @@ class Dba
             return null;
         }
 
-        return $dbh;
+        return self::_prepare($dbh);
+    }
+
+    /**
+     * Whether a handle carries a real error, which a bare errorCode() cannot answer
+     *
+     * PDO reports '00000' once any statement has run cleanly, and that string is truthy: a connection that had
+     * been prepared at all would read as broken.
+     */
+    private static function _has_error(PDO $dbh): bool
+    {
+        return !in_array($dbh->errorCode(), [null, PDO::ERR_NONE], true);
     }
 
     /**
@@ -561,6 +572,18 @@ class Dba
         $message = $pdoException->getMessage();
 
         return str_contains($message, 'server has gone away') || str_contains($message, 'Lost connection');
+    }
+
+    /**
+     * Puts a fresh connection into the state the rest of the code assumes
+     */
+    private static function _prepare(PDO $dbh): PDO
+    {
+        // nothing outside the two stats commands ever commits, so a server left with autocommit off would hold a
+        // single transaction open for a whole cron run. pdo_mysql ignores PDO::ATTR_AUTOCOMMIT, so it takes a statement
+        $dbh->exec('SET SESSION autocommit = 1');
+
+        return $dbh;
     }
 
     /**
@@ -631,10 +654,7 @@ class Dba
      */
     private static function _setup_dbh(?PDO $dbh, string $database): bool
     {
-        if (
-            !$dbh
-            || $dbh->errorCode()
-        ) {
+        if (!$dbh instanceof PDO || self::_has_error($dbh)) {
             return false;
         }
 
