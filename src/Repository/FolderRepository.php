@@ -82,9 +82,18 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             'parent' => $parent_id,
         ]);
 
-        return ($folderId)
-            ? new Folder($folderId)
-            : null;
+        if (!$folderId) {
+            return null;
+        }
+
+        // the map is told here rather than waiting for the next full rebuild, which is what left it disagreeing
+        // with `folder` for everything a scan created in between
+        $this->connection->query(
+            "INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT ?, ?, 'folder', ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM `folder_map` WHERE `object_id` = ? AND `object_type` = 'folder');",
+            [$parent_id, $folderId, $folderName, $catalogId, $folderPath, $folderId]
+        );
+
+        return new Folder($folderId);
     }
 
     public function delete(int $folderId): void
@@ -336,11 +345,24 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function getObjects(?int $folderId, int $userId = -1): array
     {
-        $result = ($folderId === null)
-            ? $this->connection->query("SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL{$this->catalogFilterSql('folder', $userId)};")
-            : $this->connection->query("SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?{$this->catalogFilterSql('folder_map', $userId)};", [$folderId]);
+        if ($folderId === null) {
+            return $this->mapObjectRows(
+                $this->connection->query("SELECT `id` AS `object_id`, 'folder' AS `object_type`, `name` FROM `folder` WHERE `parent` IS NULL{$this->catalogFilterSql('folder', $userId)} ORDER BY `name`;")
+            );
+        }
 
-        return $this->mapObjectRows($result);
+        // sub-folders are read from `folder` itself, the way the root above already is: `folder_map` only learns
+        // about a folder when the whole map is rebuilt, so a listing that trusted it stopped at the first level
+        // holding anything scanned since
+        return $this->mapObjectRows(
+            $this->connection->query(
+                "(SELECT `id` AS `object_id`, 'folder' AS `object_type`, `name`, 0 AS `sort_group` FROM `folder` WHERE `parent` = ?{$this->catalogFilterSql('folder', $userId)}) "
+                . "UNION ALL "
+                . "(SELECT `object_id`, `object_type`, `name`, 1 AS `sort_group` FROM `folder_map` WHERE `folder_id` = ? AND `object_type` != 'folder'{$this->catalogFilterSql('folder_map', $userId)}) "
+                . "ORDER BY `sort_group`, `name`;",
+                [$folderId, $folderId]
+            )
+        );
     }
 
     /**
@@ -723,8 +745,10 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     private function pruneEmptyFolders(): void
     {
         for ($i = 0; $i < 10; $i++) {
+            // a folder holding nothing but other folders holds something: without the second clause the sweep
+            // deletes every intermediate level of a normal library and orphans everything below it
             $result = $this->connection->query(
-                'SELECT `id` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL);'
+                'SELECT `id` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL) AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL);'
             );
 
             $emptyIds = [];

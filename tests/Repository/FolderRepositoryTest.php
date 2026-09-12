@@ -39,6 +39,74 @@ class FolderRepositoryTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private FolderRepository $subject;
 
+    /**
+     * The sweep calls a folder empty when nothing in the map points at it, and the map is told about a folder
+     * only on a rebuild: an artist directory holding nothing but its albums was deleted, orphaning every one
+     */
+    public function testAFolderHoldingOnlyFoldersIsNotTreatedAsEmpty(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
+                $result       = $this->createMock(PDOStatement::class);
+                $result->method('fetch')->willReturn(false);
+
+                return $result;
+            });
+
+        $this->subject->collectGarbage();
+
+        $prune = array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'SELECT `id` FROM `folder` WHERE `user` IS NULL'));
+
+        self::assertCount(1, $prune);
+        self::assertStringContainsString(
+            'AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL)',
+            (string) current($prune)
+        );
+    }
+
+    /**
+     * A file browser lists its folders first and everything in name order, which the listing never asked for
+     */
+    public function testASubFolderListingIsOrderedFoldersFirst(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('ORDER BY `sort_group`, `name`'))
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getObjects(7, 5);
+    }
+
+    /**
+     * `folder_map` only learns about a folder when the whole map is rebuilt, so a listing that read it alone
+     * showed nothing of anything scanned since: the sub-folders are read from `folder` itself, as the root is
+     */
+    public function testASubFolderListingReadsTheFolderTable(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::logicalAnd(
+                    self::stringContains('FROM `folder` WHERE `parent` = ?'),
+                    self::stringContains("`object_type` != 'folder'")
+                )
+            )
+            ->willReturn($result);
+
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getObjects(7, 5);
+    }
+
     public function testCollectGarbageRunsCleanupQueries(): void
     {
         $this->connection->expects(static::atLeast(7))
