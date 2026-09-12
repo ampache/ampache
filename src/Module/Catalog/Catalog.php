@@ -754,15 +754,28 @@ abstract class Catalog extends database_object
             $licenseId = $license?->getId();
             // only lookup string licenses from tags
             if ($licenseId === null) {
-                $licenseName = (string) $results['license'];
-                $licenseId   = $licenseRepository->find($licenseName);
+                $licenseValue = trim((string) $results['license']);
+                $licenseId    = $licenseRepository->find($licenseValue);
 
                 if (
                     $licenseId === 0
                     || $licenseId === null
                 ) {
-                    $license = $licenseRepository->prototype()
-                        ->setName($licenseName);
+                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a licence
+                    // of its own. The file that raised ampache#4497 carried a rights registry link in its LICENSE
+                    // field, which is not a licence at all, and nothing here can tell the two apart.
+                    $license = $licenseRepository->prototype();
+
+                    // the field is allowed to carry a url instead of a name, and external_link is where a url
+                    // belongs: stored as the name it overflows the column, and `find()` never matches it again
+                    if (filter_var($licenseValue, FILTER_VALIDATE_URL)) {
+                        $host = parse_url($licenseValue, PHP_URL_HOST);
+
+                        $license->setExternalLink(self::_check_length($licenseValue, 256))
+                            ->setName(self::_check_length(is_string($host) ? $host : $licenseValue, 80));
+                    } else {
+                        $license->setName(self::_check_length($licenseValue, 80));
+                    }
 
                     $license->save();
 

@@ -111,7 +111,7 @@ class License extends BaseModel
      */
     public function setDescription(string $value): License
     {
-        $this->description = htmlspecialchars($value);
+        $this->description = $value;
 
         return $this;
     }
@@ -128,10 +128,13 @@ class License extends BaseModel
 
     /**
      * Set the name
+     *
+     * Stored as it was given: every reader escapes on the way out, and a name held escaped never matches the tag
+     * it came from, so a scan would create the same licence again on every pass.
      */
     public function setName(string $value): License
     {
-        $this->name = htmlspecialchars($value);
+        $this->name = $value;
 
         return $this;
     }
