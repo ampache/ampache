@@ -1429,6 +1429,9 @@ class Song extends database_object implements
     /**
      * fill_ext_info
      * This calls the _get_ext_info and then sets the correct vars
+     *
+     * `$data_filter` names a read, not a column: PARTIAL_FILTER and WAVEFORM_FILTER each reach a narrower row,
+     * and anything else takes the whole one. A column name passed here would silently read the wrong row.
      */
     public function fill_ext_info(string $data_filter = ''): void
     {
@@ -1441,7 +1444,7 @@ class Song extends database_object implements
             if ($this->waveform !== null) {
                 return;
             }
-        } elseif ($this->song_data_loaded || ($data_filter !== '' && $this->partial_data_loaded)) {
+        } elseif ($this->song_data_loaded || ($data_filter === self::PARTIAL_FILTER && $this->partial_data_loaded)) {
             return;
         }
 
@@ -1459,10 +1462,10 @@ class Song extends database_object implements
         }
 
         // don't repeat this process if you've got it all
-        if ($data_filter === '') {
-            $this->song_data_loaded = true;
-        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+        if ($data_filter === self::PARTIAL_FILTER) {
             $this->partial_data_loaded = true;
+        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+            $this->song_data_loaded = true;
         }
     }
 
@@ -1859,7 +1862,7 @@ class Song extends database_object implements
     public function get_lyrics(bool $db_only = false): array
     {
         if ($this->lyrics === null) {
-            $this->fill_ext_info('lyrics');
+            $this->fill_ext_info();
         }
 
         if ($this->lyrics) {
@@ -2563,7 +2566,7 @@ class Song extends database_object implements
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        if ($select !== '') {
+        if ($select === self::PARTIAL_FILTER) {
             return $repository->getPartialDataRow($this->id);
         }
 

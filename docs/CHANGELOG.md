@@ -8,6 +8,7 @@
 
 ### Fixed (8.1.1)
 
+* Fix missing songs lyrics
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
 
