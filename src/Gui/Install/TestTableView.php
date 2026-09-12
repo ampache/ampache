@@ -30,6 +30,7 @@ use Ampache\Gui\View\AbstractView;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
 use Override;
+use PDOStatement;
 
 /**
  * The environment checklist shared by the installer and the standalone test page.
@@ -50,6 +51,18 @@ final class TestTableView extends AbstractView
     public function checkDatabase(): bool
     {
         return $this->environment->check_php_pdo() && Dba::check_database();
+    }
+
+    /**
+     * Reads the server default rather than this connection, which Ampache has already forced back to autocommit
+     */
+    public function checkDatabaseAutocommit(): bool
+    {
+        // an unreadable server default is not worth a warning of its own: the connection rows above cover that
+        $result = Dba::read('SELECT @@global.autocommit AS `autocommit`', [], true);
+        $row    = ($result instanceof PDOStatement) ? Dba::fetch_assoc($result) : [];
+
+        return (int) ($row['autocommit'] ?? 1) === 1;
     }
 
     public function checkDatabaseInserted(): bool

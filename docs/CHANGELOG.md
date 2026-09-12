@@ -8,6 +8,8 @@
 
 ### Fixed (8.1.1)
 
+* A DB server without autocommit could have issue. Fix the issue, added check and docs
+* `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
 
