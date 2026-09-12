@@ -9,6 +9,7 @@
 ### Fixed (8.1.1)
 
 * A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
+* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it try to work on `user_preference` assuming columns a later migration adds. Now it wait for the schema to be complete
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
 * A download with nothing to send died on the way out rather than saying so; `ZipArchive::close()` reports success on an archive nothing was added to but writes no file, and an album whose songs are all disabled produces exactly that
