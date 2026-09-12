@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
@@ -545,8 +546,9 @@ final class Stats
 
         // the newest lists reach the home page and the feeds without going through a browse, so the
         // withdrawn items have to be dropped here as well
-        if (in_array($base_type, ['album', 'artist', 'song'], true) && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user?->getId())) {
-            $where[] = sprintf('`%s`.`enabled` = 1', $base_type);
+        $withdrawn = WithdrawnFilter::conditionFor($base_type, null, $user?->getId());
+        if ($withdrawn !== '') {
+            $where[] = $withdrawn;
         }
 
         //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
@@ -745,6 +747,16 @@ final class Stats
             $body .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
         }
 
+        // the recent widgets and the api hand these ids to a renderer as they are, so nothing filters them later
+        $withdrawn = WithdrawnFilter::conditionFor(
+            ($input_type === 'album_disk') ? 'album' : $type,
+            '`object_count`.`object_id`',
+            ($filter_user instanceof User) ? $filter_user->getId() : null
+        );
+        if ($withdrawn !== '') {
+            $body .= ' AND ' . $withdrawn;
+        }
+
         // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
         $catalog_sql = Catalog::get_catalog_id_filter($input_type, $id_column, $catalog_id);
         if ($catalog_sql !== '') {
@@ -829,6 +841,23 @@ final class Stats
             $sql .= ($allowed === [])
                 ? "AND 1 = 0 "
                 : "AND `object_count`.`user` IN (" . implode(', ', $allowed) . ") ";
+        }
+
+        // the type varies row by row here, so each flag is asked for only of the rows that carry that type
+        $viewer = Core::get_global('user');
+        foreach (['album', 'album_disk', 'artist', 'song'] as $withdrawnType) {
+            if (!str_contains($object_string, sprintf("'%s'", $withdrawnType))) {
+                continue;
+            }
+
+            $withdrawn = WithdrawnFilter::conditionFor(
+                $withdrawnType,
+                '`object_count`.`object_id`',
+                ($viewer instanceof User) ? $viewer->getId() : null
+            );
+            if ($withdrawn !== '') {
+                $sql .= sprintf("AND (`object_count`.`object_type` <> '%s' OR %s) ", $withdrawnType, $withdrawn);
+            }
         }
 
         $sql .= "ORDER BY `date` DESC LIMIT " . $limit;
@@ -987,7 +1016,13 @@ final class Stats
             && !$addAdditionalColumns
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
         ) {
-            $sql   = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
+            $sql       = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
+            $withdrawn = WithdrawnFilter::conditionFor($type, '`cache_object_count`.`object_id`', $filter_user?->getId());
+            if ($withdrawn !== '') {
+                $sql .= ' AND ' . $withdrawn;
+            }
+
+            $sql .= " GROUP BY `object_id`, `object_type`";
             $group = '`object_id`';
         } else {
             $is_podcast = ($type === 'podcast');
@@ -1028,6 +1063,16 @@ final class Stats
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' AND `object_count`.`user` = " . $user->getId();
             } else {
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' ";
+            }
+
+            // `$type` is rewritten above, and the cache written here is read by everybody afterwards
+            if (!$addAdditionalColumns) {
+                $withdrawn = ($input_type === 'album_disk')
+                    ? WithdrawnFilter::conditionFor('album', '`album_disk`.`album_id`', $filter_user?->getId())
+                    : WithdrawnFilter::conditionFor($type, '`object_count`.`object_id`', $filter_user?->getId());
+                if ($withdrawn !== '') {
+                    $sql .= ' AND ' . $withdrawn;
+                }
             }
 
             if ($by_user && $filter_user?->id > 0) {
@@ -1406,6 +1451,16 @@ final class Stats
         $catalog_sql = Catalog::get_catalog_id_filter($input_type, $idColumn, $catalog_id);
         if ($catalog_sql !== '') {
             $where[] = $catalog_sql;
+        }
+
+        // the widget hands these ids straight to a browse renderer, which never filters them again
+        $withdrawn = WithdrawnFilter::conditionFor(
+            ($input_type === 'album_disk') ? 'album' : $type,
+            ($input_type === 'album_disk') ? '`album_disk`.`album_id`' : null,
+            ($filter_user instanceof User) ? $filter_user->getId() : null
+        );
+        if ($withdrawn !== '') {
+            $where[] = $withdrawn;
         }
 
         return sprintf(

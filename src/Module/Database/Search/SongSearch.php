@@ -26,9 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
 
 final class SongSearch implements SearchInterface
@@ -819,12 +816,7 @@ final class SongSearch implements SearchInterface
             }
         }
 
-        // a withdrawn item is out of a smartlist too, and unlike the catalog test it is never optional
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
-            $where_sql = ($where_sql !== '' && $where_sql !== '0')
-                ? "(" . $where_sql . ") AND `song`.`enabled` = 1"
-                : "`song`.`enabled` = 1";
-        }
+        $where_sql = WithdrawnFilter::apply($where_sql, 'song', $search_user_id);
 
         if ($join['catalog_map']) {
             if ($where_sql !== '' && $where_sql !== '0') {

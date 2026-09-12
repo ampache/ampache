@@ -2326,6 +2326,15 @@ a.option-list:hover {
     color: #c33;
 }
 
+/* a withdrawn item stays listed for whoever may see it, so its row has to read as different at a glance */
+table.tabledata tbody tr.withdrawn > td {
+    background-color: rgb(204 51 51 / 14%);
+}
+
+table.tabledata tbody tr.withdrawn > td:first-child {
+    box-shadow: inset 3px 0 0 #c33;
+}
+
 /* the same state, named again where the kind is read, for anyone who lands mid-page */
 .object-header-badge {
     display: inline-block;

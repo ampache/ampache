@@ -49,10 +49,13 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 class Artist extends database_object implements
     library_item,
     VisibleItemInterface,
+    WithdrawableInterface,
     displayable_item,
     container_item,
     CatalogItemInterface
 {
+    use WithdrawableTrait;
+
     protected const string DB_TABLENAME = 'artist';
 
     private static array $_mapcache = [];
@@ -951,20 +954,9 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
     public function isNew(): bool
     {
         return $this->getId() === 0;
-    }
-
-    public function isVisible(?User $user = null): bool
-    {
-        return $this->enabled
-            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
     }
 
     /**

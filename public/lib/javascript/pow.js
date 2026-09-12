@@ -340,8 +340,8 @@
      * The form targets a hidden iframe, so this document stays loaded: a zip is written in full
      * before its headers are sent, and unloading here would cancel the request. A download never
      * fires `load` on the frame, so a `load` means the endpoint answered with a page instead --
-     * an error, or a fresh challenge -- and the visitor should be looking at it rather than at a
-     * frame they cannot see.
+     * an error, or a fresh challenge -- and the answer that went with it is spent either way, so
+     * there is nothing left to replay and the visitor is told rather than sent round again.
      *
      * Returning waits for the acknowledgement cookie, which arrives with the download headers and at
      * no earlier moment. Before those headers the request is still a navigation the frame owns, and
@@ -373,16 +373,6 @@
             }
         }
 
-        /** The endpoint answered with a page rather than a file, so show it instead of going back. */
-        function showResponse(url) {
-            if (leaving || !url) {
-                return;
-            }
-
-            stop();
-            window.location.replace(url);
-        }
-
         function goBack() {
             if (leaving) {
                 return;
@@ -411,17 +401,14 @@
 
         if (sink) {
             sink.onload = function () {
-                // Same origin, so the frame's own address is readable and there is nothing to
-                // rebuild; the form action is only there in case a browser withholds it.
-                var shown = form.action;
-
-                try {
-                    shown = sink.contentWindow.location.href || shown;
-                } catch (error) {
-                    shown = form.action;
+                if (leaving) {
+                    return;
                 }
 
-                showResponse(shown);
+                // The answer is spent once it is submitted, so replaying this url would only earn a fresh
+                // challenge to solve, and the next one after that: say so and stop rather than loop.
+                stop();
+                say(text('Failed', 'The download did not start. Please try again.'));
             };
         }
 

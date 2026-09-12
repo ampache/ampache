@@ -44,7 +44,7 @@ class Dba
     /** @var array<string, int> $stats  */
     public static array $stats = ['query' => 0];
 
-    private static string $_error;
+    private static string $_error = '';
     private static string $_sql;
 
     /**

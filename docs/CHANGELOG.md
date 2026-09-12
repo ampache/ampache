@@ -8,8 +8,21 @@
 
 ### Fixed (8.1.1)
 
+* A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
+* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it try to work on `user_preference` assuming columns a later migration adds. Now it wait for the schema to be complete
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
+* A download with nothing to send died on the way out rather than saying so; `ZipArchive::close()` reports success on an archive nothing was added to but writes no file, and an album whose songs are all disabled produces exactly that
+* The proof of work interstitial solved a fresh puzzle on every error the protected endpoint returned, without end, because it replayed a url whose answer had already been spent
+* A share link on a private playlist refused every visitor: the check read `VisibleItemInterface`, which also answers for a list being private, so it turned away the account-less visitor the link exists for
+* A withdrawn album stayed listed on the page of its artist for everybody, and in the api and upnp listings of the same thing; both build their own sql and never reach `Query::_get_filter_sql()`
+* The `Enabled` search rule was offered on album disks and filtered nothing, so a smart list asking for withdrawn releases returned the whole catalogue
+* A disk row gave no sign the release behind it had been withdrawn, unlike an album or artist row, and it is the template the artist page uses when albums are not grouped
+* An artist's "all songs" page hid the withdrawn tracks from a manager as well, giving them a shorter list than the album pages of that same artist
+* Drawn artwork never appeared on an install with `custom_blankalbum` set: the placeholder went straight into the `src` and the request never reached `image.php`
+* The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
+* The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
+* A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row
 
 ## Ampache 8.1.0
 

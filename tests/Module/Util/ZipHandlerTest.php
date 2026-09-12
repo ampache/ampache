@@ -26,8 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use Nyholm\Psr7\Response;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -66,6 +68,36 @@ class ZipHandlerTest extends MockeryTestCase
         self::assertTrue(
             $this->subject->isZipable($type)
         );
+    }
+
+    public function testZipAnswersNotFoundWhenNothingCouldBeAdded(): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME)
+            ->andReturn('folder.jpg');
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ART_ZIP_ADD)
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::FILE_ZIP_COMMENT)
+            ->andReturn('');
+        $this->logger->shouldReceive('debug')->zeroOrMoreTimes();
+        $this->logger->shouldReceive('warning')->once();
+
+        // the tell that the crash is gone: no stream is opened on an archive that was never written
+        $this->streamFactory->expects(self::never())
+            ->method('createStreamFromFile');
+
+        // zip() drops the output buffer a page request leaves open, so the test has to provide one of its own
+        ob_start();
+        $response = $this->subject->zip(
+            new Response(),
+            'Nothing To Send',
+            ['total_size' => 0, 'files' => []],
+            false
+        );
+
+        self::assertSame(404, $response->getStatusCode());
     }
 
     #[Override]

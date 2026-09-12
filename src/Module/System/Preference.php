@@ -1412,6 +1412,13 @@ class Preference extends database_object
         $repository       = self::getPreferenceRepository();
         $filterRepository = self::getCatalogFilterRepository();
 
+        // every repair below assumes the final schema, `user_preference`.`name` first of all, which a migration
+        // adds late. On a database still mid-upgrade that column is not there yet and there is nothing to repair,
+        // so leave it: the migrations finish and a later rebuild runs against the complete schema
+        if (!$repository->hasUserPreferenceName()) {
+            return;
+        }
+
         // These repair the install rather than one listener, and each reads the whole table: running them
         // once per user turned a rebuild on a large database into hours of the same three statements.
 
