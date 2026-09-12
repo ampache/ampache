@@ -2,6 +2,11 @@
 
 ## Ampache 8.1.1
 
+### Added (8.1.1)
+
+* Database 810012
+  * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
+
 ### Changed (8.1.1)
 
 * Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
