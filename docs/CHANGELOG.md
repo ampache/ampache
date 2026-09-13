@@ -8,6 +8,7 @@
 
 ### Fixed (8.1.1)
 
+* Connections run at READ COMMITTED, so MariaDB's `innodb_snapshot_isolation` no longer aborts a cron write with error 1020
 * A DB server without autocommit could have issue. Fix the issue, added check and docs
 * `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
