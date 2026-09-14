@@ -103,6 +103,7 @@ interface AlbumRepositoryInterface
      */
     public function getAlbumByArtist(
         int $artistId,
+        bool $enabledOnly = true,
     ): array;
 
     /**

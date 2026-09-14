@@ -907,8 +907,8 @@ lastfm_api_secret = ""
 
 ; Wanted types
 ; Set the allowed types of wanted releases (album,compilation,single,ep,live,remix,promotion,official)
-; DEFAULT: album,official
-wanted_types = "album,official"
+; DEFAULT: album,single,ep,official
+wanted_types = "album,single,ep,official"
 
 ; Wanted Auto Accept
 ; Mark wanted requests as accepted by default (no content manager agreement required)

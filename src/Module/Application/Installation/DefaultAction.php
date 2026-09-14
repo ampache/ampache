@@ -73,8 +73,9 @@ final class DefaultAction implements ApplicationActionInterface
 
         define('INSTALL', 1);
 
-        $htaccess_play_file = __DIR__ . '/../../../../play/.htaccess';
-        $htaccess_rest_file = __DIR__ . '/../../../../rest/.htaccess';
+        $htaccess_play_file     = __DIR__ . '/../../../../play/.htaccess';
+        $htaccess_rest_file     = __DIR__ . '/../../../../rest/.htaccess';
+        $htaccess_jellyfin_file = __DIR__ . '/../../../../jellyfin/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in((string) ($_REQUEST['web_path'] ?? ''));
@@ -190,19 +191,29 @@ final class DefaultAction implements ApplicationActionInterface
                 Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
                 // Intentional break fall-through
             case 'show_create_config':
-                echo new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file)->render();
+                echo new InstallConfigView(
+                    $web_path,
+                    (string) $charset,
+                    (string) $htmllang,
+                    $this->installationHelper,
+                    $htaccess_play_file,
+                    $htaccess_rest_file,
+                    $htaccess_jellyfin_file
+                )->render();
                 break;
             case 'create_config':
                 // Intentional break fall-through
                 $all  = (isset($_POST['create_all']));
                 $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
-                    $write                  = (isset($_POST['write']));
-                    $download               = (isset($_POST['download']));
-                    $download_htaccess_rest = (isset($_POST['download_htaccess_rest']));
-                    $download_htaccess_play = (isset($_POST['download_htaccess_play']));
-                    $write_htaccess_rest    = (isset($_POST['write_htaccess_rest']));
-                    $write_htaccess_play    = (isset($_POST['write_htaccess_play']));
+                    $write                      = (isset($_POST['write']));
+                    $download                   = (isset($_POST['download']));
+                    $download_htaccess_rest     = (isset($_POST['download_htaccess_rest']));
+                    $download_htaccess_play     = (isset($_POST['download_htaccess_play']));
+                    $download_htaccess_jellyfin = (isset($_POST['download_htaccess_jellyfin']));
+                    $write_htaccess_rest        = (isset($_POST['write_htaccess_rest']));
+                    $write_htaccess_play        = (isset($_POST['write_htaccess_play']));
+                    $write_htaccess_jellyfin    = (isset($_POST['write_htaccess_jellyfin']));
 
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
@@ -216,6 +227,14 @@ final class DefaultAction implements ApplicationActionInterface
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
                         if ($download_htaccess_play && $created_config) {
+                            return null;
+                        }
+                    }
+
+                    if ($write_htaccess_jellyfin || $download_htaccess_jellyfin || $all) {
+                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_jellyfin_file, Core::get_post('web_path'), $download_htaccess_jellyfin);
+                        if ($download_htaccess_jellyfin && $created_config) {
+                            // the rules have already been sent as a file download; rendering the page would append it
                             return null;
                         }
                     }
@@ -240,7 +259,15 @@ final class DefaultAction implements ApplicationActionInterface
                     || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
-                    echo new InstallConfigView($web_path, (string) $charset, (string) $htmllang, $this->installationHelper, $htaccess_play_file, $htaccess_rest_file)->render();
+                    echo new InstallConfigView(
+                        $web_path,
+                        (string) $charset,
+                        (string) $htmllang,
+                        $this->installationHelper,
+                        $htaccess_play_file,
+                        $htaccess_rest_file,
+                        $htaccess_jellyfin_file
+                    )->render();
                     break;
                 }
 

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 // preferences/preference_box.phtml -- rendered by Ampache\Gui\Preferences\PreferenceBoxView
 
+use Ampache\Module\System\Preference;
+
 /** @var Ampache\Gui\Preferences\PreferenceBoxView $this */
 
 $showAdmin = $this->showAdminColumns();
@@ -55,7 +57,7 @@ foreach ($this->getPreferences() as $pref) {
     if ($pref['subcategory'] !== $lastSubcategory) {
         $lastSubcategory = $pref['subcategory'];
         if (!empty($lastSubcategory)) { ?>
-        <tr><td colspan="<?php echo $this->getColumnCount(); ?>"><h4><?php echo $this->e(T_(ucwords((string) $lastSubcategory))); ?></h4></td></tr>
+        <tr><td colspan="<?php echo $this->getColumnCount(); ?>"><h4><?php echo $this->e(T_(Preference::format_subcategory((string) $lastSubcategory))); ?></h4></td></tr>
         <?php }
         } ?>
         <tr>

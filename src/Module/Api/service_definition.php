@@ -25,8 +25,118 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Jellyfin\JellyfinApiApplication;
+use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticator;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticatorInterface;
+use Ampache\Module\Api\Jellyfin\JellyfinSessionMinter;
+use Ampache\Module\Api\Jellyfin\Method\Artist\ArtistsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\AuthenticateByNameMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\AuthenticateWithQuickConnectMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectAuthorizeMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectConnectMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectEnabledMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectInitiateMethod;
+use Ampache\Module\Api\Jellyfin\Method\Genre\MusicGenresMethod;
+use Ampache\Module\Api\Jellyfin\Method\Image\ImageMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\InstantMixMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemDeleteMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemRefreshMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Library\LibraryRefreshMethod;
+use Ampache\Module\Api\Jellyfin\Method\Library\VirtualFoldersMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playback\AudioStreamMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playback\PlaybackInfoMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\CreatePlaylistMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistItemMoveMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistItemsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\LogoutMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingPingMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingProgressMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingStoppedMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\SessionCapabilitiesMethod;
+use Ampache\Module\Api\Jellyfin\Method\Similar\SimilarMethod;
+use Ampache\Module\Api\Jellyfin\Method\Song\LyricsMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemInfoMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemInfoPublicMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemPingMethod;
+use Ampache\Module\Api\Jellyfin\Method\User\UserMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\FavoriteMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\PlayedMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\RatingMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserView\UserViewsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Web\WebRedirectMethod;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepository;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepositoryInterface;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
+use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
+use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandler as OpenSubsonicBookmarkHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface as OpenSubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\BrowsingHandler as OpenSubsonicBrowsingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\BrowsingHandlerInterface as OpenSubsonicBrowsingHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandler as OpenSubsonicChatHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface as OpenSubsonicChatHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandler as OpenSubsonicInternetRadioHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface as OpenSubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaybackStateHandler as OpenSubsonicPlaybackStateHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaybackStateHandlerInterface as OpenSubsonicPlaybackStateHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaylistHandler as OpenSubsonicPlaylistHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaylistHandlerInterface as OpenSubsonicPlaylistHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PodcastHandler as OpenSubsonicPodcastHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PodcastHandlerInterface as OpenSubsonicPodcastHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandler as OpenSubsonicRatingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandlerInterface as OpenSubsonicRatingHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\SearchHandler as OpenSubsonicSearchHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\SearchHandlerInterface as OpenSubsonicSearchHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandler as OpenSubsonicShareHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandlerInterface as OpenSubsonicShareHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\StreamingHandler as OpenSubsonicStreamingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\StreamingHandlerInterface as OpenSubsonicStreamingHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandler as OpenSubsonicSystemHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface as OpenSubsonicSystemHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\UserHandler as OpenSubsonicUserHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\UserHandlerInterface as OpenSubsonicUserHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\MusicFolderResolver as OpenSubsonicMusicFolderResolver;
+use Ampache\Module\Api\OpenSubsonic\MusicFolderResolverInterface as OpenSubsonicMusicFolderResolverInterface;
+use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandler;
+use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolver;
+use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolverInterface;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
+use Ampache\Module\Api\Subsonic\Handler\BookmarkHandler as SubsonicBookmarkHandler;
+use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface as SubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\BrowsingHandler as SubsonicBrowsingHandler;
+use Ampache\Module\Api\Subsonic\Handler\BrowsingHandlerInterface as SubsonicBrowsingHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\ChatHandler as SubsonicChatHandler;
+use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface as SubsonicChatHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandler as SubsonicInternetRadioHandler;
+use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface as SubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PlaybackStateHandler as SubsonicPlaybackStateHandler;
+use Ampache\Module\Api\Subsonic\Handler\PlaybackStateHandlerInterface as SubsonicPlaybackStateHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PlaylistHandler as SubsonicPlaylistHandler;
+use Ampache\Module\Api\Subsonic\Handler\PlaylistHandlerInterface as SubsonicPlaylistHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PodcastHandler as SubsonicPodcastHandler;
+use Ampache\Module\Api\Subsonic\Handler\PodcastHandlerInterface as SubsonicPodcastHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\RatingHandler as SubsonicRatingHandler;
+use Ampache\Module\Api\Subsonic\Handler\RatingHandlerInterface as SubsonicRatingHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\SearchHandler as SubsonicSearchHandler;
+use Ampache\Module\Api\Subsonic\Handler\SearchHandlerInterface as SubsonicSearchHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\ShareHandler as SubsonicShareHandler;
+use Ampache\Module\Api\Subsonic\Handler\ShareHandlerInterface as SubsonicShareHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\StreamingHandler as SubsonicStreamingHandler;
+use Ampache\Module\Api\Subsonic\Handler\StreamingHandlerInterface as SubsonicStreamingHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\SystemHandler as SubsonicSystemHandler;
+use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface as SubsonicSystemHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\UserHandler as SubsonicUserHandler;
+use Ampache\Module\Api\Subsonic\Handler\UserHandlerInterface as SubsonicUserHandlerInterface;
+use Ampache\Module\Api\Subsonic\MusicFolderResolver as SubsonicMusicFolderResolver;
+use Ampache\Module\Api\Subsonic\MusicFolderResolverInterface as SubsonicMusicFolderResolverInterface;
+use Ampache\Module\Api\Subsonic\SubsonicResponseHandler;
+use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 
 use function DI\autowire;
 
@@ -38,6 +148,37 @@ return [
     SubsonicApiApplication::class => autowire(),
     Subsonic_Api::class => autowire(),
     OpenSubsonic_Api::class => autowire(),
+    SubsonicResponseHandlerInterface::class => autowire(SubsonicResponseHandler::class),
+    OpenSubsonicResponseHandlerInterface::class => autowire(OpenSubsonicResponseHandler::class),
+    SubsonicChatHandlerInterface::class => autowire(SubsonicChatHandler::class),
+    OpenSubsonicChatHandlerInterface::class => autowire(OpenSubsonicChatHandler::class),
+    SubsonicBookmarkHandlerInterface::class => autowire(SubsonicBookmarkHandler::class),
+    OpenSubsonicBookmarkHandlerInterface::class => autowire(OpenSubsonicBookmarkHandler::class),
+    SubsonicInternetRadioHandlerInterface::class => autowire(SubsonicInternetRadioHandler::class),
+    OpenSubsonicInternetRadioHandlerInterface::class => autowire(OpenSubsonicInternetRadioHandler::class),
+    SonicAnalysisPluginResolverInterface::class => autowire(SonicAnalysisPluginResolver::class),
+    SubsonicSystemHandlerInterface::class => autowire(SubsonicSystemHandler::class),
+    OpenSubsonicSystemHandlerInterface::class => autowire(OpenSubsonicSystemHandler::class),
+    SubsonicShareHandlerInterface::class => autowire(SubsonicShareHandler::class),
+    OpenSubsonicShareHandlerInterface::class => autowire(OpenSubsonicShareHandler::class),
+    SubsonicMusicFolderResolverInterface::class => autowire(SubsonicMusicFolderResolver::class),
+    OpenSubsonicMusicFolderResolverInterface::class => autowire(OpenSubsonicMusicFolderResolver::class),
+    SubsonicRatingHandlerInterface::class => autowire(SubsonicRatingHandler::class),
+    OpenSubsonicRatingHandlerInterface::class => autowire(OpenSubsonicRatingHandler::class),
+    SubsonicUserHandlerInterface::class => autowire(SubsonicUserHandler::class),
+    OpenSubsonicUserHandlerInterface::class => autowire(OpenSubsonicUserHandler::class),
+    SubsonicPodcastHandlerInterface::class => autowire(SubsonicPodcastHandler::class),
+    OpenSubsonicPodcastHandlerInterface::class => autowire(OpenSubsonicPodcastHandler::class),
+    SubsonicPlaylistHandlerInterface::class => autowire(SubsonicPlaylistHandler::class),
+    OpenSubsonicPlaylistHandlerInterface::class => autowire(OpenSubsonicPlaylistHandler::class),
+    SubsonicSearchHandlerInterface::class => autowire(SubsonicSearchHandler::class),
+    OpenSubsonicSearchHandlerInterface::class => autowire(OpenSubsonicSearchHandler::class),
+    SubsonicStreamingHandlerInterface::class => autowire(SubsonicStreamingHandler::class),
+    OpenSubsonicStreamingHandlerInterface::class => autowire(OpenSubsonicStreamingHandler::class),
+    SubsonicPlaybackStateHandlerInterface::class => autowire(SubsonicPlaybackStateHandler::class),
+    OpenSubsonicPlaybackStateHandlerInterface::class => autowire(OpenSubsonicPlaybackStateHandler::class),
+    SubsonicBrowsingHandlerInterface::class => autowire(SubsonicBrowsingHandler::class),
+    OpenSubsonicBrowsingHandlerInterface::class => autowire(OpenSubsonicBrowsingHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),
@@ -45,6 +186,52 @@ return [
     OpenSubsonic_Fields::class => autowire(),
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
+    JellyfinApiApplication::class => autowire(),
+    JellyfinRequestAuthenticatorInterface::class => autowire(JellyfinRequestAuthenticator::class),
+    SystemPingMethod::class => autowire(),
+    SystemInfoPublicMethod::class => autowire(),
+    SystemInfoMethod::class => autowire(),
+    AuthenticateByNameMethod::class => autowire(),
+    JellyfinSessionMinter::class => autowire(),
+    QuickConnectEnabledMethod::class => autowire(),
+    QuickConnectInitiateMethod::class => autowire(),
+    QuickConnectConnectMethod::class => autowire(),
+    QuickConnectAuthorizeMethod::class => autowire(),
+    AuthenticateWithQuickConnectMethod::class => autowire(),
+    JellyfinQuickConnectRepositoryInterface::class => autowire(JellyfinQuickConnectRepository::class),
+    JellyfinQuickConnectService::class => autowire(),
+    QuickConnectResultMapper::class => autowire(),
+    UserViewsMethod::class => autowire(),
+    WebRedirectMethod::class => autowire(),
+    JellyfinItemMapper::class => autowire(),
+    ItemsMethod::class => autowire(),
+    ItemMethod::class => autowire(),
+    ItemDeleteMethod::class => autowire(),
+    ItemRefreshMethod::class => autowire(),
+    InstantMixMethod::class => autowire(),
+    ImageMethod::class => autowire(),
+    PlaybackInfoMethod::class => autowire(),
+    AudioStreamMethod::class => autowire(),
+    UserMethod::class => autowire(),
+    SessionCapabilitiesMethod::class => autowire(),
+    LogoutMethod::class => autowire(),
+    PlayingMethod::class => autowire(),
+    PlayingPingMethod::class => autowire(),
+    PlayingProgressMethod::class => autowire(),
+    PlayingStoppedMethod::class => autowire(),
+    MusicGenresMethod::class => autowire(),
+    FavoriteMethod::class => autowire(),
+    PlayedMethod::class => autowire(),
+    RatingMethod::class => autowire(),
+    CreatePlaylistMethod::class => autowire(),
+    PlaylistMethod::class => autowire(),
+    PlaylistItemsMethod::class => autowire(),
+    PlaylistItemMoveMethod::class => autowire(),
+    ArtistsMethod::class => autowire(),
+    VirtualFoldersMethod::class => autowire(),
+    LibraryRefreshMethod::class => autowire(),
+    LyricsMethod::class => autowire(),
+    SimilarMethod::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     Json5_Data::class => autowire(),
     Json6_Data::class => autowire(),

@@ -1,5 +1,56 @@
 # CHANGELOG
 
+## Ampache 8.1.1
+
+**Jellyfin API** Third-party Jellyfin clients can now browse and stream your library through a new, opt-in Jellyfin-compatible API.
+
+### Added (8.1.1)
+
+* Database 810012
+  * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
+* Database 810013
+  * New `jellyfin_backend_enable` preference
+* Database 810014
+  * New `jellyfin_quick_connect` table and `jellyfin_quickconnect_enable` preference, backing QuickConnect device pairing
+* Jellyfin
+  * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
+  * Off by default; enable with the new `jellyfin_backend_enable` preference
+  * Audio only — no video, podcasts or live TV — and direct-play streaming only, with no server-side transcoding
+  * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
+  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
+
+### Changed (8.1.1)
+
+* Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
+
+### Fixed (8.1.1)
+
+* Garbage collection deleted any folder holding nothing but other folders
+* Subsonic folder browsing missed sub-folders added since the last map rebuild, and folder was not returned listed
+* Connections run at READ COMMITTED, so MariaDB's `innodb_snapshot_isolation` no longer aborts a cron write with error 1020
+* A DB server without autocommit could have issue. Fix the issue, added check and docs
+* `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
+* A `LICENSE` tag was inserted raw, but Vorbis can have URL in license name
+* A licence's `external_link` reaches the admin license page as a raw `href`, so a tag carrying a `javascript:` url instead of an `http(s)` one could run script on click; only `http`/`https` render as a link now, and the link is escaped like everything else on that page
+* Fix folder in Subsonic API
+* Fix missing songs lyrics
+* A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
+* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it tried to work on `user_preference` assuming columns a later migration adds. Now it waits for the schema to be complete
+* The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
+* An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
+* A download with nothing to send died on the way out rather than saying so; `ZipArchive::close()` reports success on an archive nothing was added to but writes no file, and an album whose songs are all disabled produces exactly that
+* The proof of work interstitial solved a fresh puzzle on every error the protected endpoint returned, without end, because it replayed a url whose answer had already been spent
+* A share link on a private playlist refused every visitor: the check read `VisibleItemInterface`, which also answers for a list being private, so it turned away the account-less visitor the link exists for
+* A withdrawn album stayed listed on the page of its artist for everybody, and in the api and upnp listings of the same thing; both build their own sql and never reach `Query::_get_filter_sql()`
+* The `Enabled` search rule was offered on album disks and filtered nothing, so a smart list asking for withdrawn releases returned the whole catalogue
+* A disk row gave no sign the release behind it had been withdrawn, unlike an album or artist row, and it is the template the artist page uses when albums are not grouped
+* An artist's "all songs" page hid the withdrawn tracks from a manager as well, giving them a shorter list than the album pages of that same artist
+* Drawn artwork never appeared on an install with `custom_blankalbum` set: the placeholder went straight into the `src` and the request never reached `image.php`
+* An RSS item showed the placeholder image for a song or episode whose art lived on its album or podcast rather than on itself: `has_art()` answers for the parent, but the feed then asked `Art::url()` for the media's own id
+* The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
+* The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
+* A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row
+
 ## Ampache 8.1.0
 
 **Subsonic Users** The Subsonic API now fully implements folder browsing.

@@ -28,6 +28,7 @@ log/
 logs/
 nbproject/
 node_modules/
+jellyfin/.htaccess
 play/.htaccess
 rest/.htaccess
 client
