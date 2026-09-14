@@ -32,6 +32,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
@@ -224,6 +225,7 @@ class Subsonic_Api
     private SongRepositoryInterface $songRepository;
     private Subsonic_Json_Data $subsonicJsonData;
     private Subsonic_Xml_Data $subsonicXmlData;
+    private SystemHandlerInterface $systemHandler;
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
@@ -245,6 +247,7 @@ class Subsonic_Api
         SubsonicResponseHandlerInterface $responseHandler,
         Subsonic_Json_Data $subsonicJsonData,
         Subsonic_Xml_Data $subsonicXmlData,
+        SystemHandlerInterface $systemHandler,
         UserRepositoryInterface $userRepository,
     ) {
         $this->albumRepository          = $albumRepository;
@@ -265,6 +268,7 @@ class Subsonic_Api
         $this->responseHandler          = $responseHandler;
         $this->subsonicJsonData         = $subsonicJsonData;
         $this->subsonicXmlData          = $subsonicXmlData;
+        $this->systemHandler            = $systemHandler;
         $this->userRepository           = $userRepository;
     }
 
@@ -1699,25 +1703,11 @@ class Subsonic_Api
     }
 
     /**
-     * getLicense
-     *
-     * Get details about the software license.
-     * https://www.subsonic.org/pages/api.jsp#getlicense
      * @param array<string, mixed> $input
      */
     public function getlicense(array $input, User $user): void
     {
-        unset($user);
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addLicense($response);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addLicense($response);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->getlicense($input, $user);
     }
 
     /**
@@ -1901,14 +1891,11 @@ class Subsonic_Api
     }
 
     /**
-     * getOpenSubsonicExtensions [OS] REMOVED
      * @param array<string, mixed> $input
      */
     public function getopensubsonicextensions(array $input, User $user): void
     {
-        unset($user);
-
-        $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+        $this->systemHandler->getopensubsonicextensions($input, $user);
     }
 
     /**
@@ -2171,23 +2158,11 @@ class Subsonic_Api
     }
 
     /**
-     * getScanStatus
-     *
-     * Returns the current status for media library scanning.
-     * https://www.subsonic.org/pages/api.jsp#getscanstatus
      * @param array<string, mixed> $input
      */
     public function getscanstatus(array $input, User $user): void
     {
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addScanStatus($response, $user);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addScanStatus($response, $user);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->getscanstatus($input, $user);
     }
 
     /**
@@ -2778,17 +2753,11 @@ class Subsonic_Api
     }
 
     /**
-     * ping
-     *
-     * Used to test connectivity with the server.
-     * https://www.subsonic.org/pages/api.jsp#ping
      * @param array<string, mixed> $input
      */
     public function ping(array $input, User $user): void
     {
-        unset($user);
-
-        $this->responseHandler->responseOutput($input, __FUNCTION__);
+        $this->systemHandler->ping($input, $user);
     }
 
     /**
@@ -3151,23 +3120,11 @@ class Subsonic_Api
     }
 
     /**
-     * startScan
-     *
-     * Initiates a rescan of the media libraries.
-     * https://www.subsonic.org/pages/api.jsp#startscan
      * @param array<string, mixed> $input
      */
     public function startscan(array $input, User $user): void
     {
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addScanStatus($response, $user);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addScanStatus($response, $user);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->startscan($input, $user);
     }
 
     /**
@@ -3220,17 +3177,11 @@ class Subsonic_Api
     }
 
     /**
-     * tokenInfo [OS] REMOVED
-     *
-     * Returns information about an API key.
-     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      */
     public function tokeninfo(array $input, User $user): void
     {
-        unset($user);
-
-        $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+        $this->systemHandler->tokeninfo($input, $user);
     }
 
     /**

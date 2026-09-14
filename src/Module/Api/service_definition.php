@@ -79,8 +79,12 @@ use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandler as OpenSubsonicChatHandl
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface as OpenSubsonicChatHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandler as OpenSubsonicInternetRadioHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface as OpenSubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandler as OpenSubsonicSystemHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface as OpenSubsonicSystemHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandler;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolver;
+use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolverInterface;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Module\Api\Subsonic\Handler\BookmarkHandler as SubsonicBookmarkHandler;
@@ -89,6 +93,8 @@ use Ampache\Module\Api\Subsonic\Handler\ChatHandler as SubsonicChatHandler;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface as SubsonicChatHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandler as SubsonicInternetRadioHandler;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface as SubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\SystemHandler as SubsonicSystemHandler;
+use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface as SubsonicSystemHandlerInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandler;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 
@@ -110,6 +116,9 @@ return [
     OpenSubsonicBookmarkHandlerInterface::class => autowire(OpenSubsonicBookmarkHandler::class),
     SubsonicInternetRadioHandlerInterface::class => autowire(SubsonicInternetRadioHandler::class),
     OpenSubsonicInternetRadioHandlerInterface::class => autowire(OpenSubsonicInternetRadioHandler::class),
+    SonicAnalysisPluginResolverInterface::class => autowire(SonicAnalysisPluginResolver::class),
+    SubsonicSystemHandlerInterface::class => autowire(SubsonicSystemHandler::class),
+    OpenSubsonicSystemHandlerInterface::class => autowire(OpenSubsonicSystemHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),

@@ -32,7 +32,9 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolverInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -56,13 +58,10 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Plugin\Plugin;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Plugin\PluginSonicAnalysisInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
@@ -234,6 +233,8 @@ class OpenSubsonic_Api
     private ShareCreatorInterface $shareCreator;
     private ShareRepositoryInterface $shareRepository;
     private SongRepositoryInterface $songRepository;
+    private SonicAnalysisPluginResolverInterface $sonicAnalysisPluginResolver;
+    private SystemHandlerInterface $systemHandler;
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
@@ -255,27 +256,31 @@ class OpenSubsonic_Api
         ShareCreatorInterface $shareCreator,
         ShareRepositoryInterface $shareRepository,
         SongRepositoryInterface $songRepository,
+        SonicAnalysisPluginResolverInterface $sonicAnalysisPluginResolver,
+        SystemHandlerInterface $systemHandler,
         UserRepositoryInterface $userRepository,
     ) {
-        $this->albumRepository          = $albumRepository;
-        $this->artistRepository         = $artistRepository;
-        $this->bookmarkHandler          = $bookmarkHandler;
-        $this->chatHandler              = $chatHandler;
-        $this->folderRepository         = $folderRepository;
-        $this->internetRadioHandler     = $internetRadioHandler;
-        $this->passwordGenerator        = $passwordGenerator;
-        $this->podcastCreator           = $podcastCreator;
-        $this->podcastDeleter           = $podcastDeleter;
-        $this->podcastRepository        = $podcastRepository;
-        $this->podcastSyncer            = $podcastSyncer;
-        $this->random                   = $random;
-        $this->responseHandler          = $responseHandler;
-        $this->openSubsonicJsonData     = $openSubsonicJsonData;
-        $this->openSubsonicXmlData      = $openSubsonicXmlData;
-        $this->shareCreator             = $shareCreator;
-        $this->shareRepository          = $shareRepository;
-        $this->songRepository           = $songRepository;
-        $this->userRepository           = $userRepository;
+        $this->albumRepository             = $albumRepository;
+        $this->artistRepository            = $artistRepository;
+        $this->bookmarkHandler             = $bookmarkHandler;
+        $this->chatHandler                 = $chatHandler;
+        $this->folderRepository            = $folderRepository;
+        $this->internetRadioHandler        = $internetRadioHandler;
+        $this->passwordGenerator           = $passwordGenerator;
+        $this->podcastCreator              = $podcastCreator;
+        $this->podcastDeleter              = $podcastDeleter;
+        $this->podcastRepository           = $podcastRepository;
+        $this->podcastSyncer               = $podcastSyncer;
+        $this->random                      = $random;
+        $this->responseHandler             = $responseHandler;
+        $this->openSubsonicJsonData        = $openSubsonicJsonData;
+        $this->openSubsonicXmlData         = $openSubsonicXmlData;
+        $this->shareCreator                = $shareCreator;
+        $this->shareRepository             = $shareRepository;
+        $this->songRepository              = $songRepository;
+        $this->sonicAnalysisPluginResolver = $sonicAnalysisPluginResolver;
+        $this->systemHandler               = $systemHandler;
+        $this->userRepository              = $userRepository;
     }
 
     public static function getAlbumSubId(int $ampache_id): string
@@ -1147,7 +1152,7 @@ class OpenSubsonic_Api
      */
     public function findSonicPath(array $input, User $user): void
     {
-        $plugin = $this->_getSonicAnalysisPlugin($user);
+        $plugin = $this->sonicAnalysisPluginResolver->resolve($user);
         if ($plugin === null) {
             $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
@@ -1764,25 +1769,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getLicense
-     *
-     * Get details about the software license.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
      * @param array<string, mixed> $input
      */
     public function getlicense(array $input, User $user): void
     {
-        unset($user);
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addLicense($response);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addLicense($response);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->getlicense($input, $user);
     }
 
     /**
@@ -1993,44 +1984,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getOpenSubsonicExtensions
-     *
-     * List the OpenSubsonic extensions supported by this server.
-     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
      * @param array<string, mixed> $input
      */
     public function getopensubsonicextensions(array $input, User $user): void
     {
-        // Clients match these names literally, so they stay exactly as the spec writes them. `template` is a doc
-        // placeholder rather than a capability, so it is deliberately absent.
-        $extensions = [
-            'apiKeyAuthentication' => [1],
-            'getPodcastEpisode' => [1],
-            'indexBasedQueue' => [1],
-            'formPost' => [1],
-            'playbackReport' => [1],
-            'songLyrics' => [1],
-            'topSongsByArtistId' => [1],
-            'transcodeOffset' => [1],
-            'transcoding' => [1],
-        ];
-
-        // sonicSimilarity needs an audio-analysis backend, so it is only claimed while a plugin can actually answer.
-        if ($this->_getSonicAnalysisPlugin($user) instanceof PluginSonicAnalysisInterface) {
-            $extensions['sonicSimilarity'] = [1];
-        }
-
-        ksort($extensions);
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addOpenSubsonicExtensions($response, $extensions);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addOpenSubsonicExtensions($response, $extensions);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->getopensubsonicextensions($input, $user);
     }
 
     /**
@@ -2331,23 +2289,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getScanStatus
-     *
-     * Returns the current status for media library scanning.
-     * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
      * @param array<string, mixed> $input
      */
     public function getscanstatus(array $input, User $user): void
     {
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->getscanstatus($input, $user);
     }
 
     /**
@@ -2551,7 +2497,7 @@ class OpenSubsonic_Api
      */
     public function getSonicSimilarTracks(array $input, User $user): void
     {
-        $plugin = $this->_getSonicAnalysisPlugin($user);
+        $plugin = $this->sonicAnalysisPluginResolver->resolve($user);
         if ($plugin === null) {
             $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
@@ -3085,17 +3031,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * ping
-     *
-     * Used to test connectivity with the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/ping/
      * @param array<string, mixed> $input
      */
     public function ping(array $input, User $user): void
     {
-        unset($user);
-
-        $this->responseHandler->responseOutput($input, __FUNCTION__);
+        $this->systemHandler->ping($input, $user);
     }
 
     /**
@@ -3606,23 +3546,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * startScan
-     *
-     * Initiates a rescan of the media libraries.
-     * https://opensubsonic.netlify.app/docs/endpoints/startscan/
      * @param array<string, mixed> $input
      */
     public function startscan(array $input, User $user): void
     {
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->startscan($input, $user);
     }
 
     /**
@@ -3673,23 +3601,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * tokenInfo [OS]
-     *
-     * Returns information about an API key.
-     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      */
     public function tokeninfo(array $input, User $user): void
     {
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addTokenInfo($response, $user);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addTokenInfo($response, $user);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->systemHandler->tokeninfo($input, $user);
     }
 
     /**
@@ -4039,28 +3955,6 @@ class OpenSubsonic_Api
         }
 
         return $ampidarrays;
-    }
-
-    /**
-     * _getSonicAnalysisPlugin
-     *
-     * The first installed and enabled sonic-analysis plugin for this user, or null when none is available. Sonic
-     * similarity comes from analysing the audio, which Ampache cannot do itself, so with no plugin the endpoints
-     * report the feature as unsupported rather than answering with metadata similarity instead.
-     */
-    private function _getSonicAnalysisPlugin(User $user): ?PluginSonicAnalysisInterface
-    {
-        foreach (Plugin::get_plugins(PluginTypeEnum::SONIC_ANALYSER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if (
-                $plugin->_plugin instanceof PluginSonicAnalysisInterface
-                && $plugin->load($user)
-            ) {
-                return $plugin->_plugin;
-            }
-        }
-
-        return null;
     }
 
     /**
