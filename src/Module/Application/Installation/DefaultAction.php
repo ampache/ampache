@@ -75,7 +75,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         $htaccess_play_file     = __DIR__ . '/../../../../public/client/play/.htaccess';
         $htaccess_rest_file     = __DIR__ . '/../../../../public/rest/.htaccess';
-        $htaccess_jellyfin_file = __DIR__ . '/../../../../public/jellyfin/.htaccess';
+        $htaccess_jellyfin_file = __DIR__ . '/../../../../public/client/jellyfin/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in((string) ($_REQUEST['web_path'] ?? ''));

@@ -442,8 +442,8 @@ function check_htaccess_play_writable(): bool
  */
 function check_htaccess_jellyfin_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/')));
+    return ((file_exists(__DIR__ . '/../../public/client/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/client/jellyfin/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/client/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/client/jellyfin/')));
 }
 
 /**

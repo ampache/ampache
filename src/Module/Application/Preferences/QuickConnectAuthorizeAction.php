@@ -79,7 +79,7 @@ final readonly class QuickConnectAuthorizeAction implements ApplicationActionInt
                 ? [T_('No Problem'), T_('Device approved')]
                 : [T_('There Was a Problem'), T_('That code is invalid, expired, or already used')];
 
-            $next_url = sprintf('%s/preferences.php?tab=quickconnect', $this->configContainer->getWebPath());
+            $next_url = sprintf('%s/preferences.php?tab=quickconnect', $this->configContainer->getWebPath('/client'));
             $this->ui->showConfirmation($title, $text, $next_url);
 
             return null;

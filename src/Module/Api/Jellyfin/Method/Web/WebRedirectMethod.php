@@ -45,6 +45,6 @@ final class WebRedirectMethod implements JellyfinMethodInterface
 
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
-        return JellyfinResponse::redirect($this->configContainer->getWebPath() . '/preferences.php?tab=quickconnect');
+        return JellyfinResponse::redirect($this->configContainer->getWebPath('/client') . '/preferences.php?tab=quickconnect');
     }
 }

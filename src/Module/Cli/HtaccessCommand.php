@@ -63,7 +63,7 @@ final class HtaccessCommand extends Command
 
         $htaccess_play_file     = __DIR__ . '/../../../public/client/play/.htaccess';
         $htaccess_rest_file     = __DIR__ . '/../../../public/rest/.htaccess';
-        $htaccess_jellyfin_file = __DIR__ . '/../../../public/jellyfin/.htaccess';
+        $htaccess_jellyfin_file = __DIR__ . '/../../../public/client/jellyfin/.htaccess';
         $htaccess_public_file   = __DIR__ . '/../../../public/client/.htaccess';
 
         // check permissions
