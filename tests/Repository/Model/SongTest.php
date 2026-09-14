@@ -204,10 +204,6 @@ class SongTest extends MockeryTestCase
     }
 
     /**
-     * Every other field on a song lets its uploader through by lowering the level to USER. `enabled` must
-     * not, or an artist could turn a withdrawn track of their own back on and undo the takedown.
-     */
-    /**
      * The partial row carries the replaygain scalars and bpm, and no lyrics column at all: a read routed there
      * answers nothing, which reads exactly like a song that has no lyrics.
      */
