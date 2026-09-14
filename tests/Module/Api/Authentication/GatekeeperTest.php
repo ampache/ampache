@@ -57,9 +57,32 @@ class GatekeeperTest extends MockeryTestCase
         $this->assertNull($this->subject->getUser('apiKey'));
     }
 
+    /**
+     * Regression: an account an admin disabled kept every api key, so disabling it revoked nothing.
+     */
+    public function testGetUserRefusesADisabledAccount(): void
+    {
+        $user = $this->mock(User::class);
+
+        $user->disabled = true;
+
+        $this->expectAuthTokenFromQuery('apiKey', 'valid-key');
+
+        $this->userRepository->shouldReceive('findByApiKey')
+            ->with('valid-key')
+            ->once()
+            ->andReturn($user);
+
+        $this->logger->shouldReceive('warning')->once();
+
+        $this->assertNull($this->subject->getUser('apiKey'));
+    }
+
     public function testGetUserResolvesTheUserFromTheApiKey(): void
     {
         $user = $this->mock(User::class);
+
+        $user->disabled = false;
 
         $this->expectAuthTokenFromQuery('apiKey', 'valid-key');
 

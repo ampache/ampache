@@ -27,8 +27,10 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -52,7 +54,7 @@ final class Timeline3Method
      */
     public static function timeline(array $input, User $user): void
     {
-        unset($user);
+        $viewer = $user;
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             $limit    = (int) ($input['limit'] ?? 0);
@@ -69,6 +71,11 @@ final class Timeline3Method
                         $limit,
                         $since
                     );
+                    $accessChecker = self::getUserActivityAccessChecker();
+                    $results       = array_values(array_filter(
+                        $results,
+                        static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $viewer)
+                    ));
                     ob_end_clean();
                     echo Xml3_Data::timeline($results);
                 }
@@ -85,5 +92,12 @@ final class Timeline3Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }

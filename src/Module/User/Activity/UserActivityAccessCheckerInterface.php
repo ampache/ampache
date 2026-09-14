@@ -23,40 +23,19 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api3;
+namespace Ampache\Module\User\Activity;
 
-use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 
-/**
- * Class Playlist3Method
- */
-final class Playlist3Method
+interface UserActivityAccessCheckerInterface
 {
-    public const ACTION = 'playlist';
-
     /**
-     * playlist
-     * This returns a single playlist
+     * Whether the viewer's own catalogs cover the object an activity was recorded against.
      *
-     * @param array{
-     *     filter: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * An activity whose object carries no catalog of its own (a `follow`'s target user, a playlist, a
+     * type the loader doesn't recognise) is always visible; only a `CatalogItemInterface` object with a
+     * real catalog id is checked against the viewer's catalog list.
      */
-    public static function playlist(array $input, User $user): void
-    {
-        $uid      = scrub_in((string) $input['filter']);
-        $playlist = new Playlist((int) $uid);
-
-        // a private playlist you neither own nor collaborate on is not yours to read
-        $ids = ($playlist->isNew() || $playlist->type === 'public' || $playlist->has_collaborate($user))
-            ? [$uid]
-            : [];
-
-        ob_end_clean();
-        echo Xml3_Data::playlists($ids);
-    }
+    public function isVisibleTo(Useractivity $useractivity, User $viewer): bool;
 }

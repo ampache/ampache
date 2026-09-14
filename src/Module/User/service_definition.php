@@ -36,6 +36,7 @@ return [
     UserStateTogglerInterface::class => autowire(UserStateToggler::class),
     Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
     Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
+    Activity\UserActivityAccessCheckerInterface::class => autowire(Activity\UserActivityAccessChecker::class),
     Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
     Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
     Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),

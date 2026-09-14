@@ -28,7 +28,9 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -60,7 +62,12 @@ final class FriendsTimeline4Method
             $since = (int) ($input['since'] ?? 0);
 
             if ($user->id > 0) {
-                $results = self::getUseractivityRepository()->getActivities($user->id, $limit, $since);
+                $results       = self::getUseractivityRepository()->getFriendsActivities($user->id, $limit, $since);
+                $accessChecker = self::getUserActivityAccessChecker();
+                $results       = array_values(array_filter(
+                    $results,
+                    static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $user)
+                ));
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
@@ -80,5 +87,12 @@ final class FriendsTimeline4Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }
