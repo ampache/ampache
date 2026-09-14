@@ -32,8 +32,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\UserHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\MusicFolderResolverInterface;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolverInterface;
 use Ampache\Module\Art\Art;
@@ -57,7 +60,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
-use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -80,7 +82,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use CurlHandle;
 use WpOrg\Requests\Requests;
 
@@ -181,12 +182,9 @@ class OpenSubsonic_Api
         '_albumList',
         '_follow_stream',
         '_getAmpacheIdArrays',
-        '_musicFolderId',
-        '_musicFolders',
         '_output_body',
         '_output_header',
         '_search',
-        '_setStar',
         '_updatePlaylist',
         'error',
         'getAlbumSubId',
@@ -216,6 +214,7 @@ class OpenSubsonic_Api
     private ChatHandlerInterface $chatHandler;
     private FolderRepositoryInterface $folderRepository;
     private InternetRadioHandlerInterface $internetRadioHandler;
+    private MusicFolderResolverInterface $musicFolderResolver;
     private OpenSubsonic_Json_Data $openSubsonicJsonData;
     private OpenSubsonic_Xml_Data $openSubsonicXmlData;
     private PodcastCreatorInterface $podcastCreator;
@@ -223,12 +222,13 @@ class OpenSubsonic_Api
     private PodcastRepositoryInterface $podcastRepository;
     private PodcastSyncerInterface $podcastSyncer;
     private Random $random;
+    private RatingHandlerInterface $ratingHandler;
     private OpenSubsonicResponseHandlerInterface $responseHandler;
     private ShareHandlerInterface $shareHandler;
     private SongRepositoryInterface $songRepository;
     private SonicAnalysisPluginResolverInterface $sonicAnalysisPluginResolver;
     private SystemHandlerInterface $systemHandler;
-    private UserRepositoryInterface $userRepository;
+    private UserHandlerInterface $userHandler;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
@@ -237,6 +237,7 @@ class OpenSubsonic_Api
         ChatHandlerInterface $chatHandler,
         FolderRepositoryInterface $folderRepository,
         InternetRadioHandlerInterface $internetRadioHandler,
+        MusicFolderResolverInterface $musicFolderResolver,
         PodcastCreatorInterface $podcastCreator,
         PodcastDeleterInterface $podcastDeleter,
         PodcastRepositoryInterface $podcastRepository,
@@ -245,11 +246,12 @@ class OpenSubsonic_Api
         OpenSubsonicResponseHandlerInterface $responseHandler,
         OpenSubsonic_Json_Data $openSubsonicJsonData,
         OpenSubsonic_Xml_Data $openSubsonicXmlData,
+        RatingHandlerInterface $ratingHandler,
         ShareHandlerInterface $shareHandler,
         SongRepositoryInterface $songRepository,
         SonicAnalysisPluginResolverInterface $sonicAnalysisPluginResolver,
         SystemHandlerInterface $systemHandler,
-        UserRepositoryInterface $userRepository,
+        UserHandlerInterface $userHandler,
     ) {
         $this->albumRepository             = $albumRepository;
         $this->artistRepository            = $artistRepository;
@@ -257,6 +259,7 @@ class OpenSubsonic_Api
         $this->chatHandler                 = $chatHandler;
         $this->folderRepository            = $folderRepository;
         $this->internetRadioHandler        = $internetRadioHandler;
+        $this->musicFolderResolver         = $musicFolderResolver;
         $this->podcastCreator              = $podcastCreator;
         $this->podcastDeleter              = $podcastDeleter;
         $this->podcastRepository           = $podcastRepository;
@@ -265,11 +268,12 @@ class OpenSubsonic_Api
         $this->responseHandler             = $responseHandler;
         $this->openSubsonicJsonData        = $openSubsonicJsonData;
         $this->openSubsonicXmlData         = $openSubsonicXmlData;
+        $this->ratingHandler               = $ratingHandler;
         $this->shareHandler                = $shareHandler;
         $this->songRepository              = $songRepository;
         $this->sonicAnalysisPluginResolver = $sonicAnalysisPluginResolver;
         $this->systemHandler               = $systemHandler;
-        $this->userRepository              = $userRepository;
+        $this->userHandler                 = $userHandler;
     }
 
     public static function getAlbumSubId(int $ampache_id): string
@@ -589,36 +593,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * changePassword
-     *
-     * Changes the password of an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/changepassword/
      * @param array<string, mixed> $input
      */
     public function changepassword(array $input, User $user): void
     {
-        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        $inp_pass = $this->responseHandler->checkParameter($input, 'password', __FUNCTION__);
-        if ($inp_pass === false) {
-            return;
-        }
-
-        $password = SubsonicApiApplication::decryptPassword($inp_pass);
-        if ($user->username == $username || $user->access === 100) {
-            $update_user = User::get_from_username((string) $username);
-            if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
-                $update_user->update_password($password);
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->userHandler->changepassword($input, $user);
     }
 
     /**
@@ -744,63 +723,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * createUser
-     *
-     * Creates a new user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/createuser/
      * @param array<string, mixed> $input
      */
     public function createuser(array $input, User $user): void
     {
-        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        $password = $this->responseHandler->checkParameter($input, 'password', __FUNCTION__);
-        if ($password === false) {
-            return;
-        }
-
-        $email = $this->responseHandler->checkParameter($input, 'email', __FUNCTION__);
-        if ($email === false) {
-            return;
-        }
-
-        $email        = urldecode($email);
-        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
-        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
-        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
-        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
-        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
-
-        if ($user->access >= AccessLevelEnum::ADMIN->value) {
-            $access = AccessLevelEnum::USER;
-            if ($coverArtRole) {
-                $access = AccessLevelEnum::MANAGER;
-            }
-            if ($adminRole) {
-                $access = AccessLevelEnum::ADMIN;
-            }
-            $password = SubsonicApiApplication::decryptPassword($password);
-            $user_id  = User::create($username, $username, $email, '', $password, $access);
-            if ($user_id > 0) {
-                if ($downloadRole) {
-                    Preference::update('download', $user_id, 1);
-                }
-                if ($uploadRole) {
-                    Preference::update('allow_upload', $user_id, 1);
-                }
-                if ($shareRole) {
-                    Preference::update('share', $user_id, 1);
-                }
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->userHandler->createuser($input, $user);
     }
 
     /**
@@ -924,31 +851,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * deleteUser
-     *
-     * Deletes an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
      * @param array<string, mixed> $input
      */
     public function deleteuser(array $input, User $user): void
     {
-        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        if ($user->access === 100) {
-            $update_user = User::get_from_username((string) $username);
-            if ($update_user instanceof User) {
-                $update_user->delete();
-
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->userHandler->deleteuser($input, $user);
     }
 
     /**
@@ -1335,7 +1242,7 @@ class OpenSubsonic_Api
      */
     public function getartists(array $input, User $user): void
     {
-        $catalogs = $this->_musicFolders($input, $user);
+        $catalogs = $this->musicFolderResolver->musicFolders($input, $user);
 
         $user_id = $user->id;
         // an empty catalog list makes get_id_arrays return everything, so only ask when there is something to ask for
@@ -1581,7 +1488,7 @@ class OpenSubsonic_Api
         set_time_limit(300);
 
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
-        $catalogs        = $this->_musicFolders($input, $user);
+        $catalogs        = $this->musicFolderResolver->musicFolders($input, $user);
 
         $lastmodified = 0;
         $fcatalogs    = [];
@@ -2131,7 +2038,7 @@ class OpenSubsonic_Api
                 $ftype    = "artist";
             } else {
                 // a real music folder must be one the user can browse
-                $finput   = $this->_musicFolderId($input, $user);
+                $finput   = $this->musicFolderResolver->musicFolderId($input, $user);
                 $operator = 0;
                 $ftype    = "catalog";
             }
@@ -2327,7 +2234,7 @@ class OpenSubsonic_Api
 
         $count         = (int) ($input['count'] ?? 0);
         $offset        = (int) ($input['offset'] ?? 0);
-        $musicFolderId = $this->_musicFolderId($input, $user);
+        $musicFolderId = $this->musicFolderResolver->musicFolderId($input, $user);
 
         $tag = Tag::construct_from_name($genre);
         if ($tag->isNew()) {
@@ -2388,50 +2295,19 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getStarred
-     *
-     * Returns starred songs, albums and artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
      * @param array<string, mixed> $input
      */
     public function getstarred(array $input, User $user, string $elementName = 'starred'): void
     {
-        // hide ratings and flags for other users if single user data is enabled
-        $by_user     = (bool) Preference::get_by_user($user->id, 'subsonic_single_user_data') === true;
-        $output_user = ($by_user)
-            ? $user
-            : null;
-
-        $musicFolderId = $this->_musicFolderId($input, $user);
-        $artists       = Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
-        $albums        = Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
-        $songs         = Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = ($elementName === 'starred2')
-                ? $this->openSubsonicXmlData->addStarred2($response, $artists, $albums, $songs)
-                : $this->openSubsonicXmlData->addStarred($response, $artists, $albums, $songs);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = ($elementName === 'starred2')
-                ? $this->openSubsonicJsonData->addStarred2($response, $artists, $albums, $songs)
-                : $this->openSubsonicJsonData->addStarred($response, $artists, $albums, $songs);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->ratingHandler->getstarred($input, $user, $elementName);
     }
 
     /**
-     * getStarred2
-     *
-     * Returns starred songs, albums and artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
      * @param array<string, mixed> $input
      */
     public function getstarred2(array $input, User $user): void
     {
-        $this->getstarred($input, $user, "starred2");
+        $this->ratingHandler->getstarred2($input, $user);
     }
 
     /**
@@ -2581,68 +2457,19 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getUser
-     *
-     * Get details about a given user, including which authorization roles and folder access it has.
-     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
      * @param array<string, mixed> $input
      */
     public function getuser(array $input, User $user): void
     {
-        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        if ($user->access === 100 || $user->username == $username) {
-            if ($user->username == $username) {
-                $update_user = $user;
-            } else {
-                $update_user = User::get_from_username((string) $username);
-            }
-            if (!$update_user) {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            } else {
-                $format = (string) ($input['f'] ?? 'xml');
-                if ($format === 'xml') {
-                    $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-                    $response = $this->openSubsonicXmlData->addUser($response, $update_user);
-                } else {
-                    $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-                    $response = $this->openSubsonicJsonData->addUser($response, $update_user);
-                }
-                $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->userHandler->getuser($input, $user);
     }
 
     /**
-     * getUsers
-     *
-     * Get details about all users, including which authorization roles and folder access they have.
-     * https://opensubsonic.netlify.app/docs/endpoints/getusers/
      * @param array<string, mixed> $input
      */
     public function getusers(array $input, User $user): void
     {
-        if ($user->access !== 100) {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-
-            return;
-        }
-
-        $users  = $this->userRepository->getValid();
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->openSubsonicXmlData->addUsers($response, $users);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->openSubsonicJsonData->addUsers($response, $users);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->userHandler->getusers($input, $user);
     }
 
     /**
@@ -3357,49 +3184,19 @@ class OpenSubsonic_Api
     }
 
     /**
-     * setRating
-     *
-     * Sets the rating for a music file.
-     * https://opensubsonic.netlify.app/docs/endpoints/setrating/
      * @param array<string, mixed> $input
      */
     public function setrating(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $rating = $this->responseHandler->checkParameter($input, 'rating', __FUNCTION__);
-        if ($rating === false) {
-            return;
-        }
-
-        $type  = self::getAmpacheType($sub_id);
-        $stars = (is_numeric($rating)) ? (int) $rating : -1;
-        $robj  = (!empty($type))
-            ? new Rating(self::getAmpacheId($sub_id), $type)
-            : null;
-
-        if ($robj != null && $stars >= 0 && $stars <= 5) {
-            $robj->set_rating($stars, $user->id);
-
-            $this->responseHandler->responseOutput($input, __FUNCTION__);
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-        }
+        $this->ratingHandler->setrating($input, $user);
     }
 
     /**
-     * star
-     *
-     * Attaches a star to a song, album or artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/star/
      * @param array<string, mixed> $input
      */
     public function star(array $input, User $user): void
     {
-        $this->_setStar($input, $user, true);
+        $this->ratingHandler->star($input, $user);
     }
 
     /**
@@ -3466,15 +3263,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * unstar
-     *
-     * Attaches a star to a song, album or artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/unstar/
      * @param array<string, mixed> $input
      */
     public function unstar(array $input, User $user): void
     {
-        $this->_setStar($input, $user, false);
+        $this->ratingHandler->unstar($input, $user);
     }
 
     /**
@@ -3540,72 +3333,11 @@ class OpenSubsonic_Api
     }
 
     /**
-     * updateUser
-     *
-     * Modifies an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
      * @param array<string, mixed> $input
      */
     public function updateuser(array $input, User $user): void
     {
-        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
-        if ($username === false) {
-            return;
-        }
-
-        $password     = $input['password'] ?? false;
-        $email        = (array_key_exists('email', $input)) ? urldecode($input['email']) : false;
-        $adminRole    = (array_key_exists('adminRole', $input) && $input['adminRole'] == 'true');
-        $downloadRole = (array_key_exists('downloadRole', $input) && $input['downloadRole'] == 'true');
-        $uploadRole   = (array_key_exists('uploadRole', $input) && $input['uploadRole'] == 'true');
-        $coverArtRole = (array_key_exists('coverArtRole', $input) && $input['coverArtRole'] == 'true');
-        $shareRole    = (array_key_exists('shareRole', $input) && $input['shareRole'] == 'true');
-        $maxbitrate   = (int) ($input['maxBitRate'] ?? 0);
-
-        if ($user->access === 100) {
-            $access = 25;
-            if ($coverArtRole) {
-                $access = 75;
-            }
-            if ($adminRole) {
-                $access = 100;
-            }
-            // identify the user to modify
-            $update_user = User::get_from_username((string) $username);
-            if ($update_user instanceof User) {
-                $user_id = $update_user->id;
-                // update access level
-                $update_user->update_access($access);
-                // update password
-                if ($password && !AmpConfig::get('simple_user_mode')) {
-                    $password = SubsonicApiApplication::decryptPassword($password);
-                    $update_user->update_password($password);
-                }
-                // update e-mail
-                if ($email && Mailer::validate_address($email)) {
-                    $update_user->update_email($email);
-                }
-                // set preferences
-                if ($downloadRole) {
-                    Preference::update('download', $user_id, 1);
-                }
-                if ($uploadRole) {
-                    Preference::update('allow_upload', $user_id, 1);
-                }
-                if ($shareRole) {
-                    Preference::update('share', $user_id, 1);
-                }
-                if ($maxbitrate > 0) {
-                    // Subsonic maxBitRate is kbps; transcode_bitrate is stored in bps
-                    Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
-                }
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->userHandler->updateuser($input, $user);
     }
 
     /**
@@ -3617,7 +3349,7 @@ class OpenSubsonic_Api
     {
         $size          = (int) ($input['size'] ?? 10);
         $offset        = (int) ($input['offset'] ?? 0);
-        $musicFolderId = $this->_musicFolderId($input, $user);
+        $musicFolderId = $this->musicFolderResolver->musicFolderId($input, $user);
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // hide ratings and flags for other users if single user data is enabled
@@ -3631,7 +3363,7 @@ class OpenSubsonic_Api
             ? $user->get_catalogs('music')
             : null;
         if ($musicFolderId !== 0) {
-            $catalogs = $this->_musicFolders($input, $user);
+            $catalogs = $this->musicFolderResolver->musicFolders($input, $user);
         }
 
         $albums = null;
@@ -3781,43 +3513,6 @@ class OpenSubsonic_Api
     }
 
     /**
-     * _musicFolderId
-     *
-     * Resolve a requested musicFolderId into a single catalog id to filter on.
-     * 0 means no folder was requested; -1 can never match a catalog so a folder the user can't browse returns
-     * nothing instead of everything.
-     * @param array<string, mixed> $input
-     */
-    private function _musicFolderId(array $input, User $user): int
-    {
-        $sub_id = $input['musicFolderId'] ?? null;
-        if ($sub_id === null || $sub_id === '') {
-            return 0;
-        }
-
-        return $this->_musicFolders($input, $user)[0] ?? -1;
-    }
-
-    /**
-     * _musicFolders
-     *
-     * Resolve the catalogs a browse request should be limited to.
-     * A requested musicFolderId is always intersected with the catalogs the user may browse.
-     * @param array<string, mixed> $input
-     * @return int[]
-     */
-    private function _musicFolders(array $input, User $user): array
-    {
-        $catalogs = $user->get_catalogs('music');
-        $sub_id   = $input['musicFolderId'] ?? null;
-        if ($sub_id === null || $sub_id === '') {
-            return $catalogs;
-        }
-
-        return array_values(array_intersect($catalogs, [(int) self::getAmpacheId((string) $sub_id)]));
-    }
-
-    /**
      * _output_body
      */
     private function _output_body(CurlHandle $curl, string $data): int
@@ -3866,7 +3561,7 @@ class OpenSubsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = $this->_musicFolderId($input, $user);
+        $musicFolderId = $this->musicFolderResolver->musicFolderId($input, $user);
 
         $original = unhtmlentities($query);
         $query    = SubsonicApiApplication::parseSearchQuery($original);
@@ -3932,67 +3627,6 @@ class OpenSubsonic_Api
             'albums' => $albums,
             'songs' => $songs,
         ];
-    }
-
-    /**
-     * _setStar
-     * @param array<string, mixed> $input
-     */
-    private function _setStar(array $input, User $user, bool $star): void
-    {
-        $sub_ids  = $input['id'] ?? null;
-        $albumId  = $input['albumId'] ?? null;
-        $artistId = $input['artistId'] ?? null;
-
-        // Normalize all in one array
-        $objects = [];
-
-        if ($sub_ids) {
-            if (!is_array($sub_ids)) {
-                $sub_ids = [$sub_ids];
-            }
-            foreach ($sub_ids as $item) {
-                $object_id   = self::getAmpacheId($item);
-                $object_type = self::getAmpacheType($item);
-                $objects[]   = [
-                    'id' => $object_id,
-                    'type' => $object_type
-                ];
-            }
-        } elseif ($albumId) {
-            if (!is_array($albumId)) {
-                $albumId = [$albumId];
-            }
-            foreach ($albumId as $album) {
-                $object_id = self::getAmpacheId($album);
-                $objects[] = [
-                    'id' => $object_id,
-                    'type' => 'album'
-                ];
-            }
-        } elseif ($artistId) {
-            if (!is_array($artistId)) {
-                $artistId = [$artistId];
-            }
-            foreach ($artistId as $artist) {
-                $object_id = self::getAmpacheId($artist);
-                $objects[] = [
-                    'id' => $object_id,
-                    'type' => 'artist'
-                ];
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
-
-            return;
-        }
-
-        foreach ($objects as $object) {
-            $flag = new Userflag($object['id'], $object['type']);
-            $flag->set_flag($star, $user->id);
-        }
-
-        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**

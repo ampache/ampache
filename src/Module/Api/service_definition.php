@@ -79,10 +79,16 @@ use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandler as OpenSubsonicChatHandl
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface as OpenSubsonicChatHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandler as OpenSubsonicInternetRadioHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface as OpenSubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandler as OpenSubsonicRatingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandlerInterface as OpenSubsonicRatingHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandler as OpenSubsonicShareHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandlerInterface as OpenSubsonicShareHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandler as OpenSubsonicSystemHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface as OpenSubsonicSystemHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\UserHandler as OpenSubsonicUserHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\UserHandlerInterface as OpenSubsonicUserHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\MusicFolderResolver as OpenSubsonicMusicFolderResolver;
+use Ampache\Module\Api\OpenSubsonic\MusicFolderResolverInterface as OpenSubsonicMusicFolderResolverInterface;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandler;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\SonicAnalysisPluginResolver;
@@ -95,10 +101,16 @@ use Ampache\Module\Api\Subsonic\Handler\ChatHandler as SubsonicChatHandler;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface as SubsonicChatHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandler as SubsonicInternetRadioHandler;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface as SubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\RatingHandler as SubsonicRatingHandler;
+use Ampache\Module\Api\Subsonic\Handler\RatingHandlerInterface as SubsonicRatingHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\ShareHandler as SubsonicShareHandler;
 use Ampache\Module\Api\Subsonic\Handler\ShareHandlerInterface as SubsonicShareHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\SystemHandler as SubsonicSystemHandler;
 use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface as SubsonicSystemHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\UserHandler as SubsonicUserHandler;
+use Ampache\Module\Api\Subsonic\Handler\UserHandlerInterface as SubsonicUserHandlerInterface;
+use Ampache\Module\Api\Subsonic\MusicFolderResolver as SubsonicMusicFolderResolver;
+use Ampache\Module\Api\Subsonic\MusicFolderResolverInterface as SubsonicMusicFolderResolverInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandler;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 
@@ -125,6 +137,12 @@ return [
     OpenSubsonicSystemHandlerInterface::class => autowire(OpenSubsonicSystemHandler::class),
     SubsonicShareHandlerInterface::class => autowire(SubsonicShareHandler::class),
     OpenSubsonicShareHandlerInterface::class => autowire(OpenSubsonicShareHandler::class),
+    SubsonicMusicFolderResolverInterface::class => autowire(SubsonicMusicFolderResolver::class),
+    OpenSubsonicMusicFolderResolverInterface::class => autowire(OpenSubsonicMusicFolderResolver::class),
+    SubsonicRatingHandlerInterface::class => autowire(SubsonicRatingHandler::class),
+    OpenSubsonicRatingHandlerInterface::class => autowire(OpenSubsonicRatingHandler::class),
+    SubsonicUserHandlerInterface::class => autowire(SubsonicUserHandler::class),
+    OpenSubsonicUserHandlerInterface::class => autowire(OpenSubsonicUserHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),
