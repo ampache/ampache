@@ -82,8 +82,9 @@ final class WithdrawnFilter
             );
         }
 
+        // reaching here with $type === 'album_disk' means the guard above already ruled out $idColumn being set
         [$table, $column] = ($type === 'album_disk')
-            ? ['album', $idColumn ?? '`album_disk`.`album_id`']
+            ? ['album', '`album_disk`.`album_id`']
             : [$type, $idColumn];
 
         if (!in_array($table, ['album', 'artist', 'song'], true)) {
