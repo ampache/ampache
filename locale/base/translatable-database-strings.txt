@@ -407,6 +407,14 @@ msgid "Lock this user into the mini player interface"
 msgstr ""
 
 #: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror"
+msgstr ""
+
+#: Ampache preference description
 msgid "Allow E-mail notifications"
 msgstr ""
 
