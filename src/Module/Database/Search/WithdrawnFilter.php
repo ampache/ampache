@@ -39,6 +39,17 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 final class WithdrawnFilter
 {
     /**
+     * `conditionFor()`, folded into a statement already being built with ` AND `, in one call so a future
+     * call site cannot copy the lookup without also copying the guard that keeps an empty answer out of it.
+     */
+    public static function appendCondition(string $sql, string $type, ?string $idColumn, ?int $userId): string
+    {
+        $condition = self::conditionFor($type, $idColumn, $userId);
+
+        return ($condition === '') ? $sql : $sql . ' AND ' . $condition;
+    }
+
+    /**
      * Adds the condition to a where clause already built, unless the viewer is allowed to see withdrawn items
      */
     public static function apply(string $whereSql, string $type, ?int $userId): string
@@ -98,16 +109,5 @@ final class WithdrawnFilter
         return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
             ? ''
             : self::condition($type, $idColumn);
-    }
-
-    /**
-     * `conditionFor()`, folded into a statement already being built with ` AND `, in one call so a future
-     * call site cannot copy the lookup without also copying the guard that keeps an empty answer out of it.
-     */
-    public static function appendCondition(string $sql, string $type, ?string $idColumn, ?int $userId): string
-    {
-        $condition = self::conditionFor($type, $idColumn, $userId);
-
-        return ($condition === '') ? $sql : $sql . ' AND ' . $condition;
     }
 }
