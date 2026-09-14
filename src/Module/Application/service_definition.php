@@ -108,7 +108,6 @@ use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
 use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
-use Ampache\Module\Application\Album\SetTrackNumbersAction;
 use Ampache\Module\Application\Album\ShowAction;
 use Ampache\Module\Application\Album\ShowMissingAction;
 use Ampache\Module\Application\Album\UpdateFromTagsAction;
@@ -269,7 +268,6 @@ return [
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
     UpdateFromTagsAction::class => autowire(UpdateFromTagsAction::class),
-    SetTrackNumbersAction::class => autowire(SetTrackNumbersAction::class),
     ShowMissingAction::class => autowire(ShowMissingAction::class),
     ShowAction::class => autowire(ShowAction::class),
     Artist\DeleteAction::class => autowire(Artist\DeleteAction::class),
