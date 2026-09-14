@@ -32,11 +32,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\ShareHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 use Ampache\Module\Art\Art;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CountableTableEnum;
@@ -52,13 +51,11 @@ use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
-use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
-use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -68,7 +65,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
@@ -82,7 +78,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use CurlHandle;
@@ -213,15 +208,13 @@ class Subsonic_Api
     private ChatHandlerInterface $chatHandler;
     private FolderRepositoryInterface $folderRepository;
     private InternetRadioHandlerInterface $internetRadioHandler;
-    private PasswordGeneratorInterface $passwordGenerator;
     private PodcastCreatorInterface $podcastCreator;
     private PodcastDeleterInterface $podcastDeleter;
     private PodcastRepositoryInterface $podcastRepository;
     private PodcastSyncerInterface $podcastSyncer;
     private Random $random;
     private SubsonicResponseHandlerInterface $responseHandler;
-    private ShareCreatorInterface $shareCreator;
-    private ShareRepositoryInterface $shareRepository;
+    private ShareHandlerInterface $shareHandler;
     private SongRepositoryInterface $songRepository;
     private Subsonic_Json_Data $subsonicJsonData;
     private Subsonic_Xml_Data $subsonicXmlData;
@@ -235,14 +228,12 @@ class Subsonic_Api
         ChatHandlerInterface $chatHandler,
         FolderRepositoryInterface $folderRepository,
         InternetRadioHandlerInterface $internetRadioHandler,
-        PasswordGeneratorInterface $passwordGenerator,
         PodcastCreatorInterface $podcastCreator,
         PodcastDeleterInterface $podcastDeleter,
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
         Random $random,
-        ShareCreatorInterface $shareCreator,
-        ShareRepositoryInterface $shareRepository,
+        ShareHandlerInterface $shareHandler,
         SongRepositoryInterface $songRepository,
         SubsonicResponseHandlerInterface $responseHandler,
         Subsonic_Json_Data $subsonicJsonData,
@@ -256,14 +247,12 @@ class Subsonic_Api
         $this->chatHandler              = $chatHandler;
         $this->folderRepository         = $folderRepository;
         $this->internetRadioHandler     = $internetRadioHandler;
-        $this->passwordGenerator        = $passwordGenerator;
         $this->podcastCreator           = $podcastCreator;
         $this->podcastDeleter           = $podcastDeleter;
         $this->podcastRepository        = $podcastRepository;
         $this->podcastSyncer            = $podcastSyncer;
         $this->random                   = $random;
-        $this->shareCreator             = $shareCreator;
-        $this->shareRepository          = $shareRepository;
+        $this->shareHandler             = $shareHandler;
         $this->songRepository           = $songRepository;
         $this->responseHandler          = $responseHandler;
         $this->subsonicJsonData         = $subsonicJsonData;
@@ -732,101 +721,11 @@ class Subsonic_Api
     }
 
     /**
-     * createShare
-     *
-     * Creates a public URL that can be used by anyone to stream music or video from the server.
-     * https://www.subsonic.org/pages/api.jsp#createshare
      * @param array<string, mixed> $input
      */
     public function createshare(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        if (is_array($sub_id)) {
-            $object      = self::getAmpacheObject($sub_id[0]);
-            $object_type = self::getAmpacheType($sub_id[0]);
-        } else {
-            $object      = self::getAmpacheObject($sub_id);
-            $object_type = self::getAmpacheType($sub_id);
-        }
-
-        if (!$object instanceof library_item || !$object_type) {
-            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
-        $description = $input['description'] ?? null;
-        if (AmpConfig::get('share')) {
-            $share_expire = AmpConfig::get('share_expire', 7);
-            $expire_days  = (isset($input['expires']))
-                ? Share::get_expiry(((int) filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
-                : $share_expire;
-            if (is_array($sub_id) && $object_type === 'song') {
-                debug_event(self::class, 'createShare: sharing song list (album)', 5);
-                $song_id     = self::getAmpacheId($sub_id[0]);
-                $tmp_song    = new Song($song_id);
-                $sub_id      = self::getAlbumSubId($tmp_song->album);
-                $object      = new Album($tmp_song->album);
-                $object_type = 'album';
-            }
-            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $sub_id, 4);
-            if (
-                !in_array(
-                    $object_type,
-                    [
-                        'album',
-                        'album_disk',
-                        'artist',
-                        'playlist',
-                        'podcast',
-                        'podcast_episode',
-                        'search',
-                        'song',
-                        'video',
-                    ]
-                )
-            ) {
-                $object_type = '';
-            }
-
-            if (!empty($object_type) && !empty($sub_id) && !$object->isNew()) {
-                $share = $this->shareCreator->create(
-                    $user,
-                    LibraryItemEnum::from($object_type),
-                    $object->getId(),
-                    true,
-                    Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                    (int) $expire_days,
-                    $this->passwordGenerator->generate_token(),
-                    0,
-                    $description
-                );
-                if ($share === null) {
-                    $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
-
-                    return;
-                }
-
-                $shares = [$share];
-                $format = (string) ($input['f'] ?? 'xml');
-                if ($format === 'xml') {
-                    $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-                    $response = $this->subsonicXmlData->addShares($response, $shares);
-                } else {
-                    $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-                    $response = $this->subsonicJsonData->addShares($response, $shares);
-                }
-                $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->shareHandler->createshare($input, $user);
     }
 
     /**
@@ -1002,40 +901,11 @@ class Subsonic_Api
     }
 
     /**
-     * deleteShare
-     *
-     * Deletes an existing share.
-     * https://www.subsonic.org/pages/api.jsp#deleteshare
      * @param array<string, mixed> $input
      */
     public function deleteshare(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        if (AmpConfig::get('share')) {
-            $shareRepository = $this->shareRepository;
-
-            $share_id = self::getAmpacheId($sub_id);
-            $share    = ($share_id)
-                ? $shareRepository->findById($share_id)
-                : null;
-
-            if (
-                $share === null
-                || !$share->isAccessible($user)
-            ) {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            } else {
-                $shareRepository->delete($share);
-
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->shareHandler->deleteshare($input, $user);
     }
 
     /**
@@ -2166,24 +2036,11 @@ class Subsonic_Api
     }
 
     /**
-     * getShares
-     *
-     * Returns information about shared media this user is allowed to manage.
-     * https://www.subsonic.org/pages/api.jsp#getshares
      * @param array<string, mixed> $input
      */
     public function getshares(array $input, User $user): void
     {
-        $shares = $this->shareRepository->getIdsByUser($user);
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addShares($response, $shares);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addShares($response, $shares);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->shareHandler->getshares($input, $user);
     }
 
     /**
@@ -3251,43 +3108,11 @@ class Subsonic_Api
     }
 
     /**
-     * updateShare
-     *
-     * Updates the description and/or expiration date for an existing share.
-     * https://www.subsonic.org/pages/api.jsp#updateshare
      * @param array<string, mixed> $input
      */
     public function updateshare(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        if (AmpConfig::get('share')) {
-            $share = new Share(self::getAmpacheId($sub_id));
-            if ($share->id > 0) {
-                $expires = (isset($input['expires']))
-                    ? Share::get_expiry(((int) filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
-                    : $share->expire_days;
-                $data = [
-                    'max_counter' => $share->max_counter,
-                    'expire' => $expires,
-                    'allow_stream' => $share->allow_stream,
-                    'allow_download' => $share->allow_download,
-                    'description' => $input['description'] ?? $share->description,
-                ];
-                if ($share->update($data, $user)) {
-                    $this->responseHandler->responseOutput($input, __FUNCTION__);
-                } else {
-                    $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-                }
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->shareHandler->updateshare($input, $user);
     }
 
     /**
