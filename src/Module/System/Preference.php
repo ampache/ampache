@@ -251,15 +251,6 @@ class Preference extends database_object
         'httpq_active' => ['0', 'HTTPQ Active Instance', AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq'],
     ];
     /**
-     * Subcategory values whose `ucwords()` title-case would mangle a proper noun, keyed by the raw
-     * `DEFAULTS` subcategory string. `format_subcategory()` and `gather-messages.sh` both read this.
-     *
-     * @var array<string, string>
-     */
-    public const array SUBCATEGORY_LABELS = [
-        'musicbrainz' => 'MusicBrainz',
-    ];
-    /**
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
     public const array PLUGIN_LIST = [
@@ -441,6 +432,15 @@ class Preference extends database_object
             'reborn' => ['theme_name'],
             'web_player' => ['play_type'],
         ],
+    ];
+    /**
+     * Subcategory values whose `ucwords()` title-case would mangle a proper noun, keyed by the raw
+     * `DEFAULTS` subcategory string. `format_subcategory()` and `gather-messages.sh` both read this.
+     *
+     * @var array<string, string>
+     */
+    public const array SUBCATEGORY_LABELS = [
+        'musicbrainz' => 'MusicBrainz',
     ];
     /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
@@ -786,6 +786,14 @@ class Preference extends database_object
     }
 
     /**
+     * Title-cases a preference subcategory for display, honouring SUBCATEGORY_LABELS.
+     */
+    public static function format_subcategory(string $subcategory): string
+    {
+        return self::SUBCATEGORY_LABELS[$subcategory] ?? ucwords($subcategory);
+    }
+
+    /**
      * get
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @return array<int, array{
@@ -887,14 +895,6 @@ class Preference extends database_object
         }
 
         return $results;
-    }
-
-    /**
-     * Title-cases a preference subcategory for display, honouring SUBCATEGORY_LABELS.
-     */
-    public static function format_subcategory(string $subcategory): string
-    {
-        return self::SUBCATEGORY_LABELS[$subcategory] ?? ucwords($subcategory);
     }
 
     /**
