@@ -27,13 +27,15 @@ namespace Ampache\Module\Api\Jellyfin\Method\User;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
+use Ampache\Module\Api\Jellyfin\JellyfinUserPolicy;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * GET /Users/Me — also reached via the legacy /Users/{userId}, which this surface answers identically for
- * any id since it only ever serves the authenticated caller.
+ * GET /Users/Me, and GET /Users/{userId} (a bare id, no suffix — a real client, Feishin, polls this right
+ * after adding a server to revalidate credentials), which this surface answers identically for any id since
+ * it only ever serves the authenticated caller.
  */
 final class UserMethod implements JellyfinMethodInterface
 {
@@ -50,6 +52,7 @@ final class UserMethod implements JellyfinMethodInterface
             'HasConfiguredPassword' => true,
             'HasConfiguredEasyPassword' => false,
             'EnableAutoLogin' => false,
+            'Policy' => JellyfinUserPolicy::build($user),
         ]);
     }
 }

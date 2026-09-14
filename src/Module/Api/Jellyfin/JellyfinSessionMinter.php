@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -74,14 +73,7 @@ final class JellyfinSessionMinter
                 'HasConfiguredPassword' => true,
                 'HasConfiguredEasyPassword' => false,
                 'EnableAutoLogin' => false,
-                // real clients (confirmed: Feishin) read Policy.IsAdministrator directly off the login
-                // response and crash on a missing Policy object entirely, not just a missing field on it
-                'Policy' => [
-                    'IsAdministrator' => $user->has_access(AccessLevelEnum::ADMIN),
-                    'IsDisabled' => (bool) $user->disabled,
-                    'AuthenticationProviderId' => 'Default',
-                    'PasswordResetProviderId' => 'Default',
-                ],
+                'Policy' => JellyfinUserPolicy::build($user),
             ],
             'AccessToken' => $token,
             'ServerId' => $serverId,

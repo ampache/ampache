@@ -130,6 +130,7 @@ final class JellyfinApiApplication implements ApiApplicationInterface
         ['GET', '#^/Items/(?<itemId>[^/]+)/Similar$#i', SimilarMethod::class],
         ['GET', '#^/Artists/(?<itemId>[^/]+)/Similar$#i', SimilarMethod::class],
         ['GET', '#^/Albums/(?<itemId>[^/]+)/Similar$#i', SimilarMethod::class],
+        ['GET', '#^/Users/(?<userId>[^/]+)$#i', UserMethod::class],
         ['GET', '#^/web/.*$#i', WebRedirectMethod::class],
     ];
 
