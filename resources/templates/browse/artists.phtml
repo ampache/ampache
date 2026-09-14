@@ -58,7 +58,7 @@ if ($browse->is_show_header()) {
     </thead>
     <tbody>
         <?php foreach ($artists as $artist) { ?>
-        <tr id="artist_<?php echo $this->e($artist->getId()); ?>" class="libitem_menu" data-object-type="artist" data-object-id="<?php echo $this->e($artist->getId()); ?>">
+        <tr id="artist_<?php echo $this->e($artist->getId()); ?>" class="libitem_menu<?php echo ($artist->isEnabled()) ? '' : ' withdrawn'; ?>" data-object-type="artist" data-object-id="<?php echo $this->e($artist->getId()); ?>">
             <?php echo $this->raw($this->renderRow($artist)); ?>
         </tr>
         <?php } ?>

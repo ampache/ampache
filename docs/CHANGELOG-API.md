@@ -1,5 +1,16 @@
 # API CHANGELOG
 
+## API 8.1.1
+
+### Fixed (811000)
+
+* `download` (API8)
+  * A container with nothing downloadable behind it — a release whose songs are all disabled, or files missing from disk — crashed the request instead of answering; it now returns 404
+* `artist`, `artists`, `artist_albums` (ALL)
+  * The albums listed for an artist included the withdrawn ones, for every caller
+* `stats` (ALL)
+  * `recent`, `highest` and `frequent` listed withdrawn releases; only `newest` carried the condition. They now answer the way every other listing does, and a manager still sees them
+
 ## API 8.1.0
 
 ### Added (810000)
