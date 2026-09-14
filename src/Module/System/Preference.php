@@ -288,6 +288,8 @@ class Preference extends database_object
         'matomo_url',
         'mb_overwrite_name',
         'mpd_active',
+        'musicbrainz_server',
+        'musicbrainz_throttle',
         'paypal_business',
         'paypal_currency_code',
         'personalfav_display',
@@ -1412,6 +1414,13 @@ class Preference extends database_object
         $repository       = self::getPreferenceRepository();
         $filterRepository = self::getCatalogFilterRepository();
 
+        // every repair below assumes the final schema, `user_preference`.`name` first of all, which a migration
+        // adds late. On a database still mid-upgrade that column is not there yet and there is nothing to repair,
+        // so leave it: the migrations finish and a later rebuild runs against the complete schema
+        if (!$repository->hasUserPreferenceName()) {
+            return;
+        }
+
         // These repair the install rather than one listener, and each reads the whole table: running them
         // once per user turned a rebuild on a large database into hours of the same three statements.
 
@@ -1668,6 +1677,8 @@ class Preference extends database_object
             'mb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'mini_player' => 'Lock this user into the mini player interface',
             'mpd_active' => 'MPD Active Instance',
+            'musicbrainz_server' => 'MusicBrainz server URL, empty for musicbrainz.org',
+            'musicbrainz_throttle' => 'Hundredths of a second to wait between MusicBrainz calls, musicbrainz.org requires at least 100',
             'notify_email' => 'Allow E-mail notifications',
             'now_playing_per_user' => 'Now Playing filtered per user',
             'offset_limit' => 'Offset Limit',

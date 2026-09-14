@@ -74,12 +74,26 @@ Smart lists reach their rows without a browse and carry the same condition in `A
 `ArtistRepository::getRowsByCatalogs()`, `AlbumRepository::getIdsByCatalogs()` and `getSongs()`,
 `SongRepository::getEnabledIds()`, `getEnabledIdsByCatalog()` and `getEnabledByArtist()` - filter without
 asking anyone's level. `getAllByArtist()` deliberately does not: re-reading the tags of a withdrawn file is
-still a thing a catalogue has to do.
+still a thing a catalogue has to do, and it is also what the artist's "all songs" page reads for a manager.
+
+The home widgets and the newest, recent and popular pages build their own statements and hand the ids
+straight to a renderer, which does not filter them again, so `Stats` carries the condition itself in
+`get_newest_sql()`, `get_recent_sql()` and `get_top_sql()`. Two things there are deliberate: the top list
+leaves it out while writing the `cache_object_count` rows, because that cache is read by everybody
+afterwards and a run made under no level would freeze a truncated list for the whole instance; and a disk
+read back from that cache is keyed on the disk id, so the condition resolves it through `album_disk` to
+reach the album holding the flag rather than comparing a disk id to an album id.
+
+The artist page reads `AlbumRepository::getByArtist()`, and the api and upnp listings of the same thing
+read `getAlbumByArtist()`; neither goes through a browse, so both apply the condition themselves, level
+exemption included.
 
 Anything that resolves an item by id - the object pages and the `album`, `artist` and `song` API methods -
 answers with the response an id that was never there produces, so nothing tells the caller the item exists.
-The tab title and `Share::is_valid()` follow the same rule, through `VisibleItemInterface`, which a private
-list implements for the same reason a withdrawn release does.
+The tab title follows the same rule through `VisibleItemInterface`, which a private list implements for the
+same reason a withdrawn release does. `Share::is_valid()` asks the narrower `WithdrawableInterface`: a share
+link is how a private list gets published to somebody without an account, so reading visibility there would
+refuse every one of those links.
 
 ## Database
 

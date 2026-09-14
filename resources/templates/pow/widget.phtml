@@ -37,7 +37,8 @@ declare(strict_types=1);
      data-text-passed="<?php echo $this->e(T_('Check passed.')); ?>"
      data-text-unsupported="<?php echo $this->e(T_('Your browser is too old to pass this check.')); ?>"
      data-text-error="<?php echo $this->e(T_('The browser check failed to run. Please reload the page.')); ?>"
-     data-text-started="<?php echo $this->e(T_('Your download has started.')); ?>">
+     data-text-started="<?php echo $this->e(T_('Your download has started.')); ?>"
+     data-text-failed="<?php echo $this->e(T_('The download did not start. Please try again.')); ?>">
     <?php // The text is replaced as the search runs, so it has to be announced, not just repainted.?>
     <p id="pow-status" class="pow-status" role="status" aria-live="polite"><?php echo $this->e(T_('Checking your browser...')); ?></p>
     <noscript>
