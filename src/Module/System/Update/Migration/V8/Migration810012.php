@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Preference;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration810012 extends AbstractMigration
@@ -34,7 +35,7 @@ final class Migration810012 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('musicbrainz_server', 'MusicBrainz server URL, empty for musicbrainz.org', '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'MusicBrainz');
-        $this->updatePreferences('musicbrainz_throttle', 'Hundredths of a second to wait between MusicBrainz calls, musicbrainz.org requires at least 100', '100', AccessLevelEnum::ADMIN->value, 'integer', 'plugins', 'MusicBrainz');
+        Preference::insert('musicbrainz_server', 'MusicBrainz server URL, empty for musicbrainz.org', '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'MusicBrainz');
+        Preference::insert('musicbrainz_throttle', 'Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror', '100', AccessLevelEnum::ADMIN->value, 'integer', 'plugins', 'MusicBrainz');
     }
 }
