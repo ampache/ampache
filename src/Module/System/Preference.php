@@ -1686,7 +1686,7 @@ class Preference extends database_object
             'mini_player' => 'Lock this user into the mini player interface',
             'mpd_active' => 'MPD Active Instance',
             'musicbrainz_server' => 'MusicBrainz server URL, empty for musicbrainz.org',
-            'musicbrainz_throttle' => 'Hundredths of a second to wait between MusicBrainz calls, musicbrainz.org requires at least 100',
+            'musicbrainz_throttle' => 'Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror',
             'notify_email' => 'Allow E-mail notifications',
             'now_playing_per_user' => 'Now Playing filtered per user',
             'offset_limit' => 'Offset Limit',

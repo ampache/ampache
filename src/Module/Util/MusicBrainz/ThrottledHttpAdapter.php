@@ -35,10 +35,16 @@ use WpOrg\Requests\Response;
  */
 class ThrottledHttpAdapter extends AbstractHttpAdapter
 {
+    private readonly int $throttle;
+
     public function __construct(
         ?string $endpoint = null,
-        private readonly int $throttle = 100,
+        int $throttle = 100,
     ) {
+        // 0 stays a deliberate opt-out for a private mirror; anything else is clamped into the public
+        // server's own safe range, so a stray admin-entered value can neither hammer it nor stall every call
+        $this->throttle = ($throttle <= 0) ? 0 : max(100, min(1000, $throttle));
+
         // an unusable url keeps the public server, the way the library does, rather than failing every scan
         if ($endpoint !== null && filter_var($endpoint, FILTER_VALIDATE_URL)) {
             $this->endpoint = $endpoint;

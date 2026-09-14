@@ -340,15 +340,8 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
      */
     public function install(): bool
     {
-        if (!Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('musicbrainz_server', T_('MusicBrainz server URL, empty for musicbrainz.org'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('musicbrainz_throttle', T_('Hundredths of a second to wait between MusicBrainz calls, musicbrainz.org requires at least 100'), '100', AccessLevelEnum::ADMIN->value, 'integer', 'plugins', $this->name);
+        // musicbrainz_server/musicbrainz_throttle are system preferences (see Migration810012), not this plugin's own
+        return Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
@@ -377,11 +370,9 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
      */
     public function uninstall(): bool
     {
-        return (
-            Preference::delete('mb_overwrite_name')
-            && Preference::delete('musicbrainz_server')
-            && Preference::delete('musicbrainz_throttle')
-        );
+        // musicbrainz_server/musicbrainz_throttle are system preferences (see Migration810012); the DI-wired
+        // MusicBrainz client reads them regardless of whether this plugin is installed, so they stay
+        return Preference::delete('mb_overwrite_name');
     }
 
     /**
@@ -400,16 +391,10 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
-        if (Preference::exists('musicbrainz_server') === 0) {
-            Preference::insert('musicbrainz_server', T_('MusicBrainz server URL, empty for musicbrainz.org'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
-        }
-
-        if (Preference::exists('musicbrainz_throttle') === 0) {
-            Preference::insert('musicbrainz_throttle', T_('Hundredths of a second to wait between MusicBrainz calls, musicbrainz.org requires at least 100'), '100', AccessLevelEnum::ADMIN->value, 'integer', 'plugins', $this->name);
-        }
+        // musicbrainz_server/musicbrainz_throttle are system preferences (see Migration810012), not this plugin's own
 
         // did the upgrade work?
-        return (bool) Preference::exists('musicbrainz_throttle');
+        return (bool) Preference::exists('mb_overwrite_name');
     }
 
     /**

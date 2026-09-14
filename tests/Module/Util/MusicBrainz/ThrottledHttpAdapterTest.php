@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\MusicBrainz;
 
 use MusicBrainz\Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
 /**
  * Both settings fail quietly when they are wrong: a bad url silently serves musicbrainz.org, and a throttle
@@ -40,7 +41,8 @@ class ThrottledHttpAdapterTest extends TestCase
     private const OPTIONS = ['user-agent' => 'Ampache/8.1.1 (https://example.com)'];
 
     /**
-     * sleep() throws on a negative number, and nothing stops an admin from typing one in the form
+     * sleep() throws on a negative number, and nothing stops an admin from typing one in the form; a
+     * negative value is clamped the same way zero is, rather than reaching usleep() at all
      */
     public function testANegativeWaitIsNotTaken(): void
     {
@@ -56,6 +58,22 @@ class ThrottledHttpAdapterTest extends TestCase
         $subject->call('artist/', [], self::OPTIONS);
 
         self::assertSame('https://musicbrainz.org/ws/2/artist/', $subject->requested);
+    }
+
+    /**
+     * A stray very large value is capped rather than stalling every call for however long an admin mistyped
+     */
+    public function testAThrottleAboveTheMaximumIsClampedDown(): void
+    {
+        self::assertSame(1000, $this->configuredThrottle(5000));
+    }
+
+    /**
+     * A value below the public server's own minimum is raised to it, not left as a wait too short to matter
+     */
+    public function testAThrottleBelowTheMinimumIsClampedUp(): void
+    {
+        self::assertSame(100, $this->configuredThrottle(25));
     }
 
     public function testAuthenticationIsRefusedWithoutCredentials(): void
@@ -99,21 +117,31 @@ class ThrottledHttpAdapterTest extends TestCase
     }
 
     /**
-     * The point of the unit: a quarter of a second is a rate whole seconds cannot ask for, and the upper bound
-     * is what catches a wait that ignores the setting and serves the public server's second regardless
+     * The point of the unit: a configured wait is actually taken, at the minimum the public server allows —
+     * the upper bound is what catches a wait that ignores the setting and serves the public server's second
      */
     public function testTheWaitLastsAsLongAsTheSettingSays(): void
     {
         $started = microtime(true);
-        $this->adapter(null, 25)->call('artist/', [], self::OPTIONS);
+        $this->adapter(null, 100)->call('artist/', [], self::OPTIONS);
         $elapsed = microtime(true) - $started;
 
-        self::assertGreaterThanOrEqual(0.25, $elapsed);
-        self::assertLessThan(0.9, $elapsed);
+        self::assertGreaterThanOrEqual(1.0, $elapsed);
+        self::assertLessThan(1.6, $elapsed);
     }
 
-    private function adapter(?string $endpoint = null, int $throttle = 1): RecordingThrottledHttpAdapter
+    private function adapter(?string $endpoint = null, int $throttle = 0): RecordingThrottledHttpAdapter
     {
         return new RecordingThrottledHttpAdapter($endpoint, $throttle);
+    }
+
+    /**
+     * Reads the clamped value back without waiting it out, for the boundary cases alone
+     */
+    private function configuredThrottle(int $throttle): int
+    {
+        $property = new ReflectionProperty(ThrottledHttpAdapter::class, 'throttle');
+
+        return $property->getValue($this->adapter(null, $throttle));
     }
 }
