@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 14:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Ernest Wagner <wagnered@comcast.net>, 2021\n"
 "Language-Team: Chinese (China) (http://app.transifex.com/ampache/ampache/language/zh_CN/)\n"
@@ -338,6 +338,9 @@ msgstr "类似艺术家"
 msgid "Similar Songs"
 msgstr "类似歌曲"
 
+msgid "Disabled"
+msgstr "已禁用"
+
 msgid "Select New Art"
 msgstr "选择新作品"
 
@@ -625,6 +628,9 @@ msgstr "覆盖子歌曲的标签"
 
 msgid "Add tags to sub songs"
 msgstr "添加标签到子歌曲中"
+
+msgid "Enabled"
+msgstr ""
 
 msgid "Summary"
 msgstr "简介"
@@ -1517,11 +1523,17 @@ msgstr "play/.htaccess 文件是否存在？"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess 文件已配置？"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php 文件行为"
-
-msgid "Disabled"
-msgstr "已禁用"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php 文件是否存在？"
@@ -1842,6 +1854,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2026,6 +2054,9 @@ msgstr ""
 msgid "Save Changes"
 msgstr "保存变更"
 
+msgid "Save as Smart Playlist"
+msgstr "保存为智能播放列表"
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2085,6 +2116,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2115,6 +2149,15 @@ msgstr "应用到全部"
 
 msgid "Access Level"
 msgstr "访问等级"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "发送自"
@@ -2163,9 +2206,6 @@ msgstr "无限制"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "保存为智能播放列表"
 
 msgid "Options"
 msgstr "选项"
@@ -2922,6 +2962,9 @@ msgstr "未定已本地播放"
 msgid "Account"
 msgstr "账户"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "未发现歌词"
 
@@ -2980,7 +3023,10 @@ msgstr "许可"
 msgid "Uploaded by"
 msgstr "上传自"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3744,6 +3790,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "服务器喜好设置已成功更新"
 
@@ -4134,6 +4186,11 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d 个文件已更新"
 
+msgid ""
+"Remote Catalog type was selected, but the address is not reachable from this"
+" server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr "未指定用户名或密码"
 
@@ -4464,9 +4521,6 @@ msgid "List all pluggable modules and their installed state"
 msgstr ""
 
 msgid "Plugins"
-msgstr ""
-
-msgid "Enabled"
 msgstr ""
 
 msgid "Users List"
@@ -5189,9 +5243,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5272,9 +5323,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "任何能搜索的文本"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr ""
@@ -7193,6 +7241,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7224,6 +7280,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

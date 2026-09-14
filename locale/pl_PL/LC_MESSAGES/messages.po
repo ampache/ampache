@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 14:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Kuba Kuba, 2022\n"
 "Language-Team: Polish (Poland) (http://app.transifex.com/ampache/ampache/language/pl_PL/)\n"
@@ -338,6 +338,9 @@ msgstr "Podobni artyści"
 msgid "Similar Songs"
 msgstr "Podobne utwory"
 
+msgid "Disabled"
+msgstr "Wyłączone"
+
 msgid "Select New Art"
 msgstr "Wybierz nową grafikę"
 
@@ -625,6 +628,9 @@ msgstr "Nadpisz tagi utworów albumu"
 
 msgid "Add tags to sub songs"
 msgstr "Dodaj tagi do utworów albumu"
+
+msgid "Enabled"
+msgstr "Włączone"
 
 msgid "Summary"
 msgstr "Podsumowanie"
@@ -1517,11 +1523,17 @@ msgstr "play/.htaccess istnieje?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess skonfigurowany?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php akcja"
-
-msgid "Disabled"
-msgstr "Wyłączone"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php istnieje?"
@@ -1842,6 +1854,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Nastąpi test kilku kluczowych tabel w celu upewnienia się, czy istnieje baza danych Ampache i czy użytkownik ma do niej dostęp"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2026,6 +2054,9 @@ msgstr "Edycja smartlisty"
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
 
+msgid "Save as Smart Playlist"
+msgstr "Zapisz jako smartlistę"
+
 msgid "Save as Playlist"
 msgstr "Zapisz jako playlistę"
 
@@ -2085,6 +2116,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2115,6 +2149,15 @@ msgstr "Zastosuj do wszystkich"
 
 msgid "Access Level"
 msgstr "Poziom dostępu"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "Wysłany przez"
@@ -2163,9 +2206,6 @@ msgstr "Bez limitu"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Zapisz jako smartlistę"
 
 msgid "Options"
 msgstr "Opcje"
@@ -2940,6 +2980,9 @@ msgstr "Niezdefiniowany kontroler Localplay"
 msgid "Account"
 msgstr "Konto"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Brak tekstu utworu."
 
@@ -2998,8 +3041,11 @@ msgstr "Licencjonowanie"
 msgid "Uploaded by"
 msgstr "Przesłany przez"
 
-msgid "Technical"
-msgstr ""
+msgid "Song Data"
+msgstr "Dane utworu"
+
+msgid "File Data"
+msgstr "Dane pliku"
 
 msgid "Statistical Graphs"
 msgstr "Wykresy"
@@ -3774,6 +3820,12 @@ msgstr "Twoje konto zostało zaktualizowane"
 msgid "Your account has not been updated"
 msgstr "Twoje konto nie zostało zaktualizowane"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "Pomyślnie zapisano ustawienia serwera"
 
@@ -4179,6 +4231,11 @@ msgstr[1] "%d pliki zostały zaktualizowane."
 msgstr[2] "%d plików zostało zaktualizowanych."
 msgstr[3] "%d plików zostało zaktualizowanych."
 
+msgid ""
+"Remote Catalog type was selected, but the address is not reachable from this"
+" server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr "Nie podano nazwy użytkownika lub hasła"
 
@@ -4516,9 +4573,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "Włączone"
 
 msgid "Users List"
 msgstr ""
@@ -5243,9 +5297,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr "Dane pliku"
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5326,9 +5377,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "Dowolny tekst"
-
-msgid "Song Data"
-msgstr "Dane utworu"
 
 msgid "Favorites (Album)"
 msgstr "Ulubione albumy"
@@ -7250,6 +7298,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7281,6 +7337,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

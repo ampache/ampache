@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 14:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: tsointsoin <mike.gelabs@gmail.com>, 2021\n"
 "Language-Team: French (France) (http://app.transifex.com/ampache/ampache/language/fr_FR/)\n"
@@ -371,6 +371,9 @@ msgstr "Artistes similaires"
 msgid "Similar Songs"
 msgstr "Titres similaires"
 
+msgid "Disabled"
+msgstr "Désactivé"
+
 msgid "Select New Art"
 msgstr "Sélectionnez une nouvelle jaquette"
 
@@ -658,6 +661,9 @@ msgstr "Écraser les tags des sous-morceaux"
 
 msgid "Add tags to sub songs"
 msgstr "Ajouter des tags aux sous-morceaux"
+
+msgid "Enabled"
+msgstr "Activé"
 
 msgid "Summary"
 msgstr "Résumé"
@@ -1550,11 +1556,17 @@ msgstr "play/.htaccess existe ?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess configuré ?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php action"
-
-msgid "Disabled"
-msgstr "Désactivé"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php existe ?"
@@ -1875,6 +1887,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Ceci vérifie quelques tables clés pour être sûr que la base de données Ampache existe, et que l'utilisateur a accès à cette base de données"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2059,6 +2087,9 @@ msgstr "Modifier la playlist intelligente"
 msgid "Save Changes"
 msgstr "Enregistrer les changements"
 
+msgid "Save as Smart Playlist"
+msgstr "Enregistrer en tant que playlist intelligente"
+
 msgid "Save as Playlist"
 msgstr "Enregistrer en tant que playlist"
 
@@ -2118,6 +2149,9 @@ msgstr "La vérification du navigateur n'a pas pu s'exécuter. Merci de recharge
 msgid "Your download has started."
 msgstr "Votre téléchargement a démarré."
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2148,6 +2182,15 @@ msgstr "Appliquer à tous"
 
 msgid "Access Level"
 msgstr "Niveau d'accès"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "envoyée par"
@@ -2196,9 +2239,6 @@ msgstr "Illimité"
 
 msgid "Permalink"
 msgstr "Lien permanent"
-
-msgid "Save as Smart Playlist"
-msgstr "Enregistrer en tant que playlist intelligente"
 
 msgid "Options"
 msgstr "Options"
@@ -2967,6 +3007,9 @@ msgstr "Contrôleur du mode de Localplay non défini"
 msgid "Account"
 msgstr "Compte"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Aucune parole trouvée"
 
@@ -3025,8 +3068,11 @@ msgstr "Licences"
 msgid "Uploaded by"
 msgstr "Envoyé par"
 
-msgid "Technical"
-msgstr "Technique"
+msgid "Song Data"
+msgstr "Informations du morceau"
+
+msgid "File Data"
+msgstr "Informations du fichier"
 
 msgid "Statistical Graphs"
 msgstr "Graphiques statistiques"
@@ -3797,6 +3843,12 @@ msgstr "Votre compte a été mis à jour"
 msgid "Your account has not been updated"
 msgstr "Votre compte n'a pas été mis à jour"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "Préférences du serveur mises à jour avec succès."
 
@@ -4197,6 +4249,11 @@ msgstr[0] "%d fichier mis à jour"
 msgstr[1] "%d fichiers mis à jour"
 msgstr[2] "%d fichiers mis à jour"
 
+msgid ""
+"Remote Catalog type was selected, but the address is not reachable from this"
+" server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr "Aucun nom d'utilisateur ou mot de passe n'a été spécifié"
 
@@ -4532,9 +4589,6 @@ msgstr "Lister tous les modules enfichables et leur état d'installation"
 
 msgid "Plugins"
 msgstr "Plugins"
-
-msgid "Enabled"
-msgstr "Activé"
 
 msgid "Users List"
 msgstr "Liste d'utilisateurs"
@@ -5258,9 +5312,6 @@ msgstr "Nombre d'albums (genre)"
 msgid "Artist Count (Genre)"
 msgstr "Nombre d'artistes (genre)"
 
-msgid "File Data"
-msgstr "Informations du fichier"
-
 msgid "Date Updated"
 msgstr "Date de mise à jour"
 
@@ -5341,9 +5392,6 @@ msgstr "Score de popularité de l'épisode de podcast"
 
 msgid "Any searchable text"
 msgstr "N'importe quel texte recherchable"
-
-msgid "Song Data"
-msgstr "Informations du morceau"
 
 msgid "Favorites (Album)"
 msgstr "Favoris (Album)"
@@ -7264,6 +7312,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr "Utiliser les liens du tableau de bord dans l'en-tête de la page d'accueil"
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr "Volume par défaut du lecteur web"
 
@@ -7296,6 +7352,16 @@ msgstr "Débit de transcodage minimum pour le rééchantillonnage dynamique, en 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
 msgstr "Restreindre cet utilisateur à l'interface du mini lecteur"
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
+msgstr ""
 
 #: Ampache preference description
 msgid "Allow E-mail notifications"

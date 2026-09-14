@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -229,9 +229,6 @@ msgid "Link"
 msgstr ""
 
 msgid "Graphs"
-msgstr ""
-
-msgid "Save Track Order"
 msgstr ""
 
 msgid "Do you really want to update from tags?"
@@ -532,6 +529,9 @@ msgid "Owner"
 msgstr ""
 
 msgid "Type"
+msgstr ""
+
+msgid "Save Track Order"
 msgstr ""
 
 msgid "This Collection is empty"
@@ -4193,9 +4193,7 @@ msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this "
-"server"
+msgid "Failed to connect to the remote server"
 msgstr ""
 
 msgid "No username or password was specified"
@@ -4210,9 +4208,6 @@ msgid "Running Remote Update"
 msgstr ""
 
 msgid "URI"
-msgstr ""
-
-msgid "Failed to connect to the remote server"
 msgstr ""
 
 #. HINT: count of songs found

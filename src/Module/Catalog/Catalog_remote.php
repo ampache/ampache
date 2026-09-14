@@ -134,7 +134,7 @@ class Catalog_remote extends Catalog
         // refuses a uri naming the loopback interface, a private network or another address the server must not
         // be made to request on an administrator's behalf; the same check runs again before every connection
         if (!self::getUrlValidator()->isPublicHttpUrl($uri)) {
-            AmpError::add('general', T_('Remote Catalog type was selected, but the address is not reachable from this server'));
+            AmpError::add('general', T_('Failed to connect to the remote server'));
 
             return false;
         }
