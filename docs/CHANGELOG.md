@@ -8,6 +8,9 @@
 
 ### Fixed (8.1.1)
 
+* Connections run at READ COMMITTED, so MariaDB's `innodb_snapshot_isolation` no longer aborts a cron write with error 1020
+* A DB server without autocommit could have issue. Fix the issue, added check and docs
+* `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
 * A `LICENSE` tag was inserted raw, but Vorbis can have URL in license name
 * A licence's `external_link` reaches the admin license page as a raw `href`, so a tag carrying a `javascript:` url instead of an `http(s)` one could run script on click; only `http`/`https` render as a link now, and the link is escaped like everything else on that page
 * Fix folder in Subsonic API
