@@ -666,9 +666,8 @@ class Dba
             debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
         }
 
-        // READ COMMITTED avoids the 1020 that innodb_snapshot_isolation (MariaDB 11.6.2 default) raises under REPEATABLE READ.
-        // (usefull with cron)
-        // mariadb.com/kb/en/e1020
+        // READ COMMITTED avoids the 1020 that innodb_snapshot_isolation (MariaDB 11.6.2 default) raises under
+        // REPEATABLE READ, which matters most for a long-running cron: mariadb.com/kb/en/e1020
         try {
             $dbh->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
         } catch (PDOException) {

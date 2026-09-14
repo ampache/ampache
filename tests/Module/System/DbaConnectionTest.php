@@ -88,7 +88,9 @@ class DbaConnectionTest extends TestCase
                 && $file->getFilename() !== 'Dba.php'
                 && str_contains((string) file_get_contents($path), 'new PDO(')
             ) {
-                $offenders[] = str_replace($sourcePath, '', $path);
+                // getRealPath() carries the platform separator, and a report worth reading has to look the
+                // same whether the suite ran on Windows or not
+                $offenders[] = str_replace('\\', '/', str_replace($sourcePath, '', $path));
             }
         }
 
@@ -110,7 +112,8 @@ class DbaConnectionTest extends TestCase
         foreach ($iterator as $file) {
             $path = (string) $file->getRealPath();
             if ($file->getExtension() === 'php' && str_contains((string) file_get_contents($path), '->beginTransaction()')) {
-                $callers[] = str_replace($sourcePath, '', $path);
+                // getRealPath() carries the platform separator, and the assertion below is written portably
+                $callers[] = str_replace('\\', '/', str_replace($sourcePath, '', $path));
             }
         }
 
