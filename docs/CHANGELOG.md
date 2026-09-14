@@ -8,6 +8,7 @@
 
 ### Fixed (8.1.1)
 
+* Fix folder in Subsonic API
 * Fix missing songs lyrics
 * A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
 * `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it tried to work on `user_preference` assuming columns a later migration adds. Now it waits for the schema to be complete
