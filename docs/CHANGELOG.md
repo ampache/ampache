@@ -13,6 +13,8 @@
 
 ### Fixed (8.1.1)
 
+* Garbage collection deleted any folder holding nothing but other folders
+* Subsonic folder browsing missed sub-folders added since the last map rebuild, and folder was not returned listed
 * Connections run at READ COMMITTED, so MariaDB's `innodb_snapshot_isolation` no longer aborts a cron write with error 1020
 * A DB server without autocommit could have issue. Fix the issue, added check and docs
 * `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
