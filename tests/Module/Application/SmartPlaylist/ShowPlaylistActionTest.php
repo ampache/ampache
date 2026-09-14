@@ -81,6 +81,9 @@ class ShowPlaylistActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(false);
+        $search->type = 'public';
+        $search->shouldReceive('has_collaborate')
+            ->andReturnFalse();
         $search->shouldReceive('get_items')
             ->withNoArgs()
             ->once()

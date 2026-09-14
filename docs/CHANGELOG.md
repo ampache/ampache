@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Ampache 7.10.3
+
+### Fixed (7.10.3)
+
+* Localplay access was never actually checked (any user passed) and Subsonic `jukeboxControl` checked nothing. Now they are gated on the user's access level
+* A disabled account could still authenticate: `Gatekeeper::getUser()` (the api key path Subsonic itself uses), the Subsonic username/password login, and an RSS feed's token all resolved a disabled user as if it were active
+* Subsonic
+  * Private playlists and searches leaked through several endpoints: web smartlist, `getPlaylist`/`getPlaylists`
+  * `setRating`/`setStar` shared the API's `rate`/`flag` bugs, since both call into the same `Rating`/`Userflag` models: an out-of-range rating was stored as-is instead of clamped to 0-5, popularity weight could be drained below 0, and a future-dated flag pinned a favourite until real time caught up
+* WebDAV login accepted a disabled account and never bound the authenticated user, so `catalog_filter_group` wasn't applied to WebDAV browsing
+
 ## Ampache 7.10.2
 
 ### Fixed (7.10.2)
