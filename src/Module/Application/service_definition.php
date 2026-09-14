@@ -170,6 +170,7 @@ use Ampache\Module\Application\Podcast\UpdateFromFeedAction;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
+use Ampache\Module\Application\Preferences\QuickConnectAuthorizeAction;
 use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\UpdateUserAction;
 use Ampache\Module\Application\Preferences\UserAction;
@@ -446,6 +447,7 @@ return [
     AdminUpdatePreferencesAction::class => autowire(AdminUpdatePreferencesAction::class),
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
+    QuickConnectAuthorizeAction::class => autowire(QuickConnectAuthorizeAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
     OidcAction::class => autowire(OidcAction::class),
     ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),

@@ -66,6 +66,10 @@ final class PreferencesSidebarView extends AbstractSidebarView
 
         $categories[] = ['tab' => 'account', 'label' => T_('Account')];
 
+        if (AmpConfig::get_bool('jellyfin_quickconnect_enable')) {
+            $categories[] = ['tab' => 'quickconnect', 'label' => T_('QuickConnect')];
+        }
+
         return $categories;
     }
 

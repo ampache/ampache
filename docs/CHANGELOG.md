@@ -2,10 +2,22 @@
 
 ## Ampache 8.1.1
 
+**Jellyfin API** Third-party Jellyfin clients can now browse and stream your library through a new, opt-in Jellyfin-compatible API.
+
 ### Added (8.1.1)
 
 * Database 810012
   * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
+* Database 810013
+  * New `jellyfin_backend_enable` preference
+* Database 810014
+  * New `jellyfin_quick_connect` table and `jellyfin_quickconnect_enable` preference, backing QuickConnect device pairing
+* Jellyfin
+  * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
+  * Off by default; enable with the new `jellyfin_backend_enable` preference
+  * Audio only — no video, podcasts or live TV — and direct-play streaming only, with no server-side transcoding
+  * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
+  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
 
 ### Changed (8.1.1)
 

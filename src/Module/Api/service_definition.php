@@ -25,6 +25,54 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Api\Jellyfin\JellyfinApiApplication;
+use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticator;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticatorInterface;
+use Ampache\Module\Api\Jellyfin\JellyfinSessionMinter;
+use Ampache\Module\Api\Jellyfin\Method\Artist\ArtistsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\AuthenticateByNameMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\AuthenticateWithQuickConnectMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectAuthorizeMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectConnectMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectEnabledMethod;
+use Ampache\Module\Api\Jellyfin\Method\Auth\QuickConnectInitiateMethod;
+use Ampache\Module\Api\Jellyfin\Method\Genre\MusicGenresMethod;
+use Ampache\Module\Api\Jellyfin\Method\Image\ImageMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\InstantMixMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemDeleteMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemRefreshMethod;
+use Ampache\Module\Api\Jellyfin\Method\Items\ItemsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Library\LibraryRefreshMethod;
+use Ampache\Module\Api\Jellyfin\Method\Library\VirtualFoldersMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playback\AudioStreamMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playback\PlaybackInfoMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\CreatePlaylistMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistItemMoveMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistItemsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Playlist\PlaylistMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\LogoutMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingPingMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingProgressMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\PlayingStoppedMethod;
+use Ampache\Module\Api\Jellyfin\Method\Session\SessionCapabilitiesMethod;
+use Ampache\Module\Api\Jellyfin\Method\Similar\SimilarMethod;
+use Ampache\Module\Api\Jellyfin\Method\Song\LyricsMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemInfoMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemInfoPublicMethod;
+use Ampache\Module\Api\Jellyfin\Method\System\SystemPingMethod;
+use Ampache\Module\Api\Jellyfin\Method\User\UserMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\FavoriteMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\PlayedMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserData\RatingMethod;
+use Ampache\Module\Api\Jellyfin\Method\UserView\UserViewsMethod;
+use Ampache\Module\Api\Jellyfin\Method\Web\WebRedirectMethod;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepository;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepositoryInterface;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
+use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 
@@ -45,6 +93,52 @@ return [
     OpenSubsonic_Fields::class => autowire(),
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
+    JellyfinApiApplication::class => autowire(),
+    JellyfinRequestAuthenticatorInterface::class => autowire(JellyfinRequestAuthenticator::class),
+    SystemPingMethod::class => autowire(),
+    SystemInfoPublicMethod::class => autowire(),
+    SystemInfoMethod::class => autowire(),
+    AuthenticateByNameMethod::class => autowire(),
+    JellyfinSessionMinter::class => autowire(),
+    QuickConnectEnabledMethod::class => autowire(),
+    QuickConnectInitiateMethod::class => autowire(),
+    QuickConnectConnectMethod::class => autowire(),
+    QuickConnectAuthorizeMethod::class => autowire(),
+    AuthenticateWithQuickConnectMethod::class => autowire(),
+    JellyfinQuickConnectRepositoryInterface::class => autowire(JellyfinQuickConnectRepository::class),
+    JellyfinQuickConnectService::class => autowire(),
+    QuickConnectResultMapper::class => autowire(),
+    UserViewsMethod::class => autowire(),
+    WebRedirectMethod::class => autowire(),
+    JellyfinItemMapper::class => autowire(),
+    ItemsMethod::class => autowire(),
+    ItemMethod::class => autowire(),
+    ItemDeleteMethod::class => autowire(),
+    ItemRefreshMethod::class => autowire(),
+    InstantMixMethod::class => autowire(),
+    ImageMethod::class => autowire(),
+    PlaybackInfoMethod::class => autowire(),
+    AudioStreamMethod::class => autowire(),
+    UserMethod::class => autowire(),
+    SessionCapabilitiesMethod::class => autowire(),
+    LogoutMethod::class => autowire(),
+    PlayingMethod::class => autowire(),
+    PlayingPingMethod::class => autowire(),
+    PlayingProgressMethod::class => autowire(),
+    PlayingStoppedMethod::class => autowire(),
+    MusicGenresMethod::class => autowire(),
+    FavoriteMethod::class => autowire(),
+    PlayedMethod::class => autowire(),
+    RatingMethod::class => autowire(),
+    CreatePlaylistMethod::class => autowire(),
+    PlaylistMethod::class => autowire(),
+    PlaylistItemsMethod::class => autowire(),
+    PlaylistItemMoveMethod::class => autowire(),
+    ArtistsMethod::class => autowire(),
+    VirtualFoldersMethod::class => autowire(),
+    LibraryRefreshMethod::class => autowire(),
+    LyricsMethod::class => autowire(),
+    SimilarMethod::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     Json5_Data::class => autowire(),
     Json6_Data::class => autowire(),

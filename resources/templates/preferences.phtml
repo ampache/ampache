@@ -60,4 +60,8 @@ if ($this->isAccountTab()) {
     }
 }
 
+if ($this->isQuickConnectTab()) {
+    echo $this->raw($this->getQuickConnectView()->render());
+}
+
 Ui::show_box_bottom();
