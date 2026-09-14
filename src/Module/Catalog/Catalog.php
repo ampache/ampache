@@ -767,8 +767,12 @@ abstract class Catalog extends database_object
                     $license = $licenseRepository->prototype();
 
                     // the field is allowed to carry a url instead of a name, and external_link is where a url
-                    // belongs: stored as the name it overflows the column, and `find()` never matches it again
-                    if (filter_var($licenseValue, FILTER_VALIDATE_URL)) {
+                    // belongs: stored as the name it overflows the column, and `find()` never matches it again.
+                    // Only http(s) qualifies: a tag is untrusted input, and any other scheme reaching
+                    // external_link would hand the admin license page a link that runs script on click instead
+                    // of one that goes anywhere.
+                    $scheme = strtolower((string) parse_url($licenseValue, PHP_URL_SCHEME));
+                    if (filter_var($licenseValue, FILTER_VALIDATE_URL) && in_array($scheme, ['http', 'https'], true)) {
                         $host = parse_url($licenseValue, PHP_URL_HOST);
 
                         $license->setExternalLink(self::_check_length($licenseValue, 256))

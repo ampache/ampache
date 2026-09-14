@@ -93,6 +93,18 @@ class CatalogLicenseTagTest extends MockeryTestCase
     }
 
     /**
+     * A tag is untrusted input, and `external_link` reaches the admin license page as a raw href: a
+     * `javascript:` value must never land there, so it is kept to a plain (still escaped-at-render) name
+     */
+    public function testANonHttpUrlStaysAPlainName(): void
+    {
+        $license = $this->licenseFromTag('javascript://%0aalert(1)');
+
+        self::assertSame('javascript://%0aalert(1)', $license->getName());
+        self::assertSame('', $license->getExternalLink());
+    }
+
+    /**
      * A name held html escaped never equals the tag it came from, so `find()` misses and the scan creates the
      * same licence again, every single pass
      */

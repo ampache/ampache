@@ -61,13 +61,18 @@ class License extends BaseModel
 
     /**
      * Returns the external-link as html a-tag
+     *
+     * A tag value can carry any scheme at all, and this reaches the browser as a raw href: linking a
+     * `javascript:` or `data:` value would run it in the viewer's session the moment they click, so only
+     * http(s) is ever rendered as a link. Escaping still runs regardless, since a scheme check alone does
+     * not stop a value from breaking out of the attribute it sits in.
      */
     public function getLinkFormatted(): string
     {
-        if ((string) $this->external_link !== '') {
+        if ($this->hasLinkableExternalLink()) {
             return sprintf(
                 '<a href="%s">%s</a>',
-                $this->external_link,
+                scrub_out($this->external_link),
                 scrub_out($this->name)
             );
         }
@@ -147,5 +152,20 @@ class License extends BaseModel
         $this->order = $value;
 
         return $this;
+    }
+
+    /**
+     * http(s) only: every other scheme is a way to run script in the viewer's session rather than a place
+     * to send them, and no license anyone would type or tag a file with legitimately needs one.
+     */
+    private function hasLinkableExternalLink(): bool
+    {
+        if ((string) $this->external_link === '') {
+            return false;
+        }
+
+        $scheme = parse_url((string) $this->external_link, PHP_URL_SCHEME);
+
+        return in_array(strtolower((string) $scheme), ['http', 'https'], true);
     }
 }
