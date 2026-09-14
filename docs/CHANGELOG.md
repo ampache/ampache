@@ -8,6 +8,8 @@
 
 ### Fixed (8.1.1)
 
+* A `LICENSE` tag was inserted raw, but Vorbis can have URL in license name
+* A licence's `external_link` reaches the admin license page as a raw `href`, so a tag carrying a `javascript:` url instead of an `http(s)` one could run script on click; only `http`/`https` render as a link now, and the link is escaped like everything else on that page
 * Fix folder in Subsonic API
 * Fix missing songs lyrics
 * A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
