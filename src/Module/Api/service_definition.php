@@ -73,10 +73,22 @@ use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepository;
 use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepositoryInterface;
 use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
+use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandler as OpenSubsonicBookmarkHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface as OpenSubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandler as OpenSubsonicChatHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface as OpenSubsonicChatHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandler as OpenSubsonicInternetRadioHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface as OpenSubsonicInternetRadioHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandler;
 use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
+use Ampache\Module\Api\Subsonic\Handler\BookmarkHandler as SubsonicBookmarkHandler;
+use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface as SubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\ChatHandler as SubsonicChatHandler;
+use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface as SubsonicChatHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandler as SubsonicInternetRadioHandler;
+use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface as SubsonicInternetRadioHandlerInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandler;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 
@@ -92,6 +104,12 @@ return [
     OpenSubsonic_Api::class => autowire(),
     SubsonicResponseHandlerInterface::class => autowire(SubsonicResponseHandler::class),
     OpenSubsonicResponseHandlerInterface::class => autowire(OpenSubsonicResponseHandler::class),
+    SubsonicChatHandlerInterface::class => autowire(SubsonicChatHandler::class),
+    OpenSubsonicChatHandlerInterface::class => autowire(OpenSubsonicChatHandler::class),
+    SubsonicBookmarkHandlerInterface::class => autowire(SubsonicBookmarkHandler::class),
+    OpenSubsonicBookmarkHandlerInterface::class => autowire(OpenSubsonicBookmarkHandler::class),
+    SubsonicInternetRadioHandlerInterface::class => autowire(SubsonicInternetRadioHandler::class),
+    OpenSubsonicInternetRadioHandlerInterface::class => autowire(OpenSubsonicInternetRadioHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),

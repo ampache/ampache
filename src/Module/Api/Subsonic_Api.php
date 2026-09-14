@@ -29,6 +29,9 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
@@ -59,9 +62,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
-use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
@@ -80,12 +81,10 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
-use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use CurlHandle;
-use DateTime;
 use WpOrg\Requests\Requests;
 
 /**
@@ -209,15 +208,15 @@ class Subsonic_Api
 
     private AlbumRepositoryInterface $albumRepository;
     private ArtistRepositoryInterface $artistRepository;
-    private BookmarkRepositoryInterface $bookmarkRepository;
+    private BookmarkHandlerInterface $bookmarkHandler;
+    private ChatHandlerInterface $chatHandler;
     private FolderRepositoryInterface $folderRepository;
-    private LiveStreamRepositoryInterface $liveStreamRepository;
+    private InternetRadioHandlerInterface $internetRadioHandler;
     private PasswordGeneratorInterface $passwordGenerator;
     private PodcastCreatorInterface $podcastCreator;
     private PodcastDeleterInterface $podcastDeleter;
     private PodcastRepositoryInterface $podcastRepository;
     private PodcastSyncerInterface $podcastSyncer;
-    private PrivateMessageRepositoryInterface $privateMessageRepository;
     private Random $random;
     private SubsonicResponseHandlerInterface $responseHandler;
     private ShareCreatorInterface $shareCreator;
@@ -230,15 +229,15 @@ class Subsonic_Api
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ArtistRepositoryInterface $artistRepository,
-        BookmarkRepositoryInterface $bookmarkRepository,
+        BookmarkHandlerInterface $bookmarkHandler,
+        ChatHandlerInterface $chatHandler,
         FolderRepositoryInterface $folderRepository,
-        LiveStreamRepositoryInterface $liveStreamRepository,
+        InternetRadioHandlerInterface $internetRadioHandler,
         PasswordGeneratorInterface $passwordGenerator,
         PodcastCreatorInterface $podcastCreator,
         PodcastDeleterInterface $podcastDeleter,
         PodcastRepositoryInterface $podcastRepository,
         PodcastSyncerInterface $podcastSyncer,
-        PrivateMessageRepositoryInterface $privateMessageRepository,
         Random $random,
         ShareCreatorInterface $shareCreator,
         ShareRepositoryInterface $shareRepository,
@@ -250,15 +249,15 @@ class Subsonic_Api
     ) {
         $this->albumRepository          = $albumRepository;
         $this->artistRepository         = $artistRepository;
-        $this->bookmarkRepository       = $bookmarkRepository;
+        $this->bookmarkHandler          = $bookmarkHandler;
+        $this->chatHandler              = $chatHandler;
         $this->folderRepository         = $folderRepository;
-        $this->liveStreamRepository     = $liveStreamRepository;
+        $this->internetRadioHandler     = $internetRadioHandler;
         $this->passwordGenerator        = $passwordGenerator;
         $this->podcastCreator           = $podcastCreator;
         $this->podcastDeleter           = $podcastDeleter;
         $this->podcastRepository        = $podcastRepository;
         $this->podcastSyncer            = $podcastSyncer;
-        $this->privateMessageRepository = $privateMessageRepository;
         $this->random                   = $random;
         $this->shareCreator             = $shareCreator;
         $this->shareRepository          = $shareRepository;
@@ -578,28 +577,11 @@ class Subsonic_Api
     }
 
     /**
-     * addChatMessage
-     *
-     * Adds a message to the chat log.
-     * https://www.subsonic.org/pages/api.jsp#addchatmessage
      * @param array<string, mixed> $input
      */
     public function addchatmessage(array $input, User $user): void
     {
-        $message = $this->responseHandler->checkParameter($input, 'message', __FUNCTION__);
-        if ($message === false) {
-            return;
-        }
-
-        if (!AmpConfig::get('sociable')) {
-            $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
-
-            return;
-        }
-
-        $this->privateMessageRepository->create(null, $user, '', trim($message));
-
-        $this->responseHandler->responseOutput($input, __FUNCTION__);
+        $this->chatHandler->addchatmessage($input, $user);
     }
 
     /**
@@ -636,88 +618,19 @@ class Subsonic_Api
     }
 
     /**
-     * createBookmark
-     *
-     * Creates or updates a bookmark.
-     * https://www.subsonic.org/pages/api.jsp#createbookmark
      * @param array<string, mixed> $input
      */
     public function createbookmark(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $position = $this->responseHandler->checkParameter($input, 'position', __FUNCTION__);
-        if ($position === false) {
-            return;
-        }
-
-        $comment   = (string) ($input['comment'] ?? '');
-        $object_id = self::getAmpacheId($sub_id);
-        $type      = self::getAmpacheType($sub_id);
-
-        if (!empty($object_id) && !empty($type)) {
-            $bookmark = new Bookmark($object_id, $type);
-            if ($bookmark->isNew()) {
-                Bookmark::create(
-                    [
-                        'object_id' => $object_id,
-                        'object_type' => $type,
-                        'comment' => $comment,
-                        'position' => (int) $position
-                    ],
-                    $user->id,
-                    time()
-                );
-            } else {
-                $this->bookmarkRepository->update($bookmark->getId(), (int) $position, new DateTime());
-            }
-            $this->responseHandler->responseOutput($input, __FUNCTION__);
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-        }
+        $this->bookmarkHandler->createbookmark($input, $user);
     }
 
     /**
-     * createInternetRadioStation
-     *
-     * Adds a new internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#createinternetradiostation
      * @param array<string, mixed> $input
      */
     public function createinternetradiostation(array $input, User $user): void
     {
-        $url = $this->responseHandler->checkParameter($input, 'streamUrl', __FUNCTION__);
-        if ($url === false) {
-            return;
-        }
-
-        $name = $this->responseHandler->checkParameter($input, 'name', __FUNCTION__);
-        if ($name === false) {
-            return;
-        }
-
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
-        $catalogs = User::get_user_catalogs($user->id, 'music');
-        if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            $data = [
-                "name" => $name,
-                "url" => $url,
-                "codec" => 'mp3',
-                "catalog" => $catalogs[0],
-                "site_url" => $site_url
-            ];
-            if (!Live_Stream::create($data)) {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-                return;
-            }
-            $this->responseHandler->responseOutput($input, __FUNCTION__);
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->internetRadioHandler->createinternetradiostation($input, $user);
     }
 
     /**
@@ -973,64 +886,19 @@ class Subsonic_Api
     }
 
     /**
-     * deleteBookmark
-     *
-     * Creates or updates a bookmark.
-     * https://www.subsonic.org/pages/api.jsp#deletebookmark
      * @param array<string, mixed> $input
      */
     public function deletebookmark(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $object_id = self::getAmpacheId($sub_id);
-        $type      = self::getAmpacheType($sub_id);
-
-        $bookmark = new Bookmark($object_id, $type, $user->id);
-        if ($bookmark->isNew()) {
-            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-        } else {
-            $this->bookmarkRepository->delete($bookmark->getId());
-
-            $this->responseHandler->responseOutput($input, __FUNCTION__);
-        }
+        $this->bookmarkHandler->deletebookmark($input, $user);
     }
 
     /**
-     * deleteInternetRadioStation
-     *
-     * Deletes an existing internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#deleteinternetradiostation
      * @param array<string, mixed> $input
      */
     public function deleteinternetradiostation(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $liveStreamRepository = $this->liveStreamRepository;
-
-        if (AmpConfig::get('live_stream') && $user->access >= AccessLevelEnum::MANAGER->value) {
-            $radio_id   = self::getAmpacheId($sub_id);
-            $liveStream = ($radio_id)
-                ? $liveStreamRepository->findById($radio_id)
-                : null;
-
-            if ($liveStream === null) {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            } else {
-                $liveStreamRepository->delete($liveStream);
-
-                $this->responseHandler->responseOutput($input, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-        }
+        $this->internetRadioHandler->deleteinternetradiostation($input, $user);
     }
 
     /**
@@ -1587,34 +1455,11 @@ class Subsonic_Api
     }
 
     /**
-     * getBookmarks
-     *
-     * Returns all bookmarks for this user.
-     * https://www.subsonic.org/pages/api.jsp#getbookmarks
      * @param array<string, mixed> $input
      */
     public function getbookmarks(array $input, User $user): void
     {
-        $bookmarks = [];
-
-        $bookmarkRepository = $this->bookmarkRepository;
-        foreach ($bookmarkRepository->getByUser($user) as $bookmarkId) {
-            $bookmark = $bookmarkRepository->findById($bookmarkId);
-
-            if ($bookmark !== null) {
-                $bookmarks[] = $bookmark;
-            }
-        }
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addBookmarks($response, $bookmarks);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addBookmarks($response, $bookmarks);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->bookmarkHandler->getbookmarks($input, $user);
     }
 
     /**
@@ -1672,35 +1517,11 @@ class Subsonic_Api
     }
 
     /**
-     * getChatMessages
-     *
-     * Returns the current visible (non-expired) chat messages.
-     * https://www.subsonic.org/pages/api.jsp#getchatmessages
      * @param array<string, mixed> $input
      */
     public function getchatmessages(array $input, User $user): void
     {
-        unset($user);
-        $since        = (int) ($input['since'] ?? 0);
-        $pmRepository = $this->privateMessageRepository;
-
-        $pmRepository->cleanChatMessages();
-
-        if (!AmpConfig::get('sociable')) {
-            $messages = [];
-        } else {
-            $messages = $pmRepository->getChatMessages($since);
-        }
-
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addChatMessages($response, $messages);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addChatMessages($response, $messages);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->chatHandler->getchatmessages($input, $user);
     }
 
     /**
@@ -1870,24 +1691,11 @@ class Subsonic_Api
     }
 
     /**
-     * getInternetRadioStations
-     *
-     * Returns all internet radio stations.
-     * https://www.subsonic.org/pages/api.jsp#getinternetradiostations
      * @param array<string, mixed> $input
      */
     public function getinternetradiostations(array $input, User $user): void
     {
-        $radios = $this->liveStreamRepository->findAll($user);
-        $format = (string) ($input['f'] ?? 'xml');
-        if ($format === 'xml') {
-            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = $this->subsonicXmlData->addInternetRadioStations($response, $radios);
-        } else {
-            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = $this->subsonicJsonData->addInternetRadioStations($response, $radios);
-        }
-        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
+        $this->internetRadioHandler->getinternetradiostations($input, $user);
     }
 
     /**
@@ -3438,51 +3246,11 @@ class Subsonic_Api
     }
 
     /**
-     * updateInternetRadioStation
-     *
-     * Updates an existing internet radio station.
-     * https://www.subsonic.org/pages/api.jsp#updateinternetradiostation
      * @param array<string, mixed> $input
      */
     public function updateinternetradiostation(array $input, User $user): void
     {
-        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
-        if ($sub_id === false) {
-            return;
-        }
-
-        $url = $this->responseHandler->checkParameter($input, 'streamUrl', __FUNCTION__);
-        if ($url === false) {
-            return;
-        }
-
-        $name = $this->responseHandler->checkParameter($input, 'name', __FUNCTION__);
-        if ($name === false) {
-            return;
-        }
-
-        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?: '';
-
-        if (AmpConfig::get('live_stream') && $user->access >= 75) {
-            $internetradiostation = new Live_Stream(self::getAmpacheId($sub_id));
-            if ($internetradiostation->id > 0) {
-                $data = [
-                    "name" => $name,
-                    "url" => $url,
-                    "codec" => 'mp3',
-                    "site_url" => $site_url
-                ];
-                if ($internetradiostation->update($data)) {
-                    $this->responseHandler->responseOutput($input, __FUNCTION__);
-                } else {
-                    $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-                }
-            } else {
-                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-            }
-        } else {
-            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
-        }
+        $this->internetRadioHandler->updateinternetradiostation($input, $user);
     }
 
     /**
