@@ -75,14 +75,26 @@ use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandler as OpenSubsonicBookmarkHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface as OpenSubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\BrowsingHandler as OpenSubsonicBrowsingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\BrowsingHandlerInterface as OpenSubsonicBrowsingHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandler as OpenSubsonicChatHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\ChatHandlerInterface as OpenSubsonicChatHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandler as OpenSubsonicInternetRadioHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\InternetRadioHandlerInterface as OpenSubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaybackStateHandler as OpenSubsonicPlaybackStateHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaybackStateHandlerInterface as OpenSubsonicPlaybackStateHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaylistHandler as OpenSubsonicPlaylistHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PlaylistHandlerInterface as OpenSubsonicPlaylistHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\PodcastHandler as OpenSubsonicPodcastHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\PodcastHandlerInterface as OpenSubsonicPodcastHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandler as OpenSubsonicRatingHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\RatingHandlerInterface as OpenSubsonicRatingHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\SearchHandler as OpenSubsonicSearchHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\SearchHandlerInterface as OpenSubsonicSearchHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandler as OpenSubsonicShareHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\ShareHandlerInterface as OpenSubsonicShareHandlerInterface;
+use Ampache\Module\Api\OpenSubsonic\Handler\StreamingHandler as OpenSubsonicStreamingHandler;
+use Ampache\Module\Api\OpenSubsonic\Handler\StreamingHandlerInterface as OpenSubsonicStreamingHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandler as OpenSubsonicSystemHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\SystemHandlerInterface as OpenSubsonicSystemHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\UserHandler as OpenSubsonicUserHandler;
@@ -97,14 +109,26 @@ use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Module\Api\Subsonic\Handler\BookmarkHandler as SubsonicBookmarkHandler;
 use Ampache\Module\Api\Subsonic\Handler\BookmarkHandlerInterface as SubsonicBookmarkHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\BrowsingHandler as SubsonicBrowsingHandler;
+use Ampache\Module\Api\Subsonic\Handler\BrowsingHandlerInterface as SubsonicBrowsingHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandler as SubsonicChatHandler;
 use Ampache\Module\Api\Subsonic\Handler\ChatHandlerInterface as SubsonicChatHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandler as SubsonicInternetRadioHandler;
 use Ampache\Module\Api\Subsonic\Handler\InternetRadioHandlerInterface as SubsonicInternetRadioHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PlaybackStateHandler as SubsonicPlaybackStateHandler;
+use Ampache\Module\Api\Subsonic\Handler\PlaybackStateHandlerInterface as SubsonicPlaybackStateHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PlaylistHandler as SubsonicPlaylistHandler;
+use Ampache\Module\Api\Subsonic\Handler\PlaylistHandlerInterface as SubsonicPlaylistHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\PodcastHandler as SubsonicPodcastHandler;
+use Ampache\Module\Api\Subsonic\Handler\PodcastHandlerInterface as SubsonicPodcastHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\RatingHandler as SubsonicRatingHandler;
 use Ampache\Module\Api\Subsonic\Handler\RatingHandlerInterface as SubsonicRatingHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\SearchHandler as SubsonicSearchHandler;
+use Ampache\Module\Api\Subsonic\Handler\SearchHandlerInterface as SubsonicSearchHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\ShareHandler as SubsonicShareHandler;
 use Ampache\Module\Api\Subsonic\Handler\ShareHandlerInterface as SubsonicShareHandlerInterface;
+use Ampache\Module\Api\Subsonic\Handler\StreamingHandler as SubsonicStreamingHandler;
+use Ampache\Module\Api\Subsonic\Handler\StreamingHandlerInterface as SubsonicStreamingHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\SystemHandler as SubsonicSystemHandler;
 use Ampache\Module\Api\Subsonic\Handler\SystemHandlerInterface as SubsonicSystemHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\UserHandler as SubsonicUserHandler;
@@ -143,6 +167,18 @@ return [
     OpenSubsonicRatingHandlerInterface::class => autowire(OpenSubsonicRatingHandler::class),
     SubsonicUserHandlerInterface::class => autowire(SubsonicUserHandler::class),
     OpenSubsonicUserHandlerInterface::class => autowire(OpenSubsonicUserHandler::class),
+    SubsonicPodcastHandlerInterface::class => autowire(SubsonicPodcastHandler::class),
+    OpenSubsonicPodcastHandlerInterface::class => autowire(OpenSubsonicPodcastHandler::class),
+    SubsonicPlaylistHandlerInterface::class => autowire(SubsonicPlaylistHandler::class),
+    OpenSubsonicPlaylistHandlerInterface::class => autowire(OpenSubsonicPlaylistHandler::class),
+    SubsonicSearchHandlerInterface::class => autowire(SubsonicSearchHandler::class),
+    OpenSubsonicSearchHandlerInterface::class => autowire(OpenSubsonicSearchHandler::class),
+    SubsonicStreamingHandlerInterface::class => autowire(SubsonicStreamingHandler::class),
+    OpenSubsonicStreamingHandlerInterface::class => autowire(OpenSubsonicStreamingHandler::class),
+    SubsonicPlaybackStateHandlerInterface::class => autowire(SubsonicPlaybackStateHandler::class),
+    OpenSubsonicPlaybackStateHandlerInterface::class => autowire(OpenSubsonicPlaybackStateHandler::class),
+    SubsonicBrowsingHandlerInterface::class => autowire(SubsonicBrowsingHandler::class),
+    OpenSubsonicBrowsingHandlerInterface::class => autowire(OpenSubsonicBrowsingHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),
