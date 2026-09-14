@@ -40,6 +40,7 @@ use Ampache\Repository\SongRepositoryInterface;
 class AlbumDisk extends database_object implements
     library_item,
     VisibleItemInterface,
+    WithdrawableInterface,
     displayable_item,
     container_item,
     CatalogItemInterface

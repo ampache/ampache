@@ -60,7 +60,7 @@ if ($browse->is_show_header()) {
     </thead>
     <tbody>
         <?php foreach ($albums as $album) { ?>
-        <tr id="<?php echo $this->e($objectType . '_' . $album->getId()); ?>" class="libitem_menu" data-object-type="<?php echo $this->e($objectType); ?>" data-object-id="<?php echo $this->e($album->getId()); ?>">
+        <tr id="<?php echo $this->e($objectType . '_' . $album->getId()); ?>" class="libitem_menu<?php echo ($album->isEnabled()) ? '' : ' withdrawn'; ?>" data-object-type="<?php echo $this->e($objectType); ?>" data-object-id="<?php echo $this->e($album->getId()); ?>">
             <?php echo $this->raw($this->renderRow($album)); ?>
         </tr>
         <?php } ?>
