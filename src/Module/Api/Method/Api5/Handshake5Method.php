@@ -111,6 +111,12 @@ final class Handshake5Method
         } else {
             $client = User::get_from_username($username);
         }
+
+        if ($client instanceof User && $client->disabled) {
+            debug_event(self::class, 'Login Failed: account is disabled', 1);
+            $client = null;
+        }
+
         if ($client instanceof User) {
             $user_id = $client->id;
         }

@@ -30,7 +30,9 @@ use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -66,11 +68,16 @@ final class FriendsTimeline6Method
         $limit = (int) ($input['limit'] ?? 0);
         $since = (int) ($input['since'] ?? 0);
 
-        $results = self::getUseractivityRepository()->getFriendsActivities(
+        $results       = self::getUseractivityRepository()->getFriendsActivities(
             $user->getId(),
             $limit,
             $since
         );
+        $accessChecker = self::getUserActivityAccessChecker();
+        $results       = array_values(array_filter(
+            $results,
+            static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $user)
+        ));
         // no empty-envelope short circuit: an empty result renders as `activity: []`, matching `timeline`
         ob_end_clean();
         switch ($input['api_format']) {
@@ -89,5 +96,12 @@ final class FriendsTimeline6Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }

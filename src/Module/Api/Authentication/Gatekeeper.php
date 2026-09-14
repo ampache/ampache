@@ -123,7 +123,19 @@ final class Gatekeeper implements GatekeeperInterface
 
     public function getUser(string $requestKey = 'auth'): ?User
     {
-        return $this->userRepository->findByApiKey($this->getAuth($requestKey));
+        $user = $this->userRepository->findByApiKey($this->getAuth($requestKey));
+
+        // a disabled account must not authenticate, the same way the web login and the streaming endpoint refuse it
+        if ($user instanceof User && $user->disabled) {
+            $this->logger->warning(
+                'Disabled account attempted to use the api',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return null;
+        }
+
+        return $user;
     }
 
     public function getUserName(string $requestKey = 'auth'): string
