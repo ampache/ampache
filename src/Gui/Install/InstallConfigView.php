@@ -40,8 +40,14 @@ final class InstallConfigView extends AbstractInstallStepView
         private readonly InstallationHelperInterface $installationHelper,
         private readonly string $htaccessPlayFile,
         private readonly string $htaccessRestFile,
+        private readonly string $htaccessJellyfinFile,
     ) {
         parent::__construct($webPath, $charset, $documentLanguage);
+    }
+
+    public function checkJellyfinRewrite(): bool
+    {
+        return (bool) $this->installationHelper->install_check_rewrite_rules($this->htaccessJellyfinFile, $this->getWebPathGuess());
     }
 
     public function checkPlayRewrite(): bool
@@ -130,6 +136,11 @@ final class InstallConfigView extends AbstractInstallStepView
     public function isConfigPresent(): bool
     {
         return is_readable($this->getConfigPath());
+    }
+
+    public function isJellyfinHtaccessPresent(): bool
+    {
+        return is_readable($this->htaccessJellyfinFile);
     }
 
     public function isPlayHtaccessPresent(): bool

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: n magi <csma17068@g.nihon-u.ac.jp>, 2020\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/ampache/ampache/language/ja_JP/)\n"
@@ -234,9 +234,6 @@ msgstr "リンク"
 msgid "Graphs"
 msgstr ""
 
-msgid "Save Track Order"
-msgstr ""
-
 msgid "Do you really want to update from tags?"
 msgstr "タグから更新してもよろしいですか？"
 
@@ -336,6 +333,9 @@ msgstr "同様のアーティスト"
 
 msgid "Similar Songs"
 msgstr "同様の曲"
+
+msgid "Disabled"
+msgstr "無効"
 
 msgid "Select New Art"
 msgstr "新しいアートを選択"
@@ -535,6 +535,9 @@ msgstr "所有者"
 msgid "Type"
 msgstr "タイプ"
 
+msgid "Save Track Order"
+msgstr ""
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -624,6 +627,9 @@ msgstr "曲にタグを上書きする"
 
 msgid "Add tags to sub songs"
 msgstr "曲にタグを追加する"
+
+msgid "Enabled"
+msgstr "有効化済"
 
 msgid "Summary"
 msgstr "概要"
@@ -1516,11 +1522,17 @@ msgstr "play/.htaccess は存在しますか？"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess は設定されていますか？"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php の動作"
-
-msgid "Disabled"
-msgstr "無効"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php は存在しますか？"
@@ -1841,6 +1853,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2025,6 +2053,9 @@ msgstr ""
 msgid "Save Changes"
 msgstr "変更を保存"
 
+msgid "Save as Smart Playlist"
+msgstr "スマートプレイリストを保存"
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2084,6 +2115,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2114,6 +2148,15 @@ msgstr "全てに適用"
 
 msgid "Access Level"
 msgstr "アクセスレベル"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "送信者"
@@ -2162,9 +2205,6 @@ msgstr "無制限"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "スマートプレイリストを保存"
 
 msgid "Options"
 msgstr "オプション"
@@ -2921,6 +2961,9 @@ msgstr "ローカル再生コントローラが定義されていません"
 msgid "Account"
 msgstr "アカウント"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "歌詞が見つかりません"
 
@@ -2979,7 +3022,10 @@ msgstr "ライセンス"
 msgid "Uploaded by"
 msgstr "アップロード"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3743,6 +3789,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "サーバ設定が更新されました"
 
@@ -4133,6 +4185,9 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d 個のファイルを更新しました"
 
+msgid "Failed to connect to the remote server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr "指定されたユーザ名/パスワードはありません"
 
@@ -4146,9 +4201,6 @@ msgstr "リモート更新実行中"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr ""
 
 #. HINT: count of songs found
 #, php-format
@@ -4464,9 +4516,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "有効化済"
 
 msgid "Users List"
 msgstr ""
@@ -5188,9 +5237,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5271,9 +5317,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "検索可能なテキスト"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr ""
@@ -7192,6 +7235,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7223,6 +7274,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

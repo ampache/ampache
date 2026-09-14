@@ -61,9 +61,10 @@ final class HtaccessCommand extends Command
             return;
         }
 
-        $htaccess_play_file   = __DIR__ . '/../../../public/client/play/.htaccess';
-        $htaccess_rest_file   = __DIR__ . '/../../../public/rest/.htaccess';
-        $htaccess_public_file = __DIR__ . '/../../../public/client/.htaccess';
+        $htaccess_play_file     = __DIR__ . '/../../../public/client/play/.htaccess';
+        $htaccess_rest_file     = __DIR__ . '/../../../public/rest/.htaccess';
+        $htaccess_jellyfin_file = __DIR__ . '/../../../public/jellyfin/.htaccess';
+        $htaccess_public_file   = __DIR__ . '/../../../public/client/.htaccess';
 
         // check permissions
         if ($public && !check_htaccess_public_writable()) {
@@ -105,8 +106,22 @@ final class HtaccessCommand extends Command
             return;
         }
 
+        if (!check_htaccess_jellyfin_writable()) {
+            $interactor->error(
+                T_('Permission Denied') . ": " . $htaccess_jellyfin_file,
+                true
+            );
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
+
+            return;
+        }
+
         unlink($htaccess_play_file);
         unlink($htaccess_rest_file);
+        unlink($htaccess_jellyfin_file);
 
         // create the files
         if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->getWebPath(), false)) {
@@ -125,6 +140,19 @@ final class HtaccessCommand extends Command
         if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_rest_file,
+                true
+            );
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
+
+            return;
+        }
+
+        if (!$this->installationHelper->install_rewrite_rules($htaccess_jellyfin_file, $this->configContainer->getWebPath(), false)) {
+            $interactor->error(
+                T_('Failed to write config file') . ": " . $htaccess_jellyfin_file,
                 true
             );
             $interactor->error(

@@ -28,6 +28,7 @@ namespace Ampache\Module\System;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -581,6 +582,7 @@ final readonly class Session implements SessionInterface
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
+        JellyfinQuickConnectService::garbageCollection();
     }
 
     /**

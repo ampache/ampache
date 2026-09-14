@@ -234,6 +234,28 @@ foreach ($modes as $mode) { ?>
                                 <div class="col-sm-4 form-label"><?php echo $this->e(T_('play/.htaccess configured?')); ?></div>
                                 <div class="col-sm-8"><?php echo $this->raw(debug_result($this->checkPlayRewrite())); ?></div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-4 form-label">
+                                    <?php echo $this->e(T_('jellyfin/.htaccess action')); ?>
+                                </div>
+                                <div class="col-sm-8">
+                                    <button type="submit" class="btn btn-warning" name="download_htaccess_jellyfin"><?php echo $this->e(T_('Download')); ?></button>
+                                    <button type="submit" class="btn btn-warning" name="write_htaccess_jellyfin" <?php if (!check_htaccess_jellyfin_writable()) {
+                                        echo "disabled ";
+                                    } ?>>
+                                        <?php echo $this->e(T_('Write')); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('jellyfin/.htaccess exists?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->isJellyfinHtaccessPresent())); ?></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-label"><?php echo $this->e(T_('jellyfin/.htaccess configured?')); ?></div>
+                                <div class="col-sm-8"><?php echo $this->raw(debug_result($this->checkJellyfinRewrite())); ?></div>
+                            </div>
                         <?php } ?>
 
                         &nbsp;

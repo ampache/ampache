@@ -1240,11 +1240,6 @@ class Art extends database_object
             return '';
         }
 
-        $custom = (string) AmpConfig::get('custom_blankalbum', '');
-        if ($custom !== '') {
-            return '';
-        }
-
         return '&generate=1&template=' . rawurlencode($generated->resolveTemplate()->getId());
     }
 

@@ -438,6 +438,15 @@ function check_htaccess_play_writable(): bool
 }
 
 /**
+ * check_htaccess_jellyfin_writable
+ */
+function check_htaccess_jellyfin_writable(): bool
+{
+    return ((file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/')));
+}
+
+/**
  * check_htaccess_public_writable
  */
 function check_htaccess_public_writable(): bool

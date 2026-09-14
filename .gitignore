@@ -31,6 +31,7 @@ public/client/.htaccess
 public/client/.maintenance
 public/client/ample
 public/client/client
+public/client/jellyfin/.htaccess
 public/client/play/.htaccess
 public/client/rest/.htaccess
 public/client/dist/

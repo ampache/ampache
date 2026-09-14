@@ -27,6 +27,7 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
+use Ampache\Module\Application\Preferences\QuickConnectAuthorizeAction;
 use Ampache\Module\Application\Preferences\ShowAction;
 use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\UpdateUserAction;
@@ -47,6 +48,7 @@ $dic->get(ApplicationRunner::class)->run(
         AdminUpdatePreferencesAction::REQUEST_KEY => AdminUpdatePreferencesAction::class,
         UpdatePreferencesAction::REQUEST_KEY => UpdatePreferencesAction::class,
         GrantAction::REQUEST_KEY => GrantAction::class,
+        QuickConnectAuthorizeAction::REQUEST_KEY => QuickConnectAuthorizeAction::class,
     ],
     ShowAction::REQUEST_KEY
 );
