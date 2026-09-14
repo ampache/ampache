@@ -73,8 +73,12 @@ use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepository;
 use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepositoryInterface;
 use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
+use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandler;
+use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\Output\ApiOutputFactory;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
+use Ampache\Module\Api\Subsonic\SubsonicResponseHandler;
+use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 
 use function DI\autowire;
 
@@ -86,6 +90,8 @@ return [
     SubsonicApiApplication::class => autowire(),
     Subsonic_Api::class => autowire(),
     OpenSubsonic_Api::class => autowire(),
+    SubsonicResponseHandlerInterface::class => autowire(SubsonicResponseHandler::class),
+    OpenSubsonicResponseHandlerInterface::class => autowire(OpenSubsonicResponseHandler::class),
     Subsonic_Xml_Data::class => autowire(),
     Subsonic_Json_Data::class => autowire(),
     OpenSubsonic_Xml_Data::class => autowire(),

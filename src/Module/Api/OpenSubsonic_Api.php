@@ -29,6 +29,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -88,8 +89,6 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use CurlHandle;
 use DateTime;
-use DOMDocument;
-use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
 /**
@@ -186,24 +185,16 @@ class OpenSubsonic_Api
      */
     public const array SYSTEM_LIST = [
         '__construct',
-        '_addJsonResponse',
-        '_addXmlResponse',
         '_albumList',
-        '_check_parameter',
-        '_errorOutput',
         '_follow_stream',
         '_getAmpacheIdArrays',
-        '_jsonOutput',
-        '_jsonpOutput',
         '_musicFolderId',
         '_musicFolders',
         '_output_body',
         '_output_header',
-        '_responseOutput',
         '_search',
         '_setStar',
         '_updatePlaylist',
-        '_xmlOutput',
         'error',
         'getAlbumSubId',
         'getAmpacheId',
@@ -240,6 +231,7 @@ class OpenSubsonic_Api
     private PodcastSyncerInterface $podcastSyncer;
     private PrivateMessageRepositoryInterface $privateMessageRepository;
     private Random $random;
+    private OpenSubsonicResponseHandlerInterface $responseHandler;
     private ShareCreatorInterface $shareCreator;
     private ShareRepositoryInterface $shareRepository;
     private SongRepositoryInterface $songRepository;
@@ -258,6 +250,7 @@ class OpenSubsonic_Api
         PodcastSyncerInterface $podcastSyncer,
         PrivateMessageRepositoryInterface $privateMessageRepository,
         Random $random,
+        OpenSubsonicResponseHandlerInterface $responseHandler,
         OpenSubsonic_Json_Data $openSubsonicJsonData,
         OpenSubsonic_Xml_Data $openSubsonicXmlData,
         ShareCreatorInterface $shareCreator,
@@ -277,6 +270,7 @@ class OpenSubsonic_Api
         $this->podcastSyncer            = $podcastSyncer;
         $this->privateMessageRepository = $privateMessageRepository;
         $this->random                   = $random;
+        $this->responseHandler          = $responseHandler;
         $this->openSubsonicJsonData     = $openSubsonicJsonData;
         $this->openSubsonicXmlData      = $openSubsonicXmlData;
         $this->shareCreator             = $shareCreator;
@@ -602,20 +596,20 @@ class OpenSubsonic_Api
      */
     public function addchatmessage(array $input, User $user): void
     {
-        $message = $this->_check_parameter($input, 'message', __FUNCTION__);
+        $message = $this->responseHandler->checkParameter($input, 'message', __FUNCTION__);
         if ($message === false) {
             return;
         }
 
         if (!AmpConfig::get('sociable')) {
-            $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
 
             return;
         }
 
         $this->privateMessageRepository->create(null, $user, '', trim($message));
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -627,12 +621,12 @@ class OpenSubsonic_Api
      */
     public function changepassword(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
 
-        $inp_pass = $this->_check_parameter($input, 'password', __FUNCTION__);
+        $inp_pass = $this->responseHandler->checkParameter($input, 'password', __FUNCTION__);
         if ($inp_pass === false) {
             return;
         }
@@ -642,12 +636,12 @@ class OpenSubsonic_Api
             $update_user = User::get_from_username((string) $username);
             if ($update_user instanceof User && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password($password);
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -660,12 +654,12 @@ class OpenSubsonic_Api
      */
     public function createbookmark(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $position = $this->_check_parameter($input, 'position', __FUNCTION__);
+        $position = $this->responseHandler->checkParameter($input, 'position', __FUNCTION__);
         if ($position === false) {
             return;
         }
@@ -690,9 +684,9 @@ class OpenSubsonic_Api
             } else {
                 $this->bookmarkRepository->update($bookmark->getId(), (int) $position, new DateTime());
             }
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
     }
 
@@ -705,12 +699,12 @@ class OpenSubsonic_Api
      */
     public function createinternetradiostation(array $input, User $user): void
     {
-        $url = $this->_check_parameter($input, 'streamUrl', __FUNCTION__);
+        $url = $this->responseHandler->checkParameter($input, 'streamUrl', __FUNCTION__);
         if ($url === false) {
             return;
         }
 
-        $name = $this->_check_parameter($input, 'name', __FUNCTION__);
+        $name = $this->responseHandler->checkParameter($input, 'name', __FUNCTION__);
         if ($name === false) {
             return;
         }
@@ -726,13 +720,13 @@ class OpenSubsonic_Api
                 "site_url" => $site_url
             ];
             if (!Live_Stream::create($data)) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -756,19 +750,19 @@ class OpenSubsonic_Api
             // creating over an existing id rewrites that playlist, so it needs the same owner gate as updateplaylist
             $playlist = new Playlist($playlistId);
             if ($playlist->isNew()) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
 
             if (!$playlist->has_access($user)) {
-                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
                 return;
             }
 
             $this->_updatePlaylist($playlistId, $name, $songIdList, [], true, true);
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } elseif (!empty($name)) {
             $playlistId = Playlist::create($name, 'public', $user->id);
             if ($playlistId !== null) {
@@ -780,18 +774,18 @@ class OpenSubsonic_Api
                 $format   = (string) ($input['f'] ?? 'xml');
                 $playlist = new Playlist($playlistId);
                 if ($format === 'xml') {
-                    $response = $this->_addXmlResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
                     $response = $this->openSubsonicXmlData->addPlaylist($response, $playlist, $user, true);
                 } else {
-                    $response = $this->_addJsonResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
                     $response = $this->openSubsonicJsonData->addPlaylist($response, $playlist, $user, true);
                 }
-                $this->_responseOutput($input, __FUNCTION__, $response);
+                $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
             } else {
-                $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
         }
     }
 
@@ -804,7 +798,7 @@ class OpenSubsonic_Api
      */
     public function createpodcastchannel(array $input, User $user): void
     {
-        $url = $this->_check_parameter($input, 'url', __FUNCTION__);
+        $url = $this->responseHandler->checkParameter($input, 'url', __FUNCTION__);
         if ($url === false) {
             return;
         }
@@ -814,7 +808,7 @@ class OpenSubsonic_Api
             if (count($catalogs) > 0) {
                 $catalog = Catalog::create_from_id($catalogs[0]);
                 if (!$catalog instanceof Catalog) {
-                    $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                     return;
                 }
@@ -822,15 +816,15 @@ class OpenSubsonic_Api
                 try {
                     $this->podcastCreator->create($url, $catalog);
 
-                    $this->_responseOutput($input, __FUNCTION__);
+                    $this->responseHandler->responseOutput($input, __FUNCTION__);
                 } catch (PodcastCreationException) {
-                    $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -843,7 +837,7 @@ class OpenSubsonic_Api
      */
     public function createshare(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -857,7 +851,7 @@ class OpenSubsonic_Api
         }
 
         if (!$object instanceof library_item || !$object_type) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -909,7 +903,7 @@ class OpenSubsonic_Api
                     $description
                 );
                 if ($share === null) {
-                    $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
 
                     return;
                 }
@@ -917,18 +911,18 @@ class OpenSubsonic_Api
                 $shares = [$share];
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
-                    $response = $this->_addXmlResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
                     $response = $this->openSubsonicXmlData->addShares($response, $shares);
                 } else {
-                    $response = $this->_addJsonResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
                     $response = $this->openSubsonicJsonData->addShares($response, $shares);
                 }
-                $this->_responseOutput($input, __FUNCTION__, $response);
+                $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -941,17 +935,17 @@ class OpenSubsonic_Api
      */
     public function createuser(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
 
-        $password = $this->_check_parameter($input, 'password', __FUNCTION__);
+        $password = $this->responseHandler->checkParameter($input, 'password', __FUNCTION__);
         if ($password === false) {
             return;
         }
 
-        $email = $this->_check_parameter($input, 'email', __FUNCTION__);
+        $email = $this->responseHandler->checkParameter($input, 'email', __FUNCTION__);
         if ($email === false) {
             return;
         }
@@ -983,12 +977,12 @@ class OpenSubsonic_Api
                 if ($shareRole) {
                     Preference::update('share', $user_id, 1);
                 }
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1001,7 +995,7 @@ class OpenSubsonic_Api
      */
     public function deletebookmark(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1011,11 +1005,11 @@ class OpenSubsonic_Api
 
         $bookmark = new Bookmark($object_id, $type, $user->id);
         if ($bookmark->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         } else {
             $this->bookmarkRepository->delete($bookmark->getId());
 
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         }
     }
 
@@ -1028,7 +1022,7 @@ class OpenSubsonic_Api
      */
     public function deleteinternetradiostation(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1042,14 +1036,14 @@ class OpenSubsonic_Api
                 : null;
 
             if ($liveStream === null) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
                 $liveStreamRepository->delete($liveStream);
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
     }
 
@@ -1062,7 +1056,7 @@ class OpenSubsonic_Api
      */
     public function deleteplaylist(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1072,20 +1066,20 @@ class OpenSubsonic_Api
             (!($playlist instanceof Playlist || $playlist instanceof Search))
             || $playlist->isNew()
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         if (!$playlist->has_access($user)) {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
 
         $playlist->delete();
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -1097,7 +1091,7 @@ class OpenSubsonic_Api
      */
     public function deletepodcastchannel(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1108,14 +1102,14 @@ class OpenSubsonic_Api
                 ? $this->podcastRepository->findById($podcast_id)
                 : null;
             if ($podcast === null) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
                 $this->podcastDeleter->delete($podcast);
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1128,7 +1122,7 @@ class OpenSubsonic_Api
      */
     public function deletepodcastepisode(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1136,16 +1130,16 @@ class OpenSubsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(self::getAmpacheId($sub_id));
             if ($episode->isNew()) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } elseif ($episode->remove()) {
                 Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             } else {
-                $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1158,7 +1152,7 @@ class OpenSubsonic_Api
      */
     public function deleteshare(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1175,14 +1169,14 @@ class OpenSubsonic_Api
                 $share === null
                 || !$share->isAccessible($user)
             ) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
                 $shareRepository->delete($share);
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1195,7 +1189,7 @@ class OpenSubsonic_Api
      */
     public function deleteuser(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
@@ -1205,12 +1199,12 @@ class OpenSubsonic_Api
             if ($update_user instanceof User) {
                 $update_user->delete();
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1223,14 +1217,14 @@ class OpenSubsonic_Api
      */
     public function download(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $object = self::getAmpacheObject($sub_id);
         if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1250,7 +1244,7 @@ class OpenSubsonic_Api
      */
     public function downloadpodcastepisode(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1258,14 +1252,14 @@ class OpenSubsonic_Api
         if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(self::getAmpacheId($sub_id));
             if ($episode->isNew()) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
                 $this->podcastSyncer->syncEpisode($episode);
 
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1275,7 +1269,7 @@ class OpenSubsonic_Api
      */
     public function error(array $input, int $errorCode, string $function): void
     {
-        $this->_errorOutput($input, $errorCode, $function);
+        $this->responseHandler->errorOutput($input, $errorCode, $function);
     }
 
     /**
@@ -1287,17 +1281,17 @@ class OpenSubsonic_Api
     {
         $plugin = $this->_getSonicAnalysisPlugin($user);
         if ($plugin === null) {
-            $this->_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
             return;
         }
 
-        $start_id = $this->_check_parameter($input, 'startSongId', __FUNCTION__);
+        $start_id = $this->responseHandler->checkParameter($input, 'startSongId', __FUNCTION__);
         if ($start_id === false) {
             return;
         }
 
-        $end_id = $this->_check_parameter($input, 'endSongId', __FUNCTION__);
+        $end_id = $this->responseHandler->checkParameter($input, 'endSongId', __FUNCTION__);
         if ($end_id === false) {
             return;
         }
@@ -1310,7 +1304,7 @@ class OpenSubsonic_Api
             || $start->isNew()
             || $end->isNew()
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1320,13 +1314,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSonicMatches($response, $matches);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSonicMatches($response, $matches);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1339,27 +1333,27 @@ class OpenSubsonic_Api
     public function getalbum(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $album = self::getAmpacheObject($sub_id);
         if (!$album instanceof Album || $album->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addAlbumID3($response, $album, true);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addAlbumID3($response, $album, true);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1372,14 +1366,14 @@ class OpenSubsonic_Api
     public function getalbuminfo(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $album = self::getAmpacheObject($sub_id);
         if (!$album instanceof Album || $album->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1387,13 +1381,13 @@ class OpenSubsonic_Api
         $info   = Recommendation::get_album_info($album->getId());
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addAlbumInfo($response, $info, $album);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addAlbumInfo($response, $info, $album);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1417,31 +1411,31 @@ class OpenSubsonic_Api
      */
     public function getalbumlist(array $input, User $user): void
     {
-        $type = $this->_check_parameter($input, 'type', __FUNCTION__);
+        $type = $this->responseHandler->checkParameter($input, 'type', __FUNCTION__);
         if ($type === false) {
             return;
         }
 
-        if ($type === 'byGenre' && !$this->_check_parameter($input, 'genre', __FUNCTION__)) {
+        if ($type === 'byGenre' && !$this->responseHandler->checkParameter($input, 'genre', __FUNCTION__)) {
             return;
         }
 
         $albums = $this->_albumList($input, $user, (string) $type);
         if ($albums === null) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addAlbumList($response, $albums);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addAlbumList($response, $albums);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1453,31 +1447,31 @@ class OpenSubsonic_Api
      */
     public function getalbumlist2(array $input, User $user): void
     {
-        $type = $this->_check_parameter($input, 'type', __FUNCTION__);
+        $type = $this->responseHandler->checkParameter($input, 'type', __FUNCTION__);
         if ($type === false) {
             return;
         }
 
-        if ($type === 'byGenre' && !$this->_check_parameter($input, 'genre', __FUNCTION__)) {
+        if ($type === 'byGenre' && !$this->responseHandler->checkParameter($input, 'genre', __FUNCTION__)) {
             return;
         }
 
         $albums = $this->_albumList($input, $user, (string) $type);
         if ($albums === null) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addAlbumList2($response, $albums);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addAlbumList2($response, $albums);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1490,27 +1484,27 @@ class OpenSubsonic_Api
     public function getartist(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = new Artist(self::getAmpacheId($sub_id));
         if ($artist->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtistID3($response, $artist, true);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addArtistWithAlbumsID3($response, $artist);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1523,14 +1517,14 @@ class OpenSubsonic_Api
     public function getartistinfo(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = self::getAmpacheObject($sub_id);
         if (!$artist instanceof Artist || $artist->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1542,13 +1536,13 @@ class OpenSubsonic_Api
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtistInfo($response, $info, $artist, $similars);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addArtistInfo($response, $info, $artist, $similars);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1561,14 +1555,14 @@ class OpenSubsonic_Api
     public function getartistinfo2(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = self::getAmpacheObject($sub_id);
         if (!$artist instanceof Artist || $artist->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1580,13 +1574,13 @@ class OpenSubsonic_Api
         $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtistInfo2($response, $info, $artist, $similars);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addArtistInfo2($response, $info, $artist, $similars);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1611,13 +1605,13 @@ class OpenSubsonic_Api
 
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtists($response, $artists);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addArtists($response, $artists);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1629,7 +1623,7 @@ class OpenSubsonic_Api
      */
     public function getavatar(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
@@ -1650,10 +1644,10 @@ class OpenSubsonic_Api
                     echo $request->body;
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -1679,13 +1673,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addBookmarks($response, $bookmarks);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addBookmarks($response, $bookmarks);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1698,14 +1692,14 @@ class OpenSubsonic_Api
     public function getcaptions(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $video = self::getAmpacheObject($sub_id);
         if (!$video instanceof Video || $video->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1725,7 +1719,7 @@ class OpenSubsonic_Api
             ? file_get_contents($captions['file'])
             : false;
         if ($body === false) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1765,13 +1759,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addChatMessages($response, $messages);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addChatMessages($response, $messages);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1783,7 +1777,7 @@ class OpenSubsonic_Api
      */
     public function getcoverart(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -1797,7 +1791,7 @@ class OpenSubsonic_Api
             !$object_id
             || empty($object_type)
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1825,7 +1819,7 @@ class OpenSubsonic_Api
         }
 
         if (!$art || !$art->has_db_info('original', true)) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -1870,13 +1864,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addGenres($response, Tag::get_tags('song'));
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addGenres($response, Tag::get_tags('song'));
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1925,19 +1919,19 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
                 $response = $this->openSubsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
             }
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             if (count($fcatalogs) > 0) {
                 $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
                 $response = $this->openSubsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
             }
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1952,13 +1946,13 @@ class OpenSubsonic_Api
         $radios = $this->liveStreamRepository->findAll($user);
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addInternetRadioStations($response, $radios);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addInternetRadioStations($response, $radios);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1974,13 +1968,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addLicense($response);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addLicense($response);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -1996,7 +1990,7 @@ class OpenSubsonic_Api
         $title  = (string) ($input['title'] ?? '');
 
         if (empty($artist) && empty($title)) {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -2021,20 +2015,20 @@ class OpenSubsonic_Api
         if (count($songs) > 0) {
             $song = new Song($songs[0]);
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addLyrics($response, $artist, $title, $song);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addLyrics($response, $artist, $title, $song);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2047,13 +2041,13 @@ class OpenSubsonic_Api
     public function getlyricsbysongid(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
         $song = self::getAmpacheObject($sub_id);
         if (!$song instanceof Song || $song->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2066,13 +2060,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addLyricsList($response, $song, $enhanced);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addLyricsList($response, $song, $enhanced);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2084,21 +2078,21 @@ class OpenSubsonic_Api
      */
     public function getmusicdirectory(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $object_id = self::getAmpacheId($sub_id);
         if (!$object_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $object = self::getAmpacheObject($sub_id);
         if (!$object) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2106,15 +2100,15 @@ class OpenSubsonic_Api
         if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog || $object instanceof Folder) {
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
-                $response = $this->_addXmlResponse(__FUNCTION__);
+                $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
                 $response = $this->openSubsonicXmlData->addDirectory($response, $object, $user->getId());
             } else {
-                $response = $this->_addJsonResponse(__FUNCTION__);
+                $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
                 $response = $this->openSubsonicJsonData->addDirectory($response, $object, $user->getId());
             }
-            $this->_responseOutput($input, __FUNCTION__, $response);
+            $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
     }
 
@@ -2130,13 +2124,13 @@ class OpenSubsonic_Api
         $catalogs = $user->get_catalogs('music');
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addMusicFolders($response, $catalogs);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addMusicFolders($response, $catalogs);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2151,7 +2145,7 @@ class OpenSubsonic_Api
         unset($user);
         $count = (int) ($input['count'] ?? AmpConfig::get('podcast_new_download'));
         if (!AmpConfig::get('podcast')) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2159,13 +2153,13 @@ class OpenSubsonic_Api
         $episodes = Catalog::get_newest_podcasts($count);
         $format   = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addNewestPodcasts($response, $episodes);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addNewestPodcasts($response, $episodes);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2181,13 +2175,13 @@ class OpenSubsonic_Api
         $data   = Stream::get_now_playing();
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addNowPlaying($response, $data);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addNowPlaying($response, $data);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2222,13 +2216,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addOpenSubsonicExtensions($response, $extensions);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addOpenSubsonicExtensions($response, $extensions);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2240,7 +2234,7 @@ class OpenSubsonic_Api
      */
     public function getplaylist(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -2250,28 +2244,28 @@ class OpenSubsonic_Api
             (!($playlist instanceof Playlist || $playlist instanceof Search))
             || $playlist->isNew()
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         // a private list you neither own nor collaborate on is not yours to read
         if ($playlist->type !== 'public' && !$playlist->has_collaborate($user)) {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPlaylist($response, $playlist, $user, true);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPlaylist($response, $playlist, $user, true);
         }
 
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2310,13 +2304,13 @@ class OpenSubsonic_Api
 
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPlaylists($response, $user, $results);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPlaylists($response, $user, $results);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2333,13 +2327,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPlayQueue($response, $playQueue, (string) $user->username);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPlayQueue($response, $playQueue, (string) $user->username);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2356,13 +2350,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPlayQueueByIndex($response, $playQueue, (string) $user->username);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPlayQueueByIndex($response, $playQueue, (string) $user->username);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2375,33 +2369,33 @@ class OpenSubsonic_Api
     public function getpodcastepisode(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $episode_id = self::getAmpacheId($sub_id);
         if (!$episode_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
         $episode = new Podcast_Episode($episode_id);
         if ($episode->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPodcastEpisode($response, $episode);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPodcastEpisode($response, $episode);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2417,7 +2411,7 @@ class OpenSubsonic_Api
         $includeEpisodes = make_bool($input['includeEpisodes'] ?? true);
 
         if (!AmpConfig::get(ConfigurationKeyEnum::PODCAST)) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
 
         $podcast_id = ($sub_id)
@@ -2426,7 +2420,7 @@ class OpenSubsonic_Api
         if ($podcast_id) {
             $podcast = $this->podcastRepository->findById($podcast_id);
             if ($podcast === null) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
@@ -2438,13 +2432,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addPodcasts($response, $podcasts, $includeEpisodes, $sub_id);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2519,13 +2513,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addRandomSongs($response, $songs);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addRandomSongs($response, $songs);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2539,13 +2533,13 @@ class OpenSubsonic_Api
     {
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2560,13 +2554,13 @@ class OpenSubsonic_Api
         $shares = $this->shareRepository->getIdsByUser($user);
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addShares($response, $shares);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addShares($response, $shares);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2581,18 +2575,18 @@ class OpenSubsonic_Api
         unset($user);
         if (!AmpConfig::get('show_similar')) {
             debug_event(self::class, $elementName . ': Enable: show_similar', 4);
-            $this->_errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_GENERIC, __FUNCTION__);
 
             return;
         }
 
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
         $object_id = self::getAmpacheId($sub_id);
         if (!$object_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2631,7 +2625,7 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
                     $response = $this->openSubsonicXmlData->addSimilarSongs($response, $songs);
@@ -2641,7 +2635,7 @@ class OpenSubsonic_Api
                     break;
             }
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             switch ($elementName) {
                 case 'similarSongs':
                     $response = $this->openSubsonicJsonData->addSimilarSongs($response, $songs);
@@ -2651,7 +2645,7 @@ class OpenSubsonic_Api
                     break;
             }
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2676,34 +2670,34 @@ class OpenSubsonic_Api
     public function getsong(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $song_id = self::getAmpacheId($sub_id);
         if (!$song_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $song = new Song($song_id);
         if ($song->isNew() || !$song->enabled) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSong($response, $song);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSong($response, $song_id);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2715,7 +2709,7 @@ class OpenSubsonic_Api
      */
     public function getsongsbygenre(array $input, User $user): void
     {
-        $genre = $this->_check_parameter($input, 'genre', __FUNCTION__);
+        $genre = $this->responseHandler->checkParameter($input, 'genre', __FUNCTION__);
         if ($genre === false) {
             return;
         }
@@ -2733,13 +2727,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSongsByGenre($response, $songs);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSongsByGenre($response, $songs);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2751,19 +2745,19 @@ class OpenSubsonic_Api
     {
         $plugin = $this->_getSonicAnalysisPlugin($user);
         if ($plugin === null) {
-            $this->_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
 
             return;
         }
 
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $song = self::getAmpacheObject((string) $sub_id);
         if (!$song instanceof Song || $song->isNew()) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2773,13 +2767,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSonicMatches($response, $matches);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSonicMatches($response, $matches);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2804,17 +2798,17 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
                 ? $this->openSubsonicXmlData->addStarred2($response, $artists, $albums, $songs)
                 : $this->openSubsonicXmlData->addStarred($response, $artists, $albums, $songs);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = ($elementName === 'starred2')
                 ? $this->openSubsonicJsonData->addStarred2($response, $artists, $albums, $songs)
                 : $this->openSubsonicJsonData->addStarred($response, $artists, $albums, $songs);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2843,7 +2837,7 @@ class OpenSubsonic_Api
         $sub_id = $input['id'] ?? null;
         $name   = $input['artist'] ?? null;
         if ($sub_id === null && $name === null) {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -2851,7 +2845,7 @@ class OpenSubsonic_Api
         if ($sub_id !== null) {
             $artist = self::getAmpacheObject((string) $sub_id);
             if (!$artist instanceof Artist || $artist->isNew()) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
@@ -2873,13 +2867,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addTopSongs($response, $songs);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addTopSongs($response, $songs);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2893,7 +2887,7 @@ class OpenSubsonic_Api
     public function getTranscodeDecision(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'mediaId', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'mediaId', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -2903,7 +2897,7 @@ class OpenSubsonic_Api
             (!($media instanceof Song || $media instanceof Podcast_Episode))
             || $media->isNew()
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2914,13 +2908,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addTranscodeDecision($response, $decision);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addTranscodeDecision($response, $decision);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -2933,12 +2927,12 @@ class OpenSubsonic_Api
      */
     public function getTranscodeStream(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'mediaId', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'mediaId', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $token = $this->_check_parameter($input, 'transcodeParams', __FUNCTION__);
+        $token = $this->responseHandler->checkParameter($input, 'transcodeParams', __FUNCTION__);
         if ($token === false) {
             return;
         }
@@ -2948,7 +2942,7 @@ class OpenSubsonic_Api
             (!($media instanceof Song || $media instanceof Podcast_Episode))
             || $media->isNew()
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -2956,7 +2950,7 @@ class OpenSubsonic_Api
         // A token failing its signature is refused outright, or a client could pick its own output by sending rubbish.
         $settings = OpenSubsonic_Transcode::decodeParams((string) $token);
         if ($settings === null) {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -2984,7 +2978,7 @@ class OpenSubsonic_Api
      */
     public function getuser(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
@@ -2996,20 +2990,20 @@ class OpenSubsonic_Api
                 $update_user = User::get_from_username((string) $username);
             }
             if (!$update_user) {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
                 $format = (string) ($input['f'] ?? 'xml');
                 if ($format === 'xml') {
-                    $response = $this->_addXmlResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
                     $response = $this->openSubsonicXmlData->addUser($response, $update_user);
                 } else {
-                    $response = $this->_addJsonResponse(__FUNCTION__);
+                    $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
                     $response = $this->openSubsonicJsonData->addUser($response, $update_user);
                 }
-                $this->_responseOutput($input, __FUNCTION__, $response);
+                $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -3023,7 +3017,7 @@ class OpenSubsonic_Api
     public function getusers(array $input, User $user): void
     {
         if ($user->access !== 100) {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
@@ -3031,13 +3025,13 @@ class OpenSubsonic_Api
         $users  = $this->userRepository->getValid();
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addUsers($response, $users);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addUsers($response, $users);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3050,27 +3044,27 @@ class OpenSubsonic_Api
     public function getvideoinfo(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $video_id = self::getAmpacheId($sub_id);
         if (!$video_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addVideoInfo($response, $video_id);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addVideoInfo($response, $video_id);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3087,13 +3081,13 @@ class OpenSubsonic_Api
         $videos = Catalog::get_videos();
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addVideos($response, $videos);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addVideos($response, $videos);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3106,14 +3100,14 @@ class OpenSubsonic_Api
     public function hls(array $input, User $user): void
     {
         unset($user);
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $object_id = self::getAmpacheId($sub_id);
         if (!$object_id) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3126,7 +3120,7 @@ class OpenSubsonic_Api
         } elseif ($type === 'video') {
             $media['object_type'] = LibraryItemEnum::VIDEO;
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3158,7 +3152,7 @@ class OpenSubsonic_Api
      */
     public function jukeboxcontrol(array $input, User $user): void
     {
-        $action = $this->_check_parameter($input, 'action', __FUNCTION__);
+        $action = $this->responseHandler->checkParameter($input, 'action', __FUNCTION__);
         if ($action === false) {
             return;
         }
@@ -3168,7 +3162,7 @@ class OpenSubsonic_Api
             !AmpConfig::get('allow_localplay_playback')
             || $user->access < (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
         ) {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
@@ -3179,7 +3173,7 @@ class OpenSubsonic_Api
         $return     = false;
         if (empty($controller) || empty($localplay) || empty($localplay->type) || !$localplay->connect()) {
             debug_event(self::class, 'Error Localplay controller: ' . (empty($controller) ? 'Is not set' : $controller), 3);
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3204,7 +3198,7 @@ class OpenSubsonic_Api
                 } elseif (isset($input['offset'])) {
                     debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
                 } else {
-                    $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
                     return;
                 }
@@ -3250,7 +3244,7 @@ class OpenSubsonic_Api
                 if (isset($input['index'])) {
                     $return = $localplay->delete_track((int) $input['index']);
                 } else {
-                    $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
                 }
                 break;
             case 'shuffle':
@@ -3264,21 +3258,21 @@ class OpenSubsonic_Api
         if ($return) {
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
-                $response = $this->_addXmlResponse(__FUNCTION__);
+                $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
                 if ($action == 'get') {
                     $response = $this->openSubsonicXmlData->addJukeboxPlaylist($response, $localplay);
                 } else {
                     $response = $this->openSubsonicXmlData->addJukeboxStatus($response, $localplay);
                 }
             } else {
-                $response = $this->_addJsonResponse(__FUNCTION__);
+                $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
                 if ($action == 'get') {
                     $response = $this->openSubsonicJsonData->addJukeboxPlaylist($response, $localplay);
                 } else {
                     $response = $this->openSubsonicJsonData->addJukeboxStatus($response, $localplay);
                 }
             }
-            $this->_responseOutput($input, __FUNCTION__, $response);
+            $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
         }
     }
 
@@ -3293,7 +3287,7 @@ class OpenSubsonic_Api
     {
         unset($user);
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3313,9 +3307,9 @@ class OpenSubsonic_Api
             foreach ($podcasts as $podcast) {
                 $podcastSyncer->sync($podcast, true);
             }
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -3326,14 +3320,14 @@ class OpenSubsonic_Api
      */
     public function reportPlayback(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'mediaId', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'mediaId', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $state = strtolower((string) ($input['state'] ?? ''));
         if (!in_array($state, ['starting', 'playing', 'paused', 'stopped'], true)) {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -3346,7 +3340,7 @@ class OpenSubsonic_Api
             || $media->isNew()
             || !isset($media->id, $media->time)
         ) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3357,7 +3351,7 @@ class OpenSubsonic_Api
         if ($state === 'stopped') {
             Stream::delete_now_playing((string) $user->username, (int) $media->id, $object_type, $user->id);
 
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
 
             return;
         }
@@ -3385,7 +3379,7 @@ class OpenSubsonic_Api
             }
         }
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3442,7 +3436,7 @@ class OpenSubsonic_Api
                     }
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
@@ -3469,7 +3463,7 @@ class OpenSubsonic_Api
             User::set_user_data($user_id, 'playqueue_client', $client);
         }
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3487,7 +3481,7 @@ class OpenSubsonic_Api
             : [$id_list];
         $index = (int) ($input['currentIndex'] ?? 0);
         if ($index < 0 || $index >= count($sub_ids)) {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -3536,7 +3530,7 @@ class OpenSubsonic_Api
                     }
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;
             }
@@ -3560,7 +3554,7 @@ class OpenSubsonic_Api
             User::set_user_data($user_id, 'playqueue_client', $client);
         }
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3572,7 +3566,7 @@ class OpenSubsonic_Api
      */
     public function scrobble(array $input, User $user): void
     {
-        $sub_ids = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_ids = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_ids === false) {
             return;
         }
@@ -3596,7 +3590,7 @@ class OpenSubsonic_Api
         }
 
         if ($valid_media === []) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3634,7 +3628,7 @@ class OpenSubsonic_Api
             }
         }
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -3702,13 +3696,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSearchResult($response, $results, $offset, $total);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSearchResult($response, $results, $offset, $total);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3725,13 +3719,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSearchResult2($response, $results['artists'], $results['albums'], $results['songs']);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3748,13 +3742,13 @@ class OpenSubsonic_Api
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addSearchResult3($response, $results['artists'], $results['albums'], $results['songs']);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3766,12 +3760,12 @@ class OpenSubsonic_Api
      */
     public function setrating(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $rating = $this->_check_parameter($input, 'rating', __FUNCTION__);
+        $rating = $this->responseHandler->checkParameter($input, 'rating', __FUNCTION__);
         if ($rating === false) {
             return;
         }
@@ -3785,9 +3779,9 @@ class OpenSubsonic_Api
         if ($robj != null && $stars >= 0 && $stars <= 5) {
             $robj->set_rating($stars, $user->id);
 
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } else {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
         }
     }
 
@@ -3814,13 +3808,13 @@ class OpenSubsonic_Api
     {
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addScanStatus($response, $user);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addScanStatus($response, $user);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3832,14 +3826,14 @@ class OpenSubsonic_Api
      */
     public function stream(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $object = self::getAmpacheObject($sub_id);
         if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
@@ -3881,13 +3875,13 @@ class OpenSubsonic_Api
     {
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
-            $response = $this->_addXmlResponse(__FUNCTION__);
+            $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addTokenInfo($response, $user);
         } else {
-            $response = $this->_addJsonResponse(__FUNCTION__);
+            $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
             $response = $this->openSubsonicJsonData->addTokenInfo($response, $user);
         }
-        $this->_responseOutput($input, __FUNCTION__, $response);
+        $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
 
     /**
@@ -3911,17 +3905,17 @@ class OpenSubsonic_Api
      */
     public function updateinternetradiostation(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $url = $this->_check_parameter($input, 'streamUrl', __FUNCTION__);
+        $url = $this->responseHandler->checkParameter($input, 'streamUrl', __FUNCTION__);
         if ($url === false) {
             return;
         }
 
-        $name = $this->_check_parameter($input, 'name', __FUNCTION__);
+        $name = $this->responseHandler->checkParameter($input, 'name', __FUNCTION__);
         if ($name === false) {
             return;
         }
@@ -3938,15 +3932,15 @@ class OpenSubsonic_Api
                     "site_url" => $site_url
                 ];
                 if ($internetradiostation->update($data)) {
-                    $this->_responseOutput($input, __FUNCTION__);
+                    $this->responseHandler->responseOutput($input, __FUNCTION__);
                 } else {
-                    $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -3959,7 +3953,7 @@ class OpenSubsonic_Api
      */
     public function updateplaylist(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'playlistId', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'playlistId', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -3971,14 +3965,14 @@ class OpenSubsonic_Api
 
         $object = self::getAmpacheObject($sub_id);
         if (!$object) {
-            $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
         }
 
         if ($object instanceof Playlist) {
             if (!$object->has_access($user)) {
-                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
                 return;
             }
@@ -3990,9 +3984,9 @@ class OpenSubsonic_Api
             }
             $this->_updatePlaylist($object->getId(), $name, $songIdToAdd, $songIndexToRemove, $public);
 
-            $this->_responseOutput($input, __FUNCTION__);
+            $this->responseHandler->responseOutput($input, __FUNCTION__);
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -4005,7 +3999,7 @@ class OpenSubsonic_Api
      */
     public function updateshare(array $input, User $user): void
     {
-        $sub_id = $this->_check_parameter($input, 'id', __FUNCTION__);
+        $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
@@ -4013,7 +4007,7 @@ class OpenSubsonic_Api
         if (AmpConfig::get('share')) {
             $share = new Share(self::getAmpacheId($sub_id));
             if ($share->id > 0 && !$share->isAccessible($user)) {
-                $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
             } elseif ($share->id > 0) {
                 $expires = (isset($input['expires']))
                     ? Share::get_expiry(((int) filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) / 1000)
@@ -4026,15 +4020,15 @@ class OpenSubsonic_Api
                     'description' => $input['description'] ?? $share->description,
                 ];
                 if ($share->update($data, $user)) {
-                    $this->_responseOutput($input, __FUNCTION__);
+                    $this->responseHandler->responseOutput($input, __FUNCTION__);
                 } else {
-                    $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+                    $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
                 }
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
     }
 
@@ -4047,7 +4041,7 @@ class OpenSubsonic_Api
      */
     public function updateuser(array $input, User $user): void
     {
-        $username = $this->_check_parameter($input, 'username', __FUNCTION__);
+        $username = $this->responseHandler->checkParameter($input, 'username', __FUNCTION__);
         if ($username === false) {
             return;
         }
@@ -4098,36 +4092,13 @@ class OpenSubsonic_Api
                     // Subsonic maxBitRate is kbps; transcode_bitrate is stored in bps
                     Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
                 }
-                $this->_responseOutput($input, __FUNCTION__);
+                $this->responseHandler->responseOutput($input, __FUNCTION__);
             } else {
-                $this->_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+                $this->responseHandler->errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
-    }
-
-    /**
-     * _addJsonResponse
-     *
-     * Generate a subsonic-response
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
-     * @return array{'subsonic-response': array{'status': string, 'version': string, 'type': string, 'serverVersion': string, 'openSubsonic': bool}}
-     */
-    private function _addJsonResponse(string $function): array
-    {
-        return $this->openSubsonicJsonData->addResponse($function);
-    }
-
-    /**
-     * _addXmlResponse
-     *
-     * Generate a subsonic-response
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
-     */
-    private function _addXmlResponse(string $function): SimpleXMLElement
-    {
-        return $this->openSubsonicXmlData->addResponse($function);
     }
 
     /**
@@ -4214,44 +4185,6 @@ class OpenSubsonic_Api
         }
 
         return $albums;
-    }
-
-    /**
-     * _check_parameter
-     * @param array<string, mixed> $input
-     * @return false|mixed
-     */
-    private function _check_parameter(array $input, string $parameter, string $function): mixed
-    {
-        if (!array_key_exists($parameter, $input) || $input[$parameter] === '') {
-            ob_end_clean();
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, $function);
-
-            return false;
-        }
-
-        return $input[$parameter];
-    }
-
-    /**
-     * _errorOutput
-     * @param array<string, mixed> $input
-     */
-    private function _errorOutput(array $input, int $errorCode, string $function): void
-    {
-        $format = (string) ($input['f'] ?? 'xml');
-        switch ($format) {
-            case 'json':
-                $this->_jsonOutput($this->openSubsonicJsonData->addError($errorCode, $function));
-                break;
-            case 'jsonp':
-                $callback = (string) ($input['callback'] ?? 'jsonp');
-                $this->_jsonpOutput($this->openSubsonicJsonData->addError($errorCode, $function), $callback);
-                break;
-            default:
-                $this->_xmlOutput($this->openSubsonicXmlData->addError($errorCode, $function));
-                break;
-        }
     }
 
     /**
@@ -4363,38 +4296,6 @@ class OpenSubsonic_Api
     }
 
     /**
-     * _jsonOutput
-     * @param array{'subsonic-response': array<string, mixed>} $json
-     */
-    private function _jsonOutput(array $json): void
-    {
-        $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        if (!$output) {
-            $output = json_encode($this->openSubsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
-        }
-
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
-        header("Access-Control-Allow-Origin: *");
-        echo $output;
-    }
-
-    /**
-     * _jsonpOutput
-     * @param array{'subsonic-response': array<string, mixed>} $json
-     */
-    private function _jsonpOutput(array $json, string $callback): void
-    {
-        $output = json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        if ($output === false) {
-            $output = json_encode($this->openSubsonicJsonData->addError(self::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
-        }
-
-        header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
-        header("Access-Control-Allow-Origin: *");
-        echo $callback . '(' . $output . ')';
-    }
-
-    /**
      * _musicFolderId
      *
      * Resolve a requested musicFolderId into a single catalog id to filter on.
@@ -4461,39 +4362,6 @@ class OpenSubsonic_Api
         }
 
         return strlen($header);
-    }
-
-    /**
-     * _responseOutput
-     *
-     * Output a response or a default success response if no response is provided.
-     * @param array<string, mixed> $input
-     * @param array{'subsonic-response': array<string, mixed>}|SimpleXMLElement|null $response
-     */
-    private function _responseOutput(array $input, string $function, array|SimpleXMLElement|null $response = null): void
-    {
-        $format = (string) ($input['f'] ?? 'xml');
-        switch ($format) {
-            case 'json':
-                $response = (is_array($response))
-                    ? $response
-                    : $this->_addJsonResponse($function);
-                $this->_jsonOutput($response);
-                break;
-            case 'jsonp':
-                $response = (is_array($response))
-                    ? $response
-                    : $this->_addJsonResponse($function);
-                $callback = (string) ($input['callback'] ?? 'jsonp');
-                $this->_jsonpOutput($response, $callback);
-                break;
-            default:
-                $response = ($response instanceof SimpleXMLElement)
-                    ? $response
-                    : $this->_addXmlResponse($function);
-                $this->_xmlOutput($response);
-                break;
-        }
     }
 
     /**
@@ -4629,7 +4497,7 @@ class OpenSubsonic_Api
                 ];
             }
         } else {
-            $this->_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+            $this->responseHandler->errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
             return;
         }
@@ -4639,7 +4507,7 @@ class OpenSubsonic_Api
             $flag->set_flag($star, $user->id);
         }
 
-        $this->_responseOutput($input, __FUNCTION__);
+        $this->responseHandler->responseOutput($input, __FUNCTION__);
     }
 
     /**
@@ -4717,35 +4585,5 @@ class OpenSubsonic_Api
             $playlist->set_items();
             $playlist->regenerate_track_numbers(); // reorder now that the tracks are removed
         }
-    }
-
-    /**
-     * _xmlOutput
-     */
-    private function _xmlOutput(SimpleXMLElement $xml): void
-    {
-        $output = false;
-        $xmlstr = $xml->asXML();
-        if (is_string($xmlstr)) {
-            // clean illegal XML characters.
-            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-            if (is_string($clean_xml)) {
-                $dom = new DOMDocument();
-                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-                $dom->formatOutput = true;
-                $output            = $dom->saveXML();
-            }
-        }
-
-        // saving xml can fail
-        if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . AmpConfig::get('version') . "\" " . "openSubsonic=\"1\" " . ">"
-                . "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>"
-                . "</subsonic-response>";
-        }
-
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
-        header("Access-Control-Allow-Origin: *");
-        echo $output;
     }
 }
