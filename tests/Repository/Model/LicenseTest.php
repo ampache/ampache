@@ -43,6 +43,32 @@ class LicenseTest extends TestCase
         yield ['getExternalLink', 'setExternalLink', '', 'some-link'];
     }
 
+    /**
+     * A tag is untrusted input reaching this as a raw href, so a `javascript:` (or any other non-http(s))
+     * scheme is shown as plain text instead of a link that runs script in the viewer's session on click
+     */
+    public function testGetLinkFormattedDropsANonHttpLink(): void
+    {
+        $name = 'some-name';
+
+        $this->subject->setName($name);
+        $this->subject->setExternalLink('javascript://%0aalert(1)');
+
+        self::assertSame($name, $this->subject->getLinkFormatted());
+    }
+
+    /**
+     * The href is written raw into the page, so a value carrying a quote has to be escaped there too, not
+     * only in the name that sits beside it
+     */
+    public function testGetLinkFormattedEscapesTheLink(): void
+    {
+        $this->subject->setName('some-name');
+        $this->subject->setExternalLink('https://example.org/?a="><script>alert(1)</script>');
+
+        self::assertStringNotContainsString('<script>', $this->subject->getLinkFormatted());
+    }
+
     public function testGetLinkFormattedReturnsFormattedExternalLink(): void
     {
         $link = 'https://example.org/some-link';
@@ -59,32 +85,6 @@ class LicenseTest extends TestCase
             ),
             $this->subject->getLinkFormatted()
         );
-    }
-
-    /**
-     * The href is written raw into the page, so a value carrying a quote has to be escaped there too, not
-     * only in the name that sits beside it
-     */
-    public function testGetLinkFormattedEscapesTheLink(): void
-    {
-        $this->subject->setName('some-name');
-        $this->subject->setExternalLink('https://example.org/?a="><script>alert(1)</script>');
-
-        self::assertStringNotContainsString('<script>', $this->subject->getLinkFormatted());
-    }
-
-    /**
-     * A tag is untrusted input reaching this as a raw href, so a `javascript:` (or any other non-http(s))
-     * scheme is shown as plain text instead of a link that runs script in the viewer's session on click
-     */
-    public function testGetLinkFormattedDropsANonHttpLink(): void
-    {
-        $name = 'some-name';
-
-        $this->subject->setName($name);
-        $this->subject->setExternalLink('javascript://%0aalert(1)');
-
-        self::assertSame($name, $this->subject->getLinkFormatted());
     }
 
     public function testGetLinkFormattedReturnsNameIfLinkIsEmpty(): void

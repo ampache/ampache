@@ -73,6 +73,18 @@ class CatalogLicenseTagTest extends MockeryTestCase
         self::assertSame('', $license->getExternalLink());
     }
 
+    /**
+     * A tag is untrusted input, and `external_link` reaches the admin license page as a raw href: a
+     * `javascript:` value must never land there, so it is kept to a plain (still escaped-at-render) name
+     */
+    public function testANonHttpUrlStaysAPlainName(): void
+    {
+        $license = $this->licenseFromTag('javascript://%0aalert(1)');
+
+        self::assertSame('javascript://%0aalert(1)', $license->getName());
+        self::assertSame('', $license->getExternalLink());
+    }
+
     public function testAPlainLicenceNameStaysTheName(): void
     {
         $license = $this->licenseFromTag('CC BY SA');
@@ -90,18 +102,6 @@ class CatalogLicenseTagTest extends MockeryTestCase
 
         self::assertSame(self::BMI_LINK, $license->getExternalLink());
         self::assertSame('repertoire.bmi.com', $license->getName());
-    }
-
-    /**
-     * A tag is untrusted input, and `external_link` reaches the admin license page as a raw href: a
-     * `javascript:` value must never land there, so it is kept to a plain (still escaped-at-render) name
-     */
-    public function testANonHttpUrlStaysAPlainName(): void
-    {
-        $license = $this->licenseFromTag('javascript://%0aalert(1)');
-
-        self::assertSame('javascript://%0aalert(1)', $license->getName());
-        self::assertSame('', $license->getExternalLink());
     }
 
     /**
