@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Manuel <psyvirusx@gmail.com>, 2015-2021,2025\n"
 "Language-Team: German (Germany) (http://app.transifex.com/ampache/ampache/language/de_DE/)\n"
@@ -241,9 +241,6 @@ msgstr "Link"
 
 msgid "Graphs"
 msgstr "Graphen"
-
-msgid "Save Track Order"
-msgstr "Anordnung der Songs speichern"
 
 msgid "Do you really want to update from tags?"
 msgstr "Möchtest Du wirklich über die Tags Aktualisieren?"
@@ -545,6 +542,9 @@ msgstr "Besitzer"
 
 msgid "Type"
 msgstr "Typ"
+
+msgid "Save Track Order"
+msgstr "Anordnung der Songs speichern"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4208,10 +4208,8 @@ msgid_plural "%d files updated."
 msgstr[0] "%d Datei gelöscht"
 msgstr[1] "%d Dateien gelöscht"
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "Bei der Verbindung zum entfernten Server ist ein Fehler aufgetreten"
 
 msgid "No username or password was specified"
 msgstr "Es wurde kein Benutzername und/oder Passwort angegeben"
@@ -4226,9 +4224,6 @@ msgstr "Bearbeite entfernte Aktualisierung"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Bei der Verbindung zum entfernten Server ist ein Fehler aufgetreten"
 
 #. HINT: count of songs found
 #, php-format

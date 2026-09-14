@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Kuba Kuba, 2022\n"
 "Language-Team: Polish (Poland) (http://app.transifex.com/ampache/ampache/language/pl_PL/)\n"
@@ -234,9 +234,6 @@ msgstr "Odsyłacz"
 
 msgid "Graphs"
 msgstr "Wykresy"
-
-msgid "Save Track Order"
-msgstr "Zapisz kolejność utworów"
 
 msgid "Do you really want to update from tags?"
 msgstr "Czy na pewno chcesz zaktualizować z tagów?"
@@ -538,6 +535,9 @@ msgstr "Utworzył"
 
 msgid "Type"
 msgstr "Typ"
+
+msgid "Save Track Order"
+msgstr "Zapisz kolejność utworów"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4231,10 +4231,8 @@ msgstr[1] "%d pliki zostały zaktualizowane."
 msgstr[2] "%d plików zostało zaktualizowanych."
 msgstr[3] "%d plików zostało zaktualizowanych."
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "Błąd podczas łączenia ze zdalnym serwerem"
 
 msgid "No username or password was specified"
 msgstr "Nie podano nazwy użytkownika lub hasła"
@@ -4249,9 +4247,6 @@ msgstr "Uruchomiono zdalną aktualizację"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Błąd podczas łączenia ze zdalnym serwerem"
 
 #. HINT: count of songs found
 #, php-format

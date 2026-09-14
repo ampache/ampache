@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -230,9 +230,6 @@ msgstr "پیوند"
 
 msgid "Graphs"
 msgstr "نمودارها"
-
-msgid "Save Track Order"
-msgstr "ذخیره ترتیب آهنگ"
 
 msgid "Do you really want to update from tags?"
 msgstr "آیا واقعاً می خواهید از برچسب ها به روزرسانی کنید؟"
@@ -534,6 +531,9 @@ msgstr "مالک"
 
 msgid "Type"
 msgstr "نوع"
+
+msgid "Save Track Order"
+msgstr "ذخیره ترتیب آهنگ"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4197,10 +4197,8 @@ msgid_plural "%d files updated."
 msgstr[0] "%d فایل ها به روز شدند."
 msgstr[1] "%d فایل ها به روز شدند."
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "عدم اتصال به سرور از راه دور"
 
 msgid "No username or password was specified"
 msgstr "هیچ نام کاربری یا گذرواژه یی مشخص نشده است"
@@ -4215,9 +4213,6 @@ msgstr "اجرای به روز رسانی از راه دور"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "عدم اتصال به سرور از راه دور"
 
 #. HINT: count of songs found
 #, php-format

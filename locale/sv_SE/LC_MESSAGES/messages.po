@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2025\n"
 "Language-Team: Swedish (Sweden) (http://app.transifex.com/ampache/ampache/language/sv_SE/)\n"
@@ -230,9 +230,6 @@ msgstr "Länk"
 
 msgid "Graphs"
 msgstr "Diagram"
-
-msgid "Save Track Order"
-msgstr "Spara spårordning"
 
 msgid "Do you really want to update from tags?"
 msgstr "Vill du verkligen uppdatera från taggar?"
@@ -534,6 +531,9 @@ msgstr "Ägare"
 
 msgid "Type"
 msgstr "Typ"
+
+msgid "Save Track Order"
+msgstr "Spara spårordning"
 
 msgid "This Collection is empty"
 msgstr "Samlingen är tom"
@@ -4197,10 +4197,8 @@ msgid_plural "%d files updated."
 msgstr[0] "%d fil uppdaterad."
 msgstr[1] "%d filer uppdaterade."
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "Misslyckades med att ansluta till fjärrservern"
 
 msgid "No username or password was specified"
 msgstr "Inget användarnamn eller lösenord har angetts"
@@ -4215,9 +4213,6 @@ msgstr "Kör fjärruppdatering"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Misslyckades med att ansluta till fjärrservern"
 
 #. HINT: count of songs found
 #, php-format

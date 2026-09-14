@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: therealvanyek, 2023\n"
 "Language-Team: Russian (Russia) (http://app.transifex.com/ampache/ampache/language/ru_RU/)\n"
@@ -234,9 +234,6 @@ msgstr "Ссылка"
 
 msgid "Graphs"
 msgstr "Диаграммы"
-
-msgid "Save Track Order"
-msgstr "Сохранить Порядок Треков"
 
 msgid "Do you really want to update from tags?"
 msgstr "Вы действительно хотите обновить теги?"
@@ -538,6 +535,9 @@ msgstr "Владелец"
 
 msgid "Type"
 msgstr "Тип"
+
+msgid "Save Track Order"
+msgstr "Сохранить Порядок Треков"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4231,9 +4231,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
+msgid "Failed to connect to the remote server"
 msgstr ""
 
 msgid "No username or password was specified"
@@ -4249,9 +4247,6 @@ msgstr "Запущено удаленное обновление"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr ""
 
 #. HINT: count of songs found
 #, php-format

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Dotan Mazor, 2021\n"
 "Language-Team: Hebrew (Israel) (http://app.transifex.com/ampache/ampache/language/he_IL/)\n"
@@ -231,9 +231,6 @@ msgstr "קישור"
 
 msgid "Graphs"
 msgstr "גראפים"
-
-msgid "Save Track Order"
-msgstr "שמירת סדר הפריטים"
 
 msgid "Do you really want to update from tags?"
 msgstr "האם באמת לעדכן מתגיות?"
@@ -535,6 +532,9 @@ msgstr "בעלים"
 
 msgid "Type"
 msgstr "סוג"
+
+msgid "Save Track Order"
+msgstr "שמירת סדר הפריטים"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4213,10 +4213,8 @@ msgstr[0] "%d קובץ עודכן."
 msgstr[1] "%d קבצים עודכנו."
 msgstr[2] "%d קבצים עודכנו."
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "לא ניתן להתחבר לשרת המרוחק"
 
 msgid "No username or password was specified"
 msgstr "אין שם משתמש או לא ניתנה סיסמה"
@@ -4231,9 +4229,6 @@ msgstr "מתבצע עדכון מרוחק"
 
 msgid "URI"
 msgstr ""
-
-msgid "Failed to connect to the remote server"
-msgstr "לא ניתן להתחבר לשרת המרוחק"
 
 #. HINT: count of songs found
 #, php-format

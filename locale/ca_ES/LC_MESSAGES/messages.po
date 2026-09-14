@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: develmts <nikodeimos@gmail.com>, 2020\n"
 "Language-Team: Catalan (Spain) (http://app.transifex.com/ampache/ampache/language/ca_ES/)\n"
@@ -231,9 +231,6 @@ msgstr "Enllaç"
 
 msgid "Graphs"
 msgstr "Gràfics"
-
-msgid "Save Track Order"
-msgstr ""
 
 msgid "Do you really want to update from tags?"
 msgstr ""
@@ -535,6 +532,9 @@ msgstr "Propietari"
 
 msgid "Type"
 msgstr "Tipus"
+
+msgid "Save Track Order"
+msgstr ""
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4198,10 +4198,8 @@ msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "Erro connectant al servidor remot"
 
 msgid "No username or password was specified"
 msgstr "No s'ha especificat nom d'usuari o clau"
@@ -4216,9 +4214,6 @@ msgstr "Engegant actualització remota"
 
 msgid "URI"
 msgstr ""
-
-msgid "Failed to connect to the remote server"
-msgstr "Erro connectant al servidor remot"
 
 #. HINT: count of songs found
 #, php-format

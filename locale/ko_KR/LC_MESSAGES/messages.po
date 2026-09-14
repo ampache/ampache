@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022,2026\n"
 "Language-Team: Korean (Korea) (http://app.transifex.com/ampache/ampache/language/ko_KR/)\n"
@@ -236,9 +236,6 @@ msgstr "링크"
 
 msgid "Graphs"
 msgstr "그래프"
-
-msgid "Save Track Order"
-msgstr "트랙 순서 저장하기"
 
 msgid "Do you really want to update from tags?"
 msgstr "태그에서 갱신하시렵니까?"
@@ -540,6 +537,9 @@ msgstr "소유자"
 
 msgid "Type"
 msgstr "형태"
+
+msgid "Save Track Order"
+msgstr "트랙 순서 저장하기"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4188,10 +4188,8 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d 파일 갱신됨"
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
-msgstr ""
+msgid "Failed to connect to the remote server"
+msgstr "원격 서버 접속 실패"
 
 msgid "No username or password was specified"
 msgstr "사용자명이나 암호가 지정되지 않았음"
@@ -4206,9 +4204,6 @@ msgstr "원격 갱신 실행 중"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "원격 서버 접속 실패"
 
 #. HINT: count of songs found
 #, php-format

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/ampache/ampache/language/zh_TW/)\n"
@@ -231,9 +231,6 @@ msgstr "鍊結"
 
 msgid "Graphs"
 msgstr "圖表"
-
-msgid "Save Track Order"
-msgstr "儲存音軌順序"
 
 msgid "Do you really want to update from tags?"
 msgstr "您確定要從標籤更新嗎？"
@@ -535,6 +532,9 @@ msgstr "擁有者"
 
 msgid "Type"
 msgstr "種類"
+
+msgid "Save Track Order"
+msgstr "儲存音軌順序"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -4183,9 +4183,7 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] ""
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
+msgid "Failed to connect to the remote server"
 msgstr ""
 
 msgid "No username or password was specified"
@@ -4201,9 +4199,6 @@ msgstr "正在執行遠端更新"
 
 msgid "URI"
 msgstr "網址"
-
-msgid "Failed to connect to the remote server"
-msgstr ""
 
 #. HINT: count of songs found
 #, php-format

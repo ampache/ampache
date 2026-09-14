@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 14:55+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2020,2026\n"
 "Language-Team: Dutch (Netherlands) (http://app.transifex.com/ampache/ampache/language/nl_NL/)\n"
@@ -241,9 +241,6 @@ msgstr "Koppeling"
 
 msgid "Graphs"
 msgstr "Grafieken"
-
-msgid "Save Track Order"
-msgstr "Sla nummer volgorde op"
 
 msgid "Do you really want to update from tags?"
 msgstr "Weet u zeker dat u vanuit de tags wilt bijwerken?"
@@ -545,6 +542,9 @@ msgstr "Eigenaar"
 
 msgid "Type"
 msgstr "Type"
+
+msgid "Save Track Order"
+msgstr "Sla nummer volgorde op"
 
 msgid "This Collection is empty"
 msgstr "Deze verzameling is leeg"
@@ -4208,9 +4208,7 @@ msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"Remote Catalog type was selected, but the address is not reachable from this"
-" server"
+msgid "Failed to connect to the remote server"
 msgstr ""
 
 msgid "No username or password was specified"
@@ -4225,9 +4223,6 @@ msgid "Running Remote Update"
 msgstr "Bezig met bijwerken van remote catalogus"
 
 msgid "URI"
-msgstr ""
-
-msgid "Failed to connect to the remote server"
 msgstr ""
 
 #. HINT: count of songs found
