@@ -9,7 +9,7 @@
 ### Fixed (8.1.1)
 
 * A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
-* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it try to work on `user_preference` assuming columns a later migration adds. Now it wait for the schema to be complete
+* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it tried to work on `user_preference` assuming columns a later migration adds. Now it waits for the schema to be complete
 * The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
 * An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
 * A download with nothing to send died on the way out rather than saying so; `ZipArchive::close()` reports success on an archive nothing was added to but writes no file, and an album whose songs are all disabled produces exactly that
@@ -20,6 +20,7 @@
 * A disk row gave no sign the release behind it had been withdrawn, unlike an album or artist row, and it is the template the artist page uses when albums are not grouped
 * An artist's "all songs" page hid the withdrawn tracks from a manager as well, giving them a shorter list than the album pages of that same artist
 * Drawn artwork never appeared on an install with `custom_blankalbum` set: the placeholder went straight into the `src` and the request never reached `image.php`
+* An RSS item showed the placeholder image for a song or episode whose art lived on its album or podcast rather than on itself: `has_art()` answers for the parent, but the feed then asked `Art::url()` for the media's own id
 * The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
 * The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
 * A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row

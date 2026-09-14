@@ -98,11 +98,9 @@ class StatsTest extends TestCase
 
     /**
      * The cron cache is read by the widgets whenever it is warm, so leaving it unfiltered would serve
-     * withdrawn releases on exactly the instances that turned the cache on
-     */
-    /**
-     * `cache_object_count` keys a disk row on the disk id, so the flag is two hops away: reading `album`
-     * against that id compares a disk id to an album id and keeps whatever happens to collide
+     * withdrawn releases on exactly the instances that turned the cache on. `cache_object_count` keys a
+     * disk row on the disk id, so the flag is two hops away: reading `album` against that id compares a
+     * disk id to an album id and keeps whatever happens to collide
      */
     public function testTheCachedTopListOfDisksResolvesTheDiskToItsAlbum(): void
     {

@@ -748,14 +748,12 @@ final class Stats
         }
 
         // the recent widgets and the api hand these ids to a renderer as they are, so nothing filters them later
-        $withdrawn = WithdrawnFilter::conditionFor(
+        $body = WithdrawnFilter::appendCondition(
+            $body,
             ($input_type === 'album_disk') ? 'album' : $type,
             '`object_count`.`object_id`',
             ($filter_user instanceof User) ? $filter_user->getId() : null
         );
-        if ($withdrawn !== '') {
-            $body .= ' AND ' . $withdrawn;
-        }
 
         // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
         $catalog_sql = Catalog::get_catalog_id_filter($input_type, $id_column, $catalog_id);
@@ -1016,11 +1014,8 @@ final class Stats
             && !$addAdditionalColumns
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
         ) {
-            $sql       = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
-            $withdrawn = WithdrawnFilter::conditionFor($type, '`cache_object_count`.`object_id`', $filter_user?->getId());
-            if ($withdrawn !== '') {
-                $sql .= ' AND ' . $withdrawn;
-            }
+            $sql = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
+            $sql = WithdrawnFilter::appendCondition($sql, $type, '`cache_object_count`.`object_id`', $filter_user?->getId());
 
             $sql .= " GROUP BY `object_id`, `object_type`";
             $group = '`object_id`';
@@ -1067,12 +1062,9 @@ final class Stats
 
             // `$type` is rewritten above, and the cache written here is read by everybody afterwards
             if (!$addAdditionalColumns) {
-                $withdrawn = ($input_type === 'album_disk')
-                    ? WithdrawnFilter::conditionFor('album', '`album_disk`.`album_id`', $filter_user?->getId())
-                    : WithdrawnFilter::conditionFor($type, '`object_count`.`object_id`', $filter_user?->getId());
-                if ($withdrawn !== '') {
-                    $sql .= ' AND ' . $withdrawn;
-                }
+                $sql = ($input_type === 'album_disk')
+                    ? WithdrawnFilter::appendCondition($sql, 'album', '`album_disk`.`album_id`', $filter_user?->getId())
+                    : WithdrawnFilter::appendCondition($sql, $type, '`object_count`.`object_id`', $filter_user?->getId());
             }
 
             if ($by_user && $filter_user?->id > 0) {

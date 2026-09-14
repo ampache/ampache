@@ -57,14 +57,14 @@ final class WithdrawnFilter
     /**
      * A disk carries no flag of its own and reads the one on the album it belongs to.
      *
-     * `$idColumn` is what the statement already has to correlate on, and null says it reads the table holding
-     * the flag itself, which is the difference between naming the column and going through a subquery.
+     * `$idColumn` is what the statement already has to correlate on. Omitted, it means the statement already
+     * has `album_disk` in scope and reads that row's own `album_id` column; given, it names a column holding
+     * a disk id the statement has no other way to reach, e.g. `object_count`.`object_id` on a row counted
+     * against `album_disk` -- one hop further than the plain form can make, which is what the join is for.
      */
     public static function condition(string $type, ?string $idColumn = null): string
     {
-        // a disk id has to be resolved to its album before the flag can be read, which is a second hop the
-        // plain form cannot make; `album_disk` here means "this column holds a disk id", not a table to read
-        if ($type === 'album_disk' && $idColumn !== null && !str_contains($idColumn, '`album_disk`.`album_id`')) {
+        if ($type === 'album_disk' && $idColumn !== null) {
             return sprintf(
                 'EXISTS (SELECT 1 FROM `album_disk` AS `disk_wd` JOIN `album` AS `album_wd` ON `album_wd`.`id` = `disk_wd`.`album_id` WHERE `disk_wd`.`id` = %s AND `album_wd`.`enabled` = 1)',
                 $idColumn
@@ -98,5 +98,16 @@ final class WithdrawnFilter
         return (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId))
             ? ''
             : self::condition($type, $idColumn);
+    }
+
+    /**
+     * `conditionFor()`, folded into a statement already being built with ` AND `, in one call so a future
+     * call site cannot copy the lookup without also copying the guard that keeps an empty answer out of it.
+     */
+    public static function appendCondition(string $sql, string $type, ?string $idColumn, ?int $userId): string
+    {
+        $condition = self::conditionFor($type, $idColumn, $userId);
+
+        return ($condition === '') ? $sql : $sql . ' AND ' . $condition;
     }
 }

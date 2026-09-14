@@ -374,8 +374,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if ($enabledOnly) {
-            $withdrawn = WithdrawnFilter::conditionFor('album', null, $userId);
-            $catalog_where .= ($withdrawn === '') ? '' : ' AND ' . $withdrawn;
+            $catalog_where = WithdrawnFilter::appendCondition($catalog_where, 'album', null, $userId);
         }
 
         $original_year = (AmpConfig::get('use_original_year'))
@@ -440,8 +439,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             $params[]      = $catalogId;
         }
 
-        $withdrawn = WithdrawnFilter::conditionFor('album', null, $userId);
-        $catalog_where .= ($withdrawn === '') ? '' : ' AND ' . $withdrawn;
+        $catalog_where = WithdrawnFilter::appendCondition($catalog_where, 'album', null, $userId);
 
         $original_year = (AmpConfig::get('use_original_year'))
             ? "IFNULL(`album`.`original_year`, `album`.`year`)"
