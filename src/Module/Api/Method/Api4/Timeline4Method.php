@@ -29,8 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -60,7 +62,7 @@ final class Timeline4Method
      */
     public static function timeline(array $input, User $user): bool
     {
-        unset($user);
+        $viewer = $user;
         if (AmpConfig::get('sociable')) {
             if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
                 return false;
@@ -80,6 +82,11 @@ final class Timeline4Method
                         $limit,
                         $since
                     );
+                    $accessChecker = self::getUserActivityAccessChecker();
+                    $results       = array_values(array_filter(
+                        $results,
+                        static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $viewer)
+                    ));
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
@@ -102,5 +109,12 @@ final class Timeline4Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }

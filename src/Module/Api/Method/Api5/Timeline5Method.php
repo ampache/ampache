@@ -30,8 +30,10 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -89,6 +91,11 @@ final class Timeline5Method
                     $limit,
                     $since
                 );
+                $accessChecker = self::getUserActivityAccessChecker();
+                $results       = array_values(array_filter(
+                    $results,
+                    static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $user)
+                ));
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
@@ -108,5 +115,12 @@ final class Timeline5Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }

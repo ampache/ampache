@@ -30,8 +30,10 @@ use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\User\Activity\UserActivityAccessCheckerInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -91,6 +93,11 @@ final class Timeline6Method
                     $limit,
                     $since
                 );
+                $accessChecker = self::getUserActivityAccessChecker();
+                $results       = array_values(array_filter(
+                    $results,
+                    static fn (int $activityId): bool => $accessChecker->isVisibleTo(new Useractivity($activityId), $user)
+                ));
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
@@ -110,5 +117,12 @@ final class Timeline6Method
         global $dic;
 
         return $dic->get(UserActivityRepositoryInterface::class);
+    }
+
+    private static function getUserActivityAccessChecker(): UserActivityAccessCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityAccessCheckerInterface::class);
     }
 }

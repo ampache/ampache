@@ -103,6 +103,18 @@ final class PlaylistAdd6Method
             return false;
         }
 
+        // a private list you cannot see is not yours to expand into a playlist
+        if (
+            ($item instanceof Playlist || $item instanceof Search)
+            && $item->type !== 'public'
+            && !$item->has_collaborate($user)
+        ) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
+
+            return false;
+        }
+
         $results = [];
         switch ($object_type) {
             case 'song':

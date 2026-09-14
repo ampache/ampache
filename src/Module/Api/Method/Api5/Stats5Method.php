@@ -107,6 +107,7 @@ final class Stats5Method
             return false;
         }
 
+        $viewer = $user;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
             $user = User::get_from_username($input['username']);
@@ -125,6 +126,24 @@ final class Stats5Method
         }
 
         $user_id = $user->id;
+
+        // a user who keeps their recent activity private is not exposed through someone else's request
+        if (
+            $user_id !== $viewer->id
+            && !Preference::get_by_user($user_id, 'allow_personal_info_recent')
+        ) {
+            Api5::empty($type, $input['api_format']);
+
+            return false;
+        }
+
+        // the output below embeds $user->streamtoken in every item's play url; when browsing someone
+        // else's stats that must stay the caller's own token, or the response hands back a credential
+        // that streams as the browsed user
+        if ($user_id !== $viewer->id) {
+            $user              = clone $user;
+            $user->streamtoken = $viewer->streamtoken;
+        }
 
         $results = [];
         $filter  = $input['filter'] ?? '';

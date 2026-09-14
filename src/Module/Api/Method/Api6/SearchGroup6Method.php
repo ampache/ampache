@@ -74,6 +74,7 @@ final class SearchGroup6Method
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
      * rule_1_input = (mixed) The string, date, integer you are searching for
      * type = (string) 'all', 'music', 'song_artist', 'album_artist', 'podcast', 'video' (all by default) //optional
+     * filter = (string) same values as 'type'; used by the REST route `search/{search_type}/groups` //optional
      * random = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset = (integer) //optional
      * limit = (integer) //optional
@@ -93,9 +94,8 @@ final class SearchGroup6Method
             'song_artist',
             'video',
         ];
-        $type = (isset($input['type']))
-            ? $input['type']
-            : 'all';
+        // REST route `GET /search/{search_type}/groups` delivers {search_type} as `filter`, not `type`
+        $type = $input['filter'] ?? $input['type'] ?? 'all';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 

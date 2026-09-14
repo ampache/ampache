@@ -330,7 +330,11 @@ class Rating extends database_object
             return false;
         }
 
-        if (self::get_user_rating($user_id) === $rating) {
+        // a rating is 0 to 5; this is the one door every writer passes through, so bound it here
+        $rating = max(0, min(5, $rating));
+
+        // an absent rating is 0, so setting 0 on an unrated object is a no-op, not a weight decrement
+        if ((int) (self::get_user_rating($user_id) ?? 0) === $rating) {
             return true;
         }
 
@@ -346,7 +350,8 @@ class Rating extends database_object
             $params = [$this->id, $this->type, $user_id];
 
             if ($weighted) {
-                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+                // a decrement floors at 0, so an unbalanced sequence can never push the weight negative
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = GREATEST(`weight` - 1, 0) WHERE `id` = ?;", [$this->id]);
             }
         } else {
             $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
