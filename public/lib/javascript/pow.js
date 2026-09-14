@@ -339,9 +339,10 @@
      *
      * The form targets a hidden iframe, so this document stays loaded: a zip is written in full
      * before its headers are sent, and unloading here would cancel the request. A download never
-     * fires `load` on the frame, so a `load` means the endpoint answered with a page instead --
-     * an error, or a fresh challenge -- and the visitor should be looking at it rather than at a
-     * frame they cannot see.
+     * fires `load` on the frame, so a `load` means the endpoint answered with a page instead of a
+     * file. That page is shown in place rather than replayed: the nonce it was fetched with is
+     * spent, and navigating the top window back to the same url would only earn a fresh challenge
+     * to solve, and the next one after that.
      *
      * Returning waits for the acknowledgement cookie, which arrives with the download headers and at
      * no earlier moment. Before those headers the request is still a navigation the frame owns, and
@@ -373,16 +374,6 @@
             }
         }
 
-        /** The endpoint answered with a page rather than a file, so show it instead of going back. */
-        function showResponse(url) {
-            if (leaving || !url) {
-                return;
-            }
-
-            stop();
-            window.location.replace(url);
-        }
-
         function goBack() {
             if (leaving) {
                 return;
@@ -411,18 +402,41 @@
 
         if (sink) {
             sink.onload = function () {
-                // Same origin, so the frame's own address is readable and there is nothing to
-                // rebuild; the form action is only there in case a browser withholds it.
-                var shown = form.action;
-
-                try {
-                    shown = sink.contentWindow.location.href || shown;
-                } catch (error) {
-                    shown = form.action;
+                if (leaving) {
+                    return;
                 }
 
-                showResponse(shown);
+                stop();
+
+                // A challenge in here was born already spent, so solving it would only earn another
+                // one exactly like it: say so rather than let the frame quietly retry forever. Anything
+                // else is the endpoint's real answer, already loaded, and safe to reveal in place --
+                // doing that makes no request of its own, so it cannot fall into the same loop.
+                if (sinkHoldsAChallenge()) {
+                    say(text('Failed', 'The download did not start. Please try again.'));
+
+                    return;
+                }
+
+                var box = document.getElementById('powbox');
+
+                if (box) {
+                    box.hidden = true;
+                }
+
+                sink.hidden = false;
             };
+        }
+
+        /**
+         * Same-origin, so this is a plain DOM read; wrapped only for a browser that refuses it anyway.
+         */
+        function sinkHoldsAChallenge() {
+            try {
+                return Boolean(sink.contentDocument && sink.contentDocument.getElementById('pow-widget'));
+            } catch (error) {
+                return false;
+            }
         }
 
         if (ackField) {
