@@ -30,6 +30,8 @@ use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -118,6 +120,10 @@ final class SimilarMethod implements JellyfinMethodInterface
         }
         $ids = array_slice($ids, 0, $limit);
 
+        Album::build_cache($ids);
+        Rating::build_cache('album', $ids);
+        Userflag::build_cache('album', $ids);
+
         return array_map(fn(int $id): array => $this->mapper->mapAlbum(new Album($id), $user, []), $ids);
     }
 
@@ -138,6 +144,10 @@ final class SimilarMethod implements JellyfinMethodInterface
             $ids            = $this->fillWithRandom($ids, $pool, $artistId, $limit);
         }
         $ids = array_slice($ids, 0, $limit);
+
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
 
         return array_map(fn(int $id): array => $this->mapper->mapArtist(new Artist($id), $user, []), $ids);
     }
@@ -162,6 +172,10 @@ final class SimilarMethod implements JellyfinMethodInterface
             $ids  = $this->fillWithRandom($ids, $pool, $songId, $limit);
         }
         $ids = array_slice($ids, 0, $limit);
+
+        Song::build_cache($ids);
+        Rating::build_cache('song', $ids);
+        Userflag::build_cache('song', $ids);
 
         return array_map(fn(int $id): array => $this->mapper->mapSong(new Song($id), $user, []), $ids);
     }

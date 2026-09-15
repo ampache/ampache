@@ -30,6 +30,8 @@ use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Song;
@@ -79,6 +81,10 @@ final class InstantMixMethod implements JellyfinMethodInterface
             $ids  = $this->fillWithRandom($ids, $pool, $songId, $limit);
         }
         $ids = array_slice($ids, 0, $limit);
+
+        Song::build_cache($ids);
+        Rating::build_cache('song', $ids);
+        Userflag::build_cache('song', $ids);
 
         $items = array_map(fn(int $id): array => $this->mapper->mapSong(new Song($id), $user, []), $ids);
 
