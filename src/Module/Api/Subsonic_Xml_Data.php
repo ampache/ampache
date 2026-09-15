@@ -2166,6 +2166,6 @@ class Subsonic_Xml_Data
         Song::build_cache($songIds);
         Rating::build_cache('song', $songIds);
         Userflag::build_cache('song', $songIds);
-        Tag::build_cache($songIds);
+        Tag::build_object_tag_cache('song', $songIds);
     }
 }
