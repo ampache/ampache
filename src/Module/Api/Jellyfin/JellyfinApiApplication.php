@@ -68,12 +68,14 @@ use Ampache\Module\Api\Jellyfin\Method\UserData\PlayedMethod;
 use Ampache\Module\Api\Jellyfin\Method\UserData\RatingMethod;
 use Ampache\Module\Api\Jellyfin\Method\UserView\UserViewsMethod;
 use Ampache\Module\Api\Jellyfin\Method\Web\WebRedirectMethod;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Slim\ResponseEmitter;
 
 /**
@@ -170,6 +172,7 @@ final class JellyfinApiApplication implements ApiApplicationInterface
         private readonly JellyfinRequestAuthenticatorInterface $authenticator,
         private readonly ConfigContainerInterface $configContainer,
         private readonly ContainerInterface $dic,
+        private readonly LoggerInterface $logger,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ServerRequestCreatorInterface $serverRequestCreator,
         private readonly ResponseEmitter $sapiEmitter,
@@ -235,7 +238,15 @@ final class JellyfinApiApplication implements ApiApplicationInterface
         // some model writes (e.g. Playlist::update()'s canWrite()) read this legacy global, not $user
         Session::createGlobalUser($user);
 
-        $this->emit($handler->handle($request, $user));
+        try {
+            $this->emit($handler->handle($request, $user));
+        } catch (\Throwable $error) {
+            $this->logger->error(
+                sprintf('Uncaught error in Jellyfin handler %s: %s', $handlerClass, $error->getMessage()),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+            $this->emit(JellyfinResponse::internalError());
+        }
     }
 
     private function emit(JellyfinResponse $response): void

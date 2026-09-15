@@ -175,6 +175,8 @@ class Podcast_Episode extends database_object implements
         }
 
         Art::build_cache($ids, 'podcast_episode');
+        // one tag read for the page instead of one per episode
+        Tag::build_object_tag_cache('podcast_episode', array_map(intval(...), $ids));
 
         return true;
     }

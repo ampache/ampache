@@ -32,9 +32,12 @@ use Ampache\Module\Api\Jellyfin\JellyfinUserView;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
@@ -94,8 +97,11 @@ final class ItemsMethod implements JellyfinMethodInterface
      */
     private function albumsForArtist(int $artistId, User $user, array $fields): array
     {
+        $albumIds = $this->albumRepository->getAlbumByArtist($artistId);
+        $this->warmAlbums($albumIds);
+
         $albums = [];
-        foreach ($this->albumRepository->getAlbumByArtist($artistId) as $albumId) {
+        foreach ($albumIds as $albumId) {
             $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user, $fields);
         }
 
@@ -108,8 +114,11 @@ final class ItemsMethod implements JellyfinMethodInterface
      */
     private function allAlbums(User $user, array $fields): array
     {
+        $albumIds = Catalog::get_albums(0, 0, $user->get_catalogs('music'));
+        $this->warmAlbums($albumIds);
+
         $albums = [];
-        foreach (Catalog::get_albums(0, 0, $user->get_catalogs('music')) as $albumId) {
+        foreach ($albumIds as $albumId) {
             $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user, $fields);
         }
 
@@ -122,12 +131,15 @@ final class ItemsMethod implements JellyfinMethodInterface
      */
     private function allArtists(User $user, array $fields): array
     {
-        $artists = [];
-        foreach (Catalog::get_artists($user->get_catalogs('music')) as $artist) {
-            $artists[] = $this->mapper->mapArtist($artist, $user, $fields);
+        $artists = Catalog::get_artists($user->get_catalogs('music'));
+        $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
+
+        $result = [];
+        foreach ($artists as $artist) {
+            $result[] = $this->mapper->mapArtist($artist, $user, $fields);
         }
 
-        return $artists;
+        return $result;
     }
 
     /**
@@ -144,6 +156,7 @@ final class ItemsMethod implements JellyfinMethodInterface
             false,
             null,
         );
+        $this->warmPlaylists($ids);
 
         $playlists = [];
         foreach ($ids as $playlistId) {
@@ -159,8 +172,11 @@ final class ItemsMethod implements JellyfinMethodInterface
      */
     private function allSongs(User $user, array $fields): array
     {
+        $songIds = Catalog::get_all_song_ids(0, 0, $user->get_catalogs('music'));
+        $this->warmSongs($songIds, $user);
+
         $songs = [];
-        foreach (Catalog::get_all_song_ids(0, 0, $user->get_catalogs('music')) as $songId) {
+        foreach ($songIds as $songId) {
             $songs[] = $this->mapper->mapSong(new Song($songId), $user, $fields);
         }
 
@@ -222,8 +238,11 @@ final class ItemsMethod implements JellyfinMethodInterface
             return [];
         }
 
+        $songIds = $album->get_songs();
+        $this->warmSongs($songIds, $user);
+
         $songs = [];
-        foreach ($album->get_songs() as $songId) {
+        foreach ($songIds as $songId) {
             $songs[] = $this->mapper->mapSong(new Song($songId), $user, $fields);
         }
 
@@ -241,12 +260,16 @@ final class ItemsMethod implements JellyfinMethodInterface
             return [];
         }
 
+        $rows    = array_values(array_filter(
+            $playlist->get_items(),
+            static fn(array $row): bool => $row['object_type'] === LibraryItemEnum::SONG,
+        ));
+        $songIds = array_map(static fn(array $row): int => (int) $row['object_id'], $rows);
+        $this->warmSongs($songIds, $user);
+
         $songs = [];
-        foreach ($playlist->get_items() as $row) {
-            if ($row['object_type'] !== LibraryItemEnum::SONG) {
-                continue;
-            }
-            $songs[] = $this->mapper->mapSong(new Song($row['object_id']), $user, $fields);
+        foreach ($songIds as $songId) {
+            $songs[] = $this->mapper->mapSong(new Song($songId), $user, $fields);
         }
 
         return $songs;
@@ -260,5 +283,46 @@ final class ItemsMethod implements JellyfinMethodInterface
         }
 
         return array_values(array_filter(array_map('trim', explode(',', $value)), static fn(string $item): bool => $item !== ''));
+    }
+
+    /**
+     * @param array<int> $ids
+     */
+    private function warmAlbums(array $ids): void
+    {
+        Album::build_cache($ids);
+        Rating::build_cache('album', $ids);
+        Userflag::build_cache('album', $ids);
+    }
+
+    /**
+     * @param array<int> $ids
+     */
+    private function warmArtists(array $ids): void
+    {
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
+    }
+
+    /**
+     * @param array<int> $ids
+     */
+    private function warmPlaylists(array $ids): void
+    {
+        Playlist::build_cache($ids);
+        Rating::build_cache('playlist', $ids);
+        Userflag::build_cache('playlist', $ids);
+    }
+
+    /**
+     * @param array<int> $ids
+     */
+    private function warmSongs(array $ids, User $user): void
+    {
+        Song::build_cache($ids);
+        Rating::build_cache('song', $ids);
+        Userflag::build_cache('song', $ids);
+        Bookmark::build_cache('song', $ids, $user->getId());
     }
 }

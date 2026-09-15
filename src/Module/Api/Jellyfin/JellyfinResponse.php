@@ -61,6 +61,12 @@ final class JellyfinResponse
         return new self(403, null, 'application/json');
     }
 
+    /** An uncaught error in a handler — a real client sees a clean 500 instead of a dropped connection. */
+    public static function internalError(): self
+    {
+        return new self(500, null, 'application/json');
+    }
+
     public static function json(mixed $body, int $status = 200): self
     {
         return new self($status, $body, 'application/json');

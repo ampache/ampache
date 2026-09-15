@@ -29,6 +29,9 @@ use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -53,8 +56,14 @@ final class ArtistsMethod implements JellyfinMethodInterface
         $limitParam = (string) ($query['limit'] ?? $query['Limit'] ?? '');
         $limit      = ($limitParam !== '') ? (int) $limitParam : 0;
 
+        $artists = Catalog::get_artists($user->get_catalogs('music'));
+        $ids     = array_map(static fn(Artist $artist): int => $artist->id, $artists);
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
+
         $items = [];
-        foreach (Catalog::get_artists($user->get_catalogs('music')) as $artist) {
+        foreach ($artists as $artist) {
             $items[] = $this->mapper->mapArtist($artist, $user, []);
         }
 

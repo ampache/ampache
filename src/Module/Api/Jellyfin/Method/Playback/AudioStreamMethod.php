@@ -27,17 +27,22 @@ namespace Ampache\Module\Api\Jellyfin\Method\Playback;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Jellyfin\JellyfinId;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
+use Ampache\Module\Api\Jellyfin\JellyfinTranscodeDecision;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * GET /Audio/{itemId}/stream, /universal, and /Items/{itemId}/File (libmpv/media_kit-backed clients fetch
- * media by that path directly) — all direct-play only in v1, all served by the same range/HEAD byte-stream.
+ * media by that path directly). Transcoding only runs when the request itself asks for a specific
+ * container/bitrate (`Container`, `AudioCodec`, `AudioBitRate` or `MaxStreamingBitrate`) — a bare request,
+ * exactly what every client sent before this existed, always stays direct play.
  */
 final class AudioStreamMethod implements JellyfinMethodInterface
 {
@@ -81,6 +86,27 @@ final class AudioStreamMethod implements JellyfinMethodInterface
             http_response_code(404);
 
             return JellyfinResponse::alreadySent();
+        }
+
+        $query               = $request->getQueryParams();
+        $rawContainer        = JellyfinRequestBody::field($query, 'Container');
+        $rawAudioCodec       = JellyfinRequestBody::field($query, 'AudioCodec');
+        $rawAudioBitRate     = JellyfinRequestBody::field($query, 'AudioBitRate');
+        $rawMaxStreamingRate = JellyfinRequestBody::field($query, 'MaxStreamingBitrate');
+        $hasTranscodeHint    = $rawContainer !== null || $rawAudioCodec !== null || $rawAudioBitRate !== null || $rawMaxStreamingRate !== null;
+        $isStatic            = in_array(strtolower((string) (JellyfinRequestBody::field($query, 'Static') ?? '')), ['1', 'true'], true);
+
+        if ($hasTranscodeHint && !$isStatic) {
+            $decision = JellyfinTranscodeDecision::resolve(
+                $song,
+                (string) ($rawContainer ?? $rawAudioCodec ?? ''),
+                (int) ($rawAudioBitRate ?? 0),
+                (int) ($rawMaxStreamingRate ?? 0)
+            );
+
+            if ($decision->transcode && $decision->format !== null) {
+                return $this->streamTranscoded($request, $song, $decision->format, $query);
+            }
         }
 
         $fileSize = ($song->size > 0) ? $song->size : (int) filesize($song->file);
@@ -157,5 +183,77 @@ final class AudioStreamMethod implements JellyfinMethodInterface
         }
 
         return [$start, $end, true, true];
+    }
+
+    /**
+     * Runs a transcode and streams it out. No Content-Length is ever declared here — CLAUDE.md's own
+     * play-urls notes measured that guess wrong by up to 13% depending on codec, clipping real audio.
+     *
+     * @param array<string, mixed> $query
+     */
+    private function streamTranscoded(ServerRequestInterface $request, Song $song, string $format, array $query): JellyfinResponse
+    {
+        $troptions       = [];
+        $rawAudioBitRate = JellyfinRequestBody::field($query, 'AudioBitRate');
+        $rawMaxRate      = JellyfinRequestBody::field($query, 'MaxStreamingBitrate');
+        $rawStartTicks   = JellyfinRequestBody::field($query, 'StartTimeTicks');
+
+        if ($rawAudioBitRate !== null) {
+            $troptions['bitrate'] = (int) $rawAudioBitRate;
+        }
+        if ($rawMaxRate !== null) {
+            $troptions['maxbitrate'] = (int) $rawMaxRate;
+        }
+        if ($rawStartTicks !== null) {
+            // ticks are 100ns units; ffmpeg's %TIME% placeholder wants whole seconds
+            $troptions['frame'] = ((int) $rawStartTicks) / 10_000_000;
+        } elseif ($song->time > 0) {
+            $troptions['duration'] = (float) $song->time;
+        }
+
+        $transcodeSettings = $song->get_transcode_settings($format, 'jellyfin', $troptions);
+        $transcoder        = Stream::start_transcode($song, $transcodeSettings, $troptions, 'jellyfin');
+        $handle            = $transcoder['handle'] ?? null;
+
+        if (!is_resource($handle)) {
+            http_response_code(500);
+
+            return JellyfinResponse::alreadySent();
+        }
+
+        header('Content-Type: ' . Song::type_to_mime($transcoder['format'] ?? $format));
+        header('Accept-Ranges: none');
+        http_response_code(200);
+
+        if (strtoupper($request->getMethod()) === 'HEAD') {
+            fclose($handle);
+            Stream::kill_process($transcoder);
+
+            return JellyfinResponse::alreadySent();
+        }
+
+        $bytesStreamed = 0;
+        do {
+            $chunk = fread($handle, self::CHUNK_SIZE);
+            if ($chunk === false || $chunk === '') {
+                break;
+            }
+            echo $chunk;
+            flush();
+            $bytesStreamed += strlen($chunk);
+        } while (
+            connection_status() === 0
+            && (!feof($handle) || (!empty($transcoder['process']) && is_resource($transcoder['process']) && proc_get_status($transcoder['process'])['running']))
+        );
+
+        fclose($handle);
+        Stream::kill_process($transcoder);
+
+        if ($bytesStreamed === 0) {
+            // headers are already sent, so this can't recover to a clean error status — same as a missing source file above
+            http_response_code(500);
+        }
+
+        return JellyfinResponse::alreadySent();
     }
 }

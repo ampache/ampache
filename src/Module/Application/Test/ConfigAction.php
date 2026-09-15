@@ -32,6 +32,7 @@ use Ampache\Gui\Install\TestErrorPageView;
 use Ampache\Gui\Install\TestPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
 use Exception;
@@ -47,6 +48,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
+        private InstallationHelperInterface $installationHelper,
         private ResponseFactoryInterface $responseFactory,
         private EnvironmentInterface $environment,
     ) {}
@@ -58,7 +60,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         if ((parse_ini_file($configfile) ?: []) === []) {
-            echo new TestConfigPageView()->render();
+            echo new TestConfigPageView($this->installationHelper->findConfigSyntaxIssue($configfile))->render();
 
             return null;
         }

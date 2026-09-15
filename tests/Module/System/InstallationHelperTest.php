@@ -34,7 +34,8 @@ use Override;
 
 class InstallationHelperTest extends MockeryTestCase
 {
-    private string $file = '';
+    private string $configFile = '';
+    private string $file       = '';
     private InstallationHelper $subject;
 
     public function testAnAlreadyPrefixedTargetIsNotPrefixedTwice(): void
@@ -42,6 +43,42 @@ class InstallationHelperTest extends MockeryTestCase
         $rules = 'RewriteRule ^image\.php$ /ampache/image.php [R=302,L]';
 
         self::assertSame($rules, $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true));
+    }
+
+    public function testFindConfigSyntaxIssueIgnoresAProperlyEscapedQuote(): void
+    {
+        $file = $this->writeConfig(implode("\n", [
+            'a = "b"',
+            'foo = "va\"lue"',
+            '; a comment carrying an "unbalanced quote is never the value itself',
+        ]));
+
+        self::assertNull($this->subject->findConfigSyntaxIssue($file));
+    }
+
+    /**
+     * The offending line is the one PHP's own parser never reports: an unclosed quote makes it keep scanning
+     * and blame whatever later line it finally trips on, many lines further down the file.
+     */
+    public function testFindConfigSyntaxIssueReportsTheUnclosedLineNotTheOneParseIniFileBlames(): void
+    {
+        $file = $this->writeConfig(implode("\n", [
+            'a = "b"',
+            'foo = "va"lue"',
+            'c = "d"',
+            '; DEFAULT: "false"',
+        ]));
+
+        $issue = $this->subject->findConfigSyntaxIssue($file);
+
+        self::assertNotNull($issue);
+        self::assertSame(2, $issue['line']);
+        self::assertSame('foo = "va"lue"', $issue['content']);
+    }
+
+    public function testFindConfigSyntaxIssueReturnsNullForANonexistentFile(): void
+    {
+        self::assertNull($this->subject->findConfigSyntaxIssue(sys_get_temp_dir() . '/nonexistent-ampache.cfg.php'));
     }
 
     /**
@@ -235,6 +272,18 @@ class InstallationHelperTest extends MockeryTestCase
                 unlink($path);
             }
         }
+
+        if ($this->configFile !== '' && file_exists($this->configFile)) {
+            unlink($this->configFile);
+        }
+    }
+
+    private function writeConfig(string $contents): string
+    {
+        $this->configFile = (string) tempnam(sys_get_temp_dir(), 'ampachecfg');
+        file_put_contents($this->configFile, $contents);
+
+        return $this->configFile;
     }
 
     private function writeRules(string $rules): string

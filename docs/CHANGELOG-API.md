@@ -10,6 +10,8 @@
   * The albums listed for an artist included the withdrawn ones, for every caller
 * `stats` (ALL)
   * `recent`, `highest` and `frequent` listed withdrawn releases; only `newest` carried the condition. They now answer the way every other listing does, and a manager still sees them
+* `deleted_podcast_episodes` (API6)
+  * The XML response named the parent podcast id `<played>` instead of `<podcast>`
 
 ## API 8.1.0
 
