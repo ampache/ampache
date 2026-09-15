@@ -50,6 +50,7 @@
 * The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
 * The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
 * A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row
+* `run:updateCatalog -ca` reimported every existing file after `clean`, rather than picking up only what actually changed on disk
 
 ## Ampache 8.1.0
 

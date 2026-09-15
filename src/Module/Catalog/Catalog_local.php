@@ -923,6 +923,8 @@ class Catalog_local extends Catalog
 
         $total = count($this->_filecache);
         if ($total === 0) {
+            $this->_filecache = [];
+
             return $this->count;
         }
 
@@ -960,6 +962,7 @@ class Catalog_local extends Catalog
             );
             debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
             AmpError::add('general', T_('All files would be removed. Doing nothing'));
+            $this->_filecache = [];
 
             return $this->count;
         }
@@ -977,6 +980,9 @@ class Catalog_local extends Catalog
         }
 
         $this->getMetadataManager()->collectGarbage();
+
+        // clean built this cache with real-case keys; add_file()'s lookups are lowercased, so it must rebuild its own.
+        $this->_filecache = [];
 
         return $this->count;
     }
