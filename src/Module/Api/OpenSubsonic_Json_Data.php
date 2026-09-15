@@ -1182,6 +1182,14 @@ class OpenSubsonic_Json_Data
      */
     public function addPodcasts(array $response, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): array
     {
+        if ($includeEpisodes) {
+            $allEpisodeIds = [];
+            foreach ($podcasts as $podcast) {
+                array_push($allEpisodeIds, ...$podcast->getEpisodeIds());
+            }
+            Podcast_Episode::build_cache($allEpisodeIds);
+        }
+
         $json = ['channel' => []];
         foreach ($podcasts as $podcast) {
             $json['channel'][] = $this->_getPodcast($podcast, $includeEpisodes, $sub_id);
@@ -1477,6 +1485,8 @@ class OpenSubsonic_Json_Data
      */
     public function addSimilarSongs(array $response, array $similar_songs): array
     {
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
+
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
@@ -1510,6 +1520,8 @@ class OpenSubsonic_Json_Data
      */
     public function addSimilarSongs2(array $response, array $similar_songs): array
     {
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
+
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
@@ -3578,6 +3590,8 @@ class OpenSubsonic_Json_Data
      */
     private function _getIndex(array $artists, bool $id3 = true): array
     {
+        $this->openSubsonicFields->warmArtists(array_column($artists, 'id'));
+
         $sharpartists = [];
         $json         = [];
         $index        = [];

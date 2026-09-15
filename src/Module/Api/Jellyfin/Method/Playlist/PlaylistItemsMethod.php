@@ -31,6 +31,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
@@ -109,6 +110,7 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
         Song::build_cache($songIds);
         Rating::build_cache('song', $songIds);
         Userflag::build_cache('song', $songIds);
+        Bookmark::build_cache('song', $songIds, $user->getId());
 
         $songs = [];
         foreach ($songIds as $songId) {

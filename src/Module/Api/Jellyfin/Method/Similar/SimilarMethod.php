@@ -36,6 +36,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -176,6 +177,7 @@ final class SimilarMethod implements JellyfinMethodInterface
         Song::build_cache($ids);
         Rating::build_cache('song', $ids);
         Userflag::build_cache('song', $ids);
+        Bookmark::build_cache('song', $ids, $user->getId());
 
         return array_map(fn(int $id): array => $this->mapper->mapSong(new Song($id), $user, []), $ids);
     }

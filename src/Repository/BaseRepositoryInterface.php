@@ -47,6 +47,14 @@ interface BaseRepositoryInterface
     public function findById(int $objectId): ?object;
 
     /**
+     * Retrieve several items by id in one query, keyed by their own id
+     *
+     * @param list<int> $objectIds
+     * @return array<int, TModel>
+     */
+    public function findByIds(array $objectIds): array;
+
+    /**
      * Returns a new item
      *
      * @return TModel

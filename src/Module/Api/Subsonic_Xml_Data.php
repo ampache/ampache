@@ -984,6 +984,17 @@ class Subsonic_Xml_Data
     public function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): SimpleXMLElement
     {
         $xpodcasts = $this->_addChildToResultXml($xml, 'podcasts');
+
+        $episodeIdsByPodcast = [];
+        if ($includeEpisodes) {
+            $allEpisodeIds = [];
+            foreach ($podcasts as $podcast) {
+                $episodeIdsByPodcast[$podcast->getId()] = $podcast->getEpisodeIds();
+                array_push($allEpisodeIds, ...$episodeIdsByPodcast[$podcast->getId()]);
+            }
+            Podcast_Episode::build_cache($allEpisodeIds);
+        }
+
         foreach ($podcasts as $podcast) {
             $sub_id = (!empty($sub_id))
                 ? $sub_id
@@ -998,9 +1009,7 @@ class Subsonic_Xml_Data
             }
             $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
-                $episodes = $podcast->getEpisodeIds();
-
-                foreach ($episodes as $episode_id) {
+                foreach ($episodeIdsByPodcast[$podcast->getId()] as $episode_id) {
                     $episode = new Podcast_Episode($episode_id);
                     if ($episode->isNew()) {
                         continue;
@@ -1190,6 +1199,7 @@ class Subsonic_Xml_Data
     public function addSimilarSongs(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
     {
         $xsimilar = $this->_addChildToResultXml($xml, 'similarSongs');
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
                 $song = new Song($similar_song['id']);
@@ -1215,6 +1225,7 @@ class Subsonic_Xml_Data
     public function addSimilarSongs2(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
     {
         $xsimilar = $this->_addChildToResultXml($xml, 'similarSongs2');
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
                 $song = new Song($similar_song['id']);
@@ -1818,6 +1829,8 @@ class Subsonic_Xml_Data
      */
     private function _addIndex(SimpleXMLElement $xml, array $artists, bool $id3 = true): void
     {
+        $this->openSubsonicFields->warmArtists(array_column($artists, 'id'));
+
         $xlastcat     = null;
         $sharpartists = [];
         $xlastletter  = '';

@@ -37,6 +37,7 @@ use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
@@ -172,7 +173,7 @@ final class ItemsMethod implements JellyfinMethodInterface
     private function allSongs(User $user, array $fields): array
     {
         $songIds = Catalog::get_all_song_ids(0, 0, $user->get_catalogs('music'));
-        $this->warmSongs($songIds);
+        $this->warmSongs($songIds, $user);
 
         $songs = [];
         foreach ($songIds as $songId) {
@@ -238,7 +239,7 @@ final class ItemsMethod implements JellyfinMethodInterface
         }
 
         $songIds = $album->get_songs();
-        $this->warmSongs($songIds);
+        $this->warmSongs($songIds, $user);
 
         $songs = [];
         foreach ($songIds as $songId) {
@@ -264,7 +265,7 @@ final class ItemsMethod implements JellyfinMethodInterface
             static fn(array $row): bool => $row['object_type'] === LibraryItemEnum::SONG,
         ));
         $songIds = array_map(static fn(array $row): int => (int) $row['object_id'], $rows);
-        $this->warmSongs($songIds);
+        $this->warmSongs($songIds, $user);
 
         $songs = [];
         foreach ($songIds as $songId) {
@@ -317,10 +318,11 @@ final class ItemsMethod implements JellyfinMethodInterface
     /**
      * @param array<int> $ids
      */
-    private function warmSongs(array $ids): void
+    private function warmSongs(array $ids, User $user): void
     {
         Song::build_cache($ids);
         Rating::build_cache('song', $ids);
         Userflag::build_cache('song', $ids);
+        Bookmark::build_cache('song', $ids, $user->getId());
     }
 }

@@ -34,6 +34,7 @@ use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -85,6 +86,7 @@ final class InstantMixMethod implements JellyfinMethodInterface
         Song::build_cache($ids);
         Rating::build_cache('song', $ids);
         Userflag::build_cache('song', $ids);
+        Bookmark::build_cache('song', $ids, $user->getId());
 
         $items = array_map(fn(int $id): array => $this->mapper->mapSong(new Song($id), $user, []), $ids);
 
