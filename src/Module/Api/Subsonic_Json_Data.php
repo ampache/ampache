@@ -813,6 +813,7 @@ class Subsonic_Json_Data
     public function addNewestPodcasts(array $response, array $episodes): array
     {
         $json = ['episode' => []];
+        Podcast_Episode::build_cache(array_column($episodes, 'id'));
         foreach ($episodes as $episode) {
             $json['episode'][] = $this->_getPodcastEpisode($episode);
         }
@@ -1078,6 +1079,14 @@ class Subsonic_Json_Data
      */
     public function addPodcasts(array $response, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): array
     {
+        if ($includeEpisodes) {
+            $allEpisodeIds = [];
+            foreach ($podcasts as $podcast) {
+                array_push($allEpisodeIds, ...$podcast->getEpisodeIds());
+            }
+            Podcast_Episode::build_cache($allEpisodeIds);
+        }
+
         $json = ['channel' => []];
         foreach ($podcasts as $podcast) {
             $json['channel'][] = $this->_getPodcast($podcast, $includeEpisodes, $sub_id);
@@ -1366,6 +1375,8 @@ class Subsonic_Json_Data
      */
     public function addSimilarSongs(array $response, array $similar_songs): array
     {
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
+
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
@@ -1399,6 +1410,8 @@ class Subsonic_Json_Data
      */
     public function addSimilarSongs2(array $response, array $similar_songs): array
     {
+        Song::build_cache(array_values(array_filter(array_column($similar_songs, 'id'))));
+
         $json = ['song' => []];
         foreach ($similar_songs as $similar_song) {
             if ($similar_song['id'] !== null) {
@@ -1696,6 +1709,7 @@ class Subsonic_Json_Data
     public function addVideos(array $response, array $videos): array
     {
         $json = ['video' => []];
+        Video::build_cache(array_column($videos, 'id'));
         foreach ($videos as $video) {
             $json['video'][] = $this->_getChildVideo($video);
         }
@@ -2987,6 +3001,8 @@ class Subsonic_Json_Data
      */
     private function _getIndex(array $artists, bool $id3 = true): array
     {
+        $this->openSubsonicFields->warmArtists(array_column($artists, 'id'));
+
         $sharpartists = [];
         $json         = [];
         $index        = [];
@@ -3520,6 +3536,6 @@ class Subsonic_Json_Data
         Song::build_cache($songIds);
         Rating::build_cache('song', $songIds);
         Userflag::build_cache('song', $songIds);
-        Tag::build_cache($songIds);
+        Tag::build_object_tag_cache('song', $songIds);
     }
 }

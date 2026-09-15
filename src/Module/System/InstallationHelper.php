@@ -57,6 +57,35 @@ final readonly class InstallationHelper implements InstallationHelperInterface
     ) {}
 
     /**
+     * Finds the first line whose double-quoted value is never closed, which is almost always the actual
+     * mistake behind a `parse_ini_file()` syntax error — the parser itself keeps scanning past it and
+     * reports the failure many lines later, wherever it finally gives up.
+     * @return array{line: int, content: string}|null
+     */
+    public function findConfigSyntaxIssue(string $configFilePath): ?array
+    {
+        if (!is_readable($configFilePath)) {
+            return null;
+        }
+
+        $lines = file($configFilePath, FILE_IGNORE_NEW_LINES) ?: [];
+        foreach ($lines as $index => $line) {
+            $trimmed = ltrim($line);
+            if ($trimmed === '' || $trimmed[0] === ';' || $trimmed[0] === '[') {
+                continue;
+            }
+
+            // a backslash-escaped quote does not close the value, so it is removed before counting
+            $withoutEscapedQuotes = str_replace('\"', '', $line);
+            if (substr_count($withoutEscapedQuotes, '"') % 2 === 1) {
+                return ['line' => $index + 1, 'content' => $line];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
      * @throws Exception

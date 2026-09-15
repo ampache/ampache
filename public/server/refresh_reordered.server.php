@@ -23,7 +23,6 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Api\RefreshReordered\RefreshCollectionItemsAction;
 use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Application\ApplicationRunner;
@@ -38,9 +37,8 @@ $dic = require __DIR__ . '/../../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
-        RefreshAlbumSongsAction::REQUEST_KEY => RefreshAlbumSongsAction::class,
         RefreshCollectionItemsAction::REQUEST_KEY => RefreshCollectionItemsAction::class,
         RefreshPlaylistMediasAction::REQUEST_KEY => RefreshPlaylistMediasAction::class,
     ],
-    RefreshAlbumSongsAction::REQUEST_KEY
+    RefreshPlaylistMediasAction::REQUEST_KEY
 );

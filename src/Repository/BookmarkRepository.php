@@ -31,6 +31,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 final readonly class BookmarkRepository implements BookmarkRepositoryInterface
@@ -217,6 +218,34 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         return ($row === false)
             ? []
             : $row;
+    }
+
+    /**
+     * Reads the bookmark a user holds against a batch of objects of one type in a single query, keyed by object id
+     *
+     * @param list<int> $objectIds
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRowsByObjects(string $objectType, array $objectIds, int $userId): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` IN (%s) AND `user` = ?',
+                implode(',', array_map(intval(...), $objectIds))
+            ),
+            [$objectType, $userId]
+        );
+
+        $rows = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[(int) $row['object_id']] = $row;
+        }
+
+        return $rows;
     }
 
     /**

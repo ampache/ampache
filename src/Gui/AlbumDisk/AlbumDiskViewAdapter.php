@@ -234,6 +234,11 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
         );
     }
 
+    public function getDisabledIcon(): string
+    {
+        return Ui::get_material_symbol('unpublished', T_('Disabled'));
+    }
+
     public function getDisplayYear(): int
     {
         if ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year) {
@@ -317,6 +322,11 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     public function getUserFlags(): string
     {
         return Userflag::show($this->albumDisk->getId(), 'album_disk');
+    }
+
+    public function isDisabled(): bool
+    {
+        return !$this->albumDisk->isEnabled();
     }
 
     public function isEditable(): bool

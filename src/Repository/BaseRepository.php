@@ -77,6 +77,35 @@ abstract readonly class BaseRepository
     }
 
     /**
+     * Retrieve several items by id in one query, keyed by their own id
+     *
+     * @param list<int> $objectIds
+     * @return array<int, TModel>
+     */
+    public function findByIds(array $objectIds): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+
+        $result = $this->connection->query(
+            sprintf(
+                'SELECT * FROM `%s` WHERE `id` IN (%s)',
+                $this->getTableName(),
+                implode(',', array_map(intval(...), $objectIds))
+            )
+        );
+        $result->setFetchMode(PDO::FETCH_CLASS, $this->getModelClass(), $this->getPrototypeParameters());
+
+        $objects = [];
+        while ($object = $result->fetch()) {
+            $objects[$object->getId()] = $object;
+        }
+
+        return $objects;
+    }
+
+    /**
      * Returns a new item
      *
      * @return TModel

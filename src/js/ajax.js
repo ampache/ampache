@@ -389,6 +389,7 @@ function scrollToHash()
 
 export function loadContentPage(url)
 {
+    clearInterval(window.reloaditv);
     var loading = ampacheUrl(url);
     if (loading) {
         loadedPage = loading.pathname + loading.search;

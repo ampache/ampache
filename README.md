@@ -12,7 +12,7 @@ Ampache8 is now a work in progress and has become the mainline.
 
 The `develop` branch is Ampache8; the Ampache7 line continues on [release7](https://github.com/ampache/ampache/tree/release7).
 
-There are a lot of structural changes happening but not a lot of visible changes so far.
+There are a lot of structural changes happening, but some visible ones too — a new, opt-in Jellyfin-compatible API lets third-party Jellyfin clients (Finamp, Symfonium, gelly and others) browse and stream your library.
 
 You can check out the changes and progress in the [develop branch](https://github.com/ampache/ampache/tree/develop)
 

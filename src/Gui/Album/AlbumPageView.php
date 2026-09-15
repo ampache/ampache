@@ -368,14 +368,6 @@ final class AlbumPageView extends AbstractView
         return User::is_registered() && (bool) AmpConfig::get('ratings');
     }
 
-    /**
-     * Only the whole album offers a track reorder; a single disk has no ordering of its own to save.
-     */
-    public function showReorder(): bool
-    {
-        return !$this->album instanceof AlbumDisk;
-    }
-
     public function showRss(): bool
     {
         return (bool) AmpConfig::get('use_rss');

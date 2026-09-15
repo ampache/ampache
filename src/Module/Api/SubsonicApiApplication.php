@@ -497,7 +497,15 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             && method_exists($this->openSubsonicApi, $action)
             && assert(is_callable($callback))
         ) {
-            call_user_func($callback, $input, $user);
+            try {
+                call_user_func($callback, $input, $user);
+            } catch (\Throwable $error) {
+                $this->logger->error(
+                    sprintf('Uncaught error in Subsonic action %s: %s', $action, $error->getMessage()),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+                $this->openSubsonicApi->error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
+            }
 
             return;
         }
@@ -508,7 +516,15 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             && method_exists($this->subsonicApi, $action)
             && assert(is_callable($callback))
         ) {
-            call_user_func($callback, $input, $user);
+            try {
+                call_user_func($callback, $input, $user);
+            } catch (\Throwable $error) {
+                $this->logger->error(
+                    sprintf('Uncaught error in Subsonic action %s: %s', $action, $error->getMessage()),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+                $this->subsonicApi->error($input, Subsonic_Api::SSERROR_GENERIC, $action);
+            }
 
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;

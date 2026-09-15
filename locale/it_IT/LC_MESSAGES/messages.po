@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: GABG, 2022\n"
 "Language-Team: Italian (Italy) (http://app.transifex.com/ampache/ampache/language/it_IT/)\n"
@@ -245,9 +245,6 @@ msgstr "Collegamento"
 msgid "Graphs"
 msgstr "Grafici"
 
-msgid "Save Track Order"
-msgstr "Salva l'ordine delle tracce"
-
 msgid "Do you really want to update from tags?"
 msgstr "Davvero vuoi aggiornare dalle tags??"
 
@@ -347,6 +344,9 @@ msgstr "Artsti simili"
 
 msgid "Similar Songs"
 msgstr "Brani simili"
+
+msgid "Disabled"
+msgstr "Disattivato"
 
 msgid "Select New Art"
 msgstr "Seleziona una nuova copertina"
@@ -546,6 +546,9 @@ msgstr "Proprietario"
 msgid "Type"
 msgstr "Tipo"
 
+msgid "Save Track Order"
+msgstr "Salva l'ordine delle tracce"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -635,6 +638,9 @@ msgstr "Sovrascrivi i tag delle canzoni secondarie"
 
 msgid "Add tags to sub songs"
 msgstr "Aggiungi tag alle canzoni secondarie"
+
+msgid "Enabled"
+msgstr "Abilitato"
 
 msgid "Summary"
 msgstr "Sommario"
@@ -1527,11 +1533,17 @@ msgstr "play/.htaccess esiste?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess  è configurato?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php azione"
-
-msgid "Disabled"
-msgstr "Disattivato"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php esiste?"
@@ -1852,6 +1864,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Questo controlla alcune tabelle chiave per assicurarsi che il database Ampache esista e che l'utente abbia accesso al database"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2036,6 +2064,9 @@ msgstr "Edita la playlist intelligente"
 msgid "Save Changes"
 msgstr "Salva cambiamenti"
 
+msgid "Save as Smart Playlist"
+msgstr "Salva come playlist intelligente"
+
 msgid "Save as Playlist"
 msgstr "Salva come playlist"
 
@@ -2095,6 +2126,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2125,6 +2159,15 @@ msgstr "Applica a tutti"
 
 msgid "Access Level"
 msgstr "Livello di accesso"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "Inviato da"
@@ -2173,9 +2216,6 @@ msgstr "Illimitato"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Salva come playlist intelligente"
 
 msgid "Options"
 msgstr "Impostazioni"
@@ -2944,6 +2984,9 @@ msgstr "Controller di riproduzione locale non definito"
 msgid "Account"
 msgstr "Utente"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Nessun testo trovato."
 
@@ -3002,8 +3045,11 @@ msgstr "Licensing"
 msgid "Uploaded by"
 msgstr "Caricato da"
 
-msgid "Technical"
+msgid "Song Data"
 msgstr ""
+
+msgid "File Data"
+msgstr "File Dati"
 
 msgid "Statistical Graphs"
 msgstr "Grafici statistici"
@@ -3774,6 +3820,12 @@ msgstr "Il tuo account è stato aggiornato"
 msgid "Your account has not been updated"
 msgstr "Il tuo account non è stato aggiornato"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "Le preferenze del server sono state aggiornate con successo"
 
@@ -4174,6 +4226,9 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
+msgid "Failed to connect to the remote server"
+msgstr "Non riesco a connettermi  al server remoto"
+
 msgid "No username or password was specified"
 msgstr "Nessun username o password è stato specificato"
 
@@ -4187,9 +4242,6 @@ msgstr "Aggiornamento remoto in corso"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Non riesco a connettermi  al server remoto"
 
 #. HINT: count of songs found
 #, php-format
@@ -4509,9 +4561,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "Abilitato"
 
 msgid "Users List"
 msgstr ""
@@ -5235,9 +5284,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr "File Dati"
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5318,9 +5364,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "Ogni testo ricercabile"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr "Preferiti (album)"
@@ -7241,6 +7284,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7272,6 +7323,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

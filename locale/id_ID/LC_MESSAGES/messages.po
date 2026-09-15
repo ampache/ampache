@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: whenwesober, 2021\n"
 "Language-Team: Indonesian (Indonesia) (http://app.transifex.com/ampache/ampache/language/id_ID/)\n"
@@ -231,9 +231,6 @@ msgstr "Tautan"
 msgid "Graphs"
 msgstr "Grafik"
 
-msgid "Save Track Order"
-msgstr "Simpan Urutan Trek"
-
 msgid "Do you really want to update from tags?"
 msgstr "Apakah Anda benar ingin memperbarui dari tag?"
 
@@ -333,6 +330,9 @@ msgstr "Artis Serupa"
 
 msgid "Similar Songs"
 msgstr "Lagu serupa"
+
+msgid "Disabled"
+msgstr "Dinonaktifkan"
 
 msgid "Select New Art"
 msgstr "Pilih Sampul Baru"
@@ -532,6 +532,9 @@ msgstr "Pemilik"
 msgid "Type"
 msgstr "Jenis"
 
+msgid "Save Track Order"
+msgstr "Simpan Urutan Trek"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -621,6 +624,9 @@ msgstr "Timpa tag sub lagu"
 
 msgid "Add tags to sub songs"
 msgstr "Tambah tag ke sub lagu"
+
+msgid "Enabled"
+msgstr "Diaktifkan"
 
 msgid "Summary"
 msgstr "Ringkasan"
@@ -1513,11 +1519,17 @@ msgstr "play/.htaccess ada?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess dikonfigurasi?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "tindakan config/ampache.cfg.php"
-
-msgid "Disabled"
-msgstr "Dinonaktifkan"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php ada?"
@@ -1838,6 +1850,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Ini memeriksa beberapa tabel utama untuk memastikan bahwa database Ampache tersedia, dan pengguna memiliki akses ke database"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2022,6 +2050,9 @@ msgstr "Edit Daftar Putar Pintar"
 msgid "Save Changes"
 msgstr "Simpan perubahan"
 
+msgid "Save as Smart Playlist"
+msgstr "Simpan sebagai daftar putar pintar"
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2081,6 +2112,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2111,6 +2145,15 @@ msgstr "Terapkan ke semua"
 
 msgid "Access Level"
 msgstr "Tingkat akses"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "Dikirim oleh"
@@ -2159,9 +2202,6 @@ msgstr "Tak terbatas"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "Simpan sebagai daftar putar pintar"
 
 msgid "Options"
 msgstr "Pilihan"
@@ -2918,6 +2958,9 @@ msgstr "Pengontrol Localplay tidak didefinisikan"
 msgid "Account"
 msgstr "Akun"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Lirik tidak ditemukan."
 
@@ -2976,7 +3019,10 @@ msgstr "LISENSI"
 msgid "Uploaded by"
 msgstr "Diunggah oleh"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3740,6 +3786,12 @@ msgstr "Akun anda telah diperbaharui"
 msgid "Your account has not been updated"
 msgstr "Akun Anda belum diperbarui"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "Preferensi Server berhasil diperbarui"
 
@@ -4130,6 +4182,9 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d berkas dipebarui."
 
+msgid "Failed to connect to the remote server"
+msgstr "Gagal terhubung ke server jarak jauh"
+
 msgid "No username or password was specified"
 msgstr "Tidak ada nama pengguna atau kata sandi yang ditentukan"
 
@@ -4143,9 +4198,6 @@ msgstr "Menjalankan pembaruan jarak jauh"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Gagal terhubung ke server jarak jauh"
 
 #. HINT: count of songs found
 #, php-format
@@ -4461,9 +4513,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "Diaktifkan"
 
 msgid "Users List"
 msgstr ""
@@ -5185,9 +5234,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5268,9 +5314,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "Teks yang dapat dicari"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr ""
@@ -7189,6 +7232,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7220,6 +7271,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description
