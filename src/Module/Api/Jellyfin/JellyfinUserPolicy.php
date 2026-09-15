@@ -25,27 +25,63 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
 
 /**
  * The `Policy` object real Jellyfin nests on every `UserDto`, wherever one appears — the login response's
- * `User`, `GET /Users/Me`, and `GET /Users/{userId}` all carry it. Shared so the three can't drift the way
- * a missing `Policy.IsAdministrator` broke a real client's login (it reads the field directly and crashes
- * on a missing object entirely, not just a missing field) — `AuthenticationProviderId`/`PasswordResetProviderId`
- * are the two fields the real spec's own `UserPolicy` schema marks required; everything else there is
- * `nullable: true` and, per that same client's own source, never read.
+ * `User`, `GET /Users/Me`, and `GET /Users/{userId}` all carry it. Shared so the three can't drift.
+ *
+ * Every field here is one Finamp's own generated model (`UserPolicy` in `jellyfin_models.dart`) declares
+ * `required` on a non-nullable type, confirmed by reading that file directly — a missing or `null` value on
+ * any of them throws `type 'Null' is not a subtype of type 'bool'` (or `int`/`String`) in its generated
+ * `fromJson`, which crashed login entirely rather than just showing a broken field. The vendored spec marks
+ * most of these `nullable: true`, so this is a case of a real client being stricter than the spec, not the
+ * spec being wrong — the earlier version of this class trusted the spec's nullability and got it wrong.
+ * `EnableLiveTvManagement`/`EnableLiveTvAccess`/`EnablePlaybackRemuxing` are always false and
+ * `SyncPlayAccess` is always `'None'` because Ampache has nothing behind any of them.
  */
 final class JellyfinUserPolicy
 {
     /** @return array<string, mixed> */
     public static function build(User $user): array
     {
+        $isAdmin   = $user->has_access(AccessLevelEnum::ADMIN);
+        $isManager = $user->has_access(AccessLevelEnum::MANAGER);
+        $canStream = AmpConfig::get_bool('allow_stream_playback') && (bool) $user->getPreferenceValue('allow_stream_playback');
+
         return [
-            'IsAdministrator' => $user->has_access(AccessLevelEnum::ADMIN),
+            'IsAdministrator' => $isAdmin,
+            'IsHidden' => false,
             'IsDisabled' => (bool) $user->disabled,
+            'EnableUserPreferenceAccess' => true,
+            'EnableRemoteControlOfOtherUsers' => $isAdmin,
+            'EnableSharedDeviceControl' => $isAdmin,
+            'EnableRemoteAccess' => true,
+            'EnableLiveTvManagement' => false,
+            'EnableLiveTvAccess' => false,
+            'EnableMediaPlayback' => $canStream,
+            'EnableAudioPlaybackTranscoding' => $canStream,
+            'EnableVideoPlaybackTranscoding' => false,
+            'EnablePlaybackRemuxing' => false,
+            'ForceRemoteSourceTranscoding' => false,
+            'EnableContentDeletion' => $isManager,
+            'EnableContentDeletionFromFolders' => [],
+            'EnableContentDownloading' => AmpConfig::get_bool('download'),
+            'EnableSyncTranscoding' => $canStream,
+            'EnableMediaConversion' => $isManager,
+            'EnableAllDevices' => true,
+            'EnableAllChannels' => true,
+            'EnableAllFolders' => true,
+            'InvalidLoginAttemptCount' => 0,
+            'LoginAttemptsBeforeLockout' => -1,
+            'MaxActiveSessions' => 0,
+            'EnablePublicSharing' => false,
+            'RemoteClientBitrateLimit' => 0,
             'AuthenticationProviderId' => 'Default',
             'PasswordResetProviderId' => 'Default',
+            'SyncPlayAccess' => 'None',
         ];
     }
 }
