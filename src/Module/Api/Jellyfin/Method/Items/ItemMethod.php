@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,7 +43,8 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * Real clients (confirmed: Finamp) fetch the synthetic UserView root by id right after listing
  * `/Views`/`/UserViews`, to render the library tab itself — a missing `'view'` case here 404s that lookup
- * and blocks every downstream tab from ever loading, even though `/Views` happily lists the same id.
+ * and blocks every downstream tab from ever loading, even though `/Views` happily lists the same id. The
+ * `'genre'` case closes the same gap for a genre id `MusicGenresMethod`/browse listings hand out.
  */
 final class ItemMethod implements JellyfinMethodInterface
 {
@@ -67,6 +69,7 @@ final class ItemMethod implements JellyfinMethodInterface
             'artist' => $this->artistDto($id, $user),
             'playlist' => $this->playlistDto($id, $user),
             'view' => JellyfinUserView::build(),
+            'genre' => $this->genreDto($id, $user),
             default => null,
         };
 
@@ -91,6 +94,21 @@ final class ItemMethod implements JellyfinMethodInterface
         $artist = new Artist($id);
 
         return $artist->isNew() ? null : $this->mapper->mapArtist($artist, $user, ['Overview']);
+    }
+
+    /** @return array<string, mixed>|null */
+    private function genreDto(int $id, User $user): ?array
+    {
+        $tag = new Tag($id);
+        if ($tag->isNew() || $tag->name === null) {
+            return null;
+        }
+
+        // song-tag genres are the only kind this surface has, matching MusicGenresMethod's own scope
+        return $this->mapper->mapGenre(
+            ['id' => $tag->id, 'name' => $tag->name, 'is_hidden' => $tag->is_hidden, 'count' => $tag->song],
+            $user
+        );
     }
 
     /** @return array<string, mixed>|null */
