@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Sabre\DAV\Auth\Backend\BackendInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
@@ -37,16 +38,21 @@ final class WebDavFactory implements WebDavFactoryInterface
 {
     private AuthenticationManagerInterface $authenticationManager;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        UserRepositoryInterface $userRepository
     ) {
         $this->authenticationManager = $authenticationManager;
+        $this->userRepository        = $userRepository;
     }
 
     public function createWebDavAuth(): WebDavAuth
     {
         return new WebDavAuth(
-            $this->authenticationManager
+            $this->authenticationManager,
+            $this->userRepository
         );
     }
 
