@@ -1,5 +1,39 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 5
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Fixed (692005)
+
+* ALL
+  * `handshake`: A disabled user account could still complete the handshake and receive a valid session. **NOTE** the same fix landed in Ampache8, which serves every version as well
+  * Setting `api_force_version` reopened an API version the admin had disabled, bypassing the `api_enable_3`..`api_enable_6` check. **NOTE** the same fix landed in Ampache8, which serves every version as well
+  * `stats`: The `user_id`/`username` override handed back another user's `streamtoken` embedded in each item's play url; the response now carries the caller's own token. **NOTE** the same fix landed in Ampache8, which serves every version as well
+  * `rate`: An out-of-range value (e.g. `127`) was stored as-is instead of being clamped to 0-5, and repeatedly rating `0` could drain an object's popularity weight below `0`. **NOTE** the same fix landed in Ampache8, which serves every version as well
+  * `timeline`, `friends_timeline`: Listed activity against songs, videos, albums and other catalog-scoped objects the caller's own catalog filter excludes; those entries are now omitted from the result. **NOTE** the same fix landed in Ampache8, which serves every version as well
+* `stats` (API3, API4, API5, API6)
+  * Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out. On Ampache8, only API3, API4 and API5 needed this fix because API6/API8 share one implementation that already checked it; on Ampache7, API6 has its own separate implementation which had the same gap, so it is included here too
+* API3
+  * `playlist`, `playlist_songs`: A private playlist you neither own nor collaborate on was readable by anyone who guessed its id. **NOTE** the same fix landed in Ampache8, which serves this version as well
+* API5
+  * `ping`: `server_details` returned server-wide catalog counts scoped to user id `0` when the auth token didn't resolve to a real user, instead of being rejected. **NOTE** the same fix landed in Ampache8, which serves this version as well
+* `flag` (API4, API5, API6)
+  * A future `date` parameter pinned a favourite to the top of every newest list until real time caught up. **NOTE** the same fix landed in Ampache8, which serves these versions as well
+* `playlist_add` (API6)
+  * A private playlist or smartlist named as the source object was expanded into the caller's own playlist, leaking its songs; a non-public source you neither own nor collaborate on is now refused. **NOTE** the same fix landed in Ampache8, which serves this version as well
+* `search_group` (API6)
+  * The REST route `search/{search_type}/groups` delivers `{search_type}` as `filter`, but the method only read `type`, so it always searched `all` regardless of the path. **NOTE** the same fix landed in Ampache8, which serves this version as well
+* REST (ALL)
+  * A REST call's path-derived `type` (e.g. `playlist`, from `playlists/{playlist_id}/{add|remove}/`) always overwrote a `type` sent in the request body, for every action the REST router type-tags this way. **NOTE** the same fix landed in Ampache8, which serves these versions as well
+* `friends_timeline` (API3, API4)
+  * Returned the caller's own activity instead of the activity of the users they follow, calling `getActivities()` instead of `getFriendsActivities()`. **NOTE** the same fix landed in Ampache8, which serves these versions as well
+
 ## API 6.9.2 Build 4
 
 This version is being released for Ampache7 **only**
