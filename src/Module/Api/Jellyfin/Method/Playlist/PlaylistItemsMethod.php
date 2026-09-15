@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Jellyfin\Method\Playlist;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Statistics\Rating;
@@ -77,7 +78,7 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
         }
 
         $medias = [];
-        foreach ($this->splitList((string) ($request->getQueryParams()['ids'] ?? '')) as $encodedId) {
+        foreach ($this->splitList((string) (JellyfinRequestBody::field($request->getQueryParams(), 'ids') ?? '')) as $encodedId) {
             if (JellyfinId::isType($encodedId, 'song')) {
                 $songId = JellyfinId::decodeId($encodedId);
                 if ($songId !== null) {
@@ -133,7 +134,7 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
             return JellyfinResponse::forbidden();
         }
 
-        foreach ($this->splitList((string) ($request->getQueryParams()['entryIds'] ?? '')) as $encodedId) {
+        foreach ($this->splitList((string) (JellyfinRequestBody::field($request->getQueryParams(), 'entryIds') ?? '')) as $encodedId) {
             if (JellyfinId::isType($encodedId, 'song')) {
                 $songId = JellyfinId::decodeId($encodedId);
                 if ($songId !== null) {

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Jellyfin\Method\Similar;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
@@ -67,7 +68,7 @@ final class SimilarMethod implements JellyfinMethodInterface
             return JellyfinResponse::notFound();
         }
 
-        $limitParam = (string) ($request->getQueryParams()['limit'] ?? '');
+        $limitParam = (string) (JellyfinRequestBody::field($request->getQueryParams(), 'limit') ?? '');
         $limit      = ($limitParam !== '') ? max(1, (int) $limitParam) : self::DEFAULT_LIMIT;
 
         $items = match ($type) {

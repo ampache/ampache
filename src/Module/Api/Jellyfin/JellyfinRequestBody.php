@@ -26,11 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin;
 
 /**
- * Real Jellyfin (ASP.NET Core) binds JSON request bodies case-insensitively by default, and at least one
- * real client relies on that — confirmed live: gelly POSTs a lowercase `secret` to
- * `AuthenticateWithQuickConnect`, where the spec's own schema names the property `Secret`. Every JSON-body
- * field read in this surface goes through this rather than a literal `$body['Key']`, so it matches real
- * server behavior instead of just the documented casing.
+ * Real Jellyfin (ASP.NET Core) binds both JSON request bodies and query strings case-insensitively by
+ * default, and real clients rely on that in both directions — confirmed live: gelly POSTs a lowercase
+ * `secret` to `AuthenticateWithQuickConnect` where the spec names the property `Secret`, and Finamp's real
+ * `GET /QuickConnect/Connect` request sends `Secret` where the vendored spec text (also real, just
+ * generated with different casing) names it `secret`. Every JSON-body or query-string field read in this
+ * surface that came from a client goes through this rather than a literal `$body['Key']` /
+ * `$query['key']`, so it matches real server behavior instead of whichever casing a given doc happened to
+ * use. Despite the name, `$body` here is just "the associative array to search" — a decoded JSON body or
+ * `$request->getQueryParams()` are both fine.
  */
 final class JellyfinRequestBody
 {

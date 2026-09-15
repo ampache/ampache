@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin\Method\Auth;
 
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
@@ -49,7 +50,8 @@ final class QuickConnectConnectMethod implements JellyfinMethodInterface
             return JellyfinResponse::serviceUnavailable('QuickConnect is not enabled');
         }
 
-        $secret = (string) ($request->getQueryParams()['secret'] ?? '');
+        // real Finamp traffic sends `Secret`; the vendored spec text names it lowercase `secret`
+        $secret = (string) (JellyfinRequestBody::field($request->getQueryParams(), 'secret') ?? '');
         if ($secret === '') {
             return JellyfinResponse::notFound();
         }

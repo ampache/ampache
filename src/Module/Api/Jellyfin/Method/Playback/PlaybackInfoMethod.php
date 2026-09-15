@@ -26,15 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin\Method\Playback;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
+use Ampache\Module\Api\Jellyfin\JellyfinTranscodeDecision;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * GET/POST /Items/{itemId}/PlaybackInfo — direct play only in v1, no transcode decision yet. The client
- * builds its own `/Audio/{itemId}/stream` URL from `Id`; no URL is returned here.
+ * GET/POST /Items/{itemId}/PlaybackInfo. Advertises a transcode option, decided the same simple way the
+ * native API does (source format/bitrate vs. server config), rather than parsing the client's DeviceProfile
+ * codec/container support like a real Jellyfin server does. Direct play is always still offered.
  */
 final class PlaybackInfoMethod implements JellyfinMethodInterface
 {
@@ -54,32 +57,48 @@ final class PlaybackInfoMethod implements JellyfinMethodInterface
             return JellyfinResponse::notFound();
         }
 
-        $runTimeTicks = $song->time * 10_000_000;
+        $body           = json_decode((string) $request->getBody(), true);
+        $maxBitrate     = (int) (JellyfinRequestBody::field(is_array($body) ? $body : [], 'MaxStreamingBitrate') ?? 0);
+        $decision       = JellyfinTranscodeDecision::resolve($song, '', 0, $maxBitrate);
+        $playSessionId  = bin2hex(random_bytes(16));
+        $runTimeTicks   = $song->time * 10_000_000;
 
-        return JellyfinResponse::json([
-            'MediaSources' => [
+        $mediaSource = [
+            'Id' => $itemId,
+            'Protocol' => 'File',
+            'Container' => $song->type,
+            'Size' => $song->size,
+            'Bitrate' => $song->bitrate,
+            'RunTimeTicks' => $runTimeTicks,
+            'SupportsDirectPlay' => true,
+            'SupportsDirectStream' => true,
+            'SupportsTranscoding' => $decision->transcode,
+            'IsRemote' => false,
+            'MediaStreams' => [
                 [
-                    'Id' => $itemId,
-                    'Protocol' => 'File',
-                    'Container' => $song->type,
-                    'Size' => $song->size,
-                    'Bitrate' => $song->bitrate,
-                    'RunTimeTicks' => $runTimeTicks,
-                    'SupportsDirectPlay' => true,
-                    'SupportsDirectStream' => true,
-                    'SupportsTranscoding' => false,
-                    'IsRemote' => false,
-                    'MediaStreams' => [
-                        [
-                            'Type' => 'Audio',
-                            'Codec' => $song->type,
-                            'BitRate' => $song->bitrate,
-                            'Index' => 0,
-                        ],
-                    ],
+                    'Type' => 'Audio',
+                    'Codec' => $song->type,
+                    'BitRate' => $song->bitrate,
+                    'Index' => 0,
                 ],
             ],
-            'PlaySessionId' => bin2hex(random_bytes(16)),
+        ];
+
+        if ($decision->transcode && $decision->format !== null) {
+            $query = http_build_query([
+                'Container' => $decision->format,
+                'AudioCodec' => $decision->format,
+                'PlaySessionId' => $playSessionId,
+            ]);
+
+            $mediaSource['TranscodingUrl']          = '/Audio/' . $itemId . '/stream?' . $query;
+            $mediaSource['TranscodingContainer']    = $decision->format;
+            $mediaSource['TranscodingSubProtocol']  = 'http';
+        }
+
+        return JellyfinResponse::json([
+            'MediaSources' => [$mediaSource],
+            'PlaySessionId' => $playSessionId,
         ]);
     }
 }
