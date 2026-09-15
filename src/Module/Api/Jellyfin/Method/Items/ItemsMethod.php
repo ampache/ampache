@@ -27,14 +27,18 @@ namespace Ampache\Module\Api\Jellyfin\Method\Items;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\JellyfinUserView;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
@@ -53,6 +57,7 @@ final class ItemsMethod implements JellyfinMethodInterface
 {
     public function __construct(
         private readonly AlbumRepositoryInterface $albumRepository,
+        private readonly ArtistRepositoryInterface $artistRepository,
         private readonly JellyfinItemMapper $mapper,
         private readonly PlaylistRepositoryInterface $playlistRepository,
     ) {}
@@ -64,15 +69,27 @@ final class ItemsMethod implements JellyfinMethodInterface
         }
 
         $query        = $request->getQueryParams();
-        $fields       = $this->splitList((string) ($query['Fields'] ?? ''));
-        $includeTypes = $this->splitList((string) ($query['IncludeItemTypes'] ?? ''));
-        $parentId     = (string) ($query['ParentId'] ?? '');
-        $onlyFavorite = str_contains((string) ($query['Filters'] ?? ''), 'IsFavorite');
-        $startIndex   = max(0, (int) ($query['StartIndex'] ?? 0));
-        $limitParam   = (string) ($query['Limit'] ?? '');
+        $fields       = $this->splitList((string) (JellyfinRequestBody::field($query, 'Fields') ?? ''));
+        $includeTypes = $this->splitList((string) (JellyfinRequestBody::field($query, 'IncludeItemTypes') ?? ''));
+        $parentId     = (string) (JellyfinRequestBody::field($query, 'ParentId') ?? '');
+        $onlyFavorite = str_contains((string) (JellyfinRequestBody::field($query, 'Filters') ?? ''), 'IsFavorite');
+        $startIndex   = max(0, (int) (JellyfinRequestBody::field($query, 'StartIndex') ?? 0));
+        $limitParam   = (string) (JellyfinRequestBody::field($query, 'Limit') ?? '');
         $limit        = ($limitParam !== '') ? (int) $limitParam : 0;
+        $sortBy       = $this->splitList((string) (JellyfinRequestBody::field($query, 'SortBy') ?? ''));
+        $descending   = strcasecmp((string) (JellyfinRequestBody::field($query, 'SortOrder') ?? ''), 'Descending') === 0;
 
-        $items = $this->collect($parentId, $includeTypes, $user, $fields);
+        $sort = match (true) {
+            in_array('Random', $sortBy, true) => 'random',
+            in_array('DateCreated', $sortBy, true) => 'newest',
+            default => null,
+        };
+
+        // a favorite-only request still needs the whole set to filter from, so it cannot be pre-limited;
+        // everything else fetches one extra row past the requested page, just to detect that more remain
+        $fetchSize = ($limit > 0 && !$onlyFavorite) ? $startIndex + $limit + 1 : 0;
+
+        $items = $this->collect($parentId, $includeTypes, $user, $fields, $fetchSize, $sort, $descending);
 
         if ($onlyFavorite) {
             $items = array_values(array_filter(
@@ -81,7 +98,11 @@ final class ItemsMethod implements JellyfinMethodInterface
             ));
         }
 
-        $total = count($items);
+        // a bounded fetch can't report the real total without fetching everything, so a full page plus the
+        // peeked row reports a lower bound instead of a false "that's everything" once the cap is hit
+        $total = (($fetchSize > 0) && count($items) > $startIndex + $limit)
+            ? $startIndex + $limit + 1
+            : count($items);
         $items = ($limit > 0) ? array_slice($items, $startIndex, $limit) : array_slice($items, $startIndex);
 
         return JellyfinResponse::json([
@@ -110,11 +131,22 @@ final class ItemsMethod implements JellyfinMethodInterface
 
     /**
      * @param list<string> $fields
+     * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allAlbums(User $user, array $fields): array
+    private function allAlbums(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
     {
-        $albumIds = Catalog::get_albums(0, 0, $user->get_catalogs('music'));
+        $catalogs = $user->get_catalogs('music');
+
+        $albumIds = match ($sort) {
+            'random' => ($fetchSize > 0)
+                ? $this->albumRepository->getRandom($user->getId(), $fetchSize)
+                : $this->shuffleArray(Catalog::get_albums(0, 0, $catalogs)),
+            'newest' => Stats::get_newest('album', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+            default => Catalog::get_albums($fetchSize, 0, $catalogs),
+        };
+        $albumIds = $this->applyOrder($albumIds, $sort, $descending);
+
         $this->warmAlbums($albumIds);
 
         $albums = [];
@@ -127,16 +159,38 @@ final class ItemsMethod implements JellyfinMethodInterface
 
     /**
      * @param list<string> $fields
+     * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allArtists(User $user, array $fields): array
+    private function allArtists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
     {
-        $artists = Catalog::get_artists($user->get_catalogs('music'));
-        $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
+        $catalogs = $user->get_catalogs('music');
+
+        if ($sort === null) {
+            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize, 0), $sort, $descending);
+            $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
+
+            $result = [];
+            foreach ($artists as $artist) {
+                $result[] = $this->mapper->mapArtist($artist, $user, $fields);
+            }
+
+            return $result;
+        }
+
+        $artistIds = match ($sort) {
+            'random' => ($fetchSize > 0)
+                ? $this->artistRepository->getRandom($user->getId(), $fetchSize)
+                : $this->shuffleArray(array_map(static fn(Artist $artist): int => $artist->id, Catalog::get_artists($catalogs))),
+            'newest' => Stats::get_newest('artist', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+        };
+        $artistIds = $this->applyOrder($artistIds, $sort, $descending);
+
+        $this->warmArtists($artistIds);
 
         $result = [];
-        foreach ($artists as $artist) {
-            $result[] = $this->mapper->mapArtist($artist, $user, $fields);
+        foreach ($artistIds as $artistId) {
+            $result[] = $this->mapper->mapArtist(new Artist($artistId), $user, $fields);
         }
 
         return $result;
@@ -144,10 +198,13 @@ final class ItemsMethod implements JellyfinMethodInterface
 
     /**
      * @param list<string> $fields
+     * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allPlaylists(User $user, array $fields): array
+    private function allPlaylists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
     {
+        // findIds has no size/offset of its own, so this is the one type still bounded after the fact
+        // rather than at the query — playlist counts are small next to a library's albums/artists/songs
         $ids = $this->playlistRepository->findIds(
             $user->getId(),
             $user->has_access(AccessLevelEnum::ADMIN),
@@ -156,6 +213,18 @@ final class ItemsMethod implements JellyfinMethodInterface
             false,
             null,
         );
+
+        if ($sort === 'newest') {
+            $this->warmPlaylists($ids);
+            usort($ids, static fn(int $a, int $b): int => (new Playlist($b))->last_update <=> (new Playlist($a))->last_update);
+        } elseif ($sort === 'random') {
+            $ids = $this->shuffleArray($ids);
+        }
+        $ids = $this->applyOrder($ids, $sort, $descending);
+
+        if ($fetchSize > 0) {
+            $ids = array_slice($ids, 0, $fetchSize);
+        }
         $this->warmPlaylists($ids);
 
         $playlists = [];
@@ -168,11 +237,22 @@ final class ItemsMethod implements JellyfinMethodInterface
 
     /**
      * @param list<string> $fields
+     * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allSongs(User $user, array $fields): array
+    private function allSongs(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
     {
-        $songIds = Catalog::get_all_song_ids(0, 0, $user->get_catalogs('music'));
+        $catalogs = $user->get_catalogs('music');
+
+        $songIds = match ($sort) {
+            'random' => ($fetchSize > 0)
+                ? Random::get_default($fetchSize, $user)
+                : $this->shuffleArray(Catalog::get_all_song_ids(0, 0, $catalogs)),
+            'newest' => Stats::get_newest('song', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+            default => Catalog::get_all_song_ids($fetchSize, 0, $catalogs),
+        };
+        $songIds = $this->applyOrder($songIds, $sort, $descending);
+
         $this->warmSongs($songIds, $user);
 
         $songs = [];
@@ -184,11 +264,32 @@ final class ItemsMethod implements JellyfinMethodInterface
     }
 
     /**
+     * The default fetch already comes back ascending (by name) and `newest` already comes back descending
+     * (by addition date), so only a mismatch between that and the requested SortOrder needs a flip.
+     *
+     * @template T
+     * @param array<int, T> $ids
+     * @param 'random'|'newest'|null $sort
+     * @return array<int, T>
+     */
+    private function applyOrder(array $ids, ?string $sort, bool $descending): array
+    {
+        $needsReverse = match ($sort) {
+            'newest' => !$descending,
+            'random' => false,
+            default => $descending,
+        };
+
+        return $needsReverse ? array_reverse($ids) : $ids;
+    }
+
+    /**
      * @param list<string> $includeTypes
      * @param list<string> $fields
+     * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function collect(string $parentId, array $includeTypes, User $user, array $fields): array
+    private function collect(string $parentId, array $includeTypes, User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
     {
         // no ParentId, no IncludeItemTypes at all: the client wants the root library views, not "nothing"
         // (confirmed against real Symfonium sync traffic — this exact shape is how it discovers libraries)
@@ -212,19 +313,30 @@ final class ItemsMethod implements JellyfinMethodInterface
         // top-level: no ParentId, or the synthetic 'view' root — driven entirely by IncludeItemTypes
         $items = [];
         if (in_array('MusicAlbum', $includeTypes, true)) {
-            array_push($items, ...$this->allAlbums($user, $fields));
+            array_push($items, ...$this->allAlbums($user, $fields, $fetchSize, $sort, $descending));
         }
         if (in_array('MusicArtist', $includeTypes, true)) {
-            array_push($items, ...$this->allArtists($user, $fields));
+            array_push($items, ...$this->allArtists($user, $fields, $fetchSize, $sort, $descending));
         }
         if (in_array('Audio', $includeTypes, true)) {
-            array_push($items, ...$this->allSongs($user, $fields));
+            array_push($items, ...$this->allSongs($user, $fields, $fetchSize, $sort, $descending));
         }
         if (in_array('Playlist', $includeTypes, true)) {
-            array_push($items, ...$this->allPlaylists($user, $fields));
+            array_push($items, ...$this->allPlaylists($user, $fields, $fetchSize, $sort, $descending));
         }
 
         return $items;
+    }
+
+    /**
+     * @param array<int, int> $ids
+     * @return array<int, int>
+     */
+    private function shuffleArray(array $ids): array
+    {
+        shuffle($ids);
+
+        return $ids;
     }
 
     /**
