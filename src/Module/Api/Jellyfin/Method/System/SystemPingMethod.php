@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin\Method\System;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Repository\Model\User;
@@ -35,6 +36,8 @@ final class SystemPingMethod implements JellyfinMethodInterface
 {
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
-        return JellyfinResponse::json('Ampache Server');
+        return JellyfinResponse::json(
+            sprintf(T_('Ampache version: %s'), AmpConfig::get('version'))
+        );
     }
 }
