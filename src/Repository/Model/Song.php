@@ -536,6 +536,7 @@ class Song extends database_object implements
      *     catalog: int,
      *     total_count: int,
      *     total_skip: int,
+     *     update_time: int,
      *     album: int,
      *     artist: int,
      * }>
@@ -553,6 +554,7 @@ class Song extends database_object implements
                 'catalog' => (int) $row['catalog'],
                 'total_count' => (int) $row['total_count'],
                 'total_skip' => (int) $row['total_skip'],
+                'update_time' => (int) $row['update_time'],
                 'album' => (int) $row['album'],
                 'artist' => (int) $row['artist'],
             ];

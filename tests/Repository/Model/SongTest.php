@@ -192,6 +192,36 @@ class SongTest extends MockeryTestCase
         $this->assertSame(['tags' => 'OLD: EBM Electro --> EBM Electro Industrial'], $result['element']);
     }
 
+    public function testGetDeletedIncludesUpdateTime(): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getDeletedRows')->andReturn([
+            [
+                'id' => 123,
+                'addition_time' => 1000,
+                'delete_time' => 2000,
+                'title' => 'Some Title',
+                'file' => '/music/some.flac',
+                'catalog' => 1,
+                'total_count' => 5,
+                'total_skip' => 1,
+                'update_time' => 1500,
+                'album' => 42,
+                'artist' => 7,
+            ],
+        ]);
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+        $GLOBALS['dic'] = $dic;
+
+        $deleted = Song::get_deleted();
+
+        self::assertCount(1, $deleted);
+        // every output formatter gates the row on `isset($row['update_time'])`; a missing key drops it silently
+        self::assertSame(1500, $deleted[0]['update_time']);
+    }
+
     public function testIsCodecNameRejectsAnythingButABareWord(): void
     {
         $method = new ReflectionMethod(Song::class, '_is_codec_name');
