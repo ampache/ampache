@@ -1962,7 +1962,6 @@ class Subsonic_Api
      */
     public static function getplaylist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = self::_check_parameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -1974,6 +1973,13 @@ class Subsonic_Api
             || $playlist->isNew()
         ) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // a private list you neither own nor collaborate on is not yours to read
+        if ($playlist->type !== 'public' && !$playlist->has_collaborate($user)) {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
 
             return;
         }
@@ -1999,7 +2005,8 @@ class Subsonic_Api
      */
     public static function getplaylists(array $input, User $user): void
     {
-        $user = (isset($input['username']))
+        // only an admin may list another user's playlists; their private ones are not public
+        $user = (isset($input['username']) && $user->access >= AccessLevelEnum::ADMIN->value)
             ? User::get_from_username($input['username']) ?? $user
             : $user;
 
@@ -2789,6 +2796,16 @@ class Subsonic_Api
     {
         $action = self::_check_parameter($input, 'action', __FUNCTION__);
         if ($action === false) {
+            return;
+        }
+
+        // driving the server's own playback is gated like the native localplay method, nothing checked it here
+        if (
+            !AmpConfig::get('allow_localplay_playback')
+            || $user->access < (int) (AmpConfig::get('localplay_level') ?? AccessLevelEnum::ADMIN->value)
+        ) {
+            self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
+
             return;
         }
 
