@@ -15,7 +15,7 @@
 * Jellyfin
   * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
   * Off by default; enable with the new `jellyfin_backend_enable` preference
-  * Audio only — no video, podcasts or live TV — and direct-play streaming only, with no server-side transcoding
+  * Audio only — no video, podcasts or live TV — with direct-play streaming and server-side transcoding when the client asks for a format or bitrate the source can't serve directly
   * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
   * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
 
@@ -54,7 +54,10 @@
 * The `deleted_songs` API action returned an empty list no matter how many songs had actually been deleted
 * Subsonic
   * `getMusicDirectory` queried each song's genre tags individually instead of as one batch, which could time out or fail outright on a folder with thousands of files
+  * Video and podcast episode listings had the same one-tag-query-per-item gap
   * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
+* A catalog scan started from the UI that hit an error mid-run left the progress stream open instead of stopping and reporting it
+* An unexpected error in a DAAP request returned no response instead of an error
 
 ## Ampache 8.1.0
 

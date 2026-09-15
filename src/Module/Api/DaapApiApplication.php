@@ -27,9 +27,15 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
+use Psr\Log\LoggerInterface;
 
 final class DaapApiApplication implements ApiApplicationInterface
 {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {}
+
     public function run(): void
     {
         if (!AmpConfig::get('daap_backend')) {
@@ -71,7 +77,15 @@ final class DaapApiApplication implements ApiApplicationInterface
                     // If the method is the same as the action being called
                     // Then let's call this function!
                     if ($act == $method && is_callable([Daap_Api::class, $method])) {
-                        call_user_func([Daap_Api::class, $method], array_slice($params, $i, $p_count - $i));
+                        try {
+                            call_user_func([Daap_Api::class, $method], array_slice($params, $i, $p_count - $i));
+                        } catch (\Throwable $error) {
+                            $this->logger->error(
+                                sprintf('Uncaught error in DAAP action %s: %s', $method, $error->getMessage()),
+                                [LegacyLogger::CONTEXT_TYPE => self::class]
+                            );
+                            Daap_Api::createError(500);
+                        }
 
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;

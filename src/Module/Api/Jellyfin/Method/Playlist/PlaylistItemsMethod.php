@@ -27,8 +27,12 @@ namespace Ampache\Module\Api\Jellyfin\Method\Playlist;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
@@ -74,7 +78,7 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
         }
 
         $medias = [];
-        foreach ($this->splitList((string) ($request->getQueryParams()['ids'] ?? '')) as $encodedId) {
+        foreach ($this->splitList((string) (JellyfinRequestBody::field($request->getQueryParams(), 'ids') ?? '')) as $encodedId) {
             if (JellyfinId::isType($encodedId, 'song')) {
                 $songId = JellyfinId::decodeId($encodedId);
                 if ($songId !== null) {
@@ -100,12 +104,18 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
         $limitParam = (string) ($query['limit'] ?? '');
         $limit      = ($limitParam !== '') ? (int) $limitParam : 0;
 
+        $songIds = array_values(array_map(
+            static fn(array $row): int => (int) $row['object_id'],
+            array_filter($playlist->get_items(), static fn(array $row): bool => $row['object_type'] === LibraryItemEnum::SONG),
+        ));
+        Song::build_cache($songIds);
+        Rating::build_cache('song', $songIds);
+        Userflag::build_cache('song', $songIds);
+        Bookmark::build_cache('song', $songIds, $user->getId());
+
         $songs = [];
-        foreach ($playlist->get_items() as $row) {
-            if ($row['object_type'] !== LibraryItemEnum::SONG) {
-                continue;
-            }
-            $songs[] = $this->mapper->mapSong(new Song($row['object_id']), $user, []);
+        foreach ($songIds as $songId) {
+            $songs[] = $this->mapper->mapSong(new Song($songId), $user, []);
         }
 
         $total = count($songs);
@@ -124,7 +134,7 @@ final class PlaylistItemsMethod implements JellyfinMethodInterface
             return JellyfinResponse::forbidden();
         }
 
-        foreach ($this->splitList((string) ($request->getQueryParams()['entryIds'] ?? '')) as $encodedId) {
+        foreach ($this->splitList((string) (JellyfinRequestBody::field($request->getQueryParams(), 'entryIds') ?? '')) as $encodedId) {
             if (JellyfinId::isType($encodedId, 'song')) {
                 $songId = JellyfinId::decodeId($encodedId);
                 if ($songId !== null) {

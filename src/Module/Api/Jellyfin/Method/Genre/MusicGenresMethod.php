@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Jellyfin\Method\Genre;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,6 +56,10 @@ final class MusicGenresMethod implements JellyfinMethodInterface
         $tags  = array_values(array_filter(Tag::get_tags('song'), static fn(array $tag): bool => !$tag['is_hidden']));
         $total = count($tags);
         $tags  = ($limit > 0) ? array_slice($tags, $startIndex, $limit) : array_slice($tags, $startIndex);
+
+        $ids = array_column($tags, 'id');
+        Rating::build_cache('genre', $ids);
+        Userflag::build_cache('genre', $ids);
 
         return JellyfinResponse::json([
             'Items' => array_map(fn(array $tag): array => $this->mapper->mapGenre($tag, $user), $tags),

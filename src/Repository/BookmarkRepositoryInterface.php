@@ -88,6 +88,14 @@ interface BookmarkRepositoryInterface
     public function getRowByObject(string $objectType, int $objectId, int $userId): array;
 
     /**
+     * Reads the bookmark a user holds against a batch of objects of one type in a single query, keyed by object id
+     *
+     * @param list<int> $objectIds
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRowsByObjects(string $objectType, array $objectIds, int $userId): array;
+
+    /**
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;

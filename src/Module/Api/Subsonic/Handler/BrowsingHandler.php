@@ -341,9 +341,6 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             ? []
             : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
 
-        // one flag read for the whole index instead of one per artist
-        Userflag::build_cache('artist', array_column($artists, 'id'));
-
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);

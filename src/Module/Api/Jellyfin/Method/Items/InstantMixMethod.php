@@ -27,11 +27,15 @@ namespace Ampache\Module\Api\Jellyfin\Method\Items;
 
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,7 +68,7 @@ final class InstantMixMethod implements JellyfinMethodInterface
             return JellyfinResponse::notFound();
         }
 
-        $limitParam = (string) ($request->getQueryParams()['limit'] ?? '');
+        $limitParam = (string) (JellyfinRequestBody::field($request->getQueryParams(), 'limit') ?? '');
         $limit      = ($limitParam !== '') ? max(1, (int) $limitParam) : self::DEFAULT_LIMIT;
 
         $ids = array_map('intval', array_column(Recommendation::get_songs_like($songId, $limit), 'id'));
@@ -79,6 +83,11 @@ final class InstantMixMethod implements JellyfinMethodInterface
             $ids  = $this->fillWithRandom($ids, $pool, $songId, $limit);
         }
         $ids = array_slice($ids, 0, $limit);
+
+        Song::build_cache($ids);
+        Rating::build_cache('song', $ids);
+        Userflag::build_cache('song', $ids);
+        Bookmark::build_cache('song', $ids, $user->getId());
 
         $items = array_map(fn(int $id): array => $this->mapper->mapSong(new Song($id), $user, []), $ids);
 

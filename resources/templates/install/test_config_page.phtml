@@ -53,6 +53,12 @@ use Ampache\Module\Util\Ui;
     <div class="jumbotron" style="margin-top: 70px">
       <h1><?php echo $this->e(T_('Ampache Configuration Parse Error')); ?></h1>
       <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
+<?php if ($this->getSyntaxIssueLine() !== null) { ?>
+      <p>
+        <?php /* HINT: line number */ echo $this->e(sprintf(T_('The unclosed value looks like it starts around line %d — the parser only reports where it finally gives up, which is often further down the file'), $this->getSyntaxIssueLine())); ?>
+      </p>
+      <pre><?php echo $this->e($this->getSyntaxIssueLine() . ': ' . (string) $this->getSyntaxIssueContent()); ?></pre>
+<?php } ?>
       <p><a href="https://ampache.org/docs/help/troubleshooting/faq#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo $this->e(T_('Please visit the wiki for help')); ?></a></p>
     </div>
   </div>

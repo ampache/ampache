@@ -1259,10 +1259,10 @@ final class Xml8_Data
 
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
-        $licenseRepository = $this->licenseRepository;
+        $licenses = $this->licenseRepository->findByIds(array_values(array_map(intval(...), $objects)));
 
         foreach ($objects as $license_id) {
-            $license = $licenseRepository->findById((int) $license_id);
+            $license = $licenses[(int) $license_id] ?? null;
             if ($license !== null) {
                 $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getExternalLink() . "]]></external_link>\n</license>\n";
             }
