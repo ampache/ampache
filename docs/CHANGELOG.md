@@ -50,6 +50,11 @@
 * The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
 * The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
 * A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row
+* `run:updateCatalog -ca` reimported every existing file after `clean`, rather than picking up only what actually changed on disk
+* The `deleted_songs` API action returned an empty list no matter how many songs had actually been deleted
+* Subsonic
+  * `getMusicDirectory` queried each song's genre tags individually instead of as one batch, which could time out or fail outright on a folder with thousands of files
+  * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
 
 ## Ampache 8.1.0
 
