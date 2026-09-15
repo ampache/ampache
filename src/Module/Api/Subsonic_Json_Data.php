@@ -813,6 +813,7 @@ class Subsonic_Json_Data
     public function addNewestPodcasts(array $response, array $episodes): array
     {
         $json = ['episode' => []];
+        Podcast_Episode::build_cache(array_column($episodes, 'id'));
         foreach ($episodes as $episode) {
             $json['episode'][] = $this->_getPodcastEpisode($episode);
         }
@@ -1696,6 +1697,7 @@ class Subsonic_Json_Data
     public function addVideos(array $response, array $videos): array
     {
         $json = ['video' => []];
+        Video::build_cache(array_column($videos, 'id'));
         foreach ($videos as $video) {
             $json['video'][] = $this->_getChildVideo($video);
         }

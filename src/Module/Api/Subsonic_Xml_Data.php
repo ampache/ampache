@@ -802,6 +802,7 @@ class Subsonic_Xml_Data
     public function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): SimpleXMLElement
     {
         $xpodcasts = $this->_addChildToResultXml($xml, 'newestPodcasts');
+        Podcast_Episode::build_cache(array_column($episodes, 'id'));
         foreach ($episodes as $episode) {
             $this->_addPodcastEpisode($xpodcasts, $episode);
         }
@@ -1499,6 +1500,7 @@ class Subsonic_Xml_Data
     public function addVideos(SimpleXMLElement $xml, array $videos): SimpleXMLElement
     {
         $xvideos = $this->_addChildToResultXml($xml, 'videos');
+        Video::build_cache(array_column($videos, 'id'));
         foreach ($videos as $video) {
             $this->_addVideo($xvideos, $video);
         }

@@ -32,8 +32,10 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class SseApiApplication implements ApiApplicationInterface
 {
@@ -45,6 +47,7 @@ final class SseApiApplication implements ApiApplicationInterface
     public function __construct(
         UiInterface $ui,
         private readonly CatalogRepositoryInterface $catalogRepository,
+        private readonly LoggerInterface $logger,
     ) {
         $this->ui = $ui;
     }
@@ -105,6 +108,18 @@ final class SseApiApplication implements ApiApplicationInterface
             } else {
                 try {
                     Catalog::process_action($action, $catalogs, $options);
+                } catch (\Throwable $error) {
+                    // logged and surfaced to the browser; the block below still sends the stream's normal close events
+                    $this->logger->error(
+                        sprintf('Uncaught error running SSE action %s: %s', $action, $error->getMessage()),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    AmpError::add('general', $error->getMessage());
+                    if (defined('SSE_OUTPUT')) {
+                        echo "data: " . json_encode(['fn' => 'display_sse_error', 'args' => [$error->getMessage()]]) . "\n\n";
+                        ob_flush();
+                        flush();
+                    }
                 } finally {
                     $this->catalogRepository->releaseActionLock($lockKey);
                 }
