@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Jellyfin\Method\Items;
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
+use Ampache\Module\Api\Jellyfin\JellyfinUserView;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -36,7 +37,13 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
-/** GET /Items/{itemId} — a single item by id, whatever its type. */
+/**
+ * GET /Items/{itemId} — a single item by id, whatever its type.
+ *
+ * Real clients (confirmed: Finamp) fetch the synthetic UserView root by id right after listing
+ * `/Views`/`/UserViews`, to render the library tab itself — a missing `'view'` case here 404s that lookup
+ * and blocks every downstream tab from ever loading, even though `/Views` happily lists the same id.
+ */
 final class ItemMethod implements JellyfinMethodInterface
 {
     public function __construct(private readonly JellyfinItemMapper $mapper) {}
@@ -59,6 +66,7 @@ final class ItemMethod implements JellyfinMethodInterface
             'album' => $this->albumDto($id, $user),
             'artist' => $this->artistDto($id, $user),
             'playlist' => $this->playlistDto($id, $user),
+            'view' => JellyfinUserView::build(),
             default => null,
         };
 
