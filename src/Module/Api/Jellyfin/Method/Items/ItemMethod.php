@@ -85,7 +85,7 @@ final class ItemMethod implements JellyfinMethodInterface
     {
         $album = new Album($id);
 
-        return $album->isNew() ? null : $this->mapper->mapAlbum($album, $user, []);
+        return $album->isNew() ? null : $this->mapper->mapAlbum($album, $user);
     }
 
     /** @return array<string, mixed>|null */
@@ -106,7 +106,12 @@ final class ItemMethod implements JellyfinMethodInterface
 
         // song-tag genres are the only kind this surface has, matching MusicGenresMethod's own scope
         return $this->mapper->mapGenre(
-            ['id' => $tag->id, 'name' => $tag->name, 'is_hidden' => $tag->is_hidden, 'count' => $tag->song],
+            [
+                'id' => $tag->id,
+                'name' => (string) $tag->name,
+                'is_hidden' => $tag->is_hidden,
+                'count' => $tag->song
+            ],
             $user
         );
     }
@@ -119,7 +124,7 @@ final class ItemMethod implements JellyfinMethodInterface
             return null;
         }
 
-        return $this->mapper->mapPlaylist($playlist, $user, []);
+        return $this->mapper->mapPlaylist($playlist, $user);
     }
 
     /** @return array<string, mixed>|null */

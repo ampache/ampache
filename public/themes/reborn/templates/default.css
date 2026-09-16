@@ -1896,6 +1896,15 @@ div.box.box_rules {
     opacity: 0.25;
 }
 
+/* Only `left` (the shout's position along the waveform) is genuinely per-marker; everything else is fixed. */
+.waveform-shout-marker {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background-color: #2E2EFE;
+    top: 15px;
+}
+
 .no-border {
     border: 0;
 }
@@ -1910,6 +1919,69 @@ div.box.box_rules {
 
 .status-offline {
     color: red;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.upload-warning-label {
+    font-size: 20px;
+}
+
+.share-qrcode-box {
+    text-align: center;
+}
+
+.share-external-list {
+    padding-top: 8px;
+    text-align: right;
+}
+
+.catalogfav-title {
+    font-weight: bold;
+}
+
+.catalogfav-actions {
+    margin-right: 10px;
+}
+
+.catalogfav-description {
+    white-space: normal;
+}
+
+.google-maps-canvas {
+    display: inline-block;
+    height: 300px;
+    width: 680px;
+    margin: 0;
+    padding: 0;
+}
+
+.avatar-mini {
+    width: 32px;
+    height: 32px;
+}
+
+.avatar-medium {
+    width: 64px;
+    height: 64px;
+}
+
+.catalog-update-form {
+    padding-left: 250px;
+}
+
+.catalog-update-table {
+    width: 100%;
+}
+
+.catalog-example-path {
+    padding-left: 10px;
 }
 
 .box-bottom {

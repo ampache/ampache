@@ -117,7 +117,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
         echo 'loadMapScript();';
 
         echo '</script>' . "\n";
-        echo '<div id="map-canvas" style="display: inline-block; height: 300px; width:680px; margin: 0; padding: 0;"></div>' . "\n";
+        echo '<div id="map-canvas" class="google-maps-canvas"></div>' . "\n";
 
         return true;
     }

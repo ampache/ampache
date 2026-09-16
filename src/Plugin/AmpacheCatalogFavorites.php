@@ -230,8 +230,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         if ($item->isNew() === false) {
             echo '<tr id="song_' . $userflag . '" class="libitem_menu" data-object-type="song" data-object-id="' . $userflag . '">';
             if (!$this->gridview) {
-                echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
-                echo '<span style="margin-right: 10px;">';
+                echo '<td class="grid_song"><span class="catalogfav-title">' . $item->get_f_link() . '</span><br> ';
+                echo '<span class="catalogfav-actions">';
                 if (AmpConfig::get('directplay')) {
                     echo Ajax::button(
                         '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
@@ -274,7 +274,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             }
 
             echo '<td class="optional">';
-            echo '<div style="white-space: normal;">' . scrub_out($item->get_description()) . '</div>';
+            echo '<div class="catalogfav-description">' . scrub_out($item->get_description()) . '</div>';
             echo '</div>';
             echo '</td></tr>';
         }

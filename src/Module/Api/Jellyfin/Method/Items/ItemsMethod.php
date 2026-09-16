@@ -105,28 +105,26 @@ final class ItemsMethod implements JellyfinMethodInterface
     }
 
     /**
-     * @param list<string> $fields
      * @return list<array<string, mixed>>
      */
-    private function albumsForArtist(int $artistId, User $user, array $fields): array
+    private function albumsForArtist(int $artistId, User $user): array
     {
         $albumIds = $this->albumRepository->getAlbumByArtist($artistId);
         $this->warmAlbums($albumIds);
 
         $albums = [];
         foreach ($albumIds as $albumId) {
-            $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user, $fields);
+            $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user);
         }
 
         return $albums;
     }
 
     /**
-     * @param list<string> $fields
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allAlbums(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
+    private function allAlbums(User $user, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
         if ($onlyFavorite) {
             $albumIds = $this->favoriteIds('album', $user, $fetchSize, $sort, $descending);
@@ -146,7 +144,7 @@ final class ItemsMethod implements JellyfinMethodInterface
 
         $albums = [];
         foreach ($albumIds as $albumId) {
-            $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user, $fields);
+            $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user);
         }
 
         return $albums;
@@ -204,11 +202,10 @@ final class ItemsMethod implements JellyfinMethodInterface
     }
 
     /**
-     * @param list<string> $fields
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allPlaylists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
+    private function allPlaylists(User $user, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
         // findIds has no size/offset of its own, so this is the one type still bounded after the fact
         // rather than at the query — playlist counts are small next to a library's albums/artists/songs
@@ -242,7 +239,7 @@ final class ItemsMethod implements JellyfinMethodInterface
 
         $playlists = [];
         foreach ($ids as $playlistId) {
-            $playlists[] = $this->mapper->mapPlaylist(new Playlist($playlistId), $user, $fields);
+            $playlists[] = $this->mapper->mapPlaylist(new Playlist($playlistId), $user);
         }
 
         return $playlists;
@@ -320,7 +317,7 @@ final class ItemsMethod implements JellyfinMethodInterface
             return $this->songsForAlbum($parentObjectId, $user, $fields);
         }
         if ($parentType === 'artist' && $parentObjectId !== null) {
-            return $this->albumsForArtist($parentObjectId, $user, $fields);
+            return $this->albumsForArtist($parentObjectId, $user);
         }
         if ($parentType === 'playlist' && $parentObjectId !== null) {
             return $this->songsForPlaylist($parentObjectId, $user, $fields);
@@ -329,7 +326,7 @@ final class ItemsMethod implements JellyfinMethodInterface
         // top-level: no ParentId, or the synthetic 'view' root — driven entirely by IncludeItemTypes
         $items = [];
         if (in_array('MusicAlbum', $includeTypes, true)) {
-            array_push($items, ...$this->allAlbums($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
+            array_push($items, ...$this->allAlbums($user, $fetchSize, $sort, $descending, $onlyFavorite));
         }
         if (in_array('MusicArtist', $includeTypes, true)) {
             array_push($items, ...$this->allArtists($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
@@ -338,7 +335,7 @@ final class ItemsMethod implements JellyfinMethodInterface
             array_push($items, ...$this->allSongs($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
         }
         if (in_array('Playlist', $includeTypes, true)) {
-            array_push($items, ...$this->allPlaylists($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
+            array_push($items, ...$this->allPlaylists($user, $fetchSize, $sort, $descending, $onlyFavorite));
         }
 
         return $items;

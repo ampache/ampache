@@ -181,9 +181,12 @@ final class PlaylistEditMethod implements MethodInterface
 
         // update name/type
         if (
-            $name !== $playlist->name
-            || $type !== $playlist->type
-            || $owner !== $playlist->user
+            $name
+            && (
+                $name !== $playlist->name
+                || $type !== $playlist->type
+                || $owner !== $playlist->user
+            )
         ) {
             $playlist->update([
                 'name' => $name,

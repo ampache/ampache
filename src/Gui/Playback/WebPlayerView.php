@@ -150,11 +150,6 @@ final class WebPlayerView extends AbstractView
         return (AmpConfig::get('theme_color', 'dark') === 'light') ? 'replaygain_dark' : 'replaygain';
     }
 
-    public function getShareStyle(): string
-    {
-        return ($this->isShare || $this->isRandom) ? 'display: none;' : '';
-    }
-
     /**
      * @throws JsonException
      */

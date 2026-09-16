@@ -60,8 +60,8 @@ declare(strict_types=1);
             <a class="option-list" href="<?php echo $this->e($this->getWebPath()); ?>/catalog.php?action=show_clear_stats"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
-    <form style="padding-left: 250px;" method="post" action="<?php echo $this->e($this->getWebPath()); ?>/catalog.php?action=update_from">
-        <table class="tabledata2" style="width: 100%;">
+    <form class="catalog-update-form" method="post" action="<?php echo $this->e($this->getWebPath()); ?>/catalog.php?action=update_from">
+        <table class="tabledata2 catalog-update-table">
             <tr>
                 <td><?php echo T_('Add new files from:'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
@@ -76,10 +76,10 @@ declare(strict_types=1);
             </tr>
             <tr>
                 <td><?php /* HINT: example path /media/music */ ?><?php echo T_('Example path:') ?></td>
-                <td style="padding-left: 10px;">/media/music</td>
+                <td class="catalog-example-path">/media/music</td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align:right;"><input type="submit" value="<?php echo T_('Update'); ?>" /></td>
+                <td colspan="2" class="text-align-right"><input type="submit" value="<?php echo T_('Update'); ?>" /></td>
             </tr>
         </table>
     </form>

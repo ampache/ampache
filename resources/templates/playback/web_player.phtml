@@ -563,7 +563,7 @@ if (!$this->isPlayerFragment()) { ?>
 if (!$this->isVideo()) {
     if (!$this->isShare()) { ?>
     <div class="playing_info">
-        <img class="playing_art" alt="" style="display: none;">
+        <img class="playing_art display-none" alt="">
         <div class="playing_artist"></div>
         <div class="playing_title"></div>
         <div class="playing_album"></div>
@@ -578,7 +578,7 @@ if (!$this->isVideo()) {
 <div class="jp-area<?php echo $this->e($this->getAreaClass()); ?>">
     <div id="jp_container_1" class="<?php echo $this->e($this->getContainerClass()); ?>">
         <div class="jp-type-playlist">
-            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $this->e($this->getPlayerClass()); ?>" style="<?php echo $this->e($this->getShareStyle()); ?>"></div>
+            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $this->e($this->getPlayerClass()); ?><?php echo ($this->isShare() || $this->isRandom()) ? ' display-none' : ''; ?>"></div>
             <div class="jp-gui">
                 <?php if ($this->isVideo()) { ?>
                     <div class="jp-video-play">
@@ -730,7 +730,7 @@ if (!$this->isVideo()) {
                             <div id="equalizerbtn" class="action_button">
                                 <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', T_('Equalizer')); ?></a>
                             </div>
-                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
+                            <div id="vizfullbtn" class="action_button visualizer-hidden">
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', T_('Visualizer full-screen')); ?></a>
                             </div>
                         <?php } ?>

@@ -133,7 +133,7 @@ final class SimilarMethod implements JellyfinMethodInterface
         Rating::build_cache('album', $ids);
         Userflag::build_cache('album', $ids);
 
-        return array_map(fn(int $id): array => $this->mapper->mapAlbum(new Album($id), $user, []), $ids);
+        return array_map(fn(int $id): array => $this->mapper->mapAlbum(new Album($id), $user), $ids);
     }
 
     /** @return list<array<string, mixed>> */

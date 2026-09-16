@@ -42,10 +42,9 @@ use Ampache\Repository\Model\User;
 final class JellyfinItemMapper
 {
     /**
-     * @param list<string> $fields
      * @return array<string, mixed>
      */
-    public function mapAlbum(Album $album, User $user, array $fields): array
+    public function mapAlbum(Album $album, User $user): array
     {
         $albumArtistName = ($album->album_artist !== null) ? Artist::get_fullname_by_id($album->album_artist) : null;
 
@@ -122,10 +121,9 @@ final class JellyfinItemMapper
     }
 
     /**
-     * @param list<string> $fields
      * @return array<string, mixed>
      */
-    public function mapPlaylist(Playlist $playlist, User $user, array $fields): array
+    public function mapPlaylist(Playlist $playlist, User $user): array
     {
         $dto = [
             'Id' => JellyfinId::encode('playlist', $playlist->id),
