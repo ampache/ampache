@@ -884,7 +884,7 @@ span#sidebar-header-content::after {
     overflow-y: auto;
     right: 10px;
     top: 66px;
-    min-width: 100px;
+    min-width: 150px;
     max-width: 250px;
     margin: 5px 15px auto auto;
     max-height: 85%;
