@@ -49,7 +49,7 @@ final class CollectionRowView extends AbstractView
     public function getArt(): string
     {
         ob_start();
-        $this->collection->display_art(['width' => 100, 'height' => 100], true, true);
+        $this->collection->display_art(['width' => 100, 'height' => 100], true);
 
         return (string) ob_get_clean();
     }

@@ -103,7 +103,7 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     {
         $item = $this->getItem();
 
-        return $item instanceof Search && (bool) $item->random;
+        return $item instanceof Search && $item->random;
     }
 
     /**

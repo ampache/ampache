@@ -36,10 +36,10 @@ use Psr\Container\ContainerInterface;
  */
 class CatalogLicenseTagTest extends MockeryTestCase
 {
-    private const BMI_LINK = 'http://repertoire.bmi.com/title.asp?blnWriter=True&blnPublisher=True&blnArtist=True&keyID=3738380&ShowNbr=0&ShowSeqNbr=0&querytype=WorkID';
+    private const string BMI_LINK = 'http://repertoire.bmi.com/title.asp?blnWriter=True&blnPublisher=True&blnArtist=True&keyID=3738380&ShowNbr=0&ShowSeqNbr=0&querytype=WorkID';
 
     /** @var array<string, mixed> what a scan hands the filter, minus the licence under test */
-    private const TAGS = [
+    private const array TAGS = [
         'catalog' => 1,
         'file' => '/music/track.flac',
         'title' => 'track',

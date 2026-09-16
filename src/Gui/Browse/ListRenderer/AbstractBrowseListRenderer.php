@@ -104,7 +104,7 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     {
         $argument = $this->getContext()->argument;
 
-        return !is_array($argument) && (bool) $argument;
+        return !is_array($argument) && $argument;
     }
 
     /**

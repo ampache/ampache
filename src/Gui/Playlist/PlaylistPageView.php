@@ -195,7 +195,7 @@ final class PlaylistPageView extends AbstractView
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) AmpConfig::get('ratings');
+        return User::is_registered() && AmpConfig::get('ratings');
     }
 
     public function showShare(): bool

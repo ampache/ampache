@@ -78,7 +78,7 @@ final class InstantMixMethod implements JellyfinMethodInterface
         $ids = array_values(array_filter($ids, static fn(int $candidate): bool => $candidate !== $songId));
 
         if (count($ids) < $limit) {
-            $albumSongs = array_values((new Album($seed->album))->get_songs());
+            $albumSongs = array_values(new Album($seed->album)->get_songs());
             shuffle($albumSongs);
             $ids = $this->fillFrom($ids, $albumSongs, $songId, $limit);
         }

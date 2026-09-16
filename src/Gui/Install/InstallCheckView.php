@@ -66,7 +66,7 @@ final class InstallCheckView extends AbstractInstallStepView
 
     public function isConfigWritable(): bool
     {
-        return (bool) check_config_writable();
+        return check_config_writable();
     }
 
     public function isSqlReadable(): bool

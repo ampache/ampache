@@ -34,6 +34,7 @@ use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\SongRepositoryInterface;
+use Override;
 use SimpleXMLElement;
 
 /**
@@ -52,7 +53,7 @@ class SubsonicIndexOrderTest extends MockeryTestCase
     public function testTheLegacySerialiserPutsIndexesFirst(): void
     {
         $subject = new class ($this->mock(AlbumRepositoryInterface::class), $this->mock(FolderRepositoryInterface::class), $this->mock(SongRepositoryInterface::class), $this->fields()) extends Subsonic_Xml_Data {
-            #[\Override]
+            #[Override]
             protected function _addChildObject(SimpleXMLElement $xml, array $child): void
             {
                 $xml->addChild('child');
@@ -65,7 +66,7 @@ class SubsonicIndexOrderTest extends MockeryTestCase
     public function testTheSerialiserPutsIndexesBeforeChildren(): void
     {
         $subject = new class ($this->mock(AlbumRepositoryInterface::class), $this->mock(FolderRepositoryInterface::class), $this->fields(), $this->mock(SongRepositoryInterface::class)) extends OpenSubsonic_Xml_Data {
-            #[\Override]
+            #[Override]
             protected function _addChildObject(SimpleXMLElement $xml, array $child): void
             {
                 $xml->addChild('child');

@@ -426,8 +426,8 @@ class ArtistRepositoryTest extends TestCase
 
         $this->subject->updateAllCounts();
 
-        $albumCount = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`album_count` = ')))[0];
-        $songCount  = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`song_count` = ')))[0];
+        $albumCount = array_first(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`album_count` = ')));
+        $songCount  = array_first(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`song_count` = ')));
 
         self::assertStringContainsString('`album`.`enabled` = 1', $albumCount);
         self::assertStringContainsString('`song`.`enabled` = 1', $songCount);

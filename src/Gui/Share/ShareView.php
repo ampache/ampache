@@ -70,7 +70,7 @@ final class ShareView extends AbstractView
             $song = new Song($this->share->object_id);
             if (!$song->isNew() && $song->album) {
                 $type = 'album';
-                $id   = (int) $song->album;
+                $id   = $song->album;
             }
         }
 

@@ -80,7 +80,7 @@ final class CreatePlaylistMethod implements JellyfinMethodInterface
             }
         }
         if ($medias !== []) {
-            (new Playlist($playlistId))->add_medias($medias);
+            new Playlist($playlistId)->add_medias($medias);
         }
 
         return JellyfinResponse::json(['Id' => JellyfinId::encode('playlist', $playlistId)]);

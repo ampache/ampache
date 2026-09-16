@@ -73,7 +73,7 @@ function set_memory_limit(int|string $new_limit): void
 function scrub_in(array|string $input): array|string
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
     }
     $results = [];
     foreach ($input as $item) {
@@ -713,7 +713,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
     $count = count($rows);
     if ($count > SELECT_LIST_LIMIT) {
         $album = new Album($album_id);
-        show_parent_search($name, $key, $album_id, (string) $album->get_fullname(), 'album');
+        show_parent_search($name, $key, $album_id, $album->get_fullname(), 'album');
 
         return;
     }
@@ -788,7 +788,7 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
 
     $count = count($rows);
     if ($count > SELECT_LIST_LIMIT) {
-        show_parent_search($name, $key, $artist_id, (string) Artist::get_fullname_by_id($artist_id), 'artist');
+        show_parent_search($name, $key, $artist_id, Artist::get_fullname_by_id($artist_id), 'artist');
 
         return;
     }
@@ -1001,7 +1001,7 @@ function show_now_playing(): void
 {
     Stream::garbage_collection();
 
-    echo (new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path()))->render();
+    echo new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
 }
 
 /**
@@ -1049,8 +1049,8 @@ function load_gettext(): bool
 
     $compiled = compiled_gettext_catalogue($mopath);
     $gettext  = ($compiled === null)
-        ? Translator::createFromTranslations((new MoLoader())->loadFile($mopath))
-        : (new Translator())->loadTranslations($compiled);
+        ? Translator::createFromTranslations(new MoLoader()->loadFile($mopath))
+        : new Translator()->loadTranslations($compiled);
 
     TranslatorFunctions::register($gettext);
 
@@ -1093,7 +1093,7 @@ function compiled_gettext_catalogue(string $mopath): ?string
     }
 
     try {
-        $content = (new ArrayGenerator())->generateString((new MoLoader())->loadFile($mopath));
+        $content = new ArrayGenerator()->generateString(new MoLoader()->loadFile($mopath));
     } catch (Throwable $error) {
         debug_event('gettext', 'Could not compile ' . $mopath . ': ' . $error->getMessage(), 3);
 

@@ -51,11 +51,11 @@ class DbaDatabaseConnectionTest extends TestCase
         $error->setValue(null, "SQLSTATE[42S22]: Unknown column 'user_preference.name'");
 
         try {
-            (new DbaDatabaseConnection())->query('DELETE FROM `user_preference` WHERE `name` = ?', ['x']);
+            new DbaDatabaseConnection()->query('DELETE FROM `user_preference` WHERE `name` = ?', ['x']);
             self::fail('a query with no database should have thrown');
-        } catch (QueryFailedException $error) {
-            self::assertStringContainsString("Unknown column 'user_preference.name'", $error->getMessage());
-            self::assertStringContainsString('DELETE FROM `user_preference`', $error->getMessage());
+        } catch (QueryFailedException $queryFailedException) {
+            self::assertStringContainsString("Unknown column 'user_preference.name'", $queryFailedException->getMessage());
+            self::assertStringContainsString('DELETE FROM `user_preference`', $queryFailedException->getMessage());
         }
     }
 

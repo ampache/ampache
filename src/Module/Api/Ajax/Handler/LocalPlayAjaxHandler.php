@@ -143,11 +143,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (in_array($command, $refresh_commands, true)) {
-                    $results['localplay_status'] = (new LocalplayStatusView(
+                    $results['localplay_status'] = new LocalplayStatusView(
                         $localplay,
                         $this->browseFactory,
                         $localplay->get()
-                    ))->render();
+                    )->render();
                 }
 
                 break;
@@ -211,11 +211,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->connect();
                 $localplay->repeat(make_bool($_REQUEST['value'] ?? false));
 
-                $results['localplay_status'] = (new LocalplayStatusView(
+                $results['localplay_status'] = new LocalplayStatusView(
                     $localplay,
                     $this->browseFactory,
                     $localplay->get()
-                ))->render();
+                )->render();
 
                 break;
             case 'random':
@@ -231,11 +231,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->connect();
                 $localplay->random(make_bool($_REQUEST['value'] ?? false));
 
-                $results['localplay_status'] = (new LocalplayStatusView(
+                $results['localplay_status'] = new LocalplayStatusView(
                     $localplay,
                     $this->browseFactory,
                     $localplay->get()
-                ))->render();
+                )->render();
         } // switch on action;
 
         // We always do this

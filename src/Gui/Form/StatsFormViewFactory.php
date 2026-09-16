@@ -112,11 +112,11 @@ final readonly class StatsFormViewFactory implements StatsFormViewFactoryInterfa
 
     private function isFolderEnabled(): bool
     {
-        return (bool) AmpConfig::get('show_folder') && $this->folderRepository->getItemCount() > 0;
+        return AmpConfig::get('show_folder') && $this->folderRepository->getItemCount() > 0;
     }
 
     private function isVideoEnabled(): bool
     {
-        return (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0;
+        return AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0;
     }
 }

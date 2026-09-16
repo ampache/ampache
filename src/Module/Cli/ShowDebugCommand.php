@@ -57,7 +57,7 @@ final class ShowDebugCommand extends Command
 
         $interactor->info(T_('System'), true);
         $interactor->ok(sprintf('  Version:   %s', AutoUpdate::get_current_version()), true);
-        $interactor->ok(sprintf('  Structure: %s', (string) $this->configContainer->get('structure')), true);
+        $interactor->ok(sprintf('  Structure: %s', $this->configContainer->get('structure')), true);
         $interactor->ok(sprintf('  PHP:       %s', PHP_VERSION), true);
 
         $lastCron = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::CRON_DATE);

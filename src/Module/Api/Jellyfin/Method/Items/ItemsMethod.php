@@ -172,7 +172,7 @@ final class ItemsMethod implements JellyfinMethodInterface
         $catalogs = $user->get_catalogs('music');
 
         if ($sort === null) {
-            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize, 0), $sort, $descending);
+            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize), $sort, $descending);
             $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
 
             $result = [];
@@ -220,13 +220,13 @@ final class ItemsMethod implements JellyfinMethodInterface
 
         if ($onlyFavorite) {
             // intersect rather than querying favorites alone, so a stale flag never outruns visibility
-            $favoriteIds = Userflag::get_latest('playlist', $user, -1, 0, 0, 0, true, 0);
+            $favoriteIds = Userflag::get_latest('playlist', $user, -1, 0, 0, 0, true);
             $ids         = array_values(array_intersect($ids, $favoriteIds));
         }
 
         if ($sort === 'newest') {
             $this->warmPlaylists($ids);
-            usort($ids, static fn(int $a, int $b): int => (new Playlist($b))->last_update <=> (new Playlist($a))->last_update);
+            usort($ids, static fn(int $a, int $b): int => new Playlist($b)->last_update <=> new Playlist($a)->last_update);
         } elseif ($sort === 'random') {
             $ids = $this->shuffleArray($ids);
         }
@@ -350,7 +350,7 @@ final class ItemsMethod implements JellyfinMethodInterface
      */
     private function favoriteIds(string $type, User $user, int $fetchSize, ?string $sort, bool $descending): array
     {
-        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true, 0);
+        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true);
 
         return ($sort === 'random') ? $this->shuffleArray($ids) : $this->applyOrder($ids, 'newest', $descending);
     }

@@ -206,6 +206,7 @@ class OAuthUtil
                 $input
             );
         }
+
         if (is_scalar($input)) {
             return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode((string) $input)));
         }

@@ -411,7 +411,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
                 $lastmodified = $clastmodified;
             }
             if (!empty($ifModifiedSince) && $clastmodified > (((int) $ifModifiedSince) / 1000)) {
-                $fcatalogs[] = (int) $catalogid;
+                $fcatalogs[] = $catalogid;
             }
         }
         if (empty($ifModifiedSince)) {

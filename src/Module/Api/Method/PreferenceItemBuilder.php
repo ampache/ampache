@@ -76,7 +76,7 @@ final class PreferenceItemBuilder
         if ($preference[0]['type'] === 'special') {
             $values = Preference::get_special_values((string) $preference[0]['name'], $user);
 
-            $item['values'] = ($values) ? $values : [];
+            $item['values'] = ($values) ?: [];
         }
 
         return $item;

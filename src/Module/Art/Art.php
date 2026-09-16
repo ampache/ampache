@@ -1074,6 +1074,7 @@ class Art extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 }
+
                 if (is_dir($path . '/' . $file)) {
                     self::_delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
                 } elseif ($has_size) {
@@ -2091,7 +2092,7 @@ class Art extends database_object
             return 'invalid_image';
         }
 
-        $max_upload_size = AmpConfig::get_int('max_upload_size', 0);
+        $max_upload_size = AmpConfig::get_int('max_upload_size');
 
         // Check image size doesn't exceed the limit
         if ($max_upload_size > 0 && $source_size > $max_upload_size) {

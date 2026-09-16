@@ -200,6 +200,7 @@ abstract class Catalog extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 }
+
                 // check for lost catalogs
                 if (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
                     debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $cache_path . '/' . $file, 5);
@@ -2400,7 +2401,7 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $changed = $changed || (bool) ($info['change'] ?? false);
+                $changed = $changed || ($info['change'] ?? false);
                 $diff    = array_key_exists('element', $info) && $info['element'] !== [];
                 $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
                 $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));

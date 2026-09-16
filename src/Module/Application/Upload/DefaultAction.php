@@ -100,7 +100,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             echo new UploadView(
                 AmpConfig::get_web_path(),
                 $ajaxfs,
-                (int) $upload_max
+                $upload_max
             )->render();
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

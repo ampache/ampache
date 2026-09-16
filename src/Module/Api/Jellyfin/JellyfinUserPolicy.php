@@ -49,12 +49,12 @@ final class JellyfinUserPolicy
     {
         $isAdmin   = $user->has_access(AccessLevelEnum::ADMIN);
         $isManager = $user->has_access(AccessLevelEnum::MANAGER);
-        $canStream = AmpConfig::get_bool('allow_stream_playback') && (bool) $user->getPreferenceValue('allow_stream_playback');
+        $canStream = AmpConfig::get_bool('allow_stream_playback') && $user->getPreferenceValue('allow_stream_playback');
 
         return [
             'IsAdministrator' => $isAdmin,
             'IsHidden' => false,
-            'IsDisabled' => (bool) $user->disabled,
+            'IsDisabled' => $user->disabled,
             'EnableUserPreferenceAccess' => true,
             'EnableRemoteControlOfOtherUsers' => $isAdmin,
             'EnableSharedDeviceControl' => $isAdmin,

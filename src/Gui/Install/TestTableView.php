@@ -103,7 +103,7 @@ final class TestTableView extends AbstractView
 
         AmpConfig::set_by_array($values);
 
-        return (bool) check_config_values($values);
+        return check_config_values($values);
     }
 
     public function showConfigChecks(): bool

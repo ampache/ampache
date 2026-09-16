@@ -135,7 +135,7 @@ final readonly class TagAction implements ApplicationActionInterface
             AmpConfig::get_web_path(),
             $currentType,
             (bool) AmpConfig::get('album_group'),
-            (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0,
+            AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0,
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
                 && $this->tagRepository->getHiddenCount() > 0
         );

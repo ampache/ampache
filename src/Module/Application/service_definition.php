@@ -140,6 +140,7 @@ use Ampache\Module\Application\Browse\VideoAction;
 use Ampache\Module\Application\Collection\AddObjectAction;
 use Ampache\Module\Application\Collection\DeleteCollectionAction;
 use Ampache\Module\Application\Collection\RemoveObjectAction;
+use Ampache\Module\Application\Collection\SetTrackNumbersAction;
 use Ampache\Module\Application\DemocraticPlayback\CreateAction;
 use Ampache\Module\Application\DemocraticPlayback\ManageAction;
 use Ampache\Module\Application\DemocraticPlayback\ManagePlaylistsAction;
@@ -424,7 +425,7 @@ return [
     AddObjectAction::class => autowire(AddObjectAction::class),
     RemoveObjectAction::class => autowire(RemoveObjectAction::class),
     DeleteCollectionAction::class => autowire(DeleteCollectionAction::class),
-    Collection\SetTrackNumbersAction::class => autowire(Collection\SetTrackNumbersAction::class),
+    SetTrackNumbersAction::class => autowire(SetTrackNumbersAction::class),
     Collection\ShowCreateAction::class => autowire(Collection\ShowCreateAction::class),
     Collection\CreateAction::class => autowire(Collection\CreateAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
