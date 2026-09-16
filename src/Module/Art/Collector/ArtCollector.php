@@ -151,7 +151,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
         $plugin_names = Plugin::get_plugins(PluginTypeEnum::ART_RETRIEVER);
         foreach ($artOrder as $method) {
             $data = [];
-            if (in_array(strtolower((string) $method), $plugin_names)) {
+            if (in_array(strtolower($method), $plugin_names)) {
                 $plugin = new Plugin($method);
                 if (
                     $plugin->_plugin instanceof PluginGatherArtsInterface

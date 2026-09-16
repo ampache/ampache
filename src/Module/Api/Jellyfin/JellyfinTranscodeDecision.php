@@ -72,7 +72,7 @@ final class JellyfinTranscodeDecision
             return new self(false, null);
         }
 
-        $skip = Stream::skip_transcode($target, $song->type, (int) $song->bitrate, $requestedBitrate, $maxBitrate, 'jellyfin');
+        $skip = Stream::skip_transcode($target, $song->type, $song->bitrate, $requestedBitrate, $maxBitrate, 'jellyfin');
 
         return new self(!$skip, $target);
     }

@@ -38,7 +38,7 @@ use ReflectionProperty;
  */
 class ThrottledHttpAdapterTest extends TestCase
 {
-    private const OPTIONS = ['user-agent' => 'Ampache/8.1.1 (https://example.com)'];
+    private const array OPTIONS = ['user-agent' => 'Ampache/8.1.1 (https://example.com)'];
 
     /**
      * sleep() throws on a negative number, and nothing stops an admin from typing one in the form; a

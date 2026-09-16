@@ -131,7 +131,7 @@ final class UserListRenderer extends AbstractBrowseListRenderer
 
     private function isSociable(): bool
     {
-        return (bool) $this->configContainer->get('sociable') && $this->gatekeeperFactory->createGuiGatekeeper()
+        return $this->configContainer->get('sociable') && $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
@@ -149,6 +149,6 @@ final class UserListRenderer extends AbstractBrowseListRenderer
 
     private function showLastIp(): bool
     {
-        return $this->showActivity() && (bool) $this->configContainer->get('track_user_ip');
+        return $this->showActivity() && $this->configContainer->get('track_user_ip');
     }
 }

@@ -52,7 +52,7 @@ final class PlayingProgressMethod implements JellyfinMethodInterface
         $body          = PlaybackReportHelper::decodeBody($request);
         $positionTicks = (int) (JellyfinRequestBody::field($body, 'PositionTicks') ?? 0);
         $position      = PlaybackReportHelper::ticksToClampedSeconds($positionTicks, $song->time);
-        $state         = ((bool) (JellyfinRequestBody::field($body, 'IsPaused') ?? false)) ? 'paused' : 'playing';
+        $state         = (JellyfinRequestBody::field($body, 'IsPaused') ?? false) ? 'paused' : 'playing';
 
         Stream::insert_now_playing(
             $song->id,

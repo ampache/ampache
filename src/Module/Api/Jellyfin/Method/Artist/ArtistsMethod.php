@@ -110,7 +110,7 @@ final class ArtistsMethod implements JellyfinMethodInterface
         $catalogs = $user->get_catalogs('music');
 
         if ($sort === null) {
-            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize, 0), $sort, $descending);
+            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize), $sort, $descending);
             $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
 
             $result = [];
@@ -168,7 +168,7 @@ final class ArtistsMethod implements JellyfinMethodInterface
      */
     private function favoriteIds(string $type, User $user, int $fetchSize, ?string $sort, bool $descending): array
     {
-        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true, 0);
+        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true);
 
         return ($sort === 'random') ? $this->shuffleArray($ids) : $this->applyOrder($ids, 'newest', $descending);
     }

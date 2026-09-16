@@ -210,6 +210,7 @@ class Stream_Playlist
         if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
+
         if ($object instanceof Media) {
             return self::_media_object_to_url($object, $additional_params, $urltype, $user);
         }

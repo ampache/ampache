@@ -107,7 +107,7 @@ final class Democratic4Method implements MethodInterface
                     return $response;
                 }
 
-                $object_id = $democratic->get_uid_from_object_id($media->id, 'song');
+                $object_id = $democratic->get_uid_from_object_id($media->id);
                 if ($object_id) {
                     $democratic->remove_vote($object_id);
                 }

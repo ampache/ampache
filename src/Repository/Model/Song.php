@@ -764,7 +764,7 @@ class Song extends database_object implements
         $artists = [$artist_id, (int) $albumartist_id];
 
         // map the song to catalog album and artist maps
-        Catalog::update_map((int) $catalog, 'song', $song_id);
+        Catalog::update_map($catalog, 'song', $song_id);
         if ($artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
             Album::add_album_map($album_id, 'song', $artist_id);
@@ -821,7 +821,7 @@ class Song extends database_object implements
             // A scan maps artists to their catalog when it finishes; an upload has no such pass
             foreach (array_unique($artists) as $mapped_artist_id) {
                 if ($mapped_artist_id > 0) {
-                    Catalog::update_map((int) $catalog, 'artist', (int) $mapped_artist_id);
+                    Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
                 }
             }
 
@@ -866,7 +866,7 @@ class Song extends database_object implements
 
         self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
-        self::getFolderRepository()->mapObject('song', $song_id, (string) $file, (int) $catalog);
+        self::getFolderRepository()->mapObject('song', $song_id, (string) $file, $catalog);
 
         return $song_id;
     }
@@ -1593,7 +1593,7 @@ class Song extends database_object implements
     public function get_album_mbid(): ?string
     {
         if ($this->album_mbid === null) {
-            $this->album_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ALBUM, (int) $this->album);
+            $this->album_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ALBUM, $this->album);
         }
 
         return $this->album_mbid;
@@ -2205,7 +2205,7 @@ class Song extends database_object implements
             // instead reads as a rate below every file, which forces a transcode of everything it is asked for.
             $target_rate = ($bitrate > 0)
                 ? $bitrate
-                : (int) $this->bitrate;
+                : $this->bitrate;
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''

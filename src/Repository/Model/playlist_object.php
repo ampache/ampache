@@ -527,7 +527,7 @@ abstract class playlist_object extends database_object implements
         // contents so the same playlist keeps producing the same art. Re-running an art gather would
         // otherwise hand the user a different mosaic every time for a playlist that never changed.
         $seed    = crc32($this->id . ':' . implode(',', array_column($medias, 'object_id')));
-        $medias  = (new Randomizer(new Mt19937($seed)))->shuffleArray($medias);
+        $medias  = new Randomizer(new Mt19937($seed))->shuffleArray($medias);
         foreach ($medias as $media) {
             // Only the mosaic is capped, so the caller still gets the full list of covers to choose from
             // when it falls back to picking one.

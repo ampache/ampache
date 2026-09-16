@@ -152,7 +152,7 @@ final class UserPageView extends AbstractView
             return T_('Never');
         }
 
-        return ($this->client->last_seen) ? get_datetime((int) $this->client->last_seen) : T_('Never');
+        return ($this->client->last_seen) ? get_datetime($this->client->last_seen) : T_('Never');
     }
 
     /**
@@ -249,7 +249,7 @@ final class UserPageView extends AbstractView
 
     public function isOnline(): bool
     {
-        return (bool) $this->client->is_logged_in() && $this->client->is_online();
+        return $this->client->is_logged_in() && $this->client->is_online();
     }
 
     public function isSelf(): bool

@@ -272,7 +272,7 @@ final class ArtistPageView extends AbstractView
     {
         $limit = AmpConfig::get_int('direct_play_limit');
 
-        return (bool) AmpConfig::get('directplay')
+        return AmpConfig::get('directplay')
             && ($limit <= 0 || $this->artist->song_count <= $limit);
     }
 
@@ -293,7 +293,7 @@ final class ArtistPageView extends AbstractView
     {
         return !empty($this->artist->mbid)
             && $this->currentUser instanceof User
-            && (bool) Preference::get_by_user($this->currentUser->getId(), 'mb_overwrite_name');
+            && Preference::get_by_user($this->currentUser->getId(), 'mb_overwrite_name');
     }
 
     public function showPlayedTimes(): bool
@@ -303,7 +303,7 @@ final class ArtistPageView extends AbstractView
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) AmpConfig::get('ratings');
+        return User::is_registered() && AmpConfig::get('ratings');
     }
 
     public function showRss(): bool
@@ -313,7 +313,7 @@ final class ArtistPageView extends AbstractView
 
     public function showShout(): bool
     {
-        return (!AmpConfig::get('use_auth') || $this->mayUse) && (bool) AmpConfig::get('sociable');
+        return (!AmpConfig::get('use_auth') || $this->mayUse) && AmpConfig::get('sociable');
     }
 
     public function showSimilar(): bool
@@ -323,7 +323,7 @@ final class ArtistPageView extends AbstractView
 
     public function showUploader(): bool
     {
-        return (bool) AmpConfig::get('sociable') && $this->artist->get_user_owner() > 0;
+        return AmpConfig::get('sociable') && $this->artist->get_user_owner() > 0;
     }
 
     public function showWanted(): bool

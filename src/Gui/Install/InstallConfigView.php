@@ -130,7 +130,7 @@ final class InstallConfigView extends AbstractInstallStepView
     {
         $values = ($this->isConfigPresent()) ? parse_ini_file($this->getConfigPath()) : false;
 
-        return (bool) check_config_values($values ?: []);
+        return check_config_values($values ?: []);
     }
 
     public function isConfigPresent(): bool

@@ -119,7 +119,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 (bool) AmpConfig::get('directplay'),
                 Stream_Playlist::check_autoplay_next(),
                 Stream_Playlist::check_autoplay_append(),
-                User::is_registered() && (bool) AmpConfig::get('ratings'),
+                User::is_registered() && AmpConfig::get('ratings'),
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                 $mayManage,
                 $mayDelete,

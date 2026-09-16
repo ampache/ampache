@@ -103,6 +103,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 ? $this->labelRepository->findById($label_id)
                 : null;
         }
+
         if ($label_id !== null && $label === null) {
             $this->logger->warning(
                 'Requested a label that does not exist',
@@ -122,6 +123,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             foreach (LabelView::getExternalLinkKeys() as $configKey) {
                 $externalLinks[$configKey] = (bool) AmpConfig::get($configKey);
             }
+
             echo new LabelView(
                 AmpConfig::get_web_path('/client'),
                 $label,
@@ -129,7 +131,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 $label->get_artists(),
                 $externalLinks,
                 (!AmpConfig::get('use_auth') || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER))
-                    && (bool) AmpConfig::get('sociable'),
+                    && AmpConfig::get('sociable'),
                 $this->isEditable($gatekeeper->getUserId(), $label),
                 Catalog::can_remove($label)
             )->render();

@@ -174,7 +174,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                             break;
                         case 'folder_random':
-                            $medias = (new Folder($request_id))->get_medias();
+                            $medias = new Folder($request_id)->get_medias();
                             shuffle($medias);
                             $user->getPlaylist()->add_medias($medias);
                             break;

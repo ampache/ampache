@@ -77,6 +77,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             } elseif (Session::auth_remember()) {
                 $auth = true;
             }
+
             if ($auth) {
                 return $this->responseFactory
                     ->createResponse(RFC7231::FOUND)

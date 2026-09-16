@@ -148,7 +148,7 @@ final class ZipHandler implements ZipHandlerInterface
         $arc->close();
 
         // an archive nothing was added to is never written, so streaming it would open a file that is not there
-        if (!is_file((string) $this->zipFile)) {
+        if (!is_file($this->zipFile)) {
             $this->logger->warning(
                 'Nothing left to zip for ' . $archiveName,
                 [LegacyLogger::CONTEXT_TYPE => self::class]

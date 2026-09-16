@@ -214,7 +214,7 @@ final class CollectionItemsListRenderer extends AbstractBrowseListRenderer
             Stream_Playlist::check_autoplay_append(),
             $this->mayAdd(),
             (bool) $this->configContainer->get('download'),
-            $this->mayAdd() && (bool) $this->configContainer->get('share'),
+            $this->mayAdd() && $this->configContainer->get('share'),
             $this->canRemove()
         )->render();
     }
@@ -226,7 +226,7 @@ final class CollectionItemsListRenderer extends AbstractBrowseListRenderer
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     #[Override]

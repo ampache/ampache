@@ -174,7 +174,7 @@ final readonly class OidcAuthenticationService implements OidcAuthenticationServ
         }
 
         $useUserInfo = $this->configContainer->get(ConfigurationKeyEnum::OIDC_USE_USERINFO);
-        if ($useUserInfo === null || (bool) $useUserInfo) {
+        if ($useUserInfo === null || $useUserInfo) {
             try {
                 $userInfo = $client->requestUserInfo();
                 if (is_object($userInfo)) {

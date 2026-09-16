@@ -62,7 +62,7 @@ final class NowPlayingSongRowView extends AbstractView
     public function getAlbumLink(): string
     {
         if (!$this->showLinks()) {
-            return scrub_out((string) $this->media->get_album_fullname());
+            return scrub_out($this->media->get_album_fullname());
         }
 
         return ($this->isAlbumGrouped())
@@ -170,7 +170,7 @@ final class NowPlayingSongRowView extends AbstractView
 
     public function showRatings(): bool
     {
-        return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings');
+        return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('ratings');
     }
 
     public function showSimilar(): bool
