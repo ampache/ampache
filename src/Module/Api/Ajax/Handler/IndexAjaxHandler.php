@@ -103,8 +103,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 )->render();
                 break;
             case 'artist_songs':
-                $artistId   = (int) $this->requestParser->getFromRequest('artist');
-                $object_ids = $this->songRepository->getByArtist($artistId);
+                $artistId         = (int) $this->requestParser->getFromRequest('artist');
+                $object_ids       = $this->songRepository->getByArtist($artistId);
                 $results['songs'] = $this->createSongListPanelView(
                     'songs',
                     $object_ids,

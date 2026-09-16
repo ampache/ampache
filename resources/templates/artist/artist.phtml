@@ -198,8 +198,8 @@ foreach ($this->getMultiObjectIds() as $key => $objectIds) {
             echo $this->raw(Ajax::observe('artist_songs_link', 'click', Ajax::action('?page=index&action=artist_songs&artist=' . $artistId, 'artist_songs'))); ?>
         <div id="songs" class="tab_content">
             <?php Ui::show_box_top('', 'info-box');
-echo T_('Loading...');
-Ui::show_box_bottom(); ?>
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
         </div>
         <?php } ?>
         <?php echo $this->raw(Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artistId, 'top_tracks'))); ?>
