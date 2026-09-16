@@ -85,18 +85,10 @@ final class ItemsMethod implements JellyfinMethodInterface
             default => null,
         };
 
-        // a favorite-only request still needs the whole set to filter from, so it cannot be pre-limited;
-        // everything else fetches one extra row past the requested page, just to detect that more remain
-        $fetchSize = ($limit > 0 && !$onlyFavorite) ? $startIndex + $limit + 1 : 0;
+        // one extra row past the requested page, just to detect that more remain
+        $fetchSize = ($limit > 0) ? $startIndex + $limit + 1 : 0;
 
-        $items = $this->collect($parentId, $includeTypes, $user, $fields, $fetchSize, $sort, $descending);
-
-        if ($onlyFavorite) {
-            $items = array_values(array_filter(
-                $items,
-                static fn(array $dto): bool => (bool) ($dto['UserData']['IsFavorite'] ?? false),
-            ));
-        }
+        $items = $this->collect($parentId, $includeTypes, $user, $fields, $fetchSize, $sort, $descending, $onlyFavorite);
 
         // a bounded fetch can't report the real total without fetching everything, so a full page plus the
         // peeked row reports a lower bound instead of a false "that's everything" once the cap is hit
@@ -134,18 +126,21 @@ final class ItemsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allAlbums(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
+    private function allAlbums(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
-        $catalogs = $user->get_catalogs('music');
-
-        $albumIds = match ($sort) {
-            'random' => ($fetchSize > 0)
-                ? $this->albumRepository->getRandom($user->getId(), $fetchSize)
-                : $this->shuffleArray(Catalog::get_albums(0, 0, $catalogs)),
-            'newest' => Stats::get_newest('album', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
-            default => Catalog::get_albums($fetchSize, 0, $catalogs),
-        };
-        $albumIds = $this->applyOrder($albumIds, $sort, $descending);
+        if ($onlyFavorite) {
+            $albumIds = $this->favoriteIds('album', $user, $fetchSize, $sort, $descending);
+        } else {
+            $catalogs = $user->get_catalogs('music');
+            $albumIds = match ($sort) {
+                'random' => ($fetchSize > 0)
+                    ? $this->albumRepository->getRandom($user->getId(), $fetchSize)
+                    : $this->shuffleArray(Catalog::get_albums(0, 0, $catalogs)),
+                'newest' => Stats::get_newest('album', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+                default => Catalog::get_albums($fetchSize, 0, $catalogs),
+            };
+            $albumIds = $this->applyOrder($albumIds, $sort, $descending);
+        }
 
         $this->warmAlbums($albumIds);
 
@@ -162,8 +157,20 @@ final class ItemsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allArtists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
+    private function allArtists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
+        if ($onlyFavorite) {
+            $artistIds = $this->favoriteIds('artist', $user, $fetchSize, $sort, $descending);
+            $this->warmArtists($artistIds);
+
+            $result = [];
+            foreach ($artistIds as $artistId) {
+                $result[] = $this->mapper->mapArtist(new Artist($artistId), $user, $fields);
+            }
+
+            return $result;
+        }
+
         $catalogs = $user->get_catalogs('music');
 
         if ($sort === null) {
@@ -201,7 +208,7 @@ final class ItemsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allPlaylists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
+    private function allPlaylists(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
         // findIds has no size/offset of its own, so this is the one type still bounded after the fact
         // rather than at the query — playlist counts are small next to a library's albums/artists/songs
@@ -213,6 +220,12 @@ final class ItemsMethod implements JellyfinMethodInterface
             false,
             null,
         );
+
+        if ($onlyFavorite) {
+            // intersect rather than querying favorites alone, so a stale flag never outruns visibility
+            $favoriteIds = Userflag::get_latest('playlist', $user, -1, 0, 0, 0, true, 0);
+            $ids         = array_values(array_intersect($ids, $favoriteIds));
+        }
 
         if ($sort === 'newest') {
             $this->warmPlaylists($ids);
@@ -240,18 +253,21 @@ final class ItemsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allSongs(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
+    private function allSongs(User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
-        $catalogs = $user->get_catalogs('music');
-
-        $songIds = match ($sort) {
-            'random' => ($fetchSize > 0)
-                ? Random::get_default($fetchSize, $user)
-                : $this->shuffleArray(Catalog::get_all_song_ids(0, 0, $catalogs)),
-            'newest' => Stats::get_newest('song', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
-            default => Catalog::get_all_song_ids($fetchSize, 0, $catalogs),
-        };
-        $songIds = $this->applyOrder($songIds, $sort, $descending);
+        if ($onlyFavorite) {
+            $songIds = $this->favoriteIds('song', $user, $fetchSize, $sort, $descending);
+        } else {
+            $catalogs = $user->get_catalogs('music');
+            $songIds  = match ($sort) {
+                'random' => ($fetchSize > 0)
+                    ? Random::get_default($fetchSize, $user)
+                    : $this->shuffleArray(Catalog::get_all_song_ids(0, 0, $catalogs)),
+                'newest' => Stats::get_newest('song', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+                default => Catalog::get_all_song_ids($fetchSize, 0, $catalogs),
+            };
+            $songIds = $this->applyOrder($songIds, $sort, $descending);
+        }
 
         $this->warmSongs($songIds, $user);
 
@@ -289,7 +305,7 @@ final class ItemsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function collect(string $parentId, array $includeTypes, User $user, array $fields, int $fetchSize, ?string $sort, bool $descending): array
+    private function collect(string $parentId, array $includeTypes, User $user, array $fields, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
         // no ParentId, no IncludeItemTypes at all: the client wants the root library views, not "nothing"
         // (confirmed against real Symfonium sync traffic — this exact shape is how it discovers libraries)
@@ -313,19 +329,33 @@ final class ItemsMethod implements JellyfinMethodInterface
         // top-level: no ParentId, or the synthetic 'view' root — driven entirely by IncludeItemTypes
         $items = [];
         if (in_array('MusicAlbum', $includeTypes, true)) {
-            array_push($items, ...$this->allAlbums($user, $fields, $fetchSize, $sort, $descending));
+            array_push($items, ...$this->allAlbums($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
         }
         if (in_array('MusicArtist', $includeTypes, true)) {
-            array_push($items, ...$this->allArtists($user, $fields, $fetchSize, $sort, $descending));
+            array_push($items, ...$this->allArtists($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
         }
         if (in_array('Audio', $includeTypes, true)) {
-            array_push($items, ...$this->allSongs($user, $fields, $fetchSize, $sort, $descending));
+            array_push($items, ...$this->allSongs($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
         }
         if (in_array('Playlist', $includeTypes, true)) {
-            array_push($items, ...$this->allPlaylists($user, $fields, $fetchSize, $sort, $descending));
+            array_push($items, ...$this->allPlaylists($user, $fields, $fetchSize, $sort, $descending, $onlyFavorite));
         }
 
         return $items;
+    }
+
+    /**
+     * A DB-level Filters=IsFavorite lookup, bounded by how much the user has flagged rather than the
+     * whole library — album/artist/song carry no visibility of their own, unlike a playlist.
+     *
+     * @param 'random'|'newest'|null $sort
+     * @return array<int, int>
+     */
+    private function favoriteIds(string $type, User $user, int $fetchSize, ?string $sort, bool $descending): array
+    {
+        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true, 0);
+
+        return ($sort === 'random') ? $this->shuffleArray($ids) : $this->applyOrder($ids, 'newest', $descending);
     }
 
     /**

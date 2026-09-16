@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
@@ -45,6 +46,7 @@ class AlbumRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
+    private RandomIdSamplerInterface&MockObject $randomIdSampler;
     private AlbumRepository $subject;
 
     /**
@@ -774,6 +776,39 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testGetRandomBuildsTheCatalogFilterAndDelegatesToTheSampler(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::once())
+            ->method('sample')
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5,7,0) ', [], 3)
+            ->willReturn([10, 11, 12]);
+
+        self::assertSame([10, 11, 12], $this->subject->getRandom(42, 3));
+    }
+
+    public function testGetRandomNarrowsToTheRequestedCatalogWhenTheUserCanSeeIt(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::once())
+            ->method('sample')
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5) ', [], 1)
+            ->willReturn([10]);
+
+        self::assertSame([10], $this->subject->getRandom(42, 1, 5));
+    }
+
+    public function testGetRandomReturnsNothingWhenTheRequestedCatalogIsNotVisible(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::never())->method('sample');
+
+        self::assertSame([], $this->subject->getRandom(42, 3, 99));
+    }
+
     public function testGetRandomSongsReturnsIds(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -1023,16 +1058,32 @@ class AlbumRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger     = $this->createMock(LoggerInterface::class);
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->randomIdSampler = $this->createMock(RandomIdSamplerInterface::class);
 
         $this->subject = new AlbumRepository(
             $this->connection,
             $this->logger,
+            $this->randomIdSampler,
         );
 
         // the object cache is a process-wide static, so a leftover entry would leak between tests
         Album::clear_cache();
+    }
+
+    /**
+     * @param list<int> $catalogIds
+     */
+    private function bootCatalogRepository(array $catalogIds): void
+    {
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn($catalogIds);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturn($catalogRepository);
+
+        $GLOBALS['dic'] = $dic;
     }
 
     private function bootPrivilegeChecker(bool $isManager): void

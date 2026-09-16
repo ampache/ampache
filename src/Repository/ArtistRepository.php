@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
@@ -40,6 +41,7 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private LoggerInterface $logger,
+        private RandomIdSamplerInterface $randomIdSampler,
     ) {}
 
     /**
@@ -531,22 +533,14 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         int $userId,
         ?int $count = 1,
     ): array {
-        $results = [];
-        $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
+        $where = "WHERE EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `artist_map`.`artist_id` = `artist`.`id` AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")) ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= sprintf("AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
+            $where .= sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
         }
 
-        $sql .= "ORDER BY RAND() LIMIT " . $count;
-        $dbResults = $this->connection->query($sql);
-
-        while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
-            $results[] = (int) $row['artist_id'];
-        }
-
-        return $results;
+        return $this->randomIdSampler->sample('artist', 'id', $where, [], (int) $count);
     }
 
     /**

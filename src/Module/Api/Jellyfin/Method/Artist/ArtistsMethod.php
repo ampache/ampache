@@ -70,18 +70,10 @@ final class ArtistsMethod implements JellyfinMethodInterface
             default => null,
         };
 
-        // a favorite-only request still needs the whole set to filter from, so it cannot be pre-limited;
-        // everything else fetches one extra row past the requested page, just to detect that more remain
-        $fetchSize = ($limit > 0 && !$onlyFavorite) ? $startIndex + $limit + 1 : 0;
+        // one extra row past the requested page, just to detect that more remain
+        $fetchSize = ($limit > 0) ? $startIndex + $limit + 1 : 0;
 
-        $items = $this->allArtists($user, $fetchSize, $sort, $descending);
-
-        if ($onlyFavorite) {
-            $items = array_values(array_filter(
-                $items,
-                static fn(array $dto): bool => (bool) ($dto['UserData']['IsFavorite'] ?? false),
-            ));
-        }
+        $items = $this->allArtists($user, $fetchSize, $sort, $descending, $onlyFavorite);
 
         // a bounded fetch can't report the real total without fetching everything, so a full page plus the
         // peeked row reports a lower bound instead of a false "that's everything" once the cap is hit
@@ -101,8 +93,20 @@ final class ArtistsMethod implements JellyfinMethodInterface
      * @param 'random'|'newest'|null $sort
      * @return list<array<string, mixed>>
      */
-    private function allArtists(User $user, int $fetchSize, ?string $sort, bool $descending): array
+    private function allArtists(User $user, int $fetchSize, ?string $sort, bool $descending, bool $onlyFavorite): array
     {
+        if ($onlyFavorite) {
+            $artistIds = $this->favoriteIds('artist', $user, $fetchSize, $sort, $descending);
+            $this->warmArtists($artistIds);
+
+            $result = [];
+            foreach ($artistIds as $artistId) {
+                $result[] = $this->mapper->mapArtist(new Artist($artistId), $user, []);
+            }
+
+            return $result;
+        }
+
         $catalogs = $user->get_catalogs('music');
 
         if ($sort === null) {
@@ -153,6 +157,20 @@ final class ArtistsMethod implements JellyfinMethodInterface
         };
 
         return $needsReverse ? array_reverse($ids) : $ids;
+    }
+
+    /**
+     * A DB-level Filters=IsFavorite lookup, bounded by how much the user has flagged rather than the
+     * whole library.
+     *
+     * @param 'random'|'newest'|null $sort
+     * @return array<int, int>
+     */
+    private function favoriteIds(string $type, User $user, int $fetchSize, ?string $sort, bool $descending): array
+    {
+        $ids = Userflag::get_latest($type, $user, ($fetchSize > 0) ? $fetchSize : -1, 0, 0, 0, true, 0);
+
+        return ($sort === 'random') ? $this->shuffleArray($ids) : $this->applyOrder($ids, 'newest', $descending);
     }
 
     /**
