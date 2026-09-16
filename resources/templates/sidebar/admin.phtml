@@ -53,7 +53,7 @@ if ($this->isAdmin()) {
             <span class="sidebar-header-title"><?php echo $this->e($section['title']); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, $section['key'], 'header-img ' . $this->getState($section['key']))); ?>
         </h4>
-        <ul class="sb3" id="sb_<?php echo $this->e($section['key']); ?>"<?php echo ($this->isCollapsed($section['key'])) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed($section['key'])) ? ' collapsed' : ''; ?>" id="sb_<?php echo $this->e($section['key']); ?>">
             <?php foreach ($section['items'] as $item) { ?>
             <li id="<?php echo $this->e($item['id']); ?>"><a href="<?php echo $this->e($adminPath . $item['url']); ?>"><?php echo $this->e($item['label']); ?></a></li>
             <?php } ?>
@@ -66,7 +66,7 @@ if ($this->isAdmin()) {
             <span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'admin_server', 'header-img ' . $this->getState('admin_server'))); ?>
         </h4>
-        <ul class="sb3" id="sb_admin_server"<?php echo ($this->isCollapsed('admin_server')) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed('admin_server')) ? ' collapsed' : ''; ?>" id="sb_admin_server">
             <li id="sb_admin_ot_Debug"><a href="<?php echo $this->e($adminPath); ?>/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
             <?php foreach ($this->getServerCategories() as $category) { ?>
             <li id="sb_admin_server_<?php echo $this->e(ucfirst($category['tab'])); ?>"><a href="<?php echo $this->e($this->getWebPath()); ?>/preferences.php?action=admin&tab=<?php echo $this->e($category['tab']); ?>"><?php echo $this->e($category['label']); ?></a></li>

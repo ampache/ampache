@@ -1868,6 +1868,26 @@ div.box.box_rules {
     flex-direction: column;
 }
 
+/* Each home-plugin widget sets its own --order custom property to place itself within #home_plugin's flex column. */
+.homedash,
+.personalfav,
+.catalogfav,
+.ftl,
+#shout_objects,
+.home_plugin {
+    order: var(--order, 0);
+}
+
+/* The sidebar's own section order, set the same way via --order. */
+.sb2 > li {
+    order: var(--order, 0);
+}
+
+/* A sidebar section starts collapsed when its own cookie says so; the header click then slideToggles it. */
+.sb3.collapsed {
+    display: none;
+}
+
 .visualizer-hidden {
     visibility: hidden;
 }

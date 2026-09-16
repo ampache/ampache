@@ -96,7 +96,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             && $userflags !== []
         ) {
             $divString = ($this->order > 0)
-                ? '<div class="catalogfav" style="order: ' . $this->order . '">'
+                ? '<div class="catalogfav" style="--order: ' . $this->order . '">'
                 : '<div class="catalogfav">';
             echo $divString;
             Ui::show_box_top(T_('Highlight'));
