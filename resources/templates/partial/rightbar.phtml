@@ -34,6 +34,7 @@ use Ampache\Module\Util\Ui;
 $items = $this->getItems(); ?>
 <ul id="rb_action">
     <li><?php echo $this->raw(Ajax::button('?page=stream&action=basket', 'play_circle', T_('Play'), 'rightbar_play')); ?></li>
+    <li><?php echo $this->raw(Ajax::button('?action=basket&type=shuffle', 'shuffle', T_('Shuffle'), 'rb_shuffle_playlist')); ?></li>
     <?php if ($this->mayAdd()) { ?>
     <li id="pl_add">
         <?php echo $this->raw(Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label(true))); ?>

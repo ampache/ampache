@@ -108,4 +108,9 @@ interface TmpPlaylistRepositoryInterface
      * Whether a queue holds anything at all, which costs the same at three rows and three hundred thousand
      */
     public function hasItems(int $playlistId): bool;
+
+    /**
+     * Randomizes a queue's order in place, keeping the same items
+     */
+    public function shuffleItems(int $playlistId): void;
 }

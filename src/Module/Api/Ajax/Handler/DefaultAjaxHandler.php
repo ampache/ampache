@@ -205,6 +205,9 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'clear_all':
                             $user->getPlaylist()->clear();
                             break;
+                        case 'shuffle':
+                            $user->getPlaylist()->shuffle();
+                            break;
                     }
                 }
 

@@ -284,6 +284,17 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * shuffle
+     * Randomizes the order of the items in this tmp playlist
+     */
+    public function shuffle(): bool
+    {
+        self::getTmpPlaylistRepository()->shuffleItems($this->id);
+
+        return true;
+    }
+
+    /**
      * The playlist id whose rows this object covers
      *
      * The session is resolved to an id rather than joined: `tmp_playlist` is the key the rows are already
