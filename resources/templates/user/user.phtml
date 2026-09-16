@@ -114,7 +114,7 @@ Ui::show_box_top($this->e($this->getFullname())); ?>
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="recently_played" class="tab_content">
+        <div id="recently_played" class="tab_content" style="display: block;">
             <?php $items = $this->getTemporaryPlaylistItems();
 if ($items !== []) {
     Ui::show_box_top(T_('Active Playlist')); ?>
