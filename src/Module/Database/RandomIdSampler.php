@@ -49,6 +49,13 @@ final readonly class RandomIdSampler implements RandomIdSamplerInterface
         $min = (int) $range['min_id'];
         $max = (int) $range['max_id'];
 
+        // probing can never reach $limit distinct ids when the pool itself is that small or smaller — every
+        // later probe would just re-hit one already found, burning the whole attempt budget for nothing
+        $total = (int) $this->connection->fetchOne(sprintf('SELECT COUNT(*) FROM `%s` %s', $table, $whereSql), $params);
+        if ($total <= $limit) {
+            return $this->allMatchingIdsShuffled($table, $idColumn, $whereSql, $params);
+        }
+
         $probeSql = sprintf('SELECT `%s` FROM `%s` %s AND `%s` >= ? ORDER BY `%s` LIMIT 1', $idColumn, $table, $whereSql, $idColumn, $idColumn);
 
         $ids      = [];
@@ -62,5 +69,23 @@ final readonly class RandomIdSampler implements RandomIdSamplerInterface
         }
 
         return array_values($ids);
+    }
+
+    /**
+     * @param list<mixed> $params
+     * @return list<int>
+     */
+    private function allMatchingIdsShuffled(string $table, string $idColumn, string $whereSql, array $params): array
+    {
+        $result = $this->connection->query(sprintf('SELECT `%s` FROM `%s` %s', $idColumn, $table, $whereSql), $params);
+
+        $ids = [];
+        while ($id = $result->fetchColumn()) {
+            $ids[] = (int) $id;
+        }
+
+        shuffle($ids);
+
+        return $ids;
     }
 }
