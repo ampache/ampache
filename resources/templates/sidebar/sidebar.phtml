@@ -65,16 +65,18 @@ use Ampache\Module\Util\Ui;
         $(".header").click(function () {
             $header = $(this);
             $content = $header.next();
-            // slideToggle's callback runs after the animation, so the cookie records the settled state
-            $content.slideToggle(500, function() {
-                $header.children(".header-img").toggleClass("expanded collapsed");
-                $content.toggleClass("collapsed");
-                var sbstate = "expanded";
-                if ($header.children(".header-img").hasClass("collapsed")) {
-                    sbstate = "collapsed";
-                }
-                Cookies.set('sb_' + $header.children(".header-img").attr('id'), sbstate, {<?php echo $this->raw($this->getCookieOptions()); ?>});
-            });
+            $icon = $header.children(".header-img");
+            var sbstate = $icon.hasClass("collapsed") ? "expanded" : "collapsed";
+            $icon.toggleClass("expanded collapsed");
+            // toggling "collapsed" on $content changes its real display, so slideToggle() can't detect direction -- use slideDown()/slideUp().
+            if (sbstate == "expanded") {
+                $content.removeClass("collapsed").slideDown(500);
+            } else {
+                $content.slideUp(500, function() {
+                    $content.addClass("collapsed");
+                });
+            }
+            Cookies.set('sb_' + $icon.attr('id'), sbstate, {<?php echo $this->raw($this->getCookieOptions()); ?>});
         });
     });
 
@@ -95,7 +97,9 @@ use Ampache\Module\Util\Ui;
                 if ($("#" + key).hasClass("expanded")) {
                     $("#" + key).removeClass("expanded");
                     $("#" + key).addClass("collapsed");
-                    $("#" + key).parent().next().addClass("collapsed").slideToggle(0);
+                    $("#" + key).parent().next().slideUp(0, function() {
+                        $(this).addClass("collapsed");
+                    });
                 }
             }
         }
