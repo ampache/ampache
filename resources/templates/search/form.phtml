@@ -41,7 +41,7 @@ if ($currentType === null) {
 
 $selected = $this->getSelectedLimit();
 Ui::show_box_top(T_('Search Ampache') . '...', 'box box_advanced_search'); ?>
-<form id="search" name="search" method="post" action="<?php echo $this->e($webPath); ?>/search.php?type=<?php echo $this->e($currentType); ?>" enctype="multipart/form-data" style="display:inline">
+<form id="search" name="search" method="post" action="<?php echo $this->e($webPath); ?>/search.php?type=<?php echo $this->e($currentType); ?>" enctype="multipart/form-data" class="display-inline">
     <div class="category_options">
         <?php foreach ($this->getCategories() as $category) { ?>
         <a class="category <?php echo ($category['current']) ? 'current' : ''; ?>" href="<?php echo $this->e($webPath); ?>/search.php?type=<?php echo $this->e($category['type']); ?>"><?php echo $this->e($category['label']); ?></a>

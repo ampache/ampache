@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
@@ -112,7 +113,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
 
             if ($list_array !== []) {
                 $divString = ($this->order > 0)
-                    ? '<div class="personalfav" style="order: ' . $this->order . '">'
+                    ? '<div class="personalfav" style="--order: ' . $this->order . '">'
                     : '<div class="personalfav">';
                 echo $divString;
                 Ui::show_box_top(T_('Favorite Lists'));
@@ -125,9 +126,9 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                         // $item[1] is `playlist` or `search`; labelling a smartlist as a playlist sent
                         // the context menu after whichever playlist happened to share that id
                         echo '<tr id="' . $item[1] . '_' . $item[0]->id . '" class="libitem_menu" data-object-type="' . $item[1] . '" data-object-id="' . $item[0]->id . '">';
-                        echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
-                        echo '<td style="height: auto;">';
-                        echo '<span style="margin-right: 10px;">';
+                        echo '<td class="personalfav-link">' . $item[0]->get_f_link() . '</td>';
+                        echo '<td>';
+                        echo '<span>';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id, 'play_circle', T_('Play'), 'play_playlist_' . $item[0]->id);
                             if (Stream_Playlist::check_autoplay_next()) {
@@ -154,7 +155,16 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
 
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
-                        echo '<td class="optional">';
+                        if (AmpConfig::get('ratings')) {
+                            echo '<td class="cel_ratings">';
+                            echo '<div class="rating">';
+                            echo '<span class="cel_rating" id="rating_' . $item[0]->id . '_' . $item[1] . '">' . Rating::show($item[0]->id, $item[1]) . '</span>';
+                            echo '<span class="cel_userflag" id="userflag_' . $item[0]->id . '_' . $item[1] . '">' . Userflag::show($item[0]->id, $item[1]) . '</span>';
+                            echo '</div>';
+                            echo '</td>';
+                        }
+
+                        echo '<td class="cel_action">';
                         echo '</td></tr>';
 
                         $count++;

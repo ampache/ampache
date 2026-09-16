@@ -1,10 +1,10 @@
 # CHANGELOG
 
-## Ampache 8.1.1
+## Ampache 8.2.0
 
 **Jellyfin API** Third-party Jellyfin clients can now browse and stream your library through a new, opt-in Jellyfin-compatible API.
 
-### Added (8.1.1)
+### Added (8.2.0)
 
 * Database 810012
   * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
@@ -18,12 +18,18 @@
   * Audio only — no video, podcasts or live TV — with direct-play streaming and server-side transcoding when the client asks for a format or bitrate the source can't serve directly
   * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
   * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
+* Rightbar
+  * New Shuffle button randomizes the play queue
+  * New Play Next / Play Last buttons queue the whole play queue into the currently playing web player or localplay session, the same mechanism already used by individual song/album Play Next/Play Last actions
+* The `Personal Favorites` home plugin now shows a rating/favorite column for each playlist and smart playlist in the list
 
-### Changed (8.1.1)
+### Changed (8.2.0)
 
 * Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
+* Rightbar action buttons now lay out in a fixed 4-column grid instead of wrapping inline
+* Grid item hover action icons (album, artist, etc.) now sit bottom-right instead of top-right, matching other action overlays
 
-### Fixed (8.1.1)
+### Fixed (8.2.0)
 
 * Garbage collection deleted any folder holding nothing but other folders
 * Subsonic folder browsing missed sub-folders added since the last map rebuild, and folder was not returned listed

@@ -220,4 +220,32 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
             [$playlistId]
         ) !== false;
     }
+
+    public function shuffleItems(int $playlistId): void
+    {
+        $items = $this->getItems($playlistId);
+        if (count($items) < 2) {
+            return;
+        }
+
+        shuffle($items);
+
+        // order comes from the row's own primary key, so re-ordering means delete-and-reinsert
+        $this->connection->query('DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?', [$playlistId]);
+
+        foreach (array_chunk($items, 500) as $chunk) {
+            $params = [];
+            foreach ($chunk as $item) {
+                $params[] = $item['object_id'];
+                $params[] = $playlistId;
+                $params[] = $item['object_type'];
+            }
+
+            $this->connection->query(
+                'INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES '
+                . implode(', ', array_fill(0, count($chunk), '(?, ?, ?)')),
+                $params
+            );
+        }
+    }
 }

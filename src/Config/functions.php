@@ -824,9 +824,9 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select(string $name, int $catalog_id, string $style = '', bool $allow_none = false, string $gather_types = '', string $catalog_type = ''): void
+function show_catalog_select(string $name, int $catalog_id, bool $allow_none = false, string $gather_types = '', string $catalog_type = ''): void
 {
-    echo "<select name=\"$name\" style=\"$style\">\n";
+    echo "<select name=\"$name\">\n";
 
     $params = [];
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
@@ -917,9 +917,9 @@ function show_license_select(string $name, ?int $license_id = 0, ?int $song_id =
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select(string $name, string $selected = '', string $style = ''): void
+function show_user_select(string $name, string $selected = ''): void
 {
-    echo "<select name=\"$name\" style=\"$style\">\n";
+    echo "<select name=\"$name\">\n";
     echo "\t<option value=\"-1\">" . T_('All') . "</option>\n";
 
     $sql        = "SELECT `id`, `username`, `fullname` FROM `user` ORDER BY `fullname`";

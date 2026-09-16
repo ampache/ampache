@@ -92,7 +92,7 @@ if ((string) $label->summary !== '') { ?>
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="artists" class="tab_content" style="display: block;">
+        <div id="artists" class="tab_content">
 <?php $browse = $this->getBrowse();
 $browse->show_objects($this->getArtistIds(), true);
 $browse->set_use_alpha(false, false);

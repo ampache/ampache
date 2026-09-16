@@ -62,7 +62,7 @@ $collaborates = $this->getCollaborateIds(); ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Collaborate'); ?></td>
                 <td>
-                    <select multiple size="5" name="collaborate[]" style="height: 90px;">
+                    <select multiple size="5" name="collaborate[]" class="collaborate-select">
                         <?php foreach ($this->getCollaborators() as $userId => $username) { ?>
                         <option value="<?php echo $this->e($userId); ?>"<?php echo (in_array($userId, $collaborates, true)) ? ' selected="selected"' : ''; ?>><?php echo $this->e($username); ?></option>
                         <?php } ?>

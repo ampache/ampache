@@ -59,6 +59,14 @@ body#install-page {
     height: 70px;
 }
 
+.install-header-spacer {
+    height: 70px;
+}
+
+.install-content-offset {
+    margin-top: 70px;
+}
+
 .database-update {
     text-align: center;
 }

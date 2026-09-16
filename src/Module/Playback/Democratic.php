@@ -196,10 +196,10 @@ class Democratic extends Tmp_Playlist
      * show_playlist_select
      * This one is for playlists!
      */
-    public static function show_playlist_select(string $name, string $selected = '', string $style = ''): string
+    public static function show_playlist_select(string $name, string $selected = ''): string
     {
         $user             = Core::get_global('user');
-        $string           = "<select name=\"{$name}\" style=\"{$style}\">\n\t<option value=\"\">" . T_('None') . "</option>\n";
+        $string           = "<select name=\"{$name}\">\n\t<option value=\"\">" . T_('None') . "</option>\n";
         $already_selected = false;
         $index            = 1;
         $use_search       = AmpConfig::get('demo_use_search');

@@ -243,6 +243,12 @@ final class RecentlyPlayedView extends AbstractView
             [631138519, 31556926, '%d year ago', '%d years ago'],
         ];
 
+        /**
+         * @var  int $ceiling
+         * @var  int $divisor
+         * @var  string $singular
+         * @var  string $plural
+         */
         foreach ($units as [$ceiling, $divisor, $singular, $plural]) {
             if ($interval < $ceiling) {
                 $value = (int) floor($interval / $divisor);
