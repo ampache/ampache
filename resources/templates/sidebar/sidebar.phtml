@@ -68,6 +68,7 @@ use Ampache\Module\Util\Ui;
             // slideToggle's callback runs after the animation, so the cookie records the settled state
             $content.slideToggle(500, function() {
                 $header.children(".header-img").toggleClass("expanded collapsed");
+                $content.toggleClass("collapsed");
                 var sbstate = "expanded";
                 if ($header.children(".header-img").hasClass("collapsed")) {
                     sbstate = "collapsed";
@@ -94,7 +95,7 @@ use Ampache\Module\Util\Ui;
                 if ($("#" + key).hasClass("expanded")) {
                     $("#" + key).removeClass("expanded");
                     $("#" + key).addClass("collapsed");
-                    $("#" + key).parent().next().slideToggle(0);
+                    $("#" + key).parent().next().addClass("collapsed").slideToggle(0);
                 }
             }
         }
