@@ -443,7 +443,7 @@ final class OpenSubsonic_Fields
      */
     public function songIsrc(Song $song): array
     {
-        return Song::get_song_map_array($song->id, 'isrc');
+        return Song::get_song_map_array($song->id);
     }
 
     /**
@@ -567,7 +567,7 @@ final class OpenSubsonic_Fields
         }
 
         $entry = [
-            'displayArtist' => (string) $song->get_parent_fullname(),
+            'displayArtist' => $song->get_parent_fullname(),
             'displayTitle' => (string) $song->title,
             'lang' => 'xxx',
             'synced' => $parsed['synced'],

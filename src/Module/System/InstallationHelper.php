@@ -470,6 +470,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
                 return false;
             }
+
             if (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
                 AmpError::add('general', T_('Failed writing config file'));

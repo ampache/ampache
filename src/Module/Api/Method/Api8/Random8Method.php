@@ -106,9 +106,9 @@ final class Random8Method implements MethodInterface
             'album', 'album_artist', 'album_disk', 'artist', 'catalog', 'favorite', 'genre', 'label', 'playlist', 'rating', 'search', 'song', 'song_artist' => Random::get_single_song($object_type, $user, ($object_id === null) ? null : (int) $object_id),
             // a filter picks a random episode from that single podcast, otherwise the whole library is used
             'podcast_episode' => (((int) $object_id) > 0)
-                ? $this->podcastEpisodeRepository->getRandomByPodcast((int) $object_id, $user->getId(), 1)[0] ?? 0
-                : $this->podcastEpisodeRepository->getRandom($user->getId(), 1)[0] ?? 0,
-            'video' => $this->videoRepository->getRandom($user->getId(), 1)[0] ?? 0,
+                ? $this->podcastEpisodeRepository->getRandomByPodcast((int) $object_id, $user->getId())[0] ?? 0
+                : $this->podcastEpisodeRepository->getRandom($user->getId())[0] ?? 0,
+            'video' => $this->videoRepository->getRandom($user->getId())[0] ?? 0,
         };
 
         if ($objectId === 0) {

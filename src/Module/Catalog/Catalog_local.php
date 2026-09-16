@@ -1009,6 +1009,7 @@ class Catalog_local extends Catalog
 
             return true;
         }
+
         if (!Core::is_readable(Core::conv_lc_file($file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }

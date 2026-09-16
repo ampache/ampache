@@ -43,14 +43,14 @@ class AbstractEditFormRendererTest extends MockeryTestCase
     {
         $this->bootUser(42, true);
 
-        self::assertTrue((new AlbumEditFormRenderer())->mayDisable());
+        self::assertTrue(new AlbumEditFormRenderer()->mayDisable());
     }
 
     public function testMayDisableIsRefusedBelowManager(): void
     {
         $this->bootUser(42, false);
 
-        self::assertFalse((new AlbumEditFormRenderer())->mayDisable());
+        self::assertFalse(new AlbumEditFormRenderer()->mayDisable());
     }
 
     /**
@@ -69,7 +69,7 @@ class AbstractEditFormRendererTest extends MockeryTestCase
         $GLOBALS['dic'] = $dic;
         unset($GLOBALS['user']);
 
-        self::assertFalse((new AlbumEditFormRenderer())->mayDisable());
+        self::assertFalse(new AlbumEditFormRenderer()->mayDisable());
     }
 
     private function bootUser(int $userId, bool $isManager): void

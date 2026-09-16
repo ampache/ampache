@@ -108,12 +108,12 @@ final class AddShareView extends AbstractView
      */
     public function isDownloadChecked(): bool
     {
-        return (bool) ($_REQUEST['allow_download'] ?? 0) || Core::get_server('REQUEST_METHOD') === 'GET';
+        return ($_REQUEST['allow_download'] ?? 0) || Core::get_server('REQUEST_METHOD') === 'GET';
     }
 
     public function isStreamChecked(): bool
     {
-        return (bool) ($_REQUEST['allow_stream'] ?? 0) || Core::get_server('REQUEST_METHOD') === 'GET';
+        return ($_REQUEST['allow_stream'] ?? 0) || Core::get_server('REQUEST_METHOD') === 'GET';
     }
 
     /**

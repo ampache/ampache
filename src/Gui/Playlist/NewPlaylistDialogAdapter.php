@@ -129,7 +129,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
      */
     public function getCollectionsEnabled(): bool
     {
-        return (bool) AmpConfig::get('show_collection')
+        return AmpConfig::get('show_collection')
             && $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             && $this->acceptedTypes() !== [];
     }

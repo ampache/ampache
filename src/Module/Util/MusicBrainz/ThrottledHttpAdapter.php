@@ -74,7 +74,7 @@ class ThrottledHttpAdapter extends AbstractHttpAdapter
         $url = $this->endpoint . '/' . $path;
         $i   = 0;
         foreach ($params as $name => $value) {
-            $url .= ($i++ == 0) ? '?' : '&';
+            $url .= ($i++ === 0) ? '?' : '&';
             // AbstractFilter already urlencodes the Lucene escaped Query parts, so don't do it twice
             $url .= $name . '=' . $value;
         }

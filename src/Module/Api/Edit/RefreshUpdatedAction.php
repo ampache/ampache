@@ -142,7 +142,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $hide_genres    = (bool) AmpConfig::get('hide_genres');
                 $hide_moods     = (bool) AmpConfig::get('hide_moods');
                 $is_group       = (bool) AmpConfig::get('album_group');
-                $show_license   = (bool) (AmpConfig::get('licensing') && AmpConfig::get('show_license'));
+                $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $show_composer  = (bool) AmpConfig::get('show_composer');
                 $hide           = Core::get_request('hide');
                 $argument_param = '&hide=' . $hide;
@@ -228,7 +228,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 break;
             case 'artist_row':
                 /** @var Artist $libitem */
-                $results = (new ArtistRowView(
+                $results = new ArtistRowView(
                     $libitem,
                     AmpConfig::get_web_path(),
                     'cel_cover',
@@ -248,11 +248,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && (bool) AmpConfig::get('sociable'),
                     (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && canEditArtist($libitem, $gatekeeper->getUserId()),
                     (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) && Catalog::can_remove($libitem)
-                ))->render();
+                )->render();
                 break;
             case 'podcast_row':
                 /** @var Podcast $libitem */
-                $results = (new PodcastRowView(
+                $results = new PodcastRowView(
                     $libitem,
                     AmpConfig::get_web_path(),
                     'cel_cover',
@@ -263,11 +263,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-                ))->render();
+                )->render();
                 break;
             case 'podcast_episode_row':
                 /** @var Podcast_Episode $libitem */
-                $results = (new PodcastEpisodeRowView(
+                $results = new PodcastEpisodeRowView(
                     $libitem,
                     AmpConfig::get_web_path(),
                     'cel_cover',
@@ -284,11 +284,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                     Catalog::can_remove($libitem)
-                ))->render();
+                )->render();
                 break;
             case 'video_row':
                 /** @var Video $libitem */
-                $results = (new VideoRowView(
+                $results = new VideoRowView(
                     $libitem,
                     AmpConfig::get_web_path(),
                     'cel_cover',
@@ -308,11 +308,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                     Catalog::can_remove($libitem)
-                ))->render();
+                )->render();
                 break;
             case 'live_stream_row':
                 /** @var Live_Stream $libitem */
-                $results = (new LiveStreamRowView(
+                $results = new LiveStreamRowView(
                     $libitem,
                     'cel_cover',
                     $this->browse->getId(),
@@ -322,18 +322,18 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-                ))->render();
+                )->render();
                 break;
             case 'broadcast_row':
                 /** @var Broadcast $libitem */
-                $results = (new BroadcastRowView(
+                $results = new BroadcastRowView(
                     $libitem,
                     (bool) AmpConfig::get('directplay')
-                ))->render();
+                )->render();
                 break;
             case 'label_row':
                 /** @var Label $libitem */
-                $results = (new LabelRowView(
+                $results = new LabelRowView(
                     AmpConfig::get_web_path(),
                     $libitem,
                     'cel_cover',
@@ -341,11 +341,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                     (bool) AmpConfig::get('sociable'),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-                ))->render();
+                )->render();
                 break;
             case 'search_row':
                 /** @var Search $libitem */
-                $results = (new SearchRowView(
+                $results = new SearchRowView(
                     AmpConfig::get_web_path(),
                     $libitem,
                     (bool) AmpConfig::get('directplay'),
@@ -354,24 +354,24 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     $show_ratings,
                     Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
                     $libitem->has_access()
-                ))->render();
+                )->render();
                 break;
             case 'share_row':
                 /** @var Share $libitem */
-                $results = (new ShareRowView($libitem))->render();
+                $results = new ShareRowView($libitem)->render();
                 break;
             case 'song_preview_row':
                 /** @var Song_Preview $libitem */
-                $results = (new SongPreviewRowView(
+                $results = new SongPreviewRowView(
                     $libitem,
                     (bool) AmpConfig::get('directplay'),
                     Stream_Playlist::check_autoplay_next(),
                     Stream_Playlist::check_autoplay_append()
-                ))->render();
+                )->render();
                 break;
             case 'tag_row':
                 /** @var Tag $libitem */
-                $results = (new GenreRowView(
+                $results = new GenreRowView(
                     $this->ajaxUriRetriever->getAjaxUri(),
                     $libitem,
                     (bool) AmpConfig::get('allow_video'),
@@ -380,7 +380,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Stream_Playlist::check_autoplay_append(),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-                ))->render();
+                )->render();
                 break;
             default:
                 // pvmsg and wanted are not library items, so `loadItem()` refuses them before this point
@@ -389,7 +389,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream((string) $results)
+                $this->streamFactory->createStream($results)
             );
     }
 }

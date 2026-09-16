@@ -58,7 +58,7 @@ final class ImageMethod implements JellyfinMethodInterface
         }
 
         $art  = $this->resolveArt($type, $id);
-        $body = $art->get('original', false);
+        $body = $art->get();
         if ($body === '') {
             http_response_code(404);
 
@@ -66,7 +66,7 @@ final class ImageMethod implements JellyfinMethodInterface
         }
 
         header('Content-Type: ' . ($art->raw_mime !== '' ? $art->raw_mime : 'image/jpeg'));
-        header('Content-Length: ' . (string) strlen($body));
+        header('Content-Length: ' . strlen($body));
         header('Cache-Control: private, max-age=604800');
 
         if (strtoupper($request->getMethod()) === 'HEAD') {
@@ -92,7 +92,7 @@ final class ImageMethod implements JellyfinMethodInterface
         }
 
         if ($type === 'playlist' && !Art::has_db($id, 'playlist')) {
-            $items = (new Playlist($id))->get_items();
+            $items = new Playlist($id)->get_items();
             if ($items !== []) {
                 $song = new Song($items[array_rand($items)]['object_id']);
 

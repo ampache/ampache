@@ -80,7 +80,7 @@ class Collection extends playlist_object
             $this->$key = $value;
         }
 
-        $this->id = (int) $collectionId;
+        $this->id = $collectionId;
     }
 
     /**

@@ -278,7 +278,7 @@ final class JellyfinItemMapper
         $played        = false;
         $positionTicks = 0;
         if ($song !== null) {
-            $played        = (bool) $song->played;
+            $played        = $song->played;
             $bookmark      = new Bookmark($song->id, 'song', $user->getId());
             $positionTicks = $bookmark->position * 10_000_000;
         }

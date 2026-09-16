@@ -59,7 +59,7 @@ final class AudioStreamMethod implements JellyfinMethodInterface
         }
 
         // same gates PlayAction applies to the equivalent native byte-serving path
-        if (!AmpConfig::get_bool('allow_stream_playback') || !(bool) $user->getPreferenceValue('allow_stream_playback')) {
+        if (!AmpConfig::get_bool('allow_stream_playback') || !$user->getPreferenceValue('allow_stream_playback')) {
             http_response_code(403);
 
             return JellyfinResponse::alreadySent();
@@ -130,7 +130,7 @@ final class AudioStreamMethod implements JellyfinMethodInterface
         } else {
             http_response_code(200);
         }
-        header('Content-Length: ' . (string) $length);
+        header('Content-Length: ' . $length);
 
         if (strtoupper($request->getMethod()) === 'HEAD') {
             return JellyfinResponse::alreadySent();

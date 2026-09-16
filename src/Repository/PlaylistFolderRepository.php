@@ -263,7 +263,7 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
 
         $placements = [];
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $key = sprintf('%s-%d', (string) $row['object_type'], (int) $row['object_id']);
+            $key = sprintf('%s-%d', $row['object_type'], (int) $row['object_id']);
 
             $placements[$key] = [
                 'folder' => (int) $row['folder'],
