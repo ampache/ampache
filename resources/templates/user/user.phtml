@@ -89,9 +89,9 @@ Ui::show_box_top($this->e($this->getFullname())); ?>
     <dt><?php echo T_('Status'); ?></dt>
     <dd>
         <?php if ($this->isOnline()) { ?>
-        <i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
+        <i class="status-online"><?php echo T_('User is Online Now'); ?></i>
         <?php } else { ?>
-        <i style="color:red;"><?php echo T_('User is Offline Now'); ?></i>
+        <i class="status-offline"><?php echo T_('User is Offline Now'); ?></i>
         <?php } ?>
     </dd>
 </dl><br />
@@ -114,7 +114,7 @@ Ui::show_box_top($this->e($this->getFullname())); ?>
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="recently_played" class="tab_content" style="display: block;">
+        <div id="recently_played" class="tab_content">
             <?php $items = $this->getTemporaryPlaylistItems();
 if ($items !== []) {
     Ui::show_box_top(T_('Active Playlist')); ?>

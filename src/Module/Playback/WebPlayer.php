@@ -62,13 +62,11 @@ class WebPlayer
      *     real: string,
      *     player: string,
      * } $types
-     * @param array<string, string> $urlinfo
      */
     public static function can_transcode(
         string $media_type,
         string $file_type,
         array  $types,
-        array  $urlinfo,
         string $transcode_cfg,
         string $force_type = '',
     ): bool {
@@ -315,11 +313,11 @@ class WebPlayer
         $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
-            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
+            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif (($media = self::get_media_object($urlinfo)) instanceof Media) {
             /** @var Video|Podcast_Episode|Song|Song_Preview $media */
-            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
+            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } elseif ($item->type == 'live_stream') {
             $types['real'] = $item->codec;

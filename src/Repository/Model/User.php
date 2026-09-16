@@ -711,14 +711,14 @@ class User extends database_object
             $avatar_type == 'f_avatar_mini'
             && !empty($avatar['url_mini'])
         ) {
-            return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
+            return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" class="avatar-mini" />';
         }
 
         if (
             $avatar_type == 'f_avatar_medium'
             && !empty($avatar['url_medium'])
         ) {
-            return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
+            return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" class="avatar-medium" />';
         }
 
         return '';

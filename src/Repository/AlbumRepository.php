@@ -31,6 +31,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
 use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -71,6 +72,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private LoggerInterface $logger,
+        private RandomIdSamplerInterface $randomIdSampler,
     ) {}
 
     /**
@@ -768,7 +770,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         ?int $count = 1,
         int $catalogId = 0,
     ): array {
-        $results  = [];
         $catalogs = Catalog::get_catalogs('', $userId, true);
         if ($catalogId !== 0) {
             // never let a requested catalog widen what the user is allowed to see
@@ -776,31 +777,21 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         if ($catalogs === []) {
-            return $results;
+            return [];
         }
 
-        $sql = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', $catalogs) . ") ";
+        $where = "WHERE `album`.`catalog` IN (" . implode(',', $catalogs) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= "AND" . sprintf(
+            $where .= "AND" . sprintf(
                 " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
         }
 
-        $sql .= sprintf(
-            'ORDER BY RAND() LIMIT %d',
-            $count
-        );
-        $dbResults = $this->connection->query($sql);
-
-        while ($albumId = $dbResults->fetchColumn()) {
-            $results[] = (int) $albumId;
-        }
-
-        return $results;
+        return $this->randomIdSampler->sample('album', 'id', $where, [], (int) $count);
     }
 
     /**

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin\Method\Genre;
 
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Statistics\Rating;
@@ -49,8 +50,8 @@ final class MusicGenresMethod implements JellyfinMethodInterface
         }
 
         $query      = $request->getQueryParams();
-        $startIndex = max(0, (int) ($query['startIndex'] ?? 0));
-        $limitParam = (string) ($query['limit'] ?? '');
+        $startIndex = max(0, (int) (JellyfinRequestBody::field($query, 'StartIndex') ?? 0));
+        $limitParam = (string) (JellyfinRequestBody::field($query, 'Limit') ?? '');
         $limit      = ($limitParam !== '') ? (int) $limitParam : 0;
 
         $tags  = array_values(array_filter(Tag::get_tags('song'), static fn(array $tag): bool => !$tag['is_hidden']));

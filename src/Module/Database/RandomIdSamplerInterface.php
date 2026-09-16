@@ -25,16 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database;
 
-use Ampache\Module\Database\Query\BrowseFactory;
-use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Database\Query\Random;
-
-use function DI\autowire;
-
-return [
-    DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
-    DatabaseLockInterface::class => autowire(DatabaseLock::class),
-    BrowseFactoryInterface::class => autowire(BrowseFactory::class),
-    RandomIdSamplerInterface::class => autowire(RandomIdSampler::class),
-    Random::class => autowire(),
-];
+interface RandomIdSamplerInterface
+{
+    /**
+     * Picks up to $limit random ids matching $whereSql, without `ORDER BY RAND()`'s whole-table sort cost.
+     * $whereSql matching only a thin slice of the id range can legitimately come back short of $limit.
+     *
+     * @param list<mixed> $params bound to $whereSql (repeated once per candidate id it probes)
+     * @return list<int>
+     */
+    public function sample(string $table, string $idColumn, string $whereSql, array $params, int $limit): array;
+}

@@ -27,10 +27,10 @@ declare(strict_types=1);
 
 /** @var Ampache\Gui\Partial\VisualizerView $this */
 ?>
-<div id="visualizer" style="visibility: hidden;">
+<div id="visualizer" class="visualizer-hidden">
     <canvas id="viz-canvas"></canvas>
 </div>
-<div id="equalizer" style="visibility: hidden;">
+<div id="equalizer" class="visualizer-hidden">
     <?php foreach ($this->getBands() as $index => $label) { ?>
     <div class="eq-band">
         <input type="range" min="-20" max="20" step="1" value="0" oninput="setEqBand(<?php echo $index; ?>, this.value)" title="<?php echo $this->e($label); ?> Hz">

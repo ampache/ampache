@@ -37,7 +37,7 @@ Ui::show_box_top($this->getTitle(), 'box box_edit_catalog'); ?>
         <tr>
             <td><?php echo T_('Name'); ?></td>
             <td><input type="text" name="name" value="<?php echo $this->e($catalog->name); ?>" autofocus /></td>
-            <td style="vertical-align:top; font-family: monospace;" rowspan="5">
+            <td class="catalog-format-specifiers" rowspan="5">
                 <strong><?php echo T_('Auto-inserted Fields'); ?></strong><br />
                 <?php foreach ($this->getFormatSpecifiers() as $specifier => $label) { ?>
                 <span class="format-specifier"><?php echo $this->e($specifier); ?></span> = <?php echo $this->e($label); ?><br />

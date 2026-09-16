@@ -30,7 +30,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
-use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Recommendation;
@@ -48,6 +48,9 @@ use Psr\Http\Message\ServerRequestInterface;
 final class InstantMixMethod implements JellyfinMethodInterface
 {
     private const int DEFAULT_LIMIT = 32;
+
+    // extra rows over what's still missing, so a few landing on ids already picked don't fall short
+    private const int FILL_BUFFER = 8;
 
     public function __construct(private readonly JellyfinItemMapper $mapper) {}
 
@@ -75,12 +78,13 @@ final class InstantMixMethod implements JellyfinMethodInterface
         $ids = array_values(array_filter($ids, static fn(int $candidate): bool => $candidate !== $songId));
 
         if (count($ids) < $limit) {
-            $album = new Album($seed->album);
-            $ids   = $this->fillWithRandom($ids, array_values($album->get_songs()), $songId, $limit);
+            $albumSongs = array_values((new Album($seed->album))->get_songs());
+            shuffle($albumSongs);
+            $ids = $this->fillFrom($ids, $albumSongs, $songId, $limit);
         }
         if (count($ids) < $limit) {
-            $pool = array_values(Catalog::get_all_song_ids(0, 0, $user->get_catalogs('music')));
-            $ids  = $this->fillWithRandom($ids, $pool, $songId, $limit);
+            // a bounded random pull, never the whole library, to fill whatever is still missing
+            $ids = $this->fillFrom($ids, Random::get_default($limit - count($ids) + self::FILL_BUFFER, $user), $songId, $limit);
         }
         $ids = array_slice($ids, 0, $limit);
 
@@ -99,14 +103,15 @@ final class InstantMixMethod implements JellyfinMethodInterface
     }
 
     /**
+     * Folds candidates into $ids, skipping the excluded seed and anything already present, until $limit is met.
+     *
      * @param list<int> $ids
-     * @param list<int> $pool
+     * @param array<int, int> $candidates
      * @return list<int>
      */
-    private function fillWithRandom(array $ids, array $pool, int $exclude, int $limit): array
+    private function fillFrom(array $ids, array $candidates, int $exclude, int $limit): array
     {
-        shuffle($pool);
-        foreach ($pool as $candidate) {
+        foreach ($candidates as $candidate) {
             if ($candidate !== $exclude && !in_array($candidate, $ids, true)) {
                 $ids[] = $candidate;
             }

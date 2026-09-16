@@ -42,7 +42,7 @@ use Ampache\Module\Util\Ui;
 </head>
 <body>
         <div class="navbar navbar-dark navbar-inverse" role="navigation">
-            <div class="container" style="height: 70px;">
+            <div class="container install-header-spacer">
                 <a class="navbar-brand" href="#">
                     <img src="./images/ampache-dark.png" title="<?php echo $this->e(T_('Ampache')); ?>" alt="<?php echo $this->e(T_('Ampache')); ?>">
                     <?php echo $this->e(T_('Ampache') . ' :: ' . T_('For the Love of Music')); ?>
@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
             </div>
         </div>
   <div class="container" role="main">
-    <div class="jumbotron" style="margin-top: 70px">
+    <div class="jumbotron install-content-offset">
       <h1><?php echo $this->e(T_('Ampache Configuration Parse Error')); ?></h1>
       <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
 <?php if ($this->getSyntaxIssueLine() !== null) { ?>
