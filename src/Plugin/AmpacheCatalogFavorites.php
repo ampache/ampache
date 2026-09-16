@@ -144,7 +144,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                 </div>
                             </td>
                             <td class="cel_cover">
-                                <div style="max-width: 80px;">
+                                <div class="art-thumb-80">
                                     <?php $item->display_art(['width' => 80, 'height' => 80]); ?>
                                 </div>
                             </td>

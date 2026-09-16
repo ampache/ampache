@@ -128,7 +128,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                         echo '<tr id="' . $item[1] . '_' . $item[0]->id . '" class="libitem_menu" data-object-type="' . $item[1] . '" data-object-id="' . $item[0]->id . '">';
                         echo '<td class="personalfav-link">' . $item[0]->get_f_link() . '</td>';
                         echo '<td>';
-                        echo '<span class="personalfav-actions">';
+                        echo '<span>';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id, 'play_circle', T_('Play'), 'play_playlist_' . $item[0]->id);
                             if (Stream_Playlist::check_autoplay_next()) {

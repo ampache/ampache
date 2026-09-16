@@ -1254,6 +1254,10 @@ table.tabledata tbody .cel_cover img {
     object-fit: cover;
 }
 
+.art-thumb-80 {
+    max-width: 80px;
+}
+
 table.tabledata .cel_drag {
     max-width: 16px;
     width: 16px !important;
@@ -1584,10 +1588,6 @@ table.gridview td.cel_ratings {
     min-height: 50px;
 }
 
-.personalfav-actions {
-    margin-right: 10px;
-}
-
 .tableform {
     border-collapse: separate;
     border-spacing: 5px 0;
@@ -1825,6 +1825,17 @@ div.box.box_rules {
 
 .clearfix {
     clear: left;
+}
+
+.display-inline {
+    display: inline;
+}
+
+.apikey-qrcode-box {
+    width: 128px;
+    height: 128px;
+    background-color: #ffffff;
+    border: 8px solid #ffffff;
 }
 
 .box-bottom {

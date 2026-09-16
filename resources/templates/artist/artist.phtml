@@ -175,7 +175,7 @@ if ($this->showBiography()) {
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="albums" class="tab_content" style="display: block;">
+        <div id="albums" class="tab_content">
 <?php [$sort, $order] = $this->getSort();
 foreach ($this->getMultiObjectIds() as $key => $objectIds) {
     $browse = $this->createBrowse();

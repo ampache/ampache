@@ -139,7 +139,7 @@ if ($this->mayDelete()) { ?>
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="episodes" class="tab_content" style="display: block;">
+        <div id="episodes" class="tab_content">
 <?php $browse = $this->getBrowse();
 $browse->show_objects($this->getEpisodeIds(), true);
 $browse->store(); ?>

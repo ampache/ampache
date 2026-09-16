@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Gui\Art\GetArtView $this */
 
 Ui::show_box_top($this->e($this->getTitle()), 'box box_get_albumart'); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $this->e($this->getFormAction()); ?>" style="display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo $this->e($this->getFormAction()); ?>" class="display-inline">
     <table class="gatherart">
         <?php foreach ($this->getFields() as $field) { ?>
         <tr>
