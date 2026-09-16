@@ -166,7 +166,7 @@ class Wanted extends database_object
         foreach ($martist->{'release-groups'} as $group) {
             if (in_array(strtolower((string) $group->{'primary-type'}), $types, true)) {
                 $add     = true;
-                $g_count = count($group->{'secondary-types'});
+                $g_count = count($group->{'secondary-types'} ?? []);
 
                 for ($i = 0; $i < $g_count && $add; ++$i) {
                     $add = in_array(strtolower((string) $group->{'secondary-types'}[$i]), $types);

@@ -64,6 +64,8 @@
   * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
 * A catalog scan started from the UI that hit an error mid-run left the progress stream open instead of stopping and reporting it
 * An unexpected error in a DAAP request returned no response instead of an error
+* Clicking a sidebar section header didn't reliably toggle it open or closed, and the collapsed cookie could fall out of sync with what was actually showing
+* `wanted_missing_albums` crashed with a 500 instead of an empty list when a MusicBrainz release-group in the response carried no `secondary-types` array
 
 ## Ampache 8.1.0
 
