@@ -28,6 +28,7 @@
 * Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
 * Rightbar action buttons now lay out in a fixed 4-column grid instead of wrapping inline
 * Grid item hover action icons (album, artist, etc.) now sit bottom-right instead of top-right, matching other action overlays
+* The artist page's Songs tab now loads in place over AJAX, like Top Tracks and Missing Albums, instead of navigating to a separate `show_songs` page; the old URL still works and redirects to the new tab
 
 ### Fixed (8.2.0)
 

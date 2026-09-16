@@ -158,7 +158,7 @@ if ($this->showBiography()) {
     <div id="tabs_container">
         <ul id="tabs">
             <li<?php echo ($isAlbumType) ? ' class="tab_active"' : ''; ?>><a href="<?php echo ($isAlbumType) ? '#albums' : $this->e($listing . '&action=show#albums'); ?>"><?php echo T_('Albums'); ?></a></li>
-            <li<?php echo ($isAlbumType) ? '' : ' class="tab_active"'; ?>><a href="<?php echo ($isAlbumType) ? $this->e($listing . '&action=show_songs#albums') : '#albums'; ?>"><?php echo T_('Songs'); ?></a></li>
+            <li<?php echo ($isAlbumType) ? '' : ' class="tab_active"'; ?>><a id="artist_songs_link" href="<?php echo ($isAlbumType) ? '#songs' : '#albums'; ?>"><?php echo T_('Songs'); ?></a></li>
             <li><a id="top_tracks_link" href="#top_tracks"><?php echo T_('Top Tracks'); ?></a></li>
             <?php if ($this->showWanted()) { ?>
             <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
@@ -194,6 +194,14 @@ foreach ($this->getMultiObjectIds() as $key => $objectIds) {
     $browse->store();
 } ?>
         </div>
+        <?php if ($isAlbumType) {
+            echo $this->raw(Ajax::observe('artist_songs_link', 'click', Ajax::action('?page=index&action=artist_songs&artist=' . $artistId, 'artist_songs'))); ?>
+        <div id="songs" class="tab_content">
+            <?php Ui::show_box_top('', 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
         <?php echo $this->raw(Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artistId, 'top_tracks'))); ?>
         <div id="top_tracks" class="tab_content">
             <?php Ui::show_box_top('', 'info-box');

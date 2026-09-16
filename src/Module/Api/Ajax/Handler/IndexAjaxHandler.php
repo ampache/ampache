@@ -102,6 +102,15 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     'topTracksIndexes();'
                 )->render();
                 break;
+            case 'artist_songs':
+                $artistId   = (int) $this->requestParser->getFromRequest('artist');
+                $object_ids = $this->songRepository->getByArtist($artistId);
+                $results['songs'] = $this->createSongListPanelView(
+                    'songs',
+                    $object_ids,
+                    ['cel_artist']
+                )->render();
+                break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
                     $user->id ?: -1,
