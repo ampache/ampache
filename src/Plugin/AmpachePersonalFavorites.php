@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Ui;
@@ -154,7 +155,16 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
 
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
-                        echo '<td class="optional">';
+                        if (AmpConfig::get('ratings')) {
+                            echo '<td class="cel_ratings">';
+                            echo '<div class="rating">';
+                            echo '<span class="cel_rating" id="rating_' . $item[0]->id . '_' . $item[1] . '">' . Rating::show($item[0]->id, $item[1]) . '</span>';
+                            echo '<span class="cel_userflag" id="userflag_' . $item[0]->id . '_' . $item[1] . '">' . Userflag::show($item[0]->id, $item[1]) . '</span>';
+                            echo '</div>';
+                            echo '</td>';
+                        }
+
+                        echo '<td class="cel_action">';
                         echo '</td></tr>';
 
                         $count++;
