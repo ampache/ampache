@@ -911,12 +911,16 @@ span#sidebar-header-content::after {
 /* ---------------------------- */
 
 #rightbar #rb_action {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
     list-style-type: none;
 }
 
 #rightbar #rb_action li {
-    display: inline;
-    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-bottom: 3px;
 }
 
@@ -1838,6 +1842,56 @@ div.box.box_rules {
     border: 8px solid #ffffff;
 }
 
+.display-none {
+    display: none;
+}
+
+.option-list-menu {
+    float: left;
+}
+
+.catalog-field-label {
+    width: 25%;
+}
+
+.catalog-format-specifiers {
+    vertical-align: top;
+    font-family: monospace;
+}
+
+.collaborate-select {
+    height: 90px;
+}
+
+.home-plugin-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.visualizer-hidden {
+    visibility: hidden;
+}
+
+.disabled-icon {
+    opacity: 0.25;
+}
+
+.no-border {
+    border: 0;
+}
+
+.ms-sprite-svg {
+    position: absolute;
+}
+
+.status-online {
+    color: green;
+}
+
+.status-offline {
+    color: red;
+}
+
 .box-bottom {
     clear: both;
 }
@@ -1972,7 +2026,7 @@ span.fatalerror {
     gap: 4px;
     position: absolute;
     right: 6px;
-    top: 6px;
+    bottom: 6px;
 }
 
 .item_art .item_art_actions a:not(:empty) {
@@ -2378,6 +2432,30 @@ table.tabledata tbody tr.withdrawn > td:first-child {
 #sidebar #mobile-drawer-close,
 #mobile-nav-backdrop {
     display: none;
+}
+
+/* Home plugin widget (RSS view) item title/date row and body/image indent. */
+.rss-item-title {
+    float: left;
+    font-weight: bold;
+}
+
+.rss-item-date {
+    float: right;
+}
+
+.rss-item-body {
+    margin-left: 30px;
+}
+
+.rss-item-image {
+    float: left;
+    margin-right: 20px;
+}
+
+.rss-item-thumb {
+    width: auto;
+    max-height: 48px;
 }
 
 /* --------------------------
@@ -2792,12 +2870,14 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         box-sizing: border-box;
     }
 
-    /* Home plugin widgets (RSS view etc.) emit inline-floated title/date rows and indents; stack and wrap them. */
-    .home_plugin td div[style*="float"] {
+    /* Home plugin widgets (RSS view etc.) emit floated title/date rows and indents; stack and wrap them. */
+    .home_plugin td .rss-item-title,
+    .home_plugin td .rss-item-date,
+    .home_plugin td .rss-item-image {
         float: none !important;
     }
 
-    .home_plugin td div[style*="margin-left"] {
+    .home_plugin td .rss-item-body {
         margin-left: 0 !important;
     }
 

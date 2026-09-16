@@ -453,7 +453,7 @@ class Ui implements UiInterface
             $viewbox                             = ($symbol['viewbox'] !== '')
                 ? ' viewBox="' . $symbol['viewbox'] . '"'
                 : '';
-            $prefix = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">'
+            $prefix = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" class="ms-sprite-svg" aria-hidden="true">'
                 . '<symbol id="ms-' . scrub_out($symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol></svg>';
         }
 
@@ -568,7 +568,7 @@ class Ui implements UiInterface
             return $html;
         }
 
-        return '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">'
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" class="ms-sprite-svg" aria-hidden="true">'
             . $symbols
             . '</svg>'
             . $html;
@@ -592,7 +592,7 @@ class Ui implements UiInterface
             return '';
         }
 
-        $sprite = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">';
+        $sprite = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" class="ms-sprite-svg" aria-hidden="true">';
         foreach (array_keys($pending) as $symbol_key) {
             self::$_emitted_symbols[$symbol_key] = true;
             $symbol                              = self::$_symbol_cache[$symbol_key] ?? null;

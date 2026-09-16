@@ -105,12 +105,12 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
                 $title = scrub_out((string) $item->title);
                 echo '<tr><td>';
                 echo '<div>';
-                echo '<div style="float: left; font-weight: bold;">' . (($link !== '') ? '<a href="' . scrub_out($link) . '" target="_blank">' . $title . '</a>' : $title) . '</div>';
-                echo '<div style="float: right;">' . get_datetime((int) strtotime((string) $item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
+                echo '<div class="rss-item-title">' . (($link !== '') ? '<a href="' . scrub_out($link) . '" target="_blank">' . $title . '</a>' : $title) . '</div>';
+                echo '<div class="rss-item-date">' . get_datetime((int) strtotime((string) $item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
-                echo '<div style="margin-left: 30px;">';
+                echo '<div class="rss-item-body">';
                 if (property_exists($item, 'image') && $item->image !== null) {
-                    echo '<div style="float: left; margin-right: 20px;"><img src="' . scrub_out((string) $item->image) . '" style="width: auto; max-height: 48px;" /></div>';
+                    echo '<div class="rss-item-image"><img src="' . scrub_out((string) $item->image) . '" class="rss-item-thumb" /></div>';
                 }
 
                 echo '<div>' . scrub_out((string) $item->description) . '</div>';
