@@ -126,7 +126,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                         // $item[1] is `playlist` or `search`; labelling a smartlist as a playlist sent
                         // the context menu after whichever playlist happened to share that id
                         echo '<tr id="' . $item[1] . '_' . $item[0]->id . '" class="libitem_menu" data-object-type="' . $item[1] . '" data-object-id="' . $item[0]->id . '">';
-                        echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
+                        echo '<td style="min-height: 50px;">' . $item[0]->get_f_link() . '</td>';
                         echo '<td style="height: auto;">';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
