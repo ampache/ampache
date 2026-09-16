@@ -26,11 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin\Method\Artist;
 
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
+use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,7 +44,10 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class ArtistsMethod implements JellyfinMethodInterface
 {
-    public function __construct(private readonly JellyfinItemMapper $mapper) {}
+    public function __construct(
+        private readonly ArtistRepositoryInterface $artistRepository,
+        private readonly JellyfinItemMapper $mapper,
+    ) {}
 
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
@@ -50,22 +56,25 @@ final class ArtistsMethod implements JellyfinMethodInterface
         }
 
         $query        = $request->getQueryParams();
-        $onlyFavorite = str_contains((string) ($query['Filters'] ?? ''), 'IsFavorite')
-            || strtolower((string) ($query['isFavorite'] ?? '')) === 'true';
-        $startIndex = max(0, (int) ($query['startIndex'] ?? $query['StartIndex'] ?? 0));
-        $limitParam = (string) ($query['limit'] ?? $query['Limit'] ?? '');
+        $onlyFavorite = str_contains((string) (JellyfinRequestBody::field($query, 'Filters') ?? ''), 'IsFavorite')
+            || strtolower((string) (JellyfinRequestBody::field($query, 'IsFavorite') ?? '')) === 'true';
+        $startIndex = max(0, (int) (JellyfinRequestBody::field($query, 'StartIndex') ?? 0));
+        $limitParam = (string) (JellyfinRequestBody::field($query, 'Limit') ?? '');
         $limit      = ($limitParam !== '') ? (int) $limitParam : 0;
+        $sortBy     = $this->splitList((string) (JellyfinRequestBody::field($query, 'SortBy') ?? ''));
+        $descending = strcasecmp((string) (JellyfinRequestBody::field($query, 'SortOrder') ?? ''), 'Descending') === 0;
 
-        $artists = Catalog::get_artists($user->get_catalogs('music'));
-        $ids     = array_map(static fn(Artist $artist): int => $artist->id, $artists);
-        Artist::build_cache($ids);
-        Rating::build_cache('artist', $ids);
-        Userflag::build_cache('artist', $ids);
+        $sort = match (true) {
+            in_array('Random', $sortBy, true) => 'random',
+            in_array('DateCreated', $sortBy, true) => 'newest',
+            default => null,
+        };
 
-        $items = [];
-        foreach ($artists as $artist) {
-            $items[] = $this->mapper->mapArtist($artist, $user, []);
-        }
+        // a favorite-only request still needs the whole set to filter from, so it cannot be pre-limited;
+        // everything else fetches one extra row past the requested page, just to detect that more remain
+        $fetchSize = ($limit > 0 && !$onlyFavorite) ? $startIndex + $limit + 1 : 0;
+
+        $items = $this->allArtists($user, $fetchSize, $sort, $descending);
 
         if ($onlyFavorite) {
             $items = array_values(array_filter(
@@ -74,7 +83,11 @@ final class ArtistsMethod implements JellyfinMethodInterface
             ));
         }
 
-        $total = count($items);
+        // a bounded fetch can't report the real total without fetching everything, so a full page plus the
+        // peeked row reports a lower bound instead of a false "that's everything" once the cap is hit
+        $total = (($fetchSize > 0) && count($items) > $startIndex + $limit)
+            ? $startIndex + $limit + 1
+            : count($items);
         $items = ($limit > 0) ? array_slice($items, $startIndex, $limit) : array_slice($items, $startIndex);
 
         return JellyfinResponse::json([
@@ -82,5 +95,94 @@ final class ArtistsMethod implements JellyfinMethodInterface
             'TotalRecordCount' => $total,
             'StartIndex' => $startIndex,
         ]);
+    }
+
+    /**
+     * @param 'random'|'newest'|null $sort
+     * @return list<array<string, mixed>>
+     */
+    private function allArtists(User $user, int $fetchSize, ?string $sort, bool $descending): array
+    {
+        $catalogs = $user->get_catalogs('music');
+
+        if ($sort === null) {
+            $artists = $this->applyOrder(Catalog::get_artists($catalogs, $fetchSize, 0), $sort, $descending);
+            $this->warmArtists(array_map(static fn(Artist $artist): int => $artist->id, $artists));
+
+            $result = [];
+            foreach ($artists as $artist) {
+                $result[] = $this->mapper->mapArtist($artist, $user, []);
+            }
+
+            return $result;
+        }
+
+        $artistIds = match ($sort) {
+            'random' => ($fetchSize > 0)
+                ? $this->artistRepository->getRandom($user->getId(), $fetchSize)
+                : $this->shuffleArray(array_map(static fn(Artist $artist): int => $artist->id, Catalog::get_artists($catalogs))),
+            'newest' => Stats::get_newest('artist', ($fetchSize > 0) ? $fetchSize : -1, 0, 0, $user),
+        };
+        $artistIds = $this->applyOrder($artistIds, $sort, $descending);
+
+        $this->warmArtists($artistIds);
+
+        $result = [];
+        foreach ($artistIds as $artistId) {
+            $result[] = $this->mapper->mapArtist(new Artist($artistId), $user, []);
+        }
+
+        return $result;
+    }
+
+    /**
+     * The default fetch already comes back ascending (by name) and `newest` already comes back descending
+     * (by addition date), so only a mismatch between that and the requested SortOrder needs a flip.
+     *
+     * @template T
+     * @param array<int, T> $ids
+     * @param 'random'|'newest'|null $sort
+     * @return array<int, T>
+     */
+    private function applyOrder(array $ids, ?string $sort, bool $descending): array
+    {
+        $needsReverse = match ($sort) {
+            'newest' => !$descending,
+            'random' => false,
+            default => $descending,
+        };
+
+        return $needsReverse ? array_reverse($ids) : $ids;
+    }
+
+    /**
+     * @param array<int, int> $ids
+     * @return array<int, int>
+     */
+    private function shuffleArray(array $ids): array
+    {
+        shuffle($ids);
+
+        return $ids;
+    }
+
+    /** @return list<string> */
+    private function splitList(string $value): array
+    {
+        if ($value === '') {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('trim', explode(',', $value)), static fn(string $item): bool => $item !== ''));
+    }
+
+    /**
+     * @param array<int> $ids
+     */
+    private function warmArtists(array $ids): void
+    {
+        Artist::build_cache($ids);
+        Rating::build_cache('artist', $ids);
+        Userflag::build_cache('artist', $ids);
     }
 }
