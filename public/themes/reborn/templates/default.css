@@ -1580,6 +1580,14 @@ table.gridview td.cel_ratings {
     width: auto;
 }
 
+.personalfav-link {
+    min-height: 50px;
+}
+
+.personalfav-actions {
+    margin-right: 10px;
+}
+
 .tableform {
     border-collapse: separate;
     border-spacing: 5px 0;
