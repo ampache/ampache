@@ -63,10 +63,12 @@
   * `getMusicDirectory` queried each song's genre tags individually instead of as one batch, which could time out or fail outright on a folder with thousands of files
   * Video and podcast episode listings had the same one-tag-query-per-item gap
   * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
+  * `getMusicDirectory` on a large folder could still exhaust PHP's memory limit: a song's collaborating and album artists, unlike its primary artist, fell back to one uncached name lookup per song instead of being warmed in the same batch
 * A catalog scan started from the UI that hit an error mid-run left the progress stream open instead of stopping and reporting it
 * An unexpected error in a DAAP request returned no response instead of an error
 * Clicking a sidebar section header didn't reliably toggle it open or closed, and the collapsed cookie could fall out of sync with what was actually showing
 * `wanted_missing_albums` crashed with a 500 instead of an empty list when a MusicBrainz release-group in the response carried no `secondary-types` array
+* A live radio stream or preview played through the web player could be cut off after a couple of minutes: the proxy that fetches it disabled curl's own timeout but never PHP's execution time limit, so the request itself was killed mid-stream
 
 ## Ampache 8.1.0
 
