@@ -162,7 +162,8 @@ final class ApiHandler implements ApiHandlerInterface
             || $action == RegisterMethod::ACTION
             || $action == LostPasswordMethod::ACTION
             || $action == QuickConnectInitiate8Method::ACTION
-            || $action == QuickConnectStatus8Method::ACTION);
+            || $action == QuickConnectStatus8Method::ACTION
+        );
         $header_auth  = false;
         if (!isset($input['auth'])) {
             $header_auth   = true;
