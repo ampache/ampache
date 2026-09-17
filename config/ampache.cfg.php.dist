@@ -197,6 +197,9 @@ session_cookiesecure = 0
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; Separate the values with a comma and do not add spaces between them.
+; "http" trusts the server-set REMOTE_USER variable as an already-authenticated identity, with no
+; password check. Only enable it behind a web server or reverse proxy that performs real authentication
+; (mod_auth*, an SSO module) and guarantees no client request header can set REMOTE_USER itself.
 ; DEFAULT: mysql
 ; VALUES: mysql,ldap,http,pam,external,oidc
 auth_methods = "mysql"
