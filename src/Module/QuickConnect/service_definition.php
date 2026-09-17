@@ -23,21 +23,10 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Jellyfin\Method\Auth;
+namespace Ampache\Module\QuickConnect;
 
-use Ampache\Module\Api\Jellyfin\JellyfinResponse;
-use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
-use Ampache\Module\QuickConnect\QuickConnectService;
-use Ampache\Repository\Model\User;
-use Psr\Http\Message\ServerRequestInterface;
+use function DI\autowire;
 
-/** GET /QuickConnect/Enabled — reads the `quickconnect_enable` preference, off by default. */
-final class QuickConnectEnabledMethod implements JellyfinMethodInterface
-{
-    public function __construct(private readonly QuickConnectService $service) {}
-
-    public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
-    {
-        return JellyfinResponse::json($this->service->isEnabled());
-    }
-}
+return [
+    QuickConnectService::class => autowire(),
+];

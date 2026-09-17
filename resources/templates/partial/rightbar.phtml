@@ -83,7 +83,7 @@ $items = $this->getItems(); ?>
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
     <?php foreach ($items as $item) { ?>
-    <li>
+    <li id="track_<?php echo $item['trackId']; ?>">
         <?php echo $this->raw($item['link']);
         echo $this->raw(Ajax::button('?action=current_playlist&type=delete&id=' . $item['trackId'], 'close', T_('Delete'), 'rightbar_delete_' . $item['trackId'], '', 'delitem')); ?>
     </li>
@@ -106,5 +106,18 @@ if ($items !== []) {
         jsAmpConfigPlayType = "<?php echo $this->e($this->getPlayType()); ?>";
         jsBasketCount = <?php echo $this->getBasketCount(); ?>;
         RightbarInit();
+
+        // Drag to reorder the queue; "More" and "No items" rows carry no track id and are left out of the drag.
+        $("#rb_current_playlist").sortable({
+            items: "> li[id^='track_']",
+            update: function () {
+                var order = $("#rb_current_playlist > li[id^='track_']").map(function () {
+                    return this.id.replace("track_", "");
+                }).get().join(",");
+                if (order !== "") {
+                    ajaxPut(jsAjaxUrl + "?action=current_playlist&type=reorder&order=" + order);
+                }
+            }
+        });
     });
 </script>

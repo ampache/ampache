@@ -23,19 +23,23 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Jellyfin\QuickConnect;
+namespace Ampache\Module\QuickConnect;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\QuickConnectRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Holds every QuickConnect policy decision (TTL, code/secret generation, rate limiting, consumption) so no
- * Method class has to reimplement the security rules the plan's §B.5 lays out.
+ * caller has to reimplement the security rules the plan's §B.5 lays out.
+ *
+ * Not protocol-specific: the Jellyfin-compatible API and the native Ampache API both pair a device through
+ * this same service, each minting its own kind of session once `consume()` hands back the approving user.
  */
-final class JellyfinQuickConnectService
+final class QuickConnectService
 {
     /**
      * Real Jellyfin's own QuickConnect code is plain digits, and clients build their entry UI on that
@@ -55,7 +59,7 @@ final class JellyfinQuickConnectService
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
-        private readonly JellyfinQuickConnectRepositoryInterface $repository,
+        private readonly QuickConnectRepositoryInterface $repository,
         private readonly UserRepositoryInterface $userRepository,
     ) {}
 
@@ -68,7 +72,7 @@ final class JellyfinQuickConnectService
     {
         global $dic;
 
-        $dic->get(JellyfinQuickConnectRepositoryInterface::class)->deleteExpired(time());
+        $dic->get(QuickConnectRepositoryInterface::class)->deleteExpired(time());
     }
 
     /**
@@ -175,7 +179,7 @@ final class JellyfinQuickConnectService
 
     public function isEnabled(): bool
     {
-        return $this->configContainer->getBool(ConfigurationKeyEnum::JELLYFIN_QUICKCONNECT_ENABLE);
+        return $this->configContainer->getBool(ConfigurationKeyEnum::QUICKCONNECT_ENABLE);
     }
 
     private function generateCode(): string

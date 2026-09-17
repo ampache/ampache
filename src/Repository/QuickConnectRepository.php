@@ -23,11 +23,11 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Jellyfin\QuickConnect;
+namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 
-final class JellyfinQuickConnectRepository implements JellyfinQuickConnectRepositoryInterface
+final class QuickConnectRepository implements QuickConnectRepositoryInterface
 {
     public function __construct(private readonly DatabaseConnectionInterface $connection) {}
 

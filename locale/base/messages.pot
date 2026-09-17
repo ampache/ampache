@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-15 07:42+1000\n"
+"POT-Creation-Date: 2026-09-17 19:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1602,6 +1602,13 @@ msgid ""
 "parsable"
 msgstr ""
 
+#. HINT: line number
+#, php-format
+msgid ""
+"The unclosed value looks like it starts around line %d — the parser only "
+"reports where it finally gives up, which is often further down the file"
+msgstr ""
+
 msgid "Please visit the wiki for help"
 msgstr ""
 
@@ -1946,6 +1953,9 @@ msgstr ""
 msgid "Show less"
 msgstr ""
 
+msgid "Shuffle"
+msgstr ""
+
 msgid "Add to New Playlist"
 msgstr ""
 
@@ -2253,6 +2263,12 @@ msgid "Active Instance"
 msgstr ""
 
 msgid "Localplay Disabled"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "QuickConnect"
 msgstr ""
 
 msgid "Uploads"
@@ -2838,9 +2854,6 @@ msgstr ""
 msgid "Restore Screen"
 msgstr ""
 
-msgid "Shuffle"
-msgstr ""
-
 msgid "Shuffle Off"
 msgstr ""
 
@@ -2958,12 +2971,6 @@ msgstr ""
 msgid "Localplay Controller Not Defined"
 msgstr ""
 
-msgid "Account"
-msgstr ""
-
-msgid "QuickConnect"
-msgstr ""
-
 msgid "No lyrics found."
 msgstr ""
 
@@ -2972,9 +2979,6 @@ msgstr ""
 
 #, php-format
 msgid "Track %d"
-msgstr ""
-
-msgid "Play on the current player"
 msgstr ""
 
 msgid "Song Information"
@@ -3234,6 +3238,10 @@ msgid ""
 msgstr ""
 
 msgid "Added to playlist"
+msgstr ""
+
+#, php-format
+msgid "Ampache version: %s"
 msgstr ""
 
 msgid "Received an empty UPnP request"
@@ -4590,10 +4598,6 @@ msgid "Update the database to the latest version"
 msgstr ""
 
 msgid "Display database update information"
-msgstr ""
-
-#, php-format
-msgid "Ampache version: %s"
 msgstr ""
 
 #. HINT: config version string (e.g. 62)
@@ -7248,10 +7252,6 @@ msgid "Use Jellyfin backend"
 msgstr ""
 
 #: Ampache preference description
-msgid "Use Jellyfin QuickConnect"
-msgstr ""
-
-#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7337,6 +7337,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable QuickConnect service"
 msgstr ""
 
 #: Ampache preference description

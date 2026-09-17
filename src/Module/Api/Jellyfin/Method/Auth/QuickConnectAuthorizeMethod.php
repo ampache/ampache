@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Jellyfin\Method\Auth;
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
+use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class QuickConnectAuthorizeMethod implements JellyfinMethodInterface
 {
-    public function __construct(private readonly JellyfinQuickConnectService $service) {}
+    public function __construct(private readonly QuickConnectService $service) {}
 
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {

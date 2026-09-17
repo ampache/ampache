@@ -26,12 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -49,7 +49,7 @@ final readonly class QuickConnectAuthorizeAction implements ApplicationActionInt
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-        private JellyfinQuickConnectService $service,
+        private QuickConnectService $service,
         private UiInterface $ui,
     ) {}
 

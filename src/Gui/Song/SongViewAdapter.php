@@ -408,7 +408,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         }
 
         if ($this->canDownload()) {
-            $actions[] = $this->link($this->getExternalPlayUrl(), 'play_arrow', T_('Play on the current player'), true);
+            $actions[] = $this->link($this->getExternalPlayUrl(), 'link', T_('Link'), true);
             $actions[] = $this->link($this->getDownloadUrl(), 'download', T_('Download'), true);
         }
 
