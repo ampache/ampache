@@ -1534,8 +1534,14 @@ table.gridview td.cel_ratings {
 
 /* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. */
 .homedash table.gridview tbody {
-    grid-template-columns: repeat(auto-fill, 170px);
+    grid-template-columns: repeat(auto-fill, 176px);
     justify-content: start;
+}
+
+/* 176px matches the personal favorites item at 160px plus its 8px padding on each side, wide enough
+   for the rating row's average-rating number that was overflowing the narrower 170px cell. */
+.homedash table.gridview tbody tr {
+    min-width: 176px;
 }
 
 .personalfav table.gridview tbody {
