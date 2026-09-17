@@ -371,10 +371,6 @@ msgid "Use Jellyfin backend"
 msgstr ""
 
 #: Ampache preference description
-msgid "Use Jellyfin QuickConnect"
-msgstr ""
-
-#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -460,6 +456,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable QuickConnect service"
 msgstr ""
 
 #: Ampache preference description

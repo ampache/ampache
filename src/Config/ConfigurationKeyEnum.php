@@ -134,7 +134,6 @@ final class ConfigurationKeyEnum
     public const string HOME_RECENTLY_PLAYED                   = 'home_recently_played';
     public const string HTTPQ_ACTIVE                           = 'httpq_active';
     public const string JELLYFIN_BACKEND_ENABLE                = 'jellyfin_backend_enable';
-    public const string JELLYFIN_QUICKCONNECT_ENABLE           = 'jellyfin_quickconnect_enable';
     public const string LABEL                                  = 'label';
     public const string LABEL_IGNORE_PATTERN                   = 'label_ignore_pattern';
     public const string LANG                                   = 'lang';
@@ -200,6 +199,7 @@ final class ConfigurationKeyEnum
     public const string PROXY_PORT                             = 'proxy_port';
     public const string PROXY_USER                             = 'proxy_user';
     public const string PUBLIC_IMAGES                          = 'public_images';
+    public const string QUICKCONNECT_ENABLE                    = 'quickconnect_enable';
     public const string RADIO                                  = 'live_stream';
     public const string RATE_LIMIT                             = 'rate_limit';
     public const string RATING_FILE_TAG_USER                   = 'rating_file_tag_user';

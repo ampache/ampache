@@ -49,7 +49,8 @@ final class PreferencesSidebarView extends AbstractSidebarView
     }
 
     /**
-     * The system category is not a user preference, so it is never offered here.
+     * The system category is not a user preference, so it is never offered here; account and quickconnect
+     * are not user preferences either, and get their own "Account" sidebar group instead of this list.
      *
      * @return list<array{tab: string, label: string}>
      */
@@ -62,12 +63,6 @@ final class PreferencesSidebarView extends AbstractSidebarView
             }
 
             $categories[] = ['tab' => $name, 'label' => T_(ucfirst($name))];
-        }
-
-        $categories[] = ['tab' => 'account', 'label' => T_('Account')];
-
-        if (AmpConfig::get_bool('jellyfin_quickconnect_enable')) {
-            $categories[] = ['tab' => 'quickconnect', 'label' => T_('QuickConnect')];
         }
 
         return $categories;
@@ -96,6 +91,11 @@ final class PreferencesSidebarView extends AbstractSidebarView
     public function showHelp(): bool
     {
         return !AmpConfig::get('simple_user_mode');
+    }
+
+    public function showQuickConnect(): bool
+    {
+        return AmpConfig::get_bool('quickconnect_enable');
     }
 
     #[Override]

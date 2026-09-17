@@ -28,13 +28,13 @@ namespace Ampache\Module\System;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Tmp_Playlist;
+use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
@@ -582,7 +582,7 @@ final readonly class Session implements SessionInterface
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
-        JellyfinQuickConnectService::garbageCollection();
+        QuickConnectService::garbageCollection();
     }
 
     /**

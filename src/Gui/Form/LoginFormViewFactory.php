@@ -124,10 +124,13 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
         // read HTTP_REFERER raw: Core::get_server() html-escapes it, and the template escapes again, so a url would carry a literal &amp;
         $referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? $_SERVER['HTTP_REFERER'] ?? '');
 
+        $afterWebPath = substr($referrer, strlen($webPath));
+
         if (
             $referrer !== ''
             && (
                 !str_starts_with($referrer, $webPath)
+                || !in_array($afterWebPath[0] ?? '', ['', '/', '?', '#'], true)
                 // HTTP_REFERER is the login page itself on a retry; that isn't somewhere to send anyone
                 || str_contains($referrer, 'login.php')
             )

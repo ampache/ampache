@@ -338,7 +338,11 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     );
             }
 
-            $referrerParts = parse_url($referrer);
+            // a backslash ends the authority for a special scheme in every browser's URL parser, but
+            // parse_url() reads it as an ordinary character and keeps going past it to the next `@` --
+            // normalising it here first is what makes this check see the same host the browser will
+            // (GHSA-9w96-6g5w-9fc9)
+            $referrerParts = parse_url(str_replace('\\', '/', $referrer));
             if (
                 $referrer !== ''
                 && $referrerParts !== false

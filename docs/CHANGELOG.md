@@ -10,14 +10,14 @@
   * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
 * Database 810013
   * New `jellyfin_backend_enable` preference
-* Database 810014
-  * New `jellyfin_quick_connect` table and `jellyfin_quickconnect_enable` preference, backing QuickConnect device pairing
+* Database 810015
+  * New `jellyfin_quick_connect` table and `quickconnect_enable` preference, backing QuickConnect device pairing
 * Jellyfin
   * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
   * Off by default; enable with the new `jellyfin_backend_enable` preference
   * Audio only — no video, podcasts or live TV — with direct-play streaming and server-side transcoding when the client asks for a format or bitrate the source can't serve directly
   * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
-  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
+  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `quickconnect_enable` preference, with its own approval page under Preferences
 * Rightbar
   * New Shuffle button randomizes the play queue
   * New Play Next / Play Last buttons queue the whole play queue into the currently playing web player or localplay session, the same mechanism already used by individual song/album Play Next/Play Last actions
@@ -28,6 +28,7 @@
 * Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
 * Rightbar action buttons now lay out in a fixed 4-column grid instead of wrapping inline
 * Grid item hover action icons (album, artist, etc.) now sit bottom-right instead of top-right, matching other action overlays
+* The artist page's Songs tab now loads in place over AJAX, like Top Tracks and Missing Albums, instead of navigating to a separate `show_songs` page; the old URL still works and redirects to the new tab
 
 ### Fixed (8.2.0)
 
@@ -62,8 +63,12 @@
   * `getMusicDirectory` queried each song's genre tags individually instead of as one batch, which could time out or fail outright on a folder with thousands of files
   * Video and podcast episode listings had the same one-tag-query-per-item gap
   * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
+  * `getMusicDirectory` on a large folder could still exhaust PHP's memory limit: a song's collaborating and album artists, unlike its primary artist, fell back to one uncached name lookup per song instead of being warmed in the same batch
 * A catalog scan started from the UI that hit an error mid-run left the progress stream open instead of stopping and reporting it
 * An unexpected error in a DAAP request returned no response instead of an error
+* Clicking a sidebar section header didn't reliably toggle it open or closed, and the collapsed cookie could fall out of sync with what was actually showing
+* `wanted_missing_albums` crashed with a 500 instead of an empty list when a MusicBrainz release-group in the response carried no `secondary-types` array
+* A live radio stream or preview played through the web player could be cut off after a couple of minutes: the proxy that fetches it disabled curl's own timeout but never PHP's execution time limit, so the request itself was killed mid-stream
 
 ## Ampache 8.1.0
 

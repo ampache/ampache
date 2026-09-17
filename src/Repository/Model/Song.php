@@ -253,18 +253,22 @@ class Song extends database_object implements
             parent::add_to_cache('song', $row['id'], $row);
         }
 
-        Artist::build_cache($artists);
         Album::build_cache($albums);
         Art::build_cache($albums);
 
         // one artist_map read for the page instead of one per song, and the same for the album artists
         foreach ($repository->getParentIdsBulk(array_map(intval(...), array_values($song_ids)), false) as $songId => $parentIds) {
             parent::add_to_cache('song_artists', $songId, $parentIds);
+            $artists = array_merge($artists, $parentIds);
         }
 
         foreach ($repository->getParentIdsBulk(array_values(array_unique($albums)), true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
+            $artists = array_merge($artists, $parentIds);
         }
+
+        // every artist a song or its album credits, including a collaborator only reachable through the maps
+        Artist::build_cache(array_values(array_unique($artists)));
 
         // one read for the whole page instead of one per song
         $intIds = array_map(intval(...), array_values($song_ids));

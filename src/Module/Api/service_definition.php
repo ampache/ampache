@@ -69,10 +69,8 @@ use Ampache\Module\Api\Jellyfin\Method\UserData\PlayedMethod;
 use Ampache\Module\Api\Jellyfin\Method\UserData\RatingMethod;
 use Ampache\Module\Api\Jellyfin\Method\UserView\UserViewsMethod;
 use Ampache\Module\Api\Jellyfin\Method\Web\WebRedirectMethod;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepository;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectRepositoryInterface;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Module\Api\Jellyfin\QuickConnect\QuickConnectResultMapper;
+use Ampache\Module\Api\Method\ApiSessionMinter;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandler as OpenSubsonicBookmarkHandler;
 use Ampache\Module\Api\OpenSubsonic\Handler\BookmarkHandlerInterface as OpenSubsonicBookmarkHandlerInterface;
 use Ampache\Module\Api\OpenSubsonic\Handler\BrowsingHandler as OpenSubsonicBrowsingHandler;
@@ -192,14 +190,13 @@ return [
     SystemInfoPublicMethod::class => autowire(),
     SystemInfoMethod::class => autowire(),
     AuthenticateByNameMethod::class => autowire(),
+    ApiSessionMinter::class => autowire(),
     JellyfinSessionMinter::class => autowire(),
     QuickConnectEnabledMethod::class => autowire(),
     QuickConnectInitiateMethod::class => autowire(),
     QuickConnectConnectMethod::class => autowire(),
     QuickConnectAuthorizeMethod::class => autowire(),
     AuthenticateWithQuickConnectMethod::class => autowire(),
-    JellyfinQuickConnectRepositoryInterface::class => autowire(JellyfinQuickConnectRepository::class),
-    JellyfinQuickConnectService::class => autowire(),
     QuickConnectResultMapper::class => autowire(),
     UserViewsMethod::class => autowire(),
     WebRedirectMethod::class => autowire(),
