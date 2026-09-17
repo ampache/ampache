@@ -43,6 +43,12 @@ final readonly class StreamProxy implements StreamProxyInterface
     /** @var int How many redirects a proxied stream will follow, each one checked before it is connected to */
     private const int MAX_REDIRECTS = 10;
 
+    /** @var int How many times a connection to the same (already-resolved) url is retried after it drops */
+    private const int MAX_RETRIES = 3;
+
+    /** @var int Pause between retries, so a station having a bad moment is not hammered while it recovers */
+    private const int RETRY_DELAY_SECONDS = 1;
+
     public function __construct(
         private LoggerInterface $logger,
         private UrlValidatorInterface $urlValidator,
@@ -56,6 +62,12 @@ final readonly class StreamProxy implements StreamProxyInterface
 
         // a station or a preview can hold this request open far longer than PHP's own execution time limit
         set_time_limit(0);
+
+        // a mutable holder rather than a by-reference closure capture, so the write callback's read of a
+        // value the header callback assigns later is typed by its declared property, not narrowed to the
+        // literal null/false it holds at the point the closures are defined; one instance lives for the
+        // whole call, so a reconnect after a drop still knows the client already has a response open
+        $redirect = new StreamRedirect();
 
         // the url comes from a stored live_stream/remote row, so it is refetched from the network on every
         // play; each hop is followed by hand below rather than left to curl, so its own address can be
@@ -71,70 +83,84 @@ final readonly class StreamProxy implements StreamProxyInterface
                 return false;
             }
 
-            $curl = curl_init($url);
-            if (!$curl) {
-                return false;
-            }
+            for ($attempt = 0; $attempt <= self::MAX_RETRIES; $attempt++) {
+                $curl = curl_init($url);
+                if (!$curl) {
+                    return $redirect->started;
+                }
 
-            $this->logger->debug(
-                'Stream proxy: ' . $url,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+                $this->logger->debug(
+                    'Stream proxy: ' . $url,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
 
-            // a mutable holder rather than a by-reference closure capture, so the write callback's read of
-            // a value the header callback assigns later is typed by its declared property, not narrowed to
-            // the literal null it holds at the point the closures are defined
-            $redirect = new StreamRedirect();
+                $redirect->resetLocation();
 
-            curl_setopt_array(
-                $curl,
-                [
-                    CURLOPT_FAILONERROR => true,
-                    CURLOPT_HTTPHEADER => $this->getRequestHeaders(),
-                    CURLOPT_HEADER => false,
-                    CURLOPT_RETURNTRANSFER => false,
-                    CURLOPT_FOLLOWLOCATION => false,
-                    CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
-                    CURLOPT_WRITEFUNCTION => function (CurlHandle $curl, string $data) use ($redirect): int {
-                        unset($curl);
+                curl_setopt_array(
+                    $curl,
+                    [
+                        CURLOPT_FAILONERROR => true,
+                        CURLOPT_HTTPHEADER => $this->getRequestHeaders(),
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => false,
+                        CURLOPT_FOLLOWLOCATION => false,
+                        CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
+                        CURLOPT_WRITEFUNCTION => function (CurlHandle $curl, string $data) use ($redirect): int {
+                            unset($curl);
 
-                        // a redirect response's own body, if it has one, is never the media the client asked for
-                        if ($redirect->location !== null) {
+                            // a redirect response's own body, if it has one, is never the media the client asked for
+                            if ($redirect->location !== null) {
+                                return strlen($data);
+                            }
+
+                            $redirect->started = true;
+                            echo $data;
+                            ob_flush();
+                            flush();
+
                             return strlen($data);
-                        }
+                        },
+                        CURLOPT_HEADERFUNCTION => fn(CurlHandle $curl, string $header): int => $this->captureHeader($curl, $header, $redirect),
+                        // Default trusted chain is crap anyway and currently no custom CA option
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                        // a radio station never ends, so the transfer must not time out
+                        CURLOPT_TIMEOUT => 0,
+                    ]
+                );
 
-                        echo $data;
-                        ob_flush();
-                        flush();
+                $success = curl_exec($curl) !== false;
+                $error   = curl_error($curl);
+                curl_close($curl);
 
-                        return strlen($data);
-                    },
-                    CURLOPT_HEADERFUNCTION => fn(CurlHandle $curl, string $header): int => $this->captureHeader($curl, $header, $redirect),
-                    // Default trusted chain is crap anyway and currently no custom CA option
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    // a radio station never ends, so the transfer must not time out
-                    CURLOPT_TIMEOUT => 0,
-                ]
-            );
+                if ($redirect->location !== null) {
+                    $url = $redirect->location;
 
-            $success = curl_exec($curl) !== false;
-            $error   = curl_error($curl);
+                    continue 2;
+                }
 
-            if ($redirect->location !== null) {
-                $url = $redirect->location;
+                if ($success) {
+                    return true;
+                }
 
-                continue;
-            }
-
-            if (!$success) {
                 $this->logger->error(
                     'Stream proxy error: ' . $error,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-            }
 
-            return $success;
+                // never sent a byte: the caller can still fall back to redirecting the client itself
+                if (!$redirect->started) {
+                    return false;
+                }
+
+                // already streaming: the client's response is already committed, so there is nothing left
+                // to fall back to but reconnecting into it, and nothing to report if this was the last try
+                if ($attempt === self::MAX_RETRIES) {
+                    return true;
+                }
+
+                sleep(self::RETRY_DELAY_SECONDS);
+            }
         }
 
         $this->logger->warning(
@@ -166,8 +192,9 @@ final readonly class StreamProxy implements StreamProxyInterface
             return strlen($header);
         }
 
-        // this server decides the transfer encoding, so passing the remote one on would corrupt the response
-        if ($rheader !== '' && count($rhpart) > 1 && $rhpart[0] !== 'Transfer-Encoding') {
+        // a reconnect's headers reach here too, but the client's response is already committed to the first
+        // attempt's, and PHP would only warn that headers are already sent for no effect
+        if ($rheader !== '' && count($rhpart) > 1 && $rhpart[0] !== 'Transfer-Encoding' && !$redirect->started) {
             header($rheader);
         }
 
