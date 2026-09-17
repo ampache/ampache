@@ -73,6 +73,13 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 if ($request_type === 'delete') {
                     $user->load_playlist();
                     $user->getPlaylist()->delete_track($request_id);
+                } elseif ($request_type === 'reorder') {
+                    $order = array_values(array_filter(
+                        array_map('intval', explode(',', $this->requestParser->getFromRequest('order'))),
+                        static fn(int $rowId): bool => $rowId > 0
+                    ));
+                    $user->load_playlist();
+                    $user->getPlaylist()->reorder($order);
                 }
 
                 $results['rightbar'] = $this->ui->showRightbar();
