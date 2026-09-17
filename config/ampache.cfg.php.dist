@@ -161,6 +161,14 @@ session_length = 3600
 ; DEFAULT: 7200
 stream_length = 7200
 
+; Live streams, remote/subsonic catalog tracks and previews are streamed back to the browser
+; through this server (rather than a redirect), so the web player sees a same-origin stream it
+; can route through Web Audio. This holds a php process open for as long as playback lasts, which
+; some hosting providers kill after a few minutes. Set to false to always redirect the client to
+; the remote url directly instead if your host does this (streams over 2-3 minutes cut off).
+; DEFAULT: true
+stream_proxy = "true"
+
 ; This length defines how long a 'remember me' session and cookie will
 ; last, the default is 86400, same as length. It is up to the administrator
 ; of the box to increase this, for reference 86400 = 1 day,
