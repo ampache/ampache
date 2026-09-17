@@ -1530,6 +1530,8 @@ table.gridview td.cel_ratings {
     width: auto;
     min-width: 0;
     max-width: none;
+    min-height: 0;
+    overflow: hidden;
 }
 
 /* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. Same
