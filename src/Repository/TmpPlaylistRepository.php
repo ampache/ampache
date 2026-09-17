@@ -221,18 +221,6 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         ) !== false;
     }
 
-    public function shuffleItems(int $playlistId): void
-    {
-        $items = $this->getItems($playlistId);
-        if (count($items) < 2) {
-            return;
-        }
-
-        shuffle($items);
-
-        $this->replaceItemsInOrder($playlistId, $items);
-    }
-
     /**
      * Puts a queue's items in the order the caller drags them into, e.g. from the rightbar.
      *
@@ -261,6 +249,18 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
         // a row the caller never mentioned is one the rightbar's display cap left off the page; it keeps
         // its place after the ones the drag did touch, rather than being dropped or moved to the front
         $this->replaceItemsInOrder($playlistId, array_merge($ordered, array_values($byRowId)));
+    }
+
+    public function shuffleItems(int $playlistId): void
+    {
+        $items = $this->getItems($playlistId);
+        if (count($items) < 2) {
+            return;
+        }
+
+        shuffle($items);
+
+        $this->replaceItemsInOrder($playlistId, $items);
     }
 
     /**

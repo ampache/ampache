@@ -284,17 +284,6 @@ class Tmp_Playlist extends database_object
     }
 
     /**
-     * shuffle
-     * Randomizes the order of the items in this tmp playlist
-     */
-    public function shuffle(): bool
-    {
-        self::getTmpPlaylistRepository()->shuffleItems($this->id);
-
-        return true;
-    }
-
-    /**
      * Puts this tmp playlist's items in the order the rightbar's drag-and-drop dropped them into
      *
      * @param list<int> $orderedRowIds
@@ -302,6 +291,17 @@ class Tmp_Playlist extends database_object
     public function reorder(array $orderedRowIds): bool
     {
         self::getTmpPlaylistRepository()->reorderItems($this->id, $orderedRowIds);
+
+        return true;
+    }
+
+    /**
+     * shuffle
+     * Randomizes the order of the items in this tmp playlist
+     */
+    public function shuffle(): bool
+    {
+        self::getTmpPlaylistRepository()->shuffleItems($this->id);
 
         return true;
     }
