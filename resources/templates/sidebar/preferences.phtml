@@ -50,6 +50,18 @@ $expander  = T_('Expand/Collapse'); ?>
             <?php } ?>
         </ul>
     </li>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Account'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_account', 'header-img ' . $this->getState('preference_account'))); ?>
+        </h4>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_account')) ? ' collapsed' : ''; ?>" id="sb_preference_account">
+            <li id="sb_preference_account_account"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
+            <?php if ($this->showQuickConnect()) { ?>
+            <li id="sb_preference_account_quickconnect"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=quickconnect"><?php echo T_('QuickConnect'); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
     <?php if ($this->mayManage()) { ?>
     <li>
         <h4 class="header">
