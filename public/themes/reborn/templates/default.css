@@ -1532,26 +1532,24 @@ table.gridview td.cel_ratings {
     max-width: none;
 }
 
-/* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. */
+/* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. Same
+   160px and 10px gap as .personalfav below, so the two widgets' columns line up when resized. */
 .homedash table.gridview tbody {
-    grid-template-columns: repeat(auto-fill, 176px);
-    justify-content: start;
-}
-
-/* Matches .personalfav's item width below, so the two widgets' columns line up as the window is
-   resized; 176px is also wide enough for the rating row's average-rating number, which the
-   narrower 170px this replaced was clipping. */
-.homedash table.gridview tbody tr {
-    min-width: 176px;
-}
-
-.personalfav table.gridview tbody {
-    grid-template-columns: repeat(auto-fill, 176px);
+    grid-template-columns: repeat(auto-fill, 160px);
     gap: 10px;
     justify-content: start;
 }
 
-/* Same 176px as .homedash, so the two widgets' columns line up as the window is resized. */
+.homedash table.gridview tbody tr {
+    min-width: 160px;
+}
+
+.personalfav table.gridview tbody {
+    grid-template-columns: repeat(auto-fill, 160px);
+    gap: 10px;
+    justify-content: start;
+}
+
 .personalfav table.gridview tbody tr {
     display: flex;
     flex-direction: column;
@@ -1559,12 +1557,17 @@ table.gridview td.cel_ratings {
     justify-content: center;
     gap: 8px;
     box-sizing: border-box;
-    width: 176px;
+    width: 160px;
     height: 145px;
     padding: 8px;
     border: 1px solid rgba(128, 128, 128, 0.3);
     border-radius: 4px;
     overflow: hidden;
+}
+
+.homedash table.gridview td.cel_ratings .global-rating,
+.personalfav table.gridview td.cel_ratings .global-rating {
+    display: none;
 }
 
 .personalfav table.gridview tbody td {
