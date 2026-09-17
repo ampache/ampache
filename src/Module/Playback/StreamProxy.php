@@ -54,6 +54,9 @@ final readonly class StreamProxy implements StreamProxyInterface
             return false;
         }
 
+        // a station or a preview can hold this request open far longer than PHP's own execution time limit
+        set_time_limit(0);
+
         // the url comes from a stored live_stream/remote row, so it is refetched from the network on every
         // play; each hop is followed by hand below rather than left to curl, so its own address can be
         // validated and pinned before connecting instead of curl re-resolving the hostname unchecked
