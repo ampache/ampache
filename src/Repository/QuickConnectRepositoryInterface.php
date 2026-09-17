@@ -23,9 +23,9 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Jellyfin\QuickConnect;
+namespace Ampache\Repository;
 
-interface JellyfinQuickConnectRepositoryInterface
+interface QuickConnectRepositoryInterface
 {
     /**
      * Row-and-secret-free lookup of one authorized-and-unconsumed request, atomically marking it consumed.

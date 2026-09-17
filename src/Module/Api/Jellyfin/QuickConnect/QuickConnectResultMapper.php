@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Jellyfin\QuickConnect;
 
 /**
- * Builds the `QuickConnectResult` shape from either `JellyfinQuickConnectService::initiate()`'s return
- * value or a stored row — both carry the same field names, so one mapper covers `/Initiate` and `/Connect`.
+ * Builds the `QuickConnectResult` shape from either `QuickConnectService::initiate()`'s return value or a
+ * stored row — both carry the same field names, so one mapper covers `/Initiate` and `/Connect`.
  */
 final class QuickConnectResultMapper
 {

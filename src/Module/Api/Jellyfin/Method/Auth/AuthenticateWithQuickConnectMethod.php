@@ -29,7 +29,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\JellyfinSessionMinter;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
-use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
+use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,7 +41,7 @@ final class AuthenticateWithQuickConnectMethod implements JellyfinMethodInterfac
 {
     public function __construct(
         private readonly JellyfinSessionMinter $sessionMinter,
-        private readonly JellyfinQuickConnectService $service,
+        private readonly QuickConnectService $service,
     ) {}
 
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse

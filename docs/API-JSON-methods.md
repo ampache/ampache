@@ -103,6 +103,96 @@ Returns a single object.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/json-responses/handshake.json)
 
+### quickconnect_initiate
+
+No authentication. Starts a QuickConnect pairing request: a device with no session yet asks for a short code, shows it to the person signing in, then polls [quickconnect_status](#quickconnect_status) with the returned `secret` until it comes back authorized. Off unless the `quickconnect_enable` preference is on.
+
+| Input         | Type   | Description                                                                 | Optional |
+|---------------|--------|-----------------------------------------------------------------------------|---------:|
+| 'device_id'   | string | An id the caller makes up and keeps, so its own initiate rate limit applies |      YES |
+| 'device_name' | string | Shown to the approving user alongside the code                              |      YES |
+| 'client'      | string | The app name, shown to the approving user                                   |      YES |
+| 'version'     | string | The app version, shown to the approving user                                |      YES |
+
+* return object
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+Returns a single object.
+
+| Field       | Type    | Nullable | Optional | Notes |
+|-------------|---------|:--------:|:--------:|-------|
+| secret      | string  |    NO    |    NO    |       |
+| code        | string  |    NO    |    NO    |       |
+| device_id   | string  |    NO    |    NO    |       |
+| device_name | string  |    NO    |    NO    |       |
+| app_name    | string  |    NO    |    NO    |       |
+| app_version | string  |    NO    |    NO    |       |
+| date_added  | integer |    NO    |    NO    |       |
+| authorized  | boolean |    NO    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+### quickconnect_status
+
+No authentication. Polls a QuickConnect pairing request started by [quickconnect_initiate](#quickconnect_initiate). The caller has no session until this comes back `authorized: true`, at which point the response also carries a minted session, the same shape [handshake](#handshake) returns.
+
+| Input    | Type   | Description                                | Optional |
+|----------|--------|--------------------------------------------|---------:|
+| 'secret' | string | The value `quickconnect_initiate` returned |       NO |
+
+**NOTE** For privacy, send `secret` in a request body rather than the query string — it is a bearer credential for the pairing, the same as `auth`.
+
+* return object
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+`authorized` is always returned. Once the code is approved it is `true` and every handshake field (`auth`, `session_expire`, server counts, ...) is added alongside it.
+
+| Field               | Type              | Nullable | Optional | Notes |
+|---------------------|-------------------|:--------:|:--------:|-------|
+| authorized          | boolean           |    NO    |    NO    |       |
+| auth                | string            |   YES    |   YES    |       |
+| streamtoken         | string            |   YES    |   YES    |       |
+| api                 | string            |    NO    |   YES    |       |
+| session_expire      | integer \| string |    NO    |   YES    |       |
+| update              | string            |    NO    |   YES    |       |
+| add                 | string            |    NO    |   YES    |       |
+| clean               | string            |    NO    |   YES    |       |
+| max_song            | integer           |    NO    |   YES    |       |
+| max_album           | integer           |    NO    |   YES    |       |
+| max_artist          | integer           |    NO    |   YES    |       |
+| max_video           | integer           |    NO    |   YES    |       |
+| max_podcast         | integer           |    NO    |   YES    |       |
+| max_podcast_episode | integer           |    NO    |   YES    |       |
+| songs               | integer           |    NO    |   YES    |       |
+| albums              | integer           |    NO    |   YES    |       |
+| artists             | integer           |    NO    |   YES    |       |
+| genres              | integer           |    NO    |   YES    |       |
+| playlists           | integer           |    NO    |   YES    |       |
+| searches            | integer           |    NO    |   YES    |       |
+| playlists_searches  | integer           |    NO    |   YES    |       |
+| users               | integer           |    NO    |   YES    |       |
+| catalogs            | integer           |    NO    |   YES    |       |
+| videos              | integer           |    NO    |   YES    |       |
+| podcasts            | integer           |    NO    |   YES    |       |
+| podcast_episodes    | integer           |    NO    |   YES    |       |
+| shares              | integer           |    NO    |   YES    |       |
+| licenses            | integer           |    NO    |   YES    |       |
+| live_streams        | integer           |    NO    |   YES    |       |
+| labels              | integer           |    NO    |   YES    |       |
+| username            | string            |    NO    |   YES    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws object
+
+```JSON
+"error": ""
+```
+
 ### goodbye
 
 Destroy a session using the auth parameter.
