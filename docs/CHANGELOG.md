@@ -22,6 +22,8 @@
   * New Shuffle button randomizes the play queue
   * New Play Next / Play Last buttons queue the whole play queue into the currently playing web player or localplay session, the same mechanism already used by individual song/album Play Next/Play Last actions
 * The `Personal Favorites` home plugin now shows a rating/favorite column for each playlist and smart playlist in the list
+* Config version 100
+  * New `stream_proxy` option (default `true`); set to `false` to always redirect a live stream, remote/Subsonic catalog track or preview to its source instead of proxying it through this server, for hosts that kill long-running php processes
 
 ### Changed (8.2.0)
 

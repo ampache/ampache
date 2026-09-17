@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 99
+config_version = 100
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -160,6 +160,14 @@ session_length = 3600
 ; cause playback to stop, increase this value if you experience that
 ; DEFAULT: 7200
 stream_length = 7200
+
+; Live streams, remote/subsonic catalog tracks and previews are streamed back to the browser
+; through this server (rather than a redirect), so the web player sees a same-origin stream it
+; can route through Web Audio. This holds a php process open for as long as playback lasts, which
+; some hosting providers kill after a few minutes. Set to false to always redirect the client to
+; the remote url directly instead if your host does this (streams over 2-3 minutes cut off).
+; DEFAULT: true
+stream_proxy = "true"
 
 ; This length defines how long a 'remember me' session and cookie will
 ; last, the default is 86400, same as length. It is up to the administrator

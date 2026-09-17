@@ -240,6 +240,7 @@ final class ConfigurationKeyEnum
     public const string STATS_CONSOLIDATE_THRESHOLD            = 'stats_consolidate_threshold';
     public const string STATS_THRESHOLD                        = 'stats_threshold';
     public const string STREAM_BEAUTIFUL_URL                   = 'stream_beautiful_url';
+    public const string STREAM_PROXY                           = 'stream_proxy';
     public const string SUBSONIC_ALWAYS_DOWNLOAD               = 'subsonic_always_download';
     public const string SUBSONIC_BACKEND                       = 'subsonic_backend';
     public const string TAG_ORDER                              = 'tag_order';

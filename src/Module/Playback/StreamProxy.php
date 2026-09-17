@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UrlValidatorInterface;
@@ -52,10 +54,16 @@ final readonly class StreamProxy implements StreamProxyInterface
     public function __construct(
         private LoggerInterface $logger,
         private UrlValidatorInterface $urlValidator,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function proxy(string $url): bool
     {
+        // some hosts kill a long-running php process, so an admin can force every caller back to a redirect
+        if (!$this->configContainer->getBool(ConfigurationKeyEnum::STREAM_PROXY, true)) {
+            return false;
+        }
+
         if (!function_exists('curl_version')) {
             return false;
         }
