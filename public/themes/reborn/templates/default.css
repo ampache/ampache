@@ -1538,18 +1538,20 @@ table.gridview td.cel_ratings {
     justify-content: start;
 }
 
-/* 176px matches the personal favorites item at 160px plus its 8px padding on each side, wide enough
-   for the rating row's average-rating number that was overflowing the narrower 170px cell. */
+/* Matches .personalfav's item width below, so the two widgets' columns line up as the window is
+   resized; 176px is also wide enough for the rating row's average-rating number, which the
+   narrower 170px this replaced was clipping. */
 .homedash table.gridview tbody tr {
     min-width: 176px;
 }
 
 .personalfav table.gridview tbody {
-    grid-template-columns: repeat(auto-fill, 160px);
+    grid-template-columns: repeat(auto-fill, 176px);
     gap: 10px;
     justify-content: start;
 }
 
+/* Same 176px as .homedash, so the two widgets' columns line up as the window is resized. */
 .personalfav table.gridview tbody tr {
     display: flex;
     flex-direction: column;
@@ -1557,7 +1559,7 @@ table.gridview td.cel_ratings {
     justify-content: center;
     gap: 8px;
     box-sizing: border-box;
-    width: 160px;
+    width: 176px;
     height: 145px;
     padding: 8px;
     border: 1px solid rgba(128, 128, 128, 0.3);
