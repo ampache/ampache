@@ -95,7 +95,7 @@ final class PreferencesSidebarView extends AbstractSidebarView
 
     public function showQuickConnect(): bool
     {
-        return AmpConfig::get_bool('jellyfin_quickconnect_enable');
+        return AmpConfig::get_bool('quickconnect_enable');
     }
 
     #[Override]

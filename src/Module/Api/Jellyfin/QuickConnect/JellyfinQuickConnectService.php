@@ -175,7 +175,7 @@ final class JellyfinQuickConnectService
 
     public function isEnabled(): bool
     {
-        return $this->configContainer->getBool(ConfigurationKeyEnum::JELLYFIN_QUICKCONNECT_ENABLE);
+        return $this->configContainer->getBool(ConfigurationKeyEnum::QUICKCONNECT_ENABLE);
     }
 
     private function generateCode(): string

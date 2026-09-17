@@ -31,7 +31,7 @@ use Ampache\Module\Api\Jellyfin\QuickConnect\JellyfinQuickConnectService;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
-/** GET /QuickConnect/Enabled — reads the `jellyfin_quickconnect_enable` preference, off by default. */
+/** GET /QuickConnect/Enabled — reads the `quickconnect_enable` preference, off by default. */
 final class QuickConnectEnabledMethod implements JellyfinMethodInterface
 {
     public function __construct(private readonly JellyfinQuickConnectService $service) {}

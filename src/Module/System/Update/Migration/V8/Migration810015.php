@@ -31,18 +31,22 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
 /**
- * Add the `jellyfin_quick_connect` table and the `jellyfin_quickconnect_enable` preference
+ * Add the `jellyfin_quick_connect` table and the `quickconnect_enable` preference
  *
  * Off by default and independent of `jellyfin_backend_enable`, since it is the only part of the Jellyfin
- * surface that mints credentials on its own rather than checking a password.
+ * surface that mints credentials on its own rather than checking a password. The preference isn't
+ * Jellyfin-specific: it also gates QuickConnect pairing for the native API, so it is named for the
+ * feature rather than the first protocol that used it. This replaces an unreleased Migration810014 that
+ * shipped under the old `jellyfin_quickconnect_enable` name; the delete below cleans that name up for
+ * anyone who already ran it from `develop`, and is a no-op on a fresh install that never had it.
  */
-final class Migration810014 extends AbstractMigration
+final class Migration810015 extends AbstractMigration
 {
     private const string QUICK_CONNECT_TABLE = "CREATE TABLE IF NOT EXISTS `jellyfin_quick_connect` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `secret` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL, `code` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL, `device_id` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL, `device_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL, `app_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL, `app_version` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `authorized` tinyint(1) NOT NULL DEFAULT 0, `date_added` int(11) UNSIGNED NOT NULL, `expires` int(11) UNSIGNED NOT NULL, `consumed` tinyint(1) NOT NULL DEFAULT 0, `authorize_attempts` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`), UNIQUE KEY `secret` (`secret`), UNIQUE KEY `code` (`code`), KEY `expires` (`expires`), KEY `device_id` (`device_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s;";
 
     protected array $changelog = [
         'Add `jellyfin_quick_connect` table',
-        'Add `jellyfin_quickconnect_enable` preference to enable/disable Jellyfin QuickConnect',
+        'Add `quickconnect_enable` preference to enable/disable QuickConnect pairing',
     ];
 
     public function getTableMigrations(
@@ -53,7 +57,7 @@ final class Migration810014 extends AbstractMigration
     ): Generator {
         yield from parent::getTableMigrations($collation, $charset, $engine, $build);
 
-        if ($build > 810014) {
+        if ($build > 810015) {
             yield 'jellyfin_quick_connect' => sprintf(self::QUICK_CONNECT_TABLE, $engine, $charset, $collation);
         }
     }
@@ -66,9 +70,13 @@ final class Migration810014 extends AbstractMigration
 
         $this->updateDatabase(sprintf(self::QUICK_CONNECT_TABLE, $engine, $charset, $collation));
 
+        // cleans up the old name for anyone who ran the unreleased Migration810014; a no-op otherwise
+        $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` = 'jellyfin_quickconnect_enable');");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'jellyfin_quickconnect_enable';");
+
         $this->updatePreferences(
-            'jellyfin_quickconnect_enable',
-            'Use Jellyfin QuickConnect',
+            'quickconnect_enable',
+            'Enable QuickConnect service',
             '0',
             AccessLevelEnum::ADMIN->value,
             'boolean',

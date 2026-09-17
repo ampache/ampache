@@ -10,14 +10,14 @@
   * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
 * Database 810013
   * New `jellyfin_backend_enable` preference
-* Database 810014
-  * New `jellyfin_quick_connect` table and `jellyfin_quickconnect_enable` preference, backing QuickConnect device pairing
+* Database 810015
+  * New `jellyfin_quick_connect` table and `quickconnect_enable` preference, backing QuickConnect device pairing
 * Jellyfin
   * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
   * Off by default; enable with the new `jellyfin_backend_enable` preference
   * Audio only — no video, podcasts or live TV — with direct-play streaming and server-side transcoding when the client asks for a format or bitrate the source can't serve directly
   * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
-  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `jellyfin_quickconnect_enable` preference, with its own approval page under Preferences
+  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `quickconnect_enable` preference, with its own approval page under Preferences
 * Rightbar
   * New Shuffle button randomizes the play queue
   * New Play Next / Play Last buttons queue the whole play queue into the currently playing web player or localplay session, the same mechanism already used by individual song/album Play Next/Play Last actions
