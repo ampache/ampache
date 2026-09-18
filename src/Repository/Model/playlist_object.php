@@ -37,6 +37,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PlaylistObjectRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
@@ -408,6 +409,7 @@ abstract class playlist_object extends database_object implements
      *     random?: ?int,
      *     limit?: int,
      *     operator?: int,
+     *     folder?: ?int,
      * } $data
      */
     public function update(?array $data = null): int
@@ -463,6 +465,19 @@ abstract class playlist_object extends database_object implements
 
         if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
             $this->set_last($data['last_duration'], 'last_duration');
+        }
+
+        if (array_key_exists('folder', $data)) {
+            $currentUser = Core::get_global('user');
+            if ($currentUser instanceof User) {
+                $objectType = ($this instanceof Search) ? 'search' : 'playlist';
+                $folderId   = (int) $data['folder'];
+                if ($folderId > PlaylistFolder::ROOT) {
+                    $this->getPlaylistFolderRepository()->place($currentUser, $this->id, $objectType, $folderId);
+                } else {
+                    $this->getPlaylistFolderRepository()->unplace($currentUser, $this->id, $objectType);
+                }
+            }
         }
 
         return $this->id;
@@ -610,5 +625,15 @@ abstract class playlist_object extends database_object implements
         global $dic;
 
         return $dic->get(PlaylistArtBuilderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getPlaylistFolderRepository(): PlaylistFolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistFolderRepositoryInterface::class);
     }
 }

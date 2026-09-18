@@ -26,11 +26,16 @@ declare(strict_types=1);
 namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Database\Query\Search;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\PlaylistFolder;
@@ -50,8 +55,9 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
+        private readonly GuiFactoryInterface $guiFactory,
         private readonly PlaylistFolderRepositoryInterface $playlistFolderRepository,
-        private readonly PlaylistFolderTreeFormatterInterface $treeFormatter,
+        private readonly ZipHandlerInterface $zipHandler,
     ) {}
 
     /**
@@ -146,25 +152,6 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder' . $suffix;
     }
 
-    /**
-     * The user's whole folder tree, offered as the destination list for a row's "move to folder" control.
-     *
-     * @return list<array{id: int, name: string, depth: int}>
-     */
-    public function getMoveFolderOptions(): array
-    {
-        return $this->cachePerRender('moveFolderOptions', function (): array {
-            $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
-
-            return ($user !== null) ? $this->treeFormatter->flatten($user) : [];
-        });
-    }
-
-    public function getMoveFormAction(): string
-    {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php';
-    }
-
     public function getRowItemCount(PlaylistFolder|playlist_object $item): int
     {
         if ($item instanceof PlaylistFolder) {
@@ -240,6 +227,61 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     {
         return $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+    }
+
+    /**
+     * The same Actions cell the standalone playlist/smart-playlist browses show for this item, so folder
+     * assignment (now in the edit dialog, not here) is the only thing this browse does differently.
+     */
+    public function renderPlaylistActions(Playlist $item): string
+    {
+        $gatekeeper = $this->gatekeeperFactory->createGuiGatekeeper();
+        $playlist   = $this->guiFactory->createPlaylistViewAdapter($gatekeeper, $item);
+        $playlistId = $playlist->getId();
+        $html       = '';
+
+        if ($playlist->canShare()) {
+            $html .= $playlist->getShareUi();
+        }
+
+        if ($playlist->canBatchDownload()) {
+            $html .= '<a class="nohtml" rel="nofollow" href="' . $this->e($playlist->getBatchDownloadUrl()) . '">' . $playlist->getBatchDownloadIcon() . '</a>';
+        }
+
+        if ($playlist->canBeRefreshed()) {
+            $html .= '<a href="' . $this->e($playlist->getRefreshUrl()) . '">' . $playlist->getRefreshIcon() . '</a>';
+        }
+
+        if ($playlist->isEditable()) {
+            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . '\', \'edit_playlist_' . $playlistId . '\', \'' . $this->e($playlist->getEditButtonTitle()) . '\', \'playlist_row_\')">' . $playlist->getEditIcon() . '</a>';
+        }
+
+        if ($playlist->canBeDeleted()) {
+            $html .= $playlist->getDeletionButton();
+        }
+
+        return $html;
+    }
+
+    /**
+     * The same Actions cell the standalone smart-playlist browse shows for this item.
+     */
+    public function renderSearchActions(Search $item): string
+    {
+        $searchId = $item->id;
+        $html     = '';
+
+        if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search')) {
+            $html .= '<a class="nohtml" href="' . $this->e($this->configContainer->getWebPath() . '/batch.php?action=search&id=' . $searchId) . '" rel="nofollow">' . Ui::get_material_symbol('folder_zip', T_('Batch download')) . '</a>';
+        }
+
+        if ($item->has_access()) {
+            $title = addslashes(T_('Smart Playlist Edit'));
+            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'smartplaylist_row_\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
+            $html .= Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are You Sure?'));
+        }
+
+        return $html;
     }
 
     #[Override]

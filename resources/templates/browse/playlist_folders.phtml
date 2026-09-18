@@ -26,20 +26,20 @@ declare(strict_types=1);
 // browse/playlist_folders.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistFolderListRenderer
 
 use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\PlaylistFolder;
 
 /** @var Ampache\Gui\Browse\ListRenderer\PlaylistFolderListRenderer $this */
 
-$browse          = $this->getBrowse();
-$argument_param  = $this->getArgumentParam();
-$columns         = $this->getColumns();
-$rows            = $this->getRows();
-$currentFolder   = $this->getCurrentFolder();
-$currentFolderId = $this->getCurrentFolderId();
-$ancestors       = $this->getAncestors();
-$mayCreate       = $this->mayCreate();
-$moveOptions     = ($mayCreate) ? $this->getMoveFolderOptions() : [];
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$rows           = $this->getRows();
+$currentFolder  = $this->getCurrentFolder();
+$ancestors      = $this->getAncestors();
+$mayCreate      = $this->mayCreate();
 
 if ($mayCreate) { ?>
 <div id="information_actions">
@@ -94,29 +94,19 @@ if ($mayCreate) { ?>
             <td class="cel_count optional"><?php echo $this->e($this->getRowItemCount($row['item'])); ?></td>
             <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
             <td class="cel_action essential">
-                <?php if ($mayCreate) {
-                    if ($row['item'] instanceof PlaylistFolder) { ?>
+                <?php if ($row['item'] instanceof PlaylistFolder) {
+                    if ($mayCreate) { ?>
                 <a href="<?php echo $this->e($this->getEditFolderUrl($row['item']->getId())); ?>">
                     <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
                 </a>
                 <a href="<?php echo $this->e($this->getDeleteFolderUrl($row['item']->getId())); ?>" data-confirm="<?php echo T_('Do you really want to delete this Folder?'); ?>">
                     <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
                 </a>
-                    <?php } else { ?>
-                <form method="get" action="<?php echo $this->e($this->getMoveFormAction()); ?>" class="playlist_folder_move">
-                    <input type="hidden" name="action" value="place" />
-                    <input type="hidden" name="object_type" value="<?php echo $this->e($row['type']); ?>" />
-                    <input type="hidden" name="object_id" value="<?php echo $this->e($row['item']->id); ?>" />
-                    <input type="hidden" name="from" value="<?php echo $currentFolderId; ?>" />
-                    <select name="folder">
-                        <option value="0"<?php echo ($currentFolderId === 0) ? ' selected="selected"' : ''; ?>><?php echo T_('None'); ?></option>
-                        <?php foreach ($moveOptions as $option) { ?>
-                        <option value="<?php echo $option['id']; ?>"<?php echo ($option['id'] === $currentFolderId) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('-- ', $option['depth']) . $this->e($option['name']); ?></option>
-                        <?php } ?>
-                    </select>
-                    <button type="submit" class="button"><?php echo T_('Move'); ?></button>
-                </form>
                     <?php }
+                    } elseif ($row['item'] instanceof Playlist) {
+                        echo $this->raw($this->renderPlaylistActions($row['item']));
+                    } elseif ($row['item'] instanceof Search) {
+                        echo $this->raw($this->renderSearchActions($row['item']));
                     } ?>
             </td>
         </tr>
