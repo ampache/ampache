@@ -105,17 +105,17 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $folderId = $this->getCurrentFolderId();
         $suffix   = ($folderId > PlaylistFolder::ROOT) ? '&folder=' . $folderId : '';
 
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=show_create' . $suffix;
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=show_create' . $suffix;
     }
 
     public function getCreatePlaylistUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/playlist.php?action=show_create';
+        return $this->configContainer->getWebPath('/client') . '/playlist.php?action=show_create';
     }
 
     public function getCreateSmartPlaylistUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/search.php?type=song';
+        return $this->configContainer->getWebPath('/client') . '/search.php?type=song';
     }
 
     /**
@@ -138,19 +138,19 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
     public function getDeleteFolderUrl(int $folderId): string
     {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=delete&folder=' . $folderId;
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=delete&folder=' . $folderId;
     }
 
     public function getEditFolderUrl(int $folderId): string
     {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=show_edit&folder=' . $folderId;
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=show_edit&folder=' . $folderId;
     }
 
     public function getFolderUrl(int $folderId): string
     {
         $suffix = ($folderId > PlaylistFolder::ROOT) ? '&folder=' . $folderId : '';
 
-        return $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder' . $suffix;
+        return $this->configContainer->getWebPath('/client') . '/browse.php?action=playlist_folder' . $suffix;
     }
 
     public function getRowItemCount(PlaylistFolder|playlist_object $item): int
@@ -306,7 +306,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $html     = '';
 
         if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search')) {
-            $html .= '<a class="nohtml" href="' . $this->e($this->configContainer->getWebPath() . '/batch.php?action=search&id=' . $searchId) . '" rel="nofollow">' . Ui::get_material_symbol('folder_zip', T_('Batch download')) . '</a>';
+            $html .= '<a class="nohtml" href="' . $this->e($this->configContainer->getWebPath('/client') . '/batch.php?action=search&id=' . $searchId) . '" rel="nofollow">' . Ui::get_material_symbol('folder_zip', T_('Batch download')) . '</a>';
         }
 
         if ($item->mayOpenEditDialog()) {

@@ -68,7 +68,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo new PlaylistFolderFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             null,
             $this->requestParser->getFromRequest('name'),
             $parentId,

@@ -92,7 +92,7 @@ final readonly class EditAction implements ApplicationActionInterface
 
         if (AmpError::occurred()) {
             echo new PlaylistFolderFormView(
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $folder->getId(),
                 $name,
                 $parentId,
@@ -109,7 +109,7 @@ final readonly class EditAction implements ApplicationActionInterface
             $name,
             sprintf(
                 '%s/browse.php?action=playlist_folder%s',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 ($parentId > PlaylistFolder::ROOT) ? '&folder=' . $parentId : ''
             )
         );

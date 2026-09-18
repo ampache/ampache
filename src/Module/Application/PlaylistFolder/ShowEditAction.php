@@ -68,7 +68,7 @@ final readonly class ShowEditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         echo new PlaylistFolderFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $folder->getId(),
             $folder->getName(),
             $folder->getParentId(),

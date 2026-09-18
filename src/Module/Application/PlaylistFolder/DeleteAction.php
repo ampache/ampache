@@ -67,7 +67,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         $parentId = $folder->getParentId();
         $backUrl  = sprintf(
             '%s/browse.php?action=playlist_folder%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             ($parentId > PlaylistFolder::ROOT) ? '&folder=' . $parentId : ''
         );
 

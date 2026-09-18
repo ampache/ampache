@@ -97,7 +97,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $name,
                 sprintf(
                     '%s/browse.php?action=playlist_folder%s',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     ($parentId > PlaylistFolder::ROOT) ? '&folder=' . $parentId : ''
                 )
             );
@@ -112,7 +112,7 @@ final readonly class CreateAction implements ApplicationActionInterface
     private function formView(User $user, string $name, int $parentId): PlaylistFolderFormView
     {
         return new PlaylistFolderFormView(
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             null,
             $name,
             $parentId,
