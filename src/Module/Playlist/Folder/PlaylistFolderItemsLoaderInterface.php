@@ -23,18 +23,17 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Playlist;
+namespace Ampache\Module\Playlist\Folder;
 
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoader;
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatter;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 
-use function DI\autowire;
-
-return [
-    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
-    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    PlaylistFolderItemsLoaderInterface::class => autowire(PlaylistFolderItemsLoader::class),
-    PlaylistFolderTreeFormatterInterface::class => autowire(PlaylistFolderTreeFormatter::class),
-];
+interface PlaylistFolderItemsLoaderInterface
+{
+    /**
+     * The lists filed in $folder, or every unfiled list the user can see when $folder is null (the root)
+     *
+     * @return list<array{object_id: int, object_type: string, sort_order: int}>
+     */
+    public function getItems(User $user, ?PlaylistFolder $folder): array;
+}

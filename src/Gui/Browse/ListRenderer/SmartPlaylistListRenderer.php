@@ -122,6 +122,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
             Stream_Playlist::check_autoplay_append(),
             $this->areRatingsShown(),
             Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
+            $search->mayOpenEditDialog(),
             $search->has_access()
         )->render();
     }

@@ -23,18 +23,19 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Playlist;
+namespace Ampache\Module\Playlist\Folder;
 
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoader;
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatter;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+use Ampache\Repository\Model\User;
 
-use function DI\autowire;
-
-return [
-    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
-    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
-    PlaylistFolderItemsLoaderInterface::class => autowire(PlaylistFolderItemsLoader::class),
-    PlaylistFolderTreeFormatterInterface::class => autowire(PlaylistFolderTreeFormatter::class),
-];
+interface PlaylistFolderTreeFormatterInterface
+{
+    /**
+     * Flattens a user's folder tree into a depth-ordered option list for a folder picker.
+     *
+     * $excludeFolderId, when given, drops that folder and its whole subtree, so a rename/move form can't
+     * offer a parent that would put the folder inside itself.
+     *
+     * @return list<array{id: int, name: string, depth: int}>
+     */
+    public function flatten(User $user, ?int $excludeFolderId = null): array;
+}

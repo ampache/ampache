@@ -35,10 +35,12 @@ METHOD_DIR = REPO_ROOT / "src" / "Module" / "Api" / "Method"
 OUT_DIR = REPO_ROOT / "docs" / "browse"
 INDEX_MD = REPO_ROOT / "docs" / "API-browse.md"
 
-# Method actions that reach a browse type through a variable set_type() call, so the
-# source scan cannot see it. `browse` picks its type from the catalog it is given.
+# Method actions that reach a browse type through a set_type() call the source scan cannot see: either
+# a variable call (`browse` picks its type from the catalog it is given), or one made by a helper class
+# outside src/Module/Api/Method (`playlist_folder_items` reaches it through PlaylistFolderItemsLoader).
 EXTRA_METHOD_TYPES: dict[str, list[str]] = {
     "catalog": ["browse"],
+    "playlist_search": ["playlist_folder_items"],
 }
 
 # The API method files that serve older versions; their browses take the same filters

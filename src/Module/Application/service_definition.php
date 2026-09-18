@@ -130,6 +130,7 @@ use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
 use Ampache\Module\Application\Browse\MoodAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
+use Ampache\Module\Application\Browse\PlaylistFolderAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
 use Ampache\Module\Application\Browse\PrivateMessageAction;
@@ -463,6 +464,12 @@ return [
     ArtistAction::class => autowire(ArtistAction::class),
     SongAction::class => autowire(SongAction::class),
     PlaylistAction::class => autowire(PlaylistAction::class),
+    PlaylistFolderAction::class => autowire(PlaylistFolderAction::class),
+    PlaylistFolder\ShowCreateAction::class => autowire(PlaylistFolder\ShowCreateAction::class),
+    PlaylistFolder\CreateAction::class => autowire(PlaylistFolder\CreateAction::class),
+    PlaylistFolder\ShowEditAction::class => autowire(PlaylistFolder\ShowEditAction::class),
+    PlaylistFolder\EditAction::class => autowire(PlaylistFolder\EditAction::class),
+    PlaylistFolder\DeleteAction::class => autowire(PlaylistFolder\DeleteAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
     CollectionAction::class => autowire(CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),
