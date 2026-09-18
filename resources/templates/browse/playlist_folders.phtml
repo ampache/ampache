@@ -66,7 +66,7 @@ if ($mayCreate) { ?>
 </div>
 <?php } ?>
 <nav class="playlist_folder_breadcrumb">
-    <a href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>"><?php echo T_('Playlist Folders'); ?></a>
+    <a href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>"><?php echo T_('Home'); ?></a>
     <?php foreach ($ancestors as $ancestor) { ?>
     / <a href="<?php echo $this->e($this->getFolderUrl($ancestor->getId())); ?>"><?php echo $this->e($ancestor->getName()); ?></a>
     <?php }

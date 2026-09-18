@@ -172,7 +172,7 @@ final class HomeSidebarView extends AbstractSidebarView
     public function getPlaylistItems(): array
     {
         $items = [
-            ['id' => 'sb_home_playlist_folders', 'url' => '/browse.php?action=playlist_folder', 'label' => T_('Playlist Folders')],
+            ['id' => 'sb_home_playlist_folders', 'url' => '/browse.php?action=playlist_folder', 'label' => T_('Browse')],
             ['id' => 'sb_home_playlist_playlist', 'url' => '/browse.php?action=playlist', 'label' => T_('Playlists')],
             ['id' => 'sb_home_playlist_smartPlaylist', 'url' => '/browse.php?action=smartplaylist', 'label' => T_('Smart Playlists')],
         ];
