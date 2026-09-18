@@ -64,6 +64,19 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     }
 
     /**
+     * A comma-joined list of collaborator usernames, for a viewer who can see this but not change it.
+     */
+    public function getCollaboratorNames(): string
+    {
+        $ids = $this->getCollaborateIds();
+        if ($ids === []) {
+            return T_('None');
+        }
+
+        return implode(', ', array_map(static fn(int $id): string => User::get_username($id), $ids));
+    }
+
+    /**
      * The collaborate list is every valid user; the owner list is the one the dialog was handed.
      *
      * @return array<int, string>
@@ -115,6 +128,11 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
         return (int) $this->getItem()->user;
     }
 
+    public function getOwnerUsername(): string
+    {
+        return (string) $this->getItem()->username;
+    }
+
     public function getPlaylistId(): int
     {
         return $this->getItem()->getId();
@@ -146,6 +164,14 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     public function isSmartlist(): bool
     {
         return $this->getItem() instanceof Search;
+    }
+
+    /**
+     * Whether the current viewer may change this list's own fields; false still leaves Folder editable.
+     */
+    public function mayEditFields(): bool
+    {
+        return $this->getItem()->canEditFields();
     }
 
     #[Override]

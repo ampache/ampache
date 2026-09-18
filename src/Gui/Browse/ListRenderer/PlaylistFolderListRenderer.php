@@ -28,6 +28,7 @@ namespace Ampache\Gui\Browse\ListRenderer;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -90,7 +91,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     public function getColumns(): array
     {
         return [
-            ['class' => 'cel_type essential', 'label' => '', 'footer' => false],
+            ['class' => 'cel_cover essential', 'label' => T_('Art'), 'footer' => false],
             ['class' => 'cel_name essential persist', 'label' => T_('Name'), 'footer' => false],
             ['class' => 'cel_last_update optional', 'label' => T_('Last Update'), 'footer' => false],
             ['class' => 'cel_count optional', 'label' => T_('# Items'), 'footer' => false],
@@ -214,15 +215,6 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         });
     }
 
-    public function getRowType(string $type): string
-    {
-        return match ($type) {
-            self::TYPE_FOLDER => T_('Folder'),
-            'search' => T_('Smart Playlist'),
-            default => T_('Playlist'),
-        };
-    }
-
     /**
      * The header box title: plain text at the root (nothing to link back to), a breadcrumb of ancestor
      * links ending in the plain current folder name otherwise -- same shape as `FolderView::getTitle()`.
@@ -288,6 +280,24 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
+     * Echoes this row's cover art -- a subfolder has none of its own, so it always shows the shared folder
+     * placeholder; a playlist or smartlist shows its own real art via the same `display_art()` every other
+     * playlist/smartlist view uses. Never resolves a folder id through `Art::display('folder', ...)`: that
+     * object_type is the real catalog folder feature's id space, and a lookup there could collide with it.
+     */
+    public function renderRowArt(PlaylistFolder|playlist_object $item): void
+    {
+        if ($item instanceof PlaylistFolder) {
+            $name = $this->e($item->getName());
+            echo '<div class="item_art"><img src="' . $this->e(Art::get_fallback_url('folder', '128x128')) . '" title="' . $name . '" alt="' . $name . '" /></div>';
+
+            return;
+        }
+
+        $item->display_art(['width' => 128, 'height' => 128], true);
+    }
+
+    /**
      * The same Actions cell the standalone smart-playlist browse shows for this item.
      */
     public function renderSearchActions(Search $item): string
@@ -299,10 +309,14 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
             $html .= '<a class="nohtml" href="' . $this->e($this->configContainer->getWebPath() . '/batch.php?action=search&id=' . $searchId) . '" rel="nofollow">' . Ui::get_material_symbol('folder_zip', T_('Batch download')) . '</a>';
         }
 
-        if ($item->has_access()) {
+        if ($item->mayOpenEditDialog()) {
             $title = addslashes(T_('Smart Playlist Edit'));
             // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
             $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
+        }
+
+        // Deletion stays owner/admin only -- mayOpenEditDialog() above also admits a public list's viewer, who may not delete it
+        if ($item->has_access()) {
             $html .= Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are You Sure?'));
         }
 

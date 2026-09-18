@@ -81,6 +81,14 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * Whether the current viewer may change this list's own fields (name, type, owner, collaborate, ...).
+     */
+    public function canEditFields(): bool
+    {
+        return $this->canWrite();
+    }
+
+    /**
      * display_art
      * @param array{width: int, height: int} $size
      */
@@ -384,6 +392,16 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * Whether the current viewer may open the edit dialog at all: full write access, or -- since filing a
+     * public list into your own folder is a per-viewer action, not a write to the list -- just because it
+     * is public. canEditFields() still gates every other field inside update().
+     */
+    public function mayOpenEditDialog(): bool
+    {
+        return $this->canWrite() || ($this->type === 'public' && Core::get_global('user') instanceof User);
+    }
+
+    /**
      * set_last
      * Stores one of the cached totals.
      */
@@ -418,58 +436,56 @@ abstract class playlist_object extends database_object implements
             return 0;
         }
 
-        if (!$this->canWrite()) {
-            return $this->id;
-        }
-
-        if (isset($data['name'])) {
-            $this->name = (string) $data['name'];
-        }
-
-        if (isset($data['playlist_type'])) {
-            $this->type = (string) $data['playlist_type'];
-        }
-
-        if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
-            $this->user     = (int) $data['playlist_user'];
-            $this->username = User::get_username($this->user);
-        }
-
-        if ($this instanceof Search) {
-            // set_rules() has already applied random/limit onto the object, so they are written back
-            // unconditionally — comparing them against themselves would never fire
-            if (array_key_exists('random', $data)) {
-                $this->random = (int) $data['random'];
+        if ($this->canWrite()) {
+            if (isset($data['name'])) {
+                $this->name = (string) $data['name'];
             }
 
-            if (array_key_exists('limit', $data)) {
-                $this->limit = (int) $data['limit'];
+            if (isset($data['playlist_type'])) {
+                $this->type = (string) $data['playlist_type'];
             }
 
-            if (!empty($data['operator'])) {
-                $this->logic_operator = self::normalizeLogicOperator($data['operator']);
+            if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
+                $this->user     = (int) $data['playlist_user'];
+                $this->username = User::get_username($this->user);
             }
-        }
 
-        $this->getPlaylistObjectRepository()->persist($this);
+            if ($this instanceof Search) {
+                // set_rules() has already applied random/limit onto the object, so they are written back
+                // unconditionally — comparing them against themselves would never fire
+                if (array_key_exists('random', $data)) {
+                    $this->random = (int) $data['random'];
+                }
 
-        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
-        $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
-        if ($collaborate != $this->collaborate) {
-            $this->_update_collaborate($new_list);
-        }
+                if (array_key_exists('limit', $data)) {
+                    $this->limit = (int) $data['limit'];
+                }
 
-        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
-            $this->set_last($data['last_count'], 'last_count');
-        }
+                if (!empty($data['operator'])) {
+                    $this->logic_operator = self::normalizeLogicOperator($data['operator']);
+                }
+            }
 
-        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
-            $this->set_last($data['last_duration'], 'last_duration');
+            $this->getPlaylistObjectRepository()->persist($this);
+
+            $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
+            $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
+            if ($collaborate != $this->collaborate) {
+                $this->_update_collaborate($new_list);
+            }
+
+            if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+                $this->set_last($data['last_count'], 'last_count');
+            }
+
+            if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+                $this->set_last($data['last_duration'], 'last_duration');
+            }
         }
 
         if (array_key_exists('folder', $data)) {
             $currentUser = Core::get_global('user');
-            if ($currentUser instanceof User) {
+            if ($currentUser instanceof User && $this->isVisible($currentUser)) {
                 $objectType = ($this instanceof Search) ? 'search' : 'playlist';
                 $folderId   = (int) $data['folder'];
                 if ($folderId > PlaylistFolder::ROOT) {

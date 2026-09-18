@@ -79,7 +79,7 @@ if ($mayCreate) { ?>
     <tbody>
         <?php foreach ($rows as $row) { ?>
         <tr id="playlist_folder_row_<?php echo $this->e($row['type'] . '_' . $row['item']->getId()); ?>">
-            <td class="cel_type essential"><?php echo $this->e($this->getRowType($row['type'])); ?></td>
+            <td class="cel_cover essential"><?php $this->renderRowArt($row['item']); ?></td>
             <td class="cel_name essential persist"><?php echo $this->raw($this->getRowName($row['item'])); ?></td>
             <td class="cel_last_update optional"><?php echo $this->e($this->getRowLastUpdate($row['item'])); ?></td>
             <td class="cel_count optional"><?php echo $this->e($this->getRowItemCount($row['item'])); ?></td>

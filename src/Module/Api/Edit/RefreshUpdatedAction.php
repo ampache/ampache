@@ -353,6 +353,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                     Stream_Playlist::check_autoplay_append(),
                     $show_ratings,
                     Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
+                    $libitem->mayOpenEditDialog(),
                     $libitem->has_access()
                 )->render();
                 break;
