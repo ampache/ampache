@@ -7,70 +7,70 @@
 ### Added (8.2.0)
 
 * Database 810015
-  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling.
-  * Added `jellyfin_backend_enable` preference.
-  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing.
+  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
+  * Added `jellyfin_backend_enable` preference
+  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
 * Jellyfin
-  * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly.
-  * Disabled by default. Enable with `jellyfin_backend_enable`.
-  * Supports audio streaming, direct play and transcoding.
-  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, resume position, playback reporting and playlist management.
-  * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`.
+  * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
+  * Disabled by default. Enable with `jellyfin_backend_enable`
+  * Supports audio streaming, direct play and transcoding
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, resume position, playback reporting and playlist management
+  * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
-  * Added Shuffle button for queue randomisation.
-  * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions.
-* The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists.
+  * Added Shuffle button for queue randomisation
+  * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+* The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
 * Config version 100
-  * Added `stream_proxy` option (default `true`) to control live stream proxying.
+  * Added `stream_proxy` option (default `true`) to control live stream proxying
 
 ### Changed (8.2.0)
 
-* Updated Seafile SDK to `dev-master`.
-* Updated Composer and NPM dependencies.
-* `wanted_types` now includes `single` and `ep` by default.
-* Rightbar action buttons now use a fixed four-column grid.
-* Grid action icons now display in the bottom-right corner.
-* Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab.
+* Updated Seafile SDK to `dev-master`
+* Updated Composer and NPM dependencies
+* `wanted_types` now includes `single` and `ep` by default
+* Rightbar action buttons now use a fixed four-column grid
+* Grid action icons now display in the bottom-right corner
+* Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
 
 ### Fixed (8.2.0)
 
-* Garbage collection incorrectly removed parent-only folders.
-* Fixed missing Subsonic sub-folder listings.
-* Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`.
-* Improved support for databases with autocommit disabled.
-* Fixed false PDO error detection when error code was `00000`.
-* Fixed raw `LICENSE` tag handling for Vorbis metadata.
-* Sanitised licence external links and blocked non-HTTP(S) URLs.
-* Fixed folder handling in the Subsonic API.
-* Fixed missing song lyrics.
-* Database exceptions now include query and driver error details.
-* Fixed `admin:updateDatabase` failures during partial migrations.
-* Fixed now-playing polling continuing after page navigation.
-* Restored "Save as Smart Playlist" for existing smart playlists.
-* Fixed downloads failing when no files were available.
-* Fixed proof-of-work loops after endpoint errors.
-* Fixed private playlist share links rejecting visitors.
-* Fixed withdrawn albums appearing in artist, API and UPnP listings.
-* Fixed ineffective `Enabled` search rule on album disks.
-* Added withdrawn status indicators to disk listings.
-* Fixed managers being unable to view withdrawn tracks on artist song pages.
-* Fixed missing generated artwork when `custom_blankalbum` is enabled.
-* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork.
-* Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views.
-* Fixed withdrawn releases appearing in recently played views and feeds.
-* Added visual highlighting for withdrawn items.
-* Fixed `run:updateCatalog -ca` reimporting unchanged files.
-* Fixed `deleted_songs` API always returning an empty result.
+* Garbage collection incorrectly removed parent-only folders
+* Fixed missing Subsonic sub-folder listings
+* Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`
+* Improved support for databases with autocommit disabled
+* Fixed false PDO error detection when error code was `00000`
+* Fixed raw `LICENSE` tag handling for Vorbis metadata
+* Sanitised licence external links and blocked non-HTTP(S) URLs
+* Fixed folder handling in the Subsonic API
+* Fixed missing song lyrics
+* Database exceptions now include query and driver error details
+* Fixed `admin:updateDatabase` failures during partial migrations
+* Fixed now-playing polling continuing after page navigation
+* Restored "Save as Smart Playlist" for existing smart playlists
+* Fixed downloads failing when no files were available
+* Fixed proof-of-work loops after endpoint errors
+* Fixed private playlist share links rejecting visitors
+* Fixed withdrawn albums appearing in artist, API and UPnP listings
+* Fixed ineffective `Enabled` search rule on album disks
+* Added withdrawn status indicators to disk listings
+* Fixed managers being unable to view withdrawn tracks on artist song pages
+* Fixed missing generated artwork when `custom_blankalbum` is enabled
+* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
+* Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
+* Fixed withdrawn releases appearing in recently played views and feeds
+* Added visual highlighting for withdrawn items
+* Fixed `run:updateCatalog -ca` reimporting unchanged files
+* Fixed `deleted_songs` API always returning an empty result
 * Subsonic
-  * Optimised genre lookups in `getMusicDirectory`.
-  * Optimised video and podcast tag loading.
-  * Unexpected API errors now return proper error responses.
-  * Reduced memory usage when browsing large folders.
-* Fixed catalog scans leaving progress streams open after errors.
-* Fixed DAAP requests returning empty responses on unexpected errors.
-* Fixed sidebar section toggle inconsistencies.
-* Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`.
-* Fixed live stream interruptions caused by PHP execution time limits.
+  * Optimised genre lookups in `getMusicDirectory`
+  * Optimised video and podcast tag loading
+  * Unexpected API errors now return proper error responses
+  * Reduced memory usage when browsing large folders
+* Fixed catalog scans leaving progress streams open after errors
+* Fixed DAAP requests returning empty responses on unexpected errors
+* Fixed sidebar section toggle inconsistencies
+* Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`
+* Fixed live stream interruptions caused by PHP execution time limits
 
 ## Ampache 8.1.0
 
