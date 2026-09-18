@@ -73,6 +73,9 @@ textarea {
 /* :root sets color-scheme: dark, which the popup inherits and uses to pick the highlighted */
 /* row's UA text color regardless of the color/background-color declared below, so the row */
 /* stays white-on-white; opting the control back into light scheme is what fixes that row */
+/* row's UA text/highlight colors; opting the control back into light scheme fixes most of it, */
+/* but Firefox's focused/checked row still uses its own UA selection color at higher priority */
+/* than an unqualified author rule, so those two states are re-declared with !important below */
 select option {
     background-color: #fff;
     color: #000;
