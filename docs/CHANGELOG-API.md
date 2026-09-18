@@ -14,11 +14,11 @@
 ### Fixed (811000)
 
 * `download` (API8)
-  * A container with nothing downloadable behind it — a release whose songs are all disabled, or files missing from disk — crashed the request instead of answering; it now returns 404
+  * A container with nothing downloadable crashed the request instead of answering; it now returns 404
 * `artist`, `artists`, `artist_albums` (ALL)
   * The albums listed for an artist included the withdrawn ones, for every caller
 * `stats` (ALL)
-  * `recent`, `highest` and `frequent` listed withdrawn releases; only `newest` carried the condition. They now answer the way every other listing does, and a manager still sees them
+  * `recent`, `highest` and `frequent` listed withdrawn releases; only `newest` carried the condition. A manager can still see them
 * `deleted_podcast_episodes` (API6)
   * The XML response named the parent podcast id `<played>` instead of `<podcast>`
 

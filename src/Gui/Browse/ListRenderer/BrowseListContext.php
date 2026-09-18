@@ -30,6 +30,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 
 /**
  * Everything a browse list needs that is decided per render.
@@ -42,7 +43,7 @@ final readonly class BrowseListContext
     /**
      * @param array<mixed> $objectIds
      * @param array<mixed> $hideColumns
-     * @param array<string, Collection|Folder|Playlist|Search> $supplementalObjects
+     * @param array<string, Collection|Folder|Playlist|PlaylistFolder|Search> $supplementalObjects
      * @param array<string, mixed>|bool|string $argument
      */
     public function __construct(

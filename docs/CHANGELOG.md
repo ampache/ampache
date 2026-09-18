@@ -2,73 +2,75 @@
 
 ## Ampache 8.2.0
 
-**Jellyfin API** Third-party Jellyfin clients can now browse and stream your library through a new, opt-in Jellyfin-compatible API.
+**Jellyfin API** Third-party Jellyfin clients can now browse and stream Ampache libraries through a new optional Jellyfin-compatible API.
 
 ### Added (8.2.0)
 
-* Database 810012
-  * New `musicbrainz_server` and `musicbrainz_throttle` plugin preferences, so an instance can work against its own MusicBrainz mirror and set the wait between calls, in hundredths of a second, that only the public server requires
-* Database 810013
-  * New `jellyfin_backend_enable` preference
 * Database 810015
-  * New `jellyfin_quick_connect` table and `quickconnect_enable` preference, backing QuickConnect device pairing
+  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
+  * Added `jellyfin_backend_enable` preference
+  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
 * Jellyfin
-  * A Jellyfin-compatible API lets third-party Jellyfin clients browse and stream an Ampache library, confirmed working against Finamp, Symfonium and gelly
-  * Off by default; enable with the new `jellyfin_backend_enable` preference
-  * Audio only — no video, podcasts or live TV — with direct-play streaming and server-side transcoding when the client asks for a format or bitrate the source can't serve directly
-  * Covers signing in, browsing artists/albums/songs/playlists/genres, cover art, streaming, lyrics, similar-track and instant-mix recommendations, favorites, ratings, resume position, playback reporting and playlist creation/editing
-  * QuickConnect device pairing — approve a new device by entering the short code it shows you — off by default via the new `quickconnect_enable` preference, with its own approval page under Preferences
+  * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
+  * Disabled by default. Enable with `jellyfin_backend_enable`
+  * Supports audio streaming, direct play and transcoding
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, resume position, playback reporting and playlist management
+  * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
-  * New Shuffle button randomizes the play queue
-  * New Play Next / Play Last buttons queue the whole play queue into the currently playing web player or localplay session, the same mechanism already used by individual song/album Play Next/Play Last actions
-* The `Personal Favorites` home plugin now shows a rating/favorite column for each playlist and smart playlist in the list
+  * Added Shuffle button for queue randomisation
+  * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+* The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* Config version 100
+  * Added `stream_proxy` option (default `true`) to control live stream proxying
 
 ### Changed (8.2.0)
 
-* Default `wanted_types` now includes `single` and `ep`, so missing-release discovery finds them out of the box instead of only albums
-* Rightbar action buttons now lay out in a fixed 4-column grid instead of wrapping inline
-* Grid item hover action icons (album, artist, etc.) now sit bottom-right instead of top-right, matching other action overlays
-* The artist page's Songs tab now loads in place over AJAX, like Top Tracks and Missing Albums, instead of navigating to a separate `show_songs` page; the old URL still works and redirects to the new tab
+* Updated Seafile SDK to `dev-master`
+* Updated Composer and NPM dependencies
+* `wanted_types` now includes `single` and `ep` by default
+* Rightbar action buttons now use a fixed four-column grid
+* Grid action icons now display in the bottom-right corner
+* Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
 
 ### Fixed (8.2.0)
 
-* Garbage collection deleted any folder holding nothing but other folders
-* Subsonic folder browsing missed sub-folders added since the last map rebuild, and folder was not returned listed
-* Connections run at READ COMMITTED, so MariaDB's `innodb_snapshot_isolation` no longer aborts a cron write with error 1020
-* A DB server without autocommit could have issue. Fix the issue, added check and docs
-* `Dba::check_database()` and the connection setup read PDO's clean error code `'00000'` as an error, because the string is truthy
-* A `LICENSE` tag was inserted raw, but Vorbis can have URL in license name
-* A licence's `external_link` reaches the admin license page as a raw `href`, so a tag carrying a `javascript:` url instead of an `http(s)` one could run script on click; only `http`/`https` render as a link now, and the link is escaped like everything else on that page
-* Fix folder in Subsonic API
-* Fix missing songs lyrics
-* A failed database query threw an exception with no message, so a stack trace named the throw site and nothing about what broke; the statement and the driver error now travel with it
-* `admin:updateDatabase` crashed when preference maintenance ran on a half-migrated schema because it tried to work on `user_preference` assuming columns a later migration adds. Now it waits for the schema to be complete
-* The now-playing refresh timer only cleared on `popstate`, so link navigation left it polling `ajax.server.php` in the background long after the page was gone
-* An existing smart playlist had no `Save as Smart Playlist` button to clone it — `smartplaylist.php` never registered the action, unlike the search page
-* A download with nothing to send died on the way out rather than saying so; `ZipArchive::close()` reports success on an archive nothing was added to but writes no file, and an album whose songs are all disabled produces exactly that
-* The proof of work interstitial solved a fresh puzzle on every error the protected endpoint returned, without end, because it replayed a url whose answer had already been spent
-* A share link on a private playlist refused every visitor: the check read `VisibleItemInterface`, which also answers for a list being private, so it turned away the account-less visitor the link exists for
-* A withdrawn album stayed listed on the page of its artist for everybody, and in the api and upnp listings of the same thing; both build their own sql and never reach `Query::_get_filter_sql()`
-* The `Enabled` search rule was offered on album disks and filtered nothing, so a smart list asking for withdrawn releases returned the whole catalogue
-* A disk row gave no sign the release behind it had been withdrawn, unlike an album or artist row, and it is the template the artist page uses when albums are not grouped
-* An artist's "all songs" page hid the withdrawn tracks from a manager as well, giving them a shorter list than the album pages of that same artist
-* Drawn artwork never appeared on an install with `custom_blankalbum` set: the placeholder went straight into the `src` and the request never reached `image.php`
-* An RSS item showed the placeholder image for a song or episode whose art lived on its album or podcast rather than on itself: `has_art()` answers for the parent, but the feed then asked `Art::url()` for the media's own id
-* The Recent, Popular and Trending widgets, the pages behind them and the `stats` api method served withdrawn releases; only the newest lists carried the condition
-* The recently played lists — the home page, a user's page, the slideshow and the RSS feed — served withdrawn releases as well, and had never carried the condition at all
-* A withdrawn item's row is tinted instead of being told apart by comparing action icons, which read as the opposite state on a song row and on an album row
-* `run:updateCatalog -ca` reimported every existing file after `clean`, rather than picking up only what actually changed on disk
-* The `deleted_songs` API action returned an empty list no matter how many songs had actually been deleted
+* Garbage collection incorrectly removed parent-only folders
+* Fixed missing Subsonic sub-folder listings
+* Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`
+* Improved support for databases with autocommit disabled
+* Fixed false PDO error detection when error code was `00000`
+* Fixed raw `LICENSE` tag handling for Vorbis metadata
+* Sanitised licence external links and blocked non-HTTP(S) URLs
+* Fixed folder handling in the Subsonic API
+* Fixed missing song lyrics
+* Database exceptions now include query and driver error details
+* Fixed `admin:updateDatabase` failures during partial migrations
+* Fixed now-playing polling continuing after page navigation
+* Restored "Save as Smart Playlist" for existing smart playlists
+* Fixed downloads failing when no files were available
+* Fixed proof-of-work loops after endpoint errors
+* Fixed private playlist share links rejecting visitors
+* Fixed withdrawn albums appearing in artist, API and UPnP listings
+* Fixed ineffective `Enabled` search rule on album disks
+* Added withdrawn status indicators to disk listings
+* Fixed managers being unable to view withdrawn tracks on artist song pages
+* Fixed missing generated artwork when `custom_blankalbum` is enabled
+* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
+* Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
+* Fixed withdrawn releases appearing in recently played views and feeds
+* Added visual highlighting for withdrawn items
+* Fixed `run:updateCatalog -ca` reimporting unchanged files
+* Fixed `deleted_songs` API always returning an empty result
 * Subsonic
-  * `getMusicDirectory` queried each song's genre tags individually instead of as one batch, which could time out or fail outright on a folder with thousands of files
-  * Video and podcast episode listings had the same one-tag-query-per-item gap
-  * An unexpected error during a Subsonic or OpenSubsonic API call now returns a proper error response instead of an empty one
-  * `getMusicDirectory` on a large folder could still exhaust PHP's memory limit: a song's collaborating and album artists, unlike its primary artist, fell back to one uncached name lookup per song instead of being warmed in the same batch
-* A catalog scan started from the UI that hit an error mid-run left the progress stream open instead of stopping and reporting it
-* An unexpected error in a DAAP request returned no response instead of an error
-* Clicking a sidebar section header didn't reliably toggle it open or closed, and the collapsed cookie could fall out of sync with what was actually showing
-* `wanted_missing_albums` crashed with a 500 instead of an empty list when a MusicBrainz release-group in the response carried no `secondary-types` array
-* A live radio stream or preview played through the web player could be cut off after a couple of minutes: the proxy that fetches it disabled curl's own timeout but never PHP's execution time limit, so the request itself was killed mid-stream
+  * Optimised genre lookups in `getMusicDirectory`
+  * Optimised video and podcast tag loading
+  * Unexpected API errors now return proper error responses
+  * Reduced memory usage when browsing large folders
+* Fixed catalog scans leaving progress streams open after errors
+* Fixed DAAP requests returning empty responses on unexpected errors
+* Fixed sidebar section toggle inconsistencies
+* Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`
+* Fixed live stream interruptions caused by PHP execution time limits
 
 ## Ampache 8.1.0
 

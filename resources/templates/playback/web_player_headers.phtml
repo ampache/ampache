@@ -60,6 +60,8 @@ if ($this->isIframed()) { ?>
 <script>
     var jplaylist = new Array();
     var jtypes = new Array();
+    // Sticky for the session: an audio element binds to Web Audio once, so any remote item disables EQ/ReplayGain/the visualizer for good.
+    var sessionHasRemoteMedia = false;
 
     function convertMediaToJPMedia(media)
     {
@@ -82,6 +84,14 @@ if ($this->isIframed()) { ?>
         jpmedia['r128_album_gain'] = media['r128_album_gain'];
         jpmedia['duration'] = media['duration'];
         jpmedia['remote'] = media['remote'];
+
+        if (media['remote'] && !sessionHasRemoteMedia) {
+            sessionHasRemoteMedia = true;
+            // The graph is already bound from earlier local playback, so this item will play silently once its turn comes.
+            if (typeof mediaSource !== 'undefined' && mediaSource !== null && typeof displayNotification === 'function') {
+                displayNotification(<?php echo $this->raw($this->getRemoteStreamMessageJs()); ?>, 8000);
+            }
+        }
 
         return jpmedia;
     }
@@ -474,7 +484,7 @@ if ($this->isIframed()) { ?>
             return false;
         }
 
-        // Radio and any other directly referenced url the server did not flag; a redirect still needs `remote`.
+        // Fallback for democratic/random: they resolve to another play url whose remoteness isn't known until it loads.
         function isCrossOriginSource(src)
         {
             if (!src) {
@@ -493,18 +503,28 @@ if ($this->isIframed()) { ?>
         //                                 -> analyserNode (tap for the visualizer)
         function ensureAudioGraph()
         {
+            if (sessionHasRemoteMedia) {
+                return false;
+            }
+            // Never route a remote stream through Web Audio, or it plays silent -- and it can never be unbound, so taint the whole session.
+            if (currentTrackIsRemote()) {
+                sessionHasRemoteMedia = true;
+                if (mediaSource !== null) {
+                    displayNotification(<?php echo $this->raw($this->getRemoteStreamMessageJs()); ?>, 8000);
+                }
+
+                return false;
+            }
             if (mediaSource !== null) {
                 return true;
-            }
-            // Never route a remote (cross-origin) stream through Web Audio, or it plays silent.
-            if (currentTrackIsRemote()) {
-                return false;
             }
             var mediaElement = $('.jp-jplayer').find('audio').get(0);
             if (!mediaElement || audioContext === null) {
                 return false;
             }
             if (isCrossOriginSource(mediaElement.currentSrc)) {
+                sessionHasRemoteMedia = true;
+
                 return false;
             }
             mediaSource = audioContext.createMediaElementSource(mediaElement);
