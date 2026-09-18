@@ -223,6 +223,29 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         };
     }
 
+    /**
+     * The header box title: plain text at the root (nothing to link back to), a breadcrumb of ancestor
+     * links ending in the plain current folder name otherwise -- same shape as `FolderView::getTitle()`.
+     */
+    public function getTitle(): string
+    {
+        $home = $this->e(T_('Home'));
+
+        $folder = $this->getCurrentFolder();
+        if ($folder === null) {
+            return $home;
+        }
+
+        $crumbs = ['<a href="' . $this->e($this->getFolderUrl(PlaylistFolder::ROOT)) . '">' . $home . '</a>'];
+        foreach ($this->getAncestors() as $ancestor) {
+            $crumbs[] = '<a href="' . $this->e($this->getFolderUrl($ancestor->getId())) . '">' . $this->e($ancestor->getName()) . '</a>';
+        }
+
+        $crumbs[] = $this->e($folder->getName());
+
+        return implode(' / ', $crumbs);
+    }
+
     public function mayCreate(): bool
     {
         return $this->gatekeeperFactory->createGuiGatekeeper()
@@ -253,7 +276,8 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         }
 
         if ($playlist->isEditable()) {
-            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . '\', \'edit_playlist_' . $playlistId . '\', \'' . $this->e($playlist->getEditButtonTitle()) . '\', \'playlist_row_\')">' . $playlist->getEditIcon() . '</a>';
+            // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
+            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . '\', \'edit_playlist_' . $playlistId . '\', \'' . $this->e($playlist->getEditButtonTitle()) . '\', \'\')">' . $playlist->getEditIcon() . '</a>';
         }
 
         if ($playlist->canBeDeleted()) {
@@ -277,7 +301,8 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         if ($item->has_access()) {
             $title = addslashes(T_('Smart Playlist Edit'));
-            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'smartplaylist_row_\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
+            // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
+            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
             $html .= Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $searchId, 'close', T_('Delete'), 'delete_playlist_' . $searchId, '', '', T_('Are You Sure?'));
         }
 

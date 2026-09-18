@@ -37,9 +37,9 @@ $browse         = $this->getBrowse();
 $argument_param = $this->getArgumentParam();
 $columns        = $this->getColumns();
 $rows           = $this->getRows();
-$currentFolder  = $this->getCurrentFolder();
-$ancestors      = $this->getAncestors();
 $mayCreate      = $this->mayCreate();
+
+Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
 
 if ($mayCreate) { ?>
 <div id="information_actions">
@@ -65,15 +65,6 @@ if ($mayCreate) { ?>
     </ul>
 </div>
 <?php } ?>
-<nav class="playlist_folder_breadcrumb">
-    <a href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>"><?php echo T_('Home'); ?></a>
-    <?php foreach ($ancestors as $ancestor) { ?>
-    / <a href="<?php echo $this->e($this->getFolderUrl($ancestor->getId())); ?>"><?php echo $this->e($ancestor->getName()); ?></a>
-    <?php }
-    if ($currentFolder instanceof PlaylistFolder) { ?>
-    / <?php echo $this->e($currentFolder->getName()); ?>
-    <?php } ?>
-</nav>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
@@ -127,4 +118,6 @@ if ($mayCreate) { ?>
 </table>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
-} ?>
+}
+
+Ui::show_box_bottom(); ?>
