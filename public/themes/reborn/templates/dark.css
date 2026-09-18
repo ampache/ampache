@@ -70,6 +70,9 @@ textarea {
     border-color: hsl(0, 0%, 30%);
 }
 
+/* :root sets color-scheme: dark, which the popup inherits and uses to pick the highlighted */
+/* row's UA text color regardless of the color/background-color declared below, so the row */
+/* stays white-on-white; opting the control back into light scheme is what fixes that row */
 select option {
     background-color: #fff;
     color: #000;
