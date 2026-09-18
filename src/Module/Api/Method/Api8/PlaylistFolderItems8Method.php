@@ -30,9 +30,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,18 +49,15 @@ final class PlaylistFolderItems8Method implements MethodInterface
 
     public const string ACTION = 'playlist_folder_items';
 
-    private BrowseFactoryInterface $browseFactory;
-    private CollectionRepositoryInterface $collectionRepository;
+    private PlaylistFolderItemsLoaderInterface $itemsLoader;
     private PlaylistFolderRepositoryInterface $playlistFolderRepository;
 
     public function __construct(
         PlaylistFolderRepositoryInterface $playlistFolderRepository,
-        CollectionRepositoryInterface $collectionRepository,
-        BrowseFactoryInterface $browseFactory,
+        PlaylistFolderItemsLoaderInterface $itemsLoader,
     ) {
         $this->playlistFolderRepository = $playlistFolderRepository;
-        $this->collectionRepository     = $collectionRepository;
-        $this->browseFactory            = $browseFactory;
+        $this->itemsLoader              = $itemsLoader;
     }
 
     /**
@@ -95,10 +90,7 @@ final class PlaylistFolderItems8Method implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         $folder = $this->loadFolderOrRoot($input, $user);
-
-        $items = ($folder === null)
-            ? $this->rootItems($user)
-            : $this->playlistFolderRepository->getPlacements($user, $folder->getId());
+        $items  = $this->itemsLoader->getItems($user, $folder);
 
         if ($items === []) {
             $response->getBody()->write(
@@ -116,71 +108,5 @@ final class PlaylistFolderItems8Method implements MethodInterface
         );
 
         return $response;
-    }
-
-    /**
-     * Every list the user can see that is not filed in a folder
-     *
-     * Visibility is taken from the existing browses and repository rather than re-derived here, so public,
-     * owned, collaborated and shared lists stay in step with the rest of the API.
-     *
-     * @return list<array{object_id: int, object_type: string, sort_order: int}>
-     */
-    private function rootItems(User $user): array
-    {
-        $placements = $this->playlistFolderRepository->getPlacementMap($user);
-
-        $items = [];
-        foreach ($this->visibleLists($user) as $entry) {
-            $key       = sprintf('%s-%d', $entry['object_type'], $entry['object_id']);
-            $placement = $placements[$key] ?? null;
-
-            // Filed in a real folder, so it is not at the root
-            if ($placement !== null && $placement['folder'] !== PlaylistFolder::ROOT) {
-                continue;
-            }
-
-            $items[] = [
-                'object_id' => $entry['object_id'],
-                'object_type' => $entry['object_type'],
-                'sort_order' => $placement['sort_order'] ?? 0,
-            ];
-        }
-
-        usort(
-            $items,
-            static fn(array $left, array $right): int => [$left['sort_order'], $left['object_type'], $left['object_id']]
-                <=> [$right['sort_order'], $right['object_type'], $right['object_id']]
-        );
-
-        return $items;
-    }
-
-    /**
-     * Playlists, smartlists and collections the user may see, in the table spelling of their type
-     *
-     * @return list<array{object_id: int, object_type: string}>
-     */
-    private function visibleLists(User $user): array
-    {
-        $browse = $this->browseFactory->create(null, false);
-        $browse->set_user_id($user);
-        $browse->set_type('playlist_search');
-        $browse->set_sort('name', 'ASC', false);
-        $browse->set_filter('playlist_open', $user->getId());
-
-        $entries = [];
-        foreach ($browse->get_objects() as $listId) {
-            // The browse merges both kinds, marking a smartlist by prefixing its id
-            $entries[] = ((int) $listId === 0)
-                ? ['object_id' => (int) str_replace('smart_', '', (string) $listId), 'object_type' => 'search']
-                : ['object_id' => (int) $listId, 'object_type' => 'playlist'];
-        }
-
-        foreach ($this->collectionRepository->getByUser($user) as $collectionId) {
-            $entries[] = ['object_id' => $collectionId, 'object_type' => 'collection'];
-        }
-
-        return $entries;
     }
 }
