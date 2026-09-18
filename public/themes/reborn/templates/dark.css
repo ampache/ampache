@@ -71,8 +71,14 @@ textarea {
 }
 
 select option {
-    background-color: hsl(0, 0%, 10%);
-    color: #fff;
+    background-color: #fff;
+    color: #000;
+}
+
+select option:hover,
+select option:checked {
+    background-color: #eee;
+    color: #000;
 }
 
 button,
