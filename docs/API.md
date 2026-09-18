@@ -115,6 +115,31 @@ GET https://demo.ampache.dev/server/json.server.php?action=handshake&version=8.0
 Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
 ```
 
+### QuickConnect Authentication
+
+**Ampache 8.2.0+**
+
+QuickConnect pairs a new client without typing a password or API key: the client requests a short pairing code, shows it to the user, and polls until it is approved from another session that is already signed in (the Preferences page, or the same flow used by the Jellyfin-compatible API).
+
+It is off by default; an administrator must enable the `quickconnect_enable` preference before either method below responds.
+
+`secret` is a bearer credential for the pairing — anyone who has it can complete the sign-in — so send it as [POST data](#news) rather than a query string parameter, the same way you would an `auth` token.
+
+1. Call `quickconnect_initiate` to get a `secret` (keep this private, it is what step 3 polls with) and a short `code` (show this to the user)
+
+```shell
+curl -X POST "http://localhost/ampache/server/json.server.php" -d "action=quickconnect_initiate&device_name=My+App"
+```
+
+2. Have the user approve the `code` from their Preferences page, on a session that is already signed in
+3. Poll `quickconnect_status` with the `secret` from step 1
+
+```shell
+curl -X POST "http://localhost/ampache/server/json.server.php" -d "action=quickconnect_status&secret=SECRET"
+```
+
+While the code is still waiting for approval, the response is just `{"authorized": false}`. Once it is approved, `authorized` is `true` and the response also carries a minted session — the same fields `handshake` returns (`auth`, `session_expire`, server counts, ...) — so no separate handshake call is needed.
+
 ### Other handshake-related stuff
 
 #### Ampache scheme
@@ -239,6 +264,8 @@ All Auth methods return HTTP 200 responses
 * ping
 * register
 * lost_password **Ampache 6.1.0+**
+* quickconnect_initiate **Ampache 8.2.0+**
+* quickconnect_status **Ampache 8.2.0+**
 
 ### Non-Data Methods
 
