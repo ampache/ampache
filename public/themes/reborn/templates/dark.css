@@ -70,6 +70,11 @@ textarea {
     border-color: hsl(0, 0%, 30%);
 }
 
+select option {
+    background-color: hsl(0, 0%, 10%);
+    color: #fff;
+}
+
 button,
 input[type=button],
 input[type=submit],
