@@ -158,7 +158,7 @@ final class FolderListRenderer extends AbstractBrowseListRenderer
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     #[Override]

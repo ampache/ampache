@@ -151,6 +151,17 @@ $labels = $this->getLabels(); ?>
         return !!item && (item['media_type'] === 'random' || item['media_type'] === 'democratic');
     }
 
+    // A radio station has no length to show progress against or seek within.
+    function isLiveStreamCurrent()
+    {
+        if (jplaylist === null || !jplaylist.playlist) {
+            return false;
+        }
+        var item = jplaylist.playlist[jplaylist.current];
+
+        return !!item && item['media_type'] === 'live_stream';
+    }
+
     // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
     // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
     function nowPlayingTrackChanged()
@@ -450,6 +461,19 @@ if ($this->showSongPageTitle()) {
         }
 
         function correctPlayerTimeline(event) {
+            var container = $("#jp_container_1");
+            if (isLiveStreamCurrent()) {
+                // the browser's own guess at a live stream's duration keeps drifting as more of it downloads,
+                // which is what was filling the bar; held at empty instead, and CSS keeps it from taking clicks
+                container.addClass('jp-live-stream');
+                container.find('.jp-seek-bar').css('width', '100%');
+                container.find('.jp-play-bar').stop(true, true).css('width', '0%');
+                container.find('.jp-duration').text('');
+
+                return;
+            }
+            container.removeClass('jp-live-stream');
+
             var known = jpKnownDuration();
             if (known <= 0) {
                 return;
@@ -460,7 +484,6 @@ if ($this->showSongPageTitle()) {
                 return;
             }
             var percent = Math.max(0, Math.min(100, ((status.currentTime || 0) / known) * 100));
-            var container = $("#jp_container_1");
             container.find('.jp-seek-bar').css('width', '100%');
             container.find('.jp-play-bar').stop(true, true).css('width', percent + '%');
             container.find('.jp-duration').text(jpFormatDuration(known));
@@ -501,6 +524,15 @@ if ($this->showSongPageTitle()) {
             if ("mediaSession" in navigator) {
                 navigator.mediaSession.playbackState = "paused";
             }
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.stop, function (event) {
+            // a live stream never reaches its own end, so jPlayer's reset leaves the last position on screen
+            cancelNowPlayingRetry();
+            var container = $("#jp_container_1");
+            container.removeClass('jp-live-stream');
+            container.find('.jp-play-bar').stop(true, true).css('width', '0%');
+            container.find('.jp-current-time').text('0:00');
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
@@ -563,7 +595,7 @@ if (!$this->isPlayerFragment()) { ?>
 if (!$this->isVideo()) {
     if (!$this->isShare()) { ?>
     <div class="playing_info">
-        <img class="playing_art" alt="" style="display: none;">
+        <img class="playing_art display-none" alt="">
         <div class="playing_artist"></div>
         <div class="playing_title"></div>
         <div class="playing_album"></div>
@@ -578,7 +610,7 @@ if (!$this->isVideo()) {
 <div class="jp-area<?php echo $this->e($this->getAreaClass()); ?>">
     <div id="jp_container_1" class="<?php echo $this->e($this->getContainerClass()); ?>">
         <div class="jp-type-playlist">
-            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $this->e($this->getPlayerClass()); ?>" style="<?php echo $this->e($this->getShareStyle()); ?>"></div>
+            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $this->e($this->getPlayerClass()); ?><?php echo ($this->isShare() || $this->isRandom()) ? ' display-none' : ''; ?>"></div>
             <div class="jp-gui">
                 <?php if ($this->isVideo()) { ?>
                     <div class="jp-video-play">
@@ -668,7 +700,7 @@ if (!$this->isVideo()) {
                                     <?php echo Ui::get_material_symbol('playlist_add', T_('Add All to playlist')); ?>
                                 </a>
                             <?php } else { ?>
-                                <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('playlist_add', T_('Add All to playlist')); ?></span>
+                                <span class="disabled-icon"><?php echo Ui::get_material_symbol('playlist_add', T_('Add All to playlist')); ?></span>
                             <?php }
                             } ?>
                             </div>
@@ -676,7 +708,7 @@ if (!$this->isVideo()) {
                             <?php if ($this->isPlaylistEditable()) { ?>
                             <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', T_('Loop Playlist')); ?></a>
                             <?php } else { ?>
-                            <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('laps', T_('Loop Playlist')); ?></span>
+                            <span class="disabled-icon"><?php echo Ui::get_material_symbol('laps', T_('Loop Playlist')); ?></span>
                             <?php } ?>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
@@ -730,7 +762,7 @@ if (!$this->isVideo()) {
                             <div id="equalizerbtn" class="action_button">
                                 <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', T_('Equalizer')); ?></a>
                             </div>
-                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
+                            <div id="vizfullbtn" class="action_button visualizer-hidden">
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', T_('Visualizer full-screen')); ?></a>
                             </div>
                         <?php } ?>

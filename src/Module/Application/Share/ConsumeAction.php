@@ -108,6 +108,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         if (!$this->shareRepository->registerAccess($share, new DateTime())) {
             throw new AccessDeniedException();
         }
+
         if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';
@@ -116,6 +117,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             }
+
             $_REQUEST['action'] = $share->object_type;
             $_REQUEST['id']     = $share->object_id;
 
@@ -138,6 +140,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
                     $view->getArtUrl()
                 );
             }
+
             echo $view->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');

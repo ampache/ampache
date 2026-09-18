@@ -70,7 +70,7 @@ final class MashupView extends AbstractView
             (bool) AmpConfig::get('album_group'),
             $this->mayUse,
             (bool) AmpConfig::get('podcast'),
-            (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0
+            AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0
         );
     }
 

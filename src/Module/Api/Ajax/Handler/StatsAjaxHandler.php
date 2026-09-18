@@ -119,14 +119,14 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                 }
 
-                echo (new RecentlyPlayedView(
+                echo new RecentlyPlayedView(
                     ($all_types) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
                     $data,
                     $user,
                     $user_id,
                     $user_only,
                     AmpConfig::get_web_path()
-                ))->render();
+                )->render();
 
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -149,14 +149,14 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 Song::build_cache(array_keys($data));
-                echo (new RecentlyPlayedView(
+                echo new RecentlyPlayedView(
                     RecentlyPlayedMode::SKIPPED,
                     $data,
                     $user,
                     $user_id,
                     $user_only,
                     AmpConfig::get_web_path()
-                ))->render();
+                )->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;
             case 'refresh_skipped':
@@ -170,14 +170,14 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 Song::build_cache(array_keys($data));
-                echo (new RecentlyPlayedView(
+                echo new RecentlyPlayedView(
                     RecentlyPlayedMode::SKIPPED,
                     $data,
                     $user,
                     $user_id,
                     $user_only,
                     AmpConfig::get_web_path()
-                ))->render();
+                )->render();
                 $results['recently_skipped'] = ob_get_clean();
                 break;
         } // switch on action;

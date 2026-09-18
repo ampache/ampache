@@ -1,5 +1,27 @@
 # API CHANGELOG
 
+## API 8.2.0
+
+### Added (820000)
+
+* `quickconnect_initiate`, `quickconnect_status` (API8)
+  * New methods pair a native API client with the QuickConnect flow already used by the Jellyfin-compatible API
+  * `quickconnect_initiate` requests a pairing code, `quickconnect_status` polls it
+  * Once approved, the session is minted the same way `handshake` does and is valid
+
+## API 8.1.1
+
+### Fixed (811000)
+
+* `download` (API8)
+  * A container with nothing downloadable crashed the request instead of answering; it now returns 404
+* `artist`, `artists`, `artist_albums` (ALL)
+  * The albums listed for an artist included the withdrawn ones, for every caller
+* `stats` (ALL)
+  * `recent`, `highest` and `frequent` listed withdrawn releases; only `newest` carried the condition. A manager can still see them
+* `deleted_podcast_episodes` (API6)
+  * The XML response named the parent podcast id `<played>` instead of `<podcast>`
+
 ## API 8.1.0
 
 ### Added (810000)

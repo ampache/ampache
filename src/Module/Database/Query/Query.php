@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -190,6 +191,7 @@ class Query
             'label' => LabelQuery::FILTERS,
             'license', 'license_hidden' => LicenseQuery::FILTERS,
             'live_stream' => LiveStreamQuery::FILTERS,
+            'playlist_folder' => PlaylistFolderQuery::FILTERS,
             'playlist_localplay' => PlaylistLocalplayQuery::FILTERS,
             'playlist_media' => PlaylistMediaQuery::FILTERS,
             'playlist_search' => PlaylistSearchQuery::FILTERS,
@@ -939,6 +941,9 @@ class Query
             case 'live_stream':
                 $this->queryType = new LiveStreamQuery();
                 break;
+            case 'playlist_folder':
+                $this->queryType = new PlaylistFolderQuery();
+                break;
             case 'playlist_localplay':
                 $this->queryType = new PlaylistLocalplayQuery();
                 break;
@@ -1131,14 +1136,11 @@ class Query
             in_array($type, ['album', 'album_disk', 'artist', 'song'], true)
             && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $this->user_id)
         ) {
-            // `album_disk` carries no flag of its own, so it reads the one on the album it belongs to
-            $disabled_sql = ($type === 'album_disk')
-                ? "EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1) AND "
-                : sprintf('`%s`.`enabled` = 1 AND ', $type);
+            $enabled_sql = WithdrawnFilter::condition($type) . ' AND ';
 
             $sql .= ($sql === "WHERE")
-                ? ' ' . $disabled_sql
-                : $disabled_sql;
+                ? ' ' . $enabled_sql
+                : $enabled_sql;
         }
 
         // each fragment ends in ' AND ', and a WHERE that collected no filters has to disappear completely

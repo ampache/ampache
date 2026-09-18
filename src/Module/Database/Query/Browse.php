@@ -47,6 +47,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\PrivateMsg;
@@ -96,6 +97,7 @@ class Browse extends Query
         'license',
         'live_stream',
         'mood',
+        'playlist_folder',
         'playlist_localplay',
         'playlist_media',
         'playlist_search',
@@ -138,6 +140,7 @@ class Browse extends Query
         'folder',
         'live_stream',
         'playlist',
+        'playlist_folder',
         'podcast',
         'podcast_episode',
         'song',
@@ -153,6 +156,7 @@ class Browse extends Query
         'democratic',
         'genre',
         'mood',
+        'playlist_folder',
         'playlist_localplay',
         'playlist_media',
     ];
@@ -209,7 +213,7 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $name, Playlist|Search|Folder|Collection $object): bool
+    public function add_supplemental_object(string $name, Playlist|PlaylistFolder|Search|Folder|Collection $object): bool
     {
         $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
@@ -250,7 +254,7 @@ class Browse extends Query
     /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
-     * @return array<string, Playlist|Search|Folder|Collection>
+     * @return array<string, Playlist|PlaylistFolder|Search|Folder|Collection>
      */
     public function get_supplemental_objects(): array
     {
@@ -590,8 +594,8 @@ class Browse extends Query
 
         // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
         $prefetchable = ($type !== 'song_preview');
-        // a folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
-        $persistable = ($prefetchable && $type !== 'folder');
+        // a folder/playlist_folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
+        $persistable = ($prefetchable && $type !== 'folder' && $type !== 'playlist_folder');
         if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
         } elseif ($persistable) {
@@ -793,6 +797,7 @@ class Browse extends Query
             'license', 'license_hidden' => T_('Media Licenses'),
             'live_stream' => T_('Radio Stations') . $match,
             'playlist' => T_('Playlists') . $match,
+            'playlist_folder' => T_('Playlist Folders'),
             'playlist_localplay' => T_('Current Playlist'),
             'playlist_media' => T_('Playlist Items') . $match,
             'playlist_search', 'smartplaylist' => T_('Smart Playlists') . $match,
@@ -881,9 +886,9 @@ class Browse extends Query
 
     /**
      * Warms the cache for a page whose rows are not a uniform list of one type's ids — a folder browse's entries
-     * are each either a bare numeric folder id or an encoded "type-id" string, and a collection_items browse's
-     * entries are each a shaped {object_type, object_id} record. Group by the embedded type, then reuse each
-     * type's own build_cache().
+     * are each either a bare numeric folder id or an encoded "type-id" string, a playlist_folder browse's
+     * entries are always an encoded "type-id" string, and a collection_items browse's entries are each a shaped
+     * {object_type, object_id} record. Group by the embedded type, then reuse each type's own build_cache().
      *
      * @param array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id?: int, track?: int}> $object_ids
      */
@@ -917,6 +922,7 @@ class Browse extends Query
                 'album_disk' => AlbumDisk::build_cache($ids),
                 'video' => Video::build_cache($ids),
                 'playlist' => Playlist::build_cache($ids),
+                'search' => Search::build_cache($ids),
                 'podcast_episode' => Podcast_Episode::build_cache($ids),
                 default => null,
             };
@@ -949,7 +955,7 @@ class Browse extends Query
             'label' => Label::build_cache($this->_squashList($object_ids)),
             'catalog' => Catalog::build_cache($this->_squashList($object_ids)),
             'collection' => Collection::build_cache($this->_squashList($object_ids)),
-            'folder', 'collection_items' => $this->_prefetchMixedTypes($object_ids),
+            'folder', 'collection_items', 'playlist_folder' => $this->_prefetchMixedTypes($object_ids),
             'user', 'follower' => User::build_cache($this->_squashList($object_ids)),
             'share' => Share::build_cache($this->_squashList($object_ids)),
             'broadcast' => Broadcast::build_cache($this->_squashList($object_ids)),
@@ -958,8 +964,8 @@ class Browse extends Query
             default => null,
         };
 
-        // 'folder'/'collection_items' already warmed their own split-by-type groups above
-        if ($type !== 'folder' && $type !== 'collection_items' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+        // 'folder'/'collection_items'/'playlist_folder' already warmed their own split-by-type groups above
+        if ($type !== 'folder' && $type !== 'collection_items' && $type !== 'playlist_folder' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
             $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
         }
     }

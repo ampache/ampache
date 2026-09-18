@@ -19,7 +19,6 @@ return RectorConfig::configure()
         __DIR__ . '/src/Module',
         __DIR__ . '/src/Plugin',
         __DIR__ . '/src/Repository',
-        __DIR__ . '/tests',
     ])
     ->withCache(__DIR__ . '/build/rector', FileCacheStorage::class)
     ->withImportNames()
@@ -28,8 +27,6 @@ return RectorConfig::configure()
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
         NewlineBetweenClassLikeStmtsRector::class,
-        DeprecatedAnnotationToDeprecatedAttributeRector::class,
-        DisallowedEmptyRuleFixerRector::class,
         NullCoalescingOperatorRector::class,
         __DIR__ . '/src/Module/Api',
         __DIR__ . '/src/Module/System/Update/Migration',

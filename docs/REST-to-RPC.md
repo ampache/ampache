@@ -239,6 +239,8 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | DELETE | `preferences/{preference_name}`                      | `?action=preference_delete&filter={preference_name}`                             |                    |
 | GET    | `preferences`                                        | `?action=user_preferences`                                                       | `preferences`      |
 | PUT    | `preferences`                                        | `?action=preference_create`                                                      |                    |
+| POST   | `quickconnect/initiate`                              | `?action=quickconnect_initiate`                                                  |                    |
+| POST   | `quickconnect/status`                                | `?action=quickconnect_status`                                                    |                    |
 | GET    | `random`                                             | `?action=random&type={type}`                                                     |                    |
 | POST   | `register`                                           | `?action=register`                                                               |                    |
 | POST   | `scrobble`                                           | `?action=scrobble`                                                               |                    |

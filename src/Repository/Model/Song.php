@@ -67,12 +67,15 @@ use Traversable;
 class Song extends database_object implements
     Media,
     VisibleItemInterface,
+    WithdrawableInterface,
     displayable_item,
     container_item,
     GarbageCollectibleInterface,
     CatalogItemInterface,
     MetadataEnabledInterface
 {
+    use WithdrawableTrait;
+
     // the value a player or an api response passes to fill_ext_info() for the scalars, without the comment or lyrics
     public const string PARTIAL_FILTER  = 'partial';
     protected const string DB_TABLENAME = 'song';
@@ -250,18 +253,22 @@ class Song extends database_object implements
             parent::add_to_cache('song', $row['id'], $row);
         }
 
-        Artist::build_cache($artists);
         Album::build_cache($albums);
         Art::build_cache($albums);
 
         // one artist_map read for the page instead of one per song, and the same for the album artists
         foreach ($repository->getParentIdsBulk(array_map(intval(...), array_values($song_ids)), false) as $songId => $parentIds) {
             parent::add_to_cache('song_artists', $songId, $parentIds);
+            $artists = array_merge($artists, $parentIds);
         }
 
         foreach ($repository->getParentIdsBulk(array_values(array_unique($albums)), true) as $albumId => $parentIds) {
             parent::add_to_cache('album_artists', $albumId, $parentIds);
+            $artists = array_merge($artists, $parentIds);
         }
+
+        // every artist a song or its album credits, including a collaborator only reachable through the maps
+        Artist::build_cache(array_values(array_unique($artists)));
 
         // one read for the whole page instead of one per song
         $intIds = array_map(intval(...), array_values($song_ids));
@@ -533,6 +540,7 @@ class Song extends database_object implements
      *     catalog: int,
      *     total_count: int,
      *     total_skip: int,
+     *     update_time: int,
      *     album: int,
      *     artist: int,
      * }>
@@ -550,6 +558,7 @@ class Song extends database_object implements
                 'catalog' => (int) $row['catalog'],
                 'total_count' => (int) $row['total_count'],
                 'total_skip' => (int) $row['total_skip'],
+                'update_time' => (int) $row['update_time'],
                 'album' => (int) $row['album'],
                 'artist' => (int) $row['artist'],
             ];
@@ -759,7 +768,7 @@ class Song extends database_object implements
         $artists = [$artist_id, (int) $albumartist_id];
 
         // map the song to catalog album and artist maps
-        Catalog::update_map((int) $catalog, 'song', $song_id);
+        Catalog::update_map($catalog, 'song', $song_id);
         if ($artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
             Album::add_album_map($album_id, 'song', $artist_id);
@@ -816,7 +825,7 @@ class Song extends database_object implements
             // A scan maps artists to their catalog when it finishes; an upload has no such pass
             foreach (array_unique($artists) as $mapped_artist_id) {
                 if ($mapped_artist_id > 0) {
-                    Catalog::update_map((int) $catalog, 'artist', (int) $mapped_artist_id);
+                    Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
                 }
             }
 
@@ -861,7 +870,7 @@ class Song extends database_object implements
 
         self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
-        self::getFolderRepository()->mapObject('song', $song_id, (string) $file, (int) $catalog);
+        self::getFolderRepository()->mapObject('song', $song_id, (string) $file, $catalog);
 
         return $song_id;
     }
@@ -1429,6 +1438,9 @@ class Song extends database_object implements
     /**
      * fill_ext_info
      * This calls the _get_ext_info and then sets the correct vars
+     *
+     * `$data_filter` names a read, not a column: PARTIAL_FILTER and WAVEFORM_FILTER each reach a narrower row,
+     * and anything else takes the whole one. A column name passed here would silently read the wrong row.
      */
     public function fill_ext_info(string $data_filter = ''): void
     {
@@ -1441,7 +1453,7 @@ class Song extends database_object implements
             if ($this->waveform !== null) {
                 return;
             }
-        } elseif ($this->song_data_loaded || ($data_filter !== '' && $this->partial_data_loaded)) {
+        } elseif ($this->song_data_loaded || ($data_filter === self::PARTIAL_FILTER && $this->partial_data_loaded)) {
             return;
         }
 
@@ -1459,10 +1471,10 @@ class Song extends database_object implements
         }
 
         // don't repeat this process if you've got it all
-        if ($data_filter === '') {
-            $this->song_data_loaded = true;
-        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+        if ($data_filter === self::PARTIAL_FILTER) {
             $this->partial_data_loaded = true;
+        } elseif ($data_filter !== self::WAVEFORM_FILTER) {
+            $this->song_data_loaded = true;
         }
     }
 
@@ -1585,7 +1597,7 @@ class Song extends database_object implements
     public function get_album_mbid(): ?string
     {
         if ($this->album_mbid === null) {
-            $this->album_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ALBUM, (int) $this->album);
+            $this->album_mbid = self::getSongRepository()->findRelatedMbid(SongMbidSourceEnum::ALBUM, $this->album);
         }
 
         return $this->album_mbid;
@@ -1859,7 +1871,7 @@ class Song extends database_object implements
     public function get_lyrics(bool $db_only = false): array
     {
         if ($this->lyrics === null) {
-            $this->fill_ext_info('lyrics');
+            $this->fill_ext_info();
         }
 
         if ($this->lyrics) {
@@ -2131,12 +2143,6 @@ class Song extends database_object implements
         return $this->getId() === 0;
     }
 
-    public function isVisible(?User $user = null): bool
-    {
-        return $this->enabled
-            || ($user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId()));
-    }
-
     /**
      * play_url
      * This function takes all the song information and correctly formats a
@@ -2203,7 +2209,7 @@ class Song extends database_object implements
             // instead reads as a rate below every file, which forces a transcode of everything it is asked for.
             $target_rate = ($bitrate > 0)
                 ? $bitrate
-                : (int) $this->bitrate;
+                : $this->bitrate;
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''
@@ -2563,7 +2569,7 @@ class Song extends database_object implements
             return parent::get_from_cache('song_data', $this->id);
         }
 
-        if ($select !== '') {
+        if ($select === self::PARTIAL_FILTER) {
             return $repository->getPartialDataRow($this->id);
         }
 

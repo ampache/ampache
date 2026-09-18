@@ -158,7 +158,6 @@ final class GraphsView extends AbstractView
             $this->objectId,
             $this->startDate,
             $this->endDate,
-            $this->zoom
         );
 
         return (string) ob_get_clean();

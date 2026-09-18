@@ -200,6 +200,7 @@ abstract class Catalog extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 }
+
                 // check for lost catalogs
                 if (is_dir($cache_path . '/' . $file) && !in_array($file, $catalogs)) {
                     debug_event(self::class, 'WARNING: Orphaned catalog cache ' . $cache_path . '/' . $file, 5);
@@ -754,15 +755,32 @@ abstract class Catalog extends database_object
             $licenseId = $license?->getId();
             // only lookup string licenses from tags
             if ($licenseId === null) {
-                $licenseName = (string) $results['license'];
-                $licenseId   = $licenseRepository->find($licenseName);
+                $licenseValue = trim((string) $results['license']);
+                $licenseId    = $licenseRepository->find($licenseValue);
 
                 if (
                     $licenseId === 0
                     || $licenseId === null
                 ) {
-                    $license = $licenseRepository->prototype()
-                        ->setName($licenseName);
+                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a licence
+                    // of its own. The file that raised ampache#4497 carried a rights registry link in its LICENSE
+                    // field, which is not a licence at all, and nothing here can tell the two apart.
+                    $license = $licenseRepository->prototype();
+
+                    // the field is allowed to carry a url instead of a name, and external_link is where a url
+                    // belongs: stored as the name it overflows the column, and `find()` never matches it again.
+                    // Only http(s) qualifies: a tag is untrusted input, and any other scheme reaching
+                    // external_link would hand the admin license page a link that runs script on click instead
+                    // of one that goes anywhere.
+                    $scheme = strtolower((string) parse_url($licenseValue, PHP_URL_SCHEME));
+                    if (filter_var($licenseValue, FILTER_VALIDATE_URL) && in_array($scheme, ['http', 'https'], true)) {
+                        $host = parse_url($licenseValue, PHP_URL_HOST);
+
+                        $license->setExternalLink(self::_check_length($licenseValue, 256))
+                            ->setName(self::_check_length(is_string($host) ? $host : $licenseValue, 80));
+                    } else {
+                        $license->setName(self::_check_length($licenseValue, 80));
+                    }
 
                     $license->save();
 
@@ -2383,7 +2401,7 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $changed = $changed || (bool) ($info['change'] ?? false);
+                $changed = $changed || ($info['change'] ?? false);
                 $diff    = array_key_exists('element', $info) && $info['element'] !== [];
                 $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
                 $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));

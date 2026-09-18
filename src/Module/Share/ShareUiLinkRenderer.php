@@ -107,7 +107,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
             }
         }
 
-        $link .= "<li style='padding-top: 8px; text-align: right;'>";
+        $link .= "<li class='share-external-list'>";
 
         $plugins = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_SHARE);
         foreach ($plugins as $plugin_name) {

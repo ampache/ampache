@@ -68,7 +68,8 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
     public function remove(
         Artist $artist,
     ): void {
-        $album_ids = $this->albumRepository->getAlbumByArtist($artist->id);
+        // every album goes with the artist, withdrawn ones included, or they outlive the row they hang off
+        $album_ids = $this->albumRepository->getAlbumByArtist($artist->id, false);
 
         $song_ids = [];
         foreach ($album_ids as $albumId) {

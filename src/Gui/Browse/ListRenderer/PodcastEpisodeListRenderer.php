@@ -57,7 +57,7 @@ final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer
 
     public function areRatingsShown(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     /**

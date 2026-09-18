@@ -97,7 +97,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $body  = T_('Share created') . '<br />'
                 . T_('You can now start sharing the following URL:') . '<br />'
                 . '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />'
-                . '<div id="share_qrcode" style="text-align: center"></div>'
+                . '<div id="share_qrcode" class="share-qrcode-box"></div>'
                 . '<script>$(function () { $(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128}); });</script>'
                 . '<br /><br />'
                 . T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />'

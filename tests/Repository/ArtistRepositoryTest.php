@@ -27,11 +27,13 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
@@ -41,6 +43,7 @@ class ArtistRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
+    private RandomIdSamplerInterface&MockObject $randomIdSampler;
     private ArtistRepository $subject;
 
     public function testAddArtistMapInsertsIgnoringDuplicates(): void
@@ -281,6 +284,24 @@ class ArtistRepositoryTest extends TestCase
         self::assertSame([], $this->subject->getIdsMissingRecommendation(500));
     }
 
+    public function testGetRandomBuildsTheCatalogFilterAndDelegatesToTheSampler(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::once())
+            ->method('sample')
+            ->with(
+                'artist',
+                'id',
+                'WHERE EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `artist_map`.`artist_id` = `artist`.`id` AND `song`.`catalog` IN (5,7,0)) ',
+                [],
+                3
+            )
+            ->willReturn([10, 11, 12]);
+
+        self::assertSame([10, 11, 12], $this->subject->getRandom(42, 3));
+    }
+
     public function testGetRowsByCatalogsFiltersOnTheSongCatalogWhenGivenAList(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -405,8 +426,8 @@ class ArtistRepositoryTest extends TestCase
 
         $this->subject->updateAllCounts();
 
-        $albumCount = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`album_count` = ')))[0];
-        $songCount  = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`song_count` = ')))[0];
+        $albumCount = array_first(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`album_count` = ')));
+        $songCount  = array_first(array_filter($statements, static fn(string $sql): bool => str_contains($sql, '`artist`.`song_count` = ')));
 
         self::assertStringContainsString('`album`.`enabled` = 1', $albumCount);
         self::assertStringContainsString('`song`.`enabled` = 1', $songCount);
@@ -481,12 +502,14 @@ class ArtistRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger     = $this->createMock(LoggerInterface::class);
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->randomIdSampler = $this->createMock(RandomIdSamplerInterface::class);
 
         $this->subject = new ArtistRepository(
             $this->connection,
             $this->logger,
+            $this->randomIdSampler,
         );
     }
 
@@ -517,5 +540,19 @@ class ArtistRepositoryTest extends TestCase
                 );
             }
         }
+    }
+
+    /**
+     * @param list<int> $catalogIds
+     */
+    private function bootCatalogRepository(array $catalogIds): void
+    {
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn($catalogIds);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturn($catalogRepository);
+
+        $GLOBALS['dic'] = $dic;
     }
 }

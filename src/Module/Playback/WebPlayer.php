@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Live_Stream;
@@ -62,13 +65,11 @@ class WebPlayer
      *     real: string,
      *     player: string,
      * } $types
-     * @param array<string, string> $urlinfo
      */
     public static function can_transcode(
         string $media_type,
         string $file_type,
         array  $types,
-        array  $urlinfo,
         string $transcode_cfg,
         string $force_type = '',
     ): bool {
@@ -148,6 +149,7 @@ class WebPlayer
 
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
+            $json['remote']     = self::is_remote_media($media);
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
@@ -179,6 +181,8 @@ class WebPlayer
             }
 
             $json['media_type'] = $item->type;
+            // a station always redirects to its stream url; democratic/random resolve to another play url whose remoteness isn't known yet
+            $json['remote'] = ($item->type === 'live_stream');
         }
 
         $json['filetype'] = $types['player'];
@@ -315,11 +319,11 @@ class WebPlayer
         $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
-            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
+            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif (($media = self::get_media_object($urlinfo)) instanceof Media) {
             /** @var Video|Podcast_Episode|Song|Song_Preview $media */
-            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
+            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } elseif ($item->type == 'live_stream') {
             $types['real'] = $item->codec;
@@ -338,5 +342,26 @@ class WebPlayer
         }
 
         return $types;
+    }
+
+    /**
+     * Whether $media streams from somewhere other than this Ampache server (so PlayAction proxies or
+     * redirects it), which the web player must know before ever routing it through the shared Web Audio
+     * graph: a cross-origin resource plays silently there, and stays silent for the life of the shared
+     * audio element even after switching back to local media.
+     */
+    protected static function is_remote_media(Media $media): bool
+    {
+        if ($media instanceof Live_Stream || $media instanceof Song_Preview) {
+            return true;
+        }
+
+        if (($media instanceof Song || $media instanceof Podcast_Episode || $media instanceof Video) && $media->catalog) {
+            $catalog = Catalog::create_from_id($media->catalog);
+
+            return ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic);
+        }
+
+        return false;
     }
 }

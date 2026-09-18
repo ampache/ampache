@@ -285,7 +285,7 @@ final class BrowseMethod implements MethodInterface
         $output->setLimit($apiVersion, (int) ($input['limit'] ?? 0));
 
         $response->getBody()->write(
-            $output->browses($apiVersion, $results, (string) $objectType, $childType, $objectId, $catalogId)
+            $output->browses($apiVersion, $results, $objectType, $childType, $objectId, $catalogId)
         );
 
         return $response;

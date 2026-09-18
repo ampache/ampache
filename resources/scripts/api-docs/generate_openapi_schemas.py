@@ -47,6 +47,7 @@ SOURCES: dict[str, Path] = {
     "api": REPO_ROOT / "src" / "Module" / "Api" / "Api.php",
     "search_model": REPO_ROOT / "src" / "Module" / "Database" / "Query" / "Search.php",
     "localplay": REPO_ROOT / "src" / "Module" / "Playback" / "Localplay" / "LocalPlay.php",
+    "quickconnect": REPO_ROOT / "src" / "Module" / "QuickConnect" / "QuickConnectService.php",
 }
 
 # ---------------------------------------------------------------------------
@@ -95,6 +96,8 @@ TYPES: dict[str, dict[str, str]] = {
     "preference": {"builder": "buildList", "object": "PreferenceObject", "list": "PreferencesResponse", "key": "preference", "envelope": "bare", "source": "preference_builder"},
     # handshake writes Api::server_details() straight out; ping wraps the same fields (see build_ping_schema).
     "handshake": {"builder": "server_details", "object": "HandshakeResponse", "list": "", "key": "", "source": "api"},
+    # quickconnect_initiate writes QuickConnectService::initiate()'s pairing-request row straight out
+    "quickconnect_initiate": {"builder": "initiate", "object": "QuickConnectInitiateResponse", "list": "", "key": "", "source": "quickconnect"},
     # the advanced-search rule list a client needs to build a search, from Search::get_rule_types()
     # localplay_songs writes LocalPlay::get() straight out via objectArray(), in a bare envelope
     "localplay_song": {"builder": "get", "object": "LocalplaySongObject", "list": "LocalplaySongsResponse", "key": "localplay_songs", "envelope": "bare", "source": "localplay"},
@@ -167,6 +170,31 @@ def build_ping_schema(handshake: dict) -> dict:
         ),
         "properties": properties,
         "required": sorted(PING_ALWAYS),
+        "additionalProperties": True,
+    }
+
+
+def build_quickconnect_status_schema(handshake: dict) -> dict:
+    """QuickConnectStatusResponse = `authorized` alone while pending, plus every handshake field once approved.
+
+    Composed from the generated HandshakeResponse rather than an `allOf`, matching build_ping_schema: the
+    method-reference table lists real fields instead of falling back to "Free-form object.".
+    """
+    properties = {
+        "authorized": {
+            "type": "boolean",
+            "description": "True once the code has been approved and this response carries a session.",
+        },
+        **handshake.get("properties", {}),
+    }
+    return {
+        "type": "object",
+        "description": (
+            "`authorized` is always returned. Once the code is approved it is `true` and every "
+            "handshake field (`auth`, `session_expire`, server counts, ...) is added alongside it."
+        ),
+        "properties": properties,
+        "required": ["authorized"],
         "additionalProperties": True,
     }
 
@@ -480,6 +508,8 @@ WIRING_BY_METHOD: dict[tuple[str, str], str] = {
     ("post", "register"): "SuccessResponse",
     ("post", "player"): "NowPlayingResponse",
     ("post", "localplay"): "LocalplayResponse",
+    ("post", "quickconnect_initiate"): "QuickConnectInitiateResponse",
+    ("post", "quickconnect_status"): "QuickConnectStatusResponse",
 }
 
 # The mutation and command endpoints all answer with {"success": "..."}. They are listed by verb
@@ -1192,6 +1222,7 @@ def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
     handshake["required"] = sorted(handshake.get("properties", {}))
 
     schemas["PingResponse"] = build_ping_schema(schemas["HandshakeResponse"])
+    schemas["QuickConnectStatusResponse"] = build_quickconnect_status_schema(schemas["HandshakeResponse"])
     schemas.update(MANUAL_SCHEMAS)
     schemas["CollectionItemsResponse"] = build_collection_items_schema(schemas["CollectionObject"])
     schemas["PlaylistFolderItemsResponse"] = build_playlist_folder_items_schema(schemas["PlaylistFolderObject"])

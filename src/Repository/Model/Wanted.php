@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\database_object;
-use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -124,12 +123,7 @@ class Wanted extends database_object
         }
 
         try {
-            $brainz = MusicBrainz::newMusicBrainz(
-                'request',
-                AmpConfig::get('musicbrainz_username'),
-                AmpConfig::get('musicbrainz_password')
-            );
-            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
+            $brainz = self::getMusicBrainz();
             /**
              * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
              * @var object{
@@ -172,7 +166,7 @@ class Wanted extends database_object
         foreach ($martist->{'release-groups'} as $group) {
             if (in_array(strtolower((string) $group->{'primary-type'}), $types, true)) {
                 $add     = true;
-                $g_count = count($group->{'secondary-types'});
+                $g_count = count($group->{'secondary-types'} ?? []);
 
                 for ($i = 0; $i < $g_count && $add; ++$i) {
                     $add = in_array(strtolower((string) $group->{'secondary-types'}[$i]), $types);
@@ -262,6 +256,16 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(MissingArtistRetrieverInterface::class);
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getMusicBrainz(): MusicBrainz
+    {
+        global $dic;
+
+        return $dic->get(MusicBrainz::class);
     }
 
     /**
@@ -407,12 +411,7 @@ class Wanted extends database_object
         $this->songs = [];
 
         try {
-            $brainz = MusicBrainz::newMusicBrainz(
-                'request',
-                AmpConfig::get('musicbrainz_username'),
-                AmpConfig::get('musicbrainz_password')
-            );
-            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
+            $brainz          = self::getMusicBrainz();
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (

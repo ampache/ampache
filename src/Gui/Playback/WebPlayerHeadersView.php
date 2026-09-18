@@ -179,7 +179,7 @@ final class WebPlayerHeadersView extends AbstractView
 
     public function showConfirmClose(): bool
     {
-        return $this->iframed && (bool) AmpConfig::get('webplayer_confirmclose') && !$this->isShare;
+        return $this->iframed && AmpConfig::get('webplayer_confirmclose') && !$this->isShare;
     }
 
     public function showDebug(): bool
@@ -189,7 +189,7 @@ final class WebPlayerHeadersView extends AbstractView
 
     public function showPauseTabs(): bool
     {
-        return $this->iframed && (bool) AmpConfig::get('webplayer_pausetabs') && !$this->isShare;
+        return $this->iframed && AmpConfig::get('webplayer_pausetabs') && !$this->isShare;
     }
 
     public function showSongPageTitle(): bool

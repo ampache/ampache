@@ -220,4 +220,72 @@ final readonly class TmpPlaylistRepository implements TmpPlaylistRepositoryInter
             [$playlistId]
         ) !== false;
     }
+
+    /**
+     * Puts a queue's items in the order the caller drags them into, e.g. from the rightbar.
+     *
+     * @param list<int> $orderedRowIds
+     */
+    public function reorderItems(int $playlistId, array $orderedRowIds): void
+    {
+        $items = $this->getItems($playlistId);
+        if (count($items) < 2) {
+            return;
+        }
+
+        $byRowId = [];
+        foreach ($items as $item) {
+            $byRowId[$item['id']] = $item;
+        }
+
+        $ordered = [];
+        foreach ($orderedRowIds as $rowId) {
+            if (isset($byRowId[$rowId])) {
+                $ordered[] = $byRowId[$rowId];
+                unset($byRowId[$rowId]);
+            }
+        }
+
+        // a row the caller never mentioned is one the rightbar's display cap left off the page; it keeps
+        // its place after the ones the drag did touch, rather than being dropped or moved to the front
+        $this->replaceItemsInOrder($playlistId, array_merge($ordered, array_values($byRowId)));
+    }
+
+    public function shuffleItems(int $playlistId): void
+    {
+        $items = $this->getItems($playlistId);
+        if (count($items) < 2) {
+            return;
+        }
+
+        shuffle($items);
+
+        $this->replaceItemsInOrder($playlistId, $items);
+    }
+
+    /**
+     * Order comes from a row's own primary key, so putting a queue's items in a given order means deleting
+     * every row and reinserting them in that order, one INSERT per 500-item chunk.
+     *
+     * @param list<array{object_type: string, id: int, object_id: int}> $items
+     */
+    private function replaceItemsInOrder(int $playlistId, array $items): void
+    {
+        $this->connection->query('DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?', [$playlistId]);
+
+        foreach (array_chunk($items, 500) as $chunk) {
+            $params = [];
+            foreach ($chunk as $item) {
+                $params[] = $item['object_id'];
+                $params[] = $playlistId;
+                $params[] = $item['object_type'];
+            }
+
+            $this->connection->query(
+                'INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES '
+                . implode(', ', array_fill(0, count($chunk), '(?, ?, ?)')),
+                $params
+            );
+        }
+    }
 }

@@ -2120,11 +2120,11 @@ final class Json8_Data
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
-        $licenseRepository = $this->licenseRepository;
+        $licenses = $this->licenseRepository->findByIds(array_values(array_map(intval(...), $objects)));
 
         $JSON = [];
         foreach ($objects as $license_id) {
-            $license = $licenseRepository->findById((int) $license_id);
+            $license = $licenses[(int) $license_id] ?? null;
 
             if ($license !== null) {
                 $JSON[] = [

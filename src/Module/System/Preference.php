@@ -52,7 +52,7 @@ class Preference extends database_object
         AccessLevelEnum::USER->value => ['generated_art', 'generated_art_template', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort', 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists', 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'broadcast_private', 'browse_filter', 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user', 'custom_logo', 'custom_timezone', 'demo_clear_sessions', 'direct_play_limit', 'geolocation', 'hide_genres', 'hide_moods', 'hide_single_artist', 'home_moment_albums', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active', 'notify_email', 'of_the_moment', 'page_title_icons', 'play_type', 'popular_threshold', 'show_album_artist', 'show_artist', 'show_collection', 'show_composer', 'show_donate', 'show_folder', 'show_license', 'show_mood', 'show_original_year', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information', 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time', 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode', 'ui_fixed', 'unique_playlist', 'use_original_year', 'webplayer_confirmclose', 'webplayer_pausetabs', 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'],
         AccessLevelEnum::CONTENT_MANAGER->value => ['now_playing_per_user'],
         AccessLevelEnum::MANAGER->value => ['allow_video', 'custom_blankalbum', 'custom_apple_touch_icon', 'custom_favicon', 'custom_share_image', 'custom_login_background', 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'],
-        AccessLevelEnum::ADMIN->value => ['allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload', 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass', 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'download', 'force_http_play', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs', 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'rate_limit', 'share_expire', 'share', 'show_header_login', 'site_description', 'site_title', 'stream_beautiful_url', 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist', 'upnp_backend', 'webdav_backend'],
+        AccessLevelEnum::ADMIN->value => ['allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload', 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass', 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'download', 'force_http_play', 'jellyfin_backend_enable', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs', 'musicbrainz_server', 'musicbrainz_throttle', 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'quickconnect_enable', 'rate_limit', 'share_expire', 'share', 'show_header_login', 'site_description', 'site_title', 'stream_beautiful_url', 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist', 'upnp_backend', 'webdav_backend'],
     ];
     /**
      * Every Ampache preference and the row `set_defaults()` writes for it, as
@@ -92,6 +92,10 @@ class Preference extends database_object
         'show_played_times' => ['0', 'Show # played', AccessLevelEnum::USER->value, 'string', 'interface', 'browse'],
         'song_page_title' => ['1', 'Show current song in Web player page title', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player'],
         'subsonic_backend' => ['1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
+        'musicbrainz_server' => ['', 'MusicBrainz server URL, empty for musicbrainz.org', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'musicbrainz'],
+        'musicbrainz_throttle' => ['100', 'Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror', AccessLevelEnum::ADMIN->value, 'integer', 'plugins', 'musicbrainz'],
+        'jellyfin_backend_enable' => ['0', 'Use Jellyfin backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
+        'quickconnect_enable' => ['0', 'Enable QuickConnect service', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
         'allow_personal_info_now' => ['1', 'Share Now Playing information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'allow_personal_info_recent' => ['1', 'Share Recently Played information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'allow_personal_info_time' => ['1', 'Share Recently Played information - Allow access to streaming date/time', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
@@ -288,6 +292,8 @@ class Preference extends database_object
         'matomo_url',
         'mb_overwrite_name',
         'mpd_active',
+        'musicbrainz_server',
+        'musicbrainz_throttle',
         'paypal_business',
         'paypal_currency_code',
         'personalfav_display',
@@ -428,6 +434,15 @@ class Preference extends database_object
         ],
     ];
     /**
+     * Subcategory values whose `ucwords()` title-case would mangle a proper noun, keyed by the raw
+     * `DEFAULTS` subcategory string. `format_subcategory()` and `gather-messages.sh` both read this.
+     *
+     * @var array<string, string>
+     */
+    public const array SUBCATEGORY_LABELS = [
+        'musicbrainz' => 'MusicBrainz',
+    ];
+    /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
     public const array SYSTEM_LIST = [
@@ -518,6 +533,7 @@ class Preference extends database_object
         'home_recently_played',
         'httpq_active',
         'index_dashboard_form',
+        'jellyfin_backend_enable',
         'jp_volume',
         'lang',
         'lastfm_challenge',
@@ -530,6 +546,8 @@ class Preference extends database_object
         'max_bit_rate',
         'min_bit_rate',
         'mini_player',
+        'musicbrainz_server',
+        'musicbrainz_throttle',
         'notify_email',
         'now_playing_per_user',
         'generated_art',
@@ -543,6 +561,7 @@ class Preference extends database_object
         'podcast_keep',
         'podcast_new_download',
         'popular_threshold',
+        'quickconnect_enable',
         'rate_limit',
         'share_expire',
         'share',
@@ -764,6 +783,14 @@ class Preference extends database_object
                 $repository->addUserPreference($user_id, $key, $row['name'], $row['value']);
             }
         } // while preferences
+    }
+
+    /**
+     * Title-cases a preference subcategory for display, honouring SUBCATEGORY_LABELS.
+     */
+    public static function format_subcategory(string $subcategory): string
+    {
+        return self::SUBCATEGORY_LABELS[$subcategory] ?? ucwords($subcategory);
     }
 
     /**
@@ -1245,6 +1272,7 @@ class Preference extends database_object
             'homedash_recent',
             'homedash_trending',
             'index_dashboard_form',
+            'jellyfin_backend_enable',
             'label',
             'ldap_start_tls',
             'libitem_contextmenu',
@@ -1270,6 +1298,7 @@ class Preference extends database_object
             'prevent_multiple_logins',
             'public_images',
             'quarantine',
+            'quickconnect_enable',
             'rating_browse_filter',
             'rating_browse_minimum_stars',
             'ratingmatch_flags',
@@ -1411,6 +1440,13 @@ class Preference extends database_object
     {
         $repository       = self::getPreferenceRepository();
         $filterRepository = self::getCatalogFilterRepository();
+
+        // every repair below assumes the final schema, `user_preference`.`name` first of all, which a migration
+        // adds late. On a database still mid-upgrade that column is not there yet and there is nothing to repair,
+        // so leave it: the migrations finish and a later rebuild runs against the complete schema
+        if (!$repository->hasUserPreferenceName()) {
+            return;
+        }
 
         // These repair the install rather than one listener, and each reads the whole table: running them
         // once per user turned a rebuild on a large database into hours of the same three statements.
@@ -1650,6 +1686,7 @@ class Preference extends database_object
             'homedash_order' => 'Plugin CSS order',
             'httpq_active' => 'HTTPQ Active Instance',
             'index_dashboard_form' => 'Use Dashboard links for the index page header',
+            'jellyfin_backend_enable' => 'Use Jellyfin backend',
             'jp_volume' => 'Default webplayer volume',
             'lang' => 'Language',
             'lastfm_challenge' => 'Last.FM Submit Challenge',
@@ -1668,6 +1705,8 @@ class Preference extends database_object
             'mb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'mini_player' => 'Lock this user into the mini player interface',
             'mpd_active' => 'MPD Active Instance',
+            'musicbrainz_server' => 'MusicBrainz server URL, empty for musicbrainz.org',
+            'musicbrainz_throttle' => 'Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror',
             'notify_email' => 'Allow E-mail notifications',
             'now_playing_per_user' => 'Now Playing filtered per user',
             'offset_limit' => 'Offset Limit',
@@ -1688,6 +1727,7 @@ class Preference extends database_object
             'podcast_keep' => '# latest episodes to keep',
             'podcast_new_download' => '# episodes to download when new episodes are available',
             'popular_threshold' => 'Popular Threshold',
+            'quickconnect_enable' => 'Enable QuickConnect service',
             'rate_limit' => 'Download Rate Limit',
             'ratingmatch_flag_rule' => 'Match rule for Flags',
             'ratingmatch_flags' => 'When you love a track, flag the album and artist',

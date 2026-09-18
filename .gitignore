@@ -38,6 +38,7 @@ public/lib/components
 public/lib/javascript/custom.js
 public/master
 public/newclient
+public/jellyfin/.htaccess
 public/play/.htaccess
 public/rest/.htaccess
 public/templates/custom.css

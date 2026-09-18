@@ -75,7 +75,7 @@ final class PlaylistFolder extends database_object implements ModelInterface
         }
 
         $this->assign($info);
-        $this->id = (int) $folderId;
+        $this->id = $folderId;
     }
 
     /**

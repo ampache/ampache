@@ -92,8 +92,8 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
             $this->isMobileSession(),
             AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800),
             $referrer !== '' && (str_starts_with($referrer, $miniUrl) || rtrim($referrer, '/') === rtrim($miniUrl, '/')),
-            (bool) AmpConfig::get('allow_public_registration') && ($mailEnabled || (bool) AmpConfig::get('user_no_email_confirm', false)),
-            $mailEnabled && (bool) AmpConfig::get('allow_lost_password', true),
+            AmpConfig::get('allow_public_registration') && ($mailEnabled || AmpConfig::get('user_no_email_confirm', false)),
+            $mailEnabled && AmpConfig::get('allow_lost_password', true),
             (bool) AmpConfig::get('show_mini_player', true),
             $oidcEnabled,
             (bool) AmpConfig::get('cookie_disclaimer')
@@ -124,10 +124,13 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
         // read HTTP_REFERER raw: Core::get_server() html-escapes it, and the template escapes again, so a url would carry a literal &amp;
         $referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? $_SERVER['HTTP_REFERER'] ?? '');
 
+        $afterWebPath = substr($referrer, strlen($webPath));
+
         if (
             $referrer !== ''
             && (
                 !str_starts_with($referrer, $webPath)
+                || !in_array($afterWebPath[0] ?? '', ['', '/', '?', '#'], true)
                 // HTTP_REFERER is the login page itself on a retry; that isn't somewhere to send anyone
                 || str_contains($referrer, 'login.php')
             )

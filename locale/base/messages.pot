@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 16:08+1000\n"
+"POT-Creation-Date: 2026-09-17 19:37+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,9 +231,6 @@ msgstr ""
 msgid "Graphs"
 msgstr ""
 
-msgid "Save Track Order"
-msgstr ""
-
 msgid "Do you really want to update from tags?"
 msgstr ""
 
@@ -331,6 +328,9 @@ msgid "Similar Artists"
 msgstr ""
 
 msgid "Similar Songs"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "Select New Art"
@@ -531,6 +531,9 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+msgid "Save Track Order"
+msgstr ""
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -619,6 +622,9 @@ msgid "Overwrite tags of sub songs"
 msgstr ""
 
 msgid "Add tags to sub songs"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "Summary"
@@ -1511,10 +1517,16 @@ msgstr ""
 msgid "play/.htaccess configured?"
 msgstr ""
 
-msgid "config/ampache.cfg.php action"
+msgid "jellyfin/.htaccess action"
 msgstr ""
 
-msgid "Disabled"
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
+msgid "config/ampache.cfg.php action"
 msgstr ""
 
 msgid "config/ampache.cfg.php exists?"
@@ -1588,6 +1600,13 @@ msgstr ""
 msgid ""
 "You may have reached this page because your %s configuration file was not "
 "parsable"
+msgstr ""
+
+#. HINT: line number
+#, php-format
+msgid ""
+"The unclosed value looks like it starts around line %d — the parser only "
+"reports where it finally gives up, which is often further down the file"
 msgstr ""
 
 msgid "Please visit the wiki for help"
@@ -1836,6 +1855,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -1916,6 +1951,9 @@ msgid "%s selected"
 msgstr ""
 
 msgid "Show less"
+msgstr ""
+
+msgid "Shuffle"
 msgstr ""
 
 msgid "Add to New Playlist"
@@ -2020,6 +2058,9 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
+msgid "Save as Smart Playlist"
+msgstr ""
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2079,6 +2120,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running "
 "them."
@@ -2108,6 +2152,15 @@ msgid "Apply to All"
 msgstr ""
 
 msgid "Access Level"
+msgstr ""
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
 msgstr ""
 
 msgid "Sent by"
@@ -2156,9 +2209,6 @@ msgid "Unlimited"
 msgstr ""
 
 msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
 msgstr ""
 
 msgid "Options"
@@ -2213,6 +2263,12 @@ msgid "Active Instance"
 msgstr ""
 
 msgid "Localplay Disabled"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "QuickConnect"
 msgstr ""
 
 msgid "Uploads"
@@ -2798,9 +2854,6 @@ msgstr ""
 msgid "Restore Screen"
 msgstr ""
 
-msgid "Shuffle"
-msgstr ""
-
 msgid "Shuffle Off"
 msgstr ""
 
@@ -2918,9 +2971,6 @@ msgstr ""
 msgid "Localplay Controller Not Defined"
 msgstr ""
 
-msgid "Account"
-msgstr ""
-
 msgid "No lyrics found."
 msgstr ""
 
@@ -2929,9 +2979,6 @@ msgstr ""
 
 #, php-format
 msgid "Track %d"
-msgstr ""
-
-msgid "Play on the current player"
 msgstr ""
 
 msgid "Song Information"
@@ -3191,6 +3238,10 @@ msgid ""
 msgstr ""
 
 msgid "Added to playlist"
+msgstr ""
+
+#, php-format
+msgid "Ampache version: %s"
 msgstr ""
 
 msgid "Received an empty UPnP request"
@@ -3749,6 +3800,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr ""
 
@@ -4144,6 +4201,9 @@ msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Failed to connect to the remote server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4156,9 +4216,6 @@ msgid "Running Remote Update"
 msgstr ""
 
 msgid "URI"
-msgstr ""
-
-msgid "Failed to connect to the remote server"
 msgstr ""
 
 #. HINT: count of songs found
@@ -4476,9 +4533,6 @@ msgstr ""
 msgid "Plugins"
 msgstr ""
 
-msgid "Enabled"
-msgstr ""
-
 msgid "Users List"
 msgstr ""
 
@@ -4544,10 +4598,6 @@ msgid "Update the database to the latest version"
 msgstr ""
 
 msgid "Display database update information"
-msgstr ""
-
-#, php-format
-msgid "Ampache version: %s"
 msgstr ""
 
 #. HINT: config version string (e.g. 62)
@@ -7198,6 +7248,10 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7227,6 +7281,14 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid "Hundredths of a second to wait between MusicBrainz calls, 0 to disable for your own mirror"
 msgstr ""
 
 #: Ampache preference description
@@ -7275,6 +7337,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Popular Threshold"
+msgstr ""
+
+#: Ampache preference description
+msgid "Enable QuickConnect service"
 msgstr ""
 
 #: Ampache preference description

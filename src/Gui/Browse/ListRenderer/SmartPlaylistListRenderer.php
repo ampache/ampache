@@ -53,7 +53,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
 
     public function areRatingsShown(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     /**
@@ -122,6 +122,7 @@ final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
             Stream_Playlist::check_autoplay_append(),
             $this->areRatingsShown(),
             Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('search'),
+            $search->mayOpenEditDialog(),
             $search->has_access()
         )->render();
     }

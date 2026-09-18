@@ -77,6 +77,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             } elseif (Session::auth_remember()) {
                 $auth = true;
             }
+
             if ($auth) {
                 return $this->responseFactory
                     ->createResponse(RFC7231::FOUND)
@@ -117,7 +118,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
                 (isset($_POST['username']))
-                || (in_array('http', $this->configContainer->getArray(ConfigurationKeyEnum::AUTH_METHODS), true) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+                || (in_array('http', $this->configContainer->getArray(ConfigurationKeyEnum::AUTH_METHODS), true) && isset($_SERVER['REMOTE_USER']))
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
@@ -131,13 +132,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
                         $username = (string) $_POST['username'];
                         $password = $_POST['password'] ?? '';
                     } else {
-                        if (isset($_SERVER['REMOTE_USER'])) {
-                            $username = Core::get_server('REMOTE_USER');
-                        } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-                            $username = Core::get_server('HTTP_REMOTE_USER');
-                        } else {
-                            $username = '';
-                        }
+                        // HTTP_REMOTE_USER is a client-supplied request header and must never be trusted as an identity.
+                        $username = (isset($_SERVER['REMOTE_USER'])) ? Core::get_server('REMOTE_USER') : '';
 
                         $password = '';
                     }
@@ -337,7 +333,11 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     );
             }
 
-            $referrerParts = parse_url($referrer);
+            // a backslash ends the authority for a special scheme in every browser's URL parser, but
+            // parse_url() reads it as an ordinary character and keeps going past it to the next `@` --
+            // normalising it here first is what makes this check see the same host the browser will
+            // (GHSA-9w96-6g5w-9fc9)
+            $referrerParts = parse_url(str_replace('\\', '/', $referrer));
             if (
                 $referrer !== ''
                 && $referrerParts !== false

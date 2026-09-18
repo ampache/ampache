@@ -39,7 +39,7 @@ declare(strict_types=1);
         <tr>
             <td><?php echo T_('Catalog'); ?></td>
             <td>
-                <?php show_catalog_select('catalog', $this->getCatalogId(), '', false, 'podcast', 'local'); ?>
+                <?php show_catalog_select('catalog', $this->getCatalogId(), false, 'podcast', 'local'); ?>
                 <?php echo $this->raw($this->getError('catalog')); ?>
             </td>
         </tr>

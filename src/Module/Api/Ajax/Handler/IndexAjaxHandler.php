@@ -102,6 +102,15 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     'topTracksIndexes();'
                 )->render();
                 break;
+            case 'artist_songs':
+                $artistId         = (int) $this->requestParser->getFromRequest('artist');
+                $object_ids       = $this->songRepository->getByArtist($artistId);
+                $results['songs'] = $this->createSongListPanelView(
+                    'songs',
+                    $object_ids,
+                    ['cel_artist']
+                )->render();
+                break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
                     $user->id ?: -1,
@@ -156,14 +165,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $moment
                 );
                 if ($videos !== []) {
-                    $results['random_video_selection'] = (new RandomVideosView(
+                    $results['random_video_selection'] = new RandomVideosView(
                         $videos,
                         Ui::is_grid_view('video'),
                         (bool) AmpConfig::get('directplay'),
                         Stream_Playlist::check_autoplay_next(),
                         Stream_Playlist::check_autoplay_append(),
                         Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings')
-                    ))->render();
+                    )->render();
                 } else {
                     $results['random_video_selection'] = '<!-- None found -->';
                 }
@@ -180,7 +189,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $biography = Recommendation::get_artist_info_by_name(rawurldecode($fullname));
                     }
 
-                    $results['artist_biography'] = (new ArtistInfoView($artist, $biography))->render();
+                    $results['artist_biography'] = new ArtistInfoView($artist, $biography)->render();
                 }
 
                 break;
@@ -203,7 +212,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $mayInteract = !AmpConfig::get('use_auth')
                         || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 
-                    $results['similar_artist'] = (new RecommendedArtistsView(
+                    $results['similar_artist'] = new RecommendedArtistsView(
                         $this->gatekeeperFactory->createGuiGatekeeper(),
                         AmpConfig::get_web_path(),
                         $object_ids,
@@ -219,7 +228,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $mayInteract,
                         (bool) AmpConfig::get('sociable'),
                         false
-                    ))->render();
+                    )->render();
                 }
 
                 break;
@@ -250,12 +259,12 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $artists = Recommendation::get_artists_like((int) $this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
-                    echo (new NowPlayingSimilarView(
+                    echo new NowPlayingSimilarView(
                         AmpConfig::get_web_path(),
                         $artists,
                         $songs,
                         (bool) AmpConfig::get('wanted')
-                    ))->render();
+                    )->render();
                     $results['similar_items_' . $media_id] = ob_get_clean();
                 }
 
@@ -297,7 +306,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     }
 
                     ob_start();
-                    echo (new MissingAlbumsView($walbums))->render();
+                    echo new MissingAlbumsView($walbums)->render();
                     $results['missing_albums'] = ob_get_clean();
                 }
 
@@ -613,7 +622,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             (bool) AmpConfig::get('directplay'),
             Stream_Playlist::check_autoplay_next(),
             Stream_Playlist::check_autoplay_append(),
-            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && (bool) AmpConfig::get('ratings')
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('ratings')
         );
     }
 
@@ -656,11 +665,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             $tableId,
             $songIds,
             $hiddenColumns,
-            User::is_registered() && (bool) AmpConfig::get('ratings'),
+            User::is_registered() && AmpConfig::get('ratings'),
             (bool) AmpConfig::get('hide_genres'),
             (bool) AmpConfig::get('hide_moods'),
             (bool) AmpConfig::get('album_group'),
-            (bool) AmpConfig::get('licensing') && (bool) AmpConfig::get('show_license'),
+            AmpConfig::get('licensing') && AmpConfig::get('show_license'),
             (bool) AmpConfig::get('show_composer'),
             (bool) AmpConfig::get('show_played_times'),
             (bool) AmpConfig::get('show_skipped_times'),

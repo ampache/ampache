@@ -284,6 +284,29 @@ class Tmp_Playlist extends database_object
     }
 
     /**
+     * Puts this tmp playlist's items in the order the rightbar's drag-and-drop dropped them into
+     *
+     * @param list<int> $orderedRowIds
+     */
+    public function reorder(array $orderedRowIds): bool
+    {
+        self::getTmpPlaylistRepository()->reorderItems($this->id, $orderedRowIds);
+
+        return true;
+    }
+
+    /**
+     * shuffle
+     * Randomizes the order of the items in this tmp playlist
+     */
+    public function shuffle(): bool
+    {
+        self::getTmpPlaylistRepository()->shuffleItems($this->id);
+
+        return true;
+    }
+
+    /**
      * The playlist id whose rows this object covers
      *
      * The session is resolved to an id rather than joined: `tmp_playlist` is the key the rows are already

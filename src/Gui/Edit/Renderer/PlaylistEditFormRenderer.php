@@ -27,8 +27,12 @@ namespace Ampache\Gui\Edit\Renderer;
 
 use Ampache\Gui\Edit\AbstractEditFormRenderer;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Override;
 
 /**
@@ -39,6 +43,11 @@ use Override;
  */
 final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
 {
+    public function __construct(
+        private readonly PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private readonly PlaylistFolderTreeFormatterInterface $treeFormatter,
+    ) {}
+
     /**
      * @return list<int>
      */
@@ -55,6 +64,19 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     }
 
     /**
+     * A comma-joined list of collaborator usernames, for a viewer who can see this but not change it.
+     */
+    public function getCollaboratorNames(): string
+    {
+        $ids = $this->getCollaborateIds();
+        if ($ids === []) {
+            return T_('None');
+        }
+
+        return implode(', ', array_map(static fn(int $id): string => User::get_username($id), $ids));
+    }
+
+    /**
      * The collaborate list is every valid user; the owner list is the one the dialog was handed.
      *
      * @return array<int, string>
@@ -62,6 +84,31 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     public function getCollaborators(): array
     {
         return User::getValidArray();
+    }
+
+    /**
+     * The current session viewer's own placement of this item, not the item's owner's -- filing is per-viewer
+     */
+    public function getFolderId(): int
+    {
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return PlaylistFolder::ROOT;
+        }
+
+        $placement = $this->playlistFolderRepository->getPlacement($user, $this->getPlaylistId(), $this->objectType());
+
+        return $placement['folder'] ?? PlaylistFolder::ROOT;
+    }
+
+    /**
+     * @return list<array{id: int, name: string, depth: int}>
+     */
+    public function getFolderOptions(): array
+    {
+        $user = Core::get_global('user');
+
+        return ($user instanceof User) ? $this->treeFormatter->flatten($user) : [];
     }
 
     public function getLimit(): int
@@ -79,6 +126,11 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     public function getOwnerId(): int
     {
         return (int) $this->getItem()->user;
+    }
+
+    public function getOwnerUsername(): string
+    {
+        return (string) $this->getItem()->username;
     }
 
     public function getPlaylistId(): int
@@ -103,7 +155,7 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     {
         $item = $this->getItem();
 
-        return $item instanceof Search && (bool) $item->random;
+        return $item instanceof Search && $item->random;
     }
 
     /**
@@ -112,6 +164,14 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
     public function isSmartlist(): bool
     {
         return $this->getItem() instanceof Search;
+    }
+
+    /**
+     * Whether the current viewer may change this list's own fields; false still leaves Folder editable.
+     */
+    public function mayEditFields(): bool
+    {
+        return $this->getItem()->canEditFields();
     }
 
     #[Override]
@@ -126,5 +186,13 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
         $item = $this->getContext()->item;
 
         return $item;
+    }
+
+    /**
+     * The table spelling `PlaylistFolderRepositoryInterface` keys placements by
+     */
+    private function objectType(): string
+    {
+        return ($this->getItem() instanceof Search) ? 'search' : 'playlist';
     }
 }

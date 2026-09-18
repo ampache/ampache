@@ -37,6 +37,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Ampache\Repository\PlaylistObjectRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
@@ -77,6 +78,14 @@ abstract class playlist_object extends database_object implements
     protected static function normalizeLogicOperator(mixed $value): string
     {
         return (strtolower((string) $value) === 'or') ? 'or' : 'and';
+    }
+
+    /**
+     * Whether the current viewer may change this list's own fields (name, type, owner, collaborate, ...).
+     */
+    public function canEditFields(): bool
+    {
+        return $this->canWrite();
     }
 
     /**
@@ -383,6 +392,16 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * Whether the current viewer may open the edit dialog at all: full write access, or -- since filing a
+     * public list into your own folder is a per-viewer action, not a write to the list -- just because it
+     * is public. canEditFields() still gates every other field inside update().
+     */
+    public function mayOpenEditDialog(): bool
+    {
+        return $this->canWrite() || ($this->type === 'public' && Core::get_global('user') instanceof User);
+    }
+
+    /**
      * set_last
      * Stores one of the cached totals.
      */
@@ -408,6 +427,7 @@ abstract class playlist_object extends database_object implements
      *     random?: ?int,
      *     limit?: int,
      *     operator?: int,
+     *     folder?: ?int,
      * } $data
      */
     public function update(?array $data = null): int
@@ -416,53 +436,64 @@ abstract class playlist_object extends database_object implements
             return 0;
         }
 
-        if (!$this->canWrite()) {
-            return $this->id;
-        }
-
-        if (isset($data['name'])) {
-            $this->name = (string) $data['name'];
-        }
-
-        if (isset($data['playlist_type'])) {
-            $this->type = (string) $data['playlist_type'];
-        }
-
-        if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
-            $this->user     = (int) $data['playlist_user'];
-            $this->username = User::get_username($this->user);
-        }
-
-        if ($this instanceof Search) {
-            // set_rules() has already applied random/limit onto the object, so they are written back
-            // unconditionally — comparing them against themselves would never fire
-            if (array_key_exists('random', $data)) {
-                $this->random = (int) $data['random'];
+        if ($this->canWrite()) {
+            if (isset($data['name'])) {
+                $this->name = (string) $data['name'];
             }
 
-            if (array_key_exists('limit', $data)) {
-                $this->limit = (int) $data['limit'];
+            if (isset($data['playlist_type'])) {
+                $this->type = (string) $data['playlist_type'];
             }
 
-            if (!empty($data['operator'])) {
-                $this->logic_operator = self::normalizeLogicOperator($data['operator']);
+            if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
+                $this->user     = (int) $data['playlist_user'];
+                $this->username = User::get_username($this->user);
+            }
+
+            if ($this instanceof Search) {
+                // set_rules() has already applied random/limit onto the object, so they are written back
+                // unconditionally — comparing them against themselves would never fire
+                if (array_key_exists('random', $data)) {
+                    $this->random = (int) $data['random'];
+                }
+
+                if (array_key_exists('limit', $data)) {
+                    $this->limit = (int) $data['limit'];
+                }
+
+                if (!empty($data['operator'])) {
+                    $this->logic_operator = self::normalizeLogicOperator($data['operator']);
+                }
+            }
+
+            $this->getPlaylistObjectRepository()->persist($this);
+
+            $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
+            $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
+            if ($collaborate != $this->collaborate) {
+                $this->_update_collaborate($new_list);
+            }
+
+            if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+                $this->set_last($data['last_count'], 'last_count');
+            }
+
+            if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+                $this->set_last($data['last_duration'], 'last_duration');
             }
         }
 
-        $this->getPlaylistObjectRepository()->persist($this);
-
-        $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
-        $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
-        if ($collaborate != $this->collaborate) {
-            $this->_update_collaborate($new_list);
-        }
-
-        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
-            $this->set_last($data['last_count'], 'last_count');
-        }
-
-        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
-            $this->set_last($data['last_duration'], 'last_duration');
+        if (array_key_exists('folder', $data)) {
+            $currentUser = Core::get_global('user');
+            if ($currentUser instanceof User && $this->isVisible($currentUser)) {
+                $objectType = ($this instanceof Search) ? 'search' : 'playlist';
+                $folderId   = (int) $data['folder'];
+                if ($folderId > PlaylistFolder::ROOT) {
+                    $this->getPlaylistFolderRepository()->place($currentUser, $this->id, $objectType, $folderId);
+                } else {
+                    $this->getPlaylistFolderRepository()->unplace($currentUser, $this->id, $objectType);
+                }
+            }
         }
 
         return $this->id;
@@ -527,7 +558,7 @@ abstract class playlist_object extends database_object implements
         // contents so the same playlist keeps producing the same art. Re-running an art gather would
         // otherwise hand the user a different mosaic every time for a playlist that never changed.
         $seed    = crc32($this->id . ':' . implode(',', array_column($medias, 'object_id')));
-        $medias  = (new Randomizer(new Mt19937($seed)))->shuffleArray($medias);
+        $medias  = new Randomizer(new Mt19937($seed))->shuffleArray($medias);
         foreach ($medias as $media) {
             // Only the mosaic is capped, so the caller still gets the full list of covers to choose from
             // when it falls back to picking one.
@@ -610,5 +641,15 @@ abstract class playlist_object extends database_object implements
         global $dic;
 
         return $dic->get(PlaylistArtBuilderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getPlaylistFolderRepository(): PlaylistFolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistFolderRepositoryInterface::class);
     }
 }

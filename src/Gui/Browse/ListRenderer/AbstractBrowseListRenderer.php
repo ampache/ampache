@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
 use LogicException;
 use Override;
 
@@ -79,7 +80,7 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     /**
      * The container a browse was opened from, e.g. the folder being walked into or the playlist being listed.
      */
-    final public function getSupplementalObject(string $name): Collection|Folder|Playlist|Search|null
+    final public function getSupplementalObject(string $name): Collection|Folder|Playlist|PlaylistFolder|Search|null
     {
         return $this->getContext()->supplementalObjects[$name] ?? null;
     }
@@ -104,7 +105,7 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     {
         $argument = $this->getContext()->argument;
 
-        return !is_array($argument) && (bool) $argument;
+        return !is_array($argument) && $argument;
     }
 
     /**

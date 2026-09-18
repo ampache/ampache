@@ -58,7 +58,7 @@ class Collection extends playlist_object
         'video',
     ];
 
-    protected const DB_TABLENAME = 'collection';
+    protected const string DB_TABLENAME = 'collection';
 
     /**
      * The type this collection is pinned to, or null when it holds a mixed bag.
@@ -80,7 +80,7 @@ class Collection extends playlist_object
             $this->$key = $value;
         }
 
-        $this->id = (int) $collectionId;
+        $this->id = $collectionId;
     }
 
     /**

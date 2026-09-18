@@ -80,4 +80,5 @@ return [
     MoodRepositoryInterface::class => autowire(MoodRepository::class),
     TagRepositoryInterface::class => autowire(TagRepository::class),
     LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
+    QuickConnectRepositoryInterface::class => autowire(QuickConnectRepository::class),
 ];
