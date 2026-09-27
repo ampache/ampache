@@ -35,6 +35,7 @@
 
 ### Fixed (8.2.0)
 
+* Subsonic `getIndexes` returned an empty index on any library whose `folder_map` has not been rebuilt
 * Garbage collection incorrectly removed parent-only folders
 * Fixed missing Subsonic sub-folder listings
 * Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`

@@ -395,7 +395,9 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             $clastmodified = 0;
             $catalog       = Catalog::create_from_id($catalogid);
             if ($catalog === null) {
-                break;
+                // `get_catalogs()` appends the pseudo-catalog 0, and a type whose module is gone resolves
+                // to null too: skipping one must not drop every catalog listed after it
+                continue;
             }
             if ($catalog->last_update > $clastmodified) {
                 $clastmodified = $catalog->last_update;
@@ -418,19 +420,26 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             $fcatalogs = $catalogs;
         }
 
+        // the folder tree only exists once a catalog scan has built `folder_map`; before that the index
+        // would come back empty, so fall back to the artists the specification actually asks for
+        $children = ($fcatalogs === [])
+            ? []
+            : $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
+        $artists  = ($fcatalogs !== [] && $children === [])
+            ? Catalog::get_artist_arrays($fcatalogs)
+            : [];
+
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            if (count($fcatalogs) > 0) {
-                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
-                $response = $this->subsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
-            }
+            $response = ($children === [])
+                ? $this->subsonicXmlData->addIndexes($response, $artists, $lastmodified)
+                : $this->subsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
         } else {
             $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            if (count($fcatalogs) > 0) {
-                $children = $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
-                $response = $this->subsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
-            }
+            $response = ($children === [])
+                ? $this->subsonicJsonData->addIndexes($response, $artists, $lastmodified)
+                : $this->subsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
         }
         $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
