@@ -70,13 +70,13 @@ interface UserRepositoryInterface
     public function delete(int $userId, string $userName): void;
 
     /**
-     * Drops every session a user holds, logging them out everywhere
-     */
-    /**
      * Drops only the api sessions a user holds, leaving their interface session in place
      */
     public function deleteApiSessions(string $userName): void;
 
+    /**
+     * Drops every session a user holds, logging them out everywhere
+     */
     public function deleteSessions(string $userName): void;
 
     /**
