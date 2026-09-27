@@ -42,6 +42,21 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         private ServerRequestInterface $request,
     ) {}
 
+    /**
+     * The objects that can hold an album's art, most specific first
+     *
+     * has_db() answers for the album itself; an album with no cover of its own borrows the album
+     * artist's, the way the album page does, instead of serving the placeholder.
+     *
+     * @return list<array{string, int}>
+     */
+    public static function artSources(Album $album): array
+    {
+        $sources = [['album', $album->id], ['artist', (int) $album->album_artist]];
+
+        return array_values(array_filter($sources, static fn(array $source): bool => $source[1] > 0));
+    }
+
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
@@ -62,7 +77,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'isPermaLink' => ($album->mbid !== null || $album->mbid_group !== null)
                     ? 'true'
                     : 'false',
-                'image' => (string) Art::url($album->id, 'album', null, 2),
+                'image' => $this->getAlbumImageUrl($album),
             ];
         }
     }
@@ -103,5 +118,19 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
     protected function getTitle(): string
     {
         return T_('Newest Albums');
+    }
+
+    /**
+     * Art of the album, its own if it has any, the album artist's next, the placeholder otherwise
+     */
+    private function getAlbumImageUrl(Album $album): string
+    {
+        foreach (self::artSources($album) as [$type, $id]) {
+            if (Art::has_db($id, $type)) {
+                return (string) Art::url($id, $type, null, 2);
+            }
+        }
+
+        return (string) Art::url($album->id, 'album', null, 2);
     }
 }

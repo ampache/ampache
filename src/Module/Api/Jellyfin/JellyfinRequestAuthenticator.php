@@ -25,15 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Resolves a Jellyfin bearer/query token back to a User via `Session::username()` — not `Gatekeeper`'s
- * apikey-direct lookup, which is a different, permanent-credential flow this surface doesn't use.
+ * Resolves a Jellyfin bearer/query token back to a User through the api-typed session lookup — not
+ * `findByApiKey()`, whose raw and hashed apikey branches are a permanent-credential flow this surface
+ * does not use.
  */
 final class JellyfinRequestAuthenticator implements JellyfinRequestAuthenticatorInterface
 {
@@ -42,17 +41,11 @@ final class JellyfinRequestAuthenticator implements JellyfinRequestAuthenticator
     public function authenticate(ServerRequestInterface $request): ?User
     {
         $token = JellyfinAuthorizationHeader::extractToken($request);
-
-        if ($token === '' || !Session::exists(AccessTypeEnum::API->value, $token)) {
+        if ($token === '') {
             return null;
         }
 
-        $username = Session::username($token);
-        if ($username === '') {
-            return null;
-        }
-
-        $user = $this->userRepository->findByUsername($username);
+        $user = $this->userRepository->findByApiSessionToken($token);
         if ($user === null || $user->disabled) {
             return null;
         }

@@ -61,6 +61,10 @@ class UserKeyGeneratorTest extends MockeryTestCase
                 Mockery::type('string')
             )
             ->once();
+        // the old key doubles as a password, so the sessions it could have opened go with it
+        $this->userRepository->shouldReceive('deleteApiSessions')
+            ->with($userName)
+            ->once();
         $this->userRepository->shouldReceive('retrievePasswordFromUser')
             ->with($userId)
             ->once()

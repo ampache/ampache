@@ -29,7 +29,6 @@ use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Art\Art;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,6 +47,11 @@ final class ImageMethod implements JellyfinMethodInterface
 {
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
+        // the spec wants this open, but an install that turned public_images off asked for the opposite
+        if (!Art::isPublic() && $user === null) {
+            return JellyfinResponse::unauthorized();
+        }
+
         $itemId = (string) ($request->getAttribute('itemId') ?? '');
         $type   = JellyfinId::decodeType($itemId);
         $id     = JellyfinId::decodeId($itemId);
@@ -79,9 +83,10 @@ final class ImageMethod implements JellyfinMethodInterface
     }
 
     /**
-     * A song with no cover of its own falls back to its album's; a playlist with no cover of its own falls
-     * back to a random member song's album — mirroring AbstractGetArtMethod::resolveArt() (the native `get_art`
-     * fallback chain), minus the branches (search/smartlist/album_disk) Jellyfin ids can't carry.
+     * A song with no cover of its own falls back to its album's.
+     *
+     * A playlist does not fall back to a member's album art: this route answers anonymous callers, and
+     * reading the members would hand a private playlist's composition to anyone who can guess its id.
      */
     private function resolveArt(string $type, int $id): Art
     {
@@ -89,15 +94,6 @@ final class ImageMethod implements JellyfinMethodInterface
             $song = new Song($id);
 
             return new Art($song->album, 'album');
-        }
-
-        if ($type === 'playlist' && !Art::has_db($id, 'playlist')) {
-            $items = new Playlist($id)->get_items();
-            if ($items !== []) {
-                $song = new Song($items[array_rand($items)]['object_id']);
-
-                return new Art($song->album, 'album');
-            }
         }
 
         return new Art($id, $type);

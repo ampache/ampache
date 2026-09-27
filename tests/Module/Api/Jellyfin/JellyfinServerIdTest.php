@@ -25,31 +25,54 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class JellyfinServerIdTest extends TestCase
 {
-    public function testDiffersForDifferentSecrets(): void
-    {
-        self::assertNotSame(
-            JellyfinServerId::derive('secret-one'),
-            JellyfinServerId::derive('secret-two'),
-        );
-    }
+    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
 
-    public function testIsDeterministicForTheSameSecret(): void
+    public function testAFreshIdIsGeneratedAndKept(): void
     {
-        self::assertSame(
-            JellyfinServerId::derive('some-secret'),
-            JellyfinServerId::derive('some-secret'),
-        );
-    }
+        $this->updateInfoRepository->method('getValueByKey')->willReturn(null);
+        $this->updateInfoRepository->expects(static::once())
+            ->method('setValue')
+            ->with(UpdateInfoEnum::JELLYFIN_SERVER_ID, static::isType('string'));
 
-    public function testIsShapedLikeAUuid(): void
-    {
         self::assertMatchesRegularExpression(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/',
-            JellyfinServerId::derive('some-secret'),
+            $this->subject()->get()
         );
+    }
+
+    public function testAStoredIdIsKeptAndNotRewritten(): void
+    {
+        $this->updateInfoRepository->method('getValueByKey')->willReturn('stored-server-id');
+        $this->updateInfoRepository->expects(static::never())->method('setValue');
+
+        self::assertSame('stored-server-id', $this->subject()->get());
+    }
+
+    /**
+     * A value derived from the install's configuration would be the same on two empty installs, which is
+     * what let an anonymous caller confirm a guessed `secret_key`.
+     */
+    public function testTwoInstallsDoNotShareAnId(): void
+    {
+        $this->updateInfoRepository->method('getValueByKey')->willReturn(null);
+
+        self::assertNotSame($this->subject()->get(), $this->subject()->get());
+    }
+
+    protected function setUp(): void
+    {
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+    }
+
+    private function subject(): JellyfinServerId
+    {
+        return new JellyfinServerId($this->updateInfoRepository);
     }
 }

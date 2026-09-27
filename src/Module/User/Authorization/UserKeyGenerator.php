@@ -52,6 +52,9 @@ final readonly class UserKeyGenerator implements UserKeyGeneratorInterface
 
         $this->userRepository->updateApiKey($userId, $apikey);
 
+        // the old key doubles as a password, so it could open api sessions that would outlive the rotation
+        $this->userRepository->deleteApiSessions((string) $user->username);
+
         $this->logger->notice(
             sprintf('Updating apikey for %d', $userId),
             [LegacyLogger::CONTEXT_TYPE => self::class]

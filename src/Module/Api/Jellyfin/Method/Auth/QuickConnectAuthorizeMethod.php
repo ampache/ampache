@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Jellyfin\Method\Auth;
 use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,6 +50,10 @@ final class QuickConnectAuthorizeMethod implements JellyfinMethodInterface
         }
         if ($user === null) {
             return JellyfinResponse::unauthorized();
+        }
+        // the web form asks for a full user before it will approve a pairing, and this is the same action
+        if (!$user->has_access(AccessLevelEnum::USER)) {
+            return JellyfinResponse::forbidden();
         }
 
         $query = $request->getQueryParams();

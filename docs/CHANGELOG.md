@@ -31,6 +31,7 @@
 * Rightbar action buttons now use a fixed four-column grid
 * Grid action icons now display in the bottom-right corner
 * Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
+* A password change or API key rotation now ends the sessions that credential had opened
 
 ### Fixed (8.2.0)
 
@@ -56,6 +57,7 @@
 * Fixed managers being unable to view withdrawn tracks on artist song pages
 * Fixed missing generated artwork when `custom_blankalbum` is enabled
 * Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
+* Fixed RSS artwork for albums inheriting the album artist's artwork
 * Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
 * Fixed withdrawn releases appearing in recently played views and feeds
 * Added visual highlighting for withdrawn items
