@@ -2264,8 +2264,8 @@ span.fatalerror {
 }
 
 .cel_rating {
-    max-width: 100px;
-    width: 100px;
+    max-width: 125px;
+    width: 125px;
 }
 
 /* a table cell has no room for the wording, and its title carries the count instead */
