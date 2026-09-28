@@ -3219,14 +3219,7 @@ class Subsonic_Api
      */
     public static function search3(array $input, User $user): void
     {
-        // query required by Subsonic https://opensubsonic.netlify.app/docs/endpoints/search3/
-        if (isset($input['query'])) {
-            $query = (string) $input['query'];
-        } else {
-            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
-
-            return;
-        }
+        $query   = (string) ($input['query'] ?? '');
         $results = self::_search($query, $input, $user);
 
         $format = (string) ($input['f'] ?? 'xml');
