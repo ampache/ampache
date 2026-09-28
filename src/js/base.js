@@ -116,7 +116,7 @@ export function displayNotification(message, timeout) {
         } else {
             $("#notification").css("bottom", "120px");
         }
-        $("#notification-content").html(message);
+        $("#notification-content").text(message);
         $("#notification").removeClass("notification-out");
         notificationTimeout = setTimeout(function() {
             clearNotification();

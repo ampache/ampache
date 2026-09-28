@@ -6,6 +6,8 @@
 
 ### Added (8.2.0)
 
+* Database 810016
+  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
 * Database 810015
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
@@ -35,6 +37,12 @@
 
 ### Fixed (8.2.0)
 
+* Last.fm and Libre.fm session keys were shown in plain text
+* Notifications displayed their own quotes, and were inserted as markup rather than as text
+* A `site_title` holding a closing script tag broke the page scripts
+* A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
+* A preference written in one request was still read back stale in that same request
+* The slideshow armed itself without the Flickr plugin
 * Subsonic `getIndexes` returned an empty index on any library whose `folder_map` has not been rebuilt
 * Garbage collection incorrectly removed parent-only folders
 * Fixed missing Subsonic sub-folder listings

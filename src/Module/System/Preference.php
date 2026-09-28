@@ -194,8 +194,8 @@ class Preference extends database_object
         'bookmark_latest' => ['0', 'Only keep the latest media bookmark', AccessLevelEnum::USER->value, 'boolean', 'options', null],
         'jp_volume' => ['0.8', 'Default webplayer volume', AccessLevelEnum::USER->value, 'special', 'streaming', 'player'],
         'perpetual_api_session' => ['0', 'API sessions do not expire', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
-        'home_recently_played_all' => ['1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'bool', 'interface', 'home'],
-        'show_wrapped' => ['1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy'],
+        'home_recently_played_all' => ['1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'show_wrapped' => ['1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'mini_player' => ['0', 'Lock this user into the mini player interface', AccessLevelEnum::ADMIN->value, 'boolean', 'interface', 'theme'],
         'sidebar_hide_switcher' => ['0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'sidebar_hide_browse' => ['0', 'Hide the Browse menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
@@ -433,6 +433,13 @@ class Preference extends database_object
             'web_player' => ['play_type'],
         ],
     ];
+
+    /**
+     * Name suffixes marking a preference as a credential: masked on screen, kept on a blank submit, never exported
+     *
+     * @var list<string>
+     */
+    public const array SECRET_SUFFIXES = ['_pass', '_token', '_key', '_challenge', '_secret'];
     /**
      * Subcategory values whose `ucwords()` title-case would mangle a proper noun, keyed by the raw
      * `DEFAULTS` subcategory string. `format_subcategory()` and `gather-messages.sh` both read this.
@@ -1393,9 +1400,13 @@ class Preference extends database_object
      */
     public static function isSecretName(string $name): bool
     {
-        return str_ends_with($name, '_pass')
-            || str_ends_with($name, '_token')
-            || str_ends_with($name, '_key');
+        foreach (self::SECRET_SUFFIXES as $suffix) {
+            if (str_ends_with($name, $suffix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1880,7 +1891,7 @@ class Preference extends database_object
             );
             self::clear_from_session();
 
-            parent::remove_from_cache('get_by_user', $user_id);
+            parent::remove_from_cache('get_by_user-' . $name, $user_id);
 
             return true;
         }
