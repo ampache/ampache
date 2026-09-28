@@ -58,5 +58,5 @@ interface QuickConnectRepositoryInterface
     /** Returns the row's new attempt count. */
     public function incrementAuthorizeAttempts(int $id): int;
 
-    public function markAuthorized(int $id, int $userId): void;
+    public function markAuthorized(int $id, int $userId): bool;
 }

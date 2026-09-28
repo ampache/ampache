@@ -30,6 +30,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinRequestBody;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\JellyfinTranscodeDecision;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,7 +54,7 @@ final class PlaybackInfoMethod implements JellyfinMethodInterface
         }
 
         $song = new Song((int) JellyfinId::decodeId($itemId));
-        if ($song->isNew()) {
+        if ($song->isNew() || !Catalog::has_access($song->getCatalogId(), $user->getId())) {
             return JellyfinResponse::notFound();
         }
 

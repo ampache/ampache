@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -36,13 +35,13 @@ use Ampache\Repository\Model\User;
  */
 final class JellyfinSessionMinter
 {
-    /**
-     * Real `AccessToken`s expire only on sign-out and Finamp has no silent-reauth path (confirmed live), so
-     * this row gets a long fixed TTL rather than `session_length`, without touching `perpetual_api_session`.
-     */
-    private const int SESSION_TTL_SECONDS = 10 * 365 * 24 * 60 * 60;
+    /** Jellyfin clients cannot re-auth silently, so a token outlives any listening habit but stays in the sweep's reach */
+    private const int SESSION_TTL_SECONDS = 70 * 24 * 60 * 60;
 
-    public function __construct(private readonly DatabaseConnectionInterface $databaseConnection) {}
+    public function __construct(
+        private readonly DatabaseConnectionInterface $databaseConnection,
+        private readonly JellyfinServerId $serverId,
+    ) {}
 
     /** @return array<string, mixed>|null null means `Session::create()` itself failed */
     public function mint(User $user): ?array
@@ -57,12 +56,14 @@ final class JellyfinSessionMinter
             return null;
         }
 
+        // a perpetual row (expire 0) is left alone, and a longer expiry is never shortened
+        $expire = time() + self::SESSION_TTL_SECONDS;
         $this->databaseConnection->query(
-            'UPDATE `session` SET `expire` = ? WHERE `id` = ?',
-            [time() + self::SESSION_TTL_SECONDS, $token],
+            'UPDATE `session` SET `expire` = ? WHERE `id` = ? AND `expire` != 0 AND `expire` < ?',
+            [$expire, $token, $expire]
         );
 
-        $serverId = JellyfinServerId::derive((string) AmpConfig::get('secret_key', ''));
+        $serverId = $this->serverId->get();
 
         return [
             'User' => [

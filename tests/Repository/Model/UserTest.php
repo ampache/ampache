@@ -32,6 +32,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class UserTest extends TestCase
 {
@@ -91,6 +92,30 @@ class UserTest extends TestCase
         );
     }
 
+    public function testRevokeSessionsDropsEverySessionTheUserHolds(): void
+    {
+        $user           = new User();
+        $user->username = 'some-user';
+
+        $this->userRepository->expects(static::once())
+            ->method('deleteSessions')
+            ->with('some-user');
+
+        $user->revokeSessions();
+    }
+
+    public function testUpdatePasswordKeepsSessionsWhenTheSecretDidNotChange(): void
+    {
+        // a login-time rehash stores the same secret, so it must not log the caller out
+        $user           = new User();
+        $user->username = 'some-user';
+
+        $this->userRepository->expects(static::never())
+            ->method('deleteSessions');
+
+        $user->update_password('some-password', null, false);
+    }
+
     protected function setUp(): void
     {
         $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
@@ -101,6 +126,7 @@ class UserTest extends TestCase
             ->willReturnMap([
                 [UserRepositoryInterface::class, $this->userRepository],
                 [ImageRepositoryInterface::class, $this->imageRepository],
+                [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
             ]);
 
         // the model reaches its repository through the `global $dic` bridge; phpunit.xml sets

@@ -20,13 +20,36 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Util\Rss\Type;
 
-enum UpdateInfoEnum: string
+use Ampache\Repository\Model\Album;
+use PHPUnit\Framework\TestCase;
+
+class LatestAlbumFeedTest extends TestCase
 {
-    case CRON_DATE          = 'cron_date';
-    case DB_VERSION         = 'db_version';
-    case JELLYFIN_SERVER_ID = 'jellyfin_server_id';
+    public function testArtSourcesDropsAnArtistlessAlbum(): void
+    {
+        $album     = $this->createMock(Album::class);
+        $album->id = 11237;
+
+        self::assertSame(
+            [['album', 11237]],
+            LatestAlbumFeed::artSources($album)
+        );
+    }
+
+    public function testArtSourcesReadsTheArtistAfterTheAlbum(): void
+    {
+        $album               = $this->createMock(Album::class);
+        $album->id           = 11237;
+        $album->album_artist = 42;
+
+        self::assertSame(
+            [['album', 11237], ['artist', 42]],
+            LatestAlbumFeed::artSources($album)
+        );
+    }
 }

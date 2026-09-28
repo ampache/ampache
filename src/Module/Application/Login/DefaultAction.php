@@ -251,7 +251,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 && isset($password)
                 && $user instanceof User
             ) {
-                $user->update_password($password);
+                // this runs on every login, so it saves the password rather than changing it
+                $user->update_password($password, null, false);
             }
         }
 

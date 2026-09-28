@@ -35,6 +35,8 @@ use Psr\Http\Message\ServerRequestInterface;
 /** GET /System/Info/Public — unauthenticated capability probe clients use before login. */
 final class SystemInfoPublicMethod implements JellyfinMethodInterface
 {
+    public function __construct(private readonly JellyfinServerId $serverId) {}
+
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
         return JellyfinResponse::json([
@@ -43,7 +45,7 @@ final class SystemInfoPublicMethod implements JellyfinMethodInterface
             'Version' => JellyfinServerId::PROTOCOL_VERSION,
             'ProductName' => 'Ampache',
             'OperatingSystem' => PHP_OS,
-            'Id' => JellyfinServerId::derive((string) AmpConfig::get('secret_key', '')),
+            'Id' => $this->serverId->get(),
             'StartupWizardCompleted' => true,
         ]);
     }

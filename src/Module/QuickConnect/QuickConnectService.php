@@ -101,7 +101,13 @@ final class QuickConnectService
         }
 
         $boundUserId = $overrideUserId ?? $callingUser->getId();
-        $this->repository->markAuthorized((int) $row['id'], $boundUserId);
+        // someone else may have bound this pairing already, and saying otherwise hides that from its owner
+        if (!$this->repository->markAuthorized((int) $row['id'], $boundUserId)) {
+            debug_event(self::class, 'QuickConnect code was already bound to another user: ' . $code, 3);
+
+            return ['success' => false, 'forbidden' => false];
+        }
+
         debug_event(self::class, 'QuickConnect authorized: code=' . $code . ' user=' . $boundUserId, 4);
 
         return ['success' => true, 'forbidden' => false];
@@ -143,6 +149,13 @@ final class QuickConnectService
      */
     public function initiate(string $deviceId, string $deviceName, string $appName, string $appVersion): ?array
     {
+        // the window is counted per device, so a caller that names none would never be counted at all
+        if ($deviceId === '') {
+            debug_event(self::class, 'QuickConnect /Initiate refused: no device id', 3);
+
+            return null;
+        }
+
         $now = time();
         if ($this->repository->countRecentByDeviceId($deviceId, $now - self::TTL_SECONDS) >= self::MAX_INITIATE_PER_WINDOW) {
             debug_event(self::class, 'QuickConnect /Initiate rate limit hit for device: ' . $deviceId, 3);
