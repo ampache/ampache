@@ -30,7 +30,6 @@ use Ampache\Module\Database\database_object;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\SongRepositoryInterface;
 use Override;
 
 /**
@@ -143,7 +142,6 @@ class OpenSubsonicAlbumArtistsTest extends MockeryTestCase
         return new OpenSubsonic_Fields(
             $this->mock(BookmarkRepositoryInterface::class),
             $this->mock(LabelRepositoryInterface::class),
-            $this->mock(SongRepositoryInterface::class),
         );
     }
 }
