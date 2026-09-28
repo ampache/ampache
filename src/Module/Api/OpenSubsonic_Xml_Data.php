@@ -1945,18 +1945,17 @@ class OpenSubsonic_Xml_Data
             $xartist->addAttribute('name', (string) $array['name']);
         }
 
-        $album_artists = [];
-        foreach ($song->get_album_artists() as $artist_id) {
-            $array           = Artist::get_name_array_by_id($artist_id);
-            $album_artists[] = (string) $array['name'];
-            $xalbumartist    = $this->_addChildToResultXml($xsong, 'albumArtists');
-            $xalbumartist->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
-            $xalbumartist->addAttribute('name', (string) $array['name']);
+        // one list per album rather than one per song
+        $album_artists = $this->openSubsonicFields->songAlbumArtists($song);
+        foreach ($album_artists as $album_artist) {
+            $xalbumartist = $this->_addChildToResultXml($xsong, 'albumArtists');
+            $xalbumartist->addAttribute('id', $album_artist['id']);
+            $xalbumartist->addAttribute('name', $album_artist['name']);
         }
 
         $xsong->addAttribute('displayArtist', $song->get_parent_fullname());
         if ($album_artists !== []) {
-            $xsong->addAttribute('displayAlbumArtist', implode(', ', $album_artists));
+            $xsong->addAttribute('displayAlbumArtist', $this->openSubsonicFields->songDisplayAlbumArtist($song));
         }
 
         $composer = trim((string) $song->composer);

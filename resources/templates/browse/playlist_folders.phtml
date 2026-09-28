@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 use Ampache\Gui\Browse\ListHeaderView;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\PlaylistFolder;
@@ -38,6 +40,24 @@ $argument_param = $this->getArgumentParam();
 $columns        = $this->getColumns();
 $rows           = $this->getRows();
 $mayCreate      = $this->mayCreate();
+$showRatings    = $this->showRatings();
+
+if ($showRatings) {
+    $playlistIds = [];
+    $searchIds   = [];
+    foreach ($rows as $row) {
+        if ($row['item'] instanceof Playlist) {
+            $playlistIds[] = $row['item']->getId();
+        } elseif ($row['item'] instanceof Search) {
+            $searchIds[] = $row['item']->id;
+        }
+    }
+
+    Rating::build_cache('playlist', $playlistIds);
+    Userflag::build_cache('playlist', $playlistIds);
+    Rating::build_cache('search', $searchIds);
+    Userflag::build_cache('search', $searchIds);
+}
 
 Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
 
@@ -64,7 +84,8 @@ if ($mayCreate) { ?>
         </li>
     </ul>
 </div>
-<?php } ?>
+<?php }
+Ui::show_box_bottom(); ?>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
@@ -72,17 +93,34 @@ if ($mayCreate) { ?>
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>
-            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : '<a href="' . $this->e($this->getSortUrl($column['sort'])) . '">' . $this->e($column['label']) . '</a>'; ?></th>
             <?php } ?>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($rows as $row) { ?>
         <tr id="playlist_folder_row_<?php echo $this->e($row['type'] . '_' . $row['item']->getId()); ?>">
+            <td class="cel_play essential">
+                <span class="cel_play_content"> </span>
+                <div class="cel_play_hover"><?php echo $this->raw($this->getRowPlay($row['item'])); ?></div>
+            </td>
             <td class="cel_cover essential"><?php $this->renderRowArt($row['item']); ?></td>
             <td class="cel_name essential persist"><?php echo $this->raw($this->getRowName($row['item'])); ?></td>
+            <td class="cel_add_list essential">
+                <span class="cel_item_add"><?php echo $this->raw($this->getRowAdd($row['item'])); ?></span>
+            </td>
             <td class="cel_last_update optional"><?php echo $this->e($this->getRowLastUpdate($row['item'])); ?></td>
+            <td class="cel_type optional"><?php echo $this->raw($this->getRowType($row['item'])); ?></td>
+            <td class="cel_time optional"><?php echo $this->e($this->getRowTime($row['item'])); ?></td>
             <td class="cel_count optional"><?php echo $this->e($this->getRowItemCount($row['item'])); ?></td>
+            <?php if ($showRatings) { ?>
+            <td class="cel_ratings optional">
+                <div class="rating"><?php echo $this->raw($this->getRowRatings($row['item'])); ?></div>
+            </td>
+            <?php } ?>
             <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
             <td class="cel_action essential">
                 <?php if ($row['item'] instanceof PlaylistFolder) {
@@ -118,6 +156,4 @@ if ($mayCreate) { ?>
 </table>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
-}
-
-Ui::show_box_bottom(); ?>
+} ?>

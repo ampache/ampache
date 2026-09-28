@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Subsonic\Handler;
 
 use Ampache\Module\Api\Subsonic\MusicFolderResolverInterface;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
-use Ampache\Module\Api\Subsonic_Api;
 use Ampache\Module\Api\Subsonic_Json_Data;
 use Ampache\Module\Api\Subsonic_Xml_Data;
 use Ampache\Module\Api\SubsonicApiApplication;
@@ -149,14 +148,8 @@ final class SearchHandler implements SearchHandlerInterface
      */
     public function search3(array $input, User $user): void
     {
-        // query required by Subsonic https://opensubsonic.netlify.app/docs/endpoints/search3/
-        if (isset($input['query'])) {
-            $query = (string) $input['query'];
-        } else {
-            $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_MISSINGPARAM, __FUNCTION__);
-
-            return;
-        }
+        // a missing or empty query is a valid "browse everything", not an error; matches search2
+        $query   = (string) ($input['query'] ?? '');
         $results = $this->doSearch($query, $input, $user);
 
         $format = (string) ($input['f'] ?? 'xml');

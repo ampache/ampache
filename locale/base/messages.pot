@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-17 19:37+1000\n"
+"POT-Creation-Date: 2026-09-28 04:07+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -465,10 +465,19 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-msgid "Duration"
+msgid "Create Folder"
 msgstr ""
 
 msgid "Create Playlist"
+msgstr ""
+
+msgid "Create Smart Playlist"
+msgstr ""
+
+msgid "Do you really want to delete this Folder?"
+msgstr ""
+
+msgid "Duration"
 msgstr ""
 
 msgid "No podcast episode found"
@@ -700,6 +709,12 @@ msgid "Stream URL"
 msgstr ""
 
 msgid "Codec"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "None"
 msgstr ""
 
 msgid "Random"
@@ -1252,6 +1267,12 @@ msgstr ""
 msgid "Newest"
 msgstr ""
 
+msgid "Edit Folder"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
 msgid "Popular"
 msgstr ""
 
@@ -1469,9 +1490,6 @@ msgid "See wiki page"
 msgstr ""
 
 msgid "Template Configuration"
-msgstr ""
-
-msgid "None"
 msgstr ""
 
 msgid ""
@@ -2616,9 +2634,6 @@ msgstr ""
 msgid "Live"
 msgstr ""
 
-msgid "Parent"
-msgstr ""
-
 msgid "Remove from collection"
 msgstr ""
 
@@ -3674,9 +3689,6 @@ msgstr ""
 msgid "The Playlist has been deleted"
 msgstr ""
 
-msgid "Folder"
-msgstr ""
-
 msgid "This Folder will be deleted"
 msgstr ""
 
@@ -3721,6 +3733,18 @@ msgid "%s - Now Playing"
 msgstr ""
 
 msgid "Playlist created"
+msgstr ""
+
+msgid "Folder created"
+msgstr ""
+
+msgid "This folder is not empty"
+msgstr ""
+
+msgid "A folder cannot contain itself"
+msgstr ""
+
+msgid "Folder updated"
 msgstr ""
 
 #. HINT: Number of songs
@@ -5100,6 +5124,9 @@ msgid "Table engine: %s"
 msgstr ""
 
 msgid "Collection Items"
+msgstr ""
+
+msgid "Playlist Folders"
 msgstr ""
 
 msgid "Current Playlist"

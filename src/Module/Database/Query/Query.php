@@ -1125,8 +1125,8 @@ class Query
                     // `genre` is the row-list view of the `tag` table, so it takes the same filter
                     $filter_type = ($type === 'genre') ? 'tag' : $type;
                     $sql .= ($sql === "WHERE")
-                        ? ' ' . Catalog::get_user_filter($filter_type, $this->user_id ?? -1)
-                        : Catalog::get_user_filter($filter_type, $this->user_id ?? -1);
+                        ? ' ' . Catalog::get_user_filter($filter_type, $this->user_id ?? -1) . ' AND '
+                        : Catalog::get_user_filter($filter_type, $this->user_id ?? -1) . ' AND ';
                     break;
             }
         }
