@@ -2263,6 +2263,11 @@ span.fatalerror {
     white-space: nowrap;
 }
 
+.cel_rating {
+    max-width: 100px;
+    width: 100px;
+}
+
 /* a table cell has no room for the wording, and its title carries the count instead */
 .cel_rating .global-rating-count {
     display: none;
