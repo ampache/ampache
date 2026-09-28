@@ -92,7 +92,10 @@ if ($mayCreate) { ?>
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>
-            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php
+                echo ($column['sort'] === null)
+                    ? $this->e($column['label'])
+                    : '<a href="' . $this->e($this->getSortUrl($column['sort'])) . '">' . $this->e($column['label']) . '</a>'; ?></th>
             <?php } ?>
         </tr>
     </thead>

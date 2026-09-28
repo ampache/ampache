@@ -39,6 +39,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Playlist;
@@ -56,6 +57,14 @@ use Override;
  */
 final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 {
+    private const array SORT_FIELDS = [
+        'name' => false,
+        'last_update' => true,
+        'type' => false,
+        'time' => true,
+        'count' => true,
+        'owner' => false,
+    ];
     private const string TYPE_FOLDER = 'playlist_folder';
 
     public function __construct(
@@ -63,6 +72,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
         private readonly PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private readonly RequestParserInterface $requestParser,
         private readonly ZipHandlerInterface $zipHandler,
     ) {}
 
@@ -91,27 +101,27 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
-     * @return list<array{class: string, label: string, footer: bool}>
+     * @return list<array{class: string, label: string, sort: ?string, footer: bool}>
      */
     public function getColumns(): array
     {
         $columns = [
-            ['class' => 'cel_play essential', 'label' => '', 'footer' => false],
-            ['class' => 'cel_cover essential', 'label' => T_('Art'), 'footer' => false],
-            ['class' => 'cel_name essential persist', 'label' => T_('Name'), 'footer' => false],
-            ['class' => 'cel_add_list essential', 'label' => '', 'footer' => false],
-            ['class' => 'cel_last_update optional', 'label' => T_('Last Update'), 'footer' => false],
-            ['class' => 'cel_type optional', 'label' => T_('Type'), 'footer' => false],
-            ['class' => 'cel_time optional', 'label' => T_('Time'), 'footer' => false],
-            ['class' => 'cel_count optional', 'label' => T_('# Items'), 'footer' => false],
+            ['class' => 'cel_play essential', 'label' => '', 'sort' => null, 'footer' => false],
+            ['class' => 'cel_cover essential', 'label' => T_('Art'), 'sort' => null, 'footer' => false],
+            ['class' => 'cel_name essential persist', 'label' => T_('Name'), 'sort' => 'name', 'footer' => false],
+            ['class' => 'cel_add_list essential', 'label' => '', 'sort' => null, 'footer' => false],
+            ['class' => 'cel_last_update optional', 'label' => T_('Last Update'), 'sort' => 'last_update', 'footer' => false],
+            ['class' => 'cel_type optional', 'label' => T_('Type'), 'sort' => 'type', 'footer' => false],
+            ['class' => 'cel_time optional', 'label' => T_('Time'), 'sort' => 'time', 'footer' => false],
+            ['class' => 'cel_count optional', 'label' => T_('# Items'), 'sort' => 'count', 'footer' => false],
         ];
 
         if ($this->showRatings()) {
-            $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'footer' => false];
+            $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'sort' => null, 'footer' => false];
         }
 
-        $columns[] = ['class' => 'cel_owner essential', 'label' => T_('Owner'), 'footer' => false];
-        $columns[] = ['class' => 'cel_action essential', 'label' => T_('Actions'), 'footer' => false];
+        $columns[] = ['class' => 'cel_owner essential', 'label' => T_('Owner'), 'sort' => 'owner', 'footer' => false];
+        $columns[] = ['class' => 'cel_action essential', 'label' => T_('Actions'), 'sort' => null, 'footer' => false];
 
         return $columns;
     }
@@ -325,6 +335,17 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
                 $rows[] = ['type' => $type, 'item' => $item];
             }
 
+            $field = $this->getSortField();
+            if ($field !== '') {
+                $sign = ($this->getSortOrder() === 'DESC') ? -1 : 1;
+                usort(
+                    $rows,
+                    fn(array $left, array $right): int => $sign * (
+                        $this->getSortKey($field, $left['item']) <=> $this->getSortKey($field, $right['item'])
+                    )
+                );
+            }
+
             return $rows;
         });
     }
@@ -341,6 +362,38 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         }
 
         return '';
+    }
+
+    /**
+     * The field rows are currently sorted by, read straight off the request rather than the generic browse
+     * sort state -- this browse builds its rows in PHP instead of SQL, so there is no query to re-sort.
+     *
+     * Empty means no column was clicked: the rows keep the folder's own placement order rather than
+     * jumping to an alphabetical default the first time the page is opened.
+     */
+    public function getSortField(): string
+    {
+        $field = $this->requestParser->getFromRequest('sort');
+
+        return (array_key_exists($field, self::SORT_FIELDS)) ? $field : '';
+    }
+
+    public function getSortOrder(): string
+    {
+        return (strtoupper($this->requestParser->getFromRequest('order')) === 'DESC') ? 'DESC' : 'ASC';
+    }
+
+    /**
+     * The header link for one sortable column: toggles direction on the field already active, otherwise
+     * starts at that field's own natural first direction.
+     */
+    public function getSortUrl(string $field): string
+    {
+        $order = ($field === $this->getSortField())
+            ? (($this->getSortOrder() === 'ASC') ? 'DESC' : 'ASC')
+            : ((self::SORT_FIELDS[$field] ?? false) ? 'DESC' : 'ASC');
+
+        return $this->getFolderUrl($this->getCurrentFolderId()) . '&sort=' . $field . '&order=' . $order;
     }
 
     /**
@@ -480,6 +533,22 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
             return ($user !== null) ? $this->playlistFolderRepository->getItemCounts($user) : [];
         });
+    }
+
+    /**
+     * The value one row compares by for the current sort field -- always the same scalar type for a given
+     * field, so a `usort()` comparing two of these never mixes an int key with a string one.
+     */
+    private function getSortKey(string $field, PlaylistFolder|playlist_object $item): int|string
+    {
+        return match ($field) {
+            'last_update' => ($item instanceof PlaylistFolder) ? $item->last_update : (int) $item->last_update,
+            'type' => ($item instanceof playlist_object && $item->isPrivate()) ? 1 : 0,
+            'time' => ($item instanceof PlaylistFolder) ? 0 : (int) $item->last_duration,
+            'owner' => mb_strtolower($this->getRowOwner($item)),
+            'count' => $this->getRowItemCount($item),
+            default => mb_strtolower(($item instanceof PlaylistFolder) ? $item->getName() : (string) $item->name),
+        };
     }
 
     /**
