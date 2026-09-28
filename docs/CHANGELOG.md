@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 7.10.4
+
+### Fixed (7.10.4)
+
+* Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+
 ## Ampache 7.10.3
 
 ### Fixed (7.10.3)
