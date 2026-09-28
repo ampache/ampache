@@ -84,7 +84,8 @@ if ($mayCreate) { ?>
         </li>
     </ul>
 </div>
-<?php } ?>
+<?php }
+Ui::show_box_bottom(); ?>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
@@ -155,6 +156,4 @@ if ($mayCreate) { ?>
 </table>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
-}
-
-Ui::show_box_bottom(); ?>
+} ?>
