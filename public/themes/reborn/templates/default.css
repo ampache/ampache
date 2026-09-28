@@ -3209,7 +3209,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     align-items: center;
     display: flex;
     gap: 4px;
-    padding: 5px 10px;
+    padding: 1px 10px;
     white-space: nowrap;
 }
 
