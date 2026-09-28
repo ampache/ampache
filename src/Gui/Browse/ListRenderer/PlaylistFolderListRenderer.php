@@ -475,12 +475,12 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     {
         if ($item instanceof PlaylistFolder) {
             $name = $this->e($item->getName());
-            echo '<div class="item_art"><img src="' . $this->e(Art::get_fallback_url('folder', '128x128')) . '" title="' . $name . '" alt="' . $name . '" /></div>';
+            echo '<div class="item_art"><img src="' . $this->e(Art::get_fallback_url('folder', '100x100')) . '" title="' . $name . '" alt="' . $name . '" height="100" width="100" /></div>';
 
             return;
         }
 
-        $item->display_art(['width' => 128, 'height' => 128], true);
+        $item->display_art(['width' => 100, 'height' => 100], true);
     }
 
     /**
