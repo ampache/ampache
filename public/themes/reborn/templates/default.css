@@ -1572,6 +1572,17 @@ table.gridview td.cel_ratings {
     display: none;
 }
 
+.homedash table.gridview td.cel_ratings,
+.personalfav table.gridview td.cel_ratings {
+    justify-content: flex-start;
+}
+
+.homedash table.gridview td.cel_ratings .cel_rating,
+.personalfav table.gridview td.cel_ratings .cel_rating {
+    width: auto;
+    max-width: none;
+}
+
 .personalfav table.gridview tbody td {
     flex: 0 0 auto;
     width: 100%;
