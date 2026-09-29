@@ -28,10 +28,9 @@ namespace Ampache\Module\Api\RefreshReordered;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
+use Ampache\Module\Playlist\Folder\PlaylistFolderRowIdsInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\PlaylistFolder;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,8 +47,8 @@ final readonly class RefreshPlaylistFolderAction implements ApplicationActionInt
     public function __construct(
         private RequestParserInterface $requestParser,
         private BrowseFactoryInterface $browseFactory,
-        private PlaylistFolderItemsLoaderInterface $itemsLoader,
         private PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private PlaylistFolderRowIdsInterface $rowIds,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,33 +77,9 @@ final readonly class RefreshPlaylistFolderAction implements ApplicationActionInt
             $browse->add_supplemental_object('playlist_folder', $folder);
         }
 
-        $browse->show_objects($this->getRowIds($user, $folder), true);
+        $browse->show_objects($this->rowIds->getRowIds($user, $folder), true);
         $browse->store();
 
         return null;
-    }
-
-    /**
-     * The subfolders of this folder, followed by the playlists and smartlists filed in it -- the same set
-     * `PlaylistFolderAction::getRowIds()` builds, so a refresh renders exactly what the page's initial load did.
-     *
-     * @return list<string>
-     */
-    private function getRowIds(User $user, ?PlaylistFolder $folder): array
-    {
-        $ids = [];
-        foreach ($this->playlistFolderRepository->getChildren($user, $folder?->getId() ?? PlaylistFolder::ROOT) as $child) {
-            $ids[] = sprintf('playlist_folder-%d', $child->getId());
-        }
-
-        foreach ($this->itemsLoader->getItems($user, $folder) as $item) {
-            if ($item['object_type'] === 'collection') {
-                continue;
-            }
-
-            $ids[] = sprintf('%s-%d', $item['object_type'], $item['object_id']);
-        }
-
-        return $ids;
     }
 }
