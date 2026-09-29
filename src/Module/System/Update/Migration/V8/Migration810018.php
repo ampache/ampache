@@ -34,7 +34,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
  * Off by default: it advertises a frameable player to the scrapers, so every post carrying a link plays
  * from this server rather than bringing anyone to it.
  */
-final class Migration810017 extends AbstractMigration
+final class Migration810018 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `embed_player` preference to offer a player to sites that link here',

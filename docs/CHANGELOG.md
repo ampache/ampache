@@ -6,7 +6,7 @@
 
 ### Added (8.2.0)
 
-* Database 810017
+* Database 810018
   * Added `embed_player` preference, offering a player to sites that link here
 * Database 810016
   * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
