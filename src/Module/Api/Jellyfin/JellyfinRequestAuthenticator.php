@@ -36,7 +36,10 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class JellyfinRequestAuthenticator implements JellyfinRequestAuthenticatorInterface
 {
-    public function __construct(private readonly UserRepositoryInterface $userRepository) {}
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly JellyfinSessionMinter $sessionMinter,
+    ) {}
 
     public function authenticate(ServerRequestInterface $request): ?User
     {
@@ -49,6 +52,9 @@ final class JellyfinRequestAuthenticator implements JellyfinRequestAuthenticator
         if ($user === null || $user->disabled) {
             return null;
         }
+
+        // findByApiSessionToken() only matched a currently-valid row, so extending it here never resurrects an expired one
+        $this->sessionMinter->extend($token);
 
         return $user;
     }
