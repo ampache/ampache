@@ -21,7 +21,11 @@
 * Rightbar
   * Added Shuffle button for queue randomisation
   * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+  * Added drag-and-drop reordering of the queue
+* Playlist Folders
+  * Added a web UI to browse, create, rename, move and delete playlist folders, and to file playlists and smart playlists into them (the API8 CRUD surface already existed)
 * The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* Smart playlists and random searches now show generated mosaic cover art on their own page, like playlists already do
 * Config version 100
   * Added `stream_proxy` option (default `true`) to control live stream proxying
 
@@ -66,8 +70,9 @@
 * Added withdrawn status indicators to disk listings
 * Fixed managers being unable to view withdrawn tracks on artist song pages
 * Fixed missing generated artwork when `custom_blankalbum` is enabled
-* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
-* Fixed RSS artwork for albums inheriting the album artist's artwork
+* RSS artwork for a song or podcast episode with no cover of its own now falls back to its album or podcast's artwork instead of showing the placeholder
+* RSS artwork for an album with no cover of its own now falls back to the album artist's artwork instead of showing the placeholder
+* `http` authentication no longer accepts a client-supplied `HTTP_REMOTE_USER` header as an identity; only the server-set `REMOTE_USER` is trusted
 * Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
 * Fixed withdrawn releases appearing in recently played views and feeds
 * Added visual highlighting for withdrawn items
