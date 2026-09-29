@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -62,11 +63,11 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($shown && MediaEmbedView::isAvailable() && !empty($query['embed'])) {
+        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($query['embed'])) {
             $webPath = AmpConfig::get_web_path();
             echo (new MediaEmbedView(
                 (string) $song->get_fullname(),
-                trim($song->get_parent_fullname() . ' — ' . $song->get_album_fullname(), ' —'),
+                $this->embedSubtitle($song),
                 $webPath . '/image.php?object_id=' . $song->album . '&object_type=album&size=128x128',
                 $webPath . '/song.php?action=show_song&song_id=' . $song->getId(),
                 [$song]
@@ -137,5 +138,28 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * "Artist — Album", either half dropped when empty.
+     *
+     * Built without `trim()`: its charlist is bytes, not characters, and stripping the byte-level em dash
+     * from a name that starts or ends with a multi-byte character (an ellipsis, a curly quote) can leave a
+     * dangling continuation byte -- invalid UTF-8 that `$this->e()` then silently blanks.
+     */
+    private function embedSubtitle(Song $song): string
+    {
+        $artist = (string) $song->get_parent_fullname();
+        $album  = (string) $song->get_album_fullname();
+
+        if ($artist === '') {
+            return $album;
+        }
+
+        if ($album === '') {
+            return $artist;
+        }
+
+        return $artist . ' — ' . $album;
     }
 }

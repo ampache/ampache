@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\EmbedTracksTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Gui\Playlist\PlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,17 +37,15 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'show';
+    use EmbedTracksTrait;
 
-    /** How many tracks an embedded playlist offers before it stops being a preview */
-    private const int EMBED_TRACK_LIMIT = 50;
+    public const string REQUEST_KEY = 'show';
 
     public function __construct(
         private UiInterface $ui,
@@ -64,7 +63,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $public = !$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private');
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($public && MediaEmbedView::isAvailable() && !empty($_REQUEST['embed'])) {
+        if ($public && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($_REQUEST['embed'])) {
             $webPath = AmpConfig::get_web_path();
             echo (new MediaEmbedView(
                 (string) $playlist->name,
@@ -101,13 +100,17 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
 
             if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
-                PageMeta::setPlayer($url . '&embed=1', MediaEmbedView::WIDTH, MediaEmbedView::heightFor($count));
+                PageMeta::setPlayer(
+                    $url . '&embed=1',
+                    MediaEmbedView::WIDTH,
+                    MediaEmbedView::heightFor($this->embeddablePreviewCount($playlist->get_songs()))
+                );
             }
         }
 
         $this->ui->showHeader();
 
-        if ($playlist->isNew() || (!$playlist->has_collaborate() && $playlist->type === 'private')) {
+        if (!$public) {
             $this->logger->warning(
                 'Requested a playlist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -131,21 +134,29 @@ final readonly class ShowAction implements ApplicationActionInterface
     }
 
     /**
-     * The songs the embed offers, in playlist order.
+     * How many playable tracks the embed would actually offer, capped at 2.
      *
-     * Capped: the frame is a taster on someone else's page, not a way to walk a whole library, and every
-     * row is a stream url the page carries whether or not anyone clicks it.
+     * `last_count` includes songs disabled after the count was last cached, which `MediaEmbedView` filters
+     * back out when it renders -- so counting `last_count` for `heightFor()` can announce a taller frame
+     * than the embed ends up drawing. `heightFor()` only distinguishes "one" from "more than one", so this
+     * stops as soon as it knows which, rather than hydrating every song in a large playlist.
      *
      * @param int[] $songIds
-     * @return list<Song>
      */
-    private function embeddedSongs(array $songIds): array
+    private function embeddablePreviewCount(array $songIds): int
     {
-        $songs = [];
-        foreach (array_slice($songIds, 0, self::EMBED_TRACK_LIMIT) as $songId) {
-            $songs[] = $this->modelFactory->createSong($songId);
+        $count = 0;
+        foreach (array_slice($songIds, 0, MediaEmbedView::EMBED_TRACK_LIMIT) as $songId) {
+            $song = $this->modelFactory->createSong($songId);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+
+            if (++$count > 1) {
+                break;
+            }
         }
 
-        return $songs;
+        return $count;
     }
 }

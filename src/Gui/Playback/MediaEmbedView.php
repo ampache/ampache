@@ -40,7 +40,8 @@ use Override;
  */
 final class MediaEmbedView extends AbstractView
 {
-    public const int HEIGHT_LIST = 340;
+    public const int EMBED_TRACK_LIMIT = 50;
+    public const int HEIGHT_LIST       = 340;
 
     public const int HEIGHT_SINGLE = 128;
     /** The dimensions announced to the scrapers, and what the markup is built for */

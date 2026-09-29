@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\EmbedTracksTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -42,7 +43,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,10 +50,9 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowDiskAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'show_disk';
+    use EmbedTracksTrait;
 
-    /** How many tracks an embedded disk offers before it stops being a preview */
-    private const int EMBED_TRACK_LIMIT = 50;
+    public const string REQUEST_KEY = 'show_disk';
 
     public function __construct(
         private ModelFactoryInterface $modelFactory,
@@ -75,14 +74,14 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($shown && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
+        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
             $webPath = AmpConfig::get_web_path();
             echo (new MediaEmbedView(
                 (string) $albumDisk->get_fullname(),
                 (string) $albumDisk->get_parent_fullname(),
                 $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=128x128',
                 $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId,
-                $this->embeddedSongs($albumDiskId)
+                $this->embeddedSongs($this->albumRepository->getSongsByAlbumDisk($albumDiskId))
             ))->render();
 
             return null;
@@ -151,23 +150,5 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
-    }
-
-    /**
-     * The songs the embed offers, in disk order.
-     *
-     * Capped: the frame is a taster on someone else's page, not a way to walk a whole disk, and every row
-     * is a stream url the page carries whether or not anyone clicks it.
-     *
-     * @return list<Song>
-     */
-    private function embeddedSongs(int $albumDiskId): array
-    {
-        $songs = [];
-        foreach (array_slice($this->albumRepository->getSongsByAlbumDisk($albumDiskId), 0, self::EMBED_TRACK_LIMIT) as $songId) {
-            $songs[] = $this->modelFactory->createSong($songId);
-        }
-
-        return $songs;
     }
 }
