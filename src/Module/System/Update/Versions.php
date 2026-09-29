@@ -784,11 +784,8 @@ final class Versions
         810013 => Migration810013::class,
         810015 => Migration810015::class,
         810016 => Migration810016::class,
-<<<<<<< HEAD
-        810018 => Migration810018::class,
-=======
         810017 => Migration810017::class,
->>>>>>> develop
+        810018 => Migration810018::class,
     ];
 
     /**
