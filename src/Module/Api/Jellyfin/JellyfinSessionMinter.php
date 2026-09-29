@@ -43,6 +43,16 @@ final class JellyfinSessionMinter
         private readonly JellyfinServerId $serverId,
     ) {}
 
+    /** Rolls a token's expiry forward on active use; a perpetual row (expire 0) is left alone and a longer expiry is never shortened */
+    public function extend(string $token): void
+    {
+        $expire = time() + self::SESSION_TTL_SECONDS;
+        $this->databaseConnection->query(
+            'UPDATE `session` SET `expire` = ? WHERE `id` = ? AND `expire` != 0 AND `expire` < ?',
+            [$expire, $token, $expire]
+        );
+    }
+
     /** @return array<string, mixed>|null null means `Session::create()` itself failed */
     public function mint(User $user): ?array
     {
@@ -56,12 +66,7 @@ final class JellyfinSessionMinter
             return null;
         }
 
-        // a perpetual row (expire 0) is left alone, and a longer expiry is never shortened
-        $expire = time() + self::SESSION_TTL_SECONDS;
-        $this->databaseConnection->query(
-            'UPDATE `session` SET `expire` = ? WHERE `id` = ? AND `expire` != 0 AND `expire` < ?',
-            [$expire, $token, $expire]
-        );
+        $this->extend($token);
 
         $serverId = $this->serverId->get();
 
