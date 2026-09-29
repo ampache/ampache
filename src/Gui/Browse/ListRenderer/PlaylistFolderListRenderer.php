@@ -358,7 +358,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function getSetSortOrderUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=set_sort_order&folder=' . $this->getCurrentFolderId();
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=set_sort_order&folder=' . $this->getCurrentFolderId();
     }
 
     /**
