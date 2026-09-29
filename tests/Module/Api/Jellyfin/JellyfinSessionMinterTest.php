@@ -25,12 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant;
 
 class JellyfinSessionMinterTest extends TestCase
 {
     private const int ONE_YEAR = 365 * 24 * 60 * 60;
+
+    private DatabaseConnectionInterface&MockObject $databaseConnection;
+    private JellyfinServerId $serverId;
 
     /**
      * A perpetual session carries expiry zero on purpose, and that is what keeps it revocable.
@@ -53,5 +59,38 @@ class JellyfinSessionMinterTest extends TestCase
         $ttl = (new ReflectionClassConstant(JellyfinSessionMinter::class, 'SESSION_TTL_SECONDS'))->getValue();
 
         self::assertLessThan(self::ONE_YEAR, $ttl);
+    }
+
+    /**
+     * `extend()` is the rolling keep-alive called on every authenticated request, so it must reuse the
+     * same guarded UPDATE that mint() itself relies on, never a bare overwrite.
+     */
+    public function testExtendGuardsAgainstOverwritingAPerpetualOrLongerExpiry(): void
+    {
+        $this->databaseConnection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `session` SET `expire` = ? WHERE `id` = ? AND `expire` != 0 AND `expire` < ?',
+                static::callback(static function (array $params): bool {
+                    self::assertSame('some-token', $params[1]);
+                    self::assertGreaterThan(time(), $params[0]);
+                    self::assertSame($params[0], $params[2]);
+
+                    return true;
+                })
+            );
+
+        $this->subject()->extend('some-token');
+    }
+
+    protected function setUp(): void
+    {
+        $this->databaseConnection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->serverId           = new JellyfinServerId($this->createMock(UpdateInfoRepositoryInterface::class));
+    }
+
+    private function subject(): JellyfinSessionMinter
+    {
+        return new JellyfinSessionMinter($this->databaseConnection, $this->serverId);
     }
 }

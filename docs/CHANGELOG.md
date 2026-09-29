@@ -18,12 +18,16 @@
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
   * Supports audio streaming, direct play and transcoding
-  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, resume position, playback reporting and playlist management
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, playback resume/reporting and playlist management
   * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
   * Added Shuffle button for queue randomisation
   * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+  * Added drag-and-drop reordering of the queue
+* Playlist Folders
+  * Added a web UI to browse, create, rename, move and delete playlist folders, and to file playlists/smart playlists into them
 * The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* Smart playlists and random searches now show generated mosaic cover art on their own page, like playlists already do
 * Config version 100
   * Added `stream_proxy` option (default `true`) to control live stream proxying
 
@@ -39,7 +43,9 @@
 
 ### Fixed (8.2.0)
 
-* Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+* Database 810017
+  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
+* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
 * Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
@@ -68,8 +74,9 @@
 * Added withdrawn status indicators to disk listings
 * Fixed managers being unable to view withdrawn tracks on artist song pages
 * Fixed missing generated artwork when `custom_blankalbum` is enabled
-* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
-* Fixed RSS artwork for albums inheriting the album artist's artwork
+* RSS artwork for a song/podcast episode with no cover now falls back to its album/podcast artwork instead of the placeholder
+* RSS artwork for an album with no cover of its own now falls back to the album artist's artwork instead of showing the placeholder
+* `http` authentication no longer accepts a client-supplied `HTTP_REMOTE_USER` header as an identity; only the server-set `REMOTE_USER` is trusted
 * Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
 * Fixed withdrawn releases appearing in recently played views and feeds
 * Added visual highlighting for withdrawn items
