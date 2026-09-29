@@ -54,10 +54,21 @@ class ThrottledHttpAdapterTest extends TestCase
 
     public function testAServerThatIsNotAUrlFallsBackToThePublicOne(): void
     {
-        $subject = $this->adapter('mb.example.com');
+        $subject = $this->adapter('this is not a url');
         $subject->call('artist/', [], self::OPTIONS);
 
         self::assertSame('https://musicbrainz.org/ws/2/artist/', $subject->requested);
+    }
+
+    /**
+     * A private mirror is typically internal and plain http; a bare host must not be forced onto https
+     */
+    public function testAServerWithNoSchemeDefaultsToHttp(): void
+    {
+        $subject = $this->adapter('mb.example.com/ws/2');
+        $subject->call('artist/', [], self::OPTIONS);
+
+        self::assertSame('http://mb.example.com/ws/2/artist/', $subject->requested);
     }
 
     /**

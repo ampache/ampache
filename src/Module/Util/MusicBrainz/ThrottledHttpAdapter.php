@@ -45,9 +45,20 @@ class ThrottledHttpAdapter extends AbstractHttpAdapter
         // server's own safe range, so a stray admin-entered value can neither hammer it nor stall every call
         $this->throttle = ($throttle <= 0) ? 0 : max(100, min(1000, $throttle));
 
-        // an unusable url keeps the public server, the way the library does, rather than failing every scan
-        if ($endpoint !== null && filter_var($endpoint, FILTER_VALIDATE_URL)) {
-            $this->endpoint = $endpoint;
+        $endpoint = trim((string) $endpoint);
+        if ($endpoint !== '') {
+            // a mirror typed as a bare host/IP is assumed plain http, never forced onto https
+            if (!str_contains($endpoint, '://')) {
+                $endpoint = 'http://' . $endpoint;
+            }
+
+            // an unusable url keeps the public server, the way the library does, rather than failing every scan
+            if (
+                in_array(parse_url($endpoint, PHP_URL_SCHEME), ['http', 'https'], true)
+                && filter_var($endpoint, FILTER_VALIDATE_URL)
+            ) {
+                $this->endpoint = $endpoint;
+            }
         }
     }
 
