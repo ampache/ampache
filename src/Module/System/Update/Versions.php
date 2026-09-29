@@ -398,11 +398,8 @@ use Ampache\Module\System\Update\Migration\V8\Migration810012;
 use Ampache\Module\System\Update\Migration\V8\Migration810013;
 use Ampache\Module\System\Update\Migration\V8\Migration810015;
 use Ampache\Module\System\Update\Migration\V8\Migration810016;
-<<<<<<< HEAD
-use Ampache\Module\System\Update\Migration\V8\Migration810018;
-=======
 use Ampache\Module\System\Update\Migration\V8\Migration810017;
->>>>>>> develop
+use Ampache\Module\System\Update\Migration\V8\Migration810018;
 use Generator;
 
 /**
