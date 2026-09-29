@@ -549,11 +549,14 @@ if ($this->showSongPageTitle()) {
             }
         });
 
-        $('#jp_container_1' + ' ul:last').sortable({
-            update: function () {
-                jplaylist.scan();
-            }
-        });
+        // jQuery UI is the page's heaviest asset and only this call needs it, so an embed does without
+        if (typeof $.fn.sortable === 'function') {
+            $('#jp_container_1' + ' ul:last').sortable({
+                update: function () {
+                    jplaylist.scan();
+                }
+            });
+        }
 
         // Every play action rebuilds jplaylist against a fresh <audio> element, so the previous Web Audio chain
         // must be disconnected here or it keeps rendering into audioContext.destination alongside the new one.

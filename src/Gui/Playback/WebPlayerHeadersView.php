@@ -46,6 +46,7 @@ final class WebPlayerHeadersView extends AbstractView
         private readonly AjaxUriRetrieverInterface $ajaxUriRetriever,
         private readonly bool $iframed = false,
         private readonly bool $isShare = false,
+        private readonly bool $embedded = false,
     ) {}
 
     /**
@@ -167,6 +168,14 @@ final class WebPlayerHeadersView extends AbstractView
     public function getWebPath(): string
     {
         return $this->webPath;
+    }
+
+    /**
+     * Framed by another site, so the page carries the player and nothing of the site around it.
+     */
+    public function isEmbedded(): bool
+    {
+        return $this->embedded;
     }
 
     /**
