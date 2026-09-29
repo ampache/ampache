@@ -31,10 +31,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
+use Ampache\Module\Playlist\Folder\PlaylistFolderRowIdsInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,8 +49,8 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
 
     public function __construct(
         private BrowseFactoryInterface $browseFactory,
-        private PlaylistFolderItemsLoaderInterface $itemsLoader,
         private PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private PlaylistFolderRowIdsInterface $rowIds,
         private UiInterface $ui,
     ) {}
 
@@ -91,36 +90,11 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
             $browse->add_supplemental_object(self::REQUEST_KEY, $folder);
         }
 
-        $browse->show_objects($this->getRowIds($user, $folder), true);
+        $browse->show_objects($this->rowIds->getRowIds($user, $folder), true);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
         return null;
-    }
-
-    /**
-     * The subfolders of this folder, followed by the playlists and smartlists filed in it, each id encoded as
-     * `playlist_folder-N`/`playlist-N`/`search-N` for `PlaylistFolderListRenderer` to split back apart.
-     *
-     * @return list<string>
-     */
-    private function getRowIds(User $user, ?PlaylistFolder $folder): array
-    {
-        $ids = [];
-        foreach ($this->playlistFolderRepository->getChildren($user, $folder?->getId() ?? PlaylistFolder::ROOT) as $child) {
-            $ids[] = sprintf('%s-%d', self::REQUEST_KEY, $child->getId());
-        }
-
-        foreach ($this->itemsLoader->getItems($user, $folder) as $item) {
-            // collections are a valid folder member, but this browse does not surface them yet
-            if ($item['object_type'] === 'collection') {
-                continue;
-            }
-
-            $ids[] = sprintf('%s-%d', $item['object_type'], $item['object_id']);
-        }
-
-        return $ids;
     }
 }

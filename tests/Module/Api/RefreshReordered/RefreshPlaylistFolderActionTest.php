@@ -29,7 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
+use Ampache\Module\Playlist\Folder\PlaylistFolderRowIdsInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\User;
@@ -40,9 +40,9 @@ use Psr\Http\Message\ServerRequestInterface;
 class RefreshPlaylistFolderActionTest extends MockeryTestCase
 {
     private BrowseFactoryInterface&MockInterface $browseFactory;
-    private PlaylistFolderItemsLoaderInterface&MockInterface $itemsLoader;
     private PlaylistFolderRepositoryInterface&MockInterface $playlistFolderRepository;
     private RequestParserInterface&MockInterface $requestParser;
+    private PlaylistFolderRowIdsInterface&MockInterface $rowIds;
     private RefreshPlaylistFolderAction $subject;
 
     public function testRunDoesNothingWhenFolderBelongsToAnotherUser(): void
@@ -80,10 +80,7 @@ class RefreshPlaylistFolderActionTest extends MockeryTestCase
 
         $this->requestParser->shouldReceive('getFromRequest')->with('id')->andReturn('5');
         $this->playlistFolderRepository->shouldReceive('findById')->with(5)->andReturn($folder);
-        $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 5)->once()->andReturn([]);
-        $this->itemsLoader->shouldReceive('getItems')->with($user, $folder)->once()->andReturn([
-            ['object_id' => 20, 'object_type' => 'search', 'sort_order' => 1],
-        ]);
+        $this->rowIds->shouldReceive('getRowIds')->with($user, $folder)->once()->andReturn(['search-20']);
 
         $this->browseFactory->shouldReceive('create')->withNoArgs()->once()->andReturn($browse);
         $browse->shouldReceive('set_type')->with('playlist_folder')->once();
@@ -106,13 +103,7 @@ class RefreshPlaylistFolderActionTest extends MockeryTestCase
 
         $this->requestParser->shouldReceive('getFromRequest')->with('id')->andReturn('0');
         $this->playlistFolderRepository->shouldReceive('findById')->never();
-
-        $subfolder = $this->folder(3, 9, 0, 'Live');
-        $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([$subfolder]);
-        $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([
-            ['object_id' => 10, 'object_type' => 'playlist', 'sort_order' => 1],
-            ['object_id' => 4, 'object_type' => 'collection', 'sort_order' => 2],
-        ]);
+        $this->rowIds->shouldReceive('getRowIds')->with($user, null)->once()->andReturn(['playlist_folder-3', 'playlist-10']);
 
         $this->browseFactory->shouldReceive('create')->withNoArgs()->once()->andReturn($browse);
         $browse->shouldReceive('set_type')->with('playlist_folder')->once();
@@ -127,16 +118,16 @@ class RefreshPlaylistFolderActionTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $this->requestParser             = $this->mock(RequestParserInterface::class);
-        $this->browseFactory             = $this->mock(BrowseFactoryInterface::class);
-        $this->itemsLoader               = $this->mock(PlaylistFolderItemsLoaderInterface::class);
-        $this->playlistFolderRepository  = $this->mock(PlaylistFolderRepositoryInterface::class);
+        $this->requestParser            = $this->mock(RequestParserInterface::class);
+        $this->browseFactory            = $this->mock(BrowseFactoryInterface::class);
+        $this->playlistFolderRepository = $this->mock(PlaylistFolderRepositoryInterface::class);
+        $this->rowIds                   = $this->mock(PlaylistFolderRowIdsInterface::class);
 
         $this->subject = new RefreshPlaylistFolderAction(
             $this->requestParser,
             $this->browseFactory,
-            $this->itemsLoader,
             $this->playlistFolderRepository,
+            $this->rowIds,
         );
     }
 
