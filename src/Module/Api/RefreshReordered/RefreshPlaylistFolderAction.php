@@ -23,16 +23,13 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Browse;
+namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
@@ -40,68 +37,56 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * One level of a user's playlist folder tree: its subfolders plus the playlists and smartlists filed there.
+ * Re-renders one playlist folder level's children after they have been dragged into a new order
  *
- * Collections are a valid folder member too, but are left out of this browse for now.
+ * Only the table is redrawn, so the page keeps its scroll position; see `RefreshCollectionItemsAction`.
  */
-final readonly class PlaylistFolderAction implements ApplicationActionInterface
+final readonly class RefreshPlaylistFolderAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'playlist_folder';
+    public const string REQUEST_KEY = 'refresh_playlist_folder';
 
     public function __construct(
+        private RequestParserInterface $requestParser,
         private BrowseFactoryInterface $browseFactory,
         private PlaylistFolderItemsLoaderInterface $itemsLoader,
         private PlaylistFolderRepositoryInterface $playlistFolderRepository,
-        private UiInterface $ui,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-            throw new AccessDeniedException('Access Denied: playlist folders are only available to a logged in user.');
-        }
-
         $user = $gatekeeper->getUser();
         if ($user === null) {
-            throw new AccessDeniedException('Access Denied: playlist folders are only available to a logged in user.');
+            return null;
         }
 
-        $input    = $request->getQueryParams();
-        $folderId = (isset($input['folder'])) ? (int) $input['folder'] : PlaylistFolder::ROOT;
+        $folderId = (int) $this->requestParser->getFromRequest('id');
         $folder   = ($folderId > PlaylistFolder::ROOT)
             ? $this->playlistFolderRepository->findById($folderId)
             : null;
 
-        // another user's folder is not yours to browse, and a stale/removed id is not distinguishable from it
+        // another user's folder is not this viewer's to refresh, same rule `PlaylistFolderAction` applies
         if ($folderId > PlaylistFolder::ROOT && (!$folder instanceof PlaylistFolder || !$folder->isVisible($user))) {
-            throw new AccessDeniedException('Access Denied: playlist folder filter');
-        }
-
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
+            return null;
         }
 
         $browse = $this->browseFactory->create();
-        $browse->set_type(self::REQUEST_KEY);
-        $browse->set_use_pages(true);
-
-        $this->ui->showHeader();
+        $browse->set_type('playlist_folder');
+        $browse->set_show_header(false);
+        $browse->set_static_content(true);
 
         if ($folder instanceof PlaylistFolder) {
-            $browse->add_supplemental_object(self::REQUEST_KEY, $folder);
+            $browse->add_supplemental_object('playlist_folder', $folder);
         }
 
         $browse->show_objects($this->getRowIds($user, $folder), true);
-
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
+        $browse->store();
 
         return null;
     }
 
     /**
-     * The subfolders of this folder, followed by the playlists and smartlists filed in it, each id encoded as
-     * `playlist_folder-N`/`playlist-N`/`search-N` for `PlaylistFolderListRenderer` to split back apart.
+     * The subfolders of this folder, followed by the playlists and smartlists filed in it -- the same set
+     * `PlaylistFolderAction::getRowIds()` builds, so a refresh renders exactly what the page's initial load did.
      *
      * @return list<string>
      */
@@ -109,11 +94,10 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
     {
         $ids = [];
         foreach ($this->playlistFolderRepository->getChildren($user, $folder?->getId() ?? PlaylistFolder::ROOT) as $child) {
-            $ids[] = sprintf('%s-%d', self::REQUEST_KEY, $child->getId());
+            $ids[] = sprintf('playlist_folder-%d', $child->getId());
         }
 
         foreach ($this->itemsLoader->getItems($user, $folder) as $item) {
-            // collections are a valid folder member, but this browse does not surface them yet
             if ($item['object_type'] === 'collection') {
                 continue;
             }
