@@ -988,8 +988,14 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
  */
 function display_notification(string $message, int $timeout = 5000): void
 {
+    // json_encode() already returns a quoted JS string literal; wrapping it again put the quotes on screen
+    $literal = json_encode(
+        $message,
+        JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP
+    ) ?: '""';
+
     echo "<script>";
-    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE) ?: '') . "', " . $timeout . ");";
+    echo "displayNotification(" . $literal . ", " . $timeout . ");";
     echo "</script>\n";
 }
 
@@ -1197,7 +1203,7 @@ function get_theme(string $name): ?array
         return null;
     }
 
-    $name = strtolower($name);
+    $name = basename(strtolower($name));
 
     if (array_key_exists($name, $_mapcache)) {
         return $_mapcache[$name];

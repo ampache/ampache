@@ -6,6 +6,8 @@
 
 ### Added (8.2.0)
 
+* Database 810016
+  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
 * Database 810015
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
@@ -31,9 +33,18 @@
 * Rightbar action buttons now use a fixed four-column grid
 * Grid action icons now display in the bottom-right corner
 * Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
+* A password change or API key rotation now ends the sessions that credential had opened
 
 ### Fixed (8.2.0)
 
+* Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+* Last.fm and Libre.fm session keys were shown in plain text
+* Notifications displayed their own quotes, and were inserted as markup rather than as text
+* A `site_title` holding a closing script tag broke the page scripts
+* A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
+* A preference written in one request was still read back stale in that same request
+* The slideshow armed itself without the Flickr plugin
+* Subsonic `getIndexes` returned an empty index on any library whose `folder_map` has not been rebuilt
 * Garbage collection incorrectly removed parent-only folders
 * Fixed missing Subsonic sub-folder listings
 * Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`
@@ -56,6 +67,7 @@
 * Fixed managers being unable to view withdrawn tracks on artist song pages
 * Fixed missing generated artwork when `custom_blankalbum` is enabled
 * Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
+* Fixed RSS artwork for albums inheriting the album artist's artwork
 * Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
 * Fixed withdrawn releases appearing in recently played views and feeds
 * Added visual highlighting for withdrawn items

@@ -29,6 +29,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinApiApplication;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticator;
 use Ampache\Module\Api\Jellyfin\JellyfinRequestAuthenticatorInterface;
+use Ampache\Module\Api\Jellyfin\JellyfinServerId;
 use Ampache\Module\Api\Jellyfin\JellyfinSessionMinter;
 use Ampache\Module\Api\Jellyfin\Method\Artist\ArtistsMethod;
 use Ampache\Module\Api\Jellyfin\Method\Auth\AuthenticateByNameMethod;
@@ -185,6 +186,7 @@ return [
     DaapApiApplication::class => autowire(),
     SseApiApplication::class => autowire(),
     JellyfinApiApplication::class => autowire(),
+    JellyfinServerId::class => autowire(),
     JellyfinRequestAuthenticatorInterface::class => autowire(JellyfinRequestAuthenticator::class),
     SystemPingMethod::class => autowire(),
     SystemInfoPublicMethod::class => autowire(),

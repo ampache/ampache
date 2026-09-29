@@ -91,7 +91,7 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
             $browse->add_supplemental_object(self::REQUEST_KEY, $folder);
         }
 
-        $browse->show_objects($this->getRowIds($user, $folder));
+        $browse->show_objects($this->getRowIds($user, $folder), true);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

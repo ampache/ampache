@@ -112,9 +112,13 @@ final class ItemsMethod implements JellyfinMethodInterface
         $albumIds = $this->albumRepository->getAlbumByArtist($artistId);
         $this->warmAlbums($albumIds);
 
+        // an artist reports catalog 0, which no filter group holds, so its albums are filtered instead
         $albums = [];
         foreach ($albumIds as $albumId) {
-            $albums[] = $this->mapper->mapAlbum(new Album($albumId), $user);
+            $album = new Album($albumId);
+            if (Catalog::has_access($album->getCatalogId(), $user->getId())) {
+                $albums[] = $this->mapper->mapAlbum($album, $user);
+            }
         }
 
         return $albums;
@@ -373,7 +377,7 @@ final class ItemsMethod implements JellyfinMethodInterface
     private function songsForAlbum(int $albumId, User $user, array $fields): array
     {
         $album = new Album($albumId);
-        if ($album->isNew()) {
+        if ($album->isNew() || !Catalog::has_access($album->getCatalogId(), $user->getId())) {
             return [];
         }
 

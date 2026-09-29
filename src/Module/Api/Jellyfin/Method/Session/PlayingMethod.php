@@ -44,7 +44,7 @@ final class PlayingMethod implements JellyfinMethodInterface
             return JellyfinResponse::unauthorized();
         }
 
-        $song = PlaybackReportHelper::resolveSong($request);
+        $song = PlaybackReportHelper::resolveSong($request, $user);
         if ($song === null) {
             return JellyfinResponse::noContent();
         }

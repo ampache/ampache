@@ -40,6 +40,22 @@ and sends nothing, so only an explicit `SET SESSION autocommit = 1` puts it back
 The install schema creates every table as InnoDB. Tables left on MyISAM or Aria from a much older install still
 work, but they take a table lock for the whole of each write, so a catalog update blocks playback.
 
+## Jellyfin Backend
+
+The Jellyfin backend is off by default and is enabled from the admin preferences (`jellyfin_backend_enable`).
+
+### perpetual_api_session is recommended while it is on
+
+Jellyfin clients have no silent re-authentication path: once the API session behind a paired device expires,
+the client cannot obtain a new one by itself and the device has to be paired again from scratch.
+
+Enable *API sessions do not expire* (`perpetual_api_session`) in the admin preferences while the backend is
+enabled. Sessions then last until they are signed out or revoked, and an administrator can still clear all of
+them at once with *Clear Perpetual API Sessions* on the debug page.
+
+Left off, a Jellyfin session is given a long fixed lifetime instead (70 days) so ordinary use is not
+interrupted, but a device that goes unused past it will need pairing again.
+
 ## Enable Debug Logging
 
 Ampache has a very in depth logging system that requires a few config options to be configured before you can log.

@@ -26,7 +26,10 @@ declare(strict_types=1);
 // browse/playlist_folders.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistFolderListRenderer
 
 use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistFolderAction;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\PlaylistFolder;
@@ -38,10 +41,30 @@ $argument_param = $this->getArgumentParam();
 $columns        = $this->getColumns();
 $rows           = $this->getRows();
 $mayCreate      = $this->mayCreate();
+$showRatings    = $this->showRatings();
+$folderId       = $this->getCurrentFolderId();
 
-Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
+if ($showRatings) {
+    $playlistIds = [];
+    $searchIds   = [];
+    foreach ($rows as $row) {
+        if ($row['item'] instanceof Playlist) {
+            $playlistIds[] = $row['item']->getId();
+        } elseif ($row['item'] instanceof Search) {
+            $searchIds[] = $row['item']->id;
+        }
+    }
 
-if ($mayCreate) { ?>
+    Rating::build_cache('playlist', $playlistIds);
+    Userflag::build_cache('playlist', $playlistIds);
+    Rating::build_cache('search', $searchIds);
+    Userflag::build_cache('search', $searchIds);
+}
+
+if ($browse->is_show_header()) {
+    Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
+
+    if ($mayCreate) { ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -62,13 +85,22 @@ if ($mayCreate) { ?>
                 <?php echo T_('Create Smart Playlist'); ?>
             </a>
         </li>
+        <li>
+            <a onclick="submitNewItemsOrder('<?php echo $folderId; ?>', 'reorder_playlist_folder_table', 'track_', '<?php echo $this->e($this->getSetSortOrderUrl()); ?>', '<?php echo $this->e(RefreshPlaylistFolderAction::REQUEST_KEY); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('save', T_('Save Track Order'))); ?>
+                <?php echo T_('Save Track Order'); ?>
+            </a>
+        </li>
     </ul>
 </div>
-<?php } ?>
+    <?php }
+    Ui::show_box_bottom();
+} ?>
+<div id="reordered_list_<?php echo $folderId; ?>">
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
-<table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist_folder">
+<table id="reorder_playlist_folder_table" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist_folder" data-offset="<?php echo $this->e($browse->get_start()); ?>">
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>
@@ -76,13 +108,27 @@ if ($mayCreate) { ?>
             <?php } ?>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="sortableplaylist_<?php echo $folderId; ?>">
         <?php foreach ($rows as $row) { ?>
-        <tr id="playlist_folder_row_<?php echo $this->e($row['type'] . '_' . $row['item']->getId()); ?>">
+        <tr id="track_<?php echo $this->e($this->getRowTrackId($row['type'], $row['item'])); ?>">
+            <td class="cel_play essential">
+                <span class="cel_play_content"> </span>
+                <div class="cel_play_hover"><?php echo $this->raw($this->getRowPlay($row['item'])); ?></div>
+            </td>
             <td class="cel_cover essential"><?php $this->renderRowArt($row['item']); ?></td>
             <td class="cel_name essential persist"><?php echo $this->raw($this->getRowName($row['item'])); ?></td>
+            <td class="cel_add_list essential">
+                <span class="cel_item_add"><?php echo $this->raw($this->getRowAdd($row['item'])); ?></span>
+            </td>
             <td class="cel_last_update optional"><?php echo $this->e($this->getRowLastUpdate($row['item'])); ?></td>
+            <td class="cel_type optional"><?php echo $this->raw($this->getRowType($row['item'])); ?></td>
+            <td class="cel_time optional"><?php echo $this->e($this->getRowTime($row['item'])); ?></td>
             <td class="cel_count optional"><?php echo $this->e($this->getRowItemCount($row['item'])); ?></td>
+            <?php if ($showRatings) { ?>
+            <td class="cel_ratings optional">
+                <div class="rating"><?php echo $this->raw($this->getRowRatings($row['item'])); ?></div>
+            </td>
+            <?php } ?>
             <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
             <td class="cel_action essential">
                 <?php if ($row['item'] instanceof PlaylistFolder) {
@@ -100,6 +146,11 @@ if ($mayCreate) { ?>
                         echo $this->raw($this->renderSearchActions($row['item']));
                     } ?>
             </td>
+            <td class="cel_drag">
+                <?php if ($mayCreate) {
+                    echo $this->raw(Ui::get_material_symbol('drag_indicator', T_('Reorder')));
+                } ?>
+            </td>
         </tr>
         <?php } ?>
         <?php if ($rows === []) { ?>
@@ -116,8 +167,8 @@ if ($mayCreate) { ?>
         </tr>
     </tfoot>
 </table>
+<?php show_table_render($this->isReorderable()); ?>
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
-}
-
-Ui::show_box_bottom(); ?>
+} ?>
+</div>

@@ -70,7 +70,8 @@ final readonly class DatabaseAuthenticator implements AuthenticatorInterface
                 if (isset($hashed_password[1]) && hash_equals($row['password'], $hashed_password[1]) && $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
                     if ($user instanceof User) {
-                        $user->update_password($password);
+                        // the stored hash moves to the current format, the secret behind it does not change
+                        $user->update_password($password, null, false);
                     }
                 }
 

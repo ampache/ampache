@@ -29,13 +29,16 @@ use Ampache\Module\Api\Jellyfin\JellyfinId;
 use Ampache\Module\Api\Jellyfin\JellyfinItemMapper;
 use Ampache\Module\Api\Jellyfin\JellyfinResponse;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * POST/DELETE /UserPlayedItems/{itemId} (+ legacy /Users/{userId}/PlayedItems/{itemId}) — songs only, since
- * `Song::update_played()` is a global (not per-user) flag; there's no equivalent for album/artist/playlist.
+ * POST/DELETE /UserPlayedItems/{itemId} (+ legacy /Users/{userId}/PlayedItems/{itemId}) — songs only.
+ *
+ * A play is recorded against the caller, the way the rest of Ampache records one. `song`.`played` is a
+ * shared column rather than per-user state, so it is only ever set here, never cleared.
  */
 final class PlayedMethod implements JellyfinMethodInterface
 {
@@ -54,12 +57,16 @@ final class PlayedMethod implements JellyfinMethodInterface
 
         $songId = JellyfinId::decodeId($itemId);
         $song   = ($songId !== null) ? new Song($songId) : null;
-        if ($song === null || $song->isNew()) {
+        if ($song === null || $song->isNew() || !Catalog::has_access($song->getCatalogId(), $user->getId())) {
             return JellyfinResponse::notFound();
         }
 
-        Song::update_played(strtoupper($request->getMethod()) === 'POST', $song->id);
-        $song->played = strtoupper($request->getMethod()) === 'POST';
+        // set_played writes the caller's own history and raises the shared flag only when it is still down
+        if (strtoupper($request->getMethod()) === 'POST' && $song->set_played($user->id, 'Jellyfin', [], time())) {
+            $song->played = true;
+        }
+
+        // a delete writes nothing: the shared column is what every other user reads
 
         return JellyfinResponse::json($this->mapper->mapUserData('song', $song->id, $user, $song));
     }

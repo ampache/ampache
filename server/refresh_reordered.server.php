@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Api\RefreshReordered\RefreshCollectionItemsAction;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistFolderAction;
 use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -38,6 +39,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         RefreshCollectionItemsAction::REQUEST_KEY => RefreshCollectionItemsAction::class,
+        RefreshPlaylistFolderAction::REQUEST_KEY => RefreshPlaylistFolderAction::class,
         RefreshPlaylistMediasAction::REQUEST_KEY => RefreshPlaylistMediasAction::class,
     ],
     RefreshPlaylistMediasAction::REQUEST_KEY

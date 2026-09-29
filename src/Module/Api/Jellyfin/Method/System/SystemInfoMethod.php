@@ -35,6 +35,8 @@ use Psr\Http\Message\ServerRequestInterface;
 /** GET /System/Info — authenticated; superset of /System/Info/Public. */
 final class SystemInfoMethod implements JellyfinMethodInterface
 {
+    public function __construct(private readonly JellyfinServerId $serverId) {}
+
     public function handle(ServerRequestInterface $request, ?User $user): JellyfinResponse
     {
         if ($user === null) {
@@ -48,7 +50,7 @@ final class SystemInfoMethod implements JellyfinMethodInterface
             'ProductName' => 'Ampache',
             'OperatingSystem' => PHP_OS,
             'OperatingSystemDisplayName' => PHP_OS,
-            'Id' => JellyfinServerId::derive((string) AmpConfig::get('secret_key', '')),
+            'Id' => $this->serverId->get(),
             'StartupWizardCompleted' => true,
             'HasPendingRestart' => false,
             'IsShuttingDown' => false,

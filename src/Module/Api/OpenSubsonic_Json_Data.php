@@ -3032,21 +3032,14 @@ class OpenSubsonic_Json_Data
         }
         $json['artists'] = $artists;
 
-        $album_artists = [];
-        foreach ($song->get_album_artists() as $artist_id) {
-            $array = Artist::get_name_array_by_id($artist_id);
-
-            $album_artists[] = [
-                'id' => OpenSubsonic_Api::getArtistSubId($artist_id),
-                'name' => (string) $array['name'],
-            ];
-        }
+        // one list per album rather than one per song: the entries then share a single copy of it
+        $album_artists        = $this->openSubsonicFields->songAlbumArtists($song);
         $json['albumArtists'] = $album_artists;
 
         // The display* fields are the single-string form of the artist lists above, for clients that render one name.
         $json['displayArtist'] = $song->get_parent_fullname();
         if ($album_artists !== []) {
-            $json['displayAlbumArtist'] = implode(', ', array_column($album_artists, 'name'));
+            $json['displayAlbumArtist'] = $this->openSubsonicFields->songDisplayAlbumArtist($song);
         }
 
         $composer = trim((string) $song->composer);

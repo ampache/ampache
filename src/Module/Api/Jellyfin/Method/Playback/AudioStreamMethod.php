@@ -33,6 +33,7 @@ use Ampache\Module\Api\Jellyfin\JellyfinTranscodeDecision;
 use Ampache\Module\Api\Jellyfin\Method\JellyfinMethodInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -82,8 +83,24 @@ final class AudioStreamMethod implements JellyfinMethodInterface
         }
 
         $song = new Song((int) JellyfinId::decodeId($itemId));
-        if ($song->isNew() || !$song->enabled || $song->file === null || !is_readable($song->file)) {
+        if (
+            $song->isNew()
+            || !$song->enabled
+            || $song->file === null
+            || !is_readable($song->file)
+            || !Catalog::has_access($song->getCatalogId(), $user->getId())
+        ) {
             http_response_code(404);
+
+            return JellyfinResponse::alreadySent();
+        }
+
+        // a quota plugin caps what a user may consume, and Legalize mode refuses a media already playing
+        if (
+            !User::stream_control([['object_type' => 'song', 'object_id' => $song->id]], $user)
+            || (AmpConfig::get_bool('lock_songs') && !Stream::check_lock_media($song->id, 'song'))
+        ) {
+            http_response_code(403);
 
             return JellyfinResponse::alreadySent();
         }

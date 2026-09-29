@@ -70,6 +70,11 @@ interface UserRepositoryInterface
     public function delete(int $userId, string $userName): void;
 
     /**
+     * Drops only the api sessions a user holds, leaving their interface session in place
+     */
+    public function deleteApiSessions(string $userName): void;
+
+    /**
      * Drops every session a user holds, logging them out everywhere
      */
     public function deleteSessions(string $userName): void;
@@ -93,6 +98,11 @@ interface UserRepositoryInterface
      * This returns a built user from an apikey
      */
     public function findByApiKey(string $apikey): ?User;
+
+    /**
+     * This returns a built user from an api session token, refusing any other session type
+     */
+    public function findByApiSessionToken(string $token): ?User;
 
     /**
      * This returns a built user from a email

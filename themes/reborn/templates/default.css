@@ -1572,6 +1572,17 @@ table.gridview td.cel_ratings {
     display: none;
 }
 
+.homedash table.gridview td.cel_ratings,
+.personalfav table.gridview td.cel_ratings {
+    justify-content: flex-start;
+}
+
+.homedash table.gridview td.cel_ratings .cel_rating,
+.personalfav table.gridview td.cel_ratings .cel_rating {
+    width: auto;
+    max-width: none;
+}
+
 .personalfav table.gridview tbody td {
     flex: 0 0 auto;
     width: 100%;
@@ -2261,6 +2272,11 @@ span.fatalerror {
     position: relative;
     top: 0.9px;
     white-space: nowrap;
+}
+
+.cel_rating {
+    max-width: 125px;
+    width: 125px;
 }
 
 /* a table cell has no room for the wording, and its title carries the count instead */
@@ -3204,7 +3220,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     align-items: center;
     display: flex;
     gap: 4px;
-    padding: 5px 10px;
+    padding: 1px 10px;
     white-space: nowrap;
 }
 
