@@ -41,6 +41,8 @@
 
 ### Fixed (8.2.0)
 
+* Database 810017
+  * Corrected `preference`.`name` to the same collation as `user_preference`.`name`, fixing an "Illegal mix of collations" error from `admin:updateDatabase` on installs where the two had drifted apart
 * Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
 * Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
