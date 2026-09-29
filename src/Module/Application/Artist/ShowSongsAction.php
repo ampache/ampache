@@ -26,31 +26,62 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Artist\ArtistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
+use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Teapot\StatusCode\RFC\RFC7231;
 
 /**
- * A bookmarked/typed `show_songs` link still lands on the artist page, whose Songs tab is now an in-page
- * panel (see artist/artist.phtml) rather than a page of its own.
+ * A full-page equivalent of the artist page's in-line "Songs" tab: the songs mapped directly onto the
+ * artist, not every song on an album the artist merely appears on (see `ShowAllSongsAction` for that).
  */
 final readonly class ShowSongsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_songs';
 
     public function __construct(
-        private ResponseFactoryInterface $responseFactory,
+        private ModelFactoryInterface $modelFactory,
+        private UiInterface $ui,
+        private SongRepositoryInterface $songRepository,
+        private ZipHandlerInterface $zipHandler,
+        private BrowseFactoryInterface $browseFactory,
+        private FunctionCheckerInterface $functionChecker,
     ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
 
-        return $this->responseFactory
-            ->createResponse(RFC7231::FOUND)
-            ->withHeader('Location', AmpConfig::get_web_path('/client') . '/artists.php?action=show&artist=' . $artistId . '#songs');
+        $artist  = $this->modelFactory->createArtist($artistId);
+        $songIds = $this->songRepository->getByArtist($artistId);
+
+        $this->ui->showHeader();
+        echo new ArtistPageView(
+            $artist,
+            ['' => $songIds],
+            'song',
+            $this->browseFactory,
+            $gatekeeper->getUser(),
+            AmpConfig::get_web_path('/client'),
+            canEditArtist($artist, $gatekeeper->getUserId()),
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $this->zipHandler->isZipable('artist'),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        )->render();
+
+        $this->ui->showQueryStats();
+        $this->ui->showFooter();
+
+        return null;
     }
 }

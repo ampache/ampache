@@ -127,7 +127,7 @@ final class ArtistPageView extends AbstractView
                     ? new HeaderChip(
                         sprintf(nT_('%d song', '%d songs', $artist->song_count), $artist->song_count),
                         true,
-                        ($listed) ? $base . '&action=show_songs#albums' : '#albums'
+                        ($listed) ? $base . '&action=show_songs' : '#albums'
                     )
                     : null,
                 ($artist->time > 0) ? new HeaderChip($artist->get_f_time(), true, title: T_('Time')) : null,
