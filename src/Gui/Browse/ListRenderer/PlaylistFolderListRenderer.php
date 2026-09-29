@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Browse\ListRenderer;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
@@ -35,11 +36,15 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Override;
 
@@ -90,14 +95,26 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function getColumns(): array
     {
-        return [
+        $columns = [
+            ['class' => 'cel_play essential', 'label' => '', 'footer' => false],
             ['class' => 'cel_cover essential', 'label' => T_('Art'), 'footer' => false],
             ['class' => 'cel_name essential persist', 'label' => T_('Name'), 'footer' => false],
+            ['class' => 'cel_add_list essential', 'label' => '', 'footer' => false],
             ['class' => 'cel_last_update optional', 'label' => T_('Last Update'), 'footer' => false],
+            ['class' => 'cel_type optional', 'label' => T_('Type'), 'footer' => false],
+            ['class' => 'cel_time optional', 'label' => T_('Time'), 'footer' => false],
             ['class' => 'cel_count optional', 'label' => T_('# Items'), 'footer' => false],
-            ['class' => 'cel_owner essential', 'label' => T_('Owner'), 'footer' => false],
-            ['class' => 'cel_action essential', 'label' => T_('Actions'), 'footer' => false],
         ];
+
+        if ($this->showRatings()) {
+            $columns[] = ['class' => 'cel_ratings optional', 'label' => T_('Rating'), 'footer' => false];
+        }
+
+        $columns[] = ['class' => 'cel_owner essential', 'label' => T_('Owner'), 'footer' => false];
+        $columns[] = ['class' => 'cel_action essential', 'label' => T_('Actions'), 'footer' => false];
+        $columns[] = ['class' => 'cel_drag essential', 'label' => '', 'footer' => false];
+
+        return $columns;
     }
 
     public function getCreateFolderUrl(): string
@@ -153,6 +170,37 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return $this->configContainer->getWebPath('/client') . '/browse.php?action=playlist_folder' . $suffix;
     }
 
+    /**
+     * The Add cell the standalone playlist/smart-playlist browses show for this item; a folder is not
+     * addable to a playlist itself, so it gets none.
+     */
+    public function getRowAdd(PlaylistFolder|playlist_object $item): string
+    {
+        if (!$this->mayCreate()) {
+            return '';
+        }
+
+        if ($item instanceof Playlist) {
+            $playlist   = $this->guiFactory->createPlaylistViewAdapter($this->gatekeeperFactory->createGuiGatekeeper(), $item);
+            $playlistId = $playlist->getId();
+
+            return $playlist->getRandomPlayPlaylistButton()
+                . $playlist->getAddToTemporaryPlaylistButton()
+                . $playlist->getRandomToTemporaryPlaylistButton()
+                . '<a id="add_to_playlist_' . $playlistId . '" onclick="showPlaylistDialog(event, \'playlist\', \'' . $playlistId . '\')">' . $playlist->getAddToPlaylistIcon() . '</a>';
+        }
+
+        if ($item instanceof Search) {
+            $searchId = $item->id;
+
+            return Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $searchId, 'autorenew', T_('Random Play'), 'play_random_' . $searchId)
+                . Ajax::button('?action=basket&type=search&id=' . $searchId, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $searchId)
+                . '<a id="add_to_playlist_' . $searchId . '" onclick="showPlaylistDialog(event, \'search\', \'' . $searchId . '\')">' . Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()) . '</a>';
+        }
+
+        return '';
+    }
+
     public function getRowItemCount(PlaylistFolder|playlist_object $item): int
     {
         if ($item instanceof PlaylistFolder) {
@@ -181,6 +229,73 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     public function getRowOwner(PlaylistFolder|playlist_object $item): string
     {
         return ($item instanceof PlaylistFolder) ? '' : (string) $item->username;
+    }
+
+    /**
+     * The Play cell the standalone playlist/smart-playlist browses show for this item; a folder is not
+     * playable, so it gets none.
+     */
+    public function getRowPlay(PlaylistFolder|playlist_object $item): string
+    {
+        if (!$this->isDirectplayEnabled()) {
+            return '';
+        }
+
+        if ($item instanceof Playlist) {
+            $playlist = $this->guiFactory->createPlaylistViewAdapter($this->gatekeeperFactory->createGuiGatekeeper(), $item);
+            $html     = $playlist->getDirectplayButton();
+
+            if ($playlist->canAutoplayNext()) {
+                $html .= $playlist->getAutoplayNextButton();
+            }
+
+            if ($playlist->canAppendNext()) {
+                $html .= $playlist->getAppendNextButton();
+            }
+
+            return $html;
+        }
+
+        if ($item instanceof Search) {
+            $searchId = $item->id;
+            $html     = Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId, 'play_circle', T_('Play'), 'play_playlist_' . $searchId);
+
+            if (Stream_Playlist::check_autoplay_next()) {
+                $html .= Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_playlist_' . $searchId);
+            }
+
+            if (Stream_Playlist::check_autoplay_append()) {
+                $html .= Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $searchId . '&append=true', 'low_priority', T_('Play last'), 'addplay_playlist_' . $searchId);
+            }
+
+            return $html;
+        }
+
+        return '';
+    }
+
+    /**
+     * The Rating cell the standalone playlist/smart-playlist browses show for this item; a folder carries
+     * no rating of its own.
+     */
+    public function getRowRatings(PlaylistFolder|playlist_object $item): string
+    {
+        if ($item instanceof Playlist) {
+            $playlist   = $this->guiFactory->createPlaylistViewAdapter($this->gatekeeperFactory->createGuiGatekeeper(), $item);
+            $playlistId = $playlist->getId();
+
+            return '<span class="cel_rating" id="rating_' . $playlistId . '_playlist">' . $playlist->getRating() . '</span>'
+                . '<span class="cel_userflag" id="userflag_' . $playlistId . '_playlist">' . $playlist->getUserFlags() . '</span>';
+        }
+
+        if ($item instanceof Search) {
+            $searchId = $item->id;
+
+            return '<span class="cel_rating" id="rating_' . $searchId . '_search">' . Rating::show($searchId, 'search') . '</span>'
+                . '<span class="cel_userflag" id="userflag_' . $searchId . '_search">' . Userflag::show($searchId, 'search') . '</span>';
+        }
+
+        return '';
     }
 
     /**
@@ -215,6 +330,37 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         });
     }
 
+    public function getRowTime(PlaylistFolder|playlist_object $item): string
+    {
+        return ($item instanceof PlaylistFolder) ? '' : $item->get_f_time();
+    }
+
+    /**
+     * The drag row id for one row, in the same `<type>-<id>` encoding `PlaylistFolderAction` builds its
+     * ids from, so `SetSortOrderAction` can parse a dragged order back into per-row saves.
+     */
+    public function getRowTrackId(string $type, PlaylistFolder|playlist_object $item): string
+    {
+        return sprintf('%s-%d', $type, $item->getId());
+    }
+
+    public function getRowType(PlaylistFolder|playlist_object $item): string
+    {
+        if ($item instanceof playlist_object && $item->isPrivate()) {
+            return Ui::get_material_symbol('lock', T_('Private'));
+        }
+
+        return '';
+    }
+
+    /**
+     * The `set_sort_order` URL a drag-to-reorder save posts to for the folder currently being browsed.
+     */
+    public function getSetSortOrderUrl(): string
+    {
+        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=set_sort_order&folder=' . $this->getCurrentFolderId();
+    }
+
     /**
      * The header box title: plain text at the root (nothing to link back to), a breadcrumb of ancestor
      * links ending in the plain current folder name otherwise -- same shape as `FolderView::getTitle()`.
@@ -236,6 +382,11 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $crumbs[] = $this->e($folder->getName());
 
         return implode(' / ', $crumbs);
+    }
+
+    public function isDirectplayEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY);
     }
 
     public function mayCreate(): bool
@@ -289,12 +440,12 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     {
         if ($item instanceof PlaylistFolder) {
             $name = $this->e($item->getName());
-            echo '<div class="item_art"><img src="' . $this->e(Art::get_fallback_url('folder', '128x128')) . '" title="' . $name . '" alt="' . $name . '" /></div>';
+            echo '<div class="item_art"><img src="' . $this->e(Art::get_fallback_url('folder', '100x100')) . '" title="' . $name . '" alt="' . $name . '" height="100" width="100" /></div>';
 
             return;
         }
 
-        $item->display_art(['width' => 128, 'height' => 128], true);
+        $item->display_art(['width' => 100, 'height' => 100], true);
     }
 
     /**
@@ -321,6 +472,11 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         }
 
         return $html;
+    }
+
+    public function showRatings(): bool
+    {
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     #[Override]

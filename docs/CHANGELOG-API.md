@@ -9,6 +9,11 @@
   * `quickconnect_initiate` requests a pairing code, `quickconnect_status` polls it
   * Once approved, the session is minted the same way `handshake` does and is valid
 
+### Fixed (820000)
+
+* `deleted_songs` (API5, API6, API8)
+  * The row's `update_time` was never mapped, so every output formatter's `isset()` gate dropped it and the result was always empty
+
 ## API 8.1.1
 
 ### Fixed (811000)

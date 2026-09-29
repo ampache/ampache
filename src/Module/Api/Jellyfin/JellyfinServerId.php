@@ -25,13 +25,17 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
+use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+
 /**
- * Derives a stable, UUID-shaped ServerId from this install's `secret_key` config value — deterministic
- * across requests and restarts without needing a dedicated install-identity column.
+ * Holds this install's own UUID-shaped ServerId, generated once and kept in `update_info`.
  *
- * @todo revisit per plan §F: a config-derived UUID vs. one tied to the DB install identity is still open.
+ * It used to be the md5 of `secret_key`, which an unauthenticated route then published: that digest tells
+ * an attacker for free whether the install still runs the shipped default key, and confirms any guess at a
+ * hand-set one without touching the server again.
  */
-final class JellyfinServerId
+final readonly class JellyfinServerId
 {
     /**
      * The Jellyfin protocol version this surface emulates — clients gate features (and refuse to connect
@@ -40,10 +44,10 @@ final class JellyfinServerId
      */
     public const string PROTOCOL_VERSION = '12.0.0';
 
-    public static function derive(string $secretKey): string
-    {
-        $hex = substr(md5($secretKey), 0, 32);
+    public function __construct(private UpdateInfoRepositoryInterface $updateInfoRepository) {}
 
+    private static function shape(string $hex): string
+    {
         return sprintf(
             '%s-%s-%s-%s-%s',
             substr($hex, 0, 8),
@@ -52,5 +56,18 @@ final class JellyfinServerId
             substr($hex, 16, 4),
             substr($hex, 20, 12),
         );
+    }
+
+    public function get(): string
+    {
+        $stored = $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::JELLYFIN_SERVER_ID);
+        if ($stored !== null && $stored !== '') {
+            return $stored;
+        }
+
+        $serverId = self::shape(bin2hex(random_bytes(16)));
+        $this->updateInfoRepository->setValue(UpdateInfoEnum::JELLYFIN_SERVER_ID, $serverId);
+
+        return $serverId;
     }
 }

@@ -254,7 +254,7 @@ class Song extends database_object implements
         }
 
         Album::build_cache($albums);
-        Art::build_cache($albums);
+        Art::build_cache($albums, 'album');
 
         // one artist_map read for the page instead of one per song, and the same for the album artists
         foreach ($repository->getParentIdsBulk(array_map(intval(...), array_values($song_ids)), false) as $songId => $parentIds) {

@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 enum UpdateInfoEnum: string
 {
-    case CRON_DATE  = 'cron_date';
-    case DB_VERSION = 'db_version';
+    case CRON_DATE          = 'cron_date';
+    case DB_VERSION         = 'db_version';
+    case JELLYFIN_SERVER_ID = 'jellyfin_server_id';
 }

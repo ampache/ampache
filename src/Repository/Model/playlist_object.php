@@ -513,12 +513,23 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
-     * The items art is gathered from. A playlist has only what it plays; a collection holds its members.
+     * The items art is gathered from. A playlist has only what it plays; a collection holds its members and a random smartlist re-rolls on every call
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     protected function get_art_items(): array
     {
+        if ($this instanceof Search && $this->random) {
+            $random       = $this->random;
+            $this->random = 0;
+
+            try {
+                return $this->get_medias();
+            } finally {
+                $this->random = $random;
+            }
+        }
+
         return $this->get_medias();
     }
 

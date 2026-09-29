@@ -76,6 +76,9 @@ textarea {
 /* than an unqualified author rule, so those two states are re-declared with !important below */
 select {
     color-scheme: light;
+    /* the light scheme above is for the popup rows; without this the closed control takes that scheme's
+       black as its text color and disappears into the dark background declared above */
+    color: #fff;
 }
 
 select option {

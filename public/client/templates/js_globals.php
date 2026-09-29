@@ -46,13 +46,13 @@ $web_path = AmpConfig::get_web_path('/client');
     var jsAmpConfigSongPageTitle = "<?php echo AmpConfig::get_bool('song_page_title'); ?>";
 
     // Preferences
-    var jsPrefExistsFlickrApiKey = "<?php echo Preference::exists('flickr_api_key'); ?>";
+    var jsPrefExistsFlickrApiKey = "<?php echo (Preference::exists('flickr_api_key') > 0) ? '1' : ''; ?>";
 
     // Misc
     var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
     var jsWebPath = "<?php echo $web_path; ?>";
     var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
-    var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')); ?>";
+    var jsSiteTitle = <?php echo json_encode(AmpConfig::get('site_title', ''), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?: '""'; ?>;
     var jsCookieString = jsAmpConfigCookieSecure ? "expires: 30, path: '/', secure: true, samesite: 'Strict'" : "expires: 30, path: '/', samesite: 'Strict'";
     var jsBasketCount = 0; // updated in rightbar.inc.php after ajax load
 
