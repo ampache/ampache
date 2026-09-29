@@ -1,0 +1,124 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/media_embed.phtml -- rendered by Ampache\Gui\Playback\MediaEmbedView
+
+/** @var Ampache\Gui\Playback\MediaEmbedView $this */
+
+$tracks = $this->getTracks();
+$single = $this->isSingle(); ?>
+<!DOCTYPE html>
+<html lang="<?php echo $this->e($this->getDocumentLanguage()); ?>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title><?php echo $this->e($this->getTitle()); ?></title>
+<style>
+    /* self-contained: this page is framed by a site whose stylesheet is none of our business */
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 13px/1.4 system-ui, sans-serif; color: #eee; background: #1b1b1b; }
+    .embed { display: flex; flex-direction: column; height: 100vh; }
+    .head { display: flex; gap: 10px; align-items: center; padding: 10px; flex: none; }
+    .head img { width: 72px; height: 72px; object-fit: cover; border-radius: 3px; flex: none; }
+    .meta { min-width: 0; flex: 1; }
+    .meta a { color: inherit; text-decoration: none; }
+    .meta a:hover, .meta a:focus { text-decoration: underline; }
+    .title { font-weight: 600; }
+    .title, .subtitle, .now { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .subtitle, .now { color: #aaa; }
+    audio { width: 100%; height: 32px; margin-top: 6px; }
+    ol { flex: 1; overflow-y: auto; margin: 0; padding: 0 10px 10px; list-style: none; }
+    li { display: flex; gap: 8px; padding: 5px 6px; border-radius: 3px; cursor: pointer; }
+    li:hover, li:focus { background: #2a2a2a; }
+    li[aria-current="true"] { background: #33383f; }
+    li .n { color: #777; min-width: 1.6em; text-align: right; font-variant-numeric: tabular-nums; }
+    li .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    li .d { color: #777; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="embed">
+    <div class="head">
+        <img src="<?php echo $this->e($this->getArtUrl()); ?>" alt="" loading="lazy">
+        <div class="meta">
+            <div class="title"><a href="<?php echo $this->e($this->getPageUrl()); ?>" target="_blank" rel="noopener"><?php echo $this->e($this->getTitle()); ?></a></div>
+            <div class="subtitle"><?php echo $this->e($this->getSubtitle()); ?></div>
+            <?php if (!$single) { ?>
+            <div class="now" data-now></div>
+            <?php } ?>
+            <audio controls preload="none"<?php echo ($tracks === []) ? '' : ' src="' . $this->e($tracks[0]['url']) . '"'; ?>></audio>
+        </div>
+    </div>
+    <?php if (!$single) { ?>
+    <ol>
+        <?php foreach ($tracks as $index => $track) { ?>
+        <li tabindex="0" data-url="<?php echo $this->e($track['url']); ?>" data-title="<?php echo $this->e($track['title'] . ' — ' . $track['artist']); ?>"<?php echo ($index === 0) ? ' aria-current="true"' : ''; ?>>
+            <span class="n"><?php echo $this->e($index + 1); ?></span>
+            <span class="t"><?php echo $this->e($track['title']); ?></span>
+            <span class="d"><?php echo $this->e($track['time']); ?></span>
+        </li>
+        <?php } ?>
+    </ol>
+    <script>
+        (function () {
+            var audio = document.querySelector("audio");
+            var items = [].slice.call(document.querySelectorAll("li[data-url]"));
+            var now = document.querySelector("[data-now]");
+            if (!audio || items.length === 0) { return; }
+
+            function select(index, play) {
+                var item = items[index];
+                if (!item) { return; }
+                items.forEach(function (other) { other.removeAttribute("aria-current"); });
+                item.setAttribute("aria-current", "true");
+                audio.src = item.getAttribute("data-url");
+                if (now) { now.textContent = item.getAttribute("data-title"); }
+                if (play) { audio.play(); }
+            }
+
+            function current() {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].getAttribute("aria-current") === "true") { return i; }
+                }
+                return 0;
+            }
+
+            items.forEach(function (item, index) {
+                item.addEventListener("click", function () { select(index, true); });
+                item.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(index, true); }
+                });
+            });
+
+            // the point of a list: one track ending starts the next
+            audio.addEventListener("ended", function () { select(current() + 1, true); });
+            select(0, false);
+        }());
+    </script>
+    <?php } ?>
+</div>
+</body>
+</html>

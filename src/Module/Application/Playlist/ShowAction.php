@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Gui\Playlist\PlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -35,6 +36,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -42,6 +44,9 @@ use Psr\Log\LoggerInterface;
 final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
+
+    /** How many tracks an embedded playlist offers before it stops being a preview */
+    private const int EMBED_TRACK_LIMIT = 50;
 
     public function __construct(
         private UiInterface $ui,
@@ -56,7 +61,23 @@ final readonly class ShowAction implements ApplicationActionInterface
         $playlist = $this->modelFactory->createPlaylist(
             (int) ($_REQUEST['playlist_id'] ?? 0)
         );
-        if (!$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private')) {
+        $public = !$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private');
+
+        // a stranger's page frames this, so it answers with the player alone and none of the chrome
+        if ($public && MediaEmbedView::isAvailable() && !empty($_REQUEST['embed'])) {
+            $webPath = AmpConfig::get_web_path();
+            echo (new MediaEmbedView(
+                (string) $playlist->name,
+                (string) $playlist->username,
+                $webPath . '/image.php?object_id=' . $playlist->id . '&object_type=playlist&size=128x128',
+                $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id,
+                $this->embeddedSongs($playlist->get_songs())
+            ))->render();
+
+            return null;
+        }
+
+        if ($public) {
             $webPath = AmpConfig::get_web_path();
             $count   = (int) $playlist->last_count;
             $url     = $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id;
@@ -78,6 +99,10 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'numTracks' => $count,
                 ])
             );
+
+            if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
+                PageMeta::setPlayer($url . '&embed=1', MediaEmbedView::WIDTH, MediaEmbedView::heightFor($count));
+            }
         }
 
         $this->ui->showHeader();
@@ -103,5 +128,24 @@ final readonly class ShowAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * The songs the embed offers, in playlist order.
+     *
+     * Capped: the frame is a taster on someone else's page, not a way to walk a whole library, and every
+     * row is a stream url the page carries whether or not anyone clicks it.
+     *
+     * @param int[] $songIds
+     * @return list<Song>
+     */
+    private function embeddedSongs(array $songIds): array
+    {
+        $songs = [];
+        foreach (array_slice($songIds, 0, self::EMBED_TRACK_LIMIT) as $songId) {
+            $songs[] = $this->modelFactory->createSong($songId);
+        }
+
+        return $songs;
     }
 }

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -39,7 +40,9 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,6 +52,9 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_disk';
 
+    /** How many tracks an embedded disk offers before it stops being a preview */
+    private const int EMBED_TRACK_LIMIT = 50;
+
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
@@ -57,6 +63,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private FunctionCheckerInterface $functionChecker,
         private AlbumEditabilityCheckerInterface $editabilityChecker,
+        private AlbumRepositoryInterface $albumRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,6 +73,20 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
         $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
+
+        // a stranger's page frames this, so it answers with the player alone and none of the chrome
+        if ($shown && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
+            $webPath = AmpConfig::get_web_path();
+            echo (new MediaEmbedView(
+                (string) $albumDisk->get_fullname(),
+                (string) $albumDisk->get_parent_fullname(),
+                $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=128x128',
+                $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId,
+                $this->embeddedSongs($albumDiskId)
+            ))->render();
+
+            return null;
+        }
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path();
@@ -90,6 +111,14 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                     'numTracks' => $albumDisk->song_count,
                 ])
             );
+
+            if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
+                PageMeta::setPlayer(
+                    $url . '&embed=1',
+                    MediaEmbedView::WIDTH,
+                    MediaEmbedView::heightFor((int) $albumDisk->song_count)
+                );
+            }
         }
 
         $this->ui->showHeader();
@@ -122,5 +151,23 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         $this->ui->showFooter();
 
         return null;
+    }
+
+    /**
+     * The songs the embed offers, in disk order.
+     *
+     * Capped: the frame is a taster on someone else's page, not a way to walk a whole disk, and every row
+     * is a stream url the page carries whether or not anyone clicks it.
+     *
+     * @return list<Song>
+     */
+    private function embeddedSongs(int $albumDiskId): array
+    {
+        $songs = [];
+        foreach (array_slice($this->albumRepository->getSongsByAlbumDisk($albumDiskId), 0, self::EMBED_TRACK_LIMIT) as $songId) {
+            $songs[] = $this->modelFactory->createSong($songId);
+        }
+
+        return $songs;
     }
 }

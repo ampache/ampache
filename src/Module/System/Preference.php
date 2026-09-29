@@ -249,6 +249,7 @@ class Preference extends database_object
         'transcode_bitrate_api' => ['0', 'Transcode bitrate - API (overrides default)', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding'],
         'cron_cache_live_count' => ['0', 'Add live plays to the cached count for accurate stats (Require: Cron Cache)', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog'],
         'httpq_active' => ['0', 'HTTPQ Active Instance', AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq'],
+        'embed_player' => ['0', 'Allow an embedded player when a link to this server is posted on another site', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature'],
     ];
     /**
      * plugin and module preferences might not be there but they need to be kept if you're using them
@@ -516,6 +517,7 @@ class Preference extends database_object
         'disabled_custom_metadata_fields_input',
         'disabled_custom_metadata_fields',
         'download',
+        'embed_player',
         'encode_player_api_target',
         'encode_player_webplayer_target',
         'encode_target',
@@ -1657,6 +1659,7 @@ class Preference extends database_object
             'discogs_api_key' => 'Discogs consumer key',
             'discogs_secret_api_key' => 'Discogs secret',
             'download' => 'Allow Downloads',
+            'embed_player' => 'Allow an embedded player when a link to this server is posted on another site',
             'encode_target' => 'Transcode output format - Audio Default',
             'encode_video_target' => 'Transcode output format - Video Default',
             'encode_player_webplayer_target' => 'Transcode output format - Web Player (overrides default)',
