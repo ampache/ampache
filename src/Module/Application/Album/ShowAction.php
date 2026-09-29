@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\EmbedTracksTrait;
+use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -40,6 +42,7 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -48,6 +51,8 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
+    use EmbedTracksTrait;
+
     public const string REQUEST_KEY = 'show';
 
     public function __construct(
@@ -59,6 +64,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private BrowseFactoryInterface $browseFactory,
         private AlbumEditabilityCheckerInterface $editabilityChecker,
         private FunctionCheckerInterface $functionChecker,
+        private AlbumRepositoryInterface $albumRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,6 +74,20 @@ final readonly class ShowAction implements ApplicationActionInterface
         $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
         $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs)) && $album->isVisible($user);
+
+        // a stranger's page frames this, so it answers with the player alone and none of the chrome
+        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
+            $webPath = AmpConfig::get_web_path();
+            echo (new MediaEmbedView(
+                (string) $album->get_fullname(),
+                (string) $album->get_parent_fullname(),
+                $webPath . '/image.php?object_id=' . $albumId . '&object_type=album&size=128x128',
+                $webPath . '/albums.php?action=show&album=' . $albumId,
+                $this->embeddedSongs($this->albumRepository->getSongs($albumId))
+            ))->render();
+
+            return null;
+        }
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path();
@@ -94,6 +114,14 @@ final readonly class ShowAction implements ApplicationActionInterface
                     'datePublished' => ($album->year > 0) ? (string) $album->year : null,
                 ])
             );
+
+            if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
+                PageMeta::setPlayer(
+                    $url . '&embed=1',
+                    MediaEmbedView::WIDTH,
+                    MediaEmbedView::heightFor((int) $album->song_count)
+                );
+            }
         }
 
         $this->ui->showHeader();

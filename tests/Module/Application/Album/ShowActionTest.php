@@ -34,6 +34,7 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -44,6 +45,7 @@ use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
+    private MockInterface|AlbumRepositoryInterface $albumRepository;
     private BrowseFactoryInterface&MockInterface $browseFactory;
     private ConfigContainerInterface&MockInterface $configContainer;
     private AlbumEditabilityCheckerInterface&MockInterface $editabilityChecker;
@@ -126,6 +128,7 @@ class ShowActionTest extends MockeryTestCase
         $this->functionChecker    = $this->mock(FunctionCheckerInterface::class);
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
         $this->zipHandler         = $this->mock(ZipHandlerInterface::class);
+        $this->albumRepository    = $this->mock(AlbumRepositoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->modelFactory,
@@ -135,7 +138,8 @@ class ShowActionTest extends MockeryTestCase
             $this->zipHandler,
             $this->browseFactory,
             $this->editabilityChecker,
-            $this->functionChecker
+            $this->functionChecker,
+            $this->albumRepository
         );
     }
 }
