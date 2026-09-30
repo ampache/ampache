@@ -60,6 +60,22 @@ class DefaultActionTest extends MockeryTestCase
     private MockInterface|ZipHandlerInterface $zipHandler;
 
     /**
+     * A stream session (ssid) only proves playback of one item, not batch-download entitlement or
+     * catalog membership; both the id-loading loop and getMediaFiles() must ask the caller's catalog
+     * filter for every object before it can end up in the zip
+     */
+    public function testRunAsksTheCatalogFilterForEveryLoadedObject(): void
+    {
+        $source = (string) file_get_contents(__DIR__ . '/../../../../src/Module/Application/Batch/DefaultAction.php');
+
+        self::assertSame(
+            2,
+            substr_count($source, 'Catalog::has_access('),
+            'DefaultAction must check catalog access both where objects are loaded by id and in getMediaFiles()'
+        );
+    }
+
+    /**
      * Every id fans out to a full item load plus its own medias, so an unbounded request-supplied
      * list is a resource-exhaustion vector; it must be refused before any of that work starts
      */
@@ -93,22 +109,6 @@ class DefaultActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $this->subject->run($request, $gatekeeper);
-    }
-
-    /**
-     * A stream session (ssid) only proves playback of one item, not batch-download entitlement or
-     * catalog membership; both the id-loading loop and getMediaFiles() must ask the caller's catalog
-     * filter for every object before it can end up in the zip
-     */
-    public function testRunAsksTheCatalogFilterForEveryLoadedObject(): void
-    {
-        $source = (string) file_get_contents(__DIR__ . '/../../../../src/Module/Application/Batch/DefaultAction.php');
-
-        self::assertSame(
-            2,
-            substr_count($source, 'Catalog::has_access('),
-            'DefaultAction must check catalog access both where objects are loaded by id and in getMediaFiles()'
-        );
     }
 
     #[Override]
