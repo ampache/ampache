@@ -147,35 +147,6 @@ class LostPasswordMethodTest extends MockeryTestCase
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]
-    public function testHandleThrowsIfSimpleUserMode(int $apiVersion): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
-
-        AmpConfig::set('mail_enable', true, true);
-        AmpConfig::set('demo_mode', false, true);
-
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->expectException(AccessDeniedException::class);
-        $this->expectExceptionMessage('simple_user_mode');
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            ['auth' => 'some-token', 'api_format' => 'json'],
-            $user,
-            $apiVersion
-        );
-    }
-
-    #[DataProvider(methodName: 'apiVersionProvider')]
     public function testHandleThrowsIfLostPasswordDisabled(int $apiVersion): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -234,6 +205,35 @@ class LostPasswordMethodTest extends MockeryTestCase
 
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('allow_lost_password');
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['auth' => 'some-token', 'api_format' => 'json'],
+            $user,
+            $apiVersion
+        );
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleThrowsIfSimpleUserMode(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+
+        AmpConfig::set('mail_enable', true, true);
+        AmpConfig::set('demo_mode', false, true);
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('simple_user_mode');
 
         $this->subject->handle(
             $gatekeeper,
