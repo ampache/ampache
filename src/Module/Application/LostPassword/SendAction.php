@@ -53,7 +53,7 @@ final readonly class SendAction implements ApplicationActionInterface
         if (
             !Mailer::is_mail_enabled()
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || ($allowLostPassword !== null && !make_bool($allowLostPassword))
+            || !make_bool($allowLostPassword)
         ) {
             throw new AccessDeniedException();
         }
