@@ -238,21 +238,19 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        /*
-         * A header-authenticated request re-proves its identity on every call, so this session
-         * proves nothing by itself; it only gives the response a revocable id to embed in
-         * generated URLs instead of the real header credential. The id must be unguessable, so
-         * it is always a fresh random key -- never derived from the username or any other value
-         * an attacker could compute without the real credential.
-         */
+        // hides the real header credential behind a one-way hash of itself, not the username
         if (
             $header_auth
             && $user instanceof User
         ) {
+            $input['auth'] = hash('sha256', $input['auth']);
             if (!Session::read($input['auth'])) {
-                $input['auth'] = Session::create([
+                // clear any stale row under this id before recreating it
+                Session::destroy($input['auth']);
+                Session::create([
+                    'apikey' => $input['auth'],
                     'username' => $user->username,
-                    'type' => 'api',
+                    'type' => 'header',
                     'value' => $api_version,
                 ]);
             }

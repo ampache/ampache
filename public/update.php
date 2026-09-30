@@ -31,8 +31,7 @@ use Ampache\Module\Application\Update\UpdatePluginsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
-// every action here requires an authenticated admin session (checked in the action handlers below);
-// only the outdated-database bootstrap guard is waived, so the pending-update page itself can render
+// every action requires an admin session; only the outdated-database bootstrap guard is waived here
 define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */

@@ -137,9 +137,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        // A stream session proves playback of one item, not batch-download entitlement, so it must
-        // still be scoped to the catalogs its owner can see -- resolved from the session row itself,
-        // since NO_SESSION means there is no global user to read it from otherwise.
+        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
         $userId = $gatekeeper->getUserId();
         if ($userId === 0) {
             $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
