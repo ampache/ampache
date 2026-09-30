@@ -30,6 +30,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Database\RandomIdSamplerInterface;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ArtistFieldEnum;
@@ -539,6 +540,8 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
             $where .= sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
         }
+
+        $where = WithdrawnFilter::appendCondition(rtrim($where), 'artist', null, $userId);
 
         return $this->randomIdSampler->sample('artist', 'id', $where, [], (int) $count);
     }

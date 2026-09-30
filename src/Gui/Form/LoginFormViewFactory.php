@@ -93,7 +93,7 @@ final readonly class LoginFormViewFactory implements LoginFormViewFactoryInterfa
             AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800),
             $referrer !== '' && (str_starts_with($referrer, $miniUrl) || rtrim($referrer, '/') === rtrim($miniUrl, '/')),
             AmpConfig::get('allow_public_registration') && ($mailEnabled || AmpConfig::get('user_no_email_confirm', false)),
-            $mailEnabled && AmpConfig::get('allow_lost_password', true),
+            $mailEnabled && AmpConfig::get('allow_lost_password', false),
             (bool) AmpConfig::get('show_mini_player', true),
             $oidcEnabled,
             (bool) AmpConfig::get('cookie_disclaimer')

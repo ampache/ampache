@@ -28,6 +28,9 @@ namespace Ampache\Module\Application\Update;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\System\Update\UpdaterInterface;
@@ -46,6 +49,21 @@ class UpdateActionTest extends MockeryTestCase
     private ?UpdateAction $subject;
     private UpdaterInterface|MockInterface|null $updater;
 
+    public function testRunDeniesAccessForNonAdmin(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturn(false);
+
+        self::expectException(AccessDeniedException::class);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
     public function testRunRedirectsToTheTestPageIfTheDatabaseVersionIsUnreadable(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
@@ -53,6 +71,11 @@ class UpdateActionTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
 
         $webPath = 'some-web-path';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturn(true);
 
         $this->updater->shouldReceive('hasPendingUpdates')
             ->withNoArgs()

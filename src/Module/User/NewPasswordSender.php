@@ -53,9 +53,9 @@ final readonly class NewPasswordSender implements NewPasswordSenderInterface
             return false;
         }
 
-        // do not allow administrator password resets
-        if ($user->has_access(AccessLevelEnum::ADMIN)) {
-            debug_event(self::class, "Administrator can't reset their password.", 1);
+        // Content Manager and above (Manager, Admin) can never reset their password this way
+        if ($user->has_access(AccessLevelEnum::CONTENT_MANAGER)) {
+            debug_event(self::class, "User does not qualify for a self-service password reset.", 1);
 
             return false;
         }

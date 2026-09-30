@@ -34,13 +34,13 @@ class NewPasswordSenderTest extends TestCase
     private NewPasswordSender $subject;
     private UserRepositoryInterface&MockObject $userRepository;
 
-    public function testSendReturnsFalseForAdministrators(): void
+    public function testSendReturnsFalseForContentManagerAndAbove(): void
     {
         // NOTE: Mailer calls Mailer::is_mail_enabled() with no injectable.
         $user = $this->createMock(User::class);
 
         $user->method('has_access')
-            ->with(AccessLevelEnum::ADMIN)
+            ->with(AccessLevelEnum::CONTENT_MANAGER)
             ->willReturn(true);
 
         $this->userRepository->expects(static::once())

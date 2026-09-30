@@ -128,6 +128,10 @@ class LostPasswordMethodTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
             ->once()
             ->andReturnFalse();
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD)
+            ->once()
+            ->andReturn('true');
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'auth'));
@@ -137,6 +141,76 @@ class LostPasswordMethodTest extends MockeryTestCase
             $response,
             $output,
             ['api_format' => 'json'],
+            $user,
+            $apiVersion
+        );
+    }
+
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleThrowsIfLostPasswordDisabled(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+
+        AmpConfig::set('mail_enable', true, true);
+        AmpConfig::set('demo_mode', false, true);
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD)
+            ->once()
+            ->andReturn('false');
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('allow_lost_password');
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['auth' => 'some-token', 'api_format' => 'json'],
+            $user,
+            $apiVersion
+        );
+    }
+
+    /**
+     * The feature is off unless explicitly enabled, so leaving the config key unset must deny
+     * just like an explicit "false" does.
+     */
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleThrowsIfLostPasswordUnset(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+
+        AmpConfig::set('mail_enable', true, true);
+        AmpConfig::set('demo_mode', false, true);
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD)
+            ->once()
+            ->andReturnNull();
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('allow_lost_password');
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['auth' => 'some-token', 'api_format' => 'json'],
             $user,
             $apiVersion
         );

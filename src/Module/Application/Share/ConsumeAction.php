@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Gui\Share\ShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Batch\DefaultAction;
@@ -139,6 +140,16 @@ final readonly class ConsumeAction implements ApplicationActionInterface
                     $view->getPublicUrl(),
                     $view->getArtUrl()
                 );
+
+                // `?embed=1` already renders this same page stripped of its chrome, so the player a post
+                // frames is the share itself rather than a second route to the object it points at
+                if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
+                    PageMeta::setPlayer(
+                        $view->getPublicUrl() . '&embed=1',
+                        MediaEmbedView::WIDTH,
+                        ($share->object_type === 'song') ? MediaEmbedView::HEIGHT_SINGLE : MediaEmbedView::HEIGHT_LIST
+                    );
+                }
             }
 
             echo $view->render();
