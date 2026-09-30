@@ -2406,12 +2406,17 @@ class Song extends database_object implements
                 case 'disk':
                     // Check to see if it needs to be updated
                     if ($value != $this->disk) {
-                        // create the album_disk (if missing)
-                        $new_disk = (int) $value;
-                        AlbumDisk::check($this->album, $new_disk, $this->catalog, $this->get_album_disk_subtitle());
+                        // create the album_disk (if missing) and point this song at it
+                        $new_disk       = (int) $value;
+                        $new_album_disk = AlbumDisk::check($this->album, $new_disk, $this->catalog, $this->get_album_disk_subtitle());
 
                         self::update_disk($new_disk, $this->id);
                         $this->disk = $new_disk;
+
+                        if ($new_album_disk > 0 && $new_album_disk !== $this->album_disk) {
+                            self::_update_item('album_disk', $new_album_disk, $this->id, AccessLevelEnum::CONTENT_MANAGER, true);
+                            $this->album_disk = $new_album_disk;
+                        }
                     }
                     break;
                 case 'bitrate':

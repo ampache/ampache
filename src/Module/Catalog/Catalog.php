@@ -2823,10 +2823,12 @@ abstract class Catalog extends database_object
             $new_song->album = $song->album;
         }
 
-        // Check album_disk and update if needed
+        // Check album_disk and update if needed. Never pass a move candidate here: a single song's
+        // tag drifting onto another disk must attach it to that disk's own row, not repurpose the
+        // row every other song on the old disk still shares (which would also drag them along).
         $new_song->album_disk = ($is_upload_artist || $is_upload_albumartist)
             ? $song->album_disk
-            : AlbumDisk::check($new_song->album, $new_song->disk ?? 1, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);
+            : AlbumDisk::check($new_song->album, $new_song->disk ?? 1, $new_song->catalog, $new_song->disksubtitle);
         if ($new_song->album_disk === 0) {
             $new_song->album_disk = $song->album_disk;
         }
@@ -3086,6 +3088,7 @@ abstract class Catalog extends database_object
 
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk !== $new_song->album_disk) {
                 self::_migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id, $song->catalog);
+                Album::update_album_count($new_song->album);
             }
 
             if (
