@@ -92,6 +92,13 @@
 * Fixed sidebar section toggle inconsistencies
 * Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`
 * Fixed live stream interruptions caused by PHP execution time limits
+* Fixed the ListenBrainz plugin double-prefixing a URL that already had a scheme
+* A MusicBrainz mirror given as a bare host is now assumed `http` instead of rejected
+* Restored the artist "Songs" tab's full-page view, which had regressed to a redirect
+* Header-authenticated session ids were `md5(username)`, guessable from a username; now derived from the credential
+* `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
+* `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
+* `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
 
 ## Ampache 8.1.0
 
