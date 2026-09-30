@@ -75,7 +75,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             echo (new MediaEmbedView(
                 (string) $albumDisk->get_fullname(),
                 (string) $albumDisk->get_parent_fullname(),

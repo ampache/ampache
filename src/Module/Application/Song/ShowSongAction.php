@@ -64,7 +64,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($query['embed'])) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             echo (new MediaEmbedView(
                 (string) $song->get_fullname(),
                 $this->embedSubtitle($song),

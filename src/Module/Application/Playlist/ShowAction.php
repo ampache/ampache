@@ -64,7 +64,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if ($public && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($_REQUEST['embed'])) {
-            $webPath = AmpConfig::get_web_path();
+            $webPath = AmpConfig::get_web_path('/client');
             echo (new MediaEmbedView(
                 (string) $playlist->name,
                 (string) $playlist->username,
