@@ -605,7 +605,7 @@ final class AlbumSearch implements SearchInterface
                     $where[] = "`album`.`mbid_group` IN (SELECT `mbid_group` FROM `album` GROUP BY `album`.`mbid_group` HAVING COUNT(`mbid_group`) > 1)";
                     break;
                 case 'duplicate_tracks':
-                    $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk`, `catalog` HAVING COUNT(`track`) > 1)";
                     break;
                 default:
                     debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
