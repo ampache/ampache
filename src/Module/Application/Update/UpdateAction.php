@@ -59,6 +59,10 @@ final readonly class UpdateAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
+            throw new AccessDeniedException();
+        }
+
         try {
             $hasPendingUpdates = $this->updater->hasPendingUpdates();
         } catch (QueryFailedException) {
@@ -69,10 +73,6 @@ final readonly class UpdateAction implements ApplicationActionInterface
         }
 
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) === 'sources') {
-            if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
-                throw new AccessDeniedException();
-            }
-
             set_time_limit(300);
             $success = AutoUpdate::update_files();
             if ($success) {

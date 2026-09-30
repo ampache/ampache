@@ -35,6 +35,9 @@ final class PageMeta
 {
     private static ?self $current = null;
 
+    /** @var ?array{url: string, width: int, height: int} set after `set()`, when the object can be played */
+    private ?array $player = null;
+
     /**
      * @param array<string, mixed> $jsonLd
      */
@@ -88,6 +91,14 @@ final class PageMeta
             $out[] = '<meta property="og:url" content="' . $e($meta->url) . '">';
         }
 
+        if ($meta->player !== null) {
+            // Mastodon reads `twitter:player` alone to decide a card carries a player, and takes the
+            // dimensions from these two; it never looks at `og:video` for that
+            $out[] = '<meta name="twitter:player" content="' . $e($meta->player['url']) . '">';
+            $out[] = '<meta name="twitter:player:width" content="' . $meta->player['width'] . '">';
+            $out[] = '<meta name="twitter:player:height" content="' . $meta->player['height'] . '">';
+        }
+
         if ($meta->image !== '') {
             // Both the direct route and its beautified `stream_beautiful_url` rewrite reach the same art
             // handler, and only that handler can generate an svg placeholder a scraper cannot render.
@@ -96,7 +107,7 @@ final class PageMeta
             $image       = ($servedByArt) ? $meta->image . '&nosvg=1' : $meta->image;
 
             $out[] = '<meta property="og:image" content="' . $e($image) . '">';
-            $out[] = '<meta name="twitter:card" content="summary">';
+            $out[] = '<meta name="twitter:card" content="' . (($meta->player !== null) ? 'player' : 'summary') . '">';
         }
 
         if ($meta->jsonLd !== []) {
@@ -130,5 +141,15 @@ final class PageMeta
             $image,
             $jsonLd
         );
+    }
+
+    /**
+     * Announces a frameable player for the object the page shows, which `set()` must already have named.
+     */
+    public static function setPlayer(string $url, int $width, int $height): void
+    {
+        if (self::$current !== null) {
+            self::$current->player = ['url' => $url, 'width' => $width, 'height' => $height];
+        }
     }
 }

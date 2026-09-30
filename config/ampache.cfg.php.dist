@@ -1400,11 +1400,12 @@ site_charset = "UTF-8"
 ;allow_public_registration = "true"
 
 ; Allow users to reset a forgotten password by email.
-; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
-; so a stranger can't trigger reset mail to your users by posting to it directly.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php as well as the
+; API's lost_password action, so a stranger can't trigger reset mail to your users by posting
+; to either of them directly.
 ; Only relevant on a server with mail enabled; without mail the feature is already off.
-; DEFAULT: "true"
-;allow_lost_password = "false"
+; DEFAULT: "false"
+;allow_lost_password = "true"
 
 ; Show the "Mini player" button on the login form, which sends you to the
 ; cut down player at /m/ after logging in instead of the full interface.
