@@ -239,37 +239,22 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         /*
-         * Create a simplified session for header authenticated sessions
-         * If you are sending a handshake, then return a valid auth session.
-         * If you are doing anything else, you hide the session behind an MD5 hash of the username
+         * A header-authenticated request re-proves its identity on every call, so this session
+         * proves nothing by itself; it only gives the response a revocable id to embed in
+         * generated URLs instead of the real header credential. The id must be unguessable, so
+         * it is always a fresh random key -- never derived from the username or any other value
+         * an attacker could compute without the real credential.
          */
         if (
             $header_auth
             && $user instanceof User
         ) {
-            $data             = [];
-            $data['username'] = $user->username;
-            $data['value']    = $api_version;
-            if ($is_handshake || $is_ping) {
-                // for a handshake there needs to be a valid auth response (ping when sent needs one)
-                if (
-                    $input['auth'] !== md5((string) $user->username)
-                    && !Session::read($input['auth'])
-                ) {
-                    $data['type']  = 'api';
-                    $input['auth'] = Session::create($data);
-                }
-            } else {
-                $data['type']   = 'header';
-                $data['apikey'] = md5((string) $user->username);
-                // Session might not exist or has expired
-                if (!Session::read($data['apikey'])) {
-                    Session::destroy($data['apikey']);
-                    Session::create($data);
-                }
-
-                // Continue with the new session string to hide your header token
-                $input['auth'] = $data['apikey'];
+            if (!Session::read($input['auth'])) {
+                $input['auth'] = Session::create([
+                    'username' => $user->username,
+                    'type' => 'api',
+                    'value' => $api_version,
+                ]);
             }
 
             if (in_array($api_version, Api::API_VERSIONS)) {
@@ -364,10 +349,6 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public
             && (
                 !$user instanceof User // User is required for non-public methods
-                || (
-                    !$header_auth
-                    && $input['auth'] === md5((string) $user->username)
-                ) // require header auth for simplified session
                 || $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
