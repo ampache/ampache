@@ -28,6 +28,7 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\RandomIdSamplerInterface;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
@@ -70,6 +71,8 @@ class Random
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id) {
             $where .= sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
         }
+
+        $where = WithdrawnFilter::appendCondition(rtrim($where), 'artist', null, $user_id);
 
         $ids = self::getRandomIdSampler()->sample('artist', 'id', $where, [], 1);
 
@@ -114,6 +117,13 @@ class Random
             $where_sql .= ($where_sql === "")
                 ? sprintf('WHERE `song`.`%s` = %d ', $column, $object_id)
                 : sprintf('AND `song`.`%s` = %d ', $column, $object_id);
+        }
+
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= ($where_sql === "")
+                ? "WHERE $song_filter "
+                : "AND $song_filter ";
         }
 
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
@@ -174,6 +184,13 @@ class Random
                 : 'AND ' . $credit_sql . ' ';
         }
 
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= ($where_sql === "")
+                ? "WHERE $song_filter "
+                : "AND $song_filter ";
+        }
+
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
 
@@ -216,6 +233,8 @@ class Random
             $where_sql .= sprintf("AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
             $where_sql .= sprintf(" AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
         }
+
+        $where_sql = WithdrawnFilter::appendCondition(rtrim($where_sql), 'song', null, $user_id);
 
         return self::getRandomIdSampler()->sample('song', 'id', $where_sql, [], $limit);
     }
@@ -444,6 +463,11 @@ class Random
                 $rating_filter,
                 $user_id
             );
+        }
+
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= $song_filter . ' AND ';
         }
 
         $results    = [];

@@ -782,7 +782,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->randomIdSampler->expects(static::once())
             ->method('sample')
-            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5,7,0) ', [], 3)
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5,7,0) AND `album`.`enabled` = 1', [], 3)
             ->willReturn([10, 11, 12]);
 
         self::assertSame([10, 11, 12], $this->subject->getRandom(42, 3));
@@ -794,7 +794,7 @@ class AlbumRepositoryTest extends TestCase
 
         $this->randomIdSampler->expects(static::once())
             ->method('sample')
-            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5) ', [], 1)
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5) AND `album`.`enabled` = 1', [], 1)
             ->willReturn([10]);
 
         self::assertSame([10], $this->subject->getRandom(42, 1, 5));
@@ -811,12 +811,14 @@ class AlbumRepositoryTest extends TestCase
 
     public function testGetRandomSongsReturnsIds(): void
     {
+        $this->bootCatalogRepository([]);
+
         $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ORDER BY RAND()',
+                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`enabled` = 1 ORDER BY RAND()',
                 [666]
             )
             ->willReturn($result);
@@ -1080,8 +1082,16 @@ class AlbumRepositoryTest extends TestCase
         $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
         $catalogRepository->method('getIds')->willReturn($catalogIds);
 
+        // a non-manager, so the withdrawn-item condition WithdrawnFilter adds stays in the expected SQL
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->method('check')->willReturn(false);
+
         $dic = $this->createMock(ContainerInterface::class);
-        $dic->method('get')->willReturn($catalogRepository);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === PrivilegeCheckerInterface::class)
+                ? $privilegeChecker
+                : $catalogRepository
+        );
 
         $GLOBALS['dic'] = $dic;
     }

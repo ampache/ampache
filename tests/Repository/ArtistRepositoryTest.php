@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Module\Database\RandomIdSamplerInterface;
@@ -293,7 +294,7 @@ class ArtistRepositoryTest extends TestCase
             ->with(
                 'artist',
                 'id',
-                'WHERE EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `artist_map`.`artist_id` = `artist`.`id` AND `song`.`catalog` IN (5,7,0)) ',
+                'WHERE EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `artist_map`.`artist_id` = `artist`.`id` AND `song`.`catalog` IN (5,7,0)) AND `artist`.`enabled` = 1',
                 [],
                 3
             )
@@ -550,8 +551,16 @@ class ArtistRepositoryTest extends TestCase
         $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
         $catalogRepository->method('getIds')->willReturn($catalogIds);
 
+        // a non-manager, so the withdrawn-item condition WithdrawnFilter adds stays in the expected SQL
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->method('check')->willReturn(false);
+
         $dic = $this->createMock(ContainerInterface::class);
-        $dic->method('get')->willReturn($catalogRepository);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === PrivilegeCheckerInterface::class)
+                ? $privilegeChecker
+                : $catalogRepository
+        );
 
         $GLOBALS['dic'] = $dic;
     }
