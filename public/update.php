@@ -31,11 +31,9 @@ use Ampache\Module\Application\Update\UpdatePluginsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
-if (!array_key_exists('type', $_REQUEST) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
-    // We need this stuff
-    define('NO_SESSION', 1);
-    define('OUTDATED_DATABASE_OK', 1);
-}
+// every action here requires an authenticated admin session (checked in the action handlers below);
+// only the outdated-database bootstrap guard is waived, so the pending-update page itself can render
+define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';

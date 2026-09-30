@@ -30,13 +30,16 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Pow\PowServiceInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\CatalogItemInterface;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -45,6 +48,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -67,6 +71,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
         private PowServiceInterface $powService,
+        private UserRepositoryInterface $userRepository,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
@@ -132,6 +137,15 @@ final readonly class DefaultAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
+        // A stream session proves playback of one item, not batch-download entitlement, so it must
+        // still be scoped to the catalogs its owner can see -- resolved from the session row itself,
+        // since NO_SESSION means there is no global user to read it from otherwise.
+        $userId = $gatekeeper->getUserId();
+        if ($userId === 0) {
+            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
+            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
+        }
+
         $itemType = LibraryItemEnum::tryFrom($object_type);
         $libItems = [];
         if ($itemType !== null) {
@@ -141,7 +155,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $object_id,
                 );
 
-                if ($libItem instanceof container_item) {
+                if (
+                    $libItem instanceof container_item
+                    && (!$libItem instanceof CatalogItemInterface || Catalog::has_access($libItem->getCatalogId(), $userId))
+                ) {
                     $libItems[] = $libItem;
                 }
             }
@@ -248,7 +265,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $this->zipHandler->zip(
                 $this->responseFactory->createResponse(),
                 $name,
-                $this->getMediaFiles($media_ids),
+                $this->getMediaFiles($media_ids, $userId),
                 $flat_path
             )
         );
@@ -263,7 +280,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
      *     total_size: int
      * }
      */
-    private function getMediaFiles(iterable $medias): array
+    private function getMediaFiles(iterable $medias, int $userId): array
     {
         $media_files = [];
         $total_size  = 0;
@@ -292,6 +309,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 && property_exists($media, 'enabled')
                 && $media->enabled
                 && !empty($media->file)
+                && (!$media instanceof CatalogItemInterface || Catalog::has_access($media->getCatalogId(), $userId))
             ) {
                 $total_size += $media->size ?? 0;
                 $dirname = '';

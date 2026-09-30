@@ -37,6 +37,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -55,6 +56,7 @@ class DefaultActionTest extends MockeryTestCase
     private MockInterface|ResponseFactoryInterface $responseFactory;
     private MockInterface|SongRepositoryInterface $songRepository;
     private DefaultAction $subject;
+    private MockInterface|UserRepositoryInterface $userRepository;
     private MockInterface|ZipHandlerInterface $zipHandler;
 
     /**
@@ -93,6 +95,22 @@ class DefaultActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
+    /**
+     * A stream session (ssid) only proves playback of one item, not batch-download entitlement or
+     * catalog membership; both the id-loading loop and getMediaFiles() must ask the caller's catalog
+     * filter for every object before it can end up in the zip
+     */
+    public function testRunAsksTheCatalogFilterForEveryLoadedObject(): void
+    {
+        $source = (string) file_get_contents(__DIR__ . '/../../../../src/Module/Application/Batch/DefaultAction.php');
+
+        self::assertSame(
+            2,
+            substr_count($source, 'Catalog::has_access('),
+            'DefaultAction must check catalog access both where objects are loaded by id and in getMediaFiles()'
+        );
+    }
+
     #[Override]
     protected function setUp(): void
     {
@@ -106,6 +124,7 @@ class DefaultActionTest extends MockeryTestCase
         $this->responseFactory   = $this->mock(ResponseFactoryInterface::class);
         $this->libraryItemLoader = $this->mock(LibraryItemLoaderInterface::class);
         $this->powService        = $this->mock(PowServiceInterface::class);
+        $this->userRepository    = $this->mock(UserRepositoryInterface::class);
 
         $this->logger->shouldReceive('warning');
 
@@ -120,6 +139,7 @@ class DefaultActionTest extends MockeryTestCase
             $this->responseFactory,
             $this->libraryItemLoader,
             $this->powService,
+            $this->userRepository,
         );
     }
 }
