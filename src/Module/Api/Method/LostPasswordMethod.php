@@ -111,6 +111,13 @@ final class LostPasswordMethod implements MethodInterface
             );
         }
 
+        $allowLostPassword = $this->configContainer->get(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD);
+        if (!make_bool($allowLostPassword)) {
+            throw new AccessDeniedException(
+                'allow_lost_password'
+            );
+        }
+
         if (!array_key_exists('auth', $input)) {
             throw new RequestParamMissingException(
                 sprintf('Bad Request: %s', 'auth')

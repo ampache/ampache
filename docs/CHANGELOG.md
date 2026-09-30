@@ -6,6 +6,10 @@
 
 ### Added (8.2.0)
 
+* Database 810018
+  * Added `embed_player` preference, offering a player to sites that link here
+* Database 810017
+  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
 * Database 810016
   * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
 * Preferences
@@ -27,12 +31,16 @@
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
   * Supports audio streaming, direct play and transcoding
-  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, resume position, playback reporting and playlist management
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, playback resume/reporting and playlist management
   * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
   * Added Shuffle button for queue randomisation
   * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+  * Added drag-and-drop reordering of the queue
+* Playlist Folders
+  * Added a web UI to browse, create, rename, move and delete playlist folders, and to file playlists/smart playlists into them
 * The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* Smart playlists and random searches now show generated mosaic cover art on their own page, like playlists already do
 * Config version 100
   * Added `stream_proxy` option (default `true`) to control live stream proxying
 
@@ -68,6 +76,7 @@
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
   * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
 * Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
 * Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
@@ -95,8 +104,9 @@
 * Added withdrawn status indicators to disk listings
 * Fixed managers being unable to view withdrawn tracks on artist song pages
 * Fixed missing generated artwork when `custom_blankalbum` is enabled
-* Fixed RSS artwork for songs and podcast episodes inheriting parent artwork
-* Fixed RSS artwork for albums inheriting the album artist's artwork
+* RSS artwork for a song/podcast episode with no cover now falls back to its album/podcast artwork instead of the placeholder
+* RSS artwork for an album with no cover of its own now falls back to the album artist's artwork instead of showing the placeholder
+* `http` authentication no longer accepts a client-supplied `HTTP_REMOTE_USER` header as an identity; only the server-set `REMOTE_USER` is trusted
 * Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
 * Fixed withdrawn releases appearing in recently played views and feeds
 * Added visual highlighting for withdrawn items
@@ -112,6 +122,13 @@
 * Fixed sidebar section toggle inconsistencies
 * Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`
 * Fixed live stream interruptions caused by PHP execution time limits
+* Fixed the ListenBrainz plugin double-prefixing a URL that already had a scheme
+* A MusicBrainz mirror given as a bare host is now assumed `http` instead of rejected
+* Restored the artist "Songs" tab's full-page view, which had regressed to a redirect
+* Header-authenticated session ids were `md5(username)`, guessable from a username; now derived from the credential
+* `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
+* `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
+* `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
 
 ## Ampache 8.1.0
 

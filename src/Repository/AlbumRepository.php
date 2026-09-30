@@ -791,6 +791,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             );
         }
 
+        $where = WithdrawnFilter::appendCondition(rtrim($where), 'album', null, $userId);
+
         return $this->randomIdSampler->sample('album', 'id', $where, [], (int) $count);
     }
 
@@ -820,8 +822,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             );
         }
 
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'album_disk', null, $userId);
+
         $sql .= sprintf(
-            'ORDER BY RAND() LIMIT %d',
+            ' ORDER BY RAND() LIMIT %d',
             $count
         );
         $dbResults = $this->connection->query($sql);
@@ -846,7 +850,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
 
-        $sql .= 'ORDER BY RAND()';
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $userId);
+
+        $sql .= ' ORDER BY RAND()';
         $dbResults = $this->connection->query($sql, [$albumId]);
 
         $results = [];
@@ -870,7 +876,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
 
-        $sql .= 'ORDER BY RAND()';
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $userId);
+
+        $sql .= ' ORDER BY RAND()';
         $dbResults = $this->connection->query($sql, [$albumDiskId]);
 
         $results = [];

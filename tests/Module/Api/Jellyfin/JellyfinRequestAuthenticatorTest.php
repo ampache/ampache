@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Jellyfin;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class JellyfinRequestAuthenticatorTest extends TestCase
 {
+    private DatabaseConnectionInterface&MockObject $databaseConnection;
     private UserRepositoryInterface&MockObject $userRepository;
 
     public function testADisabledUserIsRefused(): void
@@ -41,6 +44,7 @@ class JellyfinRequestAuthenticatorTest extends TestCase
         $user->disabled = true;
 
         $this->userRepository->method('findByApiSessionToken')->willReturn($user);
+        $this->databaseConnection->expects(static::never())->method('query');
 
         self::assertNull($this->subject()->authenticate($this->requestWithToken('some-token')));
     }
@@ -48,8 +52,25 @@ class JellyfinRequestAuthenticatorTest extends TestCase
     public function testAnEmptyTokenNeverReachesTheRepository(): void
     {
         $this->userRepository->expects(static::never())->method('findByApiSessionToken');
+        $this->databaseConnection->expects(static::never())->method('query');
 
         self::assertNull($this->subject()->authenticate($this->requestWithToken('')));
+    }
+
+    public function testAValidTokenIsExtendedOnUse(): void
+    {
+        $user           = $this->createMock(User::class);
+        $user->disabled = false;
+
+        $this->userRepository->method('findByApiSessionToken')->willReturn($user);
+        $this->databaseConnection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `session` SET `expire` = ? WHERE `id` = ? AND `expire` != 0 AND `expire` < ?',
+                static::callback(static fn(array $params): bool => $params[1] === 'some-token')
+            );
+
+        $this->subject()->authenticate($this->requestWithToken('some-token'));
     }
 
     public function testTheTokenIsResolvedThroughTheApiTypedSessionLookup(): void
@@ -69,7 +90,8 @@ class JellyfinRequestAuthenticatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->userRepository = $this->createMock(UserRepositoryInterface::class);
+        $this->userRepository      = $this->createMock(UserRepositoryInterface::class);
+        $this->databaseConnection  = $this->createMock(DatabaseConnectionInterface::class);
     }
 
     private function requestWithToken(string $token): ServerRequestInterface&MockObject
@@ -83,6 +105,9 @@ class JellyfinRequestAuthenticatorTest extends TestCase
 
     private function subject(): JellyfinRequestAuthenticator
     {
-        return new JellyfinRequestAuthenticator($this->userRepository);
+        $serverId      = new JellyfinServerId($this->createMock(UpdateInfoRepositoryInterface::class));
+        $sessionMinter = new JellyfinSessionMinter($this->databaseConnection, $serverId);
+
+        return new JellyfinRequestAuthenticator($this->userRepository, $sessionMinter);
     }
 }

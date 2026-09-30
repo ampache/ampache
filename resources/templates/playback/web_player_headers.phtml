@@ -35,10 +35,7 @@ if ($this->isIframed()) { ?>
     <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jplayer.midnight.black.css')); ?>" type="text/css">
 <?php } ?>
 <?php if (!$this->isIframed()) { ?>
-    <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jquery-editdialog.css')); ?>" type="text/css" media="screen">
-    <link rel="stylesheet" href="<?php echo $this->e($this->getWebPath()); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
     <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery/jquery.min.js"></script>
-    <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
     <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/js-cookie/js.cookie.js"></script>
     <script>
         var jsAjaxServer = <?php echo $this->raw($this->getAjaxServerUriJs()); ?>;
@@ -49,7 +46,13 @@ if ($this->isIframed()) { ?>
             // Stub
         }
     </script>
-    <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
+    <?php // a framed player is served into a stranger's page, where the site's own styling has nothing to do
+    if (!$this->isEmbedded()) { ?>
+        <link rel="stylesheet" href="<?php echo $this->e($this->getCssUrl('jquery-editdialog.css')); ?>" type="text/css" media="screen">
+        <link rel="stylesheet" href="<?php echo $this->e($this->getWebPath()); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
+        <script src="<?php echo $this->e($this->getWebPath()); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
+        <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
+    }
 } ?>
 <script>
     window.jpDebug = <?php echo ($this->showDebug()) ? 'true' : 'false'; ?>;

@@ -9,6 +9,18 @@
   * `quickconnect_initiate` requests a pairing code, `quickconnect_status` polls it
   * Once approved, the session is minted the same way `handshake` does and is valid
 
+### Changed (820000)
+
+* `lost_password` (ALL)
+  * Disabled by default; requires `allow_lost_password` to be enabled
+  * Also blocked for Content Manager and Manager accounts
+
+### Fixed (820000)
+
+* `deleted_songs` (API5, API6, API8)
+  * The row's `update_time` was never mapped, so every output formatter's `isset()` gate dropped it and the result was always empty
+* Session id after header auth was `md5(username)`; now derived from the credential
+
 ## API 8.1.1
 
 ### Fixed (811000)

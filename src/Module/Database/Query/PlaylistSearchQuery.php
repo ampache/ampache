@@ -56,7 +56,7 @@ final class PlaylistSearchQuery implements QueryInterface
             SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_count`, `last_duration`, `username`, `collaborate`, 'playlist' AS `object_type` FROM `playlist`
             UNION
             SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_count`, `last_duration`, `username`, `collaborate`, 'search' AS `object_type` FROM `search`
-        ) AS `playlist`
+        ) AS `playlist` 
         SQL;
     protected string $select = "`playlist`.`id`";
 

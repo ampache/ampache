@@ -28,8 +28,10 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
 use Ampache\Module\LastFm\LastFmQueryInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
@@ -290,6 +292,7 @@ class Recommendation
                 if ($xml->similarartists) {
                     $catalog_disable = AmpConfig::get('catalog_disable');
                     $enable_filter   = Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    $user_id         = Core::get_global('user')?->getId();
                     foreach ($xml->similarartists->children() as $child) {
                         $name     = (string) $child->name;
                         $mbid     = (string) $child->mbid;
@@ -300,6 +303,7 @@ class Recommendation
                             $sql = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ? AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
+                            $sql = WithdrawnFilter::appendCondition($sql, 'artist', null, $user_id);
 
                             $db_result = Dba::read($sql, [$mbid]);
                             if ($result = Dba::fetch_assoc($db_result)) {
@@ -315,6 +319,7 @@ class Recommendation
                             $sql        = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)";
+                            $sql        = WithdrawnFilter::appendCondition($sql, 'artist', null, $user_id);
 
                             $db_result = Dba::read($sql, [$s_name, $s_fullname]);
                             if ($result = Dba::fetch_assoc($db_result)) {

@@ -30,6 +30,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\TagCountTypeEnum;
 use Ampache\Repository\Model\User;
@@ -284,6 +285,9 @@ final readonly class TagRepository implements TagRepositoryInterface
         if ($catalogClause !== '') {
             $sql .= ' AND ' . $catalogClause;
         }
+
+        $userId = Core::get_global('user')?->getId();
+        $sql    = WithdrawnFilter::appendCondition($sql, $objectType, '`tag_map`.`object_id`', $userId);
 
         $sql .= $this->limitClause($count, $offset);
 

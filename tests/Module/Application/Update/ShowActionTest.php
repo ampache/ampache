@@ -28,6 +28,9 @@ namespace Ampache\Module\Application\Update;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
 use Override;
@@ -44,6 +47,21 @@ class ShowActionTest extends MockeryTestCase
     private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?ShowAction $subject;
 
+    public function testRunDeniesAccessForNonAdmin(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturn(false);
+
+        self::expectException(AccessDeniedException::class);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
     public function testRunReturnsRenderedResponse(): void
     {
         $request           = $this->mock(ServerRequestInterface::class);
@@ -53,6 +71,11 @@ class ShowActionTest extends MockeryTestCase
         $stream            = $this->mock(StreamInterface::class);
 
         $output = 'some-output';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturn(true);
 
         $this->guiFactory->shouldReceive('createUpdateViewAdapter')
             ->withNoArgs()

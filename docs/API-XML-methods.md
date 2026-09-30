@@ -237,7 +237,9 @@ Destroy a session using the auth parameter.
 
 ### lost_password
 
-Email a new password to the user (if allowed) using a reset token.
+Email a new password to the user (if allowed) using a reset token. Requires `allow_lost_password` to
+be enabled and a working mail configuration; not available to Content Manager, Manager or Admin
+accounts.
 
 ```php
    $username;

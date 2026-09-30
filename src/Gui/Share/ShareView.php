@@ -168,7 +168,7 @@ final class ShareView extends AbstractView
 
     public function renderPlayerHeaders(): string
     {
-        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true)->render();
+        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true, $this->isEmbed())->render();
     }
 
     #[Override]

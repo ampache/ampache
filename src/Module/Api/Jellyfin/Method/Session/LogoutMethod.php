@@ -34,8 +34,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * POST /Sessions/Logout — destroys the calling token's own session row. Jellyfin `AccessToken`s otherwise
- * live for `JellyfinSessionMinter::SESSION_TTL_SECONDS` (10 years), so without this a client's "sign out"
- * did nothing server-side and the token kept working indefinitely.
+ * roll forward on every authenticated request (`JellyfinSessionMinter::extend()`) and only lapse after
+ * `SESSION_TTL_SECONDS` (70 days) of inactivity, so without this a client's "sign out" did nothing
+ * server-side and an actively-used token kept working indefinitely.
  */
 final class LogoutMethod implements JellyfinMethodInterface
 {

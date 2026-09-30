@@ -34,6 +34,7 @@ namespace Ampache\Repository\Model;
 enum SongFieldEnum: string
 {
     case ALBUM       = 'album';
+    case ALBUM_DISK  = 'album_disk';
     case ARTIST      = 'artist';
     case BITRATE     = 'bitrate';
     case COMPOSER    = 'composer';

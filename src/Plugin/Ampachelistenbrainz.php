@@ -103,7 +103,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
             return false;
         }
 
-        $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
+        $this->_resolveApiUrl((string) ($data['listenbrainz_api_url'] ?? 'api.listenbrainz.org'));
 
         return true;
     }
@@ -214,6 +214,28 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         }
 
         return true;
+    }
+
+    /**
+     * _resolveApiUrl
+     * A configured value carrying its own scheme (e.g. an http-only mirror on the same subnet) is honoured
+     * rather than concatenated onto the fixed 'https' scheme, which built an invalid 'https://http://...' url
+     */
+    private function _resolveApiUrl(string $configured): void
+    {
+        $configured = trim($configured);
+        if ($configured === '') {
+            return;
+        }
+
+        if (preg_match('~^(https?)://(.+)$~i', $configured, $matches)) {
+            $this->scheme   = strtolower($matches[1]);
+            $this->api_host = rtrim($matches[2], '/');
+
+            return;
+        }
+
+        $this->api_host = rtrim($configured, '/');
     }
 
     /**
