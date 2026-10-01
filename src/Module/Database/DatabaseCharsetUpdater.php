@@ -31,6 +31,35 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
+    /**
+     * Tables a module creates for itself on install rather than shipping in resources/sql/ampache.sql:
+     * a localplay controller's own table (see e.g. Module/Playback/Localplay/Vlc/AmpacheVlc.php), or an
+     * optional catalog backend's settings table via CatalogRepository::createSubTypeTable() (called from
+     * Catalog_beets.php, Catalog_beetsremote.php, Catalog_dropbox.php, Catalog_Seafile.php,
+     * Catalog_subsonic.php - `local` and `remote` are catalog types too, but ship in ampache.sql already
+     * since every install gets them). Both call sites build every column from `COLLATE {$collation}`
+     * with no CHARACTER SET override, so there is nothing column-specific to pin - every column just
+     * follows the configured site charset, which is exactly what falling back to the table default gives.
+     *
+     * `catalog_soundcloud`, `catalog_subsonic`'s old `catalog_webdav` sibling, and `localplay_shoutcast`
+     * are deliberately left out: they aren't in CatalogTypeEnum/the localplay controller list at all,
+     * so they're leftovers from a removed feature rather than something currently installable.
+     *
+     * @var list<string>
+     */
+    private const array DYNAMICALLY_INSTALLED_TABLES = [
+        'catalog_beets',
+        'catalog_beetsremote',
+        'catalog_dropbox',
+        'catalog_seafile',
+        'catalog_subsonic',
+        'localplay_httpq',
+        'localplay_mpd',
+        'localplay_upnp',
+        'localplay_vlc',
+        'localplay_xbmc',
+    ];
+
     public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function findMismatches(): array
@@ -200,35 +229,6 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
 
         return $mismatches;
     }
-
-    /**
-     * Tables a module creates for itself on install rather than shipping in resources/sql/ampache.sql:
-     * a localplay controller's own table (see e.g. Module/Playback/Localplay/Vlc/AmpacheVlc.php), or an
-     * optional catalog backend's settings table via CatalogRepository::createSubTypeTable() (called from
-     * Catalog_beets.php, Catalog_beetsremote.php, Catalog_dropbox.php, Catalog_Seafile.php,
-     * Catalog_subsonic.php - `local` and `remote` are catalog types too, but ship in ampache.sql already
-     * since every install gets them). Both call sites build every column from `COLLATE {$collation}`
-     * with no CHARACTER SET override, so there is nothing column-specific to pin - every column just
-     * follows the configured site charset, which is exactly what falling back to the table default gives.
-     *
-     * `catalog_soundcloud`, `catalog_subsonic`'s old `catalog_webdav` sibling, and `localplay_shoutcast`
-     * are deliberately left out: they aren't in CatalogTypeEnum/the localplay controller list at all,
-     * so they're leftovers from a removed feature rather than something currently installable.
-     *
-     * @var list<string>
-     */
-    private const array DYNAMICALLY_INSTALLED_TABLES = [
-        'catalog_beets',
-        'catalog_beetsremote',
-        'catalog_dropbox',
-        'catalog_seafile',
-        'catalog_subsonic',
-        'localplay_httpq',
-        'localplay_mpd',
-        'localplay_upnp',
-        'localplay_vlc',
-        'localplay_xbmc',
-    ];
 
     /**
      * Parses resources/sql/ampache.sql - the schema that a fresh install actually gets - into the

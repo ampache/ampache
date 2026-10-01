@@ -37,7 +37,6 @@ final class Migration810020 extends AbstractMigration
     protected array $changelog = [
         'Pin `object_type` to `utf8mb3` on `folder_map`, `collection`, `collection_map`, `playlist_folder_map`, `object_count_archive` and `object_count_summary`, matching every other object_type column',
     ];
-
     protected bool $warning = true;
 
     public function migrate(): void
