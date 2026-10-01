@@ -99,6 +99,8 @@
 * `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
 * `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
 * `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
+* `cleanup:sortSongs` used the whole server's song count (not the catalog's) and the chunk index as a row offset, silently skipping songs on every catalog-wide run
+* Writing tags to a FLAC/Vorbis file could crash and leave the comment block partially written when adding a new per-user rating tag
 
 ## Ampache 8.1.0
 
