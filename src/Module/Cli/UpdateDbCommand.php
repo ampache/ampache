@@ -139,16 +139,6 @@ final class UpdateDbCommand extends Command
         }
     }
 
-    /**
-     * @param array{table: string, column: ?string} $entry
-     */
-    private function describe(array $entry): string
-    {
-        return ($entry['column'] !== null)
-            ? sprintf('%s.%s', $entry['table'], $entry['column'])
-            : $entry['table'];
-    }
-
     #[Override]
     protected function defaults(): self
     {
@@ -157,5 +147,15 @@ final class UpdateDbCommand extends Command
         $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
+    }
+
+    /**
+     * @param array{table: string, column: ?string} $entry
+     */
+    private function describe(array $entry): string
+    {
+        return ($entry['column'] !== null)
+            ? sprintf('%s.%s', $entry['table'], $entry['column'])
+            : $entry['table'];
     }
 }

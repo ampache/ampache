@@ -31,6 +31,9 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
+    private const string FIXED_UTF8_CHARSET = 'utf8';
+
+    private const string FIXED_UTF8_COLLATION = 'utf8_unicode_ci';
     /**
      * Columns that must stay on the legacy 3-byte utf8 charset regardless of site_charset.
      * These only ever hold ASCII (ids/tokens, enum-style type flags, MusicBrainz uuids), so
@@ -75,10 +78,6 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         'wanted' => ['artist_mbid', 'mbid'],
     ];
 
-    private const string FIXED_UTF8_CHARSET = 'utf8';
-
-    private const string FIXED_UTF8_COLLATION = 'utf8_unicode_ci';
-
     public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function findMismatches(): array
@@ -103,8 +102,8 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
      */
     private function diff(): array
     {
-        $database   = (string) $this->configContainer->get('database_name');
-        $translated = Dba::translate_to_mysqlcharset((string) $this->configContainer->get('site_charset'));
+        $database        = (string) $this->configContainer->get('database_name');
+        $translated      = Dba::translate_to_mysqlcharset((string) $this->configContainer->get('site_charset'));
         $targetCharset   = $translated['charset'];
         $targetCollation = $translated['collation'];
         $targetEngine    = (string) ($this->configContainer->get('database_engine') ?? 'InnoDB');
@@ -178,8 +177,8 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             [$database]
         );
         while ($column = Dba::fetch_assoc($columns)) {
-            $table = (string) $column['TABLE_NAME'];
-            $field = (string) $column['COLUMN_NAME'];
+            $table  = (string) $column['TABLE_NAME'];
+            $field  = (string) $column['COLUMN_NAME'];
             $pinned = in_array($field, self::FIXED_UTF8_COLUMNS[$table] ?? [], true);
 
             [$desiredCharset, $desiredCollation] = $pinned
