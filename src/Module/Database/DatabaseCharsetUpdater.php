@@ -202,15 +202,27 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
     }
 
     /**
-     * Tables that localplay controllers create for themselves on install (see e.g.
-     * Module/Playback/Localplay/Vlc/AmpacheVlc.php) rather than shipping in resources/sql/ampache.sql.
-     * Their columns use `COLLATE {$collation}` with no CHARACTER SET override at all, so unlike the
-     * core schema there is nothing column-specific to pin - every column just follows the configured
-     * site charset, which is exactly what falling back to the table default already gives us.
+     * Tables a module creates for itself on install rather than shipping in resources/sql/ampache.sql:
+     * a localplay controller's own table (see e.g. Module/Playback/Localplay/Vlc/AmpacheVlc.php), or an
+     * optional catalog backend's settings table via CatalogRepository::createSubTypeTable() (called from
+     * Catalog_beets.php, Catalog_beetsremote.php, Catalog_dropbox.php, Catalog_Seafile.php,
+     * Catalog_subsonic.php - `local` and `remote` are catalog types too, but ship in ampache.sql already
+     * since every install gets them). Both call sites build every column from `COLLATE {$collation}`
+     * with no CHARACTER SET override, so there is nothing column-specific to pin - every column just
+     * follows the configured site charset, which is exactly what falling back to the table default gives.
+     *
+     * `catalog_soundcloud`, `catalog_subsonic`'s old `catalog_webdav` sibling, and `localplay_shoutcast`
+     * are deliberately left out: they aren't in CatalogTypeEnum/the localplay controller list at all,
+     * so they're leftovers from a removed feature rather than something currently installable.
      *
      * @var list<string>
      */
-    private const array PLUGIN_INSTALLED_TABLES = [
+    private const array DYNAMICALLY_INSTALLED_TABLES = [
+        'catalog_beets',
+        'catalog_beetsremote',
+        'catalog_dropbox',
+        'catalog_seafile',
+        'catalog_subsonic',
         'localplay_httpq',
         'localplay_mpd',
         'localplay_upnp',
@@ -223,8 +235,8 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
      * per-table default charset/collation and any column-level override, so the diff always
      * reflects what the project's own migrations declared rather than a second, separately
      * maintained guess that inevitably drifts from it. Tables a module installs for itself
-     * (PLUGIN_INSTALLED_TABLES) are added on top, since they're real and currently installable
-     * but never appear in that file.
+     * (DYNAMICALLY_INSTALLED_TABLES) are added on top, since they're real and currently
+     * installable but never appear in that file.
      *
      * @return array{
      *     tables: array<string, array{charset: string, collation: string}>,
@@ -282,8 +294,8 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             }
         }
 
-        foreach (self::PLUGIN_INSTALLED_TABLES as $pluginTable) {
-            $tables[$pluginTable] ??= ['charset' => $targetCharset, 'collation' => $targetCollation];
+        foreach (self::DYNAMICALLY_INSTALLED_TABLES as $dynamicTable) {
+            $tables[$dynamicTable] ??= ['charset' => $targetCharset, 'collation' => $targetCollation];
         }
 
         return ['tables' => $tables, 'columns' => $columns];

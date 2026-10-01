@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `collection` (
   `user` int(11) DEFAULT NULL,
   `username` varchar(128) DEFAULT NULL,
   `type` enum('private','public') DEFAULT 'private',
-  `object_type` varchar(16) DEFAULT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `date` int(11) unsigned NOT NULL DEFAULT 0,
   `last_update` int(11) unsigned NOT NULL DEFAULT 0,
   `last_count` int(11) DEFAULT NULL,
@@ -405,7 +405,7 @@ CREATE TABLE IF NOT EXISTS `collection_map` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `collection` int(11) unsigned NOT NULL DEFAULT 0,
   `object_id` int(11) unsigned NOT NULL DEFAULT 0,
-  `object_type` varchar(16) NOT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `track` int(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `collection_track_IDX` (`collection`,`track`),
@@ -546,7 +546,7 @@ DROP TABLE IF EXISTS `folder_map`;
 CREATE TABLE IF NOT EXISTS `folder_map` (
   `folder_id` int(11) unsigned DEFAULT NULL,
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(16) DEFAULT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `catalog` int(11) NOT NULL DEFAULT 0,
   `path_name` varchar(512) DEFAULT NULL,
@@ -872,7 +872,7 @@ CREATE TABLE IF NOT EXISTS `object_count` (
 
 DROP TABLE IF EXISTS `object_count_archive`;
 CREATE TABLE IF NOT EXISTS `object_count_archive` (
-  `object_type` enum('album','album_disk','artist','catalog','collection','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','collection','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) unsigned NOT NULL DEFAULT 0,
   `date` int(11) unsigned NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL,
@@ -893,7 +893,7 @@ CREATE TABLE IF NOT EXISTS `object_count_archive` (
 DROP TABLE IF EXISTS `object_count_summary`;
 CREATE TABLE IF NOT EXISTS `object_count_summary` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','album_disk','artist','catalog','collection','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') NOT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','collection','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `object_id` int(11) unsigned NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL,
   `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -995,7 +995,7 @@ CREATE TABLE IF NOT EXISTS `playlist_folder_map` (
   `user` int(11) unsigned NOT NULL,
   `folder` int(11) unsigned NOT NULL DEFAULT 0,
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(16) NOT NULL,
+  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_playlist_folder_map` (`user`,`object_type`,`object_id`),
