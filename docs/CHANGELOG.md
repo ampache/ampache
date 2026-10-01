@@ -8,12 +8,24 @@
 
 * Database 810026
   * Corrected the `integer`/`string` type on eight preferences that are switches
+* Database 810025
+  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
+  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
+  * Added `embed_player` preference, offering a player to sites that link here
+  * Pinned `object_type` to `utf8mb3` on `folder_map`, `collection`, `collection_map`, `playlist_folder_map`, `object_count_archive` and `object_count_summary`, matching every other `object_type` column
+  * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
+  * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
+  * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
 * Database 810018
   * Added `embed_player` preference, offering a player to sites that link here
 * Database 810017
   * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
 * Database 810016
   * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
+* Database 810015
+  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
+  * Added `jellyfin_backend_enable` preference
+  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
 * Preferences
   * One page for your own preferences, the server's, and an admin editing another account
   * The shipped default and the server value beside each preference, with one-click restore
@@ -25,10 +37,6 @@
   * `Export all preferences`, a JSON download of the whole configuration
   * Plugins can explain their own preferences through `PluginPreferenceHelpInterface`
   * The Update button stays inert until something on the page actually changed
-* Database 810015
-  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
-  * Added `jellyfin_backend_enable` preference
-  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
 * Jellyfin
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
@@ -60,6 +68,7 @@
 * Grid action icons now display in the bottom-right corner
 * Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
 * A password change or API key rotation now ends the sessions that credential had opened
+* `bin/cli run:updateDb` now compares every table and column against `resources/sql/ampache.sql` and only reports/fixes the ones that don't match, instead of unconditionally rewriting every table and column to one global charset; id/token/enum columns the schema pins to `utf8mb3` are left alone
 
 ### Removed (8.2.0)
 
@@ -77,7 +86,8 @@
   * The Last.fm and Libre.fm authorisation callback accepted a forged link
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
   * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
-* Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
+* Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
 * A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
@@ -129,6 +139,13 @@
 * `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
 * `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
 * `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
+* `cleanup:sortSongs` used the whole server's song count (not the catalog's) and the chunk index as a row offset, silently skipping songs on every catalog-wide run
+* Writing tags to a FLAC/Vorbis file could crash and leave the comment block partially written when adding a new per-user rating tag
+* `print:tags` crashed on any file not yet scanned into a catalog, including its own documented usage example
+* `run:updateCatalogFile -r|--rename` could never succeed; it looked up the destination catalog from a song row that the rename itself was meant to create
+* `run:convertFilenames` walked every local catalog instead of the one named on the command line
+* `export:playlist` never created its output directory and kept going anyway, failing a second time trying to write the playlist file
+* `export:albumArt` walked every catalog on the server instead of the one named on the command line
 
 ## Ampache 8.1.0
 
