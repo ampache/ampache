@@ -33,5 +33,6 @@ interface FileNameConverterInterface
         Interactor $interactor,
         string $source_encoding,
         bool $force = false,
+        ?string $catalogName = null,
     ): void;
 }
