@@ -38,14 +38,21 @@ class PreferencesViewFactoryTest extends TestCase
     private PreferencesViewFactory $subject;
     private UserRepositoryInterface&MockObject $userRepository;
 
-    public function testAnUnknownTabRendersNothingRatherThanEverything(): void
+    public function testATabThatNamesNothingFallsBackToTheFirstOne(): void
     {
+        // `preferences.php` carries no tab of its own, and an empty screen is not an answer
         $user = $this->user();
-        $this->userRepository->method('getPreferenceRows')->willReturn([$this->row('show_lyrics', 'interface')]);
+        $this->userRepository->method('getPreferenceRows')->willReturn([
+            $this->row('show_lyrics', 'interface'),
+            $this->row('download', 'options'),
+        ]);
 
-        $view = $this->subject->create($this->gatekeeper(), PreferenceSubject::ownPreferences($user), $user, 'nope');
+        foreach (['', 'nope'] as $tab) {
+            $view = $this->subject->create($this->gatekeeper(), PreferenceSubject::ownPreferences($user), $user, $tab);
 
-        $this->assertSame(0, $view->countAll());
+            $this->assertSame(1, $view->countAll(), sprintf('tab "%s" shows the first category', $tab));
+            $this->assertSame('interface', $view->getTab());
+        }
     }
 
     public function testTheSubjectIsCarriedThroughToTheView(): void
