@@ -65,23 +65,23 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         $targetCharset   = $translated['charset'];
         $targetCollation = $translated['collation'];
         $targetEngine    = (string) ($this->configContainer->get('database_engine') ?? 'InnoDB');
-        $schema          = $this->loadSchemaReference();
+        $schema          = $this->loadSchemaReference($targetCharset, $targetCollation);
 
         $mismatches = [];
 
-        $schema = Dba::fetch_assoc(Dba::read(
+        $schemaDefaults = Dba::fetch_assoc(Dba::read(
             'SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = ?',
             [$database]
         ));
         if (
-            $schema !== []
-            && ($schema['DEFAULT_CHARACTER_SET_NAME'] !== $targetCharset || $schema['DEFAULT_COLLATION_NAME'] !== $targetCollation)
+            $schemaDefaults !== []
+            && ($schemaDefaults['DEFAULT_CHARACTER_SET_NAME'] !== $targetCharset || $schemaDefaults['DEFAULT_COLLATION_NAME'] !== $targetCollation)
         ) {
             $mismatches[] = [
                 'scope' => 'database',
                 'table' => $database,
                 'column' => null,
-                'current' => $schema['DEFAULT_CHARACTER_SET_NAME'] . '/' . $schema['DEFAULT_COLLATION_NAME'],
+                'current' => $schemaDefaults['DEFAULT_CHARACTER_SET_NAME'] . '/' . $schemaDefaults['DEFAULT_COLLATION_NAME'],
                 'desired' => $targetCharset . '/' . $targetCollation,
                 'sql' => sprintf(
                     'ALTER DATABASE `%s` DEFAULT CHARACTER SET %s COLLATE %s',
@@ -155,8 +155,9 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             $table = (string) $column['TABLE_NAME'];
             $field = (string) $column['COLUMN_NAME'];
 
-            // no ground truth for this column (an unexported table, or schema drift) - skip rather than guess
-            $reference = $schema['columns'][$table][$field] ?? null;
+            // an unlisted column in a known table just inherits that table's own default -
+            // only skip when the table itself has no ground truth to fall back to
+            $reference = $schema['columns'][$table][$field] ?? $schema['tables'][$table] ?? null;
             if ($reference === null) {
                 continue;
             }
@@ -201,17 +202,36 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
     }
 
     /**
+     * Tables that localplay controllers create for themselves on install (see e.g.
+     * Module/Playback/Localplay/Vlc/AmpacheVlc.php) rather than shipping in resources/sql/ampache.sql.
+     * Their columns use `COLLATE {$collation}` with no CHARACTER SET override at all, so unlike the
+     * core schema there is nothing column-specific to pin - every column just follows the configured
+     * site charset, which is exactly what falling back to the table default already gives us.
+     *
+     * @var list<string>
+     */
+    private const array PLUGIN_INSTALLED_TABLES = [
+        'localplay_httpq',
+        'localplay_mpd',
+        'localplay_upnp',
+        'localplay_vlc',
+        'localplay_xbmc',
+    ];
+
+    /**
      * Parses resources/sql/ampache.sql - the schema that a fresh install actually gets - into the
      * per-table default charset/collation and any column-level override, so the diff always
      * reflects what the project's own migrations declared rather than a second, separately
-     * maintained guess that inevitably drifts from it.
+     * maintained guess that inevitably drifts from it. Tables a module installs for itself
+     * (PLUGIN_INSTALLED_TABLES) are added on top, since they're real and currently installable
+     * but never appear in that file.
      *
      * @return array{
      *     tables: array<string, array{charset: string, collation: string}>,
      *     columns: array<string, array<string, array{charset: string, collation: string}>>
      * }
      */
-    private function loadSchemaReference(): array
+    private function loadSchemaReference(string $targetCharset, string $targetCollation): array
     {
         $path = dirname(__DIR__, 3) . '/resources/sql/ampache.sql';
 
@@ -260,6 +280,10 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
 
                 $pendingColumns[$declared[1]] = $override;
             }
+        }
+
+        foreach (self::PLUGIN_INSTALLED_TABLES as $pluginTable) {
+            $tables[$pluginTable] ??= ['charset' => $targetCharset, 'collation' => $targetCollation];
         }
 
         return ['tables' => $tables, 'columns' => $columns];
