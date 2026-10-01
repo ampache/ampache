@@ -8,6 +8,8 @@
 
 * Database 810026
   * Corrected the `integer`/`string` type on eight preferences that are switches
+  * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
+  * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
 * Database 810025
   * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
   * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`

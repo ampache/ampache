@@ -28,21 +28,33 @@ namespace Ampache\Module\System\Update\Migration\V8;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Correct eight preferences that are switches but shipped typed as `integer` or `string`
+ * Repair the preference catalogue: eight wrong types, and two preferences nothing reads
  *
- * `Migration740001` already repaired databases upgraded from before 7.4, but `ampache.sql` has seeded a
- * version above it since 7.5.0, so every installation created fresh since then kept the wrong type.
+ * `Migration740001` already retyped the eight on databases upgraded from before 7.4, but `ampache.sql` has
+ * seeded a version above it since 7.5.0, so every installation created fresh since then kept the wrong type.
+ *
+ * `sidebar_order_video` arrived with 700016 to order a sidebar section that does not exist, and
+ * `allow_personal_info_agent` lost its last reader in 4.3.0.
  */
 final class Migration810026 extends AbstractMigration
 {
     protected array $changelog = [
         'Fix the `integer`/`string` type on eight preferences that are booleans',
+        'Remove the unread `sidebar_order_video` and `allow_personal_info_agent` preferences',
     ];
 
     public function migrate(): void
     {
         $this->updateDatabase(
             "UPDATE `preference` SET `type` = 'boolean' WHERE `type` != 'boolean' AND `name` IN ('allow_video', 'browser_notify', 'geolocation', 'home_moment_albums', 'home_moment_videos', 'home_now_playing', 'home_recently_played', 'show_played_times');"
+        );
+
+        $this->updateDatabase(
+            "DELETE `user_preference` FROM `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
+        );
+
+        $this->updateDatabase(
+            "DELETE FROM `preference` WHERE `name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
         );
     }
 }
