@@ -554,8 +554,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         $requested = array_map(trim(...), explode(',', $configured));
+        $matched   = array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
 
-        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
+        if ($matched === []) {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        return $matched;
     }
 
     /**

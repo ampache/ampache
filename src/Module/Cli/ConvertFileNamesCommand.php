@@ -39,11 +39,13 @@ final class ConvertFileNamesCommand extends Command
         $this
             ->option('-f|--fire', T_('Enables `fire-and-forget`-mode (Disables prompting on rename)'), 'boolval', false)
             ->option('-c|--charset', T_('The destination charset'), 'strval', iconv_get_encoding('output_encoding'))
-            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8</end> ## ' . T_('Convert filenames to utf8') . '<eol/>');
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
+            ->usage('<bold>  run:convertFilenames</end> <comment>-c utf8 some-catalog</end> ## ' . T_('Convert filenames to utf8 in `some-catalog`') . '<eol/>');
     }
 
-    public function execute(): void
-    {
+    public function execute(
+        ?string $catalogName,
+    ): void {
         if ($this->app() === null) {
             return;
         }
@@ -63,7 +65,8 @@ final class ConvertFileNamesCommand extends Command
         $this->fileNameCorrector->convert(
             $interactor,
             $values['charset'],
-            $values['fire']
+            $values['fire'],
+            $catalogName
         );
     }
 
