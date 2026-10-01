@@ -33,17 +33,17 @@ class DatabaseCharsetUpdaterTest extends TestCase
 
     public function testUpdateReadsDatabaseNameAndSiteCharsetFromConfig(): void
     {
-        // NOTE: the rest of update()'s behavior (the actual ALTER statements) are driven by static Dba calls.
-        $this->configContainer->expects(static::exactly(2))
+        // NOTE: with no live Dba connection, the information_schema lookups come back empty,
+        // so there is nothing to diff and update() reports zero mismatches.
+        $this->configContainer->expects(static::exactly(3))
             ->method('get')
             ->willReturnMap([
                 ['database_name', 'test_db'],
                 ['site_charset', 'utf-8'],
+                ['database_engine', 'InnoDB'],
             ]);
 
-        $this->subject->update();
-
-        $this->addToAssertionCount(1);
+        static::assertSame([], $this->subject->update());
     }
 
     protected function setUp(): void

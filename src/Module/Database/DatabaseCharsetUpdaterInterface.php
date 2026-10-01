@@ -27,5 +27,18 @@ namespace Ampache\Module\Database;
 
 interface DatabaseCharsetUpdaterInterface
 {
-    public function update(): void;
+    /**
+     * Compares the live schema against the configured charset/collation and
+     * returns only the database/table/column entries that don't already match.
+     *
+     * @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string}>
+     */
+    public function findMismatches(): array;
+
+    /**
+     * Applies the fix for every mismatch found by findMismatches().
+     *
+     * @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string, success: bool}>
+     */
+    public function update(): array;
 }
