@@ -6,6 +6,8 @@
 
 ### Added (8.2.0)
 
+* Database 810026
+  * Corrected the `integer`/`string` type on eight preferences that are switches
 * Database 810018
   * Added `embed_player` preference, offering a player to sites that link here
 * Database 810017
@@ -49,7 +51,7 @@
 * Preferences
   * The confirmation names which changes the per-row `Apply to All` writes into every existing account
   * Access levels are read from `Preference::DEFAULTS`, correcting nine that had drifted
-  * Resetting levels to default now also covers the 28 preferences the old list left out
+  * Resetting levels to default now also covers the 29 preferences the old list left out
   * `admin/users.php?action=show_preferences` renders the shared preferences screen
 * Updated Seafile SDK to `dev-master`
 * Updated Composer and NPM dependencies
@@ -76,8 +78,6 @@
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
   * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
 * Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0/8.1.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
-* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
-* Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
 * A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory

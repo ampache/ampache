@@ -57,8 +57,10 @@ final readonly class PreferenceCollector
 
         $rows = $this->userRepository->getPreferenceRows($subject->userId, null, !$subject->isServer);
 
-        // a rule reads preferences from other tabs, so the whole picture is built before any item is
-        $held = $this->configSettings();
+        // a rule reads preferences from other tabs, so the whole picture is built before any item is.
+        // The server rows go in first: a user's own rows never carry the `system` category, and a rule
+        // asking whether a backend is on would otherwise read nothing and never fire on their page.
+        $held = $this->configSettings() + $systemValues;
         foreach ($rows as $row) {
             $held[$row['name']] = (string) ($row['value'] ?? '');
         }

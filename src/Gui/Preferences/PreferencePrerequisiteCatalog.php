@@ -47,6 +47,7 @@ final class PreferencePrerequisiteCatalog
             ...$this->uploads(),
             ...$this->backends(),
             ...$this->interface(),
+            ...$this->sidebar(),
         ];
     }
 
@@ -178,11 +179,15 @@ final class PreferencePrerequisiteCatalog
                 [['personalfav_display', PreferencePrerequisite::IS_OFF]],
                 T_('The favourites widget is off, so this list is never shown.')
             ),
-            // LightSidebarView.php is the only reader, and it only renders while the sidebar is collapsed
+            // the arrows collapse the sidebar whatever `sidebar_light` says, so only a missing switcher settles it
             new PreferencePrerequisite(
                 'sidebar_hide_playlist',
-                [['sidebar_hide_playlist', PreferencePrerequisite::IS_ON], ['sidebar_light', PreferencePrerequisite::IS_OFF]],
-                T_('This only applies to the collapsed sidebar, which you are not using.')
+                [
+                    ['sidebar_hide_playlist', PreferencePrerequisite::IS_ON],
+                    ['sidebar_light', PreferencePrerequisite::IS_OFF],
+                    ['sidebar_hide_switcher', PreferencePrerequisite::IS_ON],
+                ],
+                T_('The sidebar can no longer be collapsed, and this only applies to its collapsed form.')
             ),
             // HeaderView.php keeps the full sidebar collapsed for good once the switcher is gone
             new PreferencePrerequisite(
@@ -214,11 +219,27 @@ final class PreferencePrerequisiteCatalog
                 [['show_license', PreferencePrerequisite::IS_ON], ['config:licensing', PreferencePrerequisite::IS_OFF]],
                 T_('Licensing is off in the server configuration file, so no licence is ever shown.')
             ),
-            // AlbumPageView.php evaluates directplay first
+            // MediaEmbedView.php refuses to publish a session-bound stream url into someone else's page
             new PreferencePrerequisite(
-                'direct_play_limit',
-                [['config:directplay', PreferencePrerequisite::IS_OFF]],
-                T_('Direct play is off in the server configuration file, so this limit is never applied.')
+                'embed_player',
+                [
+                    ['embed_player', PreferencePrerequisite::IS_ON],
+                    ['config:use_auth', PreferencePrerequisite::IS_ON],
+                    ['config:require_session', PreferencePrerequisite::IS_ON],
+                ],
+                T_('Every stream on this server needs a session, so no embedded player is ever offered to other sites.')
+            ),
+            // WebPlayerView.php only draws the broadcast button when the config file allows broadcasting
+            new PreferencePrerequisite(
+                'broadcast_by_default',
+                [['broadcast_by_default', PreferencePrerequisite::IS_ON], ['config:broadcast', PreferencePrerequisite::IS_OFF]],
+                T_('Broadcasting is off in the server configuration file, so the player never starts one.')
+            ),
+            // HomeSidebarView.php asks for the Video entry only while video is allowed
+            new PreferencePrerequisite(
+                'sidebar_hide_video',
+                [['sidebar_hide_video', PreferencePrerequisite::IS_ON], ['allow_video', PreferencePrerequisite::IS_OFF]],
+                T_('Video is disabled on this server, so the Video entry is never drawn anyway.')
             ),
         ];
     }
@@ -230,11 +251,14 @@ final class PreferencePrerequisiteCatalog
     {
         $rules = [];
 
-        // AbstractStreamAction.php only reads the playlist type on the `stream` path
+        // DemocraticAction.php reads it too, and StreamItemAction.php hands out a playlist whatever the type
         $rules[] = new PreferencePrerequisite(
             'playlist_type',
-            [['play_type', PreferencePrerequisite::IS_NOT, 'stream']],
-            T_('Your playback type is not "stream", so the playlist format is never used.')
+            [
+                ['play_type', PreferencePrerequisite::IS_NOT, 'stream'],
+                ['play_type', PreferencePrerequisite::IS_NOT, 'democratic'],
+            ],
+            T_('Your playback type does not hand out playlists, so this only shapes the "Download Playlist" link.')
         );
 
         // StreamAjaxHandler.php refuses to switch to a mode its allow_* preference turns off
@@ -242,7 +266,7 @@ final class PreferencePrerequisiteCatalog
             $rules[] = new PreferencePrerequisite(
                 'play_type',
                 [['play_type', PreferencePrerequisite::IS, $mode], ['allow_' . $mode . '_playback', PreferencePrerequisite::IS_OFF]],
-                T_('This playback type is disabled on the server: it still applies to you, but you cannot switch away from it here.')
+                T_('This playback type is no longer allowed on the server, so it is not offered here: pick another one, nothing plays with it.')
             );
         }
 
@@ -263,18 +287,30 @@ final class PreferencePrerequisiteCatalog
                 T_('The matching limit is unlimited, so this window is never used.')
             );
 
-            // AbstractStreamAction.php skips stream control entirely for democratic playback
-            $rules[] = new PreferencePrerequisite(
-                'stream_control_' . $kind . '_max',
-                [['play_type', PreferencePrerequisite::IS, 'democratic']],
-                T_('Democratic playback bypasses stream limits, so this one does not apply to your own listening.')
-            );
-
             // the three plugins return true, allowing the stream, when graphs are off
             $rules[] = new PreferencePrerequisite(
                 'stream_control_' . $kind . '_max',
                 [['config:statistical_graphs', PreferencePrerequisite::IS_OFF]],
                 T_('Stream limits need statistical graphs, which are off in the server configuration file. Nothing is enforced.')
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @return list<PreferencePrerequisite>
+     */
+    private function sidebar(): array
+    {
+        $rules = [];
+
+        // HomeSidebarView.php reads a section's order only while that section is shown
+        foreach (['browse', 'dashboard', 'search', 'information'] as $section) {
+            $rules[] = new PreferencePrerequisite(
+                'sidebar_order_' . $section,
+                [['sidebar_hide_' . $section, PreferencePrerequisite::IS_ON]],
+                T_('That sidebar section is hidden, so its order is never used.')
             );
         }
 
@@ -310,12 +346,12 @@ final class PreferencePrerequisiteCatalog
         $rules[] = new PreferencePrerequisite(
             'transcode_bitrate',
             [['transcode', PreferencePrerequisite::IS_NOT, 'never'], ['transcode_bitrate_webplayer', PreferencePrerequisite::IS_NOT, '0']],
-            T_('The web player has its own bitrate set, which wins over this one.')
+            T_('The web player has its own bitrate set, which wins over this one for the web player.')
         );
         $rules[] = new PreferencePrerequisite(
             'transcode_bitrate',
             [['transcode', PreferencePrerequisite::IS_NOT, 'never'], ['transcode_bitrate_api', PreferencePrerequisite::IS_NOT, '0']],
-            T_('The API has its own bitrate set, which wins over this one.')
+            T_('The API has its own bitrate set, which wins over this one for the API.')
         );
 
         // Stream.php falls back to the webplayer target for songs even when no player was named

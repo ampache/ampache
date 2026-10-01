@@ -75,6 +75,25 @@ class PreferenceCollectorTest extends TestCase
         $this->assertFalse($collected['options'][0]->editable);
     }
 
+    public function testARuleReadingAServerOnlyPreferenceStillWarnsOnAnAccountPage(): void
+    {
+        // `subsonic_always_download` is warned about when `subsonic_backend` is off, and that one is a
+        // `system` preference the account's own rows never carry
+        $operator = $this->user(42);
+        $own      = $this->row('subsonic_always_download', 'options', type: 'boolean', value: '1');
+
+        $this->configContainer->method('isFeatureEnabled')->willReturn(false);
+        $this->userRepository->method('getPreferenceRows')->willReturnCallback(
+            fn(int $userId): array => ($userId === User::INTERNAL_SYSTEM_USER_ID)
+                ? [$this->row('subsonic_backend', 'system', type: 'boolean', value: '0'), $own]
+                : [$own]
+        );
+
+        $item = $this->subject->collect(PreferenceSubject::ownPreferences($operator), $operator)['options'][0];
+
+        $this->assertNotNull($item->warning);
+    }
+
     public function testASecretNeverCarriesItsValue(): void
     {
         $item = $this->itemOf($this->row('daap_pass', 'system', type: 'string', value: 'hunter2'), systemValue: 'hunter2');
