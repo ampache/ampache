@@ -57,7 +57,7 @@ final class PreferenceBoxView extends AbstractView
 
     public function formatSubcategory(?string $subcategory): string
     {
-        return ($subcategory === null || $subcategory === '')
+        return ($subcategory === null)
             ? T_('Other')
             : T_(Preference::format_subcategory($subcategory));
     }
@@ -137,7 +137,7 @@ final class PreferenceBoxView extends AbstractView
 
     public function subcategoryAnchor(?string $subcategory): string
     {
-        return ($subcategory === null || $subcategory === '')
+        return ($subcategory === null)
             ? 'pref-section-other'
             : 'pref-section-' . preg_replace('/[^a-z0-9]+/', '-', strtolower($subcategory));
     }

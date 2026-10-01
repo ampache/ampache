@@ -50,11 +50,6 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
         private MetadataFieldRepositoryInterface $metadataFieldRepository,
     ) {}
 
-    /**
-     * The choices of one preference, in display order
-     *
-     * @return ?array<array-key, string> value => displayed label, or null when the preference is a free field
-     */
     #[Override]
     public function find(string $name, PreferenceSubject $subject, array $held = []): ?array
     {
@@ -70,7 +65,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
                 'name_desc' => T_('Name descending'),
             ],
             'api_force_version' => $this->getApiVersions(),
-            'disabled_custom_metadata_fields' => $this->metadataFieldRepository->getPropertyList(),
+            'disabled_custom_metadata_fields' => iterator_to_array($this->metadataFieldRepository->getPropertyList()),
             'encode_player_api_target', 'encode_player_webplayer_target', 'encode_target' => $this->getEncodeFormats('audio'),
             'encode_video_target' => $this->getEncodeFormats('video'),
             'generated_art_template' => $this->getGeneratedArtTemplates(),
@@ -115,9 +110,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
             default => null,
         };
 
-        return ($choices === null)
-            ? null
-            : $this->materialise($choices);
+        return $choices;
     }
 
     /**
@@ -192,7 +185,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
     private function getPlayTypes(array $held): array
     {
         $choices = ['' => T_('None')];
-        // these three are per-account preferences: an admin editing someone else must see theirs, not their own
+        // these three are per-account preferences: an admin editing someone else must see theirs
         if ($this->isOn($held, 'allow_stream_playback')) {
             $choices['stream'] = T_('Stream');
         }
@@ -297,16 +290,5 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
     private function isOn(array $held, string $name): bool
     {
         return array_key_exists($name, $held) ? $held[$name] === '1' : AmpConfig::get_bool($name);
-    }
-
-    /**
-     * Materialises a choice list, since some sources hand back a Generator nobody can count or re-read
-     *
-     * @param iterable<int|string, string> $choices
-     * @return array<array-key, string>
-     */
-    private function materialise(iterable $choices): array
-    {
-        return is_array($choices) ? $choices : iterator_to_array($choices);
     }
 }

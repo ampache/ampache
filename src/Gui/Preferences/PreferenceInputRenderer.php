@@ -66,11 +66,9 @@ final readonly class PreferenceInputRenderer
             return $value;
         }
 
-        $parts = $this->isMultiple($item) ? explode(',', $value) : [$value];
-
         // locale labels carry entities on purpose; the caller escapes, so they are decoded here or shown raw
         return html_entity_decode(
-            implode(', ', array_map(fn(string $part): string => $this->choiceLabel($choices, $part), $parts)),
+            implode(', ', array_map(fn(string $part): string => $this->choiceLabel($choices, $part), $this->parts($item, $value))),
             ENT_QUOTES,
             'UTF-8'
         );
@@ -82,8 +80,7 @@ final readonly class PreferenceInputRenderer
             return $this->renderReadOnly($item);
         }
 
-        // after the check above: `editable` carries both the level and the demo-mode lock, and this link
-        // sends the operator off to a third party before anything is written back
+        // after `editable`: the link sends the operator to a third party, so demo mode has to refuse first
         if (in_array($item->name, self::GRANT_LINKS, true)) {
             return $this->renderGrantLink($item, $subject);
         }
@@ -100,8 +97,7 @@ final readonly class PreferenceInputRenderer
             return $this->renderChoices($item, $item->choices);
         }
 
-        // an empty list is still a list: nothing to pick here, but the value is a set of ids or names and
-        // never a quantity, so it keeps a list control rather than falling through to a number or a text box
+        // an empty list is still a set of ids, never a quantity, so it does not fall through to a number box
         if ($item->choices === []) {
             return $this->renderEmptyChoices($item);
         }
@@ -125,9 +121,7 @@ final readonly class PreferenceInputRenderer
             return $value;
         }
 
-        $parts = $this->isMultiple($item) ? explode(',', $value) : [$value];
-
-        return implode(',', array_map(fn(string $part): string => $this->choiceKey($choices, $part), $parts));
+        return implode(',', array_map(fn(string $part): string => $this->choiceKey($choices, $part), $this->parts($item, $value)));
     }
 
     /**
@@ -220,6 +214,16 @@ final readonly class PreferenceInputRenderer
     }
 
     /**
+     * The stored values of a control, one for a plain field and several for a comma-separated multi-select
+     *
+     * @return list<string>
+     */
+    private function parts(PreferenceItem $item, string $value): array
+    {
+        return $this->isMultiple($item) ? explode(',', $value) : [$value];
+    }
+
+    /**
      * @param array<array-key, string> $choices
      */
     private function renderChoices(PreferenceItem $item, array $choices): string
@@ -290,7 +294,7 @@ final readonly class PreferenceInputRenderer
             return '';
         }
 
-        // load() fails on an empty challenge, the very state this link exists to leave, so only the key decides
+        // load() fails on the empty challenge this link exists to fill, so only the api key decides
         $plugin->load($user);
         if ((string) $plugin->_plugin->api_key === '') {
             return '';
@@ -361,8 +365,7 @@ final readonly class PreferenceInputRenderer
      */
     private function renderSecret(PreferenceItem $item): string
     {
-        // the field is always blank, so blank is also its default: anything else marks every secret changed.
-        // No server value though, that one would be the secret itself
+        // blank is the default too, or every secret reads as changed; a server value would be the secret
         return sprintf(
             '<input class="pref-control" type="password" id="%s" name="%s" value="" placeholder="%s"'
             . ' autocomplete="new-password" data-pref="%s" data-initial="" data-default="" data-pref-secret />',

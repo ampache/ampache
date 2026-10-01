@@ -758,7 +758,7 @@ class Preference extends database_object
     }
 
     /**
-     * The access level each preference ships with, as level => the preferences taking it, read from `DEFAULTS`
+     * The access level each preference ships with, as level => the preferences taking it
      *
      * @return array<int, list<string>>
      */
@@ -1255,8 +1255,7 @@ class Preference extends database_object
      */
     public static function is_boolean(string $key): bool
     {
-        // the debug page asks this about the whole merged configuration, so the answer covers two
-        // populations: preferences, whose type is declared, and config-file settings, which have none
+        // the debug page asks about the merged configuration, and only preferences declare their type
         if (isset(self::DEFAULTS[$key])) {
             return self::DEFAULTS[$key][3] === 'boolean';
         }
@@ -1435,8 +1434,7 @@ class Preference extends database_object
             return $repository->copySystemPreferences($user->getId());
         }
 
-        // `default` is what ships, so it reads `DEFAULTS` instead of repeating it: the copy had drifted on
-        // eleven values and was missing thirty-five preferences the catalogue has gained since
+        // `default` is what ships, so it is read from `DEFAULTS` rather than from a copy that drifts
         $values = ($preset === 'default')
             ? self::defaultPresetValues()
             : (self::PRESETS[$preset] ?? null);
@@ -1813,7 +1811,7 @@ class Preference extends database_object
     /**
      * The shipped value of every preference, grouped the way `set_preset()` hands them over.
      *
-     * @return array<array-key, list<string>> keyed by value, which PHP narrows to an int when it looks like one
+     * @return array<array-key, list<string>> keyed by value, which PHP narrows to an int when it can
      */
     private static function defaultPresetValues(): array
     {

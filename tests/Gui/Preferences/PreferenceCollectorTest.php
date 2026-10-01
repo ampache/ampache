@@ -200,7 +200,7 @@ class PreferenceCollectorTest extends TestCase
         $item = $this->itemOf($this->row('some_plugin_option', 'plugins', type: 'string', value: 'x'));
 
         $this->assertNull($item->shippedDefault);
-        $this->assertFalse($item->isAtShippedDefault());
+        $this->assertFalse($item->differsFromShipped());
     }
 
     public function testItReadsTheShippedDefaultFromTheDefaultsCatalogue(): void
@@ -250,7 +250,6 @@ class PreferenceCollectorTest extends TestCase
         $this->subject         = new PreferenceCollector(
             $this->userRepository,
             new PreferenceHelpCatalog(),
-            new PluginPreferenceHelp(),
             $this->choiceProvider,
             new PreferencePrerequisiteCatalog(),
             $this->configContainer,

@@ -34,15 +34,12 @@ final readonly class PreferencePrerequisite
      * Marks a condition that reads `config/ampache.cfg.php`, whose half of the decision is not on the page
      */
     public const string CONFIG_PREFIX = 'config:';
-    public const string IS            = 'is';
 
+    public const string IS       = 'is';
     public const string IS_EMPTY = 'is-empty';
-
-    public const string IS_NOT = 'is-not';
-
-    public const string IS_OFF = 'is-off';
-
-    public const string IS_ON = 'is-on';
+    public const string IS_NOT   = 'is-not';
+    public const string IS_OFF   = 'is-off';
+    public const string IS_ON    = 'is-on';
 
     /**
      * @param string $preference the preference the warning is shown under

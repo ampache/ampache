@@ -27,7 +27,9 @@ namespace Ampache\Gui\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
+use Ampache\Plugin\PluginPreferenceHelpInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -36,10 +38,11 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final readonly class PreferenceCollector
 {
+    public const string PLUGIN_CATEGORY = 'plugins';
+
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private PreferenceHelpCatalog $helpCatalog,
-        private PluginPreferenceHelp $pluginHelp,
         private PreferenceChoiceProviderInterface $choiceProvider,
         private PreferencePrerequisiteCatalog $prerequisites,
         private ConfigContainerInterface $configContainer,
@@ -65,6 +68,8 @@ final readonly class PreferenceCollector
             $held[$row['name']] = (string) ($row['value'] ?? '');
         }
 
+        $pluginHelp = $this->pluginHelp($rows);
+
         $collected = [];
         foreach ($rows as $row) {
             $collected[$row['category']][] = $this->item(
@@ -73,6 +78,7 @@ final readonly class PreferenceCollector
                 $this->choiceProvider->find($row['name'], $subject, $held),
                 !$demoMode && $operator->access >= $row['level'],
                 $this->prerequisites->find($row['name'], $held),
+                $pluginHelp[$row['name']] ?? null,
             );
         }
 
@@ -101,7 +107,7 @@ final readonly class PreferenceCollector
      * @param ?string $systemValue the `user = -1` value, null when the subject is the system itself
      * @param ?array<array-key, string> $choices from `PreferenceChoiceProvider`
      */
-    private function item(array $row, ?string $systemValue, ?array $choices, bool $editable, ?string $warning): PreferenceItem
+    private function item(array $row, ?string $systemValue, ?array $choices, bool $editable, ?string $warning, ?PreferenceHelp $pluginHelp): PreferenceItem
     {
         $name     = $row['name'];
         $value    = (string) ($row['value'] ?? '');
@@ -122,9 +128,48 @@ final readonly class PreferenceCollector
             isSecret: $isSecret,
             secretIsSet: $isSecret && $value !== '',
             // a plugin knows its own settings better than the shipped catalogue does
-            help: $this->pluginHelp->find($row) ?? $this->helpCatalog->find($name),
+            help: $pluginHelp ?? $this->helpCatalog->find($name),
             warning: $warning,
         );
+    }
+
+    /**
+     * The help a plugin writes for its own preferences, keyed by preference name
+     *
+     * Resolved once per request rather than per row: the subcategory carries the plugin name, and a plugin
+     * answers for every preference it owns.
+     *
+     * @param list<array{name: string, category: string, subcategory: ?string, value: mixed}> $rows
+     * @return array<string, PreferenceHelp>
+     */
+    private function pluginHelp(array $rows): array
+    {
+        $plugins = [];
+        $helps   = [];
+        foreach ($rows as $row) {
+            if ($row['category'] !== self::PLUGIN_CATEGORY || $row['subcategory'] === null) {
+                continue;
+            }
+
+            $owner = $row['subcategory'];
+            if (!array_key_exists($owner, $plugins)) {
+                $loaded          = new Plugin($owner)->_plugin;
+                $plugins[$owner] = ($loaded instanceof PluginPreferenceHelpInterface) ? $loaded : null;
+            }
+
+            if (!$plugins[$owner] instanceof PluginPreferenceHelpInterface) {
+                continue;
+            }
+
+            // a secret is blanked before it reaches a template, and this seam must not undo that
+            $value = (Preference::isSecretName($row['name']) || $row['value'] === null) ? null : (string) $row['value'];
+            $text  = $plugins[$owner]->getPreferenceHelp($row['name'], $value);
+            if ($text !== null && $text !== '') {
+                $helps[$row['name']] = new PreferenceHelp($text);
+            }
+        }
+
+        return $helps;
     }
 
     /**

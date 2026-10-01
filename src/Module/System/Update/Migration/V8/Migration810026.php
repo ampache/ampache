@@ -28,13 +28,7 @@ namespace Ampache\Module\System\Update\Migration\V8;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Repair the preference catalogue: eight wrong types, and two preferences nothing reads
- *
- * `Migration740001` already retyped the eight on databases upgraded from before 7.4, but `ampache.sql` has
- * seeded a version above it since 7.5.0, so every installation created fresh since then kept the wrong type.
- *
- * `sidebar_order_video` arrived with 700016 to order a sidebar section that does not exist, and
- * `allow_personal_info_agent` lost its last reader in 4.3.0.
+ * Retypes eight booleans `ampache.sql` kept seeding as `integer`/`string`, and drops two unread preferences
  */
 final class Migration810026 extends AbstractMigration
 {

@@ -29,27 +29,27 @@ use PHPUnit\Framework\TestCase;
 
 class PreferenceItemTest extends TestCase
 {
-    public function testASecretIsNeverReportedAtItsShippedDefault(): void
+    public function testASecretNeverReportsWhetherItDiffersFromTheShippedDefault(): void
     {
-        $secret = $this->item(value: '10', shippedDefault: '10', systemValue: '99', isSecret: true);
+        $secret = $this->item(value: '25', shippedDefault: '10', systemValue: '99', isSecret: true);
 
-        $this->assertFalse($secret->isAtShippedDefault());
+        $this->assertFalse($secret->differsFromShipped());
+    }
+
+    public function testDiffersFromShippedComparesAgainstTheShippedValue(): void
+    {
+        $this->assertFalse($this->item(value: '10')->differsFromShipped());
+        $this->assertTrue($this->item(value: '25')->differsFromShipped());
+    }
+
+    public function testDiffersFromShippedIsFalseWhenNoDefaultIsKnown(): void
+    {
+        $this->assertFalse($this->item(value: '', shippedDefault: null)->differsFromShipped());
     }
 
     public function testInputIdIsNamespaced(): void
     {
         $this->assertSame('pref-popular_threshold', $this->item()->inputId());
-    }
-
-    public function testIsAtShippedDefaultComparesAgainstTheShippedValue(): void
-    {
-        $this->assertTrue($this->item(value: '10')->isAtShippedDefault());
-        $this->assertFalse($this->item(value: '25')->isAtShippedDefault());
-    }
-
-    public function testIsAtShippedDefaultIsFalseWhenNoDefaultIsKnown(): void
-    {
-        $this->assertFalse($this->item(value: '', shippedDefault: null)->isAtShippedDefault());
     }
 
     private function item(

@@ -80,8 +80,7 @@ final readonly class GrantAction implements ApplicationActionInterface
                 $isScrobbler = $plugin->_plugin instanceof Ampachelibrefm
                     || $plugin->_plugin instanceof AmpacheLastfm;
 
-                // load() fails on an empty challenge, the state this callback exists to leave, so its
-                // result is not a condition: only the api key and secret it sets on the way matter
+                // load() fails on the empty challenge this callback fills, so only its side effects count
                 if ($isScrobbler) {
                     $plugin->load($user);
                 }

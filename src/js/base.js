@@ -142,7 +142,6 @@ export function displayNotification(message, timeout) {
         } else {
             $("#notification").css("bottom", "120px");
         }
-        // every caller passes a sentence, and one that ever carried a name would be an injection
         $("#notification-content").text(message);
         $("#notification").removeClass("notification-out");
         notificationTimeout = setTimeout(function() {

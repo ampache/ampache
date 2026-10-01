@@ -32,8 +32,6 @@ use Ampache\Gui\Preferences\PreferencesView;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -56,8 +54,7 @@ class AdminActionTest extends MockeryTestCase
 
         $tab         = 'some-tab';
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)->once()->andReturnTrue();
+        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
@@ -112,8 +109,7 @@ class AdminActionTest extends MockeryTestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)->once()->andReturnFalse();
+        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnFalse();
 
         $this->subject->run($request, $gatekeeper);
     }

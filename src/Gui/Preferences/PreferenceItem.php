@@ -67,14 +67,4 @@ final readonly class PreferenceItem
     {
         return 'pref-' . $this->name;
     }
-
-    /**
-     * A secret's value never leaves the database, so the comparison cannot be answered for one.
-     */
-    public function isAtShippedDefault(): bool
-    {
-        return !$this->isSecret
-            && $this->shippedDefault !== null
-            && $this->value === $this->shippedDefault;
-    }
 }

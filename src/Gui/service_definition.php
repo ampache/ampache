@@ -73,7 +73,6 @@ use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
-use Ampache\Gui\Preferences\PluginPreferenceHelp;
 use Ampache\Gui\Preferences\PreferenceChoiceProvider;
 use Ampache\Gui\Preferences\PreferenceChoiceProviderInterface;
 use Ampache\Gui\Preferences\PreferenceCollector;
@@ -149,7 +148,6 @@ return [
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
     PreferenceChoiceProviderInterface::class => autowire(PreferenceChoiceProvider::class),
     PreferenceHelpCatalog::class => autowire(PreferenceHelpCatalog::class),
-    PluginPreferenceHelp::class => autowire(PluginPreferenceHelp::class),
     PreferencePrerequisiteCatalog::class => autowire(PreferencePrerequisiteCatalog::class),
     PreferenceCollector::class => autowire(PreferenceCollector::class),
     PreferenceExporterInterface::class => autowire(PreferenceExporter::class),

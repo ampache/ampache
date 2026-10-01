@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
+use Ampache\Gui\Preferences\PreferenceType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -43,9 +44,8 @@ class PreferenceCatalogueConsistencyTest extends TestCase
     public function testEveryDeclaredTypeIsOneTheRendererKnows(): void
     {
         foreach (Preference::DEFAULTS as $name => $row) {
-            self::assertContains(
-                $row[3],
-                ['boolean', 'integer', 'string', 'special', 'transcoding'],
+            self::assertNotNull(
+                PreferenceType::tryFrom($row[3]),
                 sprintf('`%s` declares the unknown type `%s`, which falls back to a text field', $name, $row[3])
             );
         }

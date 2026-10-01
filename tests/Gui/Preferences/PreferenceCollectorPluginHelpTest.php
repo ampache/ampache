@@ -33,21 +33,20 @@ use DI\Container;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class PluginPreferenceHelpTest extends TestCase
+class PreferenceCollectorPluginHelpTest extends TestCase
 {
     use PluginFactoryMockTrait;
 
     private int $builds = 0;
-    private PluginPreferenceHelp $subject;
 
     public function testAnUnknownPluginIsNotFatal(): void
     {
-        $this->assertNull($this->subject->find($this->row('whatever', 'plugins', 'NoSuchPlugin')));
+        $this->assertNull($this->helpFor($this->row('whatever', 'plugins', 'NoSuchPlugin')));
     }
 
     public function testAPluginAnswersForItsOwnPreference(): void
     {
-        $help = $this->subject->find($this->row('ratingmatch_write_tags'));
+        $help = $this->helpFor($this->row('ratingmatch_write_tags'));
 
         $this->assertInstanceOf(PreferenceHelp::class, $help);
         $this->assertStringContainsString('rating', $help->text);
@@ -55,24 +54,26 @@ class PluginPreferenceHelpTest extends TestCase
 
     public function testAPluginDeclinesForAPreferenceItDoesNotOwn(): void
     {
-        $this->assertNull($this->subject->find($this->row('some_other_option')));
+        $this->assertNull($this->helpFor($this->row('some_other_option')));
     }
 
     public function testAPluginPreferenceWithNoOwnerNamedIsNeverAsked(): void
     {
-        $this->assertNull($this->subject->find($this->row('whatever', 'plugins', null)));
+        $this->assertNull($this->helpFor($this->row('whatever', 'plugins', null)));
     }
 
     public function testAPreferenceOutsideThePluginsCategoryIsNeverAsked(): void
     {
-        $this->assertNull($this->subject->find($this->row('download', 'options')));
+        $this->helpFor($this->row('download', 'options'));
+
+        $this->assertSame(0, $this->builds, 'a preference outside the plugins category must not build one');
     }
 
     public function testTheAnswerDescribesTheValueTheFieldHolds(): void
     {
-        $empty = $this->subject->find($this->row('ratingmatch_star3_rule', value: ''));
-        $plays = $this->subject->find($this->row('ratingmatch_star3_rule', value: '5'));
-        $both  = $this->subject->find($this->row('ratingmatch_star3_rule', value: '5,2'));
+        $empty = $this->helpFor($this->row('ratingmatch_star3_rule', value: ''));
+        $plays = $this->helpFor($this->row('ratingmatch_star3_rule', value: '5'));
+        $both  = $this->helpFor($this->row('ratingmatch_star3_rule', value: '5,2'));
 
         $this->assertNotNull($empty);
         $this->assertNotNull($plays);
@@ -85,9 +86,9 @@ class PluginPreferenceHelpTest extends TestCase
 
     public function testThePluginIsBuiltOnlyOncePerRequest(): void
     {
-        $this->assertNotNull($this->subject->find($this->row('ratingmatch_star1_rule')));
-        $this->assertNotNull($this->subject->find($this->row('ratingmatch_star2_rule')));
+        $helps = $this->helpForAll([$this->row('ratingmatch_star1_rule'), $this->row('ratingmatch_star2_rule')]);
 
+        $this->assertCount(2, array_filter($helps));
         $this->assertSame(1, $this->builds, 'a tab of plugin preferences must not rebuild the plugin per row');
     }
 
@@ -114,7 +115,62 @@ class PluginPreferenceHelpTest extends TestCase
         });
         $GLOBALS['dic'] = $dic;
 
-        $this->subject = new PluginPreferenceHelp();
+    }
+
+    /**
+     * The help `collect()` attaches to one row, which is what the screen shows under the field.
+     *
+     * @param array<string, mixed> $row
+     */
+    private function helpFor(array $row): ?PreferenceHelp
+    {
+        return $this->helpForAll([$row])[0];
+    }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     * @return list<?PreferenceHelp>
+     */
+    private function helpForAll(array $rows): array
+    {
+        $userRepository = $this->createMock(\Ampache\Repository\UserRepositoryInterface::class);
+        $userRepository->method('getPreferenceRows')->willReturnCallback(
+            fn(int $userId): array => ($userId === \Ampache\Repository\Model\User::INTERNAL_SYSTEM_USER_ID)
+                ? []
+                : array_map(static fn(array $r): array => $r + ['description' => '', 'type' => 'string', 'level' => 0], $rows)
+        );
+        $configContainer = $this->createMock(\Ampache\Config\ConfigContainerInterface::class);
+        $configContainer->method('isFeatureEnabled')->willReturn(false);
+        $configContainer->method('get')->willReturn(null);
+        $choiceProvider = $this->createMock(PreferenceChoiceProviderInterface::class);
+        $choiceProvider->method('find')->willReturn(null);
+
+        $collector = new PreferenceCollector(
+            $userRepository,
+            new PreferenceHelpCatalog(),
+            $choiceProvider,
+            new PreferencePrerequisiteCatalog(),
+            $configContainer,
+        );
+
+        $operator         = $this->createMock(\Ampache\Repository\Model\User::class);
+        $operator->access = 100;
+        $collected        = $collector->collect(PreferenceSubject::ownPreferences($operator), $operator);
+
+        $items = [];
+        foreach ($rows as $row) {
+            $found = null;
+            foreach ($collected[$row['category']] ?? [] as $item) {
+                if ($item->name === $row['name']) {
+                    $found = $item->help;
+                    break;
+                }
+            }
+
+            $items[] = $found;
+        }
+
+        return $items;
     }
 
     /** @return array<string, mixed> */

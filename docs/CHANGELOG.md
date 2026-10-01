@@ -11,9 +11,6 @@
   * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
   * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
 * Database 810025
-  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
-  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
-  * Added `embed_player` preference, offering a player to sites that link here
   * Pinned `object_type` to `utf8mb3` on `folder_map`, `collection`, `collection_map`, `playlist_folder_map`, `object_count_archive` and `object_count_summary`, matching every other `object_type` column
   * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
   * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`

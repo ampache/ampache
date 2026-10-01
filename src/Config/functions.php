@@ -1203,7 +1203,6 @@ function get_theme(string $name): ?array
         return null;
     }
 
-    // the name reaches this from a stored preference, and it is about to be a path segment
     $name = basename(strtolower($name));
 
     if (array_key_exists($name, $_mapcache)) {

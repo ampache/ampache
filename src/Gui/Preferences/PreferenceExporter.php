@@ -44,9 +44,6 @@ final readonly class PreferenceExporter implements PreferenceExporterInterface
         private UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {}
 
-    /**
-     * @return array<string, mixed>
-     */
     #[Override]
     public function export(PreferenceSubject $subject, User $operator): array
     {

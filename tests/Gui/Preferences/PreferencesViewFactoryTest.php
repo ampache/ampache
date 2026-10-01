@@ -85,7 +85,6 @@ class PreferencesViewFactoryTest extends TestCase
             new PreferenceCollector(
                 $this->userRepository,
                 new PreferenceHelpCatalog(),
-                new PluginPreferenceHelp(),
                 $this->createMock(PreferenceChoiceProviderInterface::class),
                 new PreferencePrerequisiteCatalog(),
                 $this->configContainer,

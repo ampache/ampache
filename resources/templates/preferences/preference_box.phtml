@@ -78,17 +78,21 @@ foreach ($this->getItems() as $item) {
             </td>
             <td class="cel_value"><?php echo $this->raw($this->renderControl($item)); ?></td>
             <td class="cel_reference">
-                <?php if (!$item->isSecret) { ?>
+                <?php if (!$item->isSecret) {
+                    if ($item->shippedDefault !== null) { ?>
                 <div class="pref-ref"><span><?php echo T_('Default'); ?></span><span class="pref-refval"><?php echo $this->e($this->displayValue($item, $item->shippedDefault)); ?></span></div>
-                <?php if ($item->systemValue !== null) { ?>
+                <?php }
+                    if ($item->systemValue !== null) { ?>
                 <div class="pref-ref"><span><?php echo T_('Server'); ?></span><span class="pref-refval"><?php echo $this->e($this->displayValue($item, $item->systemValue)); ?></span></div>
                 <?php }
-                } ?>
+                    } ?>
             </td>
             <td class="cel_prefaction">
-                <?php if ($item->editable && !$item->isSecret) { ?>
+                <?php if ($item->editable && !$item->isSecret) {
+                    if ($item->shippedDefault !== null) { ?>
                 <button type="button" class="pref-linkbtn" data-pref-action="default" data-pref-target="<?php echo $this->e($item->name); ?>" disabled><?php echo T_('Default'); ?></button>
-                <?php if ($item->systemValue !== null) { ?>
+                <?php }
+                    if ($item->systemValue !== null) { ?>
                 <button type="button" class="pref-linkbtn" data-pref-action="server" data-pref-target="<?php echo $this->e($item->name); ?>" title="<?php echo $this->e(T_('Copy what the server holds; it will not follow later server changes')); ?>" disabled><?php echo T_('Server'); ?></button>
                 <?php } ?>
                 <button type="button" class="pref-linkbtn" data-pref-action="revert" data-pref-target="<?php echo $this->e($item->name); ?>" disabled><?php echo T_('Undo'); ?></button>

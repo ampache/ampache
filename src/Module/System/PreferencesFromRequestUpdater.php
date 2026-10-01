@@ -123,7 +123,6 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                     break;
             }
 
-            // `Preference` owns the suffix list, so a second copy here could not drift from the masking
             if (Preference::isSecretName($name)) {
                 // The field always renders blank, so a blank submit means "leave the stored secret alone"
                 if ($value === '') {

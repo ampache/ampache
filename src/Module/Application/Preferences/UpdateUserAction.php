@@ -59,7 +59,7 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // an anonymous visitor used to slip past the `&&` below; each of these refuses on its own
+        // each of these refuses on its own, so an anonymous visitor cannot slip past a combined check
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || (int) (Core::get_global('user')?->getId()) === 0

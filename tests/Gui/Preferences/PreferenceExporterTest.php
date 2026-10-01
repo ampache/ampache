@@ -152,7 +152,6 @@ class PreferenceExporterTest extends TestCase
             new PreferenceCollector(
                 $this->userRepository,
                 new PreferenceHelpCatalog(),
-                new PluginPreferenceHelp(),
                 $this->createMock(PreferenceChoiceProviderInterface::class),
                 new PreferencePrerequisiteCatalog(),
                 $config,

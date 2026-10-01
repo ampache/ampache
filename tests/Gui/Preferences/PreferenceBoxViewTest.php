@@ -50,7 +50,6 @@ class PreferenceBoxViewTest extends TestCase
         $view = $this->view([$this->item('loose', null)]);
 
         $this->assertSame(T_('Other'), $view->formatSubcategory(null));
-        $this->assertSame(T_('Other'), $view->formatSubcategory(''));
         $this->assertSame('pref-section-other', $view->subcategoryAnchor(null));
         $this->assertSame(['pref-section-other' => T_('Other')], $view->getSubcategories());
     }
