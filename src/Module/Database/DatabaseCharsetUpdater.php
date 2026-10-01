@@ -31,53 +31,6 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
-    private const string FIXED_UTF8_CHARSET = 'utf8';
-
-    private const string FIXED_UTF8_COLLATION = 'utf8_unicode_ci';
-    /**
-     * Columns that must stay on the legacy 3-byte utf8 charset regardless of site_charset.
-     * These only ever hold ASCII (ids/tokens, enum-style type flags, MusicBrainz uuids), so
-     * they never need utf8mb4 and are deliberately excluded from the blanket conversion.
-     *
-     * @var array<string, list<string>>
-     */
-    private const array FIXED_UTF8_COLUMNS = [
-        'album' => ['mbid', 'mbid_group'],
-        'album_map' => ['object_type'],
-        'artist' => ['mbid'],
-        'artist_map' => ['object_type'],
-        'bookmark' => ['object_type'],
-        'cache_object_count' => ['object_type', 'count_type'],
-        'cache_object_count_run' => ['object_type', 'count_type'],
-        'image' => ['object_type', 'kind'],
-        'live_stream' => ['codec'],
-        'now_playing' => ['id', 'object_type'],
-        'object_count' => ['object_type', 'agent', 'geo_name', 'count_type'],
-        'player_control' => ['object_type'],
-        'playlist' => ['type'],
-        'playlist_data' => ['object_type'],
-        'podcast_episode' => ['state'],
-        'rating' => ['object_type'],
-        'recommendation' => ['object_type'],
-        'recommendation_item' => ['mbid'],
-        'search' => ['type'],
-        'session' => ['id'],
-        'session_remember' => ['token'],
-        'session_stream' => ['id'],
-        'share' => ['object_type'],
-        'song' => ['mode', 'mbid'],
-        'song_preview' => ['artist_mbid', 'album_mbid', 'mbid'],
-        'stream_playlist' => ['codec'],
-        'tag_map' => ['object_type'],
-        'tmp_playlist' => ['object_type'],
-        'tmp_playlist_data' => ['object_type'],
-        'user_activity' => ['object_type'],
-        'user_flag' => ['object_type'],
-        'user_shout' => ['object_type'],
-        'video' => ['mode'],
-        'wanted' => ['artist_mbid', 'mbid'],
-    ];
-
     public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function findMismatches(): array
@@ -89,6 +42,11 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
     {
         $applied = [];
         foreach ($this->diff() as $mismatch) {
+            // entries with no sql (e.g. a table missing from the schema reference) are informational only
+            if ($mismatch['sql'] === '') {
+                continue;
+            }
+
             $result               = Dba::write($mismatch['sql']);
             $mismatch['success']  = $result instanceof PDOStatement;
             $applied[]            = $mismatch;
@@ -107,6 +65,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         $targetCharset   = $translated['charset'];
         $targetCollation = $translated['collation'];
         $targetEngine    = (string) ($this->configContainer->get('database_engine') ?? 'InnoDB');
+        $schema          = $this->loadSchemaReference();
 
         $mismatches = [];
 
@@ -151,20 +110,36 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
                 ];
             }
 
-            if ($table['TABLE_COLLATION'] !== null && $table['TABLE_COLLATION'] !== $targetCollation) {
+            $reference = $schema['tables'][$tableName] ?? null;
+            if ($reference === null) {
+                // nothing in resources/sql/ampache.sql to compare against - a table this tool
+                // has never heard of is more likely orphaned (left behind by a removed feature)
+                // than something it should be guessing a charset for.
+                $mismatches[] = [
+                    'scope' => 'unknown',
+                    'table' => $tableName,
+                    'column' => null,
+                    'current' => 'present in the database',
+                    'desired' => 'not found in resources/sql/ampache.sql - confirm this table is still used, or regenerate the schema reference with admin:exportSchema',
+                    'sql' => '',
+                ];
+                continue;
+            }
+
+            if ($table['TABLE_COLLATION'] !== null && $this->normalizeCollation((string) $table['TABLE_COLLATION']) !== $reference['collation']) {
                 $mismatches[] = [
                     'scope' => 'table',
                     'table' => $tableName,
                     'column' => null,
                     'current' => (string) $table['TABLE_COLLATION'],
-                    'desired' => $targetCollation,
+                    'desired' => $reference['collation'],
                     // `DEFAULT CHARACTER SET` (no CONVERT TO) only changes what new columns get;
                     // it never rewrites bytes in columns that already exist.
                     'sql' => sprintf(
                         'ALTER TABLE `%s` DEFAULT CHARACTER SET %s COLLATE %s',
                         $tableName,
-                        $targetCharset,
-                        $targetCollation
+                        $reference['charset'],
+                        $reference['collation']
                     ),
                 ];
             }
@@ -177,15 +152,18 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             [$database]
         );
         while ($column = Dba::fetch_assoc($columns)) {
-            $table  = (string) $column['TABLE_NAME'];
-            $field  = (string) $column['COLUMN_NAME'];
-            $pinned = in_array($field, self::FIXED_UTF8_COLUMNS[$table] ?? [], true);
+            $table = (string) $column['TABLE_NAME'];
+            $field = (string) $column['COLUMN_NAME'];
 
-            [$desiredCharset, $desiredCollation] = $pinned
-                ? [self::FIXED_UTF8_CHARSET, self::FIXED_UTF8_COLLATION]
-                : [$targetCharset, $targetCollation];
+            // no ground truth for this column (an unexported table, or schema drift) - skip rather than guess
+            $reference = $schema['columns'][$table][$field] ?? null;
+            if ($reference === null) {
+                continue;
+            }
 
-            if ($column['CHARACTER_SET_NAME'] === $desiredCharset && $column['COLLATION_NAME'] === $desiredCollation) {
+            $currentCharset   = $this->normalizeCharset((string) $column['CHARACTER_SET_NAME']);
+            $currentCollation = $this->normalizeCollation((string) $column['COLLATION_NAME']);
+            if ($currentCharset === $reference['charset'] && $currentCollation === $reference['collation']) {
                 continue;
             }
 
@@ -204,14 +182,14 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
                 'table' => $table,
                 'column' => $field,
                 'current' => $column['CHARACTER_SET_NAME'] . '/' . $column['COLLATION_NAME'],
-                'desired' => $desiredCharset . '/' . $desiredCollation,
+                'desired' => $reference['charset'] . '/' . $reference['collation'],
                 'sql' => sprintf(
                     'ALTER TABLE `%s` MODIFY COLUMN `%s` %s CHARACTER SET %s COLLATE %s%s%s%s',
                     $table,
                     $field,
                     $column['COLUMN_TYPE'],
-                    $desiredCharset,
-                    $desiredCollation,
+                    $reference['charset'],
+                    $reference['collation'],
                     $null,
                     $default,
                     $extra
@@ -220,5 +198,84 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         }
 
         return $mismatches;
+    }
+
+    /**
+     * Parses resources/sql/ampache.sql - the schema that a fresh install actually gets - into the
+     * per-table default charset/collation and any column-level override, so the diff always
+     * reflects what the project's own migrations declared rather than a second, separately
+     * maintained guess that inevitably drifts from it.
+     *
+     * @return array{
+     *     tables: array<string, array{charset: string, collation: string}>,
+     *     columns: array<string, array<string, array{charset: string, collation: string}>>
+     * }
+     */
+    private function loadSchemaReference(): array
+    {
+        $path = dirname(__DIR__, 3) . '/resources/sql/ampache.sql';
+
+        $tables  = [];
+        $columns = [];
+
+        $table          = null;
+        $pendingColumns = [];
+
+        foreach (file($path, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
+            if (preg_match('/^CREATE TABLE IF NOT EXISTS `(\w+)` \(/', $line, $created)) {
+                $table          = $created[1];
+                $pendingColumns = [];
+                continue;
+            }
+
+            if ($table === null) {
+                continue;
+            }
+
+            if (preg_match('/^\) ENGINE=\w+ DEFAULT CHARSET=(\w+) COLLATE=(\w+)\b/', $line, $closed)) {
+                $default = [
+                    'charset' => $this->normalizeCharset($closed[1]),
+                    'collation' => $this->normalizeCollation($closed[2]),
+                ];
+
+                $tables[$table]  = $default;
+                $columns[$table] = [];
+                foreach ($pendingColumns as $name => $override) {
+                    $columns[$table][$name] = $override ?? $default;
+                }
+
+                $table = null;
+                continue;
+            }
+
+            // a column line always starts with a backtick identifier; KEY/PRIMARY KEY/CONSTRAINT lines don't
+            if (preg_match('/^\s*`(\w+)`\s/', $line, $declared)) {
+                $override = null;
+                if (preg_match('/CHARACTER SET (\w+) COLLATE (\w+)/', $line, $explicit)) {
+                    $override = [
+                        'charset' => $this->normalizeCharset($explicit[1]),
+                        'collation' => $this->normalizeCollation($explicit[2]),
+                    ];
+                }
+
+                $pendingColumns[$declared[1]] = $override;
+            }
+        }
+
+        return ['tables' => $tables, 'columns' => $columns];
+    }
+
+    /**
+     * MySQL 8 and recent MariaDB report the 3-byte charset as `utf8mb3`; older servers (and `utf8`
+     * written by hand in older migrations) still say plain `utf8`. Same charset, different name.
+     */
+    private function normalizeCharset(string $charset): string
+    {
+        return $charset === 'utf8' ? 'utf8mb3' : $charset;
+    }
+
+    private function normalizeCollation(string $collation): string
+    {
+        return str_starts_with($collation, 'utf8_') ? 'utf8mb3_' . substr($collation, 5) : $collation;
     }
 }

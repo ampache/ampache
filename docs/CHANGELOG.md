@@ -40,7 +40,7 @@
 * Grid action icons now display in the bottom-right corner
 * Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
 * A password change or API key rotation now ends the sessions that credential had opened
-* `bin/cli run:updateDb` now checks `information_schema` first and only reports/fixes the database, table and column charset/collation/engine entries that don't match your config, instead of unconditionally rewriting every table and column
+* `bin/cli run:updateDb` now compares every table and column against `resources/sql/ampache.sql` and only reports/fixes the ones that don't match, instead of unconditionally rewriting every table and column to one global charset; id/token/enum columns the schema pins to `utf8mb3` are left alone
 
 ### Fixed (8.2.0)
 
