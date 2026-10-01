@@ -31,22 +31,7 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
-    /**
-     * Tables a module creates for itself on install rather than shipping in resources/sql/ampache.sql:
-     * a localplay controller's own table (see e.g. Module/Playback/Localplay/Vlc/AmpacheVlc.php), or an
-     * optional catalog backend's settings table via CatalogRepository::createSubTypeTable() (called from
-     * Catalog_beets.php, Catalog_beetsremote.php, Catalog_dropbox.php, Catalog_Seafile.php,
-     * Catalog_subsonic.php - `local` and `remote` are catalog types too, but ship in ampache.sql already
-     * since every install gets them). Both call sites build every column from `COLLATE {$collation}`
-     * with no CHARACTER SET override, so there is nothing column-specific to pin - every column just
-     * follows the configured site charset, which is exactly what falling back to the table default gives.
-     *
-     * `catalog_soundcloud`, `catalog_subsonic`'s old `catalog_webdav` sibling, and `localplay_shoutcast`
-     * are deliberately left out: they aren't in CatalogTypeEnum/the localplay controller list at all,
-     * so they're leftovers from a removed feature rather than something currently installable.
-     *
-     * @var list<string>
-     */
+    /** Tables a module creates for itself on install; never shipped in resources/sql/ampache.sql. @var list<string> */
     private const array DYNAMICALLY_INSTALLED_TABLES = [
         'catalog_beets',
         'catalog_beetsremote',
@@ -141,9 +126,6 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
 
             $reference = $schema['tables'][$tableName] ?? null;
             if ($reference === null) {
-                // nothing in resources/sql/ampache.sql to compare against - a table this tool
-                // has never heard of is more likely orphaned (left behind by a removed feature)
-                // than something it should be guessing a charset for.
                 $mismatches[] = [
                     'scope' => 'unknown',
                     'table' => $tableName,
@@ -162,8 +144,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
                     'column' => null,
                     'current' => (string) $table['TABLE_COLLATION'],
                     'desired' => $reference['collation'],
-                    // `DEFAULT CHARACTER SET` (no CONVERT TO) only changes what new columns get;
-                    // it never rewrites bytes in columns that already exist.
+                    // DEFAULT CHARACTER SET (not CONVERT TO) only affects new columns, not existing data
                     'sql' => sprintf(
                         'ALTER TABLE `%s` DEFAULT CHARACTER SET %s COLLATE %s',
                         $tableName,
@@ -184,8 +165,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             $table = (string) $column['TABLE_NAME'];
             $field = (string) $column['COLUMN_NAME'];
 
-            // an unlisted column in a known table just inherits that table's own default -
-            // only skip when the table itself has no ground truth to fall back to
+            // unlisted column inherits the table default
             $reference = $schema['columns'][$table][$field] ?? $schema['tables'][$table] ?? null;
             if ($reference === null) {
                 continue;
@@ -231,13 +211,6 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
     }
 
     /**
-     * Parses resources/sql/ampache.sql - the schema that a fresh install actually gets - into the
-     * per-table default charset/collation and any column-level override, so the diff always
-     * reflects what the project's own migrations declared rather than a second, separately
-     * maintained guess that inevitably drifts from it. Tables a module installs for itself
-     * (DYNAMICALLY_INSTALLED_TABLES) are added on top, since they're real and currently
-     * installable but never appear in that file.
-     *
      * @return array{
      *     tables: array<string, array{charset: string, collation: string}>,
      *     columns: array<string, array<string, array{charset: string, collation: string}>>
@@ -280,7 +253,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
                 continue;
             }
 
-            // a column line always starts with a backtick identifier; KEY/PRIMARY KEY/CONSTRAINT lines don't
+            // a column line starts with a backtick; KEY/PRIMARY KEY lines don't
             if (preg_match('/^\s*`(\w+)`\s/', $line, $declared)) {
                 $override = null;
                 if (preg_match('/CHARACTER SET (\w+) COLLATE (\w+)/', $line, $explicit)) {
@@ -301,10 +274,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         return ['tables' => $tables, 'columns' => $columns];
     }
 
-    /**
-     * MySQL 8 and recent MariaDB report the 3-byte charset as `utf8mb3`; older servers (and `utf8`
-     * written by hand in older migrations) still say plain `utf8`. Same charset, different name.
-     */
+    // utf8 and utf8mb3 are the same charset; modern servers report the latter
     private function normalizeCharset(string $charset): string
     {
         return $charset === 'utf8' ? 'utf8mb3' : $charset;

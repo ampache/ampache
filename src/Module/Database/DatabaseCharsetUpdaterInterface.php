@@ -27,20 +27,9 @@ namespace Ampache\Module\Database;
 
 interface DatabaseCharsetUpdaterInterface
 {
-    /**
-     * Compares the live schema against the configured charset/collation and against
-     * resources/sql/ampache.sql, and returns only the database/table/column entries that
-     * don't already match. A `scope` of `unknown` means a table has no entry in the schema
-     * reference to compare against (`sql` is empty for those - nothing is applied for them).
-     *
-     * @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string}>
-     */
+    /** @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string}> */
     public function findMismatches(): array;
 
-    /**
-     * Applies the fix for every mismatch found by findMismatches().
-     *
-     * @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string, success: bool}>
-     */
+    /** @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string, success: bool}> */
     public function update(): array;
 }

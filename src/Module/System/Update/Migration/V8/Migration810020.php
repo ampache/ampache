@@ -27,11 +27,6 @@ namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-/**
- * Every other `object_type` tag column is pinned to `utf8mb3` (it only ever holds short ASCII values
- * like `song`/`album`); these six were added without that pin and silently inherited the table's
- * utf8mb4 default instead.
- */
 final class Migration810020 extends AbstractMigration
 {
     protected array $changelog = [
