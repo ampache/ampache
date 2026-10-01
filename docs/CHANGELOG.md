@@ -87,7 +87,6 @@
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
   * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
 * Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
-* Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
 * A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
