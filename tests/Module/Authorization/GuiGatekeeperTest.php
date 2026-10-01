@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Authorization;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
@@ -50,6 +51,41 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->assertTrue(
             $this->subject->mayAccess($type, $level)
         );
+    }
+
+    public function testMayAdministerIsRefusedInDemoMode(): void
+    {
+        // demo mode answers every privilege check with true, so the level alone would let a visitor write
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->andReturnTrue();
+
+        $this->assertFalse($this->subject->mayAdminister());
+    }
+
+    public function testMayAdministerIsRefusedWithoutTheLevel(): void
+    {
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
+
+        $this->assertFalse($this->subject->mayAdminister());
+    }
+
+    public function testMayAdministerNeedsTheLevelAndNoDemoMode(): void
+    {
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->andReturnFalse();
+
+        $this->assertTrue($this->subject->mayAdminister());
     }
 
     #[Override]

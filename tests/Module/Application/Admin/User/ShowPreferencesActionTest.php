@@ -32,6 +32,8 @@ use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -65,7 +67,8 @@ class ShowPreferencesActionTest extends MockeryTestCase
     public function testANonAdminIsRefusedBeforeAnythingIsLoaded(): void
     {
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $gatekeeper->shouldReceive('mayAdminister')
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -84,7 +87,8 @@ class ShowPreferencesActionTest extends MockeryTestCase
         $operator   = $this->mock(User::class);
         $target     = $this->mock(User::class);
 
-        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')->andReturn($operator);
         $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '666']);
         $this->modelFactory->shouldReceive('createUser')->with(666)->once()->andReturn($target);
@@ -95,21 +99,6 @@ class ShowPreferencesActionTest extends MockeryTestCase
         $this->expectException(ObjectNotFoundException::class);
 
         $this->subject->run($request, $gatekeeper);
-    }
-
-    /**
-     * Demo mode grants every privilege, which is why the gatekeeper answers this question and not a level.
-     */
-    public function testDemoModeIsRefused(): void
-    {
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnFalse();
-
-        $this->modelFactory->shouldNotReceive('createUser');
-
-        $this->expectException(AccessDeniedException::class);
-
-        $this->subject->run($this->mock(ServerRequestInterface::class), $gatekeeper);
     }
 
     public function testItRendersTheRequestedAccountAndNotTheOperator(): void
@@ -125,7 +114,8 @@ class ShowPreferencesActionTest extends MockeryTestCase
         $target->shouldReceive('getId')->andReturn(7);
         $target->shouldReceive('isNew')->once()->andReturnFalse();
 
-        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')->andReturn($operator);
         $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '7', 'tab' => 'streaming']);
         $this->modelFactory->shouldReceive('createUser')->with(7)->once()->andReturn($target);
@@ -176,7 +166,8 @@ class ShowPreferencesActionTest extends MockeryTestCase
         $target->shouldReceive('getId')->andReturn(7);
         $target->shouldReceive('isNew')->andReturnFalse();
 
-        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')->andReturn($operator);
         $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '7', 'tab' => 'account']);
         $this->modelFactory->shouldReceive('createUser')->with(7)->andReturn($target);

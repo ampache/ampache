@@ -100,6 +100,12 @@ final readonly class PreferenceInputRenderer
             return $this->renderChoices($item, $item->choices);
         }
 
+        // an empty list is still a list: nothing to pick here, but the value is a set of ids or names and
+        // never a quantity, so it keeps a list control rather than falling through to a number or a text box
+        if ($item->choices === []) {
+            return $this->renderEmptyChoices($item);
+        }
+
         if ($item->type === PreferenceType::INTEGER) {
             return $this->renderNumber($item);
         }
@@ -241,6 +247,24 @@ final readonly class PreferenceInputRenderer
             $multiple ? ' multiple="multiple" size="5"' : '',
             $this->dataAttributes($item),
             $options
+        );
+    }
+
+    /**
+     * A list with nothing to offer: shown disabled, with the value carried in a hidden field so that
+     * saving the form does not silently blank it.
+     */
+    private function renderEmptyChoices(PreferenceItem $item): string
+    {
+        return sprintf(
+            '<select class="pref-control" id="%s" disabled="disabled"%s><option value="">%s</option></select>'
+            . '<input type="hidden" name="%s" value="%s" %s>',
+            $this->e($item->inputId()),
+            ($this->isMultiple($item)) ? ' multiple="multiple" size="5"' : '',
+            $this->e(T_('Nothing to choose from')),
+            $this->e($item->name),
+            $this->e($this->canonical($item, $item->value)),
+            $this->dataAttributes($item)
         );
     }
 

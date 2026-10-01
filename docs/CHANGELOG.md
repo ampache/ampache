@@ -60,9 +60,11 @@
 
 * Preferences
   * The confirmation names which changes the per-row `Apply to All` writes into every existing account
-  * Access levels are read from `Preference::DEFAULTS`, correcting nine that had drifted
+  * Access levels are read from `Preference::DEFAULTS` rather than a second list that had fallen out of step with it
   * Resetting levels to default now also covers the 29 preferences the old list left out
   * `admin/users.php?action=show_preferences` renders the shared preferences screen
+  * The `default` preset is read from `Preference::DEFAULTS` instead of a copy that had drifted on eleven values and was missing thirty-five preferences
+  * Whether a setting is a switch is read from its declared type, so the debug page no longer relies on a list that had fallen behind
 * Updated Seafile SDK to `dev-master`
 * Updated Composer and NPM dependencies
 * `wanted_types` now includes `single` and `ep` by default

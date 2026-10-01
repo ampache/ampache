@@ -112,18 +112,6 @@ class AdminUpdatePreferencesActionTest extends MockeryTestCase
         $this->subject->run($this->mock(ServerRequestInterface::class), $this->gatekeeper(true));
     }
 
-    /**
-     * Demo mode grants every privilege, which is why the gatekeeper answers this and not a level.
-     */
-    public function testDemoModeWritesNothing(): void
-    {
-        $this->updater->shouldNotReceive('update');
-
-        $this->expectException(AccessDeniedException::class);
-
-        $this->subject->run($this->mock(ServerRequestInterface::class), $this->gatekeeper(false));
-    }
-
     public function testThePostedAccountIsTheOneWrittenTo(): void
     {
         $_POST['user_id'] = '7';

@@ -62,6 +62,16 @@ class PreferenceCatalogueConsistencyTest extends TestCase
         }
     }
 
+    public function testTheDefaultPresetIsNotRepeatedAlongsideTheCatalogue(): void
+    {
+        // it used to be copied here and had drifted on eleven values; `set_preset()` derives it now
+        self::assertArrayNotHasKey(
+            'default',
+            Preference::PRESETS,
+            'the `default` preset is derived from `DEFAULTS`, so a copy here can only drift away from it'
+        );
+    }
+
     public function testTheExemptionListEarnsItsKeep(): void
     {
         foreach (self::INSTALLED_ELSEWHERE as $name) {

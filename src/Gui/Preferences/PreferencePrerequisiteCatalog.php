@@ -154,7 +154,7 @@ final class PreferencePrerequisiteCatalog
             new PreferencePrerequisite(
                 'generated_art_template',
                 [['generated_art', PreferencePrerequisite::IS_OFF]],
-                T_('Drawn placeholders are off, so this style is only used by the preview above.')
+                T_('Drawn placeholders are off, so this style is never used.')
             ),
             // AbstractShowAction.php drops the drawing whenever a custom blank album is set
             new PreferencePrerequisite(
@@ -283,7 +283,7 @@ final class PreferencePrerequisiteCatalog
             // AmpacheStreamHits.php returns before the window is read when the maximum is negative
             $rules[] = new PreferencePrerequisite(
                 'stream_control_' . $kind . '_days',
-                [['stream_control_' . $kind . '_max', PreferencePrerequisite::IS, '-1']],
+                [['stream_control_' . $kind . '_max', PreferencePrerequisite::IS_EMPTY]],
                 T_('The matching limit is unlimited, so this window is never used.')
             );
 
@@ -361,12 +361,17 @@ final class PreferencePrerequisiteCatalog
             T_('The web player output format wins over this one, and it applies to most streams, not only the web player.')
         );
 
-        // Stream.php reads the floor only inside the max_bit_rate branch
-        $rules[] = new PreferencePrerequisite(
-            'min_bit_rate',
-            [['transcode', PreferencePrerequisite::IS_NOT, 'never'], ['max_bit_rate', PreferencePrerequisite::IS_EMPTY]],
-            T_('The floor is only applied while a maximum bitrate is set, and a maximum of 1 counts as none.')
-        );
+        // Stream.php reads the floor only inside the `max_bit_rate > 1` branch, so 0, -1 and 1 all mean none
+        foreach ([PreferencePrerequisite::IS_EMPTY => null, PreferencePrerequisite::IS => '1'] as $operator => $value) {
+            $rules[] = new PreferencePrerequisite(
+                'min_bit_rate',
+                [
+                    ['transcode', PreferencePrerequisite::IS_NOT, 'never'],
+                    ($value === null) ? ['max_bit_rate', $operator] : ['max_bit_rate', $operator, $value],
+                ],
+                T_('The floor is only applied while a maximum bitrate is set, and a maximum of 1 counts as none.')
+            );
+        }
 
         return $rules;
     }
