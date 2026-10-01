@@ -104,6 +104,8 @@
 * `print:tags` crashed on any file not yet scanned into a catalog, including its own documented usage example
 * `run:updateCatalogFile -r|--rename` could never succeed; it looked up the destination catalog from a song row that the rename itself was meant to create
 * `run:convertFilenames` walked every local catalog instead of the one named on the command line
+* `export:playlist` never created its output directory and kept going anyway, failing a second time trying to write the playlist file
+* `export:albumArt` walked every catalog on the server instead of the one named on the command line
 
 ## Ampache 8.1.0
 
