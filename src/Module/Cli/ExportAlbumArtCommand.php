@@ -30,6 +30,7 @@ use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Override;
 use Psr\Container\ContainerInterface;
@@ -46,11 +47,13 @@ final class ExportAlbumArtCommand extends Command
 
         $this
             ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')
-            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## ' . T_('Export album art for Linux') . '<eol/>');
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
+            ->usage('<bold>  export:albumArt</end> <comment>linux some-catalog</end> ## ' . T_('Export album art for Linux from `some-catalog`') . '<eol/>');
     }
 
     public function execute(
         string $type,
+        ?string $catalogName,
     ): void {
         $interactor         = $this->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
@@ -60,7 +63,16 @@ final class ExportAlbumArtCommand extends Command
             true
         );
 
-        $catalogs = Catalog::get_all_catalogs();
+        $catalogs = [];
+        if (in_array($catalogName, [null, '', '0'], true)) {
+            $catalogs = Catalog::get_all_catalogs();
+        } else {
+            $db_results = Dba::read('SELECT `id` FROM `catalog` WHERE `name` = ?', [$catalogName]);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $catalogs[] = (int) $row['id'];
+            }
+        }
+
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {

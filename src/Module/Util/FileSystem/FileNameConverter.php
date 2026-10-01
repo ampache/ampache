@@ -39,9 +39,15 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         Interactor $interactor,
         string $source_encoding,
         bool $force = false,
+        ?string $catalogName = null,
     ): void {
-        $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
-        $db_results = Dba::read($sql);
+        if (!in_array($catalogName, [null, '', '0'], true)) {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
+            $db_results = Dba::read($sql, [$catalogName]);
+        } else {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
+            $db_results = Dba::read($sql);
+        }
 
         $result = false;
         while ($row = Dba::fetch_assoc($db_results)) {

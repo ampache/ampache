@@ -104,16 +104,16 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            $stats  = Catalog::get_server_counts(0);
-            $total  = $stats['song'];
-            $chunks = (int) floor($total / 10000) + 1;
+            $page_size = 1000;
+            $total     = count($this->catalog->get_song_ids());
+            $chunks    = (int) floor($total / $page_size) + 1;
             foreach (range(1, $chunks) as $chunk) {
                 /* HINT: Catalog Block: 4/120 */
                 $interactor->info(
                     sprintf(T_('Catalog Block: %s'), $chunk . '/' . $chunks),
                     true
                 );
-                $songs = $this->catalog?->get_songs($chunk, 1000) ?? [];
+                $songs = $this->catalog?->get_songs(($chunk - 1) * $page_size, $page_size) ?? [];
                 // Foreach through each file and find it a home!
                 foreach ($songs as $song) {
                     $this->processMedia($song, $interactor);

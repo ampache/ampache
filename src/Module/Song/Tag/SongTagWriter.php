@@ -222,7 +222,11 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                                 $ndata[$key] = [];
                             }
 
-                            $ndata[$key][] = $songMeta[$key];
+                            if (is_array($songMeta[$key])) {
+                                $ndata[$key] = array_merge($ndata[$key], $songMeta[$key]);
+                            } else {
+                                $ndata[$key][] = $songMeta[$key];
+                            }
                         }
                     } else {
                         $ndata[$key] = $value;
@@ -240,7 +244,11 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                             $ndata[$key] = [];
                         }
 
-                        $ndata[$key][] = $value;
+                        if (is_array($value)) {
+                            $ndata[$key] = array_merge($ndata[$key], $value);
+                        } else {
+                            $ndata[$key][] = $value;
+                        }
                     }
                 }
             }

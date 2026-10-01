@@ -99,6 +99,13 @@
 * `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
 * `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
 * `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
+* `cleanup:sortSongs` used the whole server's song count (not the catalog's) and the chunk index as a row offset, silently skipping songs on every catalog-wide run
+* Writing tags to a FLAC/Vorbis file could crash and leave the comment block partially written when adding a new per-user rating tag
+* `print:tags` crashed on any file not yet scanned into a catalog, including its own documented usage example
+* `run:updateCatalogFile -r|--rename` could never succeed; it looked up the destination catalog from a song row that the rename itself was meant to create
+* `run:convertFilenames` walked every local catalog instead of the one named on the command line
+* `export:playlist` never created its output directory and kept going anyway, failing a second time trying to write the playlist file
+* `export:albumArt` walked every catalog on the server instead of the one named on the command line
 
 ## Ampache 8.1.0
 
