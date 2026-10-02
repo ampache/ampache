@@ -25,43 +25,60 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Gui\Admin\UserPreferencesView;
+use Ampache\Gui\Preferences\PreferenceSubject;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
+use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\PreferenceRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the users preferences
+ * Renders the preferences of another account, on the same screen an account gets for its own.
  */
-final class ShowPreferencesAction extends AbstractUserAction
+final readonly class ShowPreferencesAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_preferences';
 
     public function __construct(
-        private readonly UiInterface $ui,
-        private readonly ModelFactoryInterface $modelFactory,
-        private readonly PreferenceRepositoryInterface $preferenceRepository,
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private PreferencesViewFactoryInterface $preferencesViewFactory,
     ) {}
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
-        $user   = $this->modelFactory->createUser($userId);
+        if (!$gatekeeper->mayAdminister()) {
+            throw new AccessDeniedException();
+        }
 
-        if ($user->isNew()) {
+        $operator = $gatekeeper->getUser();
+        if (!$operator instanceof User) {
+            throw new AccessDeniedException();
+        }
+
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
+        $target = $this->modelFactory->createUser($userId);
+        if ($target->isNew()) {
             throw new ObjectNotFoundException($userId);
         }
 
+        // the account form always writes the signed-in account, so it must not appear under someone else's title
+        $tab = (string) ($request->getQueryParams()['tab'] ?? 'interface');
+        if ($tab === 'account' || $tab === 'quickconnect') {
+            $tab = 'interface';
+        }
+
         $this->ui->showHeader();
-        echo new UserPreferencesView(
-            $this->ui,
-            AmpConfig::get_web_path(),
-            $user,
-            $this->preferenceRepository->getAll($user)
+        echo $this->preferencesViewFactory->create(
+            $gatekeeper,
+            PreferenceSubject::otherUser($target, $operator),
+            $operator,
+            $tab
         )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

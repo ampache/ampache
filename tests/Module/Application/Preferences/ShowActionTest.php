@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferenceInputRenderer;
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesView;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
@@ -50,11 +52,10 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $user       = $this->mock(User::class);
 
-        $fullname    = 'some-name';
-        $preferences = ['some' => 'preference'];
         $tab         = 'some-tab';
 
-        $user->fullname = $fullname;
+        $user->fullname = 'some-name';
+        $user->shouldReceive('getId')->andReturn(42);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
@@ -70,18 +71,18 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['tab' => $tab]);
 
-        $user->shouldReceive('get_preferences')
-            ->with($tab)
-            ->once()
-            ->andReturn($preferences);
-
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
         // render() is final, so this is a real view with no tab -- the path that renders nothing
+        $captured = null;
         $this->preferencesViewFactory->shouldReceive('create')
             ->once()
-            ->andReturn(new PreferencesView($this->ui, '', '', [], '', '', 0, false, false));
+            ->andReturnUsing(function ($gate, $subject, $operator, $tab) use (&$captured, $user): PreferencesView {
+                $captured = [$subject, $operator, $tab];
+
+                return new PreferencesView('', $subject, [], '', false, false, new PreferenceInputRenderer());
+            });
 
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -97,6 +98,11 @@ class ShowActionTest extends MockeryTestCase
         } finally {
             $output = (string) ob_get_clean();
         }
+
+        /** @var array{0: PreferenceSubject, 1: User, 2: string} $captured */
+        $this->assertTrue($captured[0]->isSelf, 'the visitor gets their own preferences');
+        $this->assertSame($user, $captured[1], 'editability follows whoever is filling in the form');
+        $this->assertSame($tab, $captured[2]);
 
         $this->assertNull($result);
         $this->assertSame('', $output);

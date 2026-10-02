@@ -38,10 +38,12 @@ interface RequestParserInterface
     public function getFromRequest(string $variable): string;
 
     /**
-     * Check if the form-submit is valid
-     *
-     * If the application expects a form-submit, check if it's actually
-     * a valid submit (by validating a session token).
+     * Verifies a single-use form token carried in the post, consuming it whether or not it matches
      */
     public function verifyForm(string $formName): bool;
+
+    /**
+     * Verifies a form token carried back in the query string, as a third-party authorisation callback does
+     */
+    public function verifyFormFromQuery(string $formName): bool;
 }

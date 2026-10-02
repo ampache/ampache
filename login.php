@@ -31,6 +31,9 @@ use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
+// the update redirect targets login when auth is required, so login has to stay reachable with an outdated database too
+define('OUTDATED_DATABASE_OK', 1);
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/src/Config/Init.php';
 

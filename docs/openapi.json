@@ -83116,17 +83116,6 @@
                           "has_access": true
                         },
                         {
-                          "id": "93",
-                          "name": "allow_personal_info_agent",
-                          "level": 25,
-                          "description": "Share Recently Played information - Allow access to streaming agent",
-                          "value": "1",
-                          "type": "boolean",
-                          "category": "interface",
-                          "subcategory": "privacy",
-                          "has_access": true
-                        },
-                        {
                           "id": "92",
                           "name": "allow_personal_info_time",
                           "level": 25,
@@ -83220,17 +83209,6 @@
                           "level": 25,
                           "description": "Custom CSS Order - Search",
                           "value": "40",
-                          "type": "integer",
-                          "category": "interface",
-                          "subcategory": "sidebar",
-                          "has_access": true
-                        },
-                        {
-                          "id": "200",
-                          "name": "sidebar_order_video",
-                          "level": 25,
-                          "description": "Custom CSS Order - Video",
-                          "value": "20",
                           "type": "integer",
                           "category": "interface",
                           "subcategory": "sidebar",
@@ -84593,17 +84571,6 @@
                           "has_access": true
                         },
                         {
-                          "id": 93,
-                          "name": "allow_personal_info_agent",
-                          "level": 25,
-                          "description": "Share Recently Played information - Allow access to streaming agent",
-                          "value": "1",
-                          "type": "boolean",
-                          "category": "interface",
-                          "subcategory": "privacy",
-                          "has_access": true
-                        },
-                        {
                           "id": 92,
                           "name": "allow_personal_info_time",
                           "level": 25,
@@ -84697,17 +84664,6 @@
                           "level": 25,
                           "description": "Custom CSS Order - Search",
                           "value": "40",
-                          "type": "integer",
-                          "category": "interface",
-                          "subcategory": "sidebar",
-                          "has_access": true
-                        },
-                        {
-                          "id": 200,
-                          "name": "sidebar_order_video",
-                          "level": 25,
-                          "description": "Custom CSS Order - Video",
-                          "value": "20",
                           "type": "integer",
                           "category": "interface",
                           "subcategory": "sidebar",
@@ -97523,17 +97479,6 @@
                           "has_access": true
                         },
                         {
-                          "id": "93",
-                          "name": "allow_personal_info_agent",
-                          "level": 25,
-                          "description": "Share Recently Played information - Allow access to streaming agent",
-                          "value": "1",
-                          "type": "boolean",
-                          "category": "interface",
-                          "subcategory": "privacy",
-                          "has_access": true
-                        },
-                        {
                           "id": "92",
                           "name": "allow_personal_info_time",
                           "level": 25,
@@ -97638,17 +97583,6 @@
                           "level": 25,
                           "description": "Custom CSS Order - Search",
                           "value": "40",
-                          "type": "integer",
-                          "category": "interface",
-                          "subcategory": "sidebar",
-                          "has_access": true
-                        },
-                        {
-                          "id": "200",
-                          "name": "sidebar_order_video",
-                          "level": 25,
-                          "description": "Custom CSS Order - Video",
-                          "value": "20",
                           "type": "integer",
                           "category": "interface",
                           "subcategory": "sidebar",

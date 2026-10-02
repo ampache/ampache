@@ -170,11 +170,11 @@ use Ampache\Module\Application\Podcast\ExportPodcastsAction;
 use Ampache\Module\Application\Podcast\UpdateFromFeedAction;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
+use Ampache\Module\Application\Preferences\ExportPreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
 use Ampache\Module\Application\Preferences\QuickConnectAuthorizeAction;
 use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\UpdateUserAction;
-use Ampache\Module\Application\Preferences\UserAction;
 use Ampache\Module\Application\PrivateMessage\AddMessageAction;
 use Ampache\Module\Application\PrivateMessage\SetIsReadAction;
 use Ampache\Module\Application\PrivateMessage\ShowAddMessageAction;
@@ -441,11 +441,11 @@ return [
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
     Installation\DefaultAction::class => autowire(Installation\DefaultAction::class),
     UpdateUserAction::class => autowire(UpdateUserAction::class),
-    UserAction::class => autowire(UserAction::class),
     Preferences\ShowAction::class => autowire(Preferences\ShowAction::class),
     AdminAction::class => autowire(AdminAction::class),
     AdminUpdatePreferencesAction::class => autowire(AdminUpdatePreferencesAction::class),
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
+    ExportPreferencesAction::class => autowire(ExportPreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
     QuickConnectAuthorizeAction::class => autowire(QuickConnectAuthorizeAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),

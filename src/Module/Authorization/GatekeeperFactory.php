@@ -25,16 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 
 final readonly class GatekeeperFactory implements GatekeeperFactoryInterface
 {
-    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function createGuiGatekeeper(): GuiGatekeeperInterface
     {
         return new GuiGatekeeper(
-            $this->privilegeChecker
+            $this->privilegeChecker,
+            $this->configContainer
         );
     }
 }

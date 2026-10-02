@@ -42,18 +42,137 @@ use Ampache\Repository\PreferenceRepositoryInterface;
 class Preference extends database_object
 {
     /**
-     * The access level the `default` preset gives each preference, as level => the preferences taking it
+     * Config-file settings the debug page shows as a flag. Preferences are not listed: their type is
+     * declared in `DEFAULTS`, and a second copy here could only drift away from it.
      *
-     * @var array<int, list<string>>
+     * @var list<string>
      */
-    public const array DEFAULT_LEVELS = [
-        AccessLevelEnum::DEFAULT->value => ['libitem_contextmenu', 'show_lyrics', 'theme_color', 'theme_name'],
-        AccessLevelEnum::GUEST->value => ['offset_limit', 'playlist_method'],
-        AccessLevelEnum::USER->value => ['generated_art', 'generated_art_template', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort', 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists', 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'broadcast_private', 'browse_filter', 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user', 'custom_logo', 'custom_timezone', 'demo_clear_sessions', 'direct_play_limit', 'geolocation', 'hide_genres', 'hide_moods', 'hide_single_artist', 'home_moment_albums', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active', 'notify_email', 'of_the_moment', 'page_title_icons', 'play_type', 'popular_threshold', 'show_album_artist', 'show_artist', 'show_collection', 'show_composer', 'show_donate', 'show_folder', 'show_license', 'show_mood', 'show_original_year', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information', 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time', 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode', 'ui_fixed', 'unique_playlist', 'use_original_year', 'webplayer_confirmclose', 'webplayer_pausetabs', 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'],
-        AccessLevelEnum::CONTENT_MANAGER->value => ['now_playing_per_user'],
-        AccessLevelEnum::MANAGER->value => ['allow_video', 'custom_blankalbum', 'custom_apple_touch_icon', 'custom_favicon', 'custom_share_image', 'custom_login_background', 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'],
-        AccessLevelEnum::ADMIN->value => ['allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload', 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass', 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'download', 'force_http_play', 'jellyfin_backend_enable', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs', 'musicbrainz_server', 'musicbrainz_throttle', 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'quickconnect_enable', 'rate_limit', 'share_expire', 'share', 'show_header_login', 'site_description', 'site_title', 'stream_beautiful_url', 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist', 'upnp_backend', 'webdav_backend'],
+    public const array BOOLEAN_CONFIG_KEYS = [
+        'access_control',
+        'access_list',
+        'admin_enable_required',
+        'admin_notify_reg',
+        'album_art_store_disk',
+        'allow_php_themes',
+        'allow_public_registration',
+        'allow_upload_scripts',
+        'allow_zip_download',
+        'art_zip_add',
+        'auth_password_save',
+        'auto_create',
+        'broadcast',
+        'cache_aif',
+        'cache_aiff',
+        'cache_ape',
+        'cache_flac',
+        'cache_m4a',
+        'cache_mp3',
+        'cache_mpc',
+        'cache_oga',
+        'cache_ogg',
+        'cache_opus',
+        'cache_remote',
+        'cache_shn',
+        'cache_wav',
+        'cache_wma',
+        'captcha_public_reg',
+        'catalog_disable',
+        'catalog_filter',
+        'catalog_verify_by_album',
+        'catalog_verify_by_time',
+        'catalogfav_compact',
+        'catalogfav_gridview',
+        'cli_no_color',
+        'composer_no_dev',
+        'cookie_disclaimer',
+        'cookie_secure',
+        'debug',
+        'deferred_ext_metadata',
+        'delete_from_disk',
+        'demo_mode',
+        'direct_link',
+        'directplay',
+        'disable_xframe_sameorigin',
+        'display_menu',
+        'downsample_remote',
+        'enable_custom_metadata',
+        'external_auto_update',
+        'force_ssl',
+        'gather_song_art',
+        'generate_video_preview',
+        'getid3_detect_id3v2_encoding',
+        'hide_ampache_messages',
+        'hide_search',
+        'homedash_max_items',
+        'homedash_newest',
+        'homedash_popular',
+        'homedash_random',
+        'homedash_recent',
+        'homedash_trending',
+        'label',
+        'ldap_start_tls',
+        'licensing',
+        'live_stream',
+        'mail_auth',
+        'mail_enable',
+        'mb_overwrite_name',
+        'memory_cache',
+        'no_symlinks',
+        'oidc_auto_redirect',
+        'oidc_disable_ssl_verify',
+        'oidc_use_userinfo',
+        'personalfav_display',
+        'playlist_art',
+        'playlist_art_mosaic',
+        'podcast',
+        'prevent_multiple_logins',
+        'public_images',
+        'quarantine',
+        'rating_browse_filter',
+        'rating_browse_minimum_stars',
+        'ratingmatch_flags',
+        'ratingmatch_write_tags',
+        'ratings',
+        'require_localnet_session',
+        'require_session',
+        'resize_images',
+        'rio_global_stats',
+        'rio_track_stats',
+        'send_full_stream',
+        'session_cookiesecure',
+        'share_social',
+        'show_album_artist',
+        'show_artist',
+        'show_collection',
+        'show_folder',
+        'show_footer_statistics',
+        'show_mood',
+        'show_similar',
+        'show_song_art',
+        'simple_user_mode',
+        'sociable',
+        'statistical_graphs',
+        'tadb_overwrite_name',
+        'track_user_ip',
+        'transcode_player_customize',
+        'upload',
+        'upload_user_artist',
+        'use_auth',
+        'use_now_playing_embedded',
+        'use_rss',
+        'user_agreement',
+        'user_create_apikey',
+        'user_create_streamtoken',
+        'user_no_email_confirm',
+        'vite_dev',
+        'wanted',
+        'wanted_auto_accept',
+        'waveform',
+        'webplayer_debug',
+        'write_tags',
+        'xml_rpc',
     ];
+
     /**
      * Every Ampache preference and the row `set_defaults()` writes for it, as
      * name => [value, description, level, type, category, subcategory].
@@ -89,7 +208,7 @@ class Preference extends database_object
         'lastfm_challenge' => ['', 'Last.FM Submit Challenge', AccessLevelEnum::USER->value, 'string', 'internal', 'last.fm'],
         'now_playing_per_user' => ['1', 'Now Playing filtered per user', AccessLevelEnum::CONTENT_MANAGER->value, 'boolean', 'interface', 'home'],
         'album_sort' => ['default', 'Album - Default sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library'],
-        'show_played_times' => ['0', 'Show # played', AccessLevelEnum::USER->value, 'string', 'interface', 'browse'],
+        'show_played_times' => ['0', 'Show # played', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse'],
         'song_page_title' => ['1', 'Show current song in Web player page title', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player'],
         'subsonic_backend' => ['1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
         'musicbrainz_server' => ['', 'MusicBrainz server URL, empty for musicbrainz.org', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'musicbrainz'],
@@ -99,7 +218,6 @@ class Preference extends database_object
         'allow_personal_info_now' => ['1', 'Share Now Playing information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'allow_personal_info_recent' => ['1', 'Share Recently Played information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'allow_personal_info_time' => ['1', 'Share Recently Played information - Allow access to streaming date/time', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
-        'allow_personal_info_agent' => ['1', 'Share Recently Played information - Allow access to streaming agent', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy'],
         'page_title_icons' => ['0', 'Show an icon for the page type in the browser tab title', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme'],
         'generated_art' => ['0', 'Draw artwork for items that have no cover', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme'],
         'generated_art_template' => ['auto', 'Drawn artwork template', AccessLevelEnum::USER->value, 'string', 'interface', 'theme'],
@@ -129,18 +247,18 @@ class Preference extends database_object
         'daap_backend' => ['0', 'Use DAAP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
         'daap_pass' => ['', 'DAAP backend password', AccessLevelEnum::ADMIN->value, 'string', 'system', 'backend'],
         'upnp_backend' => ['0', 'Use UPnP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend'],
-        'allow_video' => ['0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'integer', 'options', 'feature'],
+        'allow_video' => ['0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'boolean', 'options', 'feature'],
         'album_release_type' => ['1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library'],
         'direct_play_limit' => ['500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player'],
-        'home_moment_albums' => ['1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home'],
-        'home_moment_videos' => ['0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home'],
-        'home_recently_played' => ['1', 'Show Recently Played', AccessLevelEnum::USER->value, 'integer', 'interface', 'home'],
-        'home_now_playing' => ['1', 'Show Now Playing', AccessLevelEnum::USER->value, 'integer', 'interface', 'home'],
+        'home_moment_albums' => ['1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'home_moment_videos' => ['0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'home_recently_played' => ['1', 'Show Recently Played', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'home_now_playing' => ['1', 'Show Now Playing', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'custom_logo' => ['', 'Custom URL - Logo', AccessLevelEnum::USER->value, 'string', 'interface', 'custom'],
         'album_release_type_sort' => ['album,ep,live,single', 'Album - Group per release type sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library'],
-        'browser_notify' => ['1', 'Web Player browser notifications', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification'],
+        'browser_notify' => ['1', 'Web Player browser notifications', AccessLevelEnum::USER->value, 'boolean', 'interface', 'notification'],
         'browser_notify_timeout' => ['10', 'Web Player browser notifications timeout (seconds)', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification'],
-        'geolocation' => ['0', 'Allow Geolocation', AccessLevelEnum::USER->value, 'integer', 'options', 'feature'],
+        'geolocation' => ['0', 'Allow Geolocation', AccessLevelEnum::USER->value, 'boolean', 'options', 'feature'],
         'upload_allow_remove' => ['1', 'Allow users to remove uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload'],
         'custom_login_logo' => ['', 'Custom URL - Login page logo', AccessLevelEnum::ADMIN->value, 'string', 'system', 'branding'],
         'custom_favicon' => ['', 'Custom URL - Favicon (SVG, PNG or ICO)', AccessLevelEnum::ADMIN->value, 'string', 'system', 'branding'],
@@ -208,7 +326,6 @@ class Preference extends database_object
         'index_dashboard_form' => ['0', 'Use Dashboard links for the index page header', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'sidebar_order_browse' => ['10', 'Custom CSS Order - Browse', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
         'sidebar_order_dashboard' => ['15', 'Custom CSS Order - Dashboard', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
-        'sidebar_order_video' => ['20', 'Custom CSS Order - Video', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
         'sidebar_order_playlist' => ['30', 'Custom CSS Order - Playlist', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
         'sidebar_order_search' => ['40', 'Custom CSS Order - Search', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
         'sidebar_order_information' => ['60', 'Custom CSS Order - Information', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
@@ -345,47 +462,16 @@ class Preference extends database_object
      * @var array<string, array<int|string, list<string>>>
      */
     public const array PRESETS = [
-        'default' => [
-            '-1' => ['upload_catalog'],
-            'auto' => ['generated_art_template'],
-            '' => ['custom_apple_touch_icon', 'custom_share_image', 'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'site_description', 'upload_script'],
-            '0.8' => ['jp_volume'],
-            '0' => ['generated_art', 'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'page_title_icons', 'perpetual_api_session', 'share', 'embed_player', 'show_album_artist', 'show_composer', 'show_lyrics', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download'],
-            '1' => ['album_group', 'album_release_type', 'broadcast_private', 'browse_filter', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'download', 'hide_moods', 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_mood', 'show_original_year', 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs'],
-            '10' => ['browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse'],
-            '100' => ['localplay_level'],
-            '128000' => ['transcode_bitrate'],
-            '15' => ['sidebar_order_dashboard'],
-            '20' => ['sidebar_order_video'],
-            '25' => ['upload_access_level'],
-            '30' => ['sidebar_order_playlist'],
-            '40' => ['sidebar_order_search'],
-            '50' => ['offset_limit'],
-            '6' => ['of_the_moment'],
-            '60' => ['sidebar_order_information'],
-            '7' => ['share_expire', 'stats_threshold'],
-            '8192' => ['rate_limit'],
-            'album,ep,live,single' => ['album_release_type_sort'],
-            'Ampache :: For the Love of Music' => ['site_title'],
-            'dark' => ['theme_color'],
-            'default' => ['playlist_method', 'transcode'],
-            'en_US' => ['lang'],
-            'm3u' => ['playlist_type'],
-            'mpd' => ['localplay_controller'],
-            'reborn' => ['theme_name'],
-            'web_player' => ['play_type'],
-        ],
         'minimalist' => [
             '-1' => ['upload_catalog'],
             '' => ['api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'site_description', 'upload_script'],
             '0.8' => ['jp_volume'],
             '0' => ['album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session', 'share', 'embed_player', 'show_album_artist', 'show_composer', 'show_lyrics', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download'],
-            '1' => ['album_group', 'album_release_type', 'broadcast_private', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'hide_moods', 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_mood', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs'],
+            '1' => ['album_group', 'album_release_type', 'broadcast_private', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'hide_moods', 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_mood', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs'],
             '10' => ['browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse'],
             '100' => ['localplay_level'],
             '128000' => ['transcode_bitrate'],
             '15' => ['sidebar_order_dashboard'],
-            '20' => ['sidebar_order_video'],
             '25' => ['upload_access_level'],
             '30' => ['sidebar_order_playlist'],
             '40' => ['sidebar_order_search'],
@@ -409,12 +495,11 @@ class Preference extends database_object
             '' => ['api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'site_description', 'upload_script'],
             '0.8' => ['jp_volume'],
             '0' => ['album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session', 'show_album_artist', 'show_composer', 'show_lyrics', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download'],
-            '1' => ['album_group', 'album_release_type', 'broadcast_private', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'hide_moods', 'home_moment_albums', 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'embed_player', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_mood', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs'],
+            '1' => ['album_group', 'album_release_type', 'broadcast_private', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'hide_moods', 'home_moment_albums', 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'embed_player', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_mood', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs'],
             '10' => ['browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse'],
             '100' => ['localplay_level'],
             '128000' => ['transcode_bitrate'],
             '15' => ['sidebar_order_dashboard'],
-            '20' => ['sidebar_order_video'],
             '25' => ['upload_access_level'],
             '30' => ['sidebar_order_playlist'],
             '40' => ['sidebar_order_search'],
@@ -460,7 +545,6 @@ class Preference extends database_object
         'album_sort',
         'allow_democratic_playback',
         'allow_localplay_playback',
-        'allow_personal_info_agent',
         'allow_personal_info_now',
         'allow_personal_info_recent',
         'allow_personal_info_time',
@@ -604,7 +688,6 @@ class Preference extends database_object
         'sidebar_order_information',
         'sidebar_order_playlist',
         'sidebar_order_search',
-        'sidebar_order_video',
         'site_description',
         'site_title',
         'slideshow_time',
@@ -672,6 +755,21 @@ class Preference extends database_object
         ) {
             unset($_SESSION['userdata']['preferences']);
         }
+    }
+
+    /**
+     * The access level each preference ships with, as level => the preferences taking it
+     *
+     * @return array<int, list<string>>
+     */
+    public static function defaultLevels(): array
+    {
+        $levels = [];
+        foreach (self::DEFAULTS as $name => $row) {
+            $levels[$row[2]][] = $name;
+        }
+
+        return $levels;
     }
 
     /**
@@ -823,7 +921,7 @@ class Preference extends database_object
             return [];
         }
 
-        // secret-named preferences are write-only, matching the web UI's createPreferenceInput() policy
+        // secret-named preferences are write-only, matching what the preferences screen renders
         $value = (self::isSecretName($row['name'])) ? '' : $row['value'];
 
         return [[
@@ -1157,244 +1255,12 @@ class Preference extends database_object
      */
     public static function is_boolean(string $key): bool
     {
-        $boolean_array = [
-            'access_control',
-            'access_list',
-            'admin_enable_required',
-            'admin_notify_reg',
-            'album_art_store_disk',
-            'album_group',
-            'album_release_type',
-            'allow_democratic_playback',
-            'allow_localplay_playback',
-            'allow_personal_info_agent',
-            'allow_personal_info_now',
-            'allow_personal_info_recent',
-            'allow_personal_info_time',
-            'allow_php_themes',
-            'allow_public_registration',
-            'allow_stream_playback',
-            'allow_upload_scripts',
-            'allow_upload',
-            'allow_video',
-            'allow_zip_download',
-            'api_always_download',
-            'api_enable_3',
-            'api_enable_4',
-            'api_enable_5',
-            'api_enable_6',
-            'api_enable_8',
-            'api_hide_dupe_searches',
-            'art_zip_add',
-            'auth_password_save',
-            'auto_create',
-            'autoupdate_lastversion_new',
-            'autoupdate',
-            'bookmark_latest',
-            'broadcast_by_default',
-            'broadcast_private',
-            'broadcast',
-            'browse_album_disk_grid_view',
-            'browse_album_grid_view',
-            'browse_artist_grid_view',
-            'browse_filter',
-            'browse_live_stream_grid_view',
-            'browse_playlist_grid_view',
-            'browse_podcast_episode_grid_view',
-            'browse_podcast_grid_view',
-            'browse_song_grid_view',
-            'browse_video_grid_view',
-            'browser_notify',
-            'cache_aif',
-            'cache_aiff',
-            'cache_ape',
-            'cache_flac',
-            'cache_m4a',
-            'cache_mp3',
-            'cache_mpc',
-            'cache_oga',
-            'cache_ogg',
-            'cache_opus',
-            'cache_remote',
-            'cache_shn',
-            'cache_wav',
-            'cache_wma',
-            'captcha_public_reg',
-            'catalog_check_duplicate',
-            'catalog_disable',
-            'catalog_filter',
-            'catalog_verify_by_album',
-            'catalog_verify_by_time',
-            'catalogfav_compact',
-            'catalogfav_gridview',
-            'cli_no_color',
-            'composer_no_dev',
-            'condPL',
-            'cookie_disclaimer',
-            'cookie_secure',
-            'cron_cache',
-            'cron_cache_live_count',
-            'custom_logo_user',
-            'daap_backend',
-            'debug',
-            'deferred_ext_metadata',
-            'delete_from_disk',
-            'demo_clear_sessions',
-            'demo_mode',
-            'demo_use_search',
-            'direct_link',
-            'directplay',
-            'disable_xframe_sameorigin',
-            'display_menu',
-            'download',
-            'downsample_remote',
-            'enable_custom_metadata',
-            'extended_playlist_links',
-            'external_auto_update',
-            'external_links_bandcamp',
-            'external_links_discogs',
-            'external_links_duckduckgo',
-            'external_links_google',
-            'external_links_lastfm',
-            'external_links_musicbrainz',
-            'external_links_wikipedia',
-            'force_http_play',
-            'force_ssl',
-            'gather_song_art',
-            'generate_video_preview',
-            'geolocation',
-            'getid3_detect_id3v2_encoding',
-            'hide_ampache_messages',
-            'hide_genres',
-            'hide_moods',
-            'hide_search',
-            'hide_single_artist',
-            'home_moment_albums',
-            'home_moment_videos',
-            'home_now_playing',
-            'home_recently_played_all',
-            'home_recently_played',
-            'homedash_max_items',
-            'homedash_newest',
-            'homedash_popular',
-            'homedash_random',
-            'homedash_recent',
-            'homedash_trending',
-            'index_dashboard_form',
-            'jellyfin_backend_enable',
-            'label',
-            'ldap_start_tls',
-            'libitem_contextmenu',
-            'licensing',
-            'live_stream',
-            'lock_songs',
-            'mail_auth',
-            'mail_enable',
-            'mb_overwrite_name',
-            'memory_cache',
-            'mini_player',
-            'no_symlinks',
-            'notify_email',
-            'now_playing_per_user',
-            'oidc_auto_redirect',
-            'oidc_disable_ssl_verify',
-            'oidc_use_userinfo',
-            'perpetual_api_session',
-            'personalfav_display',
-            'playlist_art',
-            'playlist_art_mosaic',
-            'podcast',
-            'prevent_multiple_logins',
-            'public_images',
-            'quarantine',
-            'quickconnect_enable',
-            'rating_browse_filter',
-            'rating_browse_minimum_stars',
-            'ratingmatch_flags',
-            'ratingmatch_write_tags',
-            'ratings',
-            'require_localnet_session',
-            'require_session',
-            'resize_images',
-            'rio_global_stats',
-            'rio_track_stats',
-            'send_full_stream',
-            'session_cookiesecure',
-            'share_social',
-            'share',
-            'show_album_artist',
-            'show_artist',
-            'show_collection',
-            'show_composer',
-            'show_donate',
-            'show_folder',
-            'show_footer_statistics',
-            'show_header_login',
-            'show_license',
-            'show_lyrics',
-            'show_mood',
-            'show_original_year',
-            'show_played_times',
-            'show_playlist_media_parent',
-            'show_playlist_username',
-            'show_similar',
-            'show_skipped_times',
-            'show_song_art',
-            'show_subtitle',
-            'show_wrapped',
-            'sidebar_hide_browse',
-            'sidebar_hide_dashboard',
-            'sidebar_hide_information',
-            'sidebar_hide_playlist',
-            'sidebar_hide_search',
-            'sidebar_hide_switcher',
-            'sidebar_hide_video',
-            'sidebar_light',
-            'simple_user_mode',
-            'sociable',
-            'song_page_title',
-            'statistical_graphs',
-            'stream_beautiful_url',
-            'subsonic_always_download',
-            'subsonic_backend',
-            'subsonic_force_album_artist',
-            'subsonic_legacy',
-            'subsonic_single_user_data',
-            'tadb_overwrite_name',
-            'topmenu',
-            'track_user_ip',
-            'transcode_player_customize',
-            'ui_fixed',
-            'unique_playlist',
-            'upload_allow_edit',
-            'upload_allow_remove',
-            'upload_catalog_pattern',
-            'upload_script',
-            'upload_subdir',
-            'upload_user_artist',
-            'upload',
-            'upnp_backend',
-            'use_auth',
-            'use_now_playing_embedded',
-            'use_original_year',
-            'use_rss',
-            'user_agreement',
-            'user_create_apikey',
-            'user_create_streamtoken',
-            'user_no_email_confirm',
-            'vite_dev',
-            'wanted_auto_accept',
-            'wanted',
-            'waveform',
-            'webdav_backend',
-            'webplayer_confirmclose',
-            'webplayer_debug',
-            'webplayer_pausetabs',
-            'write_tags',
-            'xml_rpc',
-        ];
+        // the debug page asks about the merged configuration, and only preferences declare their type
+        if (isset(self::DEFAULTS[$key])) {
+            return self::DEFAULTS[$key][3] === 'boolean';
+        }
 
-        return in_array($key, $boolean_array, true);
+        return in_array($key, self::BOOLEAN_CONFIG_KEYS, true);
     }
 
     /**
@@ -1546,7 +1412,7 @@ class Preference extends database_object
             return false;
         }
 
-        return $repository->setLevels(self::DEFAULT_LEVELS);
+        return $repository->setLevels(self::defaultLevels());
     }
 
     /**
@@ -1568,7 +1434,10 @@ class Preference extends database_object
             return $repository->copySystemPreferences($user->getId());
         }
 
-        $values = self::PRESETS[$preset] ?? null;
+        // `default` is what ships, so it is read from `DEFAULTS` rather than from a copy that drifts
+        $values = ($preset === 'default')
+            ? self::defaultPresetValues()
+            : (self::PRESETS[$preset] ?? null);
         if ($values === null) {
             return false;
         }
@@ -1589,7 +1458,6 @@ class Preference extends database_object
             'album_sort' => 'Album - Default sort',
             'allow_democratic_playback' => 'Allow Democratic Play',
             'allow_localplay_playback' => 'Allow Localplay Play',
-            'allow_personal_info_agent' => 'Share Recently Played information - Allow access to streaming agent',
             'allow_personal_info_now' => 'Share Now Playing information',
             'allow_personal_info_recent' => 'Share Recently Played information',
             'allow_personal_info_time' => 'Share Recently Played information - Allow access to streaming date/time',
@@ -1788,7 +1656,6 @@ class Preference extends database_object
             'sidebar_order_information' => 'Custom CSS Order - Information',
             'sidebar_order_playlist' => 'Custom CSS Order - Playlist',
             'sidebar_order_search' => 'Custom CSS Order - Search',
-            'sidebar_order_video' => 'Custom CSS Order - Video',
             'site_description' => 'Website Description - shown when a link to this server is shared',
             'site_title' => 'Website Title',
             'slideshow_time' => 'Artist slideshow inactivity time',
@@ -1939,6 +1806,21 @@ class Preference extends database_object
         self::getPreferenceRepository()->updateLevel((int) $preference_id, $level);
 
         return true;
+    }
+
+    /**
+     * The shipped value of every preference, grouped the way `set_preset()` hands them over.
+     *
+     * @return array<array-key, list<string>> keyed by value, which PHP narrows to an int when it can
+     */
+    private static function defaultPresetValues(): array
+    {
+        $values = [];
+        foreach (self::DEFAULTS as $name => $row) {
+            $values[$row[0]][] = $name;
+        }
+
+        return $values;
     }
 
     /**

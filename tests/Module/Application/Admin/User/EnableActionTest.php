@@ -30,8 +30,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -75,8 +73,7 @@ class EnableActionTest extends MockeryTestCase
             ->once()
             ->andReturn(false);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -126,8 +123,7 @@ class EnableActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -168,8 +164,7 @@ class EnableActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['user_id' => (string) $userId]);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -193,8 +188,7 @@ class EnableActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnFalse();
 

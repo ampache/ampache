@@ -26,42 +26,73 @@ declare(strict_types=1);
 namespace Ampache\Gui\Preferences;
 
 use Ampache\Gui\View\AbstractView;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Module\System\Preference;
 use Override;
 
 /**
- * One category of preferences, as a table.
- *
- * Its subcategory heading spanned four columns whether or not the admin columns were there, and the
- * access level was picked by a five-case ladder assigning five locals.
+ * One category of preferences, as a table, each row carrying its shipped default and the server value
  */
 final class PreferenceBoxView extends AbstractView
 {
+    /** The category whose preferences are global (`user = -1` only), so neither control below applies to it */
+    private const string SYSTEM_CATEGORY = 'system';
+
+    /** @var ?list<PreferenceItem> */
+    private ?array $ordered = null;
+
     /**
-     * @param array<string, mixed> $preferences
+     * @param list<PreferenceItem> $items
      */
     public function __construct(
-        private readonly array $preferences,
-        private readonly UiInterface $ui,
+        private readonly array $items,
+        private readonly PreferenceSubject $subject,
+        private readonly PreferenceInputRenderer $renderer,
+        private readonly string $category,
     ) {}
 
     /**
-     * The heading spans whatever the table actually has.
+     * A reference value reads exactly as the control beside it would, label included.
      */
-    public function getColumnCount(): int
+    public function displayValue(PreferenceItem $item, ?string $value): string
     {
-        return ($this->showAdminColumns()) ? 4 : 2;
+        return $this->renderer->label($item, $value);
     }
 
-    public function getInput(string $name, mixed $value, ?string $type): string
+    public function formatSubcategory(?string $subcategory): string
     {
-        ob_start();
-        $this->ui->createPreferenceInput($name, $value, $type);
+        return ($subcategory === null)
+            ? T_('Other')
+            : T_(Preference::format_subcategory($subcategory));
+    }
 
-        return (string) ob_get_clean();
+    public function getColumnCount(): int
+    {
+        return ($this->showsAdminControls()) ? 6 : 4;
+    }
+
+    /**
+     * Every preference of the tab, those belonging to no section pushed to the end
+     *
+     * @return list<PreferenceItem>
+     */
+    public function getItems(): array
+    {
+        if ($this->ordered !== null) {
+            return $this->ordered;
+        }
+
+        $sectioned = [];
+        $loose     = [];
+        foreach ($this->items as $item) {
+            if ($item->subcategory === null) {
+                $loose[] = $item;
+            } else {
+                $sectioned[] = $item;
+            }
+        }
+
+        return $this->ordered = [...$sectioned, ...$loose];
     }
 
     /**
@@ -69,36 +100,51 @@ final class PreferenceBoxView extends AbstractView
      */
     public function getLevels(): array
     {
-        return [
-            5 => T_('Guest'),
-            25 => T_('User'),
-            50 => T_('Content Manager'),
-            75 => T_('Catalog Manager'),
-            100 => T_('Admin'),
-        ];
+        return AccessLevelEnum::selectableDescriptions();
     }
 
     /**
-     * @return array<int, mixed>
+     * The sections of this tab, as anchor => heading, for the jump list at the top of the page.
+     *
+     * @return array<string, string>
      */
-    public function getPreferences(): array
+    public function getSubcategories(): array
     {
-        return $this->preferences['prefs'] ?? [];
+        $sections = [];
+        foreach ($this->getItems() as $item) {
+            $sections[$this->subcategoryAnchor($item->subcategory)] = $this->formatSubcategory($item->subcategory);
+        }
+
+        return $sections;
     }
 
-    public function getTitle(): string
+    public function renderControl(PreferenceItem $item): string
     {
-        return (string) $this->preferences['title'];
+        return $this->renderer->render($item, $this->subject);
     }
 
     /**
-     * The system category is shared by everyone, so it has nothing to apply to all or to gate per level.
+     * What the row is matched against when the visitor types in the filter box.
      */
-    public function showAdminColumns(): bool
+    public function searchText(PreferenceItem $item): string
     {
-        return $this->getTitle() !== 'System'
-            && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            && ($_REQUEST['action'] ?? '') === 'admin';
+        return strtolower(trim($item->name . ' ' . $item->description . ' ' . ($item->help->text ?? '')));
+    }
+
+    /**
+     * Level and "apply to all" act on the shared per-user row, so neither means anything for a system
+     * preference, which only ever has the server's own `user = -1` row.
+     */
+    public function showsAdminControls(): bool
+    {
+        return $this->subject->isServer && $this->category !== self::SYSTEM_CATEGORY;
+    }
+
+    public function subcategoryAnchor(?string $subcategory): string
+    {
+        return ($subcategory === null)
+            ? 'pref-section-other'
+            : 'pref-section-' . preg_replace('/[^a-z0-9]+/', '-', strtolower($subcategory));
     }
 
     #[Override]

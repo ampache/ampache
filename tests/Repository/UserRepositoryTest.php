@@ -187,6 +187,32 @@ class UserRepositoryTest extends TestCase
         User::clear_cache();
     }
 
+    public function testGetPreferenceRowsNeverOffersTheInternalBookkeeping(): void
+    {
+        // `lastfm_challenge`, `autoupdate_*` and friends are written by their own owner and must never
+        // reach a settings screen, for any subject: an admin editing someone else included
+        $queries = [];
+        $this->connection->method('query')->willReturnCallback(
+            function (string $sql) use (&$queries): PDOStatement {
+                $queries[] = $sql;
+
+                $result = $this->createMock(PDOStatement::class);
+                $result->method('fetch')->willReturn(false);
+
+                return $result;
+            }
+        );
+
+        $this->subject->getPreferenceRows(42, null, true);
+        $this->subject->getPreferenceRows(User::INTERNAL_SYSTEM_USER_ID, null, false);
+        $this->subject->getPreferenceRows(42, 'interface', true);
+
+        self::assertCount(3, $queries);
+        foreach ($queries as $sql) {
+            self::assertStringContainsString("`preference`.`category` != 'internal'", $sql, $sql);
+        }
+    }
+
     public function testGetRowsByIdsCastsTheIdsIntoTheStatement(): void
     {
         $result = $this->createMock(PDOStatement::class);
