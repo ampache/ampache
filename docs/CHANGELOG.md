@@ -8,7 +8,7 @@
   * Song, album, artist, playlist, playlist content and label lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways
   * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
   * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
-  * The column headers become a scrolling strip, so sorting stays reachable
+  * The column headers become a strip of sort links; a header you cannot sort by is dropped, and a row left with none of them disappears
   * Play, add to playlist and the row actions no longer wait for a hover
 
 ### Fixed (8.3.0)

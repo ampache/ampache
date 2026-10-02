@@ -3043,7 +3043,13 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         white-space: nowrap;
     }
 
-    table.tabledata.rowlist > thead > tr.th-top > th:empty {
+    /* The header row is a row of sort buttons now: a column name you cannot sort by only repeats what the
+       panel already labels. A row left with none of them has nothing to say at all. */
+    table.tabledata.rowlist > thead > tr.th-top > th:not(:has(a)) {
+        display: none;
+    }
+
+    table.tabledata.rowlist > thead > tr.th-top:not(:has(a)) {
         display: none;
     }
 
