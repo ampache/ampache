@@ -47,7 +47,7 @@ if ($this->showRatings()) {
 if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
-<table class="tabledata rowlist striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="<?php echo $this->e($objectType); ?>">
+<table class="tabledata striped-rows<?php echo $this->e($this->getLayoutClass()); ?>" data-objecttype="<?php echo $this->e($objectType); ?>">
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>

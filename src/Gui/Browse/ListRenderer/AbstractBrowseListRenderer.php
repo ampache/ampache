@@ -70,6 +70,15 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     }
 
     /**
+     * Grid view and the narrow row layout are two layouts of the same table, so a list that handles both names
+     * the one it is in rather than leaving the stylesheet to exclude the other.
+     */
+    final public function getLayoutClass(): string
+    {
+        return $this->getBrowse()->is_grid_view() ? ' gridview' : ' rowlist';
+    }
+
+    /**
      * @return list<int>
      */
     final public function getObjectIds(): array
