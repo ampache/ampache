@@ -73,7 +73,7 @@ final readonly class PreferenceExporter implements PreferenceExporterInterface
             'schema_version' => $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION),
             'site' => [
                 'title' => (string) $this->configContainer->get('site_title'),
-                'url' => $this->configContainer->getWebPath(),
+                'url' => $this->configContainer->getWebPath('/client'),
             ],
             'subject' => [
                 'kind' => $this->kind($subject),

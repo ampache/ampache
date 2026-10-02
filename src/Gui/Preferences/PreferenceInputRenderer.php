@@ -305,7 +305,7 @@ final readonly class PreferenceInputRenderer
 
         // the token rides along to the service and back, so a third party cannot trigger the callback write
         $callback = rawurlencode(
-            AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $pluginName
+            AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $pluginName
             . '&form_validation=' . Core::form_register('grant', 'get')
         );
 
