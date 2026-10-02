@@ -30,7 +30,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Retypes eight booleans `ampache.sql` kept seeding as `integer`/`string`, and drops two unread preferences
  */
-final class Migration810027 extends AbstractMigration
+final class Migration810030 extends AbstractMigration
 {
     protected array $changelog = [
         'Fix the `integer`/`string` type on eight preferences that are booleans',
