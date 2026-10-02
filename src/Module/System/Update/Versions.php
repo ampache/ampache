@@ -409,6 +409,9 @@ use Ampache\Module\System\Update\Migration\V8\Migration810024;
 use Ampache\Module\System\Update\Migration\V8\Migration810025;
 use Ampache\Module\System\Update\Migration\V8\Migration810026;
 use Ampache\Module\System\Update\Migration\V8\Migration810027;
+use Ampache\Module\System\Update\Migration\V8\Migration810028;
+use Ampache\Module\System\Update\Migration\V8\Migration810029;
+use Ampache\Module\System\Update\Migration\V8\Migration810030;
 use Generator;
 
 /**
@@ -803,7 +806,10 @@ final class Versions
         810024 => Migration810024::class,
         810025 => Migration810025::class,
         810026 => Migration810026::class,
-        810027 => Migration810030::class,
+        810027 => Migration810027::class,
+        810028 => Migration810028::class,
+        810029 => Migration810029::class,
+        810030 => Migration810030::class,
     ];
 
     /**

@@ -6,7 +6,7 @@
 
 ### Added (8.2.0)
 
-* Database 810027
+* Database 810030
   * Corrected the `integer`/`string` type on eight preferences that are switches
   * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
   * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
@@ -21,16 +21,13 @@
   * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
   * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
   * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
-* Database 810018
   * Added `embed_player` preference, offering a player to sites that link here
-* Database 810017
   * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
-* Database 810016
   * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
-* Database 810015
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
   * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
+  * Converted `playlist_folder_map`.`object_type`, `preference`.`type` and `stream_playlist`.`type` from a plain `varchar` to an `enum` of their real, verified values
 * Preferences
   * One page for your own preferences, the server's, and an admin editing another account
   * The shipped default and the server value beside each preference, with one-click restore
