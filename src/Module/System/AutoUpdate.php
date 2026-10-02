@@ -345,7 +345,7 @@ class AutoUpdate
         $changelog     = ($git_branch === '') ? 'master' : $git_branch;
         $zip_name      = ($git_branch === '') ? 'develop' : $git_branch;
 
-        echo '<div id="autoupdate">';
+        echo '<div id="autoupdate" style="padding-bottom: 10px;">';
         echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . $latest . ')<br />';
         echo '<a href="https://github.com/ampache/ampache/' . (($develop_check) ? 'compare/' . $current . '...' . $latest : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
