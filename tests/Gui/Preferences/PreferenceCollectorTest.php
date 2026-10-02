@@ -47,6 +47,24 @@ class PreferenceCollectorTest extends TestCase
         $this->assertNull($this->itemOf($row)->subcategory);
     }
 
+    public function testAnInheritedBitrateThatIsBlankCountsAsUnset(): void
+    {
+        // `Stream::get_player_bitrate()` answers 128000 for a blank rate, so the hint must not read empty
+        $operator = $this->user(42);
+        $override = $this->row('transcode_bitrate_webplayer', 'streaming', type: 'integer', value: '0');
+
+        $this->configContainer->method('isFeatureEnabled')->willReturn(false);
+        $this->userRepository->method('getPreferenceRows')->willReturnCallback(
+            fn(int $userId): array => ($userId === User::INTERNAL_SYSTEM_USER_ID)
+                ? []
+                : [$this->row('transcode_bitrate', 'streaming', type: 'integer', value: ''), $override]
+        );
+
+        $items = $this->subject->collect(PreferenceSubject::ownPreferences($operator), $operator)['streaming'];
+
+        $this->assertNull($items[1]->numberFallback, 'a blank base rate is no rate at all');
+    }
+
     public function testANullValueBecomesAnEmptyString(): void
     {
         $this->assertSame('', $this->itemOf($this->row('popular_threshold', 'interface', value: null))->value);

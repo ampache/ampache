@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Authorization;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
@@ -63,7 +62,7 @@ final readonly class GuiGatekeeper implements GuiGatekeeperInterface
     #[Override]
     public function isDemoMode(): bool
     {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
+        return $this->configContainer->isDemoMode();
     }
 
     public function mayAccess(

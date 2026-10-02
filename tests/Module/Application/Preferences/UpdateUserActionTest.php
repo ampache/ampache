@@ -73,6 +73,7 @@ class UpdateUserActionTest extends MockeryTestCase
         $GLOBALS['user'] = $user;
 
         try {
+            $gatekeeper->shouldReceive('isDemoMode')->andReturnFalse();
             $gatekeeper->shouldReceive('mayAccess')
                 ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
                 ->once()
