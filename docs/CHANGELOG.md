@@ -6,14 +6,19 @@
 
 ### Added (8.2.0)
 
-* Database 810018
-  * Added `embed_player` preference, offering a player to sites that link here
-* Database 810016
-  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
-* Database 810015
+* Database 810029
+  * Added an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
   * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
+  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
+  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
+  * Added `embed_player` preference, offering a player to sites that link here
+  * Pinned `object_type` to `utf8mb3` on `folder_map`, `collection`, `collection_map`, `playlist_folder_map`, `object_count_archive` and `object_count_summary`, matching every other `object_type` column
+  * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
+  * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
+  * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
+  * Converted `playlist_folder_map`.`object_type`, `preference`.`type` and `stream_playlist`.`type` from a plain `varchar` to an `enum` of their real, verified values
 * Jellyfin
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
@@ -40,12 +45,10 @@
 * Grid action icons now display in the bottom-right corner
 * Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
 * A password change or API key rotation now ends the sessions that credential had opened
-* `bin/cli run:updateDb` now checks `information_schema` first and only reports/fixes the database, table and column charset/collation/engine entries that don't match your config, instead of unconditionally rewriting every table and column
+* `bin/cli run:updateDb` now compares every table and column against `resources/sql/ampache.sql` and only reports/fixes the ones that don't match, instead of unconditionally rewriting every table and column to one global charset; id/token/enum columns the schema pins to `utf8mb3` are left alone
 
 ### Fixed (8.2.0)
 
-* Database 810017
-  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
 * Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
 * Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text

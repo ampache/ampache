@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -48,6 +49,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
+        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private PodcastRepositoryInterface $podcastRepository,
@@ -65,6 +67,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->requestParser->verifyForm('delete_podcast') === false) {
             throw new AccessDeniedException();
         }
 
