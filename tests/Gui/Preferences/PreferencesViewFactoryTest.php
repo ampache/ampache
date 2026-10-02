@@ -38,6 +38,20 @@ class PreferencesViewFactoryTest extends TestCase
     private PreferencesViewFactory $subject;
     private UserRepositoryInterface&MockObject $userRepository;
 
+    public function testATabCarryingItsOwnFormIsNotResolvedAway(): void
+    {
+        // `account` and `quickconnect` match no preference category, and falling back would hide their form
+        $user = $this->user();
+        $this->userRepository->method('getPreferenceRows')->willReturn([$this->row('show_lyrics', 'interface')]);
+
+        foreach ([PreferencesView::ACCOUNT_TAB, PreferencesView::QUICK_CONNECT_TAB] as $tab) {
+            $view = $this->subject->create($this->gatekeeper(), PreferenceSubject::ownPreferences($user), $user, $tab);
+
+            $this->assertSame($tab, $view->getTab(), sprintf('tab "%s" is kept', $tab));
+            $this->assertSame(0, $view->countAll(), sprintf('tab "%s" shows no preference list', $tab));
+        }
+    }
+
     public function testATabThatNamesNothingFallsBackToTheFirstOne(): void
     {
         // `preferences.php` carries no tab of its own, and an empty screen is not an answer

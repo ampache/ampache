@@ -45,8 +45,12 @@ final readonly class PreferencesViewFactory implements PreferencesViewFactoryInt
         User $operator,
         string $tab,
     ): PreferencesView {
-        // a bare `preferences.php` names no tab, and the old screen answered it with the first category
-        [$tab, $items] = $this->collector->collectTab($subject, $operator, $tab);
+        // the account and QuickConnect tabs carry their own form and match no category, so they must not
+        // be resolved away; a bare `preferences.php` names no tab and still answers with the first one
+        $items = [];
+        if ($tab !== PreferencesView::ACCOUNT_TAB && $tab !== PreferencesView::QUICK_CONNECT_TAB) {
+            [$tab, $items] = $this->collector->collectTab($subject, $operator, $tab);
+        }
 
         return new PreferencesView(
             $this->configContainer->getWebPath(),

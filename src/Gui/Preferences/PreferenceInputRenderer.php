@@ -46,6 +46,26 @@ final readonly class PreferenceInputRenderer
         'personalfav_smartlist',
     ];
 
+    /**
+     * Units and what a zero means, per preference, built so that `xgettext` sees every `T_()` literal
+     *
+     * Also the single source of which preference's value a number field falls back to (index 3), which
+     * `PreferenceCollector` reads too, so the two never have a second, independently drifting copy of it.
+     *
+     * @return array<string, array{0: int, 1: int, 2: string, 3: ?string, 4: ?string}>
+     */
+    public static function numberHints(): array
+    {
+        return [
+            'transcode_bitrate' => [0, 1000, T_('bps'), null, T_('the source file rate')],
+            'transcode_bitrate_webplayer' => [0, 1000, T_('bps'), 'transcode_bitrate', null],
+            'transcode_bitrate_api' => [0, 1000, T_('bps'), 'transcode_bitrate', null],
+            'max_bit_rate' => [0, 1000, T_('bps'), null, T_('no ceiling')],
+            'min_bit_rate' => [0, 1000, T_('bps'), null, T_('no floor')],
+            'rate_limit' => [0, 1024, T_('KB/s'), null, T_('unlimited')],
+        ];
+    }
+
     /** @return array<array-key, string> */
     private static function booleanChoices(): array
     {
@@ -194,26 +214,6 @@ final readonly class PreferenceInputRenderer
     private function isMultiple(PreferenceItem $item): bool
     {
         return in_array($item->name, self::MULTIPLE, true);
-    }
-
-    /**
-     * Units and what a zero means, per preference, built so that `xgettext` sees every `T_()` literal
-     *
-     * Also the single source of which preference's value a number field falls back to (index 3), which
-     * `PreferenceCollector` reads too, so the two never have a second, independently drifting copy of it.
-     *
-     * @return array<string, array{0: int, 1: int, 2: string, 3: ?string, 4: ?string}>
-     */
-    public static function numberHints(): array
-    {
-        return [
-            'transcode_bitrate' => [0, 1000, T_('bps'), null, T_('the source file rate')],
-            'transcode_bitrate_webplayer' => [0, 1000, T_('bps'), 'transcode_bitrate', null],
-            'transcode_bitrate_api' => [0, 1000, T_('bps'), 'transcode_bitrate', null],
-            'max_bit_rate' => [0, 1000, T_('bps'), null, T_('no ceiling')],
-            'min_bit_rate' => [0, 1000, T_('bps'), null, T_('no floor')],
-            'rate_limit' => [0, 1024, T_('KB/s'), null, T_('unlimited')],
-        ];
     }
 
     /**

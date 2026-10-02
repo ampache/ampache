@@ -55,7 +55,7 @@ final readonly class PreferenceCollector
     public function collect(PreferenceSubject $subject, User $operator): array
     {
         [$rows, $held, $systemValues, $demoMode] = $this->gather($subject);
-        $pluginHelp = $this->pluginHelp($rows);
+        $pluginHelp                              = $this->pluginHelp($rows);
 
         $collected = [];
         foreach ($rows as $row) {
@@ -112,6 +112,21 @@ final readonly class PreferenceCollector
     }
 
     /**
+     * The config-file settings the rules need, keyed as the rules name them.
+     *
+     * @return array<string, string>
+     */
+    private function configSettings(): array
+    {
+        $settings = [];
+        foreach ($this->prerequisites->configKeys() as $key) {
+            $settings[PreferencePrerequisite::CONFIG_PREFIX . $key] = ($this->configContainer->get($key)) ? '1' : '';
+        }
+
+        return $settings;
+    }
+
+    /**
      * The rows and the subject-wide lookups every item needs, shared by collect() and collectTab()
      *
      * @return array{0: list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string, default_value: ?string}>, 1: array<string, string>, 2: array<string, string>, 3: bool}
@@ -133,21 +148,6 @@ final readonly class PreferenceCollector
         }
 
         return [$rows, $held, $systemValues, $demoMode];
-    }
-
-    /**
-     * The config-file settings the rules need, keyed as the rules name them.
-     *
-     * @return array<string, string>
-     */
-    private function configSettings(): array
-    {
-        $settings = [];
-        foreach ($this->prerequisites->configKeys() as $key) {
-            $settings[PreferencePrerequisite::CONFIG_PREFIX . $key] = ($this->configContainer->get($key)) ? '1' : '';
-        }
-
-        return $settings;
     }
 
     /**

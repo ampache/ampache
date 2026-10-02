@@ -34,6 +34,11 @@ use Override;
  */
 final class PreferencesView extends AbstractView
 {
+    /** Tabs that carry their own form instead of a list of preferences, so no category matches them */
+    public const string ACCOUNT_TAB = 'account';
+
+    public const string QUICK_CONNECT_TAB = 'quickconnect';
+
     /**
      * @param list<PreferenceItem> $items the preferences of the tab being shown
      */
@@ -166,7 +171,7 @@ final class PreferencesView extends AbstractView
 
     public function isAccountTab(): bool
     {
-        return $this->tab === 'account';
+        return $this->tab === self::ACCOUNT_TAB;
     }
 
     public function isOtherUser(): bool
@@ -176,7 +181,7 @@ final class PreferencesView extends AbstractView
 
     public function isQuickConnectTab(): bool
     {
-        return $this->tab === 'quickconnect';
+        return $this->tab === self::QUICK_CONNECT_TAB;
     }
 
     public function isServerSubject(): bool

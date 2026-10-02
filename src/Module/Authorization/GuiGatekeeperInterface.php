@@ -40,6 +40,11 @@ interface GuiGatekeeperInterface
     public function getUserId(): int;
 
     /**
+     * Whether this install is a demo, the one flag several unrelated write paths all have to refuse on
+     */
+    public function isDemoMode(): bool;
+
+    /**
      * Checks if the user may access the requested resource
      */
     public function mayAccess(
@@ -51,9 +56,4 @@ interface GuiGatekeeperInterface
      * Whether the user may administer, which demo mode never grants however high their level reads
      */
     public function mayAdminister(): bool;
-
-    /**
-     * Whether this install is a demo, the one flag several unrelated write paths all have to refuse on
-     */
-    public function isDemoMode(): bool;
 }

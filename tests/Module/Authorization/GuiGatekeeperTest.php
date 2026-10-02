@@ -38,6 +38,15 @@ class GuiGatekeeperTest extends MockeryTestCase
     private MockInterface&PrivilegeCheckerInterface $privilegeChecker;
     private GuiGatekeeper $subject;
 
+    public function testIsDemoModeReadsTheConfigFlag(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->andReturnTrue();
+
+        $this->assertTrue($this->subject->isDemoMode());
+    }
+
     public function testMayAccessPerformsPrivilegeCheck(): void
     {
         $type  = AccessTypeEnum::API;
@@ -74,15 +83,6 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
 
         $this->assertFalse($this->subject->mayAdminister());
-    }
-
-    public function testIsDemoModeReadsTheConfigFlag(): void
-    {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->andReturnTrue();
-
-        $this->assertTrue($this->subject->isDemoMode());
     }
 
     public function testMayAdministerNeedsTheLevelAndNoDemoMode(): void

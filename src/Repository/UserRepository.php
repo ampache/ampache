@@ -529,7 +529,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         if ($excludeSystem) {
             $limit .= " AND `preference`.`category` != 'system'";
         } elseif ($category !== null) {
-            $limit     .= ' AND `preference`.`category` = ?';
+            $limit .= ' AND `preference`.`category` = ?';
             $params[]   = $category;
         }
 
