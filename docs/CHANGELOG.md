@@ -6,7 +6,7 @@
 
 ### Added (8.2.0)
 
-* Database 810026
+* Database 810029
   * Added an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
@@ -18,6 +18,7 @@
   * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
   * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
   * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
+  * Converted `playlist_folder_map`.`object_type`, `preference`.`type` and `stream_playlist`.`type` from a plain `varchar` to an `enum` of their real, verified values
 * Jellyfin
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`

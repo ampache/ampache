@@ -65,6 +65,7 @@ class ObjectTypeEnumConsistencyTest extends TestCase
             'folder_map' => ['folder_map', ['folder', 'song', 'podcast_episode', 'video']],
             'collection_map' => ['collection_map', ['album', 'album_disk', 'artist', 'folder', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'video']],
             'collection' => ['collection', ['album', 'album_disk', 'artist', 'folder', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'video']],
+            'playlist_folder_map' => ['playlist_folder_map', ['playlist', 'search', 'collection']],
             'recommendation' => ['recommendation', ['song', 'artist']],
             'user_shout' => ['user_shout', $libraryItems],
             'bookmark' => ['bookmark', self::PLAYABLE_MEDIA_TYPES],

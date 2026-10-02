@@ -1023,7 +1023,7 @@ CREATE TABLE IF NOT EXISTS `playlist_folder_map` (
   `user` int(11) unsigned NOT NULL,
   `folder` int(11) unsigned NOT NULL DEFAULT 0,
   `object_id` int(11) unsigned NOT NULL,
-  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_type` enum('playlist','search','collection') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_playlist_folder_map` (`user`,`object_type`,`object_id`),
