@@ -28,27 +28,22 @@ namespace Ampache\Module\System\Update\Migration\V8;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Retypes eight booleans `ampache.sql` kept seeding as `integer`/`string`, and drops two unread preferences
+ * Migration810028 (shipped in 8.2.0) narrowed `preference`.`type` to an enum of only four values, missing
+ * `transcoding` - silently rewriting `encode_target`, `encode_video_target`, `encode_player_webplayer_target`
+ * and `encode_player_api_target` to `string` and dropping their encode-format dropdown in the preferences UI
+ * (`PreferenceRepository::getUserPreferenceRow()` only attaches it for `type` `special`/`transcoding`).
  */
 final class Migration810030 extends AbstractMigration
 {
     protected array $changelog = [
-        'Fix the `integer`/`string` type on eight preferences that are booleans',
-        'Remove the unread `sidebar_order_video` and `allow_personal_info_agent` preferences',
+        'Widen `preference`.`type`\'s enum to admit `transcoding` again, restoring the encode-format dropdown on `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` that 8.2.0 dropped',
     ];
+    protected bool $warning = true;
 
     public function migrate(): void
     {
-        $this->updateDatabase(
-            "UPDATE `preference` SET `type` = 'boolean' WHERE `type` != 'boolean' AND `name` IN ('allow_video', 'browser_notify', 'geolocation', 'home_moment_albums', 'home_moment_videos', 'home_now_playing', 'home_recently_played', 'show_played_times');"
-        );
-
-        $this->updateDatabase(
-            "DELETE `user_preference` FROM `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
-        );
-
-        $this->updateDatabase(
-            "DELETE FROM `preference` WHERE `name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
-        );
+        // widen first - the four rows below are still typed `string` under the narrower enum 8.2.0 shipped
+        $this->updateDatabase("ALTER TABLE `preference` MODIFY COLUMN `type` enum('boolean','integer','string','special','transcoding') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;");
+        $this->updateDatabase("UPDATE `preference` SET `type` = 'transcoding' WHERE `name` IN ('encode_target', 'encode_video_target', 'encode_player_webplayer_target', 'encode_player_api_target');");
     }
 }
