@@ -63,7 +63,7 @@ function rowlistLabelActions(row) {
 
 // A row spanning the whole table is a placeholder ("found nothing to show") and has nothing to fold away.
 function rowlistEquip(row) {
-    if (row.querySelector("td") === null || row.querySelector("td[colspan]") !== null) {
+    if (row.querySelector(":scope > td") === null || row.querySelector(":scope > td[colspan]") !== null) {
         return;
     }
 
@@ -76,8 +76,8 @@ function rowlistEquip(row) {
     }
 }
 
-// Reached with a table on first paint and on a browse refresh, with a row when the infinite scroll appends a
-// page, and with a cell when an edit replaces the contents of the row it just saved.
+// Reached with a table on first paint, on a browse refresh and on each page the infinite scroll appends, and
+// with a cell when an edit replaces the contents of the row it just saved.
 function rowlistApply($node) {
     var node = $node[0];
 
@@ -124,8 +124,7 @@ function rowlistToggle(button) {
     }
 }
 
-$(document).on("click", "button.rowlist-toggle", function (event) {
-    event.preventDefault();
+$(document).on("click", "button.rowlist-toggle", function () {
     rowlistToggle(this);
 });
 

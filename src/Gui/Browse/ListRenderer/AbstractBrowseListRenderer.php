@@ -70,8 +70,7 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
     }
 
     /**
-     * Grid view and the narrow row layout are two layouts of the same table, so a list that handles both names
-     * the one it is in rather than leaving the stylesheet to exclude the other.
+     * Grid view and the narrow row layout are exclusive, so a list that offers both names the one it is in.
      */
     final public function getLayoutClass(): string
     {

@@ -3034,10 +3034,10 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     table.tabledata.rowlist > thead > tr.th-top > th {
         display: block;
         flex: 0 0 auto;
-        width: auto !important;
-        min-width: 0 !important;
-        max-width: none !important;
-        padding: 0 !important;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        padding: 0;
         border: 0;
         text-align: left;
         white-space: nowrap;
@@ -3045,11 +3045,11 @@ table.tabledata tbody tr.withdrawn > td:first-child {
 
     /* The header row is a row of sort buttons now: a column name you cannot sort by only repeats what the
        panel already labels. A row left with none of them has nothing to say at all. */
-    table.tabledata.rowlist > thead > tr.th-top > th:not(:has(a)) {
+    table.tabledata.rowlist > thead > tr.th-top > th:not(:has(a, input)) {
         display: none;
     }
 
-    table.tabledata.rowlist > thead > tr.th-top:not(:has(a)) {
+    table.tabledata.rowlist > thead > tr.th-top:not(:has(a, input)) {
         display: none;
     }
 
@@ -3127,7 +3127,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     /* A column the server had nothing to put in would show as a bare label. */
-    table.tabledata.rowlist > tbody > tr.rowlist-open > td:empty {
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td[data-label]:empty {
         display: none;
     }
 
@@ -3207,8 +3207,8 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     table.tabledata.rowlist > tbody > tr > td:is(.cel_cover, .cel_albumart) img {
-        width: 40px !important;
-        height: auto !important;
+        width: 40px;
+        height: auto;
     }
 
     /* An open row is looked at rather than scanned past, so the thumbnail opens it at a readable size. */
@@ -3219,7 +3219,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     table.tabledata.rowlist > tbody > tr.rowlist-open > td:is(.cel_cover, .cel_albumart) img {
-        width: 160px !important;
+        width: 160px;
     }
 
     /* A flex basis of zero: a long title shrinks on its line instead of claiming one of its own. */

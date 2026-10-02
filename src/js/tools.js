@@ -537,7 +537,7 @@ function sortPlaylistTouchDrag() {
         sortPlaylistMouseEvent("mouseup", event.changedTouches[0], document);
     }
 
-    // Delegated from the document, so a browse replaced by an ajax refresh needs no rebinding.
+    // Delegated from the document and independent of the widget, so a browse refresh rebinds nothing here.
     document.addEventListener("touchstart", function (event) {
         var handle = (event.touches.length === 1)
             ? event.target.closest("tbody[id^=\"sortableplaylist_\"] td.cel_drag")
