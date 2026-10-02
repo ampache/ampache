@@ -35,6 +35,9 @@ use Override;
  */
 final class PreferenceBoxView extends AbstractView
 {
+    /** The category whose preferences are global (`user = -1` only), so neither control below applies to it */
+    private const string SYSTEM_CATEGORY = 'system';
+
     /** @var ?list<PreferenceItem> */
     private ?array $ordered = null;
 
@@ -45,6 +48,7 @@ final class PreferenceBoxView extends AbstractView
         private readonly array $items,
         private readonly PreferenceSubject $subject,
         private readonly PreferenceInputRenderer $renderer,
+        private readonly string $category,
     ) {}
 
     /**
@@ -128,11 +132,12 @@ final class PreferenceBoxView extends AbstractView
     }
 
     /**
-     * Level and "apply to all" act on the shared row, so they only appear while editing the server.
+     * Level and "apply to all" act on the shared per-user row, so neither means anything for a system
+     * preference, which only ever has the server's own `user = -1` row.
      */
     public function showsAdminControls(): bool
     {
-        return $this->subject->isServer;
+        return $this->subject->isServer && $this->category !== self::SYSTEM_CATEGORY;
     }
 
     public function subcategoryAnchor(?string $subcategory): string

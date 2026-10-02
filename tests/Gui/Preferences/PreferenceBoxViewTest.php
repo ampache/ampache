@@ -70,6 +70,14 @@ class PreferenceBoxViewTest extends TestCase
         );
     }
 
+    public function testTheAdminColumnsAreHiddenForTheSystemCategory(): void
+    {
+        $view = $this->view([], server: true, category: 'system');
+
+        $this->assertFalse($view->showsAdminControls(), 'a system preference only has the server\'s own row');
+        $this->assertSame(4, $view->getColumnCount());
+    }
+
     public function testTheAdminColumnsOnlyExistForTheServer(): void
     {
         $this->assertFalse($this->view([])->showsAdminControls());
@@ -123,13 +131,13 @@ class PreferenceBoxViewTest extends TestCase
         );
     }
 
-    private function view(array $items, bool $server = false): PreferenceBoxView
+    private function view(array $items, bool $server = false, string $category = 'interface'): PreferenceBoxView
     {
         $user           = $this->createMock(User::class);
         $user->fullname = 'u';
         $user->method('getId')->willReturn(1);
         $subject = ($server) ? PreferenceSubject::serverPreferences($user) : PreferenceSubject::ownPreferences($user);
 
-        return new PreferenceBoxView($items, $subject, new PreferenceInputRenderer());
+        return new PreferenceBoxView($items, $subject, new PreferenceInputRenderer(), $category);
     }
 }

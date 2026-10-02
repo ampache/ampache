@@ -84,7 +84,7 @@ final class PreferencesView extends AbstractView
 
     public function getBoxView(): PreferenceBoxView
     {
-        return new PreferenceBoxView($this->items, $this->subject, $this->renderer);
+        return new PreferenceBoxView($this->items, $this->subject, $this->renderer, $this->tab);
     }
 
     /**
