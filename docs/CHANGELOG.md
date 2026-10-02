@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Ampache 8.2.1
+
+### Fixed (8.2.1)
+
+* Database 810030
+  * Restored the `transcoding` type on `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target`, fixing the missing encode-format dropdown on those preferences that `Migration810028` caused in 8.2.0
+
 ## Ampache 8.2.0
 
 **Jellyfin API** Third-party Jellyfin clients can now browse and stream Ampache libraries through a new optional Jellyfin-compatible API.
