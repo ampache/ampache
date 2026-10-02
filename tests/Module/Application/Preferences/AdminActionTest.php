@@ -25,12 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Preferences\PreferenceInputRenderer;
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesView;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -40,6 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AdminActionTest extends MockeryTestCase
 {
+    private MockInterface|ConfigContainerInterface $configContainer;
     private MockInterface|PreferencesViewFactoryInterface $preferencesViewFactory;
     private AdminAction $subject;
     private MockInterface|UiInterface $ui;
@@ -50,13 +52,9 @@ class AdminActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $user       = $this->mock(User::class);
 
-        $preferences = ['some' => 'preference'];
         $tab         = 'some-tab';
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
+        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnTrue();
         $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
@@ -67,18 +65,18 @@ class AdminActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['tab' => $tab]);
 
-        $user->shouldReceive('get_preferences')
-            ->with($tab, true)
-            ->once()
-            ->andReturn($preferences);
-
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
         // render() is final, so this is a real view with no tab -- the path that renders nothing
+        $captured = null;
         $this->preferencesViewFactory->shouldReceive('create')
             ->once()
-            ->andReturn(new PreferencesView($this->ui, '', '', [], '', '', 0, false, false));
+            ->andReturnUsing(function ($gate, $subject, $operator, $tab) use (&$captured, $user): PreferencesView {
+                $captured = [$subject, $operator, $tab];
+
+                return new PreferencesView('', $subject, [], '', false, false, new PreferenceInputRenderer());
+            });
 
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -95,6 +93,11 @@ class AdminActionTest extends MockeryTestCase
             $output = (string) ob_get_clean();
         }
 
+        /** @var array{0: PreferenceSubject, 1: User, 2: string} $captured */
+        $this->assertTrue($captured[0]->isServer, 'this screen edits the shared row');
+        $this->assertSame($user, $captured[1], 'editability follows whoever is filling in the form');
+        $this->assertSame($tab, $captured[2]);
+
         $this->assertNull($result);
         $this->assertSame('', $output);
     }
@@ -106,10 +109,7 @@ class AdminActionTest extends MockeryTestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
+        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnFalse();
 
         $this->subject->run($request, $gatekeeper);
     }
@@ -120,9 +120,13 @@ class AdminActionTest extends MockeryTestCase
         $this->ui                     = $this->mock(UiInterface::class);
         $this->preferencesViewFactory = $this->mock(PreferencesViewFactoryInterface::class);
 
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse()->byDefault();
+
         $this->subject = new AdminAction(
             $this->ui,
             $this->preferencesViewFactory,
+            $this->configContainer,
         );
     }
 }

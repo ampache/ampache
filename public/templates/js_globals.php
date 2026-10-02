@@ -95,4 +95,5 @@ $web_path = AmpConfig::get_web_path();
     var jsPlayLast = "<?php echo addslashes(T_('Play last')); ?>";
     var jsAddTmpPlaylist = "<?php echo addslashes(T_('Add to Temporary Playlist')); ?>";
     var jsAddPlaylist = "<?php echo addslashes(Ui::get_add_to_list_label()); ?>";
+    var jsRowlistMore = "<?php echo addslashes(T_('More')); ?>";
 </script>

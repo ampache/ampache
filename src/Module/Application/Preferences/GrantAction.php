@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -38,6 +39,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -56,57 +58,61 @@ final readonly class GrantAction implements ApplicationActionInterface
     {
         $user = $gatekeeper->getUser();
 
-        // Make sure we're a user and they came from the form
+        // a forged callback would bind this account to someone else's service, so either failure refuses
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-            && !isset($user->id)
+            || !$user instanceof User
+            || !$this->requestParser->verifyFormFromQuery('grant')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        if ($user !== null) {
-            $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
-            if (
-                $this->requestParser->getFromRequest('token')
-                && in_array($plugin_name, Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
-            ) {
-                // we receive a token for a valid plugin, have to call getSession and obtain a session key
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null) {
-                    if (
-                        (
-                            $plugin->_plugin instanceof Ampachelibrefm
-                            || $plugin->_plugin instanceof AmpacheLastfm
-                        )
-                        && $plugin->load($user)
-                        && $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
-                    ) {
-                        $title = T_('No Problem');
-                        $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
-                    } else {
-                        $title = T_('There Was a Problem');
-                        $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
-                    }
+        $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
+        if (
+            $this->requestParser->getFromRequest('token')
+            && in_array($plugin_name, Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
+        ) {
+            // we receive a token for a valid plugin, have to call getSession and obtain a session key
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin !== null) {
+                $isScrobbler = $plugin->_plugin instanceof Ampachelibrefm
+                    || $plugin->_plugin instanceof AmpacheLastfm;
 
-                    $next_url = sprintf(
-                        '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
-                    );
-
-                    $this->ui->showConfirmation($title, $text, $next_url);
-
-                    return null;
+                // load() fails on the empty challenge this callback fills, so only its side effects count
+                if ($isScrobbler) {
+                    $plugin->load($user);
                 }
-            }
 
-            echo $this->preferencesViewFactory->create(
-                $gatekeeper,
-                $user->fullname,
-                $user->get_preferences($this->requestParser->getFromRequest('tab'))
-            )->render();
+                if (
+                    $isScrobbler
+                    && $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
+                ) {
+                    $title = T_('No Problem');
+                    $text  = T_('Your account has been updated') . ' : ' . $plugin_name;
+                } else {
+                    $title = T_('There Was a Problem');
+                    $text  = T_('Your account has not been updated') . ' : ' . $plugin_name;
+                }
+
+                $next_url = sprintf(
+                    '%s/preferences.php?tab=plugins',
+                    $this->configContainer->getWebPath()
+                );
+
+                $this->ui->showConfirmation($title, $text, $next_url);
+
+                return null;
+            }
         }
+
+        echo $this->preferencesViewFactory->create(
+            $gatekeeper,
+            PreferenceSubject::ownPreferences($user),
+            $user,
+            $this->requestParser->getFromRequest('tab')
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

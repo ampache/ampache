@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Module\System\LegacyLogger;
+use Override;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -61,20 +62,23 @@ final readonly class RequestParser implements RequestParserInterface
         return scrub_in($variable);
     }
 
-    /**
-     * Check if the form-submit is valid
-     *
-     * If the application expects a form-submit, check if it's actually
-     * a valid submit (by validating a session token).
-     * This method currently proxies the verification to a static method within
-     * the core-class to make it testable.
-     *
-     * @return bool True, if the form-submit is considered valid
-     */
+    #[Override]
     public function verifyForm(string $formName): bool
     {
-        $sid = $_POST['form_validation'] ?? '';
+        return $this->consumeFormToken($formName, (string) ($_POST['form_validation'] ?? ''));
+    }
 
+    #[Override]
+    public function verifyFormFromQuery(string $formName): bool
+    {
+        return $this->consumeFormToken($formName, (string) ($_GET['form_validation'] ?? ''));
+    }
+
+    /**
+     * Reads the token once, whatever carried it: a second read must never succeed
+     */
+    private function consumeFormToken(string $formName, string $sid): bool
+    {
         if (!isset($_SESSION['forms'][$sid])) {
             $this->logger->error(
                 sprintf('Form %s not found in session, rejecting request', $formName),

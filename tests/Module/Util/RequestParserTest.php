@@ -35,6 +35,49 @@ class RequestParserTest extends TestCase
     private LoggerInterface $logger;
     private RequestParser $subject;
 
+    /**
+     * A token that survives its own use can be replayed, which is the whole point of having one.
+     */
+    public function testAFormTokenWorksExactlyOnce(): void
+    {
+        $formName = 'some-form';
+        $sid      = 'some-sid';
+
+        $_POST['form_validation'] = $sid;
+        $_SESSION['forms'][$sid]  = ['name' => $formName, 'expire' => time() + 3600];
+
+        self::assertTrue($this->subject->verifyForm($formName));
+        self::assertFalse($this->subject->verifyForm($formName), 'the second submit must be refused');
+        self::assertArrayNotHasKey($sid, $_SESSION['forms']);
+    }
+
+    /**
+     * A third-party authorisation brings the visitor back with a GET, so the token has to be readable
+     * there -- and consumed just the same.
+     */
+    public function testATokenCarriedInTheQueryStringIsAcceptedAndConsumed(): void
+    {
+        $formName = 'grant';
+        $sid      = 'some-sid';
+
+        $_GET['form_validation'] = $sid;
+        $_SESSION['forms'][$sid] = ['name' => $formName, 'expire' => time() + 3600];
+
+        self::assertTrue($this->subject->verifyFormFromQuery($formName));
+        self::assertFalse($this->subject->verifyFormFromQuery($formName));
+    }
+
+    public function testATokenPostedIsNotAcceptedFromTheQueryString(): void
+    {
+        $formName = 'grant';
+        $sid      = 'some-sid';
+
+        $_POST['form_validation'] = $sid;
+        $_SESSION['forms'][$sid]  = ['name' => $formName, 'expire' => time() + 3600];
+
+        self::assertFalse($this->subject->verifyFormFromQuery($formName), 'each carrier is read on its own');
+    }
+
     public function testGetFromPostReturnsEmptyStringIfNotContained(): void
     {
         self::assertSame(

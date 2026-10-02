@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -58,11 +59,11 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        // each of these refuses on its own, so an anonymous visitor cannot slip past a combined check
         if (
-            (
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-                && (int) (Core::get_global('user')?->getId()) > 0
-            )
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || (int) (Core::get_global('user')?->getId()) === 0
+            || $gatekeeper->isDemoMode()
             || !$this->requestParser->verifyForm('update_user')
         ) {
             throw new AccessDeniedException();
@@ -127,8 +128,9 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         if ($user instanceof User) {
             echo $this->preferencesViewFactory->create(
                 $gatekeeper,
-                $user->fullname,
-                $user->get_preferences($_REQUEST['tab'])
+                PreferenceSubject::ownPreferences($user),
+                $user,
+                (string) (((array) $request->getParsedBody())['tab'] ?? '')
             )->render();
         }
 

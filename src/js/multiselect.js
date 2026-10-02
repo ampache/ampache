@@ -24,6 +24,8 @@
 /* Multi select */
 /****************/
 
+import {onScopeAdded} from './base.js';
+
 // Row selection for browse tables. A scope element wraps one action bar and one table; the bar's links carry
 // a URL template whose {ids}, {track_ids} and {type} placeholders are filled in from the current selection.
 // Every handler is delegated from document, so a browse replaced by an AJAX refresh keeps working untouched.
@@ -263,29 +265,7 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
     run();
 });
 
-// Applies the starting state to every scope inside (or equal to) a node.
-function multiSelectRefreshAll(node) {
-    var $node = $(node);
-
-    $node.filter("[data-multiselect-scope]").add($node.find("[data-multiselect-scope]")).each(function () {
-        multiSelectRefresh($(this));
-    });
-}
-
-// A browse replaced after load never saw the ready handler, so watch for scopes arriving later.
-$(function () {
-    multiSelectRefreshAll(document.body);
-
-    new MutationObserver(function (records) {
-        records.forEach(function (record) {
-            Array.prototype.forEach.call(record.addedNodes, function (node) {
-                if (node.nodeType === 1) {
-                    multiSelectRefreshAll(node);
-                }
-            });
-        });
-    }).observe(document.body, {childList: true, subtree: true});
-});
+onScopeAdded("[data-multiselect-scope]", multiSelectRefresh);
 
 // Legacy helper for the checkbox lists that predate the scoped bar above, where the only interaction is one
 // link toggling every box named "<name>[]" at once (the admin Disabled Songs table).
