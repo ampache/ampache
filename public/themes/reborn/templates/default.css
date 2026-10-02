@@ -3528,3 +3528,522 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     font-size: 14px;
     border-radius: 3px;
 }
+
+/* ---------------------------------------------------------------------------
+   Preferences
+   Column widths are declared here: the `cel_*` classes carried none, so the table
+   collapsed to whatever the longest description happened to be.
+   --------------------------------------------------------------------------- */
+
+.pref-bar {
+    align-items: center;
+    background-color: var(--amp-raised);
+    border: 1px solid var(--amp-border);
+    border-radius: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+}
+
+.pref-subject {
+    align-items: baseline;
+    display: inline-flex;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.pref-subject-label {
+    color: var(--amp-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.pref-subject-name {
+    font-weight: 600;
+}
+
+/* the sentence that says what saving will actually touch, shown only when it is not obvious */
+.pref-subject-warning {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    margin: 0 0 10px;
+}
+
+/* the magnifier sits inside the field so the box reads as a search without needing a label */
+.pref-search {
+    align-items: center;
+    background-color: var(--amp-surface);
+    border: 1px solid var(--amp-border);
+    border-radius: 4px;
+    display: flex;
+    flex: 0 1 320px;
+    gap: 6px;
+    max-width: 340px;
+    min-width: 160px;
+    padding: 0 8px;
+}
+
+.pref-search svg {
+    fill: var(--amp-muted);
+    flex: none;
+    height: 18px;
+    width: 18px;
+}
+
+.pref-search input {
+    background: none;
+    border: 0;
+    color: inherit;
+    flex: 1;
+    font: inherit;
+    min-width: 0;
+    padding: 5px 0;
+}
+
+.pref-search input:focus {
+    outline: none;
+}
+
+.pref-search:focus-within {
+    border-color: var(--amp-accent);
+}
+
+/* the field is only clearable once it holds something, so the button is hidden until then */
+.pref-search-clear {
+    background: none;
+    border: 0;
+    color: var(--amp-muted);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.pref-search-clear:hover {
+    color: var(--amp-accent);
+}
+
+/* the native clear affordance would sit beside ours */
+.pref-search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+/* a subject-level action, so it lives with the subject rather than beside the save button, where it
+   read as part of saving */
+.pref-export {
+    align-items: center;
+    color: var(--amp-muted);
+    display: inline-flex;
+    font-size: 12.5px;
+    gap: 5px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.pref-export svg {
+    fill: currentcolor;
+    height: 16px;
+    width: 16px;
+}
+
+.pref-export:hover {
+    color: var(--amp-accent);
+}
+
+.pref-chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pref-chip {
+    background: transparent;
+    border: 1px solid var(--amp-border);
+    border-radius: 999px;
+    color: var(--amp-muted);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12.5px;
+    padding: 4px 12px;
+}
+
+.pref-chip[aria-pressed="true"] {
+    border-color: var(--amp-accent);
+    color: var(--amp-accent);
+}
+
+.pref-chip-count {
+    opacity: 0.65;
+    padding-left: 4px;
+}
+
+table.preferences .cel_preference {
+    width: 34%;
+}
+
+table.preferences .cel_value {
+    width: 19%;
+}
+
+table.preferences .cel_reference {
+    width: 15%;
+}
+
+table.preferences .cel_prefaction {
+    white-space: nowrap;
+    width: 10%;
+}
+
+/* the two admin columns are narrow, so they need their own breathing room or the headings touch */
+table.preferences .cel_applyall {
+    padding-right: 14px;
+    text-align: center;
+    width: 9%;
+}
+
+table.preferences .cel_level {
+    width: 13%;
+}
+
+table.preferences td {
+    vertical-align: top;
+}
+
+/* filtering hides rows rather than removing them, and `nth-child` counts what it cannot see, so the
+   stripes are painted from a class the filter maintains */
+table.preferences.striped-rows tbody tr.pref-row {
+    background-color: transparent;
+}
+
+table.preferences tbody tr.pref-row-odd {
+    background-color: color-mix(in srgb, var(--amp-muted) 12%, transparent);
+}
+
+/* filtering hides rows rather than removing them, and `nth-child` counts what it cannot see, so the
+   stripes are painted from a class the filter maintains */
+table.preferences.striped-rows tbody tr.pref-row {
+    background-color: transparent;
+}
+
+table.preferences tbody tr.pref-row-odd {
+    background-color: color-mix(in srgb, var(--amp-muted) 12%, transparent);
+}
+
+/* the changed rows have to be findable without reading every value; the room for the bar is reserved on
+   every row, not just the marked ones, so marking one never shifts its text sideways */
+table.preferences td:first-child,
+table.preferences th:first-child {
+    padding-left: 13px;
+}
+
+table.preferences tr.pref-row-dirty td:first-child {
+    box-shadow: inset 4px 0 0 var(--amp-accent);
+}
+
+.pref-label {
+    font-weight: 500;
+}
+
+.pref-key {
+    color: var(--amp-muted);
+    font-family: monospace;
+    font-size: 11.5px;
+}
+
+.pref-badges {
+    display: inline-flex;
+    gap: 5px;
+    padding-left: 6px;
+}
+
+.pref-badge {
+    border: 1px solid var(--amp-border);
+    border-radius: 999px;
+    font-size: 11px;
+    padding: 1px 8px;
+    white-space: nowrap;
+}
+
+.pref-badge-dirty {
+    border-color: var(--amp-accent);
+    color: var(--amp-accent);
+}
+
+.pref-badge-locked {
+    color: var(--amp-muted);
+}
+
+/* name, badges and the help toggle share one line, so help costs no vertical space until it is asked for */
+.pref-head {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    list-style: none;
+}
+
+.pref-head::-webkit-details-marker,
+.pref-head::marker {
+    content: "";
+    display: none;
+}
+
+details.pref-help > summary {
+    cursor: pointer;
+}
+
+/* the whole name is the toggle; the mark is what says so */
+.pref-help-mark {
+    align-items: center;
+    border: 1px solid var(--amp-border);
+    border-radius: 50%;
+    color: var(--amp-muted);
+    display: inline-flex;
+    flex: none;
+    font-size: 10px;
+    height: 15px;
+    justify-content: center;
+    width: 15px;
+}
+
+.pref-help > summary:hover .pref-help-mark,
+.pref-help[open] .pref-help-mark {
+    background-color: var(--amp-accent);
+    border-color: var(--amp-accent);
+    color: var(--amp-accent-ink);
+}
+
+.pref-help > p {
+    border-left: 2px solid var(--amp-border);
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    margin: 6px 0 2px;
+    max-width: 60em;
+    padding-left: 9px;
+}
+
+.pref-help > p a {
+    color: var(--amp-accent);
+    white-space: nowrap;
+}
+
+.pref-ref {
+    color: var(--amp-muted);
+    display: flex;
+    font-size: 12px;
+    gap: 6px;
+}
+
+.pref-ref span:first-child {
+    min-width: 52px;
+    opacity: 0.75;
+}
+
+/* `anywhere` also shrinks the column's min-content width, which collapsed it to one letter per line;
+   `break-word` still breaks a long url but keeps the column as wide as its longest word */
+.pref-refval {
+    font-family: monospace;
+    overflow-wrap: break-word;
+}
+
+.pref-ref span:first-child {
+    flex: none;
+}
+
+.pref-linkbtn {
+    background: none;
+    border: 0;
+    color: var(--amp-muted);
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    font-size: 12px;
+    padding: 1px 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.pref-linkbtn:hover:not([disabled]) {
+    color: var(--amp-accent);
+}
+
+.pref-linkbtn[disabled] {
+    cursor: default;
+    opacity: 0.35;
+    text-decoration: none;
+}
+
+.pref-unit,
+.pref-zero {
+    color: var(--amp-muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.pref-readonly {
+    color: var(--amp-muted);
+}
+
+/* another preference is cancelling this one; it has to read louder than the help, which is optional */
+.pref-warning {
+    border-left: 2px solid var(--amp-accent);
+    color: var(--amp-accent);
+    font-size: 12.5px;
+    margin: 6px 0 2px;
+    max-width: 60em;
+    padding-left: 9px;
+}
+
+/* the jump list: with a dozen sections per tab, scrolling to find one is the whole problem */
+.pref-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--amp-border);
+}
+
+.pref-sections a {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    text-decoration: none;
+}
+
+.pref-sections a:hover {
+    color: var(--amp-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* a heading that only differs from a row by its font weight gets read as another row */
+tr.pref-subcategory > td {
+    background-color: var(--amp-raised);
+    border-top: 3px solid var(--amp-accent);
+    padding: 22px 12px 12px;
+}
+
+/* the accent bar above is the separator, so the theme's row hover must not paint over it */
+table.preferences tr.pref-subcategory:hover > td {
+    background-color: var(--amp-raised);
+    background-image: none;
+}
+
+.pref-subcategory h3 {
+    color: var(--amp-accent);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0;
+    scroll-margin-top: 12px;
+    text-transform: uppercase;
+}
+
+/* the first section of a tab opens the table, it needs no rule above it */
+tbody tr.pref-subcategory:first-child > td {
+    border-top: 0;
+    padding-top: 6px;
+}
+
+
+.pref-empty {
+    color: var(--amp-muted);
+    padding: 22px 4px;
+}
+
+/* the recap sits right beside the button, where the eye already is; hanging both from the top means
+   unfolding it grows the row downwards without moving the button */
+.pref-actions {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 14px;
+}
+
+/* what is about to be written, folded: a count that opens into "what becomes what" */
+.pref-summary {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    padding-top: 7px;
+    text-align: right;
+}
+
+.pref-summary > summary {
+    color: var(--amp-accent);
+    cursor: pointer;
+}
+
+.pref-summary-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+.pref-summary-list li {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 2px 0;
+}
+
+.pref-summary-name {
+    text-align: right;
+}
+
+.pref-summary-from {
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+.pref-summary-to {
+    color: var(--amp-accent);
+}
+
+/* only the lines that leave this account carry it, so the badge has to be readable at a glance */
+.pref-summary-everyone {
+    border: 1px solid var(--amp-accent);
+    border-radius: 999px;
+    color: var(--amp-accent);
+    font-size: 11px;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+/* the same list again, inside the confirmation dialog */
+.pref-confirm .pref-summary-list {
+    font-size: 13px;
+    margin: 0;
+}
+
+.pref-confirm .pref-summary-name {
+    min-width: 0;
+    flex: 1 1 14em;
+}
+
+.pref-confirm-warning {
+    color: var(--amp-accent);
+    margin: 0 0 10px;
+}
+
+.pref-applyall {
+    align-items: center;
+    color: var(--amp-muted);
+    display: inline-flex;
+    font-size: 12.5px;
+    gap: 5px;
+}
+
+/* below this the six columns fight for room and the reference values break mid-word, so the two
+   columns a reader can do without are dropped rather than crushed */
+@media screen and (max-width: 900px) {
+    table.preferences .cel_reference,
+    table.preferences .cel_level {
+        display: none;
+    }
+}

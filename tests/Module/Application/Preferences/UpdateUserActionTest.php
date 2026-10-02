@@ -62,6 +62,7 @@ class UpdateUserActionTest extends MockeryTestCase
         $gatekeeper     = $this->mock(GuiGatekeeperInterface::class);
         $user           = $this->mock(User::class);
         $user->username = 'some-username';
+        $user->shouldReceive('getId')->withNoArgs()->andReturn(42);
 
         $_SESSION = [];
         $_POST    = [
@@ -80,6 +81,7 @@ class UpdateUserActionTest extends MockeryTestCase
                 ->with('update_user')
                 ->once()
                 ->andReturnTrue();
+            $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse()->byDefault();
             $this->configContainer->shouldReceive('isFeatureEnabled')
                 ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
                 ->once()

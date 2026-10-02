@@ -33,15 +33,6 @@ interface UiInterface
     public function accessDenied(string $error = 'Access Denied'): void;
 
     /**
-     * takes the key and then creates the correct type of input for updating it
-     */
-    public function createPreferenceInput(
-        string $name,
-        $value,
-        ?string $type = null,
-    ): void;
-
-    /**
      * Displays an error page when you can't write the config
      */
     public function permissionDenied(string $fileName): void;
@@ -106,13 +97,6 @@ interface UiInterface
     public function showHeader(): void;
 
     public function showObjectNotFound(): void;
-
-    /**
-     * This shows the preference box for the preferences pages.
-     *
-     * @param array<string, mixed> $preferences
-     */
-    public function showPreferenceBox(array $preferences): void;
 
     /**
      * This displays the query stats

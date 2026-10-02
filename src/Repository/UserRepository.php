@@ -517,23 +517,24 @@ final readonly class UserRepository implements UserRepositoryInterface
     /**
      * Reads the preference rows behind the settings pages, joined to their descriptions
      *
-     * @return list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string}>
+     * @return list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string, default_value: ?string}>
      */
     public function getPreferenceRows(int $userId, ?string $category, bool $excludeSystem): array
     {
-        $limit = '';
+        // 'internal' rows (lastfm_challenge, autoupdate state, ...) are implementation bookkeeping, never
+        // meant to reach any settings screen, for any subject
+        $limit  = "AND `preference`.`category` != 'internal'";
+        $params = [$userId];
+
         if ($excludeSystem) {
-            $limit = "AND `preference`.`category` != 'system'";
+            $limit .= " AND `preference`.`category` != 'system'";
         } elseif ($category !== null) {
-            $limit = 'AND `preference`.`category` = ?';
+            $limit .= ' AND `preference`.`category` = ?';
+            $params[]   = $category;
         }
 
-        $params = ($limit === 'AND `preference`.`category` = ?')
-            ? [$userId, $category]
-            : [$userId];
-
         $result = $this->connection->query(
-            'SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? ' . $limit . ' ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`',
+            'SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, `preference`.`level`, `preference`.`value` AS `default_value`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? ' . $limit . ' ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`',
             $params
         );
 
@@ -547,6 +548,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 'type' => (string) $row['type'],
                 'level' => (int) $row['level'],
                 'value' => $row['value'],
+                'default_value' => $row['default_value'],
             ];
         }
 

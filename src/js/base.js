@@ -99,6 +99,32 @@ $(document).ready(function(){
 });
 
 var notificationTimeout = null;
+// Applies a callback to every matching scope inside (or equal to) a node, now and for any node that
+// arrives later: a browse or a preferences tab swapped in by ajax never saw the ready handler.
+export function onScopeAdded(selector, apply) {
+    function run(node) {
+        var $node = $(node);
+
+        $node.filter(selector).add($node.find(selector)).each(function () {
+            apply($(this));
+        });
+    }
+
+    $(function () {
+        run(document.body);
+
+        new MutationObserver(function (records) {
+            records.forEach(function (record) {
+                Array.prototype.forEach.call(record.addedNodes, function (node) {
+                    if (node.nodeType === 1) {
+                        run(node);
+                    }
+                });
+            });
+        }).observe(document.body, {childList: true, subtree: true});
+    });
+}
+
 export function clearNotification() {
     clearTimeout(notificationTimeout);
     notificationTimeout = null;
@@ -306,13 +332,19 @@ export function getCurrentPage() {
 // it is open and, in some browsers (notably Firefox), pauses <audio>/<video> playback for the
 // duration of the dialog, interrupting the web player. This shows a themed jQuery UI dialog instead
 // and returns a Promise that resolves true (accepted) or false (cancelled/dismissed).
-export function ampacheConfirm(message) {
+// `message` is plain text or a DOM/jQuery node; `options` takes `title` and `width`.
+export function ampacheConfirm(message, options) {
     return new Promise(function (resolve) {
+        var settings = options || {};
         var $dialog = $("#ampache-confirm-dialog");
         if ($dialog.length === 0) {
             $dialog = $("<div id='ampache-confirm-dialog'></div>").appendTo(document.body);
         }
-        $dialog.text((message === null || typeof message === "undefined") ? "" : String(message));
+        if (message instanceof $ || (message && message.nodeType)) {
+            $dialog.empty().append(message);
+        } else {
+            $dialog.text((message === null || typeof message === "undefined") ? "" : String(message));
+        }
 
         var settled = false;
         function settle(result) {
@@ -328,7 +360,7 @@ export function ampacheConfirm(message) {
 
         var okLabel     = (typeof jsConfirmOkTitle !== "undefined") ? jsConfirmOkTitle : "OK";
         var cancelLabel = (typeof jsCancelTitle !== "undefined") ? jsCancelTitle : "Cancel";
-        var titleLabel  = (typeof jsConfirmTitle !== "undefined") ? jsConfirmTitle : "Confirm";
+        var titleLabel  = settings.title || ((typeof jsConfirmTitle !== "undefined") ? jsConfirmTitle : "Confirm");
 
         // Object form keeps the button order (accept first, then cancel).
         var buttons = {};
@@ -346,7 +378,7 @@ export function ampacheConfirm(message) {
             modal: true,
             resizable: false,
             draggable: false,
-            width: 400,
+            width: settings.width || 400,
             close: function () {
                 // fires for the X, the Escape key and our own close() call; the guard stops a double resolve
                 settle(false);

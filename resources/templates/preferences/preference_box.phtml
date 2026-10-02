@@ -25,50 +25,87 @@ declare(strict_types=1);
 
 // preferences/preference_box.phtml -- rendered by Ampache\Gui\Preferences\PreferenceBoxView
 
-use Ampache\Module\System\Preference;
-
 /** @var Ampache\Gui\Preferences\PreferenceBoxView $this */
 
-$showAdmin = $this->showAdminColumns();
+$showAdmin = $this->showsAdminControls();
 $levels    = $this->getLevels(); ?>
-<h4><?php echo $this->e(T_($this->getTitle())); ?></h4>
-<table class="tabledata striped-rows">
-    <colgroup>
-        <col id="col_preference" />
-        <col id="col_value" />
-        <?php if ($showAdmin) { ?>
-        <col id="col_applytoall" />
-        <col id="col_level" />
-        <?php } ?>
-    </colgroup>
+<table class="tabledata striped-rows preferences">
     <thead>
         <tr class="th-top">
             <th class="cel_preference"><?php echo T_('Preference'); ?></th>
             <th class="cel_value"><?php echo T_('Value'); ?></th>
+            <th class="cel_reference"><?php echo T_('Reference'); ?></th>
+            <th class="cel_prefaction"><?php echo T_('Restore'); ?></th>
             <?php if ($showAdmin) { ?>
-            <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
+            <th class="cel_applyall"><?php echo T_('Apply to All'); ?></th>
             <th class="cel_level"><?php echo T_('Access Level'); ?></th>
             <?php } ?>
         </tr>
     </thead>
     <tbody>
-        <?php $lastSubcategory = '';
-foreach ($this->getPreferences() as $pref) {
-    if ($pref['subcategory'] !== $lastSubcategory) {
-        $lastSubcategory = $pref['subcategory'];
-        if (!empty($lastSubcategory)) { ?>
-        <tr><td colspan="<?php echo $this->getColumnCount(); ?>"><h4><?php echo $this->e(T_(Preference::format_subcategory((string) $lastSubcategory))); ?></h4></td></tr>
-        <?php }
-        } ?>
-        <tr>
-            <td class="cel_preference"><?php echo $this->e(T_($pref['description'])); ?></td>
-            <td class="cel_value"><?php echo $this->raw($this->getInput($pref['name'], $pref['value'], $pref['type'] ?? null)); ?></td>
+        <?php $lastSubcategory = false;
+foreach ($this->getItems() as $item) {
+    if ($item->subcategory !== $lastSubcategory) {
+        $lastSubcategory = $item->subcategory; ?>
+        <tr class="pref-subcategory" id="<?php echo $this->e($this->subcategoryAnchor($lastSubcategory)); ?>">
+            <td colspan="<?php echo $this->getColumnCount(); ?>"><h3><?php echo $this->e($this->formatSubcategory($lastSubcategory)); ?></h3></td>
+        </tr>
+        <?php } ?>
+        <tr id="p-<?php echo $this->e($item->name); ?>" class="pref-row" data-pref-differs="<?php echo ($item->differsFromShipped()) ? '1' : '0'; ?>" data-search="<?php echo $this->e($this->searchText($item)); ?>">
+            <td class="cel_preference">
+                <?php $badges = '<span class="pref-badges">'
+                    . '<span class="pref-badge pref-badge-dirty" hidden>' . $this->e(T_('Unsaved')) . '</span>'
+                    . '<span class="pref-badge pref-badge-diff" title="' . $this->e(T_('Differs from the value Ampache ships')) . '" hidden>' . $this->e(T_('Modified')) . '</span>'
+                    . (($item->editable) ? '' : '<span class="pref-badge pref-badge-locked">' . $this->e(T_('Read only')) . '</span>')
+                    . '</span>';
+    $label = '<label class="pref-label" for="' . $this->e($item->inputId()) . '">' . $this->e(T_($item->description)) . '</label>';
+    if ($item->help === null) { ?>
+                <div class="pref-head"><?php echo $this->raw($label . $badges); ?></div>
+                <?php } else { ?>
+                <details class="pref-help">
+                    <summary class="pref-head"><?php echo $this->raw($label . $badges); ?><span class="pref-help-mark" title="<?php echo $this->e(T_('Help')); ?>">?</span></summary>
+                    <p><?php echo $this->e($item->help->text); ?>
+                    <?php if ($item->help->docUrl !== '') { ?>
+                    <a href="<?php echo $this->e($item->help->docUrl); ?>" target="_blank" rel="noopener"><?php echo T_('Read the documentation'); ?></a>
+                    <?php } ?>
+                    </p>
+                </details>
+                <?php } ?>
+                <div class="pref-key"><?php echo $this->e($item->name); ?></div>
+                <?php if ($item->warning !== null) { ?>
+                <p class="pref-warning"><?php echo $this->e($item->warning); ?></p>
+                <?php } ?>
+            </td>
+            <td class="cel_value"><?php echo $this->raw($this->renderControl($item)); ?></td>
+            <td class="cel_reference">
+                <?php if (!$item->isSecret) {
+                    if ($item->shippedDefault !== null) { ?>
+                <div class="pref-ref"><span><?php echo T_('Default'); ?></span><span class="pref-refval"><?php echo $this->e($this->displayValue($item, $item->shippedDefault)); ?></span></div>
+                <?php }
+                    if ($item->systemValue !== null) { ?>
+                <div class="pref-ref"><span><?php echo T_('Server'); ?></span><span class="pref-refval"><?php echo $this->e($this->displayValue($item, $item->systemValue)); ?></span></div>
+                <?php }
+                    } ?>
+            </td>
+            <td class="cel_prefaction">
+                <?php if ($item->editable && !$item->isSecret) {
+                    if ($item->shippedDefault !== null) { ?>
+                <button type="button" class="pref-linkbtn" data-pref-action="default" data-pref-target="<?php echo $this->e($item->name); ?>" disabled><?php echo T_('Default'); ?></button>
+                <?php }
+                    if ($item->systemValue !== null) { ?>
+                <button type="button" class="pref-linkbtn" data-pref-action="server" data-pref-target="<?php echo $this->e($item->name); ?>" title="<?php echo $this->e(T_('Copy what the server holds; it will not follow later server changes')); ?>" disabled><?php echo T_('Server'); ?></button>
+                <?php } ?>
+                <button type="button" class="pref-linkbtn" data-pref-action="revert" data-pref-target="<?php echo $this->e($item->name); ?>" disabled><?php echo T_('Undo'); ?></button>
+                <?php } ?>
+            </td>
             <?php if ($showAdmin) { ?>
-            <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $this->e($pref['name']); ?>" value="1" /></td>
+            <td class="cel_applyall">
+                <input type="checkbox" name="check_<?php echo $this->e($item->name); ?>" value="1" data-pref-apply="<?php echo $this->e($item->name); ?>" title="<?php echo $this->e(T_('Also write this value to every existing account')); ?>" />
+            </td>
             <td class="cel_level">
-                <select name="level_<?php echo $this->e($pref['name']); ?>">
+                <select name="level_<?php echo $this->e($item->name); ?>" data-pref-level data-initial="<?php echo $this->e($item->level); ?>">
                     <?php foreach ($levels as $value => $label) { ?>
-                    <option value="<?php echo $value; ?>"<?php echo ((int) $pref['level'] === $value) ? ' selected="selected"' : ''; ?>><?php echo $this->e($label); ?></option>
+                    <option value="<?php echo $this->e($value); ?>"<?php echo ($item->level === $value) ? ' selected="selected"' : ''; ?>><?php echo $this->e($label); ?></option>
                     <?php } ?>
                 </select>
             </td>
@@ -76,14 +113,4 @@ foreach ($this->getPreferences() as $pref) {
         </tr>
         <?php } ?>
     </tbody>
-    <tfoot>
-        <tr class="th-bottom">
-            <th class="cel_preference"><?php echo T_('Preference'); ?></th>
-            <th class="cel_value"><?php echo T_('Value'); ?></th>
-            <?php if ($showAdmin) { ?>
-            <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
-            <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-            <?php } ?>
-        </tr>
-    </tfoot>
 </table>

@@ -48,7 +48,6 @@ final class ConfigurationKeyEnum
     public const string ALLOW_DEMOCRATIC_PLAYBACK              = 'allow_democratic_playback';
     public const string ALLOW_LOCALPLAY_PLAYBACK               = 'allow_localplay_playback';
     public const string ALLOW_LOST_PASSWORD                    = 'allow_lost_password';
-    public const string ALLOW_PERSONAL_INFO_AGENT              = 'allow_personal_info_agent';
     public const string ALLOW_PERSONAL_INFO_NOW                = 'allow_personal_info_now';
     public const string ALLOW_PERSONAL_INFO_RECENT             = 'allow_personal_info_recent';
     public const string ALLOW_PERSONAL_INFO_TIME               = 'allow_personal_info_time';

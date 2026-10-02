@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
+use Ampache\Repository\Model\User;
 use DateTimeZone;
 
 final readonly class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
@@ -51,7 +52,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
         };
 
         // Get current keys
-        $sql = ($user_id == '-1')
+        $sql = ($user_id === User::INTERNAL_SYSTEM_USER_ID)
             ? "SELECT `id`, `name`, `category` FROM `preference`"
             : "SELECT `id`, `name`, `category` FROM `preference` WHERE `category` != 'system'";
 

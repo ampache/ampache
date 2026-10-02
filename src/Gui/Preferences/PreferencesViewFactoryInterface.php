@@ -26,18 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Gui\Preferences;
 
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\User;
 
 interface PreferencesViewFactoryInterface
 {
     /**
-     * Six actions render this page, so the tab, the posting action and the admin check are resolved here
-     * rather than nine constructor arguments being repeated at each of them.
-     *
-     * @param array<string, mixed> $preferences
+     * Builds the preferences page for one subject, resolving the tab and the posting action once
      */
     public function create(
         GuiGatekeeperInterface $gatekeeper,
-        ?string $fullname,
-        array $preferences,
+        PreferenceSubject $subject,
+        User $operator,
+        string $tab,
     ): PreferencesView;
 }
