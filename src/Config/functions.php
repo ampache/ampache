@@ -282,7 +282,7 @@ if (!function_exists('getallheaders')) {
 
 /**
  * check_http_referer
- * Check the http referer based on the server web_path
+ * Check the http referer's origin against the server web_path's origin
  */
 function check_http_referer(): bool
 {
@@ -298,7 +298,31 @@ function check_http_referer(): bool
         return true;
     }
 
-    return str_contains($referer, $web_path);
+    if (empty($referer) || empty($web_path)) {
+        return false;
+    }
+
+    // a substring match accepts any referer that merely embeds web_path; compare parsed origins so only an exact match passes
+    $referer_origin  = parse_url($referer);
+    $web_path_origin = parse_url($web_path);
+
+    if (
+        $referer_origin === false
+        || $web_path_origin === false
+        || empty($referer_origin['scheme'])
+        || empty($referer_origin['host'])
+        || empty($web_path_origin['scheme'])
+        || empty($web_path_origin['host'])
+    ) {
+        return false;
+    }
+
+    $referer_port  = $referer_origin['port'] ?? (strcasecmp((string) $referer_origin['scheme'], 'https') === 0 ? 443 : 80);
+    $web_path_port = $web_path_origin['port'] ?? (strcasecmp((string) $web_path_origin['scheme'], 'https') === 0 ? 443 : 80);
+
+    return strcasecmp((string) $referer_origin['scheme'], (string) $web_path_origin['scheme']) === 0
+        && strcasecmp((string) $referer_origin['host'], (string) $web_path_origin['host']) === 0
+        && $referer_port === $web_path_port;
 }
 
 /**

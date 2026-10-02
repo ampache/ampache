@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -52,6 +53,7 @@ class ConfirmDeleteActionTest extends TestCase
     private PodcastDeleterInterface&MockObject $podcastDeleter;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private ServerRequestInterface&MockObject $request;
+    private RequestParserInterface&MockObject $requestParser;
     private ConfirmDeleteAction $subject;
     private UiInterface&MockObject $ui;
 
@@ -79,6 +81,11 @@ class ConfirmDeleteActionTest extends TestCase
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_podcast')
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -162,6 +169,11 @@ class ConfirmDeleteActionTest extends TestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_podcast')
+            ->willReturn(true);
+
         $this->podcastRepository->expects(static::once())
             ->method('findById')
             ->with(0)
@@ -202,8 +214,37 @@ class ConfirmDeleteActionTest extends TestCase
         );
     }
 
+    public function testRunThrowsIfFormTokenIsInvalid(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...$this->withConsecutive(
+                [ConfigurationKeyEnum::PODCAST],
+                [ConfigurationKeyEnum::DEMO_MODE],
+            ))
+            ->willReturn(true, false);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with('delete_podcast')
+            ->willReturn(false);
+
+        $this->podcastRepository->expects(static::never())
+            ->method('findById');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     protected function setUp(): void
     {
+        $this->requestParser       = $this->createMock(RequestParserInterface::class);
         $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
         $this->ui                  = $this->createMock(UiInterface::class);
         $this->podcastRepository   = $this->createMock(PodcastRepositoryInterface::class);
@@ -211,6 +252,7 @@ class ConfirmDeleteActionTest extends TestCase
         $this->deletionUrlResolver = $this->createMock(DeletionUrlResolverInterface::class);
 
         $this->subject = new ConfirmDeleteAction(
+            $this->requestParser,
             $this->configContainer,
             $this->ui,
             $this->podcastRepository,
