@@ -47,6 +47,7 @@
   * The Last.fm and Libre.fm authorisation callback accepted a forged link
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
   * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
+* `login.php` redirected straight back to `update.php` with a pending database update, looping forever (`ERR_TOO_MANY_REDIRECTS`) instead of showing the login form
 
 ## Ampache 8.2.1
 
