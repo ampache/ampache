@@ -32,7 +32,6 @@ final class Migration810021 extends AbstractMigration
     protected array $changelog = [
         'Remove the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`',
     ];
-
     protected bool $warning = true;
 
     public function migrate(): void

@@ -33,8 +33,6 @@ use PHPUnit\Framework\TestCase;
 // guards against the drift in docs/OBJECT-TYPE-ENUM-PLAN.md: a SQL object_type enum going stale, or a duplicate column
 class ObjectTypeEnumConsistencyTest extends TestCase
 {
-    private const string SEED_FILE = __DIR__ . '/../../../../resources/sql/ampache.sql';
-
     /** values written as literals, not sourced from either PHP enum - see docs/OBJECT-TYPE-ENUM-PLAN.md. @var list<string> */
     private const array NON_ENUM_LITERAL_VALUES = [
         'catalog',
@@ -50,59 +48,14 @@ class ObjectTypeEnumConsistencyTest extends TestCase
         'song_preview',
         'video',
     ];
-
-    public function testNoTableDeclaresAColumnMoreThanOnce(): void
-    {
-        foreach ($this->parseTables() as $table => $columns) {
-            $names  = array_map(static fn (array $column): string => $column['name'], $columns);
-            $counts = array_count_values($names);
-            $dupes  = array_keys(array_filter($counts, static fn (int $count): bool => $count > 1));
-
-            self::assertSame(
-                [],
-                $dupes,
-                sprintf('`%s` declares these columns more than once: %s', $table, implode(', ', $dupes))
-            );
-        }
-    }
-
-    public function testEveryObjectTypeEnumValueIsAKnownType(): void
-    {
-        $known = [
-            ...array_map(static fn (LibraryItemEnum $case): string => $case->value, LibraryItemEnum::cases()),
-            ...array_map(static fn (ObjectTypeEnum $case): string => $case->value, ObjectTypeEnum::cases()),
-            ...self::NON_ENUM_LITERAL_VALUES,
-        ];
-
-        foreach ($this->parseTables() as $table => $columns) {
-            foreach ($columns as $column) {
-                if ($column['name'] !== 'object_type') {
-                    continue;
-                }
-
-                foreach ($this->enumValues($column['type']) ?? [] as $value) {
-                    self::assertContains(
-                        $value,
-                        $known,
-                        sprintf(
-                            '`%s`.`object_type` lists `%s`, which is not a case of LibraryItemEnum or '
-                            . 'ObjectTypeEnum and is not in NON_ENUM_LITERAL_VALUES - either it is a dead '
-                            . 'value (like `tvshow`/`tvshow_season` were) or this allowlist needs updating',
-                            $table,
-                            $value
-                        )
-                    );
-                }
-            }
-        }
-    }
+    private const string SEED_FILE = __DIR__ . '/../../../../resources/sql/ampache.sql';
 
     /**
      * @return array<string, array{0: string, 1: list<string>}>
      */
     public static function objectTypeExactListProvider(): array
     {
-        $libraryItems = array_map(static fn (LibraryItemEnum $case): string => $case->value, LibraryItemEnum::cases());
+        $libraryItems    = array_map(static fn(LibraryItemEnum $case): string => $case->value, LibraryItemEnum::cases());
         $genericTaggable = ['album', 'album_disk', 'artist', 'catalog', 'collection', 'folder', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video'];
 
         return [
@@ -130,6 +83,52 @@ class ObjectTypeEnumConsistencyTest extends TestCase
             'tag_map' => ['tag_map', [...array_diff($genericTaggable, ['collection']), 'broadcast']],
             'user_activity' => ['user_activity', array_diff($genericTaggable, ['collection'])],
         ];
+    }
+
+    public function testEveryObjectTypeEnumValueIsAKnownType(): void
+    {
+        $known = [
+            ...array_map(static fn(LibraryItemEnum $case): string => $case->value, LibraryItemEnum::cases()),
+            ...array_map(static fn(ObjectTypeEnum $case): string => $case->value, ObjectTypeEnum::cases()),
+            ...self::NON_ENUM_LITERAL_VALUES,
+        ];
+
+        foreach ($this->parseTables() as $table => $columns) {
+            foreach ($columns as $column) {
+                if ($column['name'] !== 'object_type') {
+                    continue;
+                }
+
+                foreach ($this->enumValues($column['type']) ?? [] as $value) {
+                    self::assertContains(
+                        $value,
+                        $known,
+                        sprintf(
+                            '`%s`.`object_type` lists `%s`, which is not a case of LibraryItemEnum or '
+                            . 'ObjectTypeEnum and is not in NON_ENUM_LITERAL_VALUES - either it is a dead '
+                            . 'value (like `tvshow`/`tvshow_season` were) or this allowlist needs updating',
+                            $table,
+                            $value
+                        )
+                    );
+                }
+            }
+        }
+    }
+
+    public function testNoTableDeclaresAColumnMoreThanOnce(): void
+    {
+        foreach ($this->parseTables() as $table => $columns) {
+            $names  = array_map(static fn(array $column): string => $column['name'], $columns);
+            $counts = array_count_values($names);
+            $dupes  = array_keys(array_filter($counts, static fn(int $count): bool => $count > 1));
+
+            self::assertSame(
+                [],
+                $dupes,
+                sprintf('`%s` declares these columns more than once: %s', $table, implode(', ', $dupes))
+            );
+        }
     }
 
     /**
@@ -169,6 +168,20 @@ class ObjectTypeEnumConsistencyTest extends TestCase
     }
 
     /**
+     * @return ?list<string>
+     */
+    private function enumValues(string $columnType): ?array
+    {
+        if (!preg_match('/^enum\(([^)]*)\)/', $columnType, $match)) {
+            return null;
+        }
+
+        preg_match_all("/'([^']*)'/", $match[1], $values);
+
+        return $values[1];
+    }
+
+    /**
      * @return array<string, list<array{name: string, type: string}>>
      */
     private function parseTables(): array
@@ -199,19 +212,5 @@ class ObjectTypeEnumConsistencyTest extends TestCase
         }
 
         return $tables;
-    }
-
-    /**
-     * @return ?list<string>
-     */
-    private function enumValues(string $columnType): ?array
-    {
-        if (!preg_match('/^enum\(([^)]*)\)/', $columnType, $match)) {
-            return null;
-        }
-
-        preg_match_all("/'([^']*)'/", $match[1], $values);
-
-        return $values[1];
     }
 }
