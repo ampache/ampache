@@ -52,6 +52,9 @@ class TemplateRowListTest extends TestCase
         'artist_row.phtml' => [
             'cel_play', 'getClassCover', 'getClassArtist', 'cel_add', 'cel_action',
         ],
+        'search_row.phtml' => [
+            'cel_play', 'cel_playlist', 'cel_add_list', 'cel_action',
+        ],
         'playlist_row.phtml' => [
             'cel_play', 'getClassCover', 'cel_playlist', 'cel_add_list', 'cel_time', 'cel_action',
         ],
