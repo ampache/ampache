@@ -35,6 +35,9 @@ final readonly class PreferenceItem
      * @param ?string $shippedDefault the value Ampache ships with, null when the name is unknown to `Preference::DEFAULTS`
      * @param ?string $systemValue the `user = -1` row, null when the subject *is* the system
      * @param ?string $warning why another preference is making this one pointless, when one is
+     * @param ?string $numberFallback the subject's own value of the preference this one falls back to
+     *        when left blank (e.g. `transcode_bitrate` for `transcode_bitrate_webplayer`), null when this
+     *        preference has none
      */
     public function __construct(
         public string $name,
@@ -51,6 +54,7 @@ final readonly class PreferenceItem
         public bool $secretIsSet,
         public ?PreferenceHelp $help,
         public ?string $warning = null,
+        public ?string $numberFallback = null,
     ) {}
 
     /**

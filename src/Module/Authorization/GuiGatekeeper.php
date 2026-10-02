@@ -72,6 +72,12 @@ final readonly class GuiGatekeeper implements GuiGatekeeperInterface
     {
         // demo mode answers every privilege check with true, so it never reaches the level test
         return $this->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            && !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
+            && !$this->isDemoMode();
+    }
+
+    #[Override]
+    public function isDemoMode(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
     }
 }

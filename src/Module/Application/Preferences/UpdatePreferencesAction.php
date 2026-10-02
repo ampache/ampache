@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -52,7 +50,6 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
         private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         private UiInterface $ui,
         private RequestParserInterface $requestParser,
-        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,7 +61,7 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
         if (
             !$user instanceof User
             || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || $gatekeeper->isDemoMode()
             || ($isServer && !$gatekeeper->mayAdminister())
             || !$this->requestParser->verifyForm('update_preference')
         ) {

@@ -76,6 +76,15 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->assertFalse($this->subject->mayAdminister());
     }
 
+    public function testIsDemoModeReadsTheConfigFlag(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->andReturnTrue();
+
+        $this->assertTrue($this->subject->isDemoMode());
+    }
+
     public function testMayAdministerNeedsTheLevelAndNoDemoMode(): void
     {
         $this->privilegeChecker->shouldReceive('check')

@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Preferences\PreferenceInputRenderer;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesView;
@@ -92,7 +91,6 @@ class UpdatePreferencesActionTest extends MockeryTestCase
             $this->updater,
             $this->ui,
             $this->requestParser,
-            $this->configContainer,
         );
     }
 
@@ -105,7 +103,6 @@ class UpdatePreferencesActionTest extends MockeryTestCase
 
     public function testAMissingFormTokenWritesNothing(): void
     {
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
         $this->requestParser->shouldReceive('verifyForm')->with('update_preference')->once()->andReturnFalse();
         $this->updater->shouldNotReceive('update');
 
@@ -118,7 +115,6 @@ class UpdatePreferencesActionTest extends MockeryTestCase
     {
         $_POST['method'] = 'admin';
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
         $this->requestParser->shouldReceive('verifyForm')->andReturnTrue();
         $this->updater->shouldNotReceive('update');
 
@@ -132,14 +128,11 @@ class UpdatePreferencesActionTest extends MockeryTestCase
      */
     public function testDemoModeWritesNothing(): void
     {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->andReturnTrue();
         $this->updater->shouldNotReceive('update');
 
         $this->expectException(AccessDeniedException::class);
 
-        $this->subject->run($this->mock(ServerRequestInterface::class), $this->gatekeeper());
+        $this->subject->run($this->mock(ServerRequestInterface::class), $this->gatekeeper(demo: true));
     }
 
     public function testTheServerPathWritesTheSharedRowAndNotAnAccount(): void
@@ -147,7 +140,6 @@ class UpdatePreferencesActionTest extends MockeryTestCase
         $_POST['method'] = 'admin';
         $_REQUEST['tab'] = 'system';
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
         $this->requestParser->shouldReceive('verifyForm')->andReturnTrue();
         $this->updater->shouldReceive('update')->with(User::INTERNAL_SYSTEM_USER_ID)->once();
 
@@ -172,13 +164,14 @@ class UpdatePreferencesActionTest extends MockeryTestCase
         $this->assertNull($result);
     }
 
-    private function gatekeeper(bool $admin = true): MockInterface|GuiGatekeeperInterface
+    private function gatekeeper(bool $admin = true, bool $demo = false): MockInterface|GuiGatekeeperInterface
     {
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->andReturnTrue();
         $gatekeeper->shouldReceive('mayAdminister')->andReturn($admin);
+        $gatekeeper->shouldReceive('isDemoMode')->andReturn($demo);
         $gatekeeper->shouldReceive('getUser')->andReturn($this->operator());
 
         return $gatekeeper;

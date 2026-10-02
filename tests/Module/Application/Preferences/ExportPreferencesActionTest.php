@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Preferences\PreferenceExporterInterface;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\MockeryTestCase;
@@ -47,7 +45,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ExportPreferencesActionTest extends MockeryTestCase
 {
-    private MockInterface|ConfigContainerInterface $configContainer;
     private MockInterface|PreferenceExporterInterface $exporter;
     private MockInterface|ModelFactoryInterface $modelFactory;
     private ExportPreferencesAction $subject;
@@ -55,15 +52,13 @@ class ExportPreferencesActionTest extends MockeryTestCase
     #[Override]
     public function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->exporter        = $this->mock(PreferenceExporterInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->exporter     = $this->mock(PreferenceExporterInterface::class);
 
         $this->subject = new ExportPreferencesAction(
             new Psr17Factory(),
             $this->modelFactory,
             $this->exporter,
-            $this->configContainer,
         );
     }
 
@@ -75,7 +70,6 @@ class ExportPreferencesActionTest extends MockeryTestCase
 
         $gatekeeper = $this->gatekeeper(admin: true);
         $gatekeeper->shouldReceive('getUser')->andReturn($operator);
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
         $this->modelFactory->shouldReceive('createUser')->with(7)->once()->andReturn($target);
 
         $captured = null;
@@ -97,7 +91,6 @@ class ExportPreferencesActionTest extends MockeryTestCase
     {
         $gatekeeper = $this->gatekeeper(admin: false);
         $gatekeeper->shouldReceive('getUser')->andReturn($this->user(42));
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
         $this->modelFactory->shouldNotReceive('createUser');
 
         $this->expectException(AccessDeniedException::class);
@@ -109,7 +102,6 @@ class ExportPreferencesActionTest extends MockeryTestCase
     {
         $gatekeeper = $this->gatekeeper(admin: false);
         $gatekeeper->shouldReceive('getUser')->andReturn($this->user(42));
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
 
         $this->expectException(AccessDeniedException::class);
 
@@ -120,7 +112,6 @@ class ExportPreferencesActionTest extends MockeryTestCase
     {
         $gatekeeper = $this->gatekeeper(admin: true);
         $gatekeeper->shouldReceive('getUser')->andReturn($this->user(42));
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
 
         $target = $this->mock(User::class);
         $target->shouldReceive('isNew')->once()->andReturnTrue();
@@ -143,11 +134,8 @@ class ExportPreferencesActionTest extends MockeryTestCase
      */
     public function testDemoModeIsRefusedEvenThoughItGrantsAdmin(): void
     {
-        $gatekeeper = $this->gatekeeper(admin: true);
+        $gatekeeper = $this->gatekeeper(admin: true, demo: true);
         $gatekeeper->shouldReceive('getUser')->andReturn($this->user(42));
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->andReturnTrue();
         $this->modelFactory->shouldNotReceive('createUser');
 
         $this->expectException(AccessDeniedException::class);
@@ -160,7 +148,6 @@ class ExportPreferencesActionTest extends MockeryTestCase
         $operator   = $this->user(42);
         $gatekeeper = $this->gatekeeper();
         $gatekeeper->shouldReceive('getUser')->andReturn($operator);
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
 
         $captured = null;
         $this->exporter->shouldReceive('export')
@@ -179,13 +166,14 @@ class ExportPreferencesActionTest extends MockeryTestCase
         $this->assertStringContainsString('application/json', $response->getHeaderLine('Content-Type'));
     }
 
-    private function gatekeeper(bool $user = true, bool $admin = false): MockInterface|GuiGatekeeperInterface
+    private function gatekeeper(bool $user = true, bool $admin = false, bool $demo = false): MockInterface|GuiGatekeeperInterface
     {
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->andReturn($user);
         $gatekeeper->shouldReceive('mayAdminister')->andReturn($admin);
+        $gatekeeper->shouldReceive('isDemoMode')->andReturn($demo);
 
         return $gatekeeper;
     }

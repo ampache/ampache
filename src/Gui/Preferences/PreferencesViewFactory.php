@@ -45,17 +45,13 @@ final readonly class PreferencesViewFactory implements PreferencesViewFactoryInt
         User $operator,
         string $tab,
     ): PreferencesView {
-        $collected = $this->collector->collect($subject, $operator);
-
-        // a bare `preferences.php` names no tab, and the old screen answered it with every category at once
-        if (!isset($collected[$tab])) {
-            $tab = (string) array_key_first($collected);
-        }
+        // a bare `preferences.php` names no tab, and the old screen answered it with the first category
+        [$tab, $items] = $this->collector->collectTab($subject, $operator, $tab);
 
         return new PreferencesView(
             $this->configContainer->getWebPath(),
             $subject,
-            $collected[$tab] ?? [],
+            $items,
             $tab,
             $gatekeeper->mayAdminister(),
             (bool) $this->configContainer->get('simple_user_mode'),

@@ -199,9 +199,12 @@ final readonly class PreferenceInputRenderer
     /**
      * Units and what a zero means, per preference, built so that `xgettext` sees every `T_()` literal
      *
+     * Also the single source of which preference's value a number field falls back to (index 3), which
+     * `PreferenceCollector` reads too, so the two never have a second, independently drifting copy of it.
+     *
      * @return array<string, array{0: int, 1: int, 2: string, 3: ?string, 4: ?string}>
      */
-    private function numberHints(): array
+    public static function numberHints(): array
     {
         return [
             'transcode_bitrate' => [0, 1000, T_('bps'), null, T_('the source file rate')],
@@ -318,13 +321,13 @@ final readonly class PreferenceInputRenderer
 
     private function renderNumber(PreferenceItem $item): string
     {
-        [$min, $step, $unit, $fallback, $zeroMeans] = $this->numberHints()[$item->name] ?? [null, null, null, null, null];
+        [$min, $step, $unit, $fallback, $zeroMeans] = self::numberHints()[$item->name] ?? [null, null, null, null, null];
 
-        // an empty box means "use the server value", so a zero is shown as empty to let the placeholder speak
+        // an empty box means "use the subject's base value", so a zero is shown as empty to let the placeholder speak
         $value       = ($fallback !== null && (int) $item->value <= 0) ? '' : $item->value;
         $placeholder = ($fallback === null)
             ? ''
-            : sprintf(' placeholder="%s"', $this->e((string) AmpConfig::get_int($fallback, 128000)));
+            : sprintf(' placeholder="%s"', $this->e($item->numberFallback ?? '128000'));
 
         return sprintf(
             '<input class="pref-control" type="number" id="%s" name="%s" value="%s"%s%s%s %s />%s%s',

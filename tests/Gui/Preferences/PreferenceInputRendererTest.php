@@ -94,7 +94,6 @@ class PreferenceInputRendererTest extends TestCase
 
     public function testAFieldRenderedBlankIsNotBornAlreadyModified(): void
     {
-        AmpConfig::set('transcode_bitrate', 192000, true);
         $html = $this->render($this->item(name: 'transcode_bitrate_api', value: '0', shippedDefault: '0'));
 
         $this->assertStringContainsString('value=""', $html);
@@ -106,7 +105,6 @@ class PreferenceInputRendererTest extends TestCase
      */
     public function testAFieldShownBlankAlsoCallsItsDefaultBlank(): void
     {
-        AmpConfig::set('transcode_bitrate', 192000, true);
         $html = $this->render($this->item(name: 'transcode_bitrate_api', value: '0', shippedDefault: '0'));
 
         $this->assertStringContainsString('data-default=""', $html, 'otherwise the row is marked changed for ever');
@@ -215,13 +213,23 @@ class PreferenceInputRendererTest extends TestCase
         $this->assertSame('Trois, Sept', $this->subject->label($item, '3,7'));
     }
 
-    public function testAnOverridableBitrateShowsTheServerValueAsAPlaceholderRatherThanAZero(): void
+    /**
+     * The placeholder must read the subject's own `transcode_bitrate`, not whatever the operator's session
+     * happens to hold: an admin editing someone else's bitrate must see that account's base rate, not theirs.
+     */
+    public function testAnOverridableBitrateShowsTheSubjectsOwnBaseRateAsAPlaceholderRatherThanAZero(): void
     {
-        AmpConfig::set('transcode_bitrate', 192000, true);
-        $html = $this->render($this->item(name: 'transcode_bitrate_webplayer', value: '0'));
+        $html = $this->render($this->item(name: 'transcode_bitrate_webplayer', value: '0', numberFallback: '192000'));
 
         $this->assertStringContainsString('value=""', $html);
         $this->assertStringContainsString('placeholder="192000"', $html);
+    }
+
+    public function testAnOverridableBitrateWithNoKnownBaseRateFallsBackToAPlainDefault(): void
+    {
+        $html = $this->render($this->item(name: 'transcode_bitrate_webplayer', value: '0'));
+
+        $this->assertStringContainsString('placeholder="128000"', $html);
     }
 
     public function testANumericValueMatchesItsOptionWhateverItsSpelling(): void
@@ -400,6 +408,7 @@ class PreferenceInputRendererTest extends TestCase
         bool $isSecret = false,
         bool $secretIsSet = false,
         ?string $shippedDefault = '10',
+        ?string $numberFallback = null,
     ): PreferenceItem {
         return new PreferenceItem(
             name: $name,
@@ -415,6 +424,7 @@ class PreferenceInputRendererTest extends TestCase
             isSecret: $isSecret,
             secretIsSet: $secretIsSet,
             help: null,
+            numberFallback: $numberFallback,
         );
     }
 

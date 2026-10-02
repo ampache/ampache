@@ -54,6 +54,70 @@ final readonly class PreferenceCollector
      */
     public function collect(PreferenceSubject $subject, User $operator): array
     {
+        [$rows, $held, $systemValues, $demoMode] = $this->gather($subject);
+        $pluginHelp = $this->pluginHelp($rows);
+
+        $collected = [];
+        foreach ($rows as $row) {
+            $collected[$row['category']][] = $this->item(
+                $row,
+                $systemValues[$row['name']] ?? null,
+                $this->choiceProvider->find($row['name'], $subject, $held),
+                !$demoMode && $operator->access >= $row['level'],
+                $this->prerequisites->find($row['name'], $held),
+                $pluginHelp[$row['name']] ?? null,
+                $held,
+            );
+        }
+
+        return $collected;
+    }
+
+    /**
+     * Same data as collect(), but only builds the one tab a settings screen actually renders. collect()
+     * was building and then discarding every other category's items on every page view, running a
+     * choice-provider lookup (catalog/LocalPlay queries) for rows nobody was going to see.
+     *
+     * @param User $operator whoever is filling in the form, which is not always the subject
+     * @return array{0: string, 1: list<PreferenceItem>} the resolved tab (falls back to the first
+     *         category when $tab names none of them) and its items
+     */
+    public function collectTab(PreferenceSubject $subject, User $operator, string $tab): array
+    {
+        [$rows, $held, $systemValues, $demoMode] = $this->gather($subject);
+
+        $rowsByCategory = [];
+        foreach ($rows as $row) {
+            $rowsByCategory[$row['category']][] = $row;
+        }
+
+        $resolvedTab  = isset($rowsByCategory[$tab]) ? $tab : (string) (array_key_first($rowsByCategory) ?? '');
+        $categoryRows = $rowsByCategory[$resolvedTab] ?? [];
+        $pluginHelp   = $this->pluginHelp($categoryRows);
+
+        $items = [];
+        foreach ($categoryRows as $row) {
+            $items[] = $this->item(
+                $row,
+                $systemValues[$row['name']] ?? null,
+                $this->choiceProvider->find($row['name'], $subject, $held),
+                !$demoMode && $operator->access >= $row['level'],
+                $this->prerequisites->find($row['name'], $held),
+                $pluginHelp[$row['name']] ?? null,
+                $held,
+            );
+        }
+
+        return [$resolvedTab, $items];
+    }
+
+    /**
+     * The rows and the subject-wide lookups every item needs, shared by collect() and collectTab()
+     *
+     * @return array{0: list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string, default_value: ?string}>, 1: array<string, string>, 2: array<string, string>, 3: bool}
+     */
+    private function gather(PreferenceSubject $subject): array
+    {
         // `Preference::has_access()` locks every field in demo mode; `User::has_access()` does the opposite
         $demoMode     = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
         $systemValues = ($subject->isServer) ? [] : $this->systemValues();
@@ -68,21 +132,7 @@ final readonly class PreferenceCollector
             $held[$row['name']] = (string) ($row['value'] ?? '');
         }
 
-        $pluginHelp = $this->pluginHelp($rows);
-
-        $collected = [];
-        foreach ($rows as $row) {
-            $collected[$row['category']][] = $this->item(
-                $row,
-                $systemValues[$row['name']] ?? null,
-                $this->choiceProvider->find($row['name'], $subject, $held),
-                !$demoMode && $operator->access >= $row['level'],
-                $this->prerequisites->find($row['name'], $held),
-                $pluginHelp[$row['name']] ?? null,
-            );
-        }
-
-        return $collected;
+        return [$rows, $held, $systemValues, $demoMode];
     }
 
     /**
@@ -103,15 +153,17 @@ final readonly class PreferenceCollector
     /**
      * Turns one `UserRepository::getPreferenceRows()` row into the item a screen renders
      *
-     * @param array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: mixed} $row
+     * @param array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: mixed, default_value?: mixed} $row
      * @param ?string $systemValue the `user = -1` value, null when the subject is the system itself
      * @param ?array<array-key, string> $choices from `PreferenceChoiceProvider`
+     * @param array<string, string> $held this subject's own values, by name, for a number field's fallback
      */
-    private function item(array $row, ?string $systemValue, ?array $choices, bool $editable, ?string $warning, ?PreferenceHelp $pluginHelp): PreferenceItem
+    private function item(array $row, ?string $systemValue, ?array $choices, bool $editable, ?string $warning, ?PreferenceHelp $pluginHelp, array $held): PreferenceItem
     {
-        $name     = $row['name'];
-        $value    = (string) ($row['value'] ?? '');
-        $isSecret = Preference::isSecretName($name);
+        $name         = $row['name'];
+        $value        = (string) ($row['value'] ?? '');
+        $isSecret     = Preference::isSecretName($name);
+        $fallbackName = PreferenceInputRenderer::numberHints()[$name][3] ?? null;
 
         return new PreferenceItem(
             name: $name,
@@ -121,7 +173,10 @@ final readonly class PreferenceCollector
             level: $row['level'],
             // a secret is write-only: it must not reach a template that could echo it
             value: $isSecret ? '' : $value,
-            shippedDefault: Preference::DEFAULTS[$name][0] ?? null,
+            // a plugin's own preference has no entry in the static catalogue, so it falls back to what the
+            // `preference` row itself was created with, which core preferences never need since they are
+            // always in the catalogue
+            shippedDefault: Preference::DEFAULTS[$name][0] ?? ($row['default_value'] ?? null),
             systemValue: $isSecret ? null : $systemValue,
             choices: $choices,
             editable: $editable,
@@ -130,6 +185,7 @@ final readonly class PreferenceCollector
             // a plugin knows its own settings better than the shipped catalogue does
             help: $pluginHelp ?? $this->helpCatalog->find($name),
             warning: $warning,
+            numberFallback: ($fallbackName === null) ? null : ($held[$fallbackName] ?? null),
         );
     }
 

@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Preferences\PreferenceExporterInterface;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -51,14 +49,13 @@ final readonly class ExportPreferencesAction implements ApplicationActionInterfa
         private ResponseFactoryInterface $responseFactory,
         private ModelFactoryInterface $modelFactory,
         private PreferenceExporterInterface $exporter,
-        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || $gatekeeper->isDemoMode()
         ) {
             throw new AccessDeniedException();
         }
