@@ -46,7 +46,7 @@ $redirectUrl = $this->getRedirectUrl(); ?>
     </head>
     <body>
         <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container" style="height: 70px;">
+            <div class="container install-header-spacer">
                 <a class="navbar-brand" href="<?php echo $this->e($this->getWebPath()); ?>">
                     <img src="<?php echo $this->e($this->getLogoUrl()); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo $this->e($this->getSiteTitle()); ?>
@@ -54,7 +54,7 @@ $redirectUrl = $this->getRedirectUrl(); ?>
             </div>
         </div>
         <div id="guts" class="container" role="main">
-            <div class="jumbotron" style="margin-top: 70px">
+            <div class="jumbotron install-content-offset">
                 <h1><?php echo $this->e($this->getHeading()); ?></h1>
                 <p><?php echo $this->e($this->getSubHeading()); ?></p>
             </div>

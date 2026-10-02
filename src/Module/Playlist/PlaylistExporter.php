@@ -57,11 +57,22 @@ final readonly class PlaylistExporter implements PlaylistExporterInterface
         string $urltype,
     ): void {
         // Make sure the output dir is valid and writeable
+        if (!is_dir($dirname) && !mkdir($dirname, 0775, true)) {
+            $interactor->error(
+                sprintf(T_('There was a problem creating this directory: %s'), $dirname),
+                true
+            );
+
+            return;
+        }
+
         if (!is_writable($dirname)) {
             $interactor->error(
                 sprintf(T_('There was a problem creating this directory: %s'), $dirname),
                 true
             );
+
+            return;
         }
 
         $user = new User($userId);

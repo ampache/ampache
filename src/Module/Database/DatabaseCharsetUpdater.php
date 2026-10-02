@@ -31,222 +31,257 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
+    /** Tables a module creates for itself on install; never shipped in resources/sql/ampache.sql. @var list<string> */
+    private const array DYNAMICALLY_INSTALLED_TABLES = [
+        'catalog_beets',
+        'catalog_beetsremote',
+        'catalog_dropbox',
+        'catalog_seafile',
+        'catalog_subsonic',
+        'localplay_httpq',
+        'localplay_mpd',
+        'localplay_upnp',
+        'localplay_vlc',
+        'localplay_xbmc',
+    ];
+
     public function __construct(private ConfigContainerInterface $configContainer) {}
 
-    public function update(): void
+    public function findMismatches(): array
     {
-        $database           = $this->configContainer->get('database_name');
-        $translated_charset = Dba::translate_to_mysqlcharset($this->configContainer->get('site_charset'));
-        $target_charset     = $translated_charset['charset'];
-        $target_collation   = $translated_charset['collation'];
+        return $this->diff();
+    }
 
-        // Alter the charset for the entire database
-        $sql = sprintf('ALTER DATABASE `%s` DEFAULT CHARACTER SET %s COLLATE %s', $database, $target_charset, $target_collation);
-        Dba::write($sql);
+    public function update(): array
+    {
+        $applied = [];
+        foreach ($this->diff() as $mismatch) {
+            // entries with no sql (e.g. a table missing from the schema reference) are informational only
+            if ($mismatch['sql'] === '') {
+                continue;
+            }
 
-        $sql        = "SHOW TABLES";
-        $db_results = Dba::read($sql);
+            $result               = Dba::write($mismatch['sql']);
+            $mismatch['success']  = $result instanceof PDOStatement;
+            $applied[]            = $mismatch;
+        }
 
-        // Go through the tables!
-        while ($row = Dba::fetch_row($db_results)) {
-            $sql              = "DESCRIBE `" . $row['0'] . "`";
-            $describe_results = Dba::read($sql);
+        return $applied;
+    }
 
-            // Change the table engine
-            $sql = "ALTER TABLE `" . $row['0'] . "` ENGINE=InnoDB";
-            Dba::write($sql);
-            // Change the tables default charset and collation
-            $sql = "ALTER TABLE `" . $row['0'] . sprintf('` CONVERT TO CHARACTER SET %s COLLATE %s', $target_charset, $target_collation);
-            Dba::write($sql);
+    /**
+     * @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string}>
+     */
+    private function diff(): array
+    {
+        $database        = (string) $this->configContainer->get('database_name');
+        $translated      = Dba::translate_to_mysqlcharset((string) $this->configContainer->get('site_charset'));
+        $targetCharset   = $translated['charset'];
+        $targetCollation = $translated['collation'];
+        $targetEngine    = (string) ($this->configContainer->get('database_engine') ?? 'InnoDB');
+        $schema          = $this->loadSchemaReference($targetCharset, $targetCollation);
 
-            // Iterate through the columns of the table
-            while ($table = Dba::fetch_assoc($describe_results)) {
-                if (
-                    (str_contains((string) $table['Type'], 'varchar'))
-                    || (str_contains((string) $table['Type'], 'enum'))
-                    || (str_contains((string) $table['Type'], 'text'))
-                ) {
-                    $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset . (' COLLATE ' . $target_collation);
-                    $charset_results = Dba::write($sql);
-                    if (!$charset_results instanceof PDOStatement) {
-                        debug_event(self::class, 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset . (' COLLATE ' . $target_collation), 3);
-                    } // if it fails
-                }
+        $mismatches = [];
+
+        $schemaDefaults = Dba::fetch_assoc(Dba::read(
+            'SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = ?',
+            [$database]
+        ));
+        if (
+            $schemaDefaults !== []
+            && ($schemaDefaults['DEFAULT_CHARACTER_SET_NAME'] !== $targetCharset || $schemaDefaults['DEFAULT_COLLATION_NAME'] !== $targetCollation)
+        ) {
+            $mismatches[] = [
+                'scope' => 'database',
+                'table' => $database,
+                'column' => null,
+                'current' => $schemaDefaults['DEFAULT_CHARACTER_SET_NAME'] . '/' . $schemaDefaults['DEFAULT_COLLATION_NAME'],
+                'desired' => $targetCharset . '/' . $targetCollation,
+                'sql' => sprintf(
+                    'ALTER DATABASE `%s` DEFAULT CHARACTER SET %s COLLATE %s',
+                    $database,
+                    $targetCharset,
+                    $targetCollation
+                ),
+            ];
+        }
+
+        $tables = Dba::read(
+            'SELECT TABLE_NAME, ENGINE, TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?',
+            [$database]
+        );
+        while ($table = Dba::fetch_assoc($tables)) {
+            $tableName = (string) $table['TABLE_NAME'];
+
+            if ($table['ENGINE'] !== null && $table['ENGINE'] !== $targetEngine) {
+                $mismatches[] = [
+                    'scope' => 'engine',
+                    'table' => $tableName,
+                    'column' => null,
+                    'current' => (string) $table['ENGINE'],
+                    'desired' => $targetEngine,
+                    'sql' => sprintf('ALTER TABLE `%s` ENGINE=%s', $tableName, $targetEngine),
+                ];
+            }
+
+            $reference = $schema['tables'][$tableName] ?? null;
+            if ($reference === null) {
+                $mismatches[] = [
+                    'scope' => 'unknown',
+                    'table' => $tableName,
+                    'column' => null,
+                    'current' => 'present in the database',
+                    'desired' => 'not found in resources/sql/ampache.sql - confirm this table is still used, or regenerate the schema reference with admin:exportSchema',
+                    'sql' => '',
+                ];
+                continue;
+            }
+
+            if ($table['TABLE_COLLATION'] !== null && $this->normalizeCollation((string) $table['TABLE_COLLATION']) !== $reference['collation']) {
+                $mismatches[] = [
+                    'scope' => 'table',
+                    'table' => $tableName,
+                    'column' => null,
+                    'current' => (string) $table['TABLE_COLLATION'],
+                    'desired' => $reference['collation'],
+                    // DEFAULT CHARACTER SET (not CONVERT TO) only affects new columns, not existing data
+                    'sql' => sprintf(
+                        'ALTER TABLE `%s` DEFAULT CHARACTER SET %s COLLATE %s',
+                        $tableName,
+                        $reference['charset'],
+                        $reference['collation']
+                    ),
+                ];
             }
         }
 
-        // Convert all the table columns which (probably) didn't convert
-        Dba::write(sprintf('ALTER TABLE `access_list` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `access_list` MODIFY COLUMN `type` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `album` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `album` MODIFY COLUMN `prefix` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `album` MODIFY COLUMN `release_type` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `album` MODIFY COLUMN `barcode` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `album` MODIFY COLUMN `catalog_number` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `artist` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `artist` MODIFY COLUMN `prefix` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `artist` MODIFY COLUMN `summary` text CHARACTER SET %s COLLATE %s;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `artist` MODIFY COLUMN `placeformed` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `bookmark` MODIFY COLUMN `comment` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `bookmark` MODIFY COLUMN `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `broadcast` MODIFY COLUMN `name` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `broadcast` MODIFY COLUMN `description` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `broadcast` MODIFY COLUMN `key` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write(sprintf('ALTER TABLE `catalog` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog` MODIFY COLUMN `rename_pattern` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog` MODIFY COLUMN `sort_pattern` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog` MODIFY COLUMN `gather_types` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog_local` MODIFY COLUMN `path` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog_remote` MODIFY COLUMN `uri` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog_remote` MODIFY COLUMN `username` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `catalog_remote` MODIFY COLUMN `password` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `democratic` MODIFY COLUMN `name` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `image` MODIFY COLUMN `mime` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `image` MODIFY COLUMN `size` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `image` MODIFY COLUMN `kind` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `ip_history` MODIFY COLUMN `agent` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `name` varchar(80) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `category` varchar(40) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `summary` text CHARACTER SET %s COLLATE %s;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `address` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `email` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `label` MODIFY COLUMN `website` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `license` MODIFY COLUMN `name` varchar(80) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `license` MODIFY COLUMN `description` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `license` MODIFY COLUMN `external_link` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `live_stream` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `live_stream` MODIFY COLUMN `site_url` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `live_stream` MODIFY COLUMN `url` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `localplay_httpq` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `localplay_httpq` MODIFY COLUMN `host` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `localplay_httpq` MODIFY COLUMN `password` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `localplay_mpd` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `localplay_mpd` MODIFY COLUMN `host` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `localplay_mpd` MODIFY COLUMN `password` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `metadata` MODIFY COLUMN `type` varchar(50) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `metadata_field` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `player_control` MODIFY COLUMN `cmd` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `player_control` MODIFY COLUMN `value` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `player_control` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `playlist` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `playlist` MODIFY COLUMN `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `playlist_data` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `feed` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `website` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `description` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `language` varchar(5) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `copyright` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast` MODIFY COLUMN `generator` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `guid` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `state` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `file` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `source` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `website` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `description` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `author` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `podcast_episode` MODIFY COLUMN `category` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `name` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `value` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `description` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `type` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `category` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `preference` MODIFY COLUMN `subcategory` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `recommendation` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `recommendation_item` MODIFY COLUMN `name` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `recommendation_item` MODIFY COLUMN `rel` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `search` MODIFY COLUMN `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `search` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `search` MODIFY COLUMN `logic_operator` varchar(3) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `session` MODIFY COLUMN `id` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write(sprintf('ALTER TABLE `session` MODIFY COLUMN `username` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `session` MODIFY COLUMN `type` varchar(16) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `session` MODIFY COLUMN `agent` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `session` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `session_remember` MODIFY COLUMN `username` varchar(255) CHARACTER SET %s COLLATE %s NOT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `session_remember` MODIFY COLUMN `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write(sprintf('ALTER TABLE `session_stream` MODIFY COLUMN `agent` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `share` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write(sprintf('ALTER TABLE `share` MODIFY COLUMN `secret` varchar(20) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `share` MODIFY COLUMN `public_url` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `share` MODIFY COLUMN `description` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `song` MODIFY COLUMN `file` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `song` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `song` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `song` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `song` MODIFY COLUMN `composer` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `song_data` MODIFY COLUMN `label` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `song_data` MODIFY COLUMN `language` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `song_preview` MODIFY COLUMN `session` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `song_preview` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `album_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `song_preview` MODIFY COLUMN `file` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `stream_playlist` MODIFY COLUMN `sid` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `stream_playlist` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `stream_playlist` MODIFY COLUMN `author` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `stream_playlist` MODIFY COLUMN `album` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `stream_playlist` MODIFY COLUMN `type` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `tag` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `tag_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `tmp_browse` MODIFY COLUMN `sid` varchar(128) CHARACTER SET %s COLLATE %s NOT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `tmp_playlist` MODIFY COLUMN `session` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `tmp_playlist` MODIFY COLUMN `type` varchar(32) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `tmp_playlist` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `tmp_playlist_data` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `update_info` MODIFY COLUMN `key` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `update_info` MODIFY COLUMN `value` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `username` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `fullname` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `email` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `website` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `apikey` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `password` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `validation` varchar(128) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `state` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `city` varchar(64) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user_activity` MODIFY COLUMN `action` varchar(20) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write(sprintf('ALTER TABLE `user_preference` MODIFY COLUMN `value` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user_pvmsg` MODIFY COLUMN `subject` varchar(80) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user_pvmsg` MODIFY COLUMN `message` text CHARACTER SET %s COLLATE %s;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `user_shout` MODIFY COLUMN `data` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `user_vote` MODIFY COLUMN `sid` varchar(256) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `video` MODIFY COLUMN `file` varchar(4096) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `video` MODIFY COLUMN `title` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `video` MODIFY COLUMN `video_codec` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `video` MODIFY COLUMN `audio_codec` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write(sprintf('ALTER TABLE `video` MODIFY COLUMN `mime` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
-        Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write(sprintf('ALTER TABLE `wanted` MODIFY COLUMN `name` varchar(255) CHARACTER SET %s COLLATE %s DEFAULT NULL;', $target_charset, $target_collation));
+        $columns = Dba::read(
+            'SELECT TABLE_NAME, COLUMN_NAME, CHARACTER_SET_NAME, COLLATION_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT, EXTRA
+             FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = ? AND CHARACTER_SET_NAME IS NOT NULL',
+            [$database]
+        );
+        while ($column = Dba::fetch_assoc($columns)) {
+            $table = (string) $column['TABLE_NAME'];
+            $field = (string) $column['COLUMN_NAME'];
+
+            // unlisted column inherits the table default
+            $reference = $schema['columns'][$table][$field] ?? $schema['tables'][$table] ?? null;
+            if ($reference === null) {
+                continue;
+            }
+
+            $currentCharset   = $this->normalizeCharset((string) $column['CHARACTER_SET_NAME']);
+            $currentCollation = $this->normalizeCollation((string) $column['COLLATION_NAME']);
+            if ($currentCharset === $reference['charset'] && $currentCollation === $reference['collation']) {
+                continue;
+            }
+
+            $null = ($column['IS_NULLABLE'] === 'NO') ? ' NOT NULL' : ' NULL';
+            if ($column['COLUMN_DEFAULT'] !== null) {
+                $default = " DEFAULT '" . Dba::escape($column['COLUMN_DEFAULT']) . "'";
+            } elseif ($column['IS_NULLABLE'] === 'YES') {
+                $default = ' DEFAULT NULL';
+            } else {
+                $default = '';
+            }
+            $extra = ($column['EXTRA'] !== '') ? ' ' . $column['EXTRA'] : '';
+
+            $mismatches[] = [
+                'scope' => 'column',
+                'table' => $table,
+                'column' => $field,
+                'current' => $column['CHARACTER_SET_NAME'] . '/' . $column['COLLATION_NAME'],
+                'desired' => $reference['charset'] . '/' . $reference['collation'],
+                'sql' => sprintf(
+                    'ALTER TABLE `%s` MODIFY COLUMN `%s` %s CHARACTER SET %s COLLATE %s%s%s%s',
+                    $table,
+                    $field,
+                    $column['COLUMN_TYPE'],
+                    $reference['charset'],
+                    $reference['collation'],
+                    $null,
+                    $default,
+                    $extra
+                ),
+            ];
+        }
+
+        return $mismatches;
+    }
+
+    /**
+     * @return array{
+     *     tables: array<string, array{charset: string, collation: string}>,
+     *     columns: array<string, array<string, array{charset: string, collation: string}>>
+     * }
+     */
+    private function loadSchemaReference(string $targetCharset, string $targetCollation): array
+    {
+        $path = dirname(__DIR__, 3) . '/resources/sql/ampache.sql';
+
+        $tables  = [];
+        $columns = [];
+
+        $table          = null;
+        $pendingColumns = [];
+
+        foreach (file($path, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
+            if (preg_match('/^CREATE TABLE IF NOT EXISTS `(\w+)` \(/', $line, $created)) {
+                $table          = $created[1];
+                $pendingColumns = [];
+                continue;
+            }
+
+            if ($table === null) {
+                continue;
+            }
+
+            if (preg_match('/^\) ENGINE=\w+ DEFAULT CHARSET=(\w+) COLLATE=(\w+)\b/', $line, $closed)) {
+                $default = [
+                    'charset' => $this->normalizeCharset($closed[1]),
+                    'collation' => $this->normalizeCollation($closed[2]),
+                ];
+
+                $tables[$table]  = $default;
+                $columns[$table] = [];
+                foreach ($pendingColumns as $name => $override) {
+                    $columns[$table][$name] = $override ?? $default;
+                }
+
+                $table = null;
+                continue;
+            }
+
+            // a column line starts with a backtick; KEY/PRIMARY KEY lines don't
+            if (preg_match('/^\s*`(\w+)`\s/', $line, $declared)) {
+                $override = null;
+                if (preg_match('/CHARACTER SET (\w+) COLLATE (\w+)/', $line, $explicit)) {
+                    $override = [
+                        'charset' => $this->normalizeCharset($explicit[1]),
+                        'collation' => $this->normalizeCollation($explicit[2]),
+                    ];
+                }
+
+                $pendingColumns[$declared[1]] = $override;
+            }
+        }
+
+        foreach (self::DYNAMICALLY_INSTALLED_TABLES as $dynamicTable) {
+            $tables[$dynamicTable] ??= ['charset' => $targetCharset, 'collation' => $targetCollation];
+        }
+
+        return ['tables' => $tables, 'columns' => $columns];
+    }
+
+    // utf8 and utf8mb3 are the same charset; modern servers report the latter
+    private function normalizeCharset(string $charset): string
+    {
+        return $charset === 'utf8' ? 'utf8mb3' : $charset;
+    }
+
+    private function normalizeCollation(string $collation): string
+    {
+        return str_starts_with($collation, 'utf8_') ? 'utf8mb3_' . substr($collation, 5) : $collation;
     }
 }

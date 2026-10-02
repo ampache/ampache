@@ -74,6 +74,37 @@ final class UpdateDbCommand extends Command
             sprintf(T_('Table engine: %s'), $table_engine),
             true
         );
+        $interactor->eol();
+
+        $mismatches = $this->databaseCharsetUpdater->findMismatches();
+
+        if ($mismatches === []) {
+            $interactor->ok(
+                T_('Nothing out of sync. No changes needed'),
+                true
+            );
+
+            return;
+        }
+
+        /* HINT: %d is a number of database/table/column entries */
+        $interactor->warn(
+            sprintf(T_('Found %d entries out of sync with your configured charset:'), count($mismatches)),
+            true
+        );
+        foreach ($mismatches as $mismatch) {
+            $interactor->white(
+                sprintf(
+                    '  [%s] %s: %s -> %s',
+                    $mismatch['scope'],
+                    $this->describe($mismatch),
+                    $mismatch['current'],
+                    $mismatch['desired']
+                ),
+                true
+            );
+        }
+        $interactor->eol();
 
         if ($dryRun) {
             $interactor->info(
@@ -84,13 +115,27 @@ final class UpdateDbCommand extends Command
                 T_('No changes have been made'),
                 true
             );
-        } else {
-            $interactor->warn(
-                "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
-                true
-            );
 
-            $this->databaseCharsetUpdater->update();
+            return;
+        }
+
+        $interactor->warn(
+            "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
+            true
+        );
+
+        foreach ($this->databaseCharsetUpdater->update() as $result) {
+            if ($result['success']) {
+                $interactor->ok(
+                    sprintf(T_('Fixed %s'), $this->describe($result)),
+                    true
+                );
+            } else {
+                $interactor->error(
+                    sprintf(T_('Failed to fix %s'), $this->describe($result)),
+                    true
+                );
+            }
         }
     }
 
@@ -102,5 +147,15 @@ final class UpdateDbCommand extends Command
         $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
+    }
+
+    /**
+     * @param array{table: string, column: ?string} $entry
+     */
+    private function describe(array $entry): string
+    {
+        return ($entry['column'] !== null)
+            ? sprintf('%s.%s', $entry['table'], $entry['column'])
+            : $entry['table'];
     }
 }

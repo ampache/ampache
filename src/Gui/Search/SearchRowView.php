@@ -43,6 +43,7 @@ final class SearchRowView extends AbstractView
         private readonly bool $showRatings,
         private readonly bool $mayBatchDownload,
         private readonly bool $mayEdit,
+        private readonly bool $mayDelete,
     ) {}
 
     public function areRatingsShown(): bool
@@ -83,6 +84,11 @@ final class SearchRowView extends AbstractView
     public function mayBatchDownload(): bool
     {
         return $this->mayBatchDownload;
+    }
+
+    public function mayDelete(): bool
+    {
+        return $this->mayDelete;
     }
 
     public function mayEdit(): bool

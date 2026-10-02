@@ -37,6 +37,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -118,6 +119,11 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $level = AccessLevelEnum::USER;
         }
         if ($action === 'show_edit_playlist') {
+            $level = AccessLevelEnum::USER;
+        }
+
+        // Filing a public list into your own folder is per-viewer, not a write to it -- canEditFields() still gates every other field.
+        if ($libitem instanceof playlist_object && !$libitem->isPrivate()) {
             $level = AccessLevelEnum::USER;
         }
 

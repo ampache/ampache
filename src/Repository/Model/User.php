@@ -618,9 +618,7 @@ class User extends database_object
         $this->disabled = true;
         self::remove_from_cache('user', $this->id);
 
-        // Delete any sessions they may have, including a persistent remember-me token
-        $userRepository->deleteSessions((string) $this->username);
-        Session::remove_remember_token((string) $this->username);
+        $this->revokeSessions();
 
         return true;
     }
@@ -711,14 +709,14 @@ class User extends database_object
             $avatar_type == 'f_avatar_mini'
             && !empty($avatar['url_mini'])
         ) {
-            return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
+            return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" class="avatar-mini" />';
         }
 
         if (
             $avatar_type == 'f_avatar_medium'
             && !empty($avatar['url_medium'])
         ) {
-            return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
+            return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" class="avatar-medium" />';
         }
 
         return '';
@@ -984,6 +982,15 @@ class User extends database_object
     }
 
     /**
+     * Drops every session this user holds, including a persistent remember-me token
+     */
+    public function revokeSessions(): void
+    {
+        self::getUserRepository()->deleteSessions((string) $this->username);
+        Session::remove_remember_token((string) $this->username);
+    }
+
+    /**
      * set_preferences
      * sets the prefs for this specific user
      */
@@ -1127,7 +1134,7 @@ class User extends database_object
         $this->store(UserFieldEnum::FULLNAME_PUBLIC, ($new_fullname_public) ? '1' : '0');
     }
 
-    public function update_password(string $new_password, ?string $hashed_password = null): void
+    public function update_password(string $new_password, ?string $hashed_password = null, bool $revokeSessions = true): void
     {
         debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
@@ -1139,8 +1146,10 @@ class User extends database_object
             unset($_SESSION['userdata']['password']);
         }
 
-        // a persistent remember-me token issued under the old password must not outlive it
-        Session::remove_remember_token((string) $this->username);
+        // nothing the old password opened may outlive it; a login-time rehash stores the same secret and keeps them
+        if ($revokeSessions) {
+            $this->revokeSessions();
+        }
     }
 
     public function update_state(string $new_state): void

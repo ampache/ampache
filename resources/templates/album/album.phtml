@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Share;
@@ -85,14 +84,6 @@ Ui::show_box_top('', 'info-box'); ?>
         <li>
             <a href="<?php echo $this->e($webPath); ?>/stats.php?action=graph&object_type=<?php echo $this->e($type); ?>&object_id=<?php echo $albumId; ?>">
                 <?php echo $this->raw(Ui::get_material_symbol('bar_chart', T_('Graphs'))); ?><?php echo T_('Graphs'); ?>
-            </a>
-        </li>
-        <?php } ?>
-        <?php if ($this->showReorder()) { ?>
-        <li>
-            <a onclick="submitNewItemsOrder('<?php echo $albumId; ?>', 'reorder_songs_table_<?php echo $albumId; ?>', 'song_', '<?php echo $this->e($webPath); ?>/albums.php?action=set_track_numbers', '<?php echo $this->e(RefreshAlbumSongsAction::REQUEST_KEY); ?>')">
-                <?php echo $this->raw(Ui::get_material_symbol('save', T_('Save Track Order'))); ?>
-                <?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <?php } ?>

@@ -197,7 +197,7 @@ final class AlbumPageView extends AbstractView
      */
     public function getHiddenColumns(): array
     {
-        return ((bool) AmpConfig::get('hide_single_artist') && $this->album->get_artist_count() === 1)
+        return (AmpConfig::get('hide_single_artist') && $this->album->get_artist_count() === 1)
             ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
             : ['cel_album', 'cel_year', 'cel_drag'];
     }
@@ -349,7 +349,7 @@ final class AlbumPageView extends AbstractView
     {
         $limit = AmpConfig::get_int('direct_play_limit');
 
-        return (bool) AmpConfig::get('directplay')
+        return AmpConfig::get('directplay')
             && ($limit <= 0 || $this->album->song_count <= $limit);
     }
 
@@ -365,15 +365,7 @@ final class AlbumPageView extends AbstractView
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) AmpConfig::get('ratings');
-    }
-
-    /**
-     * Only the whole album offers a track reorder; a single disk has no ordering of its own to save.
-     */
-    public function showReorder(): bool
-    {
-        return !$this->album instanceof AlbumDisk;
+        return User::is_registered() && AmpConfig::get('ratings');
     }
 
     public function showRss(): bool
@@ -383,17 +375,17 @@ final class AlbumPageView extends AbstractView
 
     public function showShare(): bool
     {
-        return $this->mayUse && (bool) AmpConfig::get('share');
+        return $this->mayUse && AmpConfig::get('share');
     }
 
     public function showShout(): bool
     {
-        return (!AmpConfig::get('use_auth') || $this->mayUse) && (bool) AmpConfig::get('sociable');
+        return (!AmpConfig::get('use_auth') || $this->mayUse) && AmpConfig::get('sociable');
     }
 
     public function showUploader(): bool
     {
-        return (bool) AmpConfig::get('sociable') && $this->album->get_user_owner() > 0;
+        return AmpConfig::get('sociable') && $this->album->get_user_owner() > 0;
     }
 
     #[Override]

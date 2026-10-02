@@ -58,25 +58,28 @@ final class PrintTagsCommand extends Command
             true
         );
 
+        $dir_pattern  = '';
+        $file_pattern = '';
+
         /* Attempt to figure out what catalog it comes from */
         $sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE ?;";
         $db_results = Dba::read($sql, ['%' . $filename]);
         $row        = Dba::fetch_assoc($db_results);
-        $catalog    = Catalog::create_from_id($row['id']);
-        if ($catalog === null) {
-            return;
+        if (isset($row['id'])) {
+            $catalog = Catalog::create_from_id((int) $row['id']);
+            if ($catalog !== null) {
+                $dir_pattern  = (string) $catalog->sort_pattern;
+                $file_pattern = (string) $catalog->rename_pattern;
+            }
         }
-
-        $dir_pattern  = $catalog->sort_pattern;
-        $file_pattern = $catalog->rename_pattern;
 
         $vainfo = $this->utilityFactory->createVaInfo(
             $filename,
             ['music'],
             '',
             '',
-            (string) $dir_pattern,
-            (string) $file_pattern
+            $dir_pattern,
+            $file_pattern
         );
 
         if (

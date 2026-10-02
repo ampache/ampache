@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Api\Jellyfin;
+
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ * Resolves a Jellyfin bearer/query token back to a User through the api-typed session lookup — not
+ * `findByApiKey()`, whose raw and hashed apikey branches are a permanent-credential flow this surface
+ * does not use.
+ */
+final class JellyfinRequestAuthenticator implements JellyfinRequestAuthenticatorInterface
+{
+    public function __construct(
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly JellyfinSessionMinter $sessionMinter,
+    ) {}
+
+    public function authenticate(ServerRequestInterface $request): ?User
+    {
+        $token = JellyfinAuthorizationHeader::extractToken($request);
+        if ($token === '') {
+            return null;
+        }
+
+        $user = $this->userRepository->findByApiSessionToken($token);
+        if ($user === null || $user->disabled) {
+            return null;
+        }
+
+        // findByApiSessionToken() only matched a currently-valid row, so extending it here never resurrects an expired one
+        $this->sessionMinter->extend($token);
+
+        return $user;
+    }
+}

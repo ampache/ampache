@@ -66,7 +66,7 @@ final class HomeView extends AbstractView
             (bool) AmpConfig::get('album_group'),
             $this->mayUse,
             (bool) AmpConfig::get('podcast'),
-            (bool) AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0
+            AmpConfig::get('allow_video') && $this->videoRepository->getItemCount() > 0
         )->render();
     }
 
@@ -128,7 +128,7 @@ final class HomeView extends AbstractView
 
     public function showMomentVideos(): bool
     {
-        return (bool) AmpConfig::get('home_moment_videos') && (bool) AmpConfig::get('allow_video');
+        return AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video');
     }
 
     public function showNowPlaying(): bool

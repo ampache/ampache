@@ -159,7 +159,7 @@ class Playlist extends playlist_object
         // get the public_name/username
         $username = User::get_username($user_id);
 
-        $insert_id = self::getPlaylistRepository()->insert($name, $user_id, (string) $username, $type, time());
+        $insert_id = self::getPlaylistRepository()->insert($name, $user_id, $username, $type, time());
         if ($insert_id === null) {
             return null;
         }

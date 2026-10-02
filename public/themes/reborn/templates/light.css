@@ -538,10 +538,6 @@ span.fatalerror {
     background-size: contain;
 }
 
-.item_art .item_art_actions {
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
 .item_art img {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }

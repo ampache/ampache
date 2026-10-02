@@ -23,66 +23,57 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Album;
+namespace Ampache\Module\Application\PlaylistFolder;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Gui\Form\PlaylistFolderFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\PlaylistFolder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
-final readonly class SetTrackNumbersAction implements ApplicationActionInterface
+/**
+ * Shows the create-a-playlist-folder form
+ */
+final readonly class ShowCreateAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'set_track_numbers';
+    public const string REQUEST_KEY = 'show_create';
 
     public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private PlaylistFolderTreeFormatterInterface $treeFormatter,
+        private RequestParserInterface $requestParser,
         private UiInterface $ui,
-        private LoggerInterface $logger,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $this->logger->debug(
-            'Set track numbers called.',
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
             throw new AccessDeniedException();
         }
 
-        // Retrieving final song order from url
-        foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities(scrub_in((string) $data));
-
-            $this->logger->debug(
-                sprintf('%d=%s', $key, Core::get_get($key)),
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+        $user = $gatekeeper->getUser();
+        if ($user === null) {
+            throw new AccessDeniedException();
         }
 
-        if (isset($_GET['order'])) {
-            $songs = explode(';', Core::get_get('order'));
-            $track = (filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT))
-                ? ((int) filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
-                : 1;
-            foreach ($songs as $song_id) {
-                if ($song_id !== '') {
-                    Song::update_track($track, (int) $song_id);
-                    ++$track;
-                }
-            }
-        }
+        $parentId = (int) ($request->getQueryParams()['folder'] ?? PlaylistFolder::ROOT);
 
+        $this->ui->showHeader();
+        echo new PlaylistFolderFormView(
+            $this->configContainer->getWebPath(),
+            null,
+            $this->requestParser->getFromRequest('name'),
+            $parentId,
+            $this->treeFormatter->flatten($user)
+        )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

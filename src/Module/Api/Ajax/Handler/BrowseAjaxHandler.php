@@ -245,13 +245,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_catalog($selectedCatalogId);
                 }
 
-                $results['browse_filters'] = (new BrowseFiltersView(
+                $results['browse_filters'] = new BrowseFiltersView(
                     $browse,
                     Browse::get_allowed_filters($browse->get_type()),
                     $this->catalogRepository->getNamesByIds(User::get_user_catalogs($user->getId())),
                     $selectedCatalogId,
                     $argument_param
-                ))->render();
+                )->render();
                 break;
             case 'hide_filters':
                 ob_start();

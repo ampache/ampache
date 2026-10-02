@@ -96,7 +96,7 @@ final class BookmarkDeleteMethod implements MethodInterface
         }
 
         $objectId = (int) $input['filter'];
-        $type     = $input['type'] ?? 'bookmark';
+        $type     = (string) ($input['type'] ?? 'bookmark');
         $comment  = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
 
         if (

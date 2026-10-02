@@ -37,6 +37,7 @@ use Ampache\Module\Database\DbaDatabaseConnection;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Cache\ArrayCacheDriver;
 use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Module\Util\MusicBrainz\ThrottledHttpAdapter;
 
 use function DI\autowire;
 use function DI\factory;
@@ -65,12 +66,17 @@ return [
     }),
     getID3::class => autowire(getID3::class),
     MusicBrainz::class => factory(static function (): MusicBrainz {
-        $brainz = MusicBrainz::newMusicBrainz(
-            'request',
+        // the one place the server and its throttle are read, so no caller can reach musicbrainz.org by accident
+        $brainz = new MusicBrainz(
+            new ThrottledHttpAdapter(
+                AmpConfig::get('musicbrainz_server'),
+                AmpConfig::get_int('musicbrainz_throttle', 100)
+            ),
             AmpConfig::get('musicbrainz_username'),
             AmpConfig::get('musicbrainz_password')
         );
-        $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
+        // the library refuses a version holding a '-', and this factory now runs for every plugin listing
+        $brainz->setUserAgent('Ampache', explode('-', (string) AmpConfig::get('version', ''))[0], Stream::get_base_url());
 
         return $brainz;
     }),

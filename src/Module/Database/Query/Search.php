@@ -48,7 +48,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\playlist_object;

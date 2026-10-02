@@ -259,6 +259,9 @@ class Daap_Api
             case 401:
                 $error = "Unauthorized";
                 break;
+            case 500:
+                $error = "Internal Server Error";
+                break;
         }
         header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);

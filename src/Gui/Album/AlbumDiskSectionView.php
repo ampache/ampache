@@ -131,18 +131,18 @@ final class AlbumDiskSectionView extends AbstractView
     {
         $limit = AmpConfig::get_int('direct_play_limit');
 
-        return (bool) AmpConfig::get('directplay')
+        return AmpConfig::get('directplay')
             && ($limit <= 0 || $this->disk->song_count <= $limit);
     }
 
     public function showShare(): bool
     {
-        return $this->mayUse && (bool) AmpConfig::get('share');
+        return $this->mayUse && AmpConfig::get('share');
     }
 
     public function showShout(): bool
     {
-        return (!AmpConfig::get('use_auth') || $this->mayUse) && (bool) AmpConfig::get('sociable');
+        return (!AmpConfig::get('use_auth') || $this->mayUse) && AmpConfig::get('sociable');
     }
 
     #[Override]

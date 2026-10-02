@@ -1574,3 +1574,9 @@ a.jp-video-play-icon {
 .jp-volume-bar-value {
     background: linear-gradient(to bottom, #34a9f2, #1c9ced) !important;
 }
+
+/* A live stream has no length to seek within, so its bar takes no clicks and is kept from filling in JS. */
+.jp-live-stream .jp-seek-bar {
+    cursor: default;
+    pointer-events: none;
+}

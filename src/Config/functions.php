@@ -73,7 +73,7 @@ function set_memory_limit(int|string $new_limit): void
 function scrub_in(array|string $input): array|string
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset', 'UTF-8')));
     }
     $results = [];
     foreach ($input as $item) {
@@ -282,7 +282,7 @@ if (!function_exists('getallheaders')) {
 
 /**
  * check_http_referer
- * Check the http referer based on the server web_path
+ * Check the http referer's origin against the server web_path's origin
  */
 function check_http_referer(): bool
 {
@@ -298,7 +298,31 @@ function check_http_referer(): bool
         return true;
     }
 
-    return str_contains($referer, $web_path);
+    if (empty($referer) || empty($web_path)) {
+        return false;
+    }
+
+    // a substring match accepts any referer that merely embeds web_path; compare parsed origins so only an exact match passes
+    $referer_origin  = parse_url($referer);
+    $web_path_origin = parse_url($web_path);
+
+    if (
+        $referer_origin === false
+        || $web_path_origin === false
+        || empty($referer_origin['scheme'])
+        || empty($referer_origin['host'])
+        || empty($web_path_origin['scheme'])
+        || empty($web_path_origin['host'])
+    ) {
+        return false;
+    }
+
+    $referer_port  = $referer_origin['port'] ?? (strcasecmp((string) $referer_origin['scheme'], 'https') === 0 ? 443 : 80);
+    $web_path_port = $web_path_origin['port'] ?? (strcasecmp((string) $web_path_origin['scheme'], 'https') === 0 ? 443 : 80);
+
+    return strcasecmp((string) $referer_origin['scheme'], (string) $web_path_origin['scheme']) === 0
+        && strcasecmp((string) $referer_origin['host'], (string) $web_path_origin['host']) === 0
+        && $referer_port === $web_path_port;
 }
 
 /**
@@ -435,6 +459,15 @@ function check_htaccess_play_writable(): bool
 {
     return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
         || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+}
+
+/**
+ * check_htaccess_jellyfin_writable
+ */
+function check_htaccess_jellyfin_writable(): bool
+{
+    return ((file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/jellyfin/.htaccess') && is_writeable(__DIR__ . '/../../public/jellyfin/')));
 }
 
 /**
@@ -704,7 +737,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
     $count = count($rows);
     if ($count > SELECT_LIST_LIMIT) {
         $album = new Album($album_id);
-        show_parent_search($name, $key, $album_id, (string) $album->get_fullname(), 'album');
+        show_parent_search($name, $key, $album_id, $album->get_fullname(), 'album');
 
         return;
     }
@@ -779,7 +812,7 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
 
     $count = count($rows);
     if ($count > SELECT_LIST_LIMIT) {
-        show_parent_search($name, $key, $artist_id, (string) Artist::get_fullname_by_id($artist_id), 'artist');
+        show_parent_search($name, $key, $artist_id, Artist::get_fullname_by_id($artist_id), 'artist');
 
         return;
     }
@@ -815,9 +848,9 @@ function show_artist_select(string $name, int $artist_id = 0, bool $allow_add = 
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  */
-function show_catalog_select(string $name, int $catalog_id, string $style = '', bool $allow_none = false, string $gather_types = '', string $catalog_type = ''): void
+function show_catalog_select(string $name, int $catalog_id, bool $allow_none = false, string $gather_types = '', string $catalog_type = ''): void
 {
-    echo "<select name=\"$name\" style=\"$style\">\n";
+    echo "<select name=\"$name\">\n";
 
     $params = [];
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
@@ -908,9 +941,9 @@ function show_license_select(string $name, ?int $license_id = 0, ?int $song_id =
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select(string $name, string $selected = '', string $style = ''): void
+function show_user_select(string $name, string $selected = ''): void
 {
-    echo "<select name=\"$name\" style=\"$style\">\n";
+    echo "<select name=\"$name\">\n";
     echo "\t<option value=\"-1\">" . T_('All') . "</option>\n";
 
     $sql        = "SELECT `id`, `username`, `fullname` FROM `user` ORDER BY `fullname`";
@@ -979,8 +1012,14 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
  */
 function display_notification(string $message, int $timeout = 5000): void
 {
+    // json_encode() already returns a quoted JS string literal; wrapping it again put the quotes on screen
+    $literal = json_encode(
+        $message,
+        JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP
+    ) ?: '""';
+
     echo "<script>";
-    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE) ?: '') . "', " . $timeout . ");";
+    echo "displayNotification(" . $literal . ", " . $timeout . ");";
     echo "</script>\n";
 }
 
@@ -992,7 +1031,7 @@ function show_now_playing(): void
 {
     Stream::garbage_collection();
 
-    echo (new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path()))->render();
+    echo new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
 }
 
 /**
@@ -1040,8 +1079,8 @@ function load_gettext(): bool
 
     $compiled = compiled_gettext_catalogue($mopath);
     $gettext  = ($compiled === null)
-        ? Translator::createFromTranslations((new MoLoader())->loadFile($mopath))
-        : (new Translator())->loadTranslations($compiled);
+        ? Translator::createFromTranslations(new MoLoader()->loadFile($mopath))
+        : new Translator()->loadTranslations($compiled);
 
     TranslatorFunctions::register($gettext);
 
@@ -1084,7 +1123,7 @@ function compiled_gettext_catalogue(string $mopath): ?string
     }
 
     try {
-        $content = (new ArrayGenerator())->generateString((new MoLoader())->loadFile($mopath));
+        $content = new ArrayGenerator()->generateString(new MoLoader()->loadFile($mopath));
     } catch (Throwable $error) {
         debug_event('gettext', 'Could not compile ' . $mopath . ': ' . $error->getMessage(), 3);
 
@@ -1188,7 +1227,7 @@ function get_theme(string $name): ?array
         return null;
     }
 
-    $name = strtolower($name);
+    $name = basename(strtolower($name));
 
     if (array_key_exists($name, $_mapcache)) {
         return $_mapcache[$name];

@@ -1,0 +1,68 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// form/playlist_folder.phtml -- rendered by Ampache\Gui\Form\PlaylistFolderFormView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Form\PlaylistFolderFormView $this */
+
+$isEdit   = $this->isEdit();
+$action   = ($isEdit) ? 'edit' : 'create';
+$parentId = $this->getParentId();
+
+Ui::show_box_top(($isEdit) ? T_('Edit Folder') : T_('Create Folder'), 'box box_playlist_folder'); ?>
+<form name="playlist_folder" method="post" action="<?php echo $this->e($this->getWebPath()); ?>/playlist_folder.php?action=<?php echo $action; ?>">
+<table class="tabledata">
+<tr>
+    <td><?php echo T_('Name'); ?></td>
+    <td><input type="text" name="name" value="<?php echo $this->e($this->getName()); ?>" autofocus />
+        <?php echo $this->raw($this->getError('name')); ?>
+    </td>
+</tr>
+<tr>
+    <td><?php echo T_('Parent'); ?></td>
+    <td>
+        <select name="parent">
+            <option value="0"<?php echo ($parentId === 0) ? ' selected="selected"' : ''; ?>><?php echo T_('None'); ?></option>
+            <?php foreach ($this->getParentOptions() as $option) { ?>
+            <option value="<?php echo $option['id']; ?>"<?php echo ($option['id'] === $parentId) ? ' selected="selected"' : ''; ?>><?php echo str_repeat('-- ', $option['depth']) . $this->e($option['name']); ?></option>
+            <?php } ?>
+        </select>
+        <?php echo $this->raw($this->getError('parent')); ?>
+    </td>
+</tr>
+</table>
+<div class="formValidation">
+    <?php if ($isEdit) { ?>
+    <input type="hidden" name="folder" value="<?php echo $this->getFolderId(); ?>" />
+    <?php echo $this->raw($this->getFormToken('edit_playlist_folder')); ?>
+    <?php } else { ?>
+    <?php echo $this->raw($this->getFormToken('add_playlist_folder')); ?>
+    <?php } ?>
+    <input class="button" type="submit" value="<?php echo ($isEdit) ? T_('Save') : T_('Create'); ?>" />
+</div>
+</form>
+<?php Ui::show_box_bottom(); ?>

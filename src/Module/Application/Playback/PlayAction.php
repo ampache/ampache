@@ -562,7 +562,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $started   = ($last_play['object_type'] === 'song' && (int) $last_play['object_id'] === $last_id)
                     ? (int) $last_play['date']
                     : $last_time;
-                $repeat = (($time - $started) < AmpConfig::get_skip_timer((new Song($last_id))->time));
+                $repeat = (($time - $started) < AmpConfig::get_skip_timer(new Song($last_id)->time));
             }
 
             if ($repeat) {
@@ -1381,6 +1381,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             return null;
         }
+
         if ($status > 0) {
             do {
                 $read_size = ($transcode)

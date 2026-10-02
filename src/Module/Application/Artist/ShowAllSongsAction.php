@@ -60,10 +60,15 @@ final readonly class ShowAllSongsAction implements ApplicationActionInterface
 
         $artist = $this->modelFactory->createArtist($artistId);
 
+        // a manager reads the withdrawn tracks here the way the album page shows them, rather than a shorter list
+        $songIds = ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER))
+            ? $this->songRepository->getAllByArtist($artistId)
+            : $this->songRepository->getEnabledByArtist($artistId);
+
         $this->ui->showHeader();
         echo new ArtistPageView(
             $artist,
-            ['' => $this->songRepository->getEnabledByArtist($artistId)],
+            ['' => $songIds],
             'song',
             $this->browseFactory,
             $gatekeeper->getUser(),

@@ -25,9 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist;
 
+use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoader;
+use Ampache\Module\Playlist\Folder\PlaylistFolderItemsLoaderInterface;
+use Ampache\Module\Playlist\Folder\PlaylistFolderRowIds;
+use Ampache\Module\Playlist\Folder\PlaylistFolderRowIdsInterface;
+use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatter;
+use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
+
 use function DI\autowire;
 
 return [
     PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
     PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
+    PlaylistFolderItemsLoaderInterface::class => autowire(PlaylistFolderItemsLoader::class),
+    PlaylistFolderRowIdsInterface::class => autowire(PlaylistFolderRowIds::class),
+    PlaylistFolderTreeFormatterInterface::class => autowire(PlaylistFolderTreeFormatter::class),
 ];

@@ -247,6 +247,17 @@ if (!$this->getEnvironment()->check_dependencies_folder()) { ?>
     <td><?php echo $this->e(T_('This checks a few key tables to make sure that the Ampache database exists, and the user has access to the database')); ?></td>
 </tr>
 <tr>
+    <td><?php echo $this->e(T_('Database autocommit')); ?></td>
+    <td><?php echo $this->raw($this->debugWarning($this->checkDatabaseAutocommit())); ?></td>
+    <td>
+        <?php echo $this->e(T_('This checks that your database server leaves autocommit on, which is its default. Ampache only opens a transaction in two command line tools and commits nowhere else, so with autocommit off a single connection would hold one transaction open for as long as it lives.')); ?>
+<?php if (!$this->checkDatabaseAutocommit()) { ?>
+        <br />
+        <b><?php echo $this->e(T_('Set autocommit = 1 in your database server configuration. Ampache forces it on for its own connections, but leaving it off will affect anything else using this database.')); ?></b>
+<?php } ?>
+    </td>
+</tr>
+<tr>
     <td><?php echo $this->e(T_('Web Path')); ?></td>
     <td>
         <?php if ($this->isConfigValid()) {

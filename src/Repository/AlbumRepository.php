@@ -31,6 +31,8 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
@@ -70,6 +72,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private LoggerInterface $logger,
+        private RandomIdSamplerInterface $randomIdSampler,
     ) {}
 
     /**
@@ -368,9 +371,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      */
     public function getAlbumByArtist(
         int $artistId,
+        bool $enabledOnly = true,
     ): array {
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
+        if ($enabledOnly) {
+            $catalog_where = WithdrawnFilter::appendCondition($catalog_where, 'album', null, $userId);
+        }
 
         $original_year = (AmpConfig::get('use_original_year'))
             ? "IFNULL(`album`.`original_year`, `album`.`year`)"
@@ -433,6 +440,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where = 'AND `album`.`catalog` = ?';
             $params[]      = $catalogId;
         }
+
+        $catalog_where = WithdrawnFilter::appendCondition($catalog_where, 'album', null, $userId);
 
         $original_year = (AmpConfig::get('use_original_year'))
             ? "IFNULL(`album`.`original_year`, `album`.`year`)"
@@ -545,8 +554,13 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         $requested = array_map(trim(...), explode(',', $configured));
+        $matched   = array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
 
-        return array_values(array_intersect(self::IDENTITY_COLUMNS, $requested));
+        if ($matched === []) {
+            return self::IDENTITY_COLUMNS;
+        }
+
+        return $matched;
     }
 
     /**
@@ -761,7 +775,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         ?int $count = 1,
         int $catalogId = 0,
     ): array {
-        $results  = [];
         $catalogs = Catalog::get_catalogs('', $userId, true);
         if ($catalogId !== 0) {
             // never let a requested catalog widen what the user is allowed to see
@@ -769,31 +782,23 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         if ($catalogs === []) {
-            return $results;
+            return [];
         }
 
-        $sql = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', $catalogs) . ") ";
+        $where = "WHERE `album`.`catalog` IN (" . implode(',', $catalogs) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= "AND" . sprintf(
+            $where .= "AND" . sprintf(
                 " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
                 $rating_filter,
                 $userId
             );
         }
 
-        $sql .= sprintf(
-            'ORDER BY RAND() LIMIT %d',
-            $count
-        );
-        $dbResults = $this->connection->query($sql);
+        $where = WithdrawnFilter::appendCondition(rtrim($where), 'album', null, $userId);
 
-        while ($albumId = $dbResults->fetchColumn()) {
-            $results[] = (int) $albumId;
-        }
-
-        return $results;
+        return $this->randomIdSampler->sample('album', 'id', $where, [], (int) $count);
     }
 
     /**
@@ -822,8 +827,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             );
         }
 
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'album_disk', null, $userId);
+
         $sql .= sprintf(
-            'ORDER BY RAND() LIMIT %d',
+            ' ORDER BY RAND() LIMIT %d',
             $count
         );
         $dbResults = $this->connection->query($sql);
@@ -848,7 +855,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
 
-        $sql .= 'ORDER BY RAND()';
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $userId);
+
+        $sql .= ' ORDER BY RAND()';
         $dbResults = $this->connection->query($sql, [$albumId]);
 
         $results = [];
@@ -872,7 +881,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
 
-        $sql .= 'ORDER BY RAND()';
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $userId);
+
+        $sql .= ' ORDER BY RAND()';
         $dbResults = $this->connection->query($sql, [$albumDiskId]);
 
         $results = [];

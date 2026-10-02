@@ -146,7 +146,7 @@ final class GetIndexes5Method implements MethodInterface
 
         $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1)
-            || (bool) $this->configContainer->get('hide_search');
+            || $this->configContainer->get('hide_search');
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'])) {

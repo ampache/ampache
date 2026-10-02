@@ -27,6 +27,8 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Database\RandomIdSamplerInterface;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
@@ -61,23 +63,20 @@ class Random
     {
         $catalog_filter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
         $user_id        = Core::get_global('user')?->getId() ?? -1;
-        $sql            = ($catalog_filter)
-            ? "SELECT `artist`.`id` FROM `artist` WHERE EXISTS (SELECT 1 FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")) "
-            : "SELECT `artist`.`id` FROM `artist` ";
+        $where          = ($catalog_filter)
+            ? "WHERE EXISTS (SELECT 1 FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")) "
+            : "WHERE 1=1 ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id) {
-            $sql .= ($catalog_filter)
-                ? sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id)
-                : sprintf("WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
+            $where .= sprintf("AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ", $rating_filter, $user_id);
         }
 
-        $sql .= "ORDER BY RAND() LIMIT 1;";
+        $where = WithdrawnFilter::appendCondition(rtrim($where), 'artist', null, $user_id);
 
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
+        $ids = self::getRandomIdSampler()->sample('artist', 'id', $where, [], 1);
 
-        return (int) ($results['id'] ?? 0);
+        return $ids[0] ?? 0;
     }
 
     /**
@@ -118,6 +117,13 @@ class Random
             $where_sql .= ($where_sql === "")
                 ? sprintf('WHERE `song`.`%s` = %d ', $column, $object_id)
                 : sprintf('AND `song`.`%s` = %d ', $column, $object_id);
+        }
+
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= ($where_sql === "")
+                ? "WHERE $song_filter "
+                : "AND $song_filter ";
         }
 
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
@@ -178,6 +184,13 @@ class Random
                 : 'AND ' . $credit_sql . ' ';
         }
 
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= ($where_sql === "")
+                ? "WHERE $song_filter "
+                : "AND $song_filter ";
+        }
+
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
 
@@ -206,35 +219,24 @@ class Random
      */
     public static function get_default(int $limit, ?User $user = null): array
     {
-        $results = [];
-
         if (empty($user)) {
             $user = Core::get_global('user');
         }
 
         $user_id   = $user?->getId();
-        $sql       = "SELECT `song`.`id` FROM `song` ";
         $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
             ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
-            : "";
+            : "WHERE 1=1 ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $where_sql .= ($where_sql === "")
-                ? sprintf("WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id)
-                : sprintf("AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
-            $where_sql .= sprintf("AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
+            $where_sql .= sprintf("AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
+            $where_sql .= sprintf(" AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)", $rating_filter, $user_id);
         }
 
-        $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
-        $db_results = Dba::read($sql);
-        //debug_event(self::class, "get_default " . $sql, 5);
+        $where_sql = WithdrawnFilter::appendCondition(rtrim($where_sql), 'song', null, $user_id);
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
+        return self::getRandomIdSampler()->sample('song', 'id', $where_sql, [], $limit);
     }
 
     /**
@@ -463,6 +465,11 @@ class Random
             );
         }
 
+        $song_filter = WithdrawnFilter::conditionFor('song', null, $user_id);
+        if ($song_filter !== '') {
+            $where_sql .= $song_filter . ' AND ';
+        }
+
         $results    = [];
         $db_results = Dba::read(sprintf('SELECT `song`.`id` FROM `song` %s%s ORDER BY RAND() LIMIT %d', $where_sql, $filter_sql, $limit));
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -470,6 +477,16 @@ class Random
         }
 
         return $results;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getRandomIdSampler(): RandomIdSamplerInterface
+    {
+        global $dic;
+
+        return $dic->get(RandomIdSamplerInterface::class);
     }
 
     /**

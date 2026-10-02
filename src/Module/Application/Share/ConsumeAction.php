@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Gui\Share\ShareView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Batch\DefaultAction;
@@ -108,6 +109,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         if (!$this->shareRepository->registerAccess($share, new DateTime())) {
             throw new AccessDeniedException();
         }
+
         if ($action === 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {
                 $_REQUEST['action']                    = 'download';
@@ -116,6 +118,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
                 return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             }
+
             $_REQUEST['action'] = $share->object_type;
             $_REQUEST['id']     = $share->object_id;
 
@@ -137,7 +140,18 @@ final readonly class ConsumeAction implements ApplicationActionInterface
                     $view->getPublicUrl(),
                     $view->getArtUrl()
                 );
+
+                // `?embed=1` already renders this same page stripped of its chrome, so the player a post
+                // frames is the share itself rather than a second route to the object it points at
+                if (AmpConfig::get('embed_player') && MediaEmbedView::isAvailable()) {
+                    PageMeta::setPlayer(
+                        $view->getPublicUrl() . '&embed=1',
+                        MediaEmbedView::WIDTH,
+                        ($share->object_type === 'song') ? MediaEmbedView::HEIGHT_SINGLE : MediaEmbedView::HEIGHT_LIST
+                    );
+                }
             }
+
             echo $view->render();
         } else {
             throw new AccessDeniedException('Access Denied: unknown action.');

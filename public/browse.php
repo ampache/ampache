@@ -36,6 +36,7 @@ use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
 use Ampache\Module\Application\Browse\MoodAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
+use Ampache\Module\Application\Browse\PlaylistFolderAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
 use Ampache\Module\Application\Browse\PrivateMessageAction;
@@ -61,6 +62,7 @@ $dic->get(ApplicationRunner::class)->run(
         ArtistAction::REQUEST_KEY => ArtistAction::class,
         SongAction::REQUEST_KEY => SongAction::class,
         PlaylistAction::REQUEST_KEY => PlaylistAction::class,
+        PlaylistFolderAction::REQUEST_KEY => PlaylistFolderAction::class,
         SmartPlaylistAction::REQUEST_KEY => SmartPlaylistAction::class,
         CollectionAction::REQUEST_KEY => CollectionAction::class,
         PodcastEpisodeAction::REQUEST_KEY => PodcastEpisodeAction::class,

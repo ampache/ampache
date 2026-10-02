@@ -27,5 +27,9 @@ namespace Ampache\Module\Database;
 
 interface DatabaseCharsetUpdaterInterface
 {
-    public function update(): void;
+    /** @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string}> */
+    public function findMismatches(): array;
+
+    /** @return list<array{scope: string, table: string, column: ?string, current: string, desired: string, sql: string, success: bool}> */
+    public function update(): array;
 }

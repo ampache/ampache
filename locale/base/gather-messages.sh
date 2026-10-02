@@ -137,12 +137,16 @@ generate_pot_utds() {
       | awk '!seen[$0]++' > "$tmpdir/desc.txt"
 
     # Subcategories: the last element of each Preference::DEFAULTS row, which set_defaults() inserts.
-    # Title-case them to match rendering - the template calls T_(ucwords($subcategory)).
+    # Title-case them to match rendering - the template calls T_(Preference::format_subcategory($subcategory)).
+    # The sed pass mirrors Preference::SUBCATEGORY_LABELS: a proper noun that ucwords() would mangle
+    # (e.g. 'musicbrainz' -> 'Musicbrainz', duplicating the already-translated 'MusicBrainz') gets the
+    # same override here, keeping this file's msgid identical to the one the app actually renders.
     awk '/public const array DEFAULTS = \[/{f=1; next}
          f && /^[[:space:]]*\];/{exit}
          f' "$preffile" \
       | sed -E "s/.*, ('[^']*'|null)\],[[:space:]]*\$/\1/" \
       | grep -v '^null$' | tr -d "'" \
+      | sed 's/^musicbrainz$/MusicBrainz/' \
       | perl -pe 's/(?:^|(?<=\s))([a-z])/\u$1/g' | sort -u > "$tmpdir/subcat.txt"
 
     # Both lists are read out of the source with awk, so a rename in Preference.php shows up here as an

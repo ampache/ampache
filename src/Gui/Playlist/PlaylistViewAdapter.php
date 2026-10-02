@@ -303,7 +303,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->playlist->has_access();
+        return $this->playlist->mayOpenEditDialog();
     }
 
     public function isPrivate(): bool

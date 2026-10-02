@@ -1,5 +1,116 @@
 # CHANGELOG
 
+## Ampache 8.2.0
+
+**Jellyfin API** Third-party Jellyfin clients can now browse and stream Ampache libraries through a new optional Jellyfin-compatible API.
+
+### Added (8.2.0)
+
+* Database 810029
+  * Added an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup
+  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
+  * Added `jellyfin_backend_enable` preference
+  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
+  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
+  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
+  * Added `embed_player` preference, offering a player to sites that link here
+  * Pinned `object_type` to `utf8mb3` on `folder_map`, `collection`, `collection_map`, `playlist_folder_map`, `object_count_archive` and `object_count_summary`, matching every other `object_type` column
+  * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
+  * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
+  * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
+  * Converted `playlist_folder_map`.`object_type`, `preference`.`type` and `stream_playlist`.`type` from a plain `varchar` to an `enum` of their real, verified values
+* Jellyfin
+  * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
+  * Disabled by default. Enable with `jellyfin_backend_enable`
+  * Supports audio streaming, direct play and transcoding
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, playback resume/reporting and playlist management
+  * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
+* Rightbar
+  * Added Shuffle button for queue randomisation
+  * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
+  * Added drag-and-drop reordering of the queue
+* Playlist Folders
+  * Added a web UI to browse, create, rename, move and delete playlist folders, and to file playlists/smart playlists into them
+* The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* Smart playlists and random searches now show generated mosaic cover art on their own page, like playlists already do
+* Config version 100
+  * Added `stream_proxy` option (default `true`) to control live stream proxying
+
+### Changed (8.2.0)
+
+* Updated Seafile SDK to `dev-master`
+* Updated Composer and NPM dependencies
+* `wanted_types` now includes `single` and `ep` by default
+* Rightbar action buttons now use a fixed four-column grid
+* Grid action icons now display in the bottom-right corner
+* Artist Songs now loads via AJAX within the artist page. Legacy URLs redirect to the new tab
+* A password change or API key rotation now ends the sessions that credential had opened
+* `bin/cli run:updateDb` now compares every table and column against `resources/sql/ampache.sql` and only reports/fixes the ones that don't match, instead of unconditionally rewriting every table and column to one global charset; id/token/enum columns the schema pins to `utf8mb3` are left alone
+
+### Fixed (8.2.0)
+
+* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
+* Last.fm and Libre.fm session keys were shown in plain text
+* Notifications displayed their own quotes, and were inserted as markup rather than as text
+* A `site_title` holding a closing script tag broke the page scripts
+* A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
+* A preference written in one request was still read back stale in that same request
+* The slideshow armed itself without the Flickr plugin
+* Subsonic `getIndexes` returned an empty index on any library whose `folder_map` has not been rebuilt
+* Garbage collection incorrectly removed parent-only folders
+* Fixed missing Subsonic sub-folder listings
+* Fixed MariaDB error 1020 when using `innodb_snapshot_isolation`
+* Improved support for databases with autocommit disabled
+* Fixed false PDO error detection when error code was `00000`
+* Fixed raw `LICENSE` tag handling for Vorbis metadata
+* Sanitised licence external links and blocked non-HTTP(S) URLs
+* Fixed folder handling in the Subsonic API
+* Fixed missing song lyrics
+* Database exceptions now include query and driver error details
+* Fixed `admin:updateDatabase` failures during partial migrations
+* Fixed now-playing polling continuing after page navigation
+* Restored "Save as Smart Playlist" for existing smart playlists
+* Fixed downloads failing when no files were available
+* Fixed proof-of-work loops after endpoint errors
+* Fixed private playlist share links rejecting visitors
+* Fixed withdrawn albums appearing in artist, API and UPnP listings
+* Fixed ineffective `Enabled` search rule on album disks
+* Added withdrawn status indicators to disk listings
+* Fixed managers being unable to view withdrawn tracks on artist song pages
+* Fixed missing generated artwork when `custom_blankalbum` is enabled
+* RSS artwork for a song/podcast episode with no cover now falls back to its album/podcast artwork instead of the placeholder
+* RSS artwork for an album with no cover of its own now falls back to the album artist's artwork instead of showing the placeholder
+* `http` authentication no longer accepts a client-supplied `HTTP_REMOTE_USER` header as an identity; only the server-set `REMOTE_USER` is trusted
+* Fixed withdrawn releases appearing in Recent, Popular, Trending and statistics views
+* Fixed withdrawn releases appearing in recently played views and feeds
+* Added visual highlighting for withdrawn items
+* Fixed `run:updateCatalog -ca` reimporting unchanged files
+* Fixed `deleted_songs` API always returning an empty result
+* Subsonic
+  * Optimised genre lookups in `getMusicDirectory`
+  * Optimised video and podcast tag loading
+  * Unexpected API errors now return proper error responses
+  * Reduced memory usage when browsing large folders
+* Fixed catalog scans leaving progress streams open after errors
+* Fixed DAAP requests returning empty responses on unexpected errors
+* Fixed sidebar section toggle inconsistencies
+* Fixed `wanted_missing_albums` errors when MusicBrainz data omitted `secondary-types`
+* Fixed live stream interruptions caused by PHP execution time limits
+* Fixed the ListenBrainz plugin double-prefixing a URL that already had a scheme
+* A MusicBrainz mirror given as a bare host is now assumed `http` instead of rejected
+* Restored the artist "Songs" tab's full-page view, which had regressed to a redirect
+* Header-authenticated session ids were `md5(username)`, guessable from a username; now derived from the credential
+* `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
+* `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
+* `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
+* `cleanup:sortSongs` used the whole server's song count (not the catalog's) and the chunk index as a row offset, silently skipping songs on every catalog-wide run
+* Writing tags to a FLAC/Vorbis file could crash and leave the comment block partially written when adding a new per-user rating tag
+* `print:tags` crashed on any file not yet scanned into a catalog, including its own documented usage example
+* `run:updateCatalogFile -r|--rename` could never succeed; it looked up the destination catalog from a song row that the rename itself was meant to create
+* `run:convertFilenames` walked every local catalog instead of the one named on the command line
+* `export:playlist` never created its output directory and kept going anyway, failing a second time trying to write the playlist file
+* `export:albumArt` walked every catalog on the server instead of the one named on the command line
+
 ## Ampache 8.1.0
 
 **Subsonic Users** The Subsonic API now fully implements folder browsing.

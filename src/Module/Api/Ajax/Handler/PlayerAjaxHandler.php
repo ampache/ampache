@@ -65,7 +65,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 // shared by all -1 public users.
                 $data       = ['found' => false];
                 $sessionIds = array_values(array_filter(
-                    [(string) session_id(), (string) ($user->streamtoken ?? '')],
+                    [(string) session_id(), $user->streamtoken ?? ''],
                     static fn(string $sid): bool => $sid !== ''
                 ));
                 $current = Stream::get_latest_now_playing($sessionIds);
@@ -74,7 +74,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     /** @var Song|Video $media */
                     $media = new $className($current['object_id']);
                     if (!$media->isNew() && $media instanceof Song) {
-                        $web_path   = (string) AmpConfig::get_web_path();
+                        $web_path   = AmpConfig::get_web_path();
                         $artistId   = (int) $media->artist;
                         $albumId    = (int) $media->album;
                         $titleText  = scrub_out((string) $media->get_fullname());
@@ -100,7 +100,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'album' => ($albumId > 0)
                                 ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')">' . $albumText . '</a>'
                                 : $albumText,
-                            'art' => (string) (Art::url($albumId, 'album', null) ?? ''),
+                            'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
                         ];
                     }
@@ -123,10 +123,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     $broadcasts[] = new Broadcast($broadcastId);
                 }
 
-                $results = (new BroadcastsDialogView(
+                $results = new BroadcastsDialogView(
                     $this->ajaxUriRetriever->getAjaxUri(),
                     $broadcasts
-                ))->render();
+                )->render();
                 header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset', 'UTF-8'));
                 header_remove('Content-Disposition');
                 echo $results;
@@ -142,8 +142,8 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 if ($broadcast->isNew() === false) {
                     $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
-                    $results['broadcast']                = (new BroadcastActionView((int) $broadcast_id))->render() . "<script>startBroadcast('" . $key . "');</script>";
-                    $results['broadcast_listeners_wrap'] = (new BroadcastListenersView())->render();
+                    $results['broadcast']                = new BroadcastActionView((int) $broadcast_id)->render() . "<script>startBroadcast('" . $key . "');</script>";
+                    $results['broadcast_listeners_wrap'] = new BroadcastListenersView()->render();
                 }
 
                 break;
@@ -152,7 +152,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 $broadcast    = new Broadcast((int) $broadcast_id);
                 if ($broadcast->isNew() === false) {
                     $broadcast->update_state(0);
-                    $results['broadcast']                = (new BroadcastActionView())->render() . '<script>stopBroadcast();</script>';
+                    $results['broadcast']                = new BroadcastActionView()->render() . '<script>stopBroadcast();</script>';
                     $results['broadcast_listeners_wrap'] = '';
                 }
         } // switch on action;

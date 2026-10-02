@@ -5477,6 +5477,195 @@
           }
         },
         "additionalProperties": true
+      },
+      "QuickConnectInitiateResponse": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "device_name": {
+            "type": "string"
+          },
+          "app_name": {
+            "type": "string"
+          },
+          "app_version": {
+            "type": "string"
+          },
+          "date_added": {
+            "type": "integer"
+          },
+          "authorized": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "secret",
+          "code",
+          "device_id",
+          "device_name",
+          "app_name",
+          "app_version",
+          "date_added",
+          "authorized"
+        ],
+        "additionalProperties": true,
+        "nullable": true
+      },
+      "QuickConnectStatusResponse": {
+        "type": "object",
+        "description": "`authorized` is always returned. Once the code is approved it is `true` and every handshake field (`auth`, `session_expire`, server counts, ...) is added alongside it.",
+        "properties": {
+          "authorized": {
+            "type": "boolean",
+            "description": "True once the code has been approved and this response carries a session."
+          },
+          "auth": {
+            "type": "string",
+            "nullable": true
+          },
+          "streamtoken": {
+            "type": "string",
+            "nullable": true
+          },
+          "api": {
+            "type": "string"
+          },
+          "session_expire": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "update": {
+            "type": "string"
+          },
+          "add": {
+            "type": "string"
+          },
+          "clean": {
+            "type": "string"
+          },
+          "max_song": {
+            "type": "integer"
+          },
+          "max_album": {
+            "type": "integer"
+          },
+          "max_artist": {
+            "type": "integer"
+          },
+          "max_video": {
+            "type": "integer"
+          },
+          "max_podcast": {
+            "type": "integer"
+          },
+          "max_podcast_episode": {
+            "type": "integer"
+          },
+          "songs": {
+            "type": "integer"
+          },
+          "albums": {
+            "type": "integer"
+          },
+          "artists": {
+            "type": "integer"
+          },
+          "genres": {
+            "type": "integer"
+          },
+          "playlists": {
+            "type": "integer"
+          },
+          "searches": {
+            "type": "integer"
+          },
+          "playlists_searches": {
+            "type": "integer"
+          },
+          "users": {
+            "type": "integer"
+          },
+          "catalogs": {
+            "type": "integer"
+          },
+          "videos": {
+            "type": "integer"
+          },
+          "podcasts": {
+            "type": "integer"
+          },
+          "podcast_episodes": {
+            "type": "integer"
+          },
+          "shares": {
+            "type": "integer"
+          },
+          "licenses": {
+            "type": "integer"
+          },
+          "live_streams": {
+            "type": "integer"
+          },
+          "labels": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "authorized"
+        ],
+        "additionalProperties": true
+      },
+      "QuickconnectInitiateRequest": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "description": "An id the caller makes up and keeps, so its own initiate rate limit applies."
+          },
+          "device_name": {
+            "type": "string",
+            "description": "Shown to the approving user alongside the code."
+          },
+          "client": {
+            "type": "string",
+            "description": "Client/agent name recorded with the request."
+          },
+          "version": {
+            "type": "string",
+            "description": "The app version, shown to the approving user."
+          }
+        },
+        "additionalProperties": true
+      },
+      "QuickconnectStatusRequest": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "The value `/quickconnect/initiate` returned."
+          }
+        },
+        "required": [
+          "secret"
+        ],
+        "additionalProperties": true
       }
     },
     "responses": {
@@ -6319,7 +6508,9 @@
     "PUT /shares": "action=share_create",
     "PUT /songs/{song_id}/bookmark": "action=bookmark_create&filter={song_id}&type=song",
     "PUT /users": "action=user_create",
-    "PUT /videos/{video_id}/bookmark": "action=bookmark_create&filter={video_id}&type=video"
+    "PUT /videos/{video_id}/bookmark": "action=bookmark_create&filter={video_id}&type=video",
+    "POST /quickconnect/initiate": "action=quickconnect_initiate",
+    "POST /quickconnect/status": "action=quickconnect_status"
   },
   "paths": {
     "/album-disks/search": {
@@ -100355,6 +100546,165 @@
         },
         "operationId": "shareCreateVideos",
         "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
+      }
+    },
+    "/quickconnect/initiate": {
+      "post": {
+        "summary": "Start a QuickConnect pairing request",
+        "description": "No authentication: a device with no session yet asks for a short code, shows it to the person signing in, then polls `/quickconnect/status` with the returned `secret` until it comes back authorized. Off unless the `quickconnect_enable` preference is on.",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {}
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "device_id",
+            "required": false,
+            "description": "An id the caller makes up and keeps, so its own initiate rate limit applies.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "device_name",
+            "required": false,
+            "description": "Shown to the approving user alongside the code.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Client"
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "required": false,
+            "description": "The app version, shown to the approving user.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pairing request created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuickConnectInitiateResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickconnectInitiateRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickconnectInitiateRequest"
+              }
+            }
+          }
+        },
+        "operationId": "quickconnectInitiate"
+      }
+    },
+    "/quickconnect/status": {
+      "post": {
+        "summary": "Poll a QuickConnect pairing request",
+        "description": "No authentication: the caller has no session until this comes back `authorized: true`, at which point the response also carries a minted session, the same shape `handshake` returns.",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {}
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "secret",
+            "required": false,
+            "description": "The value `/quickconnect/initiate` returned.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pairing status, with a session once authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuickConnectStatusResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickconnectStatusRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickconnectStatusRequest"
+              }
+            }
+          }
+        },
+        "operationId": "quickconnectStatus"
       }
     }
   }

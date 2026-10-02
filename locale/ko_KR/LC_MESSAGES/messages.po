@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022,2026\n"
 "Language-Team: Korean (Korea) (http://app.transifex.com/ampache/ampache/language/ko_KR/)\n"
@@ -237,9 +237,6 @@ msgstr "링크"
 msgid "Graphs"
 msgstr "그래프"
 
-msgid "Save Track Order"
-msgstr "트랙 순서 저장하기"
-
 msgid "Do you really want to update from tags?"
 msgstr "태그에서 갱신하시렵니까?"
 
@@ -339,6 +336,9 @@ msgstr "유사한 아티스트"
 
 msgid "Similar Songs"
 msgstr "유사한 노래들"
+
+msgid "Disabled"
+msgstr "사용불가"
 
 msgid "Select New Art"
 msgstr "새 아트 선택하기"
@@ -538,6 +538,9 @@ msgstr "소유자"
 msgid "Type"
 msgstr "형태"
 
+msgid "Save Track Order"
+msgstr "트랙 순서 저장하기"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -627,6 +630,9 @@ msgstr "하위 노래의 태그를 덮어쓰기"
 
 msgid "Add tags to sub songs"
 msgstr "하위 노래에 태그 달기"
+
+msgid "Enabled"
+msgstr "사용가능"
 
 msgid "Summary"
 msgstr "요약"
@@ -1519,11 +1525,17 @@ msgstr "play/.htaccess 존재?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess 설정됨?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php 동작"
-
-msgid "Disabled"
-msgstr "사용불가"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php 존재?"
@@ -1844,6 +1856,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Ampache 데이타베이스가 존재하는지 확인합니다."
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2028,6 +2056,9 @@ msgstr "지능형 재생목록 편집"
 msgid "Save Changes"
 msgstr "변경사항 저장하기"
 
+msgid "Save as Smart Playlist"
+msgstr "지능형 재생목록으로 저장하기"
+
 msgid "Save as Playlist"
 msgstr "재생목록으로 저장하기"
 
@@ -2087,6 +2118,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2117,6 +2151,15 @@ msgstr "전체 적용"
 
 msgid "Access Level"
 msgstr "접근 수준"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "발신 "
@@ -2165,9 +2208,6 @@ msgstr "무제한"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "지능형 재생목록으로 저장하기"
 
 msgid "Options"
 msgstr "선택사항들"
@@ -2924,6 +2964,9 @@ msgstr "내부 재생 컨트롤러를 정의하지 못함"
 msgid "Account"
 msgstr "계정"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "가사없음"
 
@@ -2982,8 +3025,11 @@ msgstr "라이센싱"
 msgid "Uploaded by"
 msgstr "에서 업로드됨"
 
-msgid "Technical"
-msgstr ""
+msgid "Song Data"
+msgstr "노래 데이터"
+
+msgid "File Data"
+msgstr "파일 데이터"
 
 msgid "Statistical Graphs"
 msgstr "통계표"
@@ -3746,6 +3792,12 @@ msgstr "사용자 계정을 갱신하였습니다"
 msgid "Your account has not been updated"
 msgstr "사용자 계정을 갱신하지 못하였습니다"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "서버 설정을 성공적으로 갱신하였습니다"
 
@@ -4136,6 +4188,9 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d 파일 갱신됨"
 
+msgid "Failed to connect to the remote server"
+msgstr "원격 서버 접속 실패"
+
 msgid "No username or password was specified"
 msgstr "사용자명이나 암호가 지정되지 않았음"
 
@@ -4149,9 +4204,6 @@ msgstr "원격 갱신 실행 중"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "원격 서버 접속 실패"
 
 #. HINT: count of songs found
 #, php-format
@@ -4467,9 +4519,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "사용가능"
 
 msgid "Users List"
 msgstr ""
@@ -5191,9 +5240,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr "파일 데이터"
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5274,9 +5320,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "찾을 만한 문서"
-
-msgid "Song Data"
-msgstr "노래 데이터"
 
 msgid "Favorites (Album)"
 msgstr "즐겨찾기 (앨범)"
@@ -7195,6 +7238,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7226,6 +7277,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

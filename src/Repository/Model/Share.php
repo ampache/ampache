@@ -358,7 +358,7 @@ class Share extends database_object
         // a link handed out before a takedown must stop working with it, and the visitor has no account to
         // hold a level, so the withdrawal is read here rather than by asking who is on the other end
         $object = $this->getLibraryItemLoader()->load($this->getObjectType(), $this->object_id);
-        if ($object instanceof VisibleItemInterface && !$object->isVisible()) {
+        if ($object instanceof WithdrawableInterface && !$object->isEnabled()) {
             debug_event(self::class, 'Access Denied: shared object withdrawn ' . $this->id . '.', 3);
 
             return false;

@@ -108,4 +108,18 @@ interface TmpPlaylistRepositoryInterface
      * Whether a queue holds anything at all, which costs the same at three rows and three hundred thousand
      */
     public function hasItems(int $playlistId): bool;
+
+    /**
+     * Puts a queue's items in the order the caller drags them into, e.g. from the rightbar. A row id the
+     * caller doesn't mention (one the rightbar's display cap left off the page) keeps its place after the
+     * ones the drag did touch.
+     *
+     * @param list<int> $orderedRowIds
+     */
+    public function reorderItems(int $playlistId, array $orderedRowIds): void;
+
+    /**
+     * Randomizes a queue's order in place, keeping the same items
+     */
+    public function shuffleItems(int $playlistId): void;
 }

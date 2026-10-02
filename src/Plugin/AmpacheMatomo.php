@@ -96,7 +96,7 @@ class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterf
         echo "})();\n";
         echo "});\n";
         echo "</script>\n";
-        echo "<noscript><p><img src='" . scrub_out($this->matomo_url) . "matomo.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
+        echo "<noscript><p><img src='" . scrub_out($this->matomo_url) . "matomo.php?idsite=" . scrub_out($this->site_id) . "' class='no-border' alt= '' /></p></noscript>\n";
         echo "<!-- End Matomo Code -->\n";
     }
 

@@ -70,7 +70,7 @@ final class ShareView extends AbstractView
             $song = new Song($this->share->object_id);
             if (!$song->isNew() && $song->album) {
                 $type = 'album';
-                $id   = (int) $song->album;
+                $id   = $song->album;
             }
         }
 
@@ -168,7 +168,7 @@ final class ShareView extends AbstractView
 
     public function renderPlayerHeaders(): string
     {
-        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true)->render();
+        return new WebPlayerHeadersView($this->webPath, $this->ajaxUriRetriever, false, true, $this->isEmbed())->render();
     }
 
     #[Override]

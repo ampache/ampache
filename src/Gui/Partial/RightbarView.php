@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -73,6 +74,16 @@ final class RightbarView extends AbstractView
         private readonly ZipHandlerInterface $zipHandler,
         private readonly string $webPath,
     ) {}
+
+    public function canAppendNext(): bool
+    {
+        return Stream_Playlist::check_autoplay_append();
+    }
+
+    public function canAutoplayNext(): bool
+    {
+        return Stream_Playlist::check_autoplay_next();
+    }
 
     public function getBasketCount(): int
     {

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/ampache/ampache/language/zh_TW/)\n"
@@ -232,9 +232,6 @@ msgstr "鍊結"
 msgid "Graphs"
 msgstr "圖表"
 
-msgid "Save Track Order"
-msgstr "儲存音軌順序"
-
 msgid "Do you really want to update from tags?"
 msgstr "您確定要從標籤更新嗎？"
 
@@ -334,6 +331,9 @@ msgstr "相似的作者"
 
 msgid "Similar Songs"
 msgstr "相似的歌曲"
+
+msgid "Disabled"
+msgstr "停用"
 
 msgid "Select New Art"
 msgstr "選擇新封面圖片"
@@ -533,6 +533,9 @@ msgstr "擁有者"
 msgid "Type"
 msgstr "種類"
 
+msgid "Save Track Order"
+msgstr "儲存音軌順序"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -622,6 +625,9 @@ msgstr "覆蓋內含歌曲中的現存標籤"
 
 msgid "Add tags to sub songs"
 msgstr "新增標籤到內含歌曲"
+
+msgid "Enabled"
+msgstr ""
 
 msgid "Summary"
 msgstr "總結"
@@ -1514,11 +1520,17 @@ msgstr "play/.htaccess 已存在？"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess 已設定？"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php 動作"
-
-msgid "Disabled"
-msgstr "停用"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php 已存在？"
@@ -1839,6 +1851,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2023,6 +2051,9 @@ msgstr "編輯智慧播放清單"
 msgid "Save Changes"
 msgstr "儲存修改"
 
+msgid "Save as Smart Playlist"
+msgstr "儲存為智慧播放清單"
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2082,6 +2113,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2112,6 +2146,15 @@ msgstr "套用到全部"
 
 msgid "Access Level"
 msgstr "存取等級"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "寄送者"
@@ -2160,9 +2203,6 @@ msgstr "無限制"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "儲存為智慧播放清單"
 
 msgid "Options"
 msgstr "選項"
@@ -2919,6 +2959,9 @@ msgstr "沒有定義本地播放控制器"
 msgid "Account"
 msgstr "帳號"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "找不到歌詞。"
 
@@ -2977,8 +3020,11 @@ msgstr "正在收聽"
 msgid "Uploaded by"
 msgstr "上傳者"
 
-msgid "Technical"
-msgstr ""
+msgid "Song Data"
+msgstr "歌曲資訊"
+
+msgid "File Data"
+msgstr "檔案資訊"
 
 msgid "Statistical Graphs"
 msgstr "統計圖表"
@@ -3741,6 +3787,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "伺服器偏好設定已成功更新"
 
@@ -4131,6 +4183,9 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] ""
 
+msgid "Failed to connect to the remote server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4144,9 +4199,6 @@ msgstr "正在執行遠端更新"
 
 msgid "URI"
 msgstr "網址"
-
-msgid "Failed to connect to the remote server"
-msgstr ""
 
 #. HINT: count of songs found
 #, php-format
@@ -4461,9 +4513,6 @@ msgid "List all pluggable modules and their installed state"
 msgstr ""
 
 msgid "Plugins"
-msgstr ""
-
-msgid "Enabled"
 msgstr ""
 
 msgid "Users List"
@@ -5186,9 +5235,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr "檔案資訊"
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5269,9 +5315,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "所有可搜尋的文字"
-
-msgid "Song Data"
-msgstr "歌曲資訊"
 
 msgid "Favorites (Album)"
 msgstr "我的最愛 (專輯)"
@@ -7190,6 +7233,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7221,6 +7272,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

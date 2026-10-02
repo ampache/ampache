@@ -157,7 +157,7 @@ class Stream
     {
         // All bitrate values (transcode_bitrate, max_bit_rate, min_bit_rate) are stored and
         // handled in bits per second (bps). max_bit_rate/min_bit_rate are per-user preferences.
-        $max_bitrate   = AmpConfig::get_int('max_bit_rate', 0);
+        $max_bitrate   = AmpConfig::get_int('max_bit_rate');
         $min_bitrate   = AmpConfig::get_int('min_bit_rate', 8000);
         $user_bit_rate = self::get_player_bitrate($player);
 

@@ -52,9 +52,9 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 <form name="update_catalog" method="post" action="<?php echo $this->e($this->getWebPath()); ?>/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
-            <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
+            <td class="catalog-field-label"><?php echo T_('Catalog Name'); ?>: </td>
             <td><input type="text" name="name" value="<?php echo $this->e($this->getName()); ?>" /></td>
-            <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
+            <td class="catalog-format-specifiers" rowspan="6" id="patterns_example">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
                 <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
                 <span class="format-specifier">%B</span> = <?php echo T_('Album Artist'); ?><br />
@@ -96,7 +96,7 @@ foreach (Catalog::CATALOG_TYPES as $type => $className) {
             echo "<tr><td></td><td>" . $help . "</td></tr>";
         }
         foreach ($fields as $key => $field) {
-            echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+            echo "<tr><td class='catalog-field-label'>" . $field['description'] . ":</td><td>";
             $value = (array_key_exists('value', $field)) ? $field['value'] : '';
 
             switch ($field['type']) {

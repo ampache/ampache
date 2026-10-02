@@ -56,6 +56,12 @@ use Ampache\Repository\Model\User;
  */
 final class OpenSubsonic_Fields
 {
+    /** Above this many album artists the list stops being readable and the album is credited as various */
+    private const int ALBUM_ARTIST_LIMIT = 10;
+
+    /** `Artist::get_name_array_by_id(0)` answers "Various", which is what Ampache already calls such an album */
+    private const int VARIOUS_ARTIST_ID = 0;
+
     /**
      * Per-request bookmark positions, keyed by user id and then song id. See $this->songBookmarkPosition().
      *
@@ -63,7 +69,14 @@ final class OpenSubsonic_Fields
      */
     private static array $bookmarkPositions = [];
 
+    /** @var array<int, list<array{id: string, name: string}>> album id => its artists */
+    private array $albumArtists = [];
+
     private BookmarkRepositoryInterface $bookmarkRepository;
+
+    /** @var array<int, string> album id => its artists as one string */
+    private array $displayAlbumArtists = [];
+
     private LabelRepositoryInterface $labelRepository;
 
     public function __construct(
@@ -360,6 +373,45 @@ final class OpenSubsonic_Fields
      * bookmark set is loaded once per request and memoised, because a Child is built for every row of every list
      * response and a per-song lookup would put a query behind each one.
      */
+    /**
+     * songAlbumArtists
+     *
+     * The album artists of a song, as the `id` and `name` a Child carries.
+     *
+     * Memoised per album: every song of one album maps to the same list, and a various-artists album maps
+     * every track artist, so a folder would otherwise rebuild a long list once per song. Handing the same
+     * array back also lets the callers share one copy of it rather than one per entry.
+     *
+     * @return list<array{id: string, name: string}>
+     */
+    public function songAlbumArtists(Song $song): array
+    {
+        $albumId = (int) $song->album;
+        if (!array_key_exists($albumId, $this->albumArtists)) {
+            $artistIds = $song->get_album_artists();
+
+            // `album_map` collects the ALBUMARTIST tag of every song, so an album that gathers unrelated
+            // tracks -- an "Unknown" bucket, most of all -- credits as many album artists as it has tags.
+            // Past a list anyone could read, the album is a various-artists one and says so in one entry
+            // rather than repeating a thousand names under every single track.
+            if (count($artistIds) > self::ALBUM_ARTIST_LIMIT) {
+                $artistIds = [self::VARIOUS_ARTIST_ID];
+            }
+
+            $artists = [];
+            foreach ($artistIds as $artistId) {
+                $artists[] = [
+                    'id' => OpenSubsonic_Api::getArtistSubId($artistId),
+                    'name' => (string) Artist::get_name_array_by_id($artistId)['name'],
+                ];
+            }
+
+            $this->albumArtists[$albumId] = $artists;
+        }
+
+        return $this->albumArtists[$albumId];
+    }
+
     public function songBookmarkPosition(Song $song): ?int
     {
         $user = Core::get_global('user');
@@ -434,6 +486,21 @@ final class OpenSubsonic_Fields
     }
 
     /**
+     * songDisplayAlbumArtist
+     *
+     * The same list as one string, for clients that render a single name. Memoised for the same reason.
+     */
+    public function songDisplayAlbumArtist(Song $song): string
+    {
+        $albumId = (int) $song->album;
+        if (!array_key_exists($albumId, $this->displayAlbumArtists)) {
+            $this->displayAlbumArtists[$albumId] = implode(', ', array_column($this->songAlbumArtists($song), 'name'));
+        }
+
+        return $this->displayAlbumArtists[$albumId];
+    }
+
+    /**
      * songIsrc
      *
      * The ISRCs recorded against a song. Ampache keeps them in `song_map`, so a song with none returns an empty
@@ -443,7 +510,7 @@ final class OpenSubsonic_Fields
      */
     public function songIsrc(Song $song): array
     {
-        return Song::get_song_map_array($song->id, 'isrc');
+        return Song::get_song_map_array($song->id);
     }
 
     /**
@@ -567,7 +634,7 @@ final class OpenSubsonic_Fields
         }
 
         $entry = [
-            'displayArtist' => (string) $song->get_parent_fullname(),
+            'displayArtist' => $song->get_parent_fullname(),
             'displayTitle' => (string) $song->title,
             'lang' => 'xxx',
             'synced' => $parsed['synced'],

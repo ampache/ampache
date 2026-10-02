@@ -71,8 +71,8 @@ final readonly class SidebarViewFactory implements SidebarViewFactoryInterface
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::GUEST),
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER),
-            (bool) AmpConfig::get('allow_localplay_playback')
-                && (bool) AmpConfig::get('localplay_controller')
+            AmpConfig::get('allow_localplay_playback')
+                && AmpConfig::get('localplay_controller')
                 && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST),
             Upload::can_upload($user)
         );

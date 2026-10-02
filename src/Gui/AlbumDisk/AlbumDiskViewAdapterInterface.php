@@ -71,6 +71,8 @@ interface AlbumDiskViewAdapterInterface
 
     public function getDirectplayButton(): string;
 
+    public function getDisabledIcon(): string;
+
     public function getDisplayYear(): int;
 
     public function getEditButtonTitle(): string;
@@ -98,6 +100,8 @@ interface AlbumDiskViewAdapterInterface
     public function getSongCount(): int;
 
     public function getUserFlags(): string;
+
+    public function isDisabled(): bool;
 
     public function isEditable(): bool;
 }

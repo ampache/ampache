@@ -65,7 +65,7 @@ if ($browse->is_show_header()) {
         </thead>
         <tbody id="sortableplaylist_<?php echo $this->e($tableKey); ?>">
             <?php foreach ($songs as $song) { ?>
-            <tr id="song_<?php echo $this->e($song->getId()); ?>">
+            <tr id="song_<?php echo $this->e($song->getId()); ?>"<?php echo ($song->isEnabled()) ? '' : ' class="withdrawn"'; ?>>
                 <?php if ($this->canMultiselect()) { ?>
                 <td class="cel_select"><?php echo ($showMultiselect) ? '<input type="checkbox" class="multiselect-item" title="' . $this->e(T_('Select')) . '" data-id="' . $this->e($song->getId()) . '" data-type="song" />' : ''; ?></td>
                 <?php } ?>

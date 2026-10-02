@@ -159,6 +159,8 @@ class Video extends database_object implements
         }
 
         Art::build_cache($ids, 'video', ['default', 'preview']);
+        // one tag read for the page instead of one per video
+        Tag::build_object_tag_cache('video', array_map(intval(...), $ids));
 
         return true;
     }

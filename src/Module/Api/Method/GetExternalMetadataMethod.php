@@ -35,11 +35,8 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetMetadataInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 

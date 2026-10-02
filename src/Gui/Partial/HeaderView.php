@@ -344,8 +344,8 @@ final class HeaderView extends AbstractView
 
     public function showRegisterLink(): bool
     {
-        return (bool) AmpConfig::get('allow_public_registration')
-            && (Mailer::is_mail_enabled() || (bool) AmpConfig::get('user_no_email_confirm', false));
+        return AmpConfig::get('allow_public_registration')
+            && (Mailer::is_mail_enabled() || AmpConfig::get('user_no_email_confirm', false));
     }
 
     public function showTopMenu(): bool

@@ -135,12 +135,12 @@ final class PlaylistListRenderer extends AbstractBrowseListRenderer
 
     public function showArt(): bool
     {
-        return (bool) $this->configContainer->get('playlist_art') || $this->getBrowse()->is_mashup();
+        return $this->configContainer->get('playlist_art') || $this->getBrowse()->is_mashup();
     }
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     #[Override]

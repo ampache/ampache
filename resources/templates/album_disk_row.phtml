@@ -82,7 +82,10 @@ if ($this->isUsingRatings()) { ?>
     </td>
 <?php } ?>
     <td class="cel_action">
-<?php if ($album->canPostShout()) { ?>
+<?php if ($album->isDisabled()) {
+    echo $this->raw($album->getDisabledIcon());
+}
+if ($album->canPostShout()) { ?>
         <a href="<?php echo $this->e($album->getPostShoutUrl()); ?>"><?php echo $this->raw($album->getPostShoutIcon()); ?></a>
 <?php }
 if ($album->canShare()) {

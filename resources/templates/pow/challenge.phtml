@@ -73,6 +73,16 @@ use Ampache\Gui\Asset\StylesheetsView;
         #powbox .pow-return a {
             color: #8ecfff;
         }
+
+        /* Hidden until the endpoint answers with a page rather than a file, which is what this
+           reveals rather than replays. */
+        #pow-sink:not([hidden]) {
+            display: block;
+            width: 100%;
+            height: min(60vh, 26em);
+            border: 0;
+            background-color: #fff;
+        }
     </style>
 </head>
 

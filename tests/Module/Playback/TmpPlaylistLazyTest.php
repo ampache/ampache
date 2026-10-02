@@ -102,6 +102,18 @@ class TmpPlaylistLazyTest extends TestCase
         self::assertSame(7, Tmp_Playlist::get_from_session('a-session')->id);
     }
 
+    public function testShuffleReordersTheQueue(): void
+    {
+        $this->repository->method('getRow')
+            ->willReturn(['id' => 42, 'session' => 'a-session', 'type' => 'user', 'object_type' => 'song']);
+
+        $this->repository->expects(static::once())
+            ->method('shuffleItems')
+            ->with(42);
+
+        self::assertTrue(new Tmp_Playlist(42)->shuffle());
+    }
+
     protected function setUp(): void
     {
         $this->repository = $this->createMock(TmpPlaylistRepositoryInterface::class);

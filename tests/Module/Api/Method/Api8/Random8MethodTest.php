@@ -79,7 +79,7 @@ class Random8MethodTest extends MockeryTestCase
             ->andReturn($userId);
 
         $this->podcastEpisodeRepository->shouldReceive('getRandom')
-            ->with($userId, 1)
+            ->with($userId)
             ->once()
             ->andReturn([$episodeId]);
 
@@ -134,7 +134,7 @@ class Random8MethodTest extends MockeryTestCase
             ->andReturn($userId);
 
         $this->videoRepository->shouldReceive('getRandom')
-            ->with($userId, 1)
+            ->with($userId)
             ->once()
             ->andReturn([$videoId]);
 
@@ -186,7 +186,7 @@ class Random8MethodTest extends MockeryTestCase
             ->andReturn($userId);
 
         $this->podcastEpisodeRepository->shouldReceive('getRandom')
-            ->with($userId, 1)
+            ->with($userId)
             ->once()
             ->andReturn([]);
 
@@ -221,7 +221,7 @@ class Random8MethodTest extends MockeryTestCase
             ->andReturn($userId);
 
         $this->videoRepository->shouldReceive('getRandom')
-            ->with($userId, 1)
+            ->with($userId)
             ->once()
             ->andReturn([$videoId]);
 

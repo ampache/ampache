@@ -153,7 +153,7 @@ final class GetArt5Method implements MethodInterface
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = $this->modelFactory->createSong($object_id);
-                $art  = $this->modelFactory->createArt($song->album, 'album');
+                $art  = $this->modelFactory->createArt($song->album);
             }
         } elseif ($type == 'search') {
             $smartlist = $this->modelFactory->createSmartlist($object_id, $user);
@@ -162,14 +162,14 @@ final class GetArt5Method implements MethodInterface
             $art       = $this->modelFactory->createArt($item['object_id'], $item['object_type']->value);
             if (!Art::has_db($item['object_id'], 'song')) {
                 $song = $this->modelFactory->createSong($item['object_id']);
-                $art  = $this->modelFactory->createArt($song->album, 'album');
+                $art  = $this->modelFactory->createArt($song->album);
             }
         } elseif ($type == 'playlist' && !Art::has_db($object_id, $type)) {
             $playlist  = $this->modelFactory->createPlaylist($object_id);
             $listitems = $playlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $song      = $this->modelFactory->createSong($item['object_id']);
-            $art       = $this->modelFactory->createArt($song->album, 'album');
+            $art       = $this->modelFactory->createArt($song->album);
         }
 
         return $art;

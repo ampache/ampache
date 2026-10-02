@@ -26,11 +26,24 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 /**
- * A mutable holder for the Location a StreamProxy hop's header callback captures, read back once curl_exec()
- * returns; a plain by-reference closure capture reads as always-null to static analysis, since the assignment
+ * A mutable holder for state a StreamProxy call's callbacks capture, read back once curl_exec() returns; a
+ * plain by-reference closure capture reads as always-null/false to static analysis, since the assignment
  * happens in a sibling closure it cannot see.
+ *
+ * One instance lives for the whole `proxy()` call, so `started`, once set, survives every later attempt: a
+ * reconnect after a drop must know the client's response is already committed, and keep writing into it
+ * rather than trying to redirect or re-send headers that were already flushed. `location` instead resets
+ * per attempt via `resetLocation()` rather than a plain assignment, which is what keeps PHPStan from
+ * narrowing it to always-null in the closures below the reset -- the mutation has to stay out of sight
+ * behind a method call, not sit in the same scope as the read.
  */
 final class StreamRedirect
 {
     public ?string $location = null;
+    public bool $started     = false;
+
+    public function resetLocation(): void
+    {
+        $this->location = null;
+    }
 }

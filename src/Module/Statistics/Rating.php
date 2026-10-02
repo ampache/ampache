@@ -105,7 +105,7 @@ class Rating extends database_object
         foreach ($ids as $object_id) {
             // First store the user-specific rating. A visitor has none, but the zero still has to be
             // cached: without it every row asks the database for a rating that cannot exist
-            $rating = (isset($user_ratings[$object_id])) ? (int) $user_ratings[$object_id] : 0;
+            $rating = $user_ratings[$object_id] ?? 0;
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
 

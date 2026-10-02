@@ -28,6 +28,8 @@ namespace Ampache\Module\Util\Rss\Surrogate;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +41,52 @@ class PlayableItemRssItemAdapterTest extends TestCase
     private library_item&MockObject $playable;
     private PlayableItemRssItemAdapter $subject;
     private User&MockObject $user;
+
+    public function testArtSourcesDropsAnAlbumlessSong(): void
+    {
+        $song = $this->createMock(Song::class);
+        $song->method('getId')->willReturn(49388);
+
+        self::assertSame(
+            [['song', 49388]],
+            PlayableItemRssItemAdapter::artSources($song)
+        );
+    }
+
+    public function testArtSourcesDropsAnUnsetPodcast(): void
+    {
+        $episode = $this->createMock(Podcast_Episode::class);
+        $episode->method('getId')->willReturn(666);
+
+        self::assertSame(
+            [['podcast_episode', 666]],
+            PlayableItemRssItemAdapter::artSources($episode)
+        );
+    }
+
+    public function testArtSourcesReadsTheAlbumAfterTheSong(): void
+    {
+        $song        = $this->createMock(Song::class);
+        $song->album = 7953;
+        $song->method('getId')->willReturn(49388);
+
+        self::assertSame(
+            [['song', 49388], ['album', 7953]],
+            PlayableItemRssItemAdapter::artSources($song)
+        );
+    }
+
+    public function testArtSourcesReadsThePodcastAfterTheEpisode(): void
+    {
+        $episode          = $this->createMock(Podcast_Episode::class);
+        $episode->podcast = 12;
+        $episode->method('getId')->willReturn(666);
+
+        self::assertSame(
+            [['podcast_episode', 666], ['podcast', 12]],
+            PlayableItemRssItemAdapter::artSources($episode)
+        );
+    }
 
     public function testGetOwnerNameReturnsValue(): void
     {

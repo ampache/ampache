@@ -32,6 +32,8 @@ use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Api8\Handshake8Method;
+use Ampache\Module\Api\Method\Api8\QuickConnectInitiate8Method;
+use Ampache\Module\Api\Method\Api8\QuickConnectStatus8Method;
 use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\PingMethod;
@@ -154,9 +156,14 @@ final class ApiHandler implements ApiHandlerInterface
         }
         $is_handshake = $action == Handshake8Method::ACTION;
         $is_ping      = $action == PingMethod::ACTION;
-        $is_register  = $action == RegisterMethod::ACTION;
-        $is_forgotten = $action == LostPasswordMethod::ACTION;
-        $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
+        $is_public    = (
+            $is_handshake
+            || $is_ping
+            || $action == RegisterMethod::ACTION
+            || $action == LostPasswordMethod::ACTION
+            || $action == QuickConnectInitiate8Method::ACTION
+            || $action == QuickConnectStatus8Method::ACTION
+        );
         $header_auth  = false;
         if (!isset($input['auth'])) {
             $header_auth   = true;
@@ -231,38 +238,21 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        /*
-         * Create a simplified session for header authenticated sessions
-         * If you are sending a handshake, then return a valid auth session.
-         * If you are doing anything else, you hide the session behind an MD5 hash of the username
-         */
+        // hides the real header credential behind a one-way hash of itself, not the username
         if (
             $header_auth
             && $user instanceof User
         ) {
-            $data             = [];
-            $data['username'] = $user->username;
-            $data['value']    = $api_version;
-            if ($is_handshake || $is_ping) {
-                // for a handshake there needs to be a valid auth response (ping when sent needs one)
-                if (
-                    $input['auth'] !== md5((string) $user->username)
-                    && !Session::read($input['auth'])
-                ) {
-                    $data['type']  = 'api';
-                    $input['auth'] = Session::create($data);
-                }
-            } else {
-                $data['type']   = 'header';
-                $data['apikey'] = md5((string) $user->username);
-                // Session might not exist or has expired
-                if (!Session::read($data['apikey'])) {
-                    Session::destroy($data['apikey']);
-                    Session::create($data);
-                }
-
-                // Continue with the new session string to hide your header token
-                $input['auth'] = $data['apikey'];
+            $input['auth'] = hash('sha256', $input['auth']);
+            if (!Session::read($input['auth'])) {
+                // clear any stale row under this id before recreating it
+                Session::destroy($input['auth']);
+                Session::create([
+                    'apikey' => $input['auth'],
+                    'username' => $user->username,
+                    'type' => 'header',
+                    'value' => $api_version,
+                ]);
             }
 
             if (in_array($api_version, Api::API_VERSIONS)) {
@@ -357,10 +347,6 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public
             && (
                 !$user instanceof User // User is required for non-public methods
-                || (
-                    !$header_auth
-                    && $input['auth'] === md5((string) $user->username)
-                ) // require header auth for simplified session
                 || $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {

@@ -43,10 +43,10 @@ use Ampache\Module\Util\Ui;
 </head>
 <body>
     <!-- rfc3514 implementation -->
-    <div id="rfc3514" style="display: none;">0x0</div>
-    <div id="reloader" style="display: none;"></div>
+    <div id="rfc3514" class="display-none">0x0</div>
+    <div id="reloader" class="display-none"></div>
     <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container" style="height: 70px;">
+        <div class="container install-header-spacer">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo $this->e(Ui::get_logo_url('dark')); ?>" title="<?php echo $this->e(T_('Ampache')); ?>" alt="<?php echo $this->e(T_('Ampache')); ?>">
                 <?php echo $this->e(T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation')); ?>
@@ -54,7 +54,7 @@ use Ampache\Module\Util\Ui;
         </div>
     </div>
     <div class="container" role="main">
-        <div class="jumbotron" style="margin-top: 70px">
+        <div class="jumbotron install-content-offset">
         <h1><?php echo $this->e(T_('Error')); ?></h1>
             <p><?php echo $this->e(T_('You may have reached this page because Ampache was unable to load the required dependencies')); ?></p>
             <p><a href="https://ampache.org/docs/" rel="nofollow"><?php echo $this->e(T_('Please visit the wiki for help')); ?></a></p>

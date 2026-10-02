@@ -140,7 +140,7 @@ final class WebPlayerView extends AbstractView
      */
     public function getRemoveCount(): int
     {
-        $count = AmpConfig::get_int('webplayer_removeplayed', 0);
+        $count = AmpConfig::get_int('webplayer_removeplayed');
 
         return ($count === 999) ? 0 : $count;
     }
@@ -148,11 +148,6 @@ final class WebPlayerView extends AbstractView
     public function getReplaygainIcon(): string
     {
         return (AmpConfig::get('theme_color', 'dark') === 'light') ? 'replaygain_dark' : 'replaygain';
-    }
-
-    public function getShareStyle(): string
-    {
-        return ($this->isShare || $this->isRandom) ? 'display: none;' : '';
     }
 
     /**
@@ -257,7 +252,7 @@ final class WebPlayerView extends AbstractView
      */
     public function removesPlayed(): bool
     {
-        return AmpConfig::get_int('webplayer_removeplayed', 0) > 0;
+        return AmpConfig::get_int('webplayer_removeplayed') > 0;
     }
 
     public function renderHeaders(): string
@@ -267,12 +262,12 @@ final class WebPlayerView extends AbstractView
 
     public function showBroadcast(): bool
     {
-        return (bool) AmpConfig::get('broadcast') && $this->mayUse;
+        return AmpConfig::get('broadcast') && $this->mayUse;
     }
 
     public function showBrowserNotify(): bool
     {
-        return $this->iframed && (bool) AmpConfig::get('browser_notify');
+        return $this->iframed && AmpConfig::get('browser_notify');
     }
 
     public function showLyrics(): bool
@@ -282,7 +277,7 @@ final class WebPlayerView extends AbstractView
 
     public function showPauseTabs(): bool
     {
-        return $this->iframed && (bool) AmpConfig::get('webplayer_pausetabs');
+        return $this->iframed && AmpConfig::get('webplayer_pausetabs');
     }
 
     /**
@@ -298,7 +293,7 @@ final class WebPlayerView extends AbstractView
      */
     public function showSongPageTitle(): bool
     {
-        return (bool) AmpConfig::get('song_page_title') && !$this->isShare;
+        return AmpConfig::get('song_page_title') && !$this->isShare;
     }
 
     #[Override]

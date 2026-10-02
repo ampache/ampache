@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UrlValidatorInterface;
+use CurlHandle;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,6 +40,9 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
 {
     /** A playlist naming a station is a few hundred bytes; anything larger is not one. */
     private const int MAX_PLAYLIST_BYTES = 65536;
+
+    /** How many redirects a resolve will follow, each one re-validated and re-pinned before it is connected to */
+    private const int MAX_REDIRECTS = 10;
 
     /** @var list<string> */
     private const array PLAYLIST_EXTENSIONS = ['m3u', 'm3u8', 'pls', 'asx', 'xspf'];
@@ -63,21 +67,11 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
 
     public function resolve(string $url): string
     {
-        $target = $this->urlValidator->resolvePinnedTarget($url);
-        if ($target === null) {
-            $this->logger->warning(
-                'Refusing to resolve playlist url: ' . $url,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-
+        if (!$this->looksLikePlaylist($url)) {
             return $url;
         }
 
-        if (!$this->looksLikePlaylist($url, $target)) {
-            return $url;
-        }
-
-        $body = $this->read($url, $target);
+        $body = $this->read($url);
         if ($body === null) {
             return $url;
         }
@@ -100,36 +94,58 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
         return $stream;
     }
 
-    /**
-     * @param array{host: string, port: int, address: string} $target
-     */
-    private function contentType(string $url, array $target): string
+    private function contentType(string $url): string
     {
         if (!function_exists('curl_version')) {
             return '';
         }
 
-        $curl = curl_init($url);
-        if (!$curl) {
-            return '';
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $target = $this->urlValidator->resolvePinnedTarget($url);
+            if ($target === null) {
+                $this->logger->warning(
+                    'Refusing to resolve playlist url: ' . $url,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return '';
+            }
+
+            $curl = curl_init($url);
+            if (!$curl) {
+                return '';
+            }
+
+            curl_setopt_array($curl, [
+                CURLOPT_NOBODY => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
+                // pins the connection to the address just validated; a later hop re-validates before connecting
+                CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
+            ]);
+            curl_exec($curl);
+
+            $redirect = $this->redirectLocation($curl);
+            if ($redirect !== null) {
+                $url = $redirect;
+
+                continue;
+            }
+
+            $type = (string) curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
+
+            return strtolower(trim(explode(';', $type)[0]));
         }
 
-        curl_setopt_array($curl, [
-            CURLOPT_NOBODY => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
-            // pins the connection to the address resolve() already validated, so curl's own DNS lookup at
-            // connect time can't be answered differently than the check just above it was
-            CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
-        ]);
-        curl_exec($curl);
+        $this->logger->warning(
+            'Too many redirects resolving playlist url: ' . $url,
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
 
-        $type = (string) curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
-
-        return strtolower(trim(explode(';', $type)[0]));
+        return '';
     }
 
     /**
@@ -157,10 +173,8 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
 
     /**
      * An extension is the cheap test; a content type catches the directories that serve a playlist from a bare url.
-     *
-     * @param array{host: string, port: int, address: string} $target
      */
-    private function looksLikePlaylist(string $url, array $target): bool
+    private function looksLikePlaylist(string $url): bool
     {
         $extension = strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
         if (in_array($extension, self::PLAYLIST_EXTENSIONS, true)) {
@@ -172,37 +186,76 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
             return false;
         }
 
-        return in_array($this->contentType($url, $target), self::PLAYLIST_MIMES, true);
+        return in_array($this->contentType($url), self::PLAYLIST_MIMES, true);
     }
 
-    /**
-     * @param array{host: string, port: int, address: string} $target
-     */
-    private function read(string $url, array $target): ?string
+    private function read(string $url): ?string
     {
         if (!function_exists('curl_version')) {
             return null;
         }
 
-        $curl = curl_init($url);
-        if (!$curl) {
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            $target = $this->urlValidator->resolvePinnedTarget($url);
+            if ($target === null) {
+                $this->logger->warning(
+                    'Refusing to resolve playlist url: ' . $url,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return null;
+            }
+
+            $curl = curl_init($url);
+            if (!$curl) {
+                return null;
+            }
+
+            curl_setopt_array($curl, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
+                CURLOPT_RANGE => '0-' . (self::MAX_PLAYLIST_BYTES - 1),
+                CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
+            ]);
+
+            $body = curl_exec($curl);
+
+            $redirect = $this->redirectLocation($curl);
+            if ($redirect !== null) {
+                $url = $redirect;
+
+                continue;
+            }
+
+            return (is_string($body) && $body !== '')
+                ? $body
+                : null;
+        }
+
+        $this->logger->warning(
+            'Too many redirects resolving playlist url: ' . $url,
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        return null;
+    }
+
+    /**
+     * The absolute url a 3xx response redirects to, or null otherwise; curl resolves a relative Location itself
+     * via CURLINFO_REDIRECT_URL, so the caller can re-validate and re-pin the next hop instead of following it
+     */
+    private function redirectLocation(CurlHandle $curl): ?string
+    {
+        $status = (int) curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+        if ($status < 300 || $status > 399) {
             return null;
         }
 
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_TIMEOUT => self::TIMEOUT_SECONDS,
-            CURLOPT_RANGE => '0-' . (self::MAX_PLAYLIST_BYTES - 1),
-            CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $target['host'], $target['port'], $target['address'])],
-        ]);
+        $location = (string) curl_getinfo($curl, CURLINFO_REDIRECT_URL);
 
-        $body = curl_exec($curl);
-
-        return (is_string($body) && $body !== '')
-            ? $body
-            : null;
+        return $location !== '' ? $location : null;
     }
 }

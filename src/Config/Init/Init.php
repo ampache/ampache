@@ -121,7 +121,7 @@ final readonly class Init
                 '%s://%s%s',
                 $protocol,
                 Core::get_server('HTTP_HOST'),
-                (string) $_SERVER['REQUEST_URI']
+                $_SERVER['REQUEST_URI']
             ));
         }
 

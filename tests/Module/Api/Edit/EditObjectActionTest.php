@@ -36,6 +36,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -101,6 +102,65 @@ class EditObjectActionTest extends TestCase
         );
 
         self::assertInstanceOf(ResponseInterface::class, $response);
+    }
+
+    public function testRunReachesUpdateForAPublicPlaylistWithoutContentManagerAccess(): void
+    {
+        // filing a public list into your own folder must not need content-manager rights or ownership
+        $libitem = $this->createMock(playlist_object::class);
+        $libitem->method('isPrivate')->willReturn(false);
+        $libitem->method('get_user_owner')->willReturn(1);
+
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
+
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $gatekeeper->method('getUser')->willReturn($user);
+        $gatekeeper->method('mayAccess')
+            ->willReturnCallback(static fn(AccessTypeEnum $type, AccessLevelEnum $level): bool => $level === AccessLevelEnum::USER);
+
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::PLAYLIST, 666)
+            ->willReturn($libitem);
+
+        $libitem->expects(static::once())
+            ->method('update')
+            ->willReturn(666);
+
+        $this->subject->run(
+            $this->createRequest(['type' => 'playlist_row', 'id' => '666'], ['id' => '666', 'folder' => '3']),
+            $gatekeeper
+        );
+    }
+
+    public function testRunRefusesAPrivatePlaylistWithoutContentManagerAccess(): void
+    {
+        $libitem = $this->createMock(playlist_object::class);
+        $libitem->method('isPrivate')->willReturn(true);
+        $libitem->method('get_user_owner')->willReturn(1);
+
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
+
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $gatekeeper->method('getUser')->willReturn($user);
+        $gatekeeper->method('mayAccess')
+            ->willReturnCallback(static fn(AccessTypeEnum $type, AccessLevelEnum $level): bool => $level === AccessLevelEnum::USER);
+
+        $this->libraryItemLoader->method('load')->willReturn($libitem);
+        $libitem->expects(static::never())->method('update');
+
+        self::assertNull(
+            $this->subject->run(
+                $this->createRequest(['type' => 'playlist_row', 'id' => '666'], ['id' => '666', 'folder' => '3']),
+                $gatekeeper
+            )
+        );
     }
 
     public function testRunResolvesShareThroughItsOwnRepository(): void

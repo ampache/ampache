@@ -108,7 +108,6 @@ use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
 use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
-use Ampache\Module\Application\Album\SetTrackNumbersAction;
 use Ampache\Module\Application\Album\ShowAction;
 use Ampache\Module\Application\Album\ShowMissingAction;
 use Ampache\Module\Application\Album\UpdateFromTagsAction;
@@ -131,6 +130,7 @@ use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
 use Ampache\Module\Application\Browse\MoodAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
+use Ampache\Module\Application\Browse\PlaylistFolderAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
 use Ampache\Module\Application\Browse\PrivateMessageAction;
@@ -141,6 +141,7 @@ use Ampache\Module\Application\Browse\VideoAction;
 use Ampache\Module\Application\Collection\AddObjectAction;
 use Ampache\Module\Application\Collection\DeleteCollectionAction;
 use Ampache\Module\Application\Collection\RemoveObjectAction;
+use Ampache\Module\Application\Collection\SetTrackNumbersAction;
 use Ampache\Module\Application\DemocraticPlayback\CreateAction;
 use Ampache\Module\Application\DemocraticPlayback\ManageAction;
 use Ampache\Module\Application\DemocraticPlayback\ManagePlaylistsAction;
@@ -170,6 +171,7 @@ use Ampache\Module\Application\Podcast\UpdateFromFeedAction;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
+use Ampache\Module\Application\Preferences\QuickConnectAuthorizeAction;
 use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\UpdateUserAction;
 use Ampache\Module\Application\Preferences\UserAction;
@@ -268,7 +270,6 @@ return [
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
     UpdateFromTagsAction::class => autowire(UpdateFromTagsAction::class),
-    SetTrackNumbersAction::class => autowire(SetTrackNumbersAction::class),
     ShowMissingAction::class => autowire(ShowMissingAction::class),
     ShowAction::class => autowire(ShowAction::class),
     Artist\DeleteAction::class => autowire(Artist\DeleteAction::class),
@@ -425,7 +426,7 @@ return [
     AddObjectAction::class => autowire(AddObjectAction::class),
     RemoveObjectAction::class => autowire(RemoveObjectAction::class),
     DeleteCollectionAction::class => autowire(DeleteCollectionAction::class),
-    Collection\SetTrackNumbersAction::class => autowire(Collection\SetTrackNumbersAction::class),
+    SetTrackNumbersAction::class => autowire(SetTrackNumbersAction::class),
     Collection\ShowCreateAction::class => autowire(Collection\ShowCreateAction::class),
     Collection\CreateAction::class => autowire(Collection\CreateAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
@@ -446,6 +447,7 @@ return [
     AdminUpdatePreferencesAction::class => autowire(AdminUpdatePreferencesAction::class),
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
+    QuickConnectAuthorizeAction::class => autowire(QuickConnectAuthorizeAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
     OidcAction::class => autowire(OidcAction::class),
     ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),
@@ -462,6 +464,12 @@ return [
     ArtistAction::class => autowire(ArtistAction::class),
     SongAction::class => autowire(SongAction::class),
     PlaylistAction::class => autowire(PlaylistAction::class),
+    PlaylistFolderAction::class => autowire(PlaylistFolderAction::class),
+    PlaylistFolder\ShowCreateAction::class => autowire(PlaylistFolder\ShowCreateAction::class),
+    PlaylistFolder\CreateAction::class => autowire(PlaylistFolder\CreateAction::class),
+    PlaylistFolder\ShowEditAction::class => autowire(PlaylistFolder\ShowEditAction::class),
+    PlaylistFolder\EditAction::class => autowire(PlaylistFolder\EditAction::class),
+    PlaylistFolder\DeleteAction::class => autowire(PlaylistFolder\DeleteAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
     CollectionAction::class => autowire(CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),

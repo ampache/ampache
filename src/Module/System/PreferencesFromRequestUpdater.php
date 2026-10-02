@@ -122,11 +122,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                     break;
             }
 
-            if (
-                str_ends_with($name, '_pass')
-                || str_ends_with($name, '_token')
-                || str_ends_with($name, '_key')
-            ) {
+            if (Preference::isSecretName($name)) {
                 // The field always renders blank, so a blank submit means "leave the stored secret alone"
                 if ($value === '') {
                     unset($_REQUEST[$name]);

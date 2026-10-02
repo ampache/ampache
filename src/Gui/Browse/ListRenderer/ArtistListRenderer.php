@@ -179,9 +179,9 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
             $this->hideMoods(),
             $this->showRatings(),
             $this->showPlayedTimes(),
-            (bool) $this->configContainer->get('directplay') && $mayAdd,
+            $this->configContainer->get('directplay') && $mayAdd,
             $mayAdd,
-            $anonymous && (bool) $this->configContainer->get('sociable'),
+            $anonymous && $this->configContainer->get('sociable'),
             $anonymous && canEditArtist($artist, $gatekeeper->getUserId()),
             $anonymous && Catalog::can_remove($artist)
         )->render();
@@ -194,7 +194,7 @@ final class ArtistListRenderer extends AbstractBrowseListRenderer
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     #[Override]

@@ -28,8 +28,6 @@ declare(strict_types=1);
 use Ampache\Gui\Search\SearchOptionsView;
 use Ampache\Gui\Search\SearchRulesView;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Statistics\Rating;
-use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Playlist\SmartPlaylistPageView $this */
@@ -40,11 +38,9 @@ $browse     = $this->getBrowse();
 // the rule editor reads these from its own scope, as it does on the search and random pages
 $playlist    = $this->getPlaylist();
 $currentType = $this->getObjectType();
-Ui::show_box_top('<div id="smartplaylist_row_' . $playlistId . '">' . $this->getFullname() . '</div>', 'box box_smartplaylist'); ?>
-<?php if ($this->showRatings()) { ?>
-<span id="rating_<?php echo $playlistId; ?>_search"><?php echo $this->raw(Rating::show($playlistId, 'search')); ?></span>
-<span id="userflag_<?php echo $playlistId; ?>_search"><?php echo $this->raw(Userflag::show($playlistId, 'search')); ?></span>
-<?php } ?>
+Ui::show_box_top('', 'box box_smartplaylist'); ?>
+<div class="object-page" id="smartplaylist_row_<?php echo $playlistId; ?>">
+<?php echo $this->raw($this->getHeader()->render()); ?>
 <div id="information_actions">
     <ul>
         <?php if ($this->mayBatchDownload()) { ?>
@@ -81,12 +77,13 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlistId . '">' . $this->get
         <?php } ?>
     </ul>
 </div>
-<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getFormAction()); ?>" style="display:inline">
+<form id="editplaylist" name="editplaylist" method="post" enctype="multipart/form-data" action="<?php echo $this->e($this->getFormAction()); ?>" class="display-inline">
     <?php echo $this->raw((new SearchRulesView($playlist, $currentType, $webPath))->render()); ?>
     <div class="formValidation">
         <?php if ($this->showEditButtons()) { ?>
         <input class="button" type="submit" value="<?php echo $this->e(T_('Refresh')); ?>" onClick="$('#hiddenaction').val('refresh_playlist');" />&nbsp;&nbsp;
         <input class="button" type="submit" value="<?php echo $this->e(T_('Save Changes')); ?>" onClick="$('#hiddenaction').val('update_playlist');" />&nbsp;&nbsp;
+        <input class="button" type="submit" value="<?php echo $this->e(T_('Save as Smart Playlist')); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
         <input class="button" type="submit" value="<?php echo $this->e(T_('Save as Playlist')); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
         <?php } ?>
         <input type="hidden" id="hiddenaction" name="action" value="search" />
@@ -99,6 +96,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlistId . '">' . $this->get
         <input type="hidden" name="random" value="<?php echo $this->e($this->getRandom()); ?>" />
     </div>
 </form>
+</div>
 <?php Ui::show_box_bottom(); ?>
 <div>
 <?php if ($this->showSearchOptions()) {

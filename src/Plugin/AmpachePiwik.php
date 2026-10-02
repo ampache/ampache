@@ -96,7 +96,7 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         echo "})();\n";
         echo "});\n";
         echo "</script>\n";
-        echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
+        echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' class='no-border' alt= '' /></p></noscript>\n";
         echo "<!-- End Piwik Code -->\n";
     }
 

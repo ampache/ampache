@@ -38,6 +38,6 @@ declare(strict_types=1);
             <option value="<?php echo $this->e($option['value']); ?>"><?php echo $this->e($option['label']); ?></option>
             <?php } ?>
         </select>
-        <input class="button" type="submit" value="<?php echo $this->e(T_('Search')); ?>" id="searchBtn"<?php echo ($this->isMobile()) ? ' style="display: none;"' : ''; ?> />
+        <input class="button<?php echo ($this->isMobile()) ? ' display-none' : ''; ?>" type="submit" value="<?php echo $this->e(T_('Search')); ?>" id="searchBtn" />
     </form>
 </div>

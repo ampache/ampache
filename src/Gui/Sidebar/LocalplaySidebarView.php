@@ -79,8 +79,8 @@ final class LocalplaySidebarView extends AbstractSidebarView
 
     public function isEnabled(): bool
     {
-        return (bool) AmpConfig::get('allow_localplay_playback')
-            && (bool) AmpConfig::get('localplay_controller')
+        return AmpConfig::get('allow_localplay_playback')
+            && AmpConfig::get('localplay_controller')
             && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST);
     }
 

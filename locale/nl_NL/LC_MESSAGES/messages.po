@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2020,2026\n"
 "Language-Team: Dutch (Netherlands) (http://app.transifex.com/ampache/ampache/language/nl_NL/)\n"
@@ -242,9 +242,6 @@ msgstr "Koppeling"
 msgid "Graphs"
 msgstr "Grafieken"
 
-msgid "Save Track Order"
-msgstr "Sla nummer volgorde op"
-
 msgid "Do you really want to update from tags?"
 msgstr "Weet u zeker dat u vanuit de tags wilt bijwerken?"
 
@@ -344,6 +341,9 @@ msgstr "Dezelfde Artiesten"
 
 msgid "Similar Songs"
 msgstr "Vergelijkbare nummers"
+
+msgid "Disabled"
+msgstr "Gedeactiveerd"
 
 msgid "Select New Art"
 msgstr "Kies nieuwe art"
@@ -543,6 +543,9 @@ msgstr "Eigenaar"
 msgid "Type"
 msgstr "Type"
 
+msgid "Save Track Order"
+msgstr "Sla nummer volgorde op"
+
 msgid "This Collection is empty"
 msgstr "Deze verzameling is leeg"
 
@@ -632,6 +635,9 @@ msgstr ""
 
 msgid "Add tags to sub songs"
 msgstr "Voeg tags toe aan onderliggende liedjes"
+
+msgid "Enabled"
+msgstr ""
 
 msgid "Summary"
 msgstr "Samenvatting"
@@ -1524,11 +1530,17 @@ msgstr ""
 msgid "play/.htaccess configured?"
 msgstr ""
 
-msgid "config/ampache.cfg.php action"
+msgid "jellyfin/.htaccess action"
 msgstr ""
 
-msgid "Disabled"
-msgstr "Gedeactiveerd"
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
+msgid "config/ampache.cfg.php action"
+msgstr ""
 
 msgid "config/ampache.cfg.php exists?"
 msgstr ""
@@ -1849,6 +1861,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2033,6 +2061,9 @@ msgstr ""
 msgid "Save Changes"
 msgstr "Veranderingen opslaan"
 
+msgid "Save as Smart Playlist"
+msgstr ""
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2092,6 +2123,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2122,6 +2156,15 @@ msgstr "Pas toe op alles"
 
 msgid "Access Level"
 msgstr "Toegangs niveau"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "Verzonden door"
@@ -2169,9 +2212,6 @@ msgid "Unlimited"
 msgstr "Ongelimiteerd"
 
 msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
 msgstr ""
 
 msgid "Options"
@@ -2935,6 +2975,9 @@ msgstr "Lokaal afspelen niet ingesteld (Controller)"
 msgid "Account"
 msgstr "Account"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Geen songtekst gevonden."
 
@@ -2993,7 +3036,10 @@ msgstr ""
 msgid "Uploaded by"
 msgstr "Geüpload door"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3761,6 +3807,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr ""
 
@@ -4156,6 +4208,9 @@ msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Failed to connect to the remote server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4168,9 +4223,6 @@ msgid "Running Remote Update"
 msgstr "Bezig met bijwerken van remote catalogus"
 
 msgid "URI"
-msgstr ""
-
-msgid "Failed to connect to the remote server"
 msgstr ""
 
 #. HINT: count of songs found
@@ -4488,9 +4540,6 @@ msgid "List all pluggable modules and their installed state"
 msgstr ""
 
 msgid "Plugins"
-msgstr ""
-
-msgid "Enabled"
 msgstr ""
 
 msgid "Users List"
@@ -5214,9 +5263,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5297,9 +5343,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "Elke doorzoekbare tekst"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr ""
@@ -7219,6 +7262,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7250,6 +7301,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

@@ -94,7 +94,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
     {
         return $this->gatekeeperFactory->createGuiGatekeeper()
             ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-            && (bool) $this->configContainer->get('label');
+            && $this->configContainer->get('label');
     }
 
     public function renderRow(Label $label): string

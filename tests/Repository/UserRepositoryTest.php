@@ -158,6 +158,20 @@ class UserRepositoryTest extends TestCase
         User::clear_cache();
     }
 
+    public function testFindByApiSessionTokenPinsTheSessionType(): void
+    {
+        // `Session::exists()` answers for `stream` rows as well, so this lookup is what refuses them
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND `type` = 'api'",
+                static::callback(static fn(array $params): bool => $params[0] === 'some-token')
+            )
+            ->willReturn(false);
+
+        self::assertNull($this->subject->findByApiSessionToken('some-token'));
+    }
+
     public function testFindByUsernameResolvesTheNameOncePerRequest(): void
     {
         User::add_to_cache('user', 42, $this->userRow(42, 'some-user'));

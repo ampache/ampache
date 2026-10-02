@@ -101,7 +101,7 @@ final class DemocraticMethod implements MethodInterface
             case 'devote':
                 $media = $this->resolveSong($input);
 
-                $objectId = $democratic->get_uid_from_object_id($media->getId(), 'song');
+                $objectId = $democratic->get_uid_from_object_id($media->getId());
                 if ($objectId) {
                     $democratic->remove_vote($objectId);
                 }

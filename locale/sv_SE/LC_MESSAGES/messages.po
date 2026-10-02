@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2025\n"
 "Language-Team: Swedish (Sweden) (http://app.transifex.com/ampache/ampache/language/sv_SE/)\n"
@@ -231,9 +231,6 @@ msgstr "Länk"
 msgid "Graphs"
 msgstr "Diagram"
 
-msgid "Save Track Order"
-msgstr "Spara spårordning"
-
 msgid "Do you really want to update from tags?"
 msgstr "Vill du verkligen uppdatera från taggar?"
 
@@ -333,6 +330,9 @@ msgstr "Liknande artister"
 
 msgid "Similar Songs"
 msgstr "Liknande låtar"
+
+msgid "Disabled"
+msgstr "Inaktiverad"
 
 msgid "Select New Art"
 msgstr "Välj Nytt omslag"
@@ -532,6 +532,9 @@ msgstr "Ägare"
 msgid "Type"
 msgstr "Typ"
 
+msgid "Save Track Order"
+msgstr "Spara spårordning"
+
 msgid "This Collection is empty"
 msgstr "Samlingen är tom"
 
@@ -621,6 +624,9 @@ msgstr "Skriva över taggar för underordnade låtar"
 
 msgid "Add tags to sub songs"
 msgstr "Lägg till taggar till under låtar"
+
+msgid "Enabled"
+msgstr "Aktiverad"
 
 msgid "Summary"
 msgstr "Sammanfattning"
@@ -1513,11 +1519,17 @@ msgstr "play/.htaccess finns?"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess konfigurerad?"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "config/ampache.cfg.php åtgärd"
-
-msgid "Disabled"
-msgstr "Inaktiverad"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php finns?"
@@ -1838,6 +1850,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "Detta kontrollerar några viktiga tabeller för att se till att Ampache-databasen finns och att användaren har åtkomst till databasen"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2022,6 +2050,9 @@ msgstr "Redigera smart spellista"
 msgid "Save Changes"
 msgstr "Spara ändringar"
 
+msgid "Save as Smart Playlist"
+msgstr "Spara som smart spellista"
+
 msgid "Save as Playlist"
 msgstr "Spara som spellista"
 
@@ -2081,6 +2112,9 @@ msgstr "Webbläsarkontrollen kunde inte köras. Ladda om sidan."
 msgid "Your download has started."
 msgstr "Hämtningen har startat."
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2111,6 +2145,15 @@ msgstr "Utför för alla"
 
 msgid "Access Level"
 msgstr "Behörighetsnivå"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "Skickat av"
@@ -2159,9 +2202,6 @@ msgstr "Obegränsat"
 
 msgid "Permalink"
 msgstr "Permalänk"
-
-msgid "Save as Smart Playlist"
-msgstr "Spara som smart spellista"
 
 msgid "Options"
 msgstr "Inställningar"
@@ -2924,6 +2964,9 @@ msgstr "Kontroller för lokal uppspelning är inte definierad"
 msgid "Account"
 msgstr "Konto"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "Ingen text hittades."
 
@@ -2982,8 +3025,11 @@ msgstr "Licensiering"
 msgid "Uploaded by"
 msgstr "Uppladdad av"
 
-msgid "Technical"
-msgstr ""
+msgid "Song Data"
+msgstr "Låtdata"
+
+msgid "File Data"
+msgstr "Fildata"
 
 msgid "Statistical Graphs"
 msgstr "Statistiska diagram"
@@ -3750,6 +3796,12 @@ msgstr "Ditt konto har uppdaterats"
 msgid "Your account has not been updated"
 msgstr "Ditt konto har inte uppdaterats"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "Serverinställningarna uppdaterades framgångsrikt"
 
@@ -4145,6 +4197,9 @@ msgid_plural "%d files updated."
 msgstr[0] "%d fil uppdaterad."
 msgstr[1] "%d filer uppdaterade."
 
+msgid "Failed to connect to the remote server"
+msgstr "Misslyckades med att ansluta till fjärrservern"
+
 msgid "No username or password was specified"
 msgstr "Inget användarnamn eller lösenord har angetts"
 
@@ -4158,9 +4213,6 @@ msgstr "Kör fjärruppdatering"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "Misslyckades med att ansluta till fjärrservern"
 
 #. HINT: count of songs found
 #, php-format
@@ -4478,9 +4530,6 @@ msgstr "Lista alla insticksbara moduler och deras installationsstatus"
 
 msgid "Plugins"
 msgstr "Insticksprogram"
-
-msgid "Enabled"
-msgstr "Aktiverad"
 
 msgid "Users List"
 msgstr "Användarlista"
@@ -5203,9 +5252,6 @@ msgstr "Antal album (genre)"
 msgid "Artist Count (Genre)"
 msgstr "Antal artister (genre)"
 
-msgid "File Data"
-msgstr "Fildata"
-
 msgid "Date Updated"
 msgstr "Datum uppdaterat"
 
@@ -5286,9 +5332,6 @@ msgstr "Popularitetspoäng för podcastavsnitt"
 
 msgid "Any searchable text"
 msgstr "Vilken sökbar text som helst"
-
-msgid "Song Data"
-msgstr "Låtdata"
 
 msgid "Favorites (Album)"
 msgstr "Favoriter (Album)"
@@ -7208,6 +7251,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr "Använd panellänkar för indexsidans rubrik"
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr "Standardvolym för webbspelare"
 
@@ -7240,6 +7291,16 @@ msgstr "Lägsta bithastighet för omkodning vid dynamisk nedsampling i bps"
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
 msgstr "Lås användaren till gränssnittet för minispelaren"
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
+msgstr ""
 
 #: Ampache preference description
 msgid "Allow E-mail notifications"

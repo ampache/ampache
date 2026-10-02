@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// preferences/quickconnect.phtml -- rendered by Ampache\Gui\Preferences\QuickConnectView
+
+use Ampache\Module\System\Core;
+
+/** @var Ampache\Gui\Preferences\QuickConnectView $this */
+?>
+<form method="post" name="quickconnect" action="<?php echo $this->e($this->getFormAction()); ?>">
+    <p><?php echo T_('Enter the code shown on the other device to sign it in.'); ?></p>
+    <table class="tabledata">
+        <tr>
+            <td><?php echo T_('Code'); ?>:</td>
+            <td><input type="text" name="code" id="quickconnect_code" maxlength="6" autocomplete="off" inputmode="numeric" pattern="[0-9]*" required /></td>
+        </tr>
+    </table>
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Approve'); ?>" />
+        <?php echo $this->raw(Core::form_register('quickconnect_authorize')); ?>
+    </div>
+</form>

@@ -351,8 +351,23 @@ final class CatalogCounter implements CatalogCounterInterface
     private function refreshMediaTable(CountableTableEnum $table, bool $skipDisabledCatalogs): array
     {
         $sql = ($skipDisabledCatalogs)
-            ? sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`enabled` = '1' AND `catalog`.`enabled` = '1'", $table->value, $table->value, $table->value)
-            : sprintf("SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = '1'", $table->value, $table->value);
+            ? sprintf(
+                "SELECT COUNT(`%s`.`id`), IFNULL(SUM(`%s`.`time`), 0), IFNULL(SUM(`%s`.`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `%s`.`enabled` = '1' AND `catalog`.`enabled` = '1'",
+                $table->value,
+                $table->value,
+                $table->value,
+                $table->value,
+                $table->value,
+                $table->value
+            )
+            : sprintf(
+                "SELECT COUNT(`%s`.`id`), IFNULL(SUM(`%s`.`time`), 0), IFNULL(SUM(`%s`.`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = '1'",
+                $table->value,
+                $table->value,
+                $table->value,
+                $table->value,
+                $table->value
+            );
 
         $row = $this->connection->query($sql)->fetch(PDO::FETCH_NUM);
         if ($row === false) {

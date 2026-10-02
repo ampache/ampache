@@ -66,7 +66,7 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
 
     public function areRatingsShown(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     /**
@@ -142,8 +142,8 @@ final class VideoListRenderer extends AbstractBrowseListRenderer
             $this->arePlayedTimesShown(),
             (bool) $this->configContainer->get('directplay'),
             $mayInteract,
-            (!$this->configContainer->get('use_auth') || $mayInteract) && (bool) $this->configContainer->get('sociable'),
-            $mayInteract && (bool) $this->configContainer->get('share'),
+            (!$this->configContainer->get('use_auth') || $mayInteract) && $this->configContainer->get('sociable'),
+            $mayInteract && $this->configContainer->get('share'),
             Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER),
             Catalog::can_remove($video)

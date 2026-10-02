@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Dotan Mazor, 2021\n"
 "Language-Team: Hebrew (Israel) (http://app.transifex.com/ampache/ampache/language/he_IL/)\n"
@@ -232,9 +232,6 @@ msgstr "קישור"
 msgid "Graphs"
 msgstr "גראפים"
 
-msgid "Save Track Order"
-msgstr "שמירת סדר הפריטים"
-
 msgid "Do you really want to update from tags?"
 msgstr "האם באמת לעדכן מתגיות?"
 
@@ -334,6 +331,9 @@ msgstr "אמנים דומים"
 
 msgid "Similar Songs"
 msgstr "שירים דומים"
+
+msgid "Disabled"
+msgstr "מושבת"
 
 msgid "Select New Art"
 msgstr "בחירת תמונת אלבום חדשה"
@@ -533,6 +533,9 @@ msgstr "בעלים"
 msgid "Type"
 msgstr "סוג"
 
+msgid "Save Track Order"
+msgstr "שמירת סדר הפריטים"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -622,6 +625,9 @@ msgstr "שכתוב תגיות של תתי-שירים"
 
 msgid "Add tags to sub songs"
 msgstr "הוספת תגיות לתתי-שירים"
+
+msgid "Enabled"
+msgstr "מופעל"
 
 msgid "Summary"
 msgstr "סיכום"
@@ -1514,11 +1520,17 @@ msgstr ""
 msgid "play/.htaccess configured?"
 msgstr ""
 
-msgid "config/ampache.cfg.php action"
+msgid "jellyfin/.htaccess action"
 msgstr ""
 
-msgid "Disabled"
-msgstr "מושבת"
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
+msgid "config/ampache.cfg.php action"
+msgstr ""
 
 msgid "config/ampache.cfg.php exists?"
 msgstr ""
@@ -1839,6 +1851,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2023,6 +2051,9 @@ msgstr "עריכת רשימת השמעה חכמה"
 msgid "Save Changes"
 msgstr "שמירת שינויים"
 
+msgid "Save as Smart Playlist"
+msgstr "שמירה בתור רשימת השמעה חכמה"
+
 msgid "Save as Playlist"
 msgstr ""
 
@@ -2082,6 +2113,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2112,6 +2146,15 @@ msgstr "להחיל על הכל"
 
 msgid "Access Level"
 msgstr "רמת גישה"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "נשלח מאת"
@@ -2160,9 +2203,6 @@ msgstr "ללא הגבלה"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "שמירה בתור רשימת השמעה חכמה"
 
 msgid "Options"
 msgstr "אפשרויות"
@@ -2931,6 +2971,9 @@ msgstr ""
 msgid "Account"
 msgstr "חשבון"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "לא נמצאו מילים."
 
@@ -2989,7 +3032,10 @@ msgstr "רישיון שימוש"
 msgid "Uploaded by"
 msgstr "הועלה על ידי"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3761,6 +3807,12 @@ msgstr "חשבונך עודכן"
 msgid "Your account has not been updated"
 msgstr "חשבונך לא עודכן"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "הגדרות שרת עודכנו בהצלחה"
 
@@ -4161,6 +4213,9 @@ msgstr[0] "%d קובץ עודכן."
 msgstr[1] "%d קבצים עודכנו."
 msgstr[2] "%d קבצים עודכנו."
 
+msgid "Failed to connect to the remote server"
+msgstr "לא ניתן להתחבר לשרת המרוחק"
+
 msgid "No username or password was specified"
 msgstr "אין שם משתמש או לא ניתנה סיסמה"
 
@@ -4174,9 +4229,6 @@ msgstr "מתבצע עדכון מרוחק"
 
 msgid "URI"
 msgstr ""
-
-msgid "Failed to connect to the remote server"
-msgstr "לא ניתן להתחבר לשרת המרוחק"
 
 #. HINT: count of songs found
 #, php-format
@@ -4496,9 +4548,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "מופעל"
 
 msgid "Users List"
 msgstr ""
@@ -5222,9 +5271,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5305,9 +5351,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "כל טקסט שניתן לחפש"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr ""
@@ -7228,6 +7271,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7259,6 +7310,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

@@ -26,10 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playlist;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\Partial\HeaderChip;
+use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -76,6 +80,24 @@ final class SmartPlaylistPageView extends AbstractView
         return Ui::get_add_to_list_label();
     }
 
+    public function getArt(): string
+    {
+        ob_start();
+        $this->playlist->display_art($this->getArtSize(), false, false);
+
+        return (string) ob_get_clean();
+    }
+
+    /**
+     * @return array{width: int, height: int}
+     */
+    public function getArtSize(): array
+    {
+        return (Ui::is_grid_view('search'))
+            ? ['width' => 150, 'height' => 150]
+            : ['width' => 384, 'height' => 384];
+    }
+
     /**
      * The browse id goes into the form, so it has to exist before the form renders.
      */
@@ -104,6 +126,24 @@ final class SmartPlaylistPageView extends AbstractView
         echo $this->playlist->getFullname();
 
         return (string) ob_get_clean();
+    }
+
+    public function getHeader(): ObjectHeaderView
+    {
+        $playlist = $this->playlist;
+
+        return new ObjectHeaderView(
+            kind: T_('Smart Playlist'),
+            title: $this->e((string) $playlist->name),
+            art: $this->getArt(),
+            breadcrumb: $this->e((string) $playlist->username),
+            chips: HeaderChip::listOf(
+                ($playlist->type === 'private') ? T_('Private') : T_('Public'),
+            ),
+            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'search', true) : '',
+            userflag: ($this->showRatings()) ? Userflag::show($this->getPlaylistId(), 'search') : '',
+            ratingKey: $this->getPlaylistId() . '_search',
+        );
     }
 
     public function getLimit(): int
@@ -198,7 +238,7 @@ final class SmartPlaylistPageView extends AbstractView
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) AmpConfig::get('ratings');
+        return User::is_registered() && AmpConfig::get('ratings');
     }
 
     public function showSearchOptions(): bool

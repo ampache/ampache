@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba1bf6b2e2725e06169016b023a00d94",
+    "content-hash": "c286c617b582a41e1983f32e4a7ec1ed",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -81,16 +81,16 @@
         },
         {
             "name": "ampache/ampacheapi-php",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ampache/ampacheapi-php.git",
-                "reference": "587e67ad06bc28af33b3a1a14fc96207ef953036"
+                "url": "https://github.com/ampache/ampacheapi-php",
+                "reference": "b0c02a5b7f127cc8b67a3649143f97880c79e49e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/587e67ad06bc28af33b3a1a14fc96207ef953036",
-                "reference": "587e67ad06bc28af33b3a1a14fc96207ef953036",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/b0c02a5b7f127cc8b67a3649143f97880c79e49e",
+                "reference": "b0c02a5b7f127cc8b67a3649143f97880c79e49e",
                 "shasum": ""
             },
             "require": {
@@ -120,11 +120,7 @@
                 "api",
                 "library"
             ],
-            "support": {
-                "issues": "https://github.com/ampache/ampacheapi-php/issues",
-                "source": "https://github.com/ampache/ampacheapi-php/tree/2.0.0"
-            },
-            "time": "2026-08-02T02:38:05+00:00"
+            "time": "2026-09-10T06:59:23+00:00"
         },
         {
             "name": "ampache/php-discogs-api",
@@ -1297,12 +1293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "0bc49beff9c274f2490ce9a4bb76f5ef50881e08"
+                "reference": "c6e6abfc503cfa53532bf7947ad33c5d7f3008ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/0bc49beff9c274f2490ce9a4bb76f5ef50881e08",
-                "reference": "0bc49beff9c274f2490ce9a4bb76f5ef50881e08",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/c6e6abfc503cfa53532bf7947ad33c5d7f3008ae",
+                "reference": "c6e6abfc503cfa53532bf7947ad33c5d7f3008ae",
                 "shasum": ""
             },
             "require": {
@@ -1357,7 +1353,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2026-09-06T13:47:54+00:00"
+            "time": "2026-09-10T13:19:53+00:00"
         },
         {
             "name": "jumbojett/openid-connect-php",
@@ -1825,18 +1821,21 @@
             "time": "2026-03-08T20:05:35+00:00"
         },
         {
-            "name": "nabil1337/case-helper",
-            "version": "0.1.0",
+            "name": "marcusball/case-helper",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nabil1337/case-helper.git",
-                "reference": "8cead5fe6470402d127ae0d759168f9778078992"
+                "url": "https://github.com/marcusball/case-helper.git",
+                "reference": "c5c6321d7f908fce6d77f13b0c0d706cbd880e00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nabil1337/case-helper/zipball/8cead5fe6470402d127ae0d759168f9778078992",
-                "reference": "8cead5fe6470402d127ae0d759168f9778078992",
+                "url": "https://api.github.com/repos/marcusball/case-helper/zipball/c5c6321d7f908fce6d77f13b0c0d706cbd880e00",
+                "reference": "c5c6321d7f908fce6d77f13b0c0d706cbd880e00",
                 "shasum": ""
+            },
+            "require": {
+                "symfony/polyfill-mbstring": "^1.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.4.0"
@@ -1852,13 +1851,12 @@
             "license": [
                 "MIT"
             ],
-            "description": "Easily convert between camelCase, PascalCase, kebab-case, snake_case, SCREAMING_SNAKE_CASE, Train-Case, and string case!",
+            "description": "Easily convert between camelCase, PascalCase, kebab-case, snake_case, SCREAMING_SNAKE_CASE, Train-Case, and string case! Note: This is a fork of nabil1337/case-helper, which appears abandoned.",
             "support": {
-                "issues": "https://github.com/nabil1337/case-helper/issues",
-                "source": "https://github.com/nabil1337/case-helper/tree/master"
+                "issues": "https://github.com/marcusball/case-helper/issues",
+                "source": "https://github.com/marcusball/case-helper/tree/0.2.0"
             },
-            "abandoned": "marcusball/case-helper",
-            "time": "2014-12-06T02:33:17+00:00"
+            "time": "2021-07-14T21:20:15+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -3720,33 +3718,34 @@
         },
         {
             "name": "rsd/seafile-php-sdk",
-            "version": "v2.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK.git",
-                "reference": "7236eff9adaf0fc586fb64e046f58331ddc83993"
+                "reference": "d33a3cf325acf48cc8726c0eb2e1353d24924b10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Schmidt-DevOps/Seafile-PHP-SDK/zipball/7236eff9adaf0fc586fb64e046f58331ddc83993",
-                "reference": "7236eff9adaf0fc586fb64e046f58331ddc83993",
+                "url": "https://api.github.com/repos/Schmidt-DevOps/Seafile-PHP-SDK/zipball/d33a3cf325acf48cc8726c0eb2e1353d24924b10",
+                "reference": "d33a3cf325acf48cc8726c0eb2e1353d24924b10",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "~6.0|~7.0",
-                "nabil1337/case-helper": "~0.1",
-                "php": ">=7.3",
-                "sdo/bitmask": "^1.0"
+                "guzzlehttp/guzzle": "~7.7",
+                "marcusball/case-helper": "~0.2",
+                "php": ">=8.3",
+                "sdo/bitmask": "~1.0"
             },
             "require-dev": {
-                "fzaninotto/faker": "^1.9",
-                "monolog/monolog": "~1.17",
-                "phpunit/php-timer": "~2.0",
-                "phpunit/php-token-stream": "~3.0",
-                "phpunit/phpunit": "~8.0",
-                "sebastian/phpcpd": "~4.0",
-                "squizlabs/php_codesniffer": "~3.2"
+                "fzaninotto/faker": "~1.5",
+                "monolog/monolog": " ~2.9",
+                "phpmd/phpmd": "^2.15.0",
+                "phpstan/phpstan": "^1.11",
+                "phpunit/php-timer": "~5.0",
+                "phpunit/phpunit": "~9.6",
+                "rector/rector": "^1.2",
+                "squizlabs/php_codesniffer": "~3.7"
             },
             "type": "library",
             "autoload": {
@@ -3779,9 +3778,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/issues",
-                "source": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/tree/v2.0.1"
+                "source": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/tree/develop"
             },
-            "time": "2020-12-08T08:47:41+00:00"
+            "time": "2024-12-23T20:38:36+00:00"
         },
         {
             "name": "sabre/dav",
@@ -5376,16 +5375,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.95.24",
+            "version": "v3.95.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "9a4b8050f8768646bf3693ee7416978ceeca6206"
+                "reference": "2cdfc1f3daf173d83a1ebb6177949b58c95de6ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/9a4b8050f8768646bf3693ee7416978ceeca6206",
-                "reference": "9a4b8050f8768646bf3693ee7416978ceeca6206",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/2cdfc1f3daf173d83a1ebb6177949b58c95de6ff",
+                "reference": "2cdfc1f3daf173d83a1ebb6177949b58c95de6ff",
                 "shasum": ""
             },
             "require": {
@@ -5468,7 +5467,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.24"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.95.25"
             },
             "funding": [
                 {
@@ -5476,7 +5475,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-31T15:31:12+00:00"
+            "time": "2026-09-08T11:11:37+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -5867,16 +5866,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.8.0",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9e33da9553fe7786f0962b35f4e4ecf01be89def",
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def",
                 "shasum": ""
             },
             "require": {
@@ -5918,9 +5917,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.9.0"
             },
-            "time": "2026-07-04T14:30:18+00:00"
+            "time": "2026-09-13T18:51:52+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -6090,11 +6089,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.13",
+            "version": "2.2.14",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
-                "reference": "9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9c672e7a8e791dfc3d30e55f683e73fc0b63a3ac",
+                "reference": "9c672e7a8e791dfc3d30e55f683e73fc0b63a3ac",
                 "shasum": ""
             },
             "require": {
@@ -6150,7 +6149,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-03T20:38:19+00:00"
+            "time": "2026-09-12T21:39:33+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -6769,21 +6768,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.6.6",
+            "version": "2.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "ca069d6c79feaa6651b423c15d101a27a436093e"
+                "reference": "f4aa224edb9b0630fb43826d4cb6a49b62e48d4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/ca069d6c79feaa6651b423c15d101a27a436093e",
-                "reference": "ca069d6c79feaa6651b423c15d101a27a436093e",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/f4aa224edb9b0630fb43826d4cb6a49b62e48d4c",
+                "reference": "f4aa224edb9b0630fb43826d4cb6a49b62e48d4c",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.2.10"
+                "phpstan/phpstan": "^2.2.14"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -6814,7 +6813,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.6.6"
+                "source": "https://github.com/rectorphp/rector/tree/2.6.7"
             },
             "funding": [
                 {
@@ -6822,7 +6821,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-02T09:38:46+00:00"
+            "time": "2026-09-13T20:17:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -9181,7 +9180,8 @@
     "stability-flags": {
         "cboden/ratchet": 20,
         "james-heinrich/getid3": 20,
-        "krixon/xbmc-php-rpc": 20
+        "krixon/xbmc-php-rpc": 20,
+        "rsd/seafile-php-sdk": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 <div id="browse_header">
     <?php echo $this->raw($this->getHeaderForm()); ?>
 </div>
-<div id="home_plugin" style="display:flex;flex-direction:column;">
+<div id="home_plugin" class="home-plugin-flex">
     <?php foreach ($this->getPluginWidgets() as $widget) {
         echo $this->raw($widget);
     } ?>

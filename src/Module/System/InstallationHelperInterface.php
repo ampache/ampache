@@ -30,6 +30,14 @@ use Exception;
 interface InstallationHelperInterface
 {
     /**
+     * Finds the first line whose double-quoted value is never closed, which is almost always the actual
+     * mistake behind a `parse_ini_file()` syntax error — the parser itself keeps scanning past it and
+     * reports the failure many lines later, wherever it finally gives up.
+     * @return array{line: int, content: string}|null
+     */
+    public function findConfigSyntaxIssue(string $configFilePath): ?array;
+
+    /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
      * @throws Exception

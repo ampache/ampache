@@ -171,7 +171,7 @@ final class DebugView extends AbstractView
 
     public function getLastUpdateCheck(): string
     {
-        $checked = AmpConfig::get_int('autoupdate_lastcheck', 0);
+        $checked = AmpConfig::get_int('autoupdate_lastcheck');
 
         return ($checked) ? get_datetime($checked) : T_('Unknown');
     }

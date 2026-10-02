@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-10 14:56+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -231,9 +231,6 @@ msgstr "پیوند"
 msgid "Graphs"
 msgstr "نمودارها"
 
-msgid "Save Track Order"
-msgstr "ذخیره ترتیب آهنگ"
-
 msgid "Do you really want to update from tags?"
 msgstr "آیا واقعاً می خواهید از برچسب ها به روزرسانی کنید؟"
 
@@ -333,6 +330,9 @@ msgstr "هنرمندان مشابه"
 
 msgid "Similar Songs"
 msgstr "ترانه های مشابه"
+
+msgid "Disabled"
+msgstr "غیر فعال شد"
 
 msgid "Select New Art"
 msgstr "انتخاب روی جلد جدید"
@@ -532,6 +532,9 @@ msgstr "مالک"
 msgid "Type"
 msgstr "نوع"
 
+msgid "Save Track Order"
+msgstr "ذخیره ترتیب آهنگ"
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -621,6 +624,9 @@ msgstr "بازنویسی برچسب های آهنگ های فرعی"
 
 msgid "Add tags to sub songs"
 msgstr "افزودن برچسب های آهنگ های فرعی"
+
+msgid "Enabled"
+msgstr "فعال‌ شد"
 
 msgid "Summary"
 msgstr "خلاصه"
@@ -1513,11 +1519,17 @@ msgstr "play/.htaccess وجود دارد؟"
 msgid "play/.htaccess configured?"
 msgstr "play/.htaccess پیکره بندی شده است؟"
 
+msgid "jellyfin/.htaccess action"
+msgstr ""
+
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
 msgid "config/ampache.cfg.php action"
 msgstr "اجرای config/ampache.cfg.php"
-
-msgid "Disabled"
-msgstr "غیر فعال شد"
 
 msgid "config/ampache.cfg.php exists?"
 msgstr "config/ampache.cfg.php وجود دارد؟"
@@ -1838,6 +1850,22 @@ msgid ""
 "and the user has access to the database"
 msgstr "این بررسی چند جدول کلیدی را بازبینی می کند تا مطمئن شود پایگاه داده آمپاچی ایجاد شده، و کاربر به آن دسترسی دارد"
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -2022,6 +2050,9 @@ msgstr "ویرایش لیست پخش هوشمند"
 msgid "Save Changes"
 msgstr "ذخیره‌ تغییرات"
 
+msgid "Save as Smart Playlist"
+msgstr "ذخیره بعنوان لیست پخش هوشمند"
+
 msgid "Save as Playlist"
 msgstr "ذخیره بعنوان لیست پخش"
 
@@ -2081,6 +2112,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2111,6 +2145,15 @@ msgstr "اعمال تغییرات برای همه"
 
 msgid "Access Level"
 msgstr "سطح دسترسی"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr "ارسال بوسیله"
@@ -2159,9 +2202,6 @@ msgstr "نامحدود"
 
 msgid "Permalink"
 msgstr ""
-
-msgid "Save as Smart Playlist"
-msgstr "ذخیره بعنوان لیست پخش هوشمند"
 
 msgid "Options"
 msgstr "گزینه‌ها"
@@ -2924,6 +2964,9 @@ msgstr "کنترل کننده پخش محلی تعریف نشده است"
 msgid "Account"
 msgstr "حساب کاربری"
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr "متن ترانه پیدا نشد."
 
@@ -2982,7 +3025,10 @@ msgstr "صدور مجوز"
 msgid "Uploaded by"
 msgstr "بارگزاری شده توسط"
 
-msgid "Technical"
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3750,6 +3796,12 @@ msgstr "حساب کاربری شما به روز شد"
 msgid "Your account has not been updated"
 msgstr "حساب کاربری شما به روز نشده است"
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr "تنظیمات برگزیده سرور با موفقیت به روز شد"
 
@@ -4145,6 +4197,9 @@ msgid_plural "%d files updated."
 msgstr[0] "%d فایل ها به روز شدند."
 msgstr[1] "%d فایل ها به روز شدند."
 
+msgid "Failed to connect to the remote server"
+msgstr "عدم اتصال به سرور از راه دور"
+
 msgid "No username or password was specified"
 msgstr "هیچ نام کاربری یا گذرواژه یی مشخص نشده است"
 
@@ -4158,9 +4213,6 @@ msgstr "اجرای به روز رسانی از راه دور"
 
 msgid "URI"
 msgstr "URI"
-
-msgid "Failed to connect to the remote server"
-msgstr "عدم اتصال به سرور از راه دور"
 
 #. HINT: count of songs found
 #, php-format
@@ -4478,9 +4530,6 @@ msgstr ""
 
 msgid "Plugins"
 msgstr ""
-
-msgid "Enabled"
-msgstr "فعال‌ شد"
 
 msgid "Users List"
 msgstr ""
@@ -5203,9 +5252,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5286,9 +5332,6 @@ msgstr ""
 
 msgid "Any searchable text"
 msgstr "هر متن قابل جستجو"
-
-msgid "Song Data"
-msgstr ""
 
 msgid "Favorites (Album)"
 msgstr "موردعلاقه ها (آلبوم)"
@@ -7208,6 +7251,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7239,6 +7290,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

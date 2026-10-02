@@ -41,6 +41,10 @@ use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * A full-page equivalent of the artist page's in-line "Songs" tab: the songs mapped directly onto the
+ * artist, not every song on an album the artist merely appears on (see `ShowAllSongsAction` for that).
+ */
 final readonly class ShowSongsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_songs';
@@ -58,12 +62,13 @@ final readonly class ShowSongsAction implements ApplicationActionInterface
     {
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
 
-        $artist = $this->modelFactory->createArtist($artistId);
+        $artist  = $this->modelFactory->createArtist($artistId);
+        $songIds = $this->songRepository->getByArtist($artistId);
 
         $this->ui->showHeader();
         echo new ArtistPageView(
             $artist,
-            ['' => $this->songRepository->getByArtist($artistId)],
+            ['' => $songIds],
             'song',
             $this->browseFactory,
             $gatekeeper->getUser(),

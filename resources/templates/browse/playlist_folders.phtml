@@ -1,0 +1,174 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// browse/playlist_folders.phtml -- rendered by Ampache\Gui\Browse\ListRenderer\PlaylistFolderListRenderer
+
+use Ampache\Gui\Browse\ListHeaderView;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistFolderAction;
+use Ampache\Module\Database\Query\Search;
+use Ampache\Module\Statistics\Rating;
+use Ampache\Module\Statistics\Userflag;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\PlaylistFolder;
+
+/** @var Ampache\Gui\Browse\ListRenderer\PlaylistFolderListRenderer $this */
+
+$browse         = $this->getBrowse();
+$argument_param = $this->getArgumentParam();
+$columns        = $this->getColumns();
+$rows           = $this->getRows();
+$mayCreate      = $this->mayCreate();
+$showRatings    = $this->showRatings();
+$folderId       = $this->getCurrentFolderId();
+
+if ($showRatings) {
+    $playlistIds = [];
+    $searchIds   = [];
+    foreach ($rows as $row) {
+        if ($row['item'] instanceof Playlist) {
+            $playlistIds[] = $row['item']->getId();
+        } elseif ($row['item'] instanceof Search) {
+            $searchIds[] = $row['item']->id;
+        }
+    }
+
+    Rating::build_cache('playlist', $playlistIds);
+    Userflag::build_cache('playlist', $playlistIds);
+    Rating::build_cache('search', $searchIds);
+    Userflag::build_cache('search', $searchIds);
+}
+
+if ($browse->is_show_header()) {
+    Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
+
+    if ($mayCreate) { ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo $this->e($this->getCreateFolderUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('create_new_folder', T_('Create Folder'))); ?>
+                <?php echo T_('Create Folder'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $this->e($this->getCreatePlaylistUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('add_circle', T_('Create Playlist'))); ?>
+                <?php echo T_('Create Playlist'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo $this->e($this->getCreateSmartPlaylistUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('add_circle', T_('Create Smart Playlist'))); ?>
+                <?php echo T_('Create Smart Playlist'); ?>
+            </a>
+        </li>
+        <li>
+            <a onclick="submitNewItemsOrder('<?php echo $folderId; ?>', 'reorder_playlist_folder_table', 'track_', '<?php echo $this->e($this->getSetSortOrderUrl()); ?>', '<?php echo $this->e(RefreshPlaylistFolderAction::REQUEST_KEY); ?>')">
+                <?php echo $this->raw(Ui::get_material_symbol('save', T_('Save Track Order'))); ?>
+                <?php echo T_('Save Track Order'); ?>
+            </a>
+        </li>
+    </ul>
+</div>
+    <?php }
+    Ui::show_box_bottom();
+} ?>
+<div id="reordered_list_<?php echo $folderId; ?>">
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
+} ?>
+<table id="reorder_playlist_folder_table" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist_folder" data-offset="<?php echo $this->e($browse->get_start()); ?>">
+    <thead>
+        <tr class="th-top">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e($column['class']); ?>"><?php echo $this->e($column['label']); ?></th>
+            <?php } ?>
+        </tr>
+    </thead>
+    <tbody id="sortableplaylist_<?php echo $folderId; ?>">
+        <?php foreach ($rows as $row) { ?>
+        <tr id="track_<?php echo $this->e($this->getRowTrackId($row['type'], $row['item'])); ?>">
+            <td class="cel_play essential">
+                <span class="cel_play_content"> </span>
+                <div class="cel_play_hover"><?php echo $this->raw($this->getRowPlay($row['item'])); ?></div>
+            </td>
+            <td class="cel_cover essential"><?php $this->renderRowArt($row['item']); ?></td>
+            <td class="cel_name essential persist"><?php echo $this->raw($this->getRowName($row['item'])); ?></td>
+            <td class="cel_add_list essential">
+                <span class="cel_item_add"><?php echo $this->raw($this->getRowAdd($row['item'])); ?></span>
+            </td>
+            <td class="cel_last_update optional"><?php echo $this->e($this->getRowLastUpdate($row['item'])); ?></td>
+            <td class="cel_type optional"><?php echo $this->raw($this->getRowType($row['item'])); ?></td>
+            <td class="cel_time optional"><?php echo $this->e($this->getRowTime($row['item'])); ?></td>
+            <td class="cel_count optional"><?php echo $this->e($this->getRowItemCount($row['item'])); ?></td>
+            <?php if ($showRatings) { ?>
+            <td class="cel_ratings optional">
+                <div class="rating"><?php echo $this->raw($this->getRowRatings($row['item'])); ?></div>
+            </td>
+            <?php } ?>
+            <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
+            <td class="cel_action essential">
+                <?php if ($row['item'] instanceof PlaylistFolder) {
+                    if ($mayCreate) { ?>
+                <a href="<?php echo $this->e($this->getEditFolderUrl($row['item']->getId())); ?>">
+                    <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                </a>
+                <a href="<?php echo $this->e($this->getDeleteFolderUrl($row['item']->getId())); ?>" data-confirm="<?php echo T_('Do you really want to delete this Folder?'); ?>">
+                    <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
+                </a>
+                    <?php }
+                    } elseif ($row['item'] instanceof Playlist) {
+                        echo $this->raw($this->renderPlaylistActions($row['item']));
+                    } elseif ($row['item'] instanceof Search) {
+                        echo $this->raw($this->renderSearchActions($row['item']));
+                    } ?>
+            </td>
+            <td class="cel_drag">
+                <?php if ($mayCreate) {
+                    echo $this->raw(Ui::get_material_symbol('drag_indicator', T_('Reorder')));
+                } ?>
+            </td>
+        </tr>
+        <?php } ?>
+        <?php if ($rows === []) { ?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>"><span class="nodata"><?php echo T_('Found nothing to show'); ?></span></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot>
+        <tr class="th-bottom">
+            <?php foreach ($columns as $column) { ?>
+            <th class="<?php echo $this->e(explode(' ', $column['class'])[0]); ?>"><?php echo ($column['footer']) ? $this->e($column['label']) : ''; ?></th>
+            <?php } ?>
+        </tr>
+    </tfoot>
+</table>
+<?php show_table_render($this->isReorderable()); ?>
+<?php if ($browse->is_show_header()) {
+    echo $this->raw((new ListHeaderView($browse, false, $argument_param))->render());
+} ?>
+</div>

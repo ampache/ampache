@@ -33,6 +33,21 @@ use Override;
  */
 final class TestConfigPageView extends AbstractView
 {
+    /**
+     * @param array{line: int, content: string}|null $syntaxIssue
+     */
+    public function __construct(private readonly ?array $syntaxIssue = null) {}
+
+    public function getSyntaxIssueContent(): ?string
+    {
+        return $this->syntaxIssue['content'] ?? null;
+    }
+
+    public function getSyntaxIssueLine(): ?int
+    {
+        return $this->syntaxIssue['line'] ?? null;
+    }
+
     #[Override]
     protected function templateFile(): string
     {

@@ -275,7 +275,7 @@ final class SongListRenderer extends AbstractBrowseListRenderer
 
     public function showLicense(): bool
     {
-        return (bool) $this->configContainer->get('licensing') && (bool) $this->configContainer->get('show_license');
+        return $this->configContainer->get('licensing') && $this->configContainer->get('show_license');
     }
 
     public function showMultiselect(): bool
@@ -290,7 +290,7 @@ final class SongListRenderer extends AbstractBrowseListRenderer
 
     public function showRatings(): bool
     {
-        return User::is_registered() && (bool) $this->configContainer->get('ratings');
+        return User::is_registered() && $this->configContainer->get('ratings');
     }
 
     public function showSkippedTimes(): bool

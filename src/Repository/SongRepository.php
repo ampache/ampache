@@ -30,6 +30,7 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Database\Exception\InsertIdInvalidException;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
@@ -413,8 +414,10 @@ final readonly class SongRepository implements SongRepositoryInterface
     ): array {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`"
-            : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
+            ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $user_id) . " ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
 
         if ($limit !== 0) {
             $sql .= " LIMIT " . $limit;
@@ -440,8 +443,10 @@ final readonly class SongRepository implements SongRepositoryInterface
     ): array {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` "
-            : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` ";
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
+
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $user_id) . " ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` ";
 
         if ($limit !== 0) {
             $sql .= "LIMIT " . $limit;
@@ -936,8 +941,10 @@ final readonly class SongRepository implements SongRepositoryInterface
     ): array {
         $user_id = Core::get_global('user')?->getId();
         $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY RAND()"
-            : "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ORDER BY RAND()";
+            ? "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
+
+        $sql = WithdrawnFilter::appendCondition(rtrim($sql), 'song', null, $user_id) . ' ORDER BY RAND()';
 
         $dbResults = $this->connection->query($sql, [$artist->getId()]);
         $results   = [];

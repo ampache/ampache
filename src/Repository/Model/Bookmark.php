@@ -74,7 +74,10 @@ class Bookmark extends database_object
                 return;
             }
 
-            $info = self::getBookmarkRepository()->getRowByObject($object_type, $object_id, $user_id);
+            $cacheIndex = 'bookmark_' . $object_type . '_user' . $user_id;
+            $info       = (self::is_cached($cacheIndex, $object_id))
+                ? self::get_from_cache($cacheIndex, $object_id)
+                : self::getBookmarkRepository()->getRowByObject($object_type, $object_id, $user_id);
         }
 
         $this->comment       = $info['comment'] ?? null;
@@ -85,6 +88,40 @@ class Bookmark extends database_object
         $this->position      = (int) ($info['position'] ?? 0);
         $this->update_date   = (int) ($info['update_date'] ?? 0);
         $this->user          = (int) ($info['user'] ?? 0);
+    }
+
+    /**
+     * Warms the per-object bookmark cache for a page load, one query instead of one per object
+     *
+     * @param array<int|string> $ids
+     */
+    public static function build_cache(string $type, array $ids, ?int $user_id = null): bool
+    {
+        if ($ids === []) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
+        }
+
+        if ($user_id === 0) {
+            return false;
+        }
+
+        $rows = self::getBookmarkRepository()->getRowsByObjects($type, array_map(intval(...), array_values($ids)), $user_id);
+
+        foreach ($ids as $object_id) {
+            parent::add_to_cache('bookmark_' . $type . '_user' . $user_id, (int) $object_id, $rows[(int) $object_id] ?? []);
+        }
+
+        return true;
     }
 
     /**

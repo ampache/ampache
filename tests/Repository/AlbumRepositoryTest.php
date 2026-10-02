@@ -26,14 +26,17 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Module\Database\RandomIdSamplerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
@@ -43,6 +46,7 @@ class AlbumRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
+    private RandomIdSamplerInterface&MockObject $randomIdSampler;
     private AlbumRepository $subject;
 
     /**
@@ -284,6 +288,28 @@ class AlbumRepositoryTest extends TestCase
         self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
     }
 
+    public function testFindByPropertiesDropsYearEntirelyWhenOmittedFromConfig(): void
+    {
+        // year is droppable like any other column (only name/year's non-nullability is special-cased in
+        // create(), not their eligibility for findByProperties()'s grouping set); dropping it merges albums
+        // across different years as long as everything else configured still matches
+        AmpConfig::set('album_grouping_fields', 'name,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 'The', 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
     public function testFindByPropertiesFallsBackToAllColumnsWhenConfigIsEmpty(): void
     {
         // an empty configured value keeps today's full-field behaviour rather than matching nothing
@@ -357,6 +383,47 @@ class AlbumRepositoryTest extends TestCase
             ->willReturn('666');
 
         self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+    }
+
+    public function testFindByPropertiesMbidOnlyMatchesAnyUntaggedAlbumInTheCatalog(): void
+    {
+        // with name/year dropped from the set entirely, an untagged release (both mbid fields null, as
+        // createProperties() sets up) matches on `mbid IS NULL AND mbid_group IS NULL` alone - so every
+        // other untagged album already in the catalog is a candidate match, not just same-named ones
+        AmpConfig::set('album_grouping_fields', 'mbid,mbid_group', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    'SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`catalog` = ?;',
+                    [7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testFindByPropertiesNameAndYearOnlyDropsEveryTagField(): void
+    {
+        AmpConfig::set('album_grouping_fields', 'name,year', true);
+
+        try {
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
     }
 
     public function testFindByPropertiesNarrowsIdentityColumnsFromConfig(): void
@@ -463,6 +530,42 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    /**
+     * The api and upnp listings of an artist's albums do not go through a browse either, so the withdrawal
+     * has to be read here or a release taken off the shelves is handed out by every device protocol.
+     */
+    public function testGetAlbumByArtistHidesAWithdrawnAlbumFromALowerLevel(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('AND `album`.`enabled` = 1'))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getAlbumByArtist(42);
+    }
+
+    /**
+     * Deleting an artist takes its albums with it, and retagging one carries down to them, so those two read
+     * the whole list. A filtered one leaves a withdrawn album behind with nothing above it.
+     */
+    public function testGetAlbumByArtistKeepsTheWithdrawnOnesForMaintenance(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::logicalNot(self::stringContains('`album`.`enabled`')))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getAlbumByArtist(42, false);
+    }
+
     public function testGetArtistMapReturnsArtistList(): void
     {
         $album  = $this->createMock(Album::class);
@@ -492,6 +595,38 @@ class AlbumRepositoryTest extends TestCase
             [$artistId],
             $this->subject->getArtistMap($album, $objectType)
         );
+    }
+
+    /**
+     * An album taken off the shelves was still listed on the page of its artist, for everybody, because this
+     * listing builds its own sql instead of going through Query::_get_filter_sql()
+     */
+    public function testGetByArtistHidesAWithdrawnAlbumFromALowerLevel(): void
+    {
+        $this->bootPrivilegeChecker(false);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::stringContains('AND `album`.`enabled` = 1'))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getByArtist(42);
+    }
+
+    public function testGetByArtistLeavesTheConditionOutForAManager(): void
+    {
+        $this->bootPrivilegeChecker(true);
+
+        $result = $this->createMock(PDOStatement::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(self::logicalNot(self::stringContains('`album`.`enabled`')))
+            ->willReturn($result);
+        $result->method('fetch')->willReturn(false);
+
+        $this->subject->getByArtist(42);
     }
 
     public function testGetByMbidGroupReturnsData(): void
@@ -543,6 +678,81 @@ class AlbumRepositoryTest extends TestCase
             [$albumId],
             $this->subject->getByName($name, $artistId)
         );
+    }
+
+    public function testGetIdentityColumnsDeduplicatesRepeatedFields(): void
+    {
+        AmpConfig::set('album_grouping_fields', 'name,name,year,year,year', true);
+
+        try {
+            self::assertSame(['name', 'year'], $this->subject->getIdentityColumns());
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testGetIdentityColumnsDropsEmptyEntriesFromATrailingComma(): void
+    {
+        AmpConfig::set('album_grouping_fields', 'name,year,', true);
+
+        try {
+            self::assertSame(['name', 'year'], $this->subject->getIdentityColumns());
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testGetIdentityColumnsFallsBackToDefaultsWhenEveryEntryIsUnknown(): void
+    {
+        // a config string that matches no known column is as good as unset - it falls back to the full
+        // default list rather than collapsing to just `catalog`, same as an empty/unset config does
+        AmpConfig::set('album_grouping_fields', 'totally_invalid, also_bogus', true);
+
+        try {
+            self::assertSame(
+                ['name', 'year', 'prefix', 'mbid', 'mbid_group', 'album_artist', 'release_type', 'release_status', 'original_year', 'barcode', 'catalog_number', 'version'],
+                $this->subject->getIdentityColumns()
+            );
+
+            $this->connection->expects(static::once())
+                ->method('fetchOne')
+                ->with(
+                    "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? AND `album`.`prefix` = ? AND `album`.`mbid` IS NULL AND `album`.`mbid_group` IS NULL AND `album`.`album_artist` = ? AND `album`.`release_type` IS NULL AND `album`.`release_status` IS NULL AND `album`.`original_year` IS NULL AND `album`.`barcode` IS NULL AND `album`.`catalog_number` IS NULL AND `album`.`version` IS NULL AND `album`.`catalog` = ?;",
+                    ['some-album', 'some-album', 1999, 'The', 42, 7]
+                )
+                ->willReturn('666');
+
+            self::assertSame(666, $this->subject->findByProperties($this->createProperties()));
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testGetIdentityColumnsIgnoresTheOrderOfTheConfiguredList(): void
+    {
+        // array_intersect() keeps IDENTITY_COLUMNS's own order regardless of how the admin ordered the CSV -
+        // the config string is read as a set, never as a sequence
+        AmpConfig::set('album_grouping_fields', 'version,prefix,name,catalog_number,year', true);
+
+        try {
+            self::assertSame(
+                ['name', 'year', 'prefix', 'catalog_number', 'version'],
+                $this->subject->getIdentityColumns()
+            );
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
+    }
+
+    public function testGetIdentityColumnsTrimsWhitespaceAroundEveryField(): void
+    {
+        AmpConfig::set('album_grouping_fields', "  name , year  ,   album_artist ", true);
+
+        try {
+            self::assertSame(['name', 'year', 'album_artist'], $this->subject->getIdentityColumns());
+        } finally {
+            AmpConfig::set('album_grouping_fields', null, true);
+        }
     }
 
     public function testGetIdsByCatalogReadsTheAlbumsWithNoArt(): void
@@ -704,14 +914,49 @@ class AlbumRepositoryTest extends TestCase
         );
     }
 
+    public function testGetRandomBuildsTheCatalogFilterAndDelegatesToTheSampler(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::once())
+            ->method('sample')
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5,7,0) AND `album`.`enabled` = 1', [], 3)
+            ->willReturn([10, 11, 12]);
+
+        self::assertSame([10, 11, 12], $this->subject->getRandom(42, 3));
+    }
+
+    public function testGetRandomNarrowsToTheRequestedCatalogWhenTheUserCanSeeIt(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::once())
+            ->method('sample')
+            ->with('album', 'id', 'WHERE `album`.`catalog` IN (5) AND `album`.`enabled` = 1', [], 1)
+            ->willReturn([10]);
+
+        self::assertSame([10], $this->subject->getRandom(42, 1, 5));
+    }
+
+    public function testGetRandomReturnsNothingWhenTheRequestedCatalogIsNotVisible(): void
+    {
+        $this->bootCatalogRepository([5, 7]);
+
+        $this->randomIdSampler->expects(static::never())->method('sample');
+
+        self::assertSame([], $this->subject->getRandom(42, 3, 99));
+    }
+
     public function testGetRandomSongsReturnsIds(): void
     {
+        $this->bootCatalogRepository([]);
+
         $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ORDER BY RAND()',
+                'SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`enabled` = 1 ORDER BY RAND()',
                 [666]
             )
             ->willReturn($result);
@@ -953,16 +1198,59 @@ class AlbumRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger     = $this->createMock(LoggerInterface::class);
+        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger          = $this->createMock(LoggerInterface::class);
+        $this->randomIdSampler = $this->createMock(RandomIdSamplerInterface::class);
 
         $this->subject = new AlbumRepository(
             $this->connection,
             $this->logger,
+            $this->randomIdSampler,
         );
 
         // the object cache is a process-wide static, so a leftover entry would leak between tests
         Album::clear_cache();
+    }
+
+    /**
+     * @param list<int> $catalogIds
+     */
+    private function bootCatalogRepository(array $catalogIds): void
+    {
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn($catalogIds);
+
+        // a non-manager, so the withdrawn-item condition WithdrawnFilter adds stays in the expected SQL
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->method('check')->willReturn(false);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === PrivilegeCheckerInterface::class)
+                ? $privilegeChecker
+                : $catalogRepository
+        );
+
+        $GLOBALS['dic'] = $dic;
+    }
+
+    private function bootPrivilegeChecker(bool $isManager): void
+    {
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->method('check')->willReturn($isManager);
+
+        // `Catalog::get_catalogs()` reaches the same container on the way through, so it cannot all be the checker
+        $catalogRepository = $this->createMock(CatalogRepositoryInterface::class);
+        $catalogRepository->method('getIds')->willReturn([]);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(
+            fn(string $id): object => ($id === PrivilegeCheckerInterface::class)
+                ? $privilegeChecker
+                : $catalogRepository
+        );
+
+        $GLOBALS['dic'] = $dic;
     }
 
     /**

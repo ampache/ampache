@@ -56,15 +56,18 @@ abstract class AbstractHandshakeMethod implements MethodInterface
 
     private ConfigContainerInterface $configContainer;
     private NetworkCheckerInterface $networkChecker;
+    private ApiSessionMinter $sessionMinter;
     private UserRepositoryInterface $userRepository;
     private UserTrackerInterface $userTracker;
 
     public function __construct(
+        ApiSessionMinter $sessionMinter,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
         UserTrackerInterface $userTracker,
     ) {
+        $this->sessionMinter   = $sessionMinter;
         $this->configContainer = $configContainer;
         $this->networkChecker  = $networkChecker;
         $this->userRepository  = $userRepository;
@@ -205,8 +208,8 @@ abstract class AbstractHandshakeMethod implements MethodInterface
 
             if ($client instanceof User) {
                 $token = ($exists)
-                    ? $this->extendSession((string) ($input['auth'] ?? ''))
-                    : $this->createSession($client, $dataVersion, $input);
+                    ? $this->sessionMinter->extend((string) ($input['auth'] ?? ''))
+                    : $this->sessionMinter->mint($client, $dataVersion, $input);
 
                 // We're about to start. Record this user's IP.
                 if ($this->configContainer->get('track_user_ip')) {
@@ -245,54 +248,6 @@ abstract class AbstractHandshakeMethod implements MethodInterface
     protected function normalizeDataVersion(int $dataVersion): int
     {
         return $dataVersion;
-    }
-
-    /**
-     * @param array<string, mixed> $input
-     */
-    private function createSession(User $client, int $dataVersion, array $input): string
-    {
-        $data = [
-            'username' => (string) $client->username,
-            'type' => 'api',
-            'apikey' => (string) $client->apikey,
-            'streamtoken' => (string) $client->streamtoken,
-            'value' => $dataVersion,
-        ];
-
-        if (isset($input['client'])) {
-            $data['agent'] = scrub_in((string) $input['client']);
-        }
-
-        if (isset($input['geo_latitude'])) {
-            $data['geo_latitude'] = (float) $input['geo_latitude'];
-        }
-
-        if (isset($input['geo_longitude'])) {
-            $data['geo_longitude'] = (float) $input['geo_longitude'];
-        }
-
-        if (isset($input['geo_name'])) {
-            $data['geo_name'] = $input['geo_name'];
-        }
-
-        // Session might not exist or has expired
-        if (!Session::read($data['apikey'])) {
-            Session::destroy($data['apikey']);
-
-            return Session::create($data);
-        }
-
-        Session::extend($data['apikey'], AccessTypeEnum::API->value);
-
-        return $data['apikey'];
-    }
-
-    private function extendSession(string $auth): string
-    {
-        Session::extend($auth, AccessTypeEnum::API->value);
-
-        return $auth;
     }
 
     private function writeInvalidHandshake(

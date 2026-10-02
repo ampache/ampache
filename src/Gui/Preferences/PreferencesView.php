@@ -68,6 +68,14 @@ final class PreferencesView extends AbstractView
         return $this->webPath . '/preferences.php?action=update_preferences';
     }
 
+    /**
+     * The QuickConnect tab brings its own form, same as the account tab.
+     */
+    public function getQuickConnectView(): QuickConnectView
+    {
+        return new QuickConnectView($this->webPath);
+    }
+
     public function getRequestAction(): string
     {
         return $this->requestAction;
@@ -94,7 +102,7 @@ final class PreferencesView extends AbstractView
      */
     public function hasPreferenceForm(): bool
     {
-        return $this->hasTab() && !$this->isAccountTab() && $this->tab !== 'modules';
+        return $this->hasTab() && !$this->isAccountTab() && !$this->isQuickConnectTab() && $this->tab !== 'modules';
     }
 
     /**
@@ -108,6 +116,11 @@ final class PreferencesView extends AbstractView
     public function isAccountTab(): bool
     {
         return $this->tab === 'account';
+    }
+
+    public function isQuickConnectTab(): bool
+    {
+        return $this->tab === 'quickconnect';
     }
 
     /**

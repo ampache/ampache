@@ -52,6 +52,23 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     ) {}
 
     /**
+     * The objects that can hold a media's art, most specific first
+     *
+     * has_art() answers for the parent (a song's album, an episode's podcast), so asking url() for the
+     * media itself served the placeholder for every song whose album holds the cover.
+     *
+     * @return list<array{string, int}>
+     */
+    public static function artSources(Song|Podcast_Episode $media): array
+    {
+        $sources = ($media instanceof Song)
+            ? [['song', $media->getId()], ['album', $media->album]]
+            : [['podcast_episode', $media->getId()], ['podcast', $media->podcast ?? 0]];
+
+        return array_values(array_filter($sources, static fn(array $source): bool => $source[1] > 0));
+    }
+
+    /**
      * Returns the itunes author of the item
      */
     public function getAuthor(): string
@@ -271,14 +288,16 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Art of a single episode, its own if it has any, the feed art otherwise
+     * Art of a single media, its own if it has any, its parent's next, the feed art otherwise
      */
     private function getMediaImageUrl(Song|Podcast_Episode $media): string
     {
-        $type = $media->getMediaType()->value;
+        foreach (self::artSources($media) as [$type, $id]) {
+            if (Art::has_db($id, $type)) {
+                return Art::url($id, $type, null, 700) ?? $this->getImageUrl();
+            }
+        }
 
-        return ($media->has_art())
-            ? (Art::url($media->getId(), $type, null, 700) ?? $this->getImageUrl())
-            : $this->getImageUrl();
+        return $this->getImageUrl();
     }
 }

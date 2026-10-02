@@ -104,6 +104,7 @@ class Core
         if ($length < 1) {
             return null;
         }
+
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {

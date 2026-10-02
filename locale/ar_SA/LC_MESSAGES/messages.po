@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-08 15:11+1000\n"
+"POT-Creation-Date: 2026-09-14 15:55+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: ben ish <ben.sos.test@gmail.com>, 2020\n"
 "Language-Team: Arabic (Saudi Arabia) (http://app.transifex.com/ampache/ampache/language/ar_SA/)\n"
@@ -217,26 +217,6 @@ msgstr "إحصائيات واضحة"
 msgid "Update User"
 msgstr "تحديث المستخدم"
 
-#. HINT: Number of times an object has been played
-msgid "Played"
-msgstr ""
-
-#, php-format
-msgid "%d time"
-msgid_plural "%d times"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-msgid "Uploaded by"
-msgstr ""
-
-msgid "Actions"
-msgstr "الإجراءات"
-
 msgid "Random to Temporary Playlist"
 msgstr ""
 
@@ -250,9 +230,6 @@ msgid "Link"
 msgstr ""
 
 msgid "Graphs"
-msgstr ""
-
-msgid "Save Track Order"
 msgstr ""
 
 msgid "Do you really want to update from tags?"
@@ -340,6 +317,9 @@ msgstr ""
 msgid "Albums"
 msgstr "البوم"
 
+msgid "Songs"
+msgstr "الأغاني"
+
 msgid "Top Tracks"
 msgstr ""
 
@@ -350,6 +330,9 @@ msgid "Similar Artists"
 msgstr ""
 
 msgid "Similar Songs"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "Select New Art"
@@ -550,6 +533,9 @@ msgstr "مالك"
 msgid "Type"
 msgstr "نوع"
 
+msgid "Save Track Order"
+msgstr ""
+
 msgid "This Collection is empty"
 msgstr ""
 
@@ -638,6 +624,9 @@ msgid "Overwrite tags of sub songs"
 msgstr ""
 
 msgid "Add tags to sub songs"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "Summary"
@@ -803,6 +792,9 @@ msgstr ""
 
 msgid "Release Date"
 msgstr ""
+
+msgid "Actions"
+msgstr "الإجراءات"
 
 msgid "Add Current Host"
 msgstr ""
@@ -1000,9 +992,6 @@ msgstr ""
 msgid "Folders"
 msgstr ""
 
-msgid "Songs"
-msgstr "الأغاني"
-
 msgid "Artists"
 msgstr "الفنانون"
 
@@ -1129,6 +1118,9 @@ msgstr ""
 
 msgid "Edit Instance"
 msgstr ""
+
+msgid "Are You Sure?"
+msgstr "هل أنت متأكد ؟"
 
 msgid "Localplay Control"
 msgstr ""
@@ -1528,10 +1520,16 @@ msgstr ""
 msgid "play/.htaccess configured?"
 msgstr ""
 
-msgid "config/ampache.cfg.php action"
+msgid "jellyfin/.htaccess action"
 msgstr ""
 
-msgid "Disabled"
+msgid "jellyfin/.htaccess exists?"
+msgstr ""
+
+msgid "jellyfin/.htaccess configured?"
+msgstr ""
+
+msgid "config/ampache.cfg.php action"
 msgstr ""
 
 msgid "config/ampache.cfg.php exists?"
@@ -1853,6 +1851,22 @@ msgid ""
 "and the user has access to the database"
 msgstr ""
 
+msgid "Database autocommit"
+msgstr ""
+
+msgid ""
+"This checks that your database server leaves autocommit on, which is its "
+"default. Ampache only opens a transaction in two command line tools and "
+"commits nowhere else, so with autocommit off a single connection would hold "
+"one transaction open for as long as it lives."
+msgstr ""
+
+msgid ""
+"Set autocommit = 1 in your database server configuration. Ampache forces it "
+"on for its own connections, but leaving it off will affect anything else "
+"using this database."
+msgstr ""
+
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -1930,6 +1944,9 @@ msgstr ""
 
 #, php-format
 msgid "%s selected"
+msgstr ""
+
+msgid "Show less"
 msgstr ""
 
 msgid "Add to New Playlist"
@@ -2034,25 +2051,22 @@ msgstr ""
 msgid "Save Changes"
 msgstr "حفظ التغييرات"
 
+msgid "Save as Smart Playlist"
+msgstr ""
+
 msgid "Save as Playlist"
 msgstr ""
 
-msgid "Rating"
-msgstr "تصنيف"
-
-msgid "Fav."
-msgstr ""
-
 msgid "Waveform"
-msgstr ""
-
-msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Sync"
 msgstr ""
 
 msgid "Started"
+msgstr ""
+
+msgid "Podcast Episode Edit"
 msgstr ""
 
 msgid "Podcast Edit"
@@ -2099,6 +2113,9 @@ msgstr ""
 msgid "Your download has started."
 msgstr ""
 
+msgid "The download did not start. Please try again."
+msgstr ""
+
 msgid ""
 "This check needs JavaScript and Web Workers, and this browser is not running"
 " them."
@@ -2129,6 +2146,15 @@ msgstr "تنطبق على جميع"
 
 msgid "Access Level"
 msgstr "مستوى الوصول"
+
+msgid "Enter the code shown on the other device to sign it in."
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
 
 msgid "Sent by"
 msgstr ""
@@ -2176,9 +2202,6 @@ msgid "Unlimited"
 msgstr ""
 
 msgid "Permalink"
-msgstr ""
-
-msgid "Save as Smart Playlist"
 msgstr ""
 
 msgid "Options"
@@ -2251,15 +2274,6 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
-msgstr ""
-
-msgid "Average for all users"
-msgstr ""
-
-msgid "average"
-msgstr ""
-
-msgid "Fav"
 msgstr ""
 
 msgid "Connected Users"
@@ -2461,6 +2475,9 @@ msgstr "مستخدم على الشبكة الآن"
 msgid "User is Offline Now"
 msgstr "والآن ، دون اتصال المستخدم"
 
+msgid "Played"
+msgstr ""
+
 msgid "Skipped"
 msgstr ""
 
@@ -2479,10 +2496,10 @@ msgstr ""
 msgid "Subtitle"
 msgstr ""
 
-msgid "Video Edit"
+msgid "Video Information"
 msgstr ""
 
-msgid "Video Information"
+msgid "Video Edit"
 msgstr ""
 
 msgid "Songs Played"
@@ -2536,6 +2553,32 @@ msgstr ""
 msgid "Editing %s Preferences"
 msgstr ""
 
+msgid "Album Disk"
+msgstr ""
+
+#, php-format
+msgid "%d song"
+msgid_plural "%d songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+msgid "Time"
+msgstr "وقت"
+
+#, php-format
+msgid "Played %d time"
+msgid_plural "Played %d times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
 msgid "Unknown (Orphaned)"
 msgstr ""
 
@@ -2548,8 +2591,18 @@ msgstr ""
 msgid "Cover Art Search"
 msgstr ""
 
-msgid "Time"
-msgstr "وقت"
+#, php-format
+msgid "%d album"
+msgid_plural "%d albums"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+msgid "Rating"
+msgstr "تصنيف"
 
 msgid "Starts With"
 msgstr "يبدأ"
@@ -2712,6 +2765,9 @@ msgstr ""
 msgid "Search on %s ..."
 msgstr ""
 
+msgid "Radio Station"
+msgstr ""
+
 msgid "Stream"
 msgstr "يتدفق"
 
@@ -2825,6 +2881,16 @@ msgstr ""
 msgid "Channels"
 msgstr ""
 
+#, php-format
+msgid "%d episode"
+msgid_plural "%d episodes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
 msgid "Return to Login Page"
 msgstr ""
 
@@ -2923,17 +2989,24 @@ msgstr "المراقب المالي المحلي اللعب غير محدد"
 msgid "Account"
 msgstr ""
 
+msgid "QuickConnect"
+msgstr ""
+
 msgid "No lyrics found."
 msgstr ""
 
 msgid "Song Edit"
 msgstr ""
 
+#, php-format
+msgid "Track %d"
+msgstr ""
+
+msgid "Play on the current player"
+msgstr ""
+
 msgid "Song Information"
 msgstr "أغنية المعلومات"
-
-msgid "Links"
-msgstr ""
 
 msgid "Song Language"
 msgstr ""
@@ -2972,6 +3045,15 @@ msgid "Lyrics"
 msgstr ""
 
 msgid "Licensing"
+msgstr ""
+
+msgid "Uploaded by"
+msgstr ""
+
+msgid "Song Data"
+msgstr ""
+
+msgid "File Data"
 msgstr ""
 
 msgid "Statistical Graphs"
@@ -3219,9 +3301,6 @@ msgstr ""
 
 msgid "Your Access List entry has been removed"
 msgstr ""
-
-msgid "Are You Sure?"
-msgstr "هل أنت متأكد ؟"
 
 #. HINT: ACL Name
 #, php-format
@@ -3758,6 +3837,12 @@ msgstr ""
 msgid "Your account has not been updated"
 msgstr ""
 
+msgid "Device approved"
+msgstr ""
+
+msgid "That code is invalid, expired, or already used"
+msgstr ""
+
 msgid "Server preferences updated successfully"
 msgstr ""
 
@@ -4173,6 +4258,9 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
+msgid "Failed to connect to the remote server"
+msgstr ""
+
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4185,9 +4273,6 @@ msgid "Running Remote Update"
 msgstr ""
 
 msgid "URI"
-msgstr ""
-
-msgid "Failed to connect to the remote server"
 msgstr ""
 
 #. HINT: count of songs found
@@ -4513,9 +4598,6 @@ msgid "List all pluggable modules and their installed state"
 msgstr ""
 
 msgid "Plugins"
-msgstr ""
-
-msgid "Enabled"
 msgstr ""
 
 msgid "Users List"
@@ -5243,9 +5325,6 @@ msgstr ""
 msgid "Artist Count (Genre)"
 msgstr ""
 
-msgid "File Data"
-msgstr ""
-
 msgid "Date Updated"
 msgstr ""
 
@@ -5325,9 +5404,6 @@ msgid "Podcast Episode popularity score"
 msgstr ""
 
 msgid "Any searchable text"
-msgstr ""
-
-msgid "Song Data"
 msgstr ""
 
 msgid "Favorites (Album)"
@@ -5472,6 +5548,16 @@ msgstr ""
 
 msgid " Stars"
 msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 msgid "Average from all users"
 msgstr ""
@@ -7242,6 +7328,14 @@ msgid "Use Dashboard links for the index page header"
 msgstr ""
 
 #: Ampache preference description
+msgid "Use Jellyfin backend"
+msgstr ""
+
+#: Ampache preference description
+msgid "Use Jellyfin QuickConnect"
+msgstr ""
+
+#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7273,6 +7367,16 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Lock this user into the mini player interface"
+msgstr ""
+
+#: Ampache preference description
+msgid "MusicBrainz server URL, empty for musicbrainz.org"
+msgstr ""
+
+#: Ampache preference description
+msgid ""
+"Hundredths of a second to wait between MusicBrainz calls, 0 to disable for "
+"your own mirror"
 msgstr ""
 
 #: Ampache preference description

@@ -58,6 +58,31 @@ class ShareTest extends TestCase
     }
 
     /**
+     * Sharing a private list is the whole point of the link: the visitor on the other end has no account, so
+     * asking whether they may see the list would refuse every one of them.
+     */
+    public function testIsValidKeepsWorkingForAPrivatePlaylist(): void
+    {
+        AmpConfig::set('share', true, true);
+
+        $private = $this->createMock(Playlist::class);
+        // the tell that the wrong question is gone: a private list answers no here and is served anyway
+        $private->method('isVisible')->willReturn(false);
+        $this->bootLoader($private);
+
+        $subject                 = new Share();
+        $subject->id             = 666;
+        $subject->object_type    = 'playlist';
+        $subject->object_id      = 42;
+        $subject->expire_days    = 0;
+        $subject->max_counter    = 0;
+        $subject->allow_stream   = false;
+        $subject->allow_download = false;
+
+        self::assertTrue($subject->is_valid('', ''));
+    }
+
+    /**
      * A link handed out before a takedown has to stop working with it. The visitor has no account, so the
      * withdrawal is read off the item rather than from whoever is on the other end.
      */
@@ -66,7 +91,7 @@ class ShareTest extends TestCase
         AmpConfig::set('share', true, true);
 
         $withdrawn = $this->createMock(Album::class);
-        $withdrawn->method('isVisible')->willReturn(false);
+        $withdrawn->method('isEnabled')->willReturn(false);
         $this->bootLoader($withdrawn);
 
         $subject                 = new Share();

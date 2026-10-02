@@ -26,9 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Database\Search;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
 
 final class AlbumSearch implements SearchInterface
@@ -608,7 +605,7 @@ final class AlbumSearch implements SearchInterface
                     $where[] = "`album`.`mbid_group` IN (SELECT `mbid_group` FROM `album` GROUP BY `album`.`mbid_group` HAVING COUNT(`mbid_group`) > 1)";
                     break;
                 case 'duplicate_tracks':
-                    $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk`, `catalog` HAVING COUNT(`track`) > 1)";
                     break;
                 default:
                     debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
@@ -640,12 +637,7 @@ final class AlbumSearch implements SearchInterface
             }
         }
 
-        // a withdrawn item is out of a smartlist too, and unlike the catalog test it is never optional
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $search_user_id)) {
-            $where_sql = ($where_sql !== '' && $where_sql !== '0')
-                ? "(" . $where_sql . ") AND `album`.`enabled` = 1"
-                : "`album`.`enabled` = 1";
-        }
+        $where_sql = WithdrawnFilter::apply($where_sql, 'album', $search_user_id);
 
         if ($search->catalog_id) {
             if ($where_sql !== '' && $where_sql !== '0') {

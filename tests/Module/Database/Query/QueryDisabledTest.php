@@ -55,7 +55,7 @@ class QueryDisabledTest extends TestCase
         $sql = $this->sqlFor('album_disk', false);
 
         self::assertStringContainsString(
-            'EXISTS (SELECT 1 FROM `album` AS `album_dis` WHERE `album_dis`.`id` = `album_disk`.`album_id` AND `album_dis`.`enabled` = 1)',
+            'EXISTS (SELECT 1 FROM `album` AS `album_wd` WHERE `album_wd`.`id` = `album_disk`.`album_id` AND `album_wd`.`enabled` = 1)',
             $sql
         );
     }
@@ -109,7 +109,7 @@ class QueryDisabledTest extends TestCase
 
         self::assertStringNotContainsString('`album`.`enabled`', $sql);
         self::assertStringNotContainsString('`artist`.`enabled`', $sql);
-        self::assertStringNotContainsString('`album_dis`', $sql);
+        self::assertStringNotContainsString('`album_wd`', $sql);
     }
 
     private function query(bool $isManager): Query

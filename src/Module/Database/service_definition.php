@@ -35,5 +35,6 @@ return [
     DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
     DatabaseLockInterface::class => autowire(DatabaseLock::class),
     BrowseFactoryInterface::class => autowire(BrowseFactory::class),
+    RandomIdSamplerInterface::class => autowire(RandomIdSampler::class),
     Random::class => autowire(),
 ];

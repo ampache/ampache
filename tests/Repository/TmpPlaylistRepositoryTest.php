@@ -86,6 +86,55 @@ class TmpPlaylistRepositoryTest extends TestCase
         $this->subject->deleteItemByRowId(601, 7);
     }
 
+    public function testShuffleItemsDeletesAndReinsertsTheSameRows(): void
+    {
+        $rows = [
+            ['object_type' => 'song', 'id' => 1, 'object_id' => 21],
+            ['object_type' => 'song', 'id' => 2, 'object_id' => 33],
+            ['object_type' => 'album', 'id' => 3, 'object_id' => 5],
+        ];
+
+        $calls = [];
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params = []) use (&$calls, $rows): PDOStatement {
+                $calls[] = [$sql, $params];
+
+                return str_starts_with($sql, 'SELECT')
+                    ? $this->makeResultRows($rows)
+                    : $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->shuffleItems(666);
+
+        [, $deleteCall, $insertCall] = $calls;
+
+        self::assertSame('DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?', $deleteCall[0]);
+        self::assertSame([666], $deleteCall[1]);
+
+        self::assertSame(
+            'INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES (?, ?, ?), (?, ?, ?), (?, ?, ?)',
+            $insertCall[0]
+        );
+
+        // shuffle() randomizes the order, so compare the rows as a set rather than position by position
+        self::assertEqualsCanonicalizing(
+            [[21, 666, 'song'], [33, 666, 'song'], [5, 666, 'album']],
+            array_chunk($insertCall[1], 3)
+        );
+    }
+
+    public function testShuffleItemsDoesNothingForFewerThanTwoItems(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($this->makeResultRows([
+                ['object_type' => 'song', 'id' => 1, 'object_id' => 21],
+            ]));
+
+        $this->subject->shuffleItems(666);
+    }
+
     protected function setUp(): void
     {
         $this->connection = $this->createMock(DatabaseConnectionInterface::class);
@@ -94,5 +143,17 @@ class TmpPlaylistRepositoryTest extends TestCase
             $this->connection,
             $this->createMock(LoggerInterface::class)
         );
+    }
+
+    /**
+     * @param list<array{object_type: string, id: int, object_id: int}> $rows
+     */
+    private function makeResultRows(array $rows): PDOStatement&MockObject
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('fetch')
+            ->willReturnOnConsecutiveCalls(...[...$rows, false]);
+
+        return $statement;
     }
 }

@@ -212,6 +212,7 @@ class Ldap
                 if ($field == 'count' || is_int($field)) {
                     continue;
                 }
+
                 if ($field == 'dn') {
                     $sr_clean[$key][$field] = $values;
                 } else {

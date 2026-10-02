@@ -47,7 +47,7 @@ if ($this->areRatingsShown()) {
     </thead>
     <tbody>
         <?php foreach ($songs as $song) { ?>
-        <tr id="song_<?php echo $this->e($song->id); ?>">
+        <tr id="song_<?php echo $this->e($song->id); ?>"<?php echo ($song->isEnabled()) ? '' : ' class="withdrawn"'; ?>>
             <?php echo $this->raw($this->renderRow($song)); ?>
         </tr>
         <?php } ?>

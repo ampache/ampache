@@ -44,9 +44,21 @@ $expander  = T_('Expand/Collapse'); ?>
             <span class="sidebar-header-title"><?php echo T_('Preferences'); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_prefs', 'header-img ' . $this->getState('preference_prefs'))); ?>
         </h4>
-        <ul class="sb3" id="sb_preference_prefs"<?php echo ($this->isCollapsed('preference_prefs')) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_prefs')) ? ' collapsed' : ''; ?>" id="sb_preference_prefs">
             <?php foreach ($this->getCategories() as $category) { ?>
             <li id="sb_preference_prefs_<?php echo $this->e(ucfirst($category['tab'])); ?>"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=<?php echo $this->e($category['tab']); ?>"><?php echo $this->e($category['label']); ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <li>
+        <h4 class="header">
+            <span class="sidebar-header-title"><?php echo T_('Account'); ?></span>
+            <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_account', 'header-img ' . $this->getState('preference_account'))); ?>
+        </h4>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_account')) ? ' collapsed' : ''; ?>" id="sb_preference_account">
+            <li id="sb_preference_account_account"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
+            <?php if ($this->showQuickConnect()) { ?>
+            <li id="sb_preference_account_quickconnect"><a href="<?php echo $this->e($webPath); ?>/preferences.php?tab=quickconnect"><?php echo T_('QuickConnect'); ?></a></li>
             <?php } ?>
         </ul>
     </li>
@@ -56,7 +68,7 @@ $expander  = T_('Expand/Collapse'); ?>
             <span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_playlist', 'header-img ' . $this->getState('preference_playlist'))); ?>
         </h4>
-        <ul class="sb3" id="sb_preference_playlist"<?php echo ($this->isCollapsed('preference_playlist')) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_playlist')) ? ' collapsed' : ''; ?>" id="sb_preference_playlist">
             <li id="sb_preference_prefs_playlist_import"><a href="<?php echo $this->e($webPath); ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import'); ?></a></li>
         </ul>
     </li>
@@ -67,7 +79,7 @@ $expander  = T_('Expand/Collapse'); ?>
             <span class="sidebar-header-title"><?php echo T_('Uploads'); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_upload', 'header-img ' . $this->getState('preference_upload'))); ?>
         </h4>
-        <ul class="sb3" id="sb_preference_upload"<?php echo ($this->isCollapsed('preference_upload')) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_upload')) ? ' collapsed' : ''; ?>" id="sb_preference_upload">
             <li id="sb_preference_upload_browse"><a href="<?php echo $this->e($webPath); ?>/stats.php?action=upload"><?php echo T_('Browse'); ?></a></li>
             <li id="sb_preference_upload_upload"><a href="<?php echo $this->e($webPath); ?>/upload.php"><?php echo T_('Upload'); ?></a></li>
         </ul>
@@ -79,7 +91,7 @@ $expander  = T_('Expand/Collapse'); ?>
             <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
             <?php echo $this->raw(Ui::get_material_symbol('chevron_right', $expander, 'preference_help', 'header-img ' . $this->getState('preference_help'))); ?>
         </h4>
-        <ul class="sb3" id="sb_preference_help"<?php echo ($this->isCollapsed('preference_help')) ? ' style="display: none;"' : ''; ?>>
+        <ul class="sb3<?php echo ($this->isCollapsed('preference_help')) ? ' collapsed' : ''; ?>" id="sb_preference_help">
             <li id="sb_preference_help_wiki"><a href="https://ampache.org/docs/" target="_blank"><?php echo T_('Ampache Wiki'); ?></a></li>
             <li id="sb_preference_help_api"><a href="https://ampache.org/api/" target="_blank"><?php echo T_('API Documentation'); ?></a></li>
             <?php if ($this->showCookieDisclaimer()) { ?>
