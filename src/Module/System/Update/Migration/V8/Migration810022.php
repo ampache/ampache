@@ -32,7 +32,6 @@ final class Migration810022 extends AbstractMigration
     protected array $changelog = [
         'Convert `object_type` from a plain `varchar` to an `enum` on `album_map`, `artist_map`, `catalog_map`, `folder_map` and `collection_map`, using the value list each table actually writes',
     ];
-
     protected bool $warning = true;
 
     public function migrate(): void

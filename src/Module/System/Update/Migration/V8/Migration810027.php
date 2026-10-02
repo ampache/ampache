@@ -25,25 +25,30 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V8;
 
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Let the similar artists/songs lookup find its rows instead of scanning the whole table.
+ * Retypes eight booleans `ampache.sql` kept seeding as `integer`/`string`, and drops two unread preferences
  */
-final class Migration810026 extends AbstractMigration
+final class Migration810027 extends AbstractMigration
 {
     protected array $changelog = [
-        'Add an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup',
+        'Fix the `integer`/`string` type on eight preferences that are booleans',
+        'Remove the unread `sidebar_order_video` and `allow_personal_info_agent` preferences',
     ];
 
     public function migrate(): void
     {
-        // Recommendation::get_items() filters on `recommendation` with no key, so the optimiser walked the
-        // whole table per lookup. Reported on GitHub (#4528) as a full scan of 2.6M rows taking ~1.3s; the
-        // key drops that to ~100 rows read and well under 1ms
-        if (!Dba::has_index('recommendation_item', 'recommendation_item_recommendation_IDX')) {
-            $this->updateDatabase('ALTER TABLE `recommendation_item` ADD KEY `recommendation_item_recommendation_IDX` (`recommendation`);');
-        }
+        $this->updateDatabase(
+            "UPDATE `preference` SET `type` = 'boolean' WHERE `type` != 'boolean' AND `name` IN ('allow_video', 'browser_notify', 'geolocation', 'home_moment_albums', 'home_moment_videos', 'home_now_playing', 'home_recently_played', 'show_played_times');"
+        );
+
+        $this->updateDatabase(
+            "DELETE `user_preference` FROM `user_preference` JOIN `preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
+        );
+
+        $this->updateDatabase(
+            "DELETE FROM `preference` WHERE `name` IN ('sidebar_order_video', 'allow_personal_info_agent');"
+        );
     }
 }
