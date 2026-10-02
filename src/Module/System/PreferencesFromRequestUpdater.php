@@ -53,8 +53,8 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
 
         // Get current keys
         $sql = ($user_id === User::INTERNAL_SYSTEM_USER_ID)
-            ? "SELECT `id`, `name`, `category` FROM `preference`"
-            : "SELECT `id`, `name`, `category` FROM `preference` WHERE `category` != 'system'";
+            ? "SELECT `id`, `name`, `category` FROM `preference` WHERE `category` != 'internal'"
+            : "SELECT `id`, `name`, `category` FROM `preference` WHERE `category` NOT IN ('internal', 'system')";
 
         $db_results = Dba::read($sql);
         $results    = [];

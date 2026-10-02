@@ -35,6 +35,16 @@ class PreferenceBoxViewTest extends TestCase
         $this->assertSame('pref-section-last-fm', $this->view([])->subcategoryAnchor('Last.FM'));
     }
 
+    public function testAPreferenceWithNoShippedDefaultOffersNoRestoreButton(): void
+    {
+        // a plugin preference absent from the catalogue has no default to go back to, and the button
+        // would simply blank the field
+        $html = $this->view([$this->item('download', 'feature'), $this->plugin()])->render();
+
+        self::assertSame(1, substr_count($html, 'data-pref-action="default"'), $html);
+        self::assertSame(2, substr_count($html, 'data-pref-action="server"'));
+    }
+
     public function testAReferenceValueIsShownWithTheLabelTheControlUses(): void
     {
         $view = $this->view([]);
@@ -43,6 +53,14 @@ class PreferenceBoxViewTest extends TestCase
         $this->assertSame(T_('On'), $view->displayValue($item, '1'), 'the reference column speaks the language of the control');
         $this->assertSame(T_('Off'), $view->displayValue($item, '0'));
         $this->assertSame(T_('(empty)'), $view->displayValue($item, ''));
+    }
+
+    public function testASecretNeverReachesTheMarkupAsAValue(): void
+    {
+        $html = $this->view([$this->secret()])->render();
+
+        self::assertStringContainsString('type="password"', $html);
+        self::assertStringNotContainsString('data-pref-action="default"', $html);
     }
 
     public function testASectionlessPreferenceGetsTheCatchAllHeading(): void
@@ -112,6 +130,17 @@ class PreferenceBoxViewTest extends TestCase
         );
     }
 
+    public function testTheRenderedBoxCarriesOneRowAndOneControlPerPreference(): void
+    {
+        // nothing else renders these templates, so a missing control or a stray row goes unnoticed
+        $html = $this->view([$this->item('download', 'feature'), $this->item('share', 'feature')])->render();
+
+        self::assertSame(2, substr_count($html, 'class="pref-row"'), $html);
+        self::assertSame(2, substr_count($html, 'class="pref-control"'));
+        self::assertStringContainsString('id="p-download"', $html);
+        self::assertStringContainsString('id="p-share"', $html);
+    }
+
     private function item(string $name, ?string $subcategory, ?PreferenceHelp $help = null, string $description = ''): PreferenceItem
     {
         return new PreferenceItem(
@@ -128,6 +157,44 @@ class PreferenceBoxViewTest extends TestCase
             isSecret: false,
             secretIsSet: false,
             help: $help,
+        );
+    }
+
+    private function plugin(): PreferenceItem
+    {
+        return new PreferenceItem(
+            name: 'catalogfav_max_items',
+            description: 'Catalog favorites',
+            type: PreferenceType::INTEGER,
+            subcategory: 'feature',
+            level: 25,
+            value: '24',
+            shippedDefault: null,
+            systemValue: '5',
+            choices: null,
+            editable: true,
+            isSecret: false,
+            secretIsSet: false,
+            help: null,
+        );
+    }
+
+    private function secret(): PreferenceItem
+    {
+        return new PreferenceItem(
+            name: 'lastfm_challenge',
+            description: 'Last.FM session',
+            type: PreferenceType::STRING,
+            subcategory: 'lastfm',
+            level: 25,
+            value: '',
+            shippedDefault: null,
+            systemValue: null,
+            choices: null,
+            editable: true,
+            isSecret: true,
+            secretIsSet: true,
+            help: null,
         );
     }
 

@@ -32,7 +32,8 @@ final readonly class PreferenceItem
 {
     /**
      * @param ?array<array-key, string> $choices posted value => displayed label, when the set is closed
-     * @param ?string $shippedDefault the value Ampache ships with, null when the name is unknown to `Preference::DEFAULTS`
+     * @param ?string $shippedDefault the value a new account starts from: `DEFAULTS` for a core preference,
+     *        the `preference` row for a plugin one, which an admin can move through `preference_edit default=1`
      * @param ?string $systemValue the `user = -1` row, null when the subject *is* the system
      * @param ?string $warning why another preference is making this one pointless, when one is
      * @param ?string $numberFallback the subject's own value of the preference this one falls back to

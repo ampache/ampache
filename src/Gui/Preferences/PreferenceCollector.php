@@ -185,7 +185,7 @@ final readonly class PreferenceCollector
             // a plugin knows its own settings better than the shipped catalogue does
             help: $pluginHelp ?? $this->helpCatalog->find($name),
             warning: $warning,
-            numberFallback: ($fallbackName === null) ? null : ($held[$fallbackName] ?? null),
+            numberFallback: ($fallbackName === null) ? null : ((($held[$fallbackName] ?? '') === '') ? null : $held[$fallbackName]),
         );
     }
 

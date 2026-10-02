@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Authorization;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
@@ -40,8 +39,7 @@ class GuiGatekeeperTest extends MockeryTestCase
 
     public function testIsDemoModeReadsTheConfigFlag(): void
     {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
+        $this->configContainer->shouldReceive('isDemoMode')
             ->andReturnTrue();
 
         $this->assertTrue($this->subject->isDemoMode());
@@ -68,8 +66,7 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->privilegeChecker->shouldReceive('check')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
+        $this->configContainer->shouldReceive('isDemoMode')
             ->andReturnTrue();
 
         $this->assertFalse($this->subject->mayAdminister());
@@ -80,7 +77,7 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->privilegeChecker->shouldReceive('check')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
+        $this->configContainer->shouldReceive('isDemoMode')->andReturnFalse();
 
         $this->assertFalse($this->subject->mayAdminister());
     }
@@ -90,8 +87,7 @@ class GuiGatekeeperTest extends MockeryTestCase
         $this->privilegeChecker->shouldReceive('check')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
+        $this->configContainer->shouldReceive('isDemoMode')
             ->andReturnFalse();
 
         $this->assertTrue($this->subject->mayAdminister());
