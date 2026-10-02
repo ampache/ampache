@@ -3236,6 +3236,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
 
     table.tabledata.rowlist[data-objecttype="song"] > tbody > tr > td.cel_time,
     table.tabledata.rowlist[data-objecttype="media"] > tbody > tr > td.cel_time,
+    table.tabledata.rowlist[data-objecttype="podcast_episode"] > tbody > tr > td.cel_time,
     table.tabledata.rowlist[data-objecttype="playlist"] > tbody > tr > td.cel_time {
         display: block;
         order: 5;

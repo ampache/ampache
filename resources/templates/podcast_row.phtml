@@ -66,13 +66,13 @@ if ($this->canAddToPlaylist()) { ?>
     <?php } ?>
     </span>
 </td>
-<td class="cel_siteurl"><a target="_blank" href="<?php echo $this->e($libitem->getWebsite()); ?>"><?php echo $this->e($libitem->getWebsite()); ?></a></td>
-<td class="cel_episodes"><?php echo $this->e($libitem->getEpisodeCount()); ?></td>
+<td data-label="<?php echo $this->e(T_('Website')); ?>" class="cel_siteurl"><a target="_blank" href="<?php echo $this->e($libitem->getWebsite()); ?>"><?php echo $this->e($libitem->getWebsite()); ?></a></td>
+<td data-label="<?php echo $this->e(T_('Episodes')); ?>" class="cel_episodes"><?php echo $this->e($libitem->getEpisodeCount()); ?></td>
 <?php if ($this->isShowPlayedTimes()) { ?>
-    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->getTotalCount()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Played')); ?>" class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->getTotalCount()); ?></td>
 <?php }
 if ($this->isShowRatings()) { ?>
-        <td class="cel_ratings">
+        <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $itemId; ?>_podcast"><?php echo $this->raw(Rating::show($itemId, 'podcast')); ?></span>
                 <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_podcast"><?php echo $this->raw(Userflag::show($itemId, 'podcast')); ?></span>
