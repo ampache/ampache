@@ -73,6 +73,14 @@ use Ampache\Gui\Form\LoginFormViewFactory;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Gui\Form\StatsFormViewFactory;
 use Ampache\Gui\Form\StatsFormViewFactoryInterface;
+use Ampache\Gui\Preferences\PreferenceChoiceProvider;
+use Ampache\Gui\Preferences\PreferenceChoiceProviderInterface;
+use Ampache\Gui\Preferences\PreferenceCollector;
+use Ampache\Gui\Preferences\PreferenceExporter;
+use Ampache\Gui\Preferences\PreferenceExporterInterface;
+use Ampache\Gui\Preferences\PreferenceHelpCatalog;
+use Ampache\Gui\Preferences\PreferenceInputRenderer;
+use Ampache\Gui\Preferences\PreferencePrerequisiteCatalog;
 use Ampache\Gui\Preferences\PreferencesViewFactory;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Gui\Sidebar\SidebarViewFactory;
@@ -138,6 +146,12 @@ return [
             'wanted' => get(WantedListRenderer::class),
         ]),
     LoginFormViewFactoryInterface::class => autowire(LoginFormViewFactory::class),
+    PreferenceChoiceProviderInterface::class => autowire(PreferenceChoiceProvider::class),
+    PreferenceHelpCatalog::class => autowire(PreferenceHelpCatalog::class),
+    PreferencePrerequisiteCatalog::class => autowire(PreferencePrerequisiteCatalog::class),
+    PreferenceCollector::class => autowire(PreferenceCollector::class),
+    PreferenceExporterInterface::class => autowire(PreferenceExporter::class),
+    PreferenceInputRenderer::class => autowire(PreferenceInputRenderer::class),
     PreferencesViewFactoryInterface::class => autowire(PreferencesViewFactory::class),
     StatsFormViewFactoryInterface::class => autowire(StatsFormViewFactory::class),
     SidebarViewFactoryInterface::class => autowire(SidebarViewFactory::class),

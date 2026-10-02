@@ -28,8 +28,6 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -58,8 +56,7 @@ class DeleteRssTokenActionTest extends TestCase
         $user = $this->createMock(User::class);
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())
@@ -115,8 +112,7 @@ class DeleteRssTokenActionTest extends TestCase
         static::expectException(ObjectNotFoundException::class);
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())

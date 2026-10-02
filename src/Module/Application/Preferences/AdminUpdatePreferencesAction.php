@@ -28,12 +28,12 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,27 +48,35 @@ final readonly class AdminUpdatePreferencesAction implements ApplicationActionIn
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            !$gatekeeper->mayAdminister()
             || !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }
 
-        $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
+        // this endpoint only ever writes one account; the server row has its own action and its own guard
+        $userId = (int) Core::get_post('user_id');
+        if ($userId <= 0 || $this->modelFactory->createUser($userId)->isNew()) {
+            throw new ObjectNotFoundException($userId);
+        }
+
+        $this->preferencesFromRequestUpdater->update($userId);
 
         return $this->responseFactory
             ->createResponse(RFC7231::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(
-                    '%s/users.php?action=show_preferences&user_id=%s',
+                    '%s/users.php?action=show_preferences&user_id=%d&tab=%s',
                     $this->configContainer->getWebPath('/admin'),
-                    scrub_out(Core::get_post('user_id'))
+                    $userId,
+                    rawurlencode(Core::get_post('tab'))
                 )
             );
     }

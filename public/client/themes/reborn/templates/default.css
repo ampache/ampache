@@ -3011,6 +3011,268 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     .multiselect-actions {
         position: static;
     }
+
+    /* A table marked `rowlist` keeps its markup and gives up its grid: two lines per row, the rest folded
+       away behind the chevron src/js/rowlist.js appends. */
+    table.tabledata.rowlist {
+        display: block;
+        overflow-x: visible;
+    }
+
+    /* The sort links survive as one scrolling strip; repeating them in the footer is noise on a phone. */
+    table.tabledata.rowlist > thead {
+        display: block;
+    }
+
+    table.tabledata.rowlist > thead > tr.th-top {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 2px 8px 5px;
+    }
+
+    table.tabledata.rowlist > thead > tr.th-top > th {
+        display: block;
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        padding: 0;
+        border: 0;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    /* The header row is a row of sort buttons now: a column name you cannot sort by only repeats what the
+       panel already labels. A row left with none of them has nothing to say at all. */
+    table.tabledata.rowlist > thead > tr.th-top > th:not(:has(a, input)) {
+        display: none;
+    }
+
+    table.tabledata.rowlist > thead > tr.th-top:not(:has(a, input)) {
+        display: none;
+    }
+
+    table.tabledata.rowlist > tfoot {
+        display: none;
+    }
+
+    table.tabledata.rowlist > tbody {
+        display: block;
+    }
+
+    table.tabledata.rowlist > tbody > tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 10px;
+        padding: 6px 8px;
+    }
+
+    /* The line break between what is always shown and what the second line carries. */
+    table.tabledata.rowlist > tbody > tr::after {
+        content: "";
+        order: 8;
+        flex: 0 0 100%;
+    }
+
+    /* A cell is folded until one of the rules below claims it for the first or the second line. */
+    table.tabledata.rowlist > tbody > tr > td {
+        display: none;
+        order: 20;
+        flex: 0 0 100%;
+        width: auto !important;
+        min-width: 0;
+        max-width: none;
+        margin-top: 6px;
+        padding: 0;
+        border: 0;
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+
+    /* A tap leaves :hover stuck on a touch screen, and the theme paints it in the accent colour. */
+    table.tabledata.rowlist > tbody > tr.rowlist-open,
+    table.tabledata.rowlist > tbody > tr.rowlist-open:hover,
+    table.tabledata.rowlist > tbody > tr.rowlist-open:focus {
+        background-color: var(--amp-raised);
+        background-image: none;
+    }
+
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td {
+        display: block;
+    }
+
+    /* The panel reads as a description list first and a toolbar last, whatever order the markup emits. */
+    table.tabledata.rowlist > tbody > tr > td:is(.cel_add, .cel_add_list) {
+        order: 25;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_action {
+        order: 26;
+    }
+
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_ratings {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Both toolbars only come out on hover in a table, which a touch screen never produces. */
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td:is(.cel_add, .cel_add_list) .cel_item_add {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+    }
+
+    /* A column the server had nothing to put in would show as a bare label. */
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td[data-label]:empty {
+        display: none;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td[data-label]::before {
+        content: attr(data-label) " ";
+        color: var(--amp-muted);
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_action {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td:is(.cel_action, .cel_add, .cel_add_list) a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td:is(.cel_action, .cel_add, .cel_add_list) .rowlist-action-text {
+        display: inline;
+    }
+
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_action {
+        display: flex;
+    }
+
+    /* First line: what names the item, how long it is, and the two gestures that matter. */
+    table.tabledata.rowlist > tbody > tr > td:is(
+        .cel_select, .cel_play, .cel_cover, .cel_song, .cel_title, .cel_album,
+        .cel_artist, .cel_playlist, .cel_label, .cel_streamname, .cel_drag, .cel_expand) {
+        display: block;
+        flex: 0 0 auto;
+        margin-top: 0;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_select {
+        order: 1;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_play {
+        display: flex;
+        order: 2;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* No hover on a touch screen: the play button is always out, and the track number sits beside it. */
+    table.tabledata.rowlist > tbody > tr > td.cel_play .cel_play_hover,
+    table.tabledata.rowlist > tbody > tr:hover > td.cel_play .cel_play_hover {
+        display: block;
+        order: 1;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_play .cel_play_content,
+    table.tabledata.rowlist > tbody > tr:hover > td.cel_play .cel_play_content {
+        display: block;
+        order: 2;
+        color: var(--amp-muted);
+        font-size: 0.8em;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_play .cel_play_content b {
+        font-weight: normal;
+    }
+
+    /* Play next and play last are conveniences; one row can only spare the width for playing. */
+    table.tabledata.rowlist > tbody > tr > td.cel_play .cel_play_hover > *:nth-child(n+2) {
+        display: none;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_cover {
+        order: 3;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_cover img {
+        width: 40px;
+        height: auto;
+    }
+
+    /* An open row is looked at rather than scanned past, so the thumbnail opens it at a readable size. */
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_cover {
+        order: 19;
+        flex: 0 0 100%;
+        margin-top: 8px;
+    }
+
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_cover img {
+        width: 160px;
+    }
+
+    /* A flex basis of zero: a long title shrinks on its line instead of claiming one of its own. */
+    table.tabledata.rowlist > tbody > tr > td:is(
+        .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_streamname) {
+        display: -webkit-box;
+        order: 4;
+        flex: 1 1 0;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow-wrap: anywhere;
+    }
+
+    table.tabledata.rowlist[data-objecttype="song"] > tbody > tr > td.cel_time,
+    table.tabledata.rowlist[data-objecttype="media"] > tbody > tr > td.cel_time,
+    table.tabledata.rowlist[data-objecttype="podcast_episode"] > tbody > tr > td.cel_time,
+    table.tabledata.rowlist[data-objecttype="playlist"] > tbody > tr > td.cel_time {
+        display: block;
+        order: 5;
+        flex: 0 0 auto;
+        margin-top: 0;
+        color: var(--amp-muted);
+        font-size: 0.85em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_drag {
+        order: 6;
+    }
+
+    table.tabledata.rowlist > tbody > tr > td.cel_expand {
+        order: 7;
+    }
+
+    /* Second line: only what the first could not hold and the reader still needs to tell two rows apart. */
+    table.tabledata.rowlist[data-objecttype="song"] > tbody > tr > td:is(.cel_artist, .cel_album),
+    table.tabledata.rowlist[data-objecttype="media"] > tbody > tr > td.cel_artist,
+    table.tabledata.rowlist[data-objecttype="album"] > tbody > tr > td:is(.cel_artist, .cel_year),
+    table.tabledata.rowlist[data-objecttype="album_disk"] > tbody > tr > td:is(.cel_artist, .cel_year) {
+        display: block;
+        order: 9;
+        flex: 0 1 auto;
+        max-width: 100%;
+        margin-top: 0;
+        overflow: hidden;
+        color: var(--amp-muted);
+        font-size: 0.85em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 /* --------------------------
@@ -3527,4 +3789,591 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     padding: 6px 16px;
     font-size: 14px;
     border-radius: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Preferences
+   Column widths are declared here: the `cel_*` classes carried none, so the table
+   collapsed to whatever the longest description happened to be.
+   --------------------------------------------------------------------------- */
+
+.pref-bar {
+    align-items: center;
+    background-color: var(--amp-raised);
+    border: 1px solid var(--amp-border);
+    border-radius: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+}
+
+.pref-subject {
+    align-items: baseline;
+    display: inline-flex;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.pref-subject-label {
+    color: var(--amp-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.pref-subject-name {
+    font-weight: 600;
+}
+
+/* the sentence that says what saving will actually touch, shown only when it is not obvious */
+.pref-subject-warning {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    margin: 0 0 10px;
+}
+
+/* the magnifier sits inside the field so the box reads as a search without needing a label */
+.pref-search {
+    align-items: center;
+    background-color: var(--amp-surface);
+    border: 1px solid var(--amp-border);
+    border-radius: 4px;
+    display: flex;
+    flex: 0 1 320px;
+    gap: 6px;
+    max-width: 340px;
+    min-width: 160px;
+    padding: 0 8px;
+}
+
+.pref-search svg {
+    fill: var(--amp-muted);
+    flex: none;
+    height: 18px;
+    width: 18px;
+}
+
+.pref-search input {
+    background: none;
+    border: 0;
+    color: inherit;
+    flex: 1;
+    font: inherit;
+    min-width: 0;
+    padding: 5px 0;
+}
+
+.pref-search input:focus {
+    outline: none;
+}
+
+.pref-search:focus-within {
+    border-color: var(--amp-accent);
+}
+
+/* the field is only clearable once it holds something, so the button is hidden until then */
+.pref-search-clear {
+    background: none;
+    border: 0;
+    color: var(--amp-muted);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.pref-search-clear:hover {
+    color: var(--amp-accent);
+}
+
+/* the native clear affordance would sit beside ours */
+.pref-search input::-webkit-search-cancel-button {
+    display: none;
+}
+
+/* a subject-level action, so it lives with the subject rather than beside the save button, where it
+   read as part of saving */
+.pref-export {
+    align-items: center;
+    color: var(--amp-muted);
+    display: inline-flex;
+    font-size: 12.5px;
+    gap: 5px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.pref-export svg {
+    fill: currentcolor;
+    height: 16px;
+    width: 16px;
+}
+
+.pref-export:hover {
+    color: var(--amp-accent);
+}
+
+.pref-chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pref-chip {
+    background: transparent;
+    border: 1px solid var(--amp-border);
+    border-radius: 999px;
+    color: var(--amp-muted);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12.5px;
+    padding: 4px 12px;
+}
+
+.pref-chip[aria-pressed="true"] {
+    border-color: var(--amp-accent);
+    color: var(--amp-accent);
+}
+
+.pref-chip-count {
+    opacity: 0.65;
+    padding-left: 4px;
+}
+
+table.preferences .cel_preference {
+    width: 34%;
+}
+
+table.preferences .cel_value {
+    width: 19%;
+}
+
+table.preferences .cel_reference {
+    width: 15%;
+}
+
+table.preferences .cel_prefaction {
+    white-space: nowrap;
+    width: 10%;
+}
+
+/* the two admin columns are narrow, so they need their own breathing room or the headings touch */
+table.preferences .cel_applyall {
+    padding-right: 14px;
+    text-align: center;
+    width: 9%;
+}
+
+table.preferences .cel_level {
+    width: 13%;
+}
+
+table.preferences td {
+    vertical-align: top;
+}
+
+/* filtering hides rows rather than removing them, and `nth-child` counts what it cannot see, so the
+   stripes are painted from a class the filter maintains */
+table.preferences.striped-rows tbody tr.pref-row {
+    background-color: transparent;
+}
+
+table.preferences tbody tr.pref-row-odd {
+    background-color: color-mix(in srgb, var(--amp-muted) 12%, transparent);
+}
+
+/* filtering hides rows rather than removing them, and `nth-child` counts what it cannot see, so the
+   stripes are painted from a class the filter maintains */
+table.preferences.striped-rows tbody tr.pref-row {
+    background-color: transparent;
+}
+
+table.preferences tbody tr.pref-row-odd {
+    background-color: color-mix(in srgb, var(--amp-muted) 12%, transparent);
+}
+
+/* the changed rows have to be findable without reading every value; the room for the bar is reserved on
+   every row, not just the marked ones, so marking one never shifts its text sideways */
+table.preferences td:first-child,
+table.preferences th:first-child {
+    padding-left: 13px;
+}
+
+table.preferences tr.pref-row-dirty td:first-child {
+    box-shadow: inset 4px 0 0 var(--amp-accent);
+}
+
+.pref-label {
+    font-weight: 500;
+}
+
+.pref-key {
+    color: var(--amp-muted);
+    font-family: monospace;
+    font-size: 11.5px;
+}
+
+.pref-badges {
+    display: inline-flex;
+    gap: 5px;
+    padding-left: 6px;
+}
+
+.pref-badge {
+    border: 1px solid var(--amp-border);
+    border-radius: 999px;
+    font-size: 11px;
+    padding: 1px 8px;
+    white-space: nowrap;
+}
+
+.pref-badge-dirty {
+    border-color: var(--amp-accent);
+    color: var(--amp-accent);
+}
+
+.pref-badge-locked {
+    color: var(--amp-muted);
+}
+
+/* name, badges and the help toggle share one line, so help costs no vertical space until it is asked for */
+.pref-head {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    list-style: none;
+}
+
+.pref-head::-webkit-details-marker,
+.pref-head::marker {
+    content: "";
+    display: none;
+}
+
+details.pref-help > summary {
+    cursor: pointer;
+}
+
+/* the whole name is the toggle; the mark is what says so */
+.pref-help-mark {
+    align-items: center;
+    border: 1px solid var(--amp-border);
+    border-radius: 50%;
+    color: var(--amp-muted);
+    display: inline-flex;
+    flex: none;
+    font-size: 10px;
+    height: 15px;
+    justify-content: center;
+    width: 15px;
+}
+
+.pref-help > summary:hover .pref-help-mark,
+.pref-help[open] .pref-help-mark {
+    background-color: var(--amp-accent);
+    border-color: var(--amp-accent);
+    color: var(--amp-accent-ink);
+}
+
+.pref-help > p {
+    border-left: 2px solid var(--amp-border);
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    margin: 6px 0 2px;
+    max-width: 60em;
+    padding-left: 9px;
+}
+
+.pref-help > p a {
+    color: var(--amp-accent);
+    white-space: nowrap;
+}
+
+.pref-ref {
+    color: var(--amp-muted);
+    display: flex;
+    font-size: 12px;
+    gap: 6px;
+}
+
+.pref-ref span:first-child {
+    min-width: 52px;
+    opacity: 0.75;
+}
+
+/* `anywhere` also shrinks the column's min-content width, which collapsed it to one letter per line;
+   `break-word` still breaks a long url but keeps the column as wide as its longest word */
+.pref-refval {
+    font-family: monospace;
+    overflow-wrap: break-word;
+}
+
+.pref-ref span:first-child {
+    flex: none;
+}
+
+.pref-linkbtn {
+    background: none;
+    border: 0;
+    color: var(--amp-muted);
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    font-size: 12px;
+    padding: 1px 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.pref-linkbtn:hover:not([disabled]) {
+    color: var(--amp-accent);
+}
+
+.pref-linkbtn[disabled] {
+    cursor: default;
+    opacity: 0.35;
+    text-decoration: none;
+}
+
+.pref-unit,
+.pref-zero {
+    color: var(--amp-muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.pref-readonly {
+    color: var(--amp-muted);
+}
+
+/* another preference is cancelling this one; it has to read louder than the help, which is optional */
+.pref-warning {
+    border-left: 2px solid var(--amp-accent);
+    color: var(--amp-accent);
+    font-size: 12.5px;
+    margin: 6px 0 2px;
+    max-width: 60em;
+    padding-left: 9px;
+}
+
+/* the jump list: with a dozen sections per tab, scrolling to find one is the whole problem */
+.pref-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--amp-border);
+}
+
+.pref-sections a {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    text-decoration: none;
+}
+
+.pref-sections a:hover {
+    color: var(--amp-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* a heading that only differs from a row by its font weight gets read as another row */
+tr.pref-subcategory > td {
+    background-color: var(--amp-raised);
+    border-top: 3px solid var(--amp-accent);
+    padding: 22px 12px 12px;
+}
+
+/* the accent bar above is the separator, so the theme's row hover must not paint over it */
+table.preferences tr.pref-subcategory:hover > td {
+    background-color: var(--amp-raised);
+    background-image: none;
+}
+
+.pref-subcategory h3 {
+    color: var(--amp-accent);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0;
+    scroll-margin-top: 12px;
+    text-transform: uppercase;
+}
+
+/* the first section of a tab opens the table, it needs no rule above it */
+tbody tr.pref-subcategory:first-child > td {
+    border-top: 0;
+    padding-top: 6px;
+}
+
+
+.pref-empty {
+    color: var(--amp-muted);
+    padding: 22px 4px;
+}
+
+/* the recap sits right beside the button, where the eye already is; hanging both from the top means
+   unfolding it grows the row downwards without moving the button */
+.pref-actions {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 14px;
+}
+
+/* what is about to be written, folded: a count that opens into "what becomes what" */
+.pref-summary {
+    color: var(--amp-muted);
+    font-size: 12.5px;
+    padding-top: 7px;
+    text-align: right;
+}
+
+.pref-summary > summary {
+    color: var(--amp-accent);
+    cursor: pointer;
+}
+
+.pref-summary-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+.pref-summary-list li {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 2px 0;
+}
+
+.pref-summary-name {
+    text-align: right;
+}
+
+.pref-summary-from {
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+.pref-summary-to {
+    color: var(--amp-accent);
+}
+
+/* only the lines that leave this account carry it, so the badge has to be readable at a glance */
+.pref-summary-everyone {
+    border: 1px solid var(--amp-accent);
+    border-radius: 999px;
+    color: var(--amp-accent);
+    font-size: 11px;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+/* the same list again, inside the confirmation dialog */
+.pref-confirm .pref-summary-list {
+    font-size: 13px;
+    margin: 0;
+}
+
+.pref-confirm .pref-summary-name {
+    min-width: 0;
+    flex: 1 1 14em;
+}
+
+.pref-confirm-warning {
+    color: var(--amp-accent);
+    margin: 0 0 10px;
+}
+
+.pref-applyall {
+    align-items: center;
+    color: var(--amp-muted);
+    display: inline-flex;
+    font-size: 12.5px;
+    gap: 5px;
+}
+
+/* below this the six columns fight for room and the reference values break mid-word, so the two
+   columns a reader can do without are dropped rather than crushed */
+@media screen and (max-width: 900px) {
+    table.preferences .cel_reference,
+    table.preferences .cel_level {
+        display: none;
+    }
+}
+
+/* The reorder handle drives the drag itself, so the browser must not take the gesture away to scroll. */
+td.cel_drag {
+    touch-action: none;
+}
+
+/* The chevron's cell has a place only in the narrow row layout. */
+td.cel_expand,
+th.cel_expand {
+    display: none;
+}
+
+/* The narrow layout spells its actions out; a table column has a header to do that for it. */
+.rowlist-action-text {
+    display: none;
+    font-size: 0.85em;
+}
+
+button.rowlist-toggle {
+    display: flex;
+    border-radius: 0;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--amp-muted);
+    cursor: pointer;
+}
+
+button.rowlist-toggle::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.18s ease;
+}
+
+/* Every button in the theme is an orange slab; this one is an affordance inside a row. */
+button.rowlist-toggle:hover,
+button.rowlist-toggle:focus {
+    background: none;
+    box-shadow: none;
+}
+
+button.rowlist-toggle:focus-visible {
+    outline: 2px solid var(--amp-accent);
+    outline-offset: -2px;
+}
+
+button.rowlist-toggle[aria-expanded="true"] {
+    color: var(--amp-accent);
+}
+
+button.rowlist-toggle[aria-expanded="true"]::before {
+    transform: translateY(2px) rotate(225deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button.rowlist-toggle::before {
+        transition: none;
+    }
 }

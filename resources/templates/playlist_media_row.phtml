@@ -65,7 +65,7 @@ $type   = $this->getObjectType(); ?>
 </td>
 <td class="cel_title"><?php echo $this->raw($this->getLink()); ?></td>
 <?php if ($this->showComposer()) { ?>
-<td class="cel_composer"><?php echo $this->e($this->getComposer()); ?></td>
+<td data-label="<?php echo $this->e(T_('Composer')); ?>" class="cel_composer"><?php echo $this->e($this->getComposer()); ?></td>
 <?php } ?>
 <?php if ($this->showParent()) { ?>
 <td class="cel_artist"><?php echo $this->raw($this->getParentLink()); ?></td>
@@ -82,7 +82,7 @@ $type   = $this->getObjectType(); ?>
 </td>
 <td class="<?php echo $this->e($this->getTimeClass()); ?>"><?php echo $this->e($this->getTime()); ?></td>
 <?php if ($this->showRatings()) { ?>
-<td class="cel_ratings">
+<td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
     <div class="rating">
         <span class="cel_rating" id="rating_<?php echo $itemId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Rating::show($itemId, $type)); ?></span>
         <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_<?php echo $this->e($type); ?>"><?php echo $this->raw(Userflag::show($itemId, $type)); ?></span>

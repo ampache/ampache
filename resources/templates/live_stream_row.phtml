@@ -65,10 +65,10 @@ if ($this->canAddToPlaylist()) { ?>
         <?php } ?>
     </span>
 </td>
-<td class="cel_siteurl"><a target="_blank" href="<?php echo $this->e($libitem->site_url); ?>"><?php echo $this->e($libitem->site_url); ?></a></td>
-<td class="cel_codec"><?php echo $this->e($libitem->codec); ?></td>
+<td data-label="<?php echo $this->e(T_('Website')); ?>" class="cel_siteurl"><a target="_blank" href="<?php echo $this->e($libitem->site_url); ?>"><?php echo $this->e($libitem->site_url); ?></a></td>
+<td data-label="<?php echo $this->e(T_('Codec')); ?>" class="cel_codec"><?php echo $this->e($libitem->codec); ?></td>
 <?php if ($this->isShowRatings()) { ?>
-    <td class="cel_ratings">
+    <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
         <div class="rating">
             <span class="cel_rating" id="rating_<?php echo $itemId; ?>_live_stream">
                 <?php echo $this->raw(Rating::show($itemId, 'live_stream')); ?>

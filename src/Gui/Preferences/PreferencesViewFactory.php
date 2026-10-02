@@ -26,39 +26,40 @@ declare(strict_types=1);
 namespace Ampache\Gui\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Override;
 
 final readonly class PreferencesViewFactory implements PreferencesViewFactoryInterface
 {
     public function __construct(
-        private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-        private RequestParserInterface $requestParser,
+        private PreferenceCollector $collector,
+        private PreferenceInputRenderer $renderer,
     ) {}
 
     #[Override]
     public function create(
         GuiGatekeeperInterface $gatekeeper,
-        ?string $fullname,
-        array $preferences,
+        PreferenceSubject $subject,
+        User $operator,
+        string $tab,
     ): PreferencesView {
-        $isAdmin = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+        // the account and QuickConnect tabs carry their own form and match no category, so they must not
+        // be resolved away; a bare `preferences.php` names no tab and still answers with the first one
+        $items = [];
+        if ($tab !== PreferencesView::ACCOUNT_TAB && $tab !== PreferencesView::QUICK_CONNECT_TAB) {
+            [$tab, $items] = $this->collector->collectTab($subject, $operator, $tab);
+        }
 
         return new PreferencesView(
-            $this->ui,
             $this->configContainer->getWebPath('/client'),
-            (string) $fullname,
-            $preferences,
-            $this->requestParser->getFromRequest('tab'),
-            $this->requestParser->getFromRequest('action'),
-            $isAdmin ? (int) $this->requestParser->getFromRequest('user_id') : 0,
-            $isAdmin,
-            (bool) $this->configContainer->get('simple_user_mode')
+            $subject,
+            $items,
+            $tab,
+            $gatekeeper->mayAdminister(),
+            (bool) $this->configContainer->get('simple_user_mode'),
+            $this->renderer,
         );
     }
 }

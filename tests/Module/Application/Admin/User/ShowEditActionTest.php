@@ -28,8 +28,6 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -56,8 +54,7 @@ class ShowEditActionTest extends TestCase
         static::expectException(ObjectNotFoundException::class);
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())
@@ -88,8 +85,7 @@ class ShowEditActionTest extends TestCase
         $userId = 666;
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())
@@ -136,8 +132,7 @@ class ShowEditActionTest extends TestCase
     public function testRunReturnsNullInDemoMode(): void
     {
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())

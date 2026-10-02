@@ -63,21 +63,21 @@ $playlistId = $playlist->getId(); ?>
 <?php } ?>
         </span>
     </td>
-    <td class="cel_last_update"><?php echo $this->e($playlist->getLastUpdate()); ?></td>
-    <td class="cel_type"><?php echo ($playlist->isPrivate())
+    <td data-label="<?php echo $this->e(T_('Last Update')); ?>" class="cel_last_update"><?php echo $this->e($playlist->getLastUpdate()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Type')); ?>" class="cel_type"><?php echo ($playlist->isPrivate())
         ? $this->raw(Ui::get_material_symbol('lock', T_('Private')))
         : ''; ?></td>
     <td class="cel_time"><?php echo $this->e($playlist->getPlayDuration()); ?></td>
-    <td class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
+    <td data-label="<?php echo $this->e(T_('# Items')); ?>" class="cel_medias"><?php echo $this->e($playlist->getMediaCount()); ?></td>
 <?php if ($this->isUsingRatings()) { ?>
-    <td class="cel_ratings">
+    <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
         <div class="rating">
             <span class="cel_rating" id="rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getRating()); ?></span>
             <span class="cel_userflag" id="userflag_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getUserFlags()); ?></span>
         </div>
     </td>
 <?php } ?>
-    <td class="cel_owner"><?php echo $this->e($playlist->getUsername()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Owner')); ?>" class="cel_owner"><?php echo $this->e($playlist->getUsername()); ?></td>
     <td class="cel_action">
 <?php if ($playlist->canShare()) {
     echo $this->raw($playlist->getShareUi());

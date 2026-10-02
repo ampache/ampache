@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -57,8 +58,9 @@ final readonly class ShowAction implements ApplicationActionInterface
         if ($user instanceof User) {
             echo $this->preferencesViewFactory->create(
                 $gatekeeper,
-                $user->fullname,
-                $user->get_preferences($request->getQueryParams()['tab'] ?? '')
+                PreferenceSubject::ownPreferences($user),
+                $user,
+                (string) ($request->getQueryParams()['tab'] ?? '')
             )->render();
         }
 

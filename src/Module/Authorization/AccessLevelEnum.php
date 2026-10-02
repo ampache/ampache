@@ -53,6 +53,26 @@ enum AccessLevelEnum: int
     }
 
     /**
+     * Every level a preference can be gated on, lowest first, as value => description
+     *
+     * @return array<int, string>
+     */
+    public static function selectableDescriptions(): array
+    {
+        $levels = [];
+        foreach (self::cases() as $level) {
+            if ($level !== self::DEFAULT) {
+                $levels[$level->value] = $level->toDescription();
+            }
+        }
+
+        // `cases()` follows declaration order; a list of levels reads as a ladder
+        ksort($levels);
+
+        return $levels;
+    }
+
+    /**
      * Returns the translated description for an access-level
      */
     public function toDescription(): string

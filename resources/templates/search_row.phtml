@@ -59,21 +59,21 @@ $searchId = $search->id; ?>
         </a>
     </span>
 </td>
-<td class="cel_last_update"><?php echo $this->e($search->get_f_last_update()); ?></td>
-<td class="cel_type"><?php echo ($search->isPrivate())
+<td data-label="<?php echo $this->e(T_('Last Update')); ?>" class="cel_last_update"><?php echo $this->e($search->get_f_last_update()); ?></td>
+<td data-label="<?php echo $this->e(T_('Type')); ?>" class="cel_type"><?php echo ($search->isPrivate())
     ? $this->raw(Ui::get_material_symbol('lock', T_('Private')))
     : ''; ?></td>
-<td class="cel_random"><?php echo $search->random ? T_('Yes') : T_('No'); ?></td>
-<td class="cel_limit"><?php echo $this->e($this->getLimitLabel()); ?></td>
+<td data-label="<?php echo $this->e(T_('Random')); ?>" class="cel_random"><?php echo $search->random ? T_('Yes') : T_('No'); ?></td>
+<td data-label="<?php echo $this->e(T_('Item Limit')); ?>" class="cel_limit"><?php echo $this->e($this->getLimitLabel()); ?></td>
 <?php if ($this->areRatingsShown()) { ?>
-<td class="cel_ratings">
+<td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
     <div class="rating">
         <span class="cel_rating" id="rating_<?php echo $this->e($searchId); ?>_search"><?php echo $this->raw(Rating::show($searchId, 'search')); ?></span>
         <span class="cel_userflag" id="userflag_<?php echo $this->e($searchId); ?>_search"><?php echo $this->raw(Userflag::show($searchId, 'search')); ?></span>
     </div>
 </td>
 <?php } ?>
-<td class="cel_owner"><?php echo $this->e($search->username); ?></td>
+<td data-label="<?php echo $this->e(T_('Owner')); ?>" class="cel_owner"><?php echo $this->e($search->username); ?></td>
 <td class="cel_action">
 <?php if ($this->mayBatchDownload()) { ?>
     <a class="nohtml" href="<?php echo $this->e($this->getBatchDownloadUrl()); ?>" rel="nofollow">

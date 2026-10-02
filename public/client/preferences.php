@@ -26,12 +26,12 @@ declare(strict_types=1);
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Preferences\AdminAction;
 use Ampache\Module\Application\Preferences\AdminUpdatePreferencesAction;
+use Ampache\Module\Application\Preferences\ExportPreferencesAction;
 use Ampache\Module\Application\Preferences\GrantAction;
 use Ampache\Module\Application\Preferences\QuickConnectAuthorizeAction;
 use Ampache\Module\Application\Preferences\ShowAction;
 use Ampache\Module\Application\Preferences\UpdatePreferencesAction;
 use Ampache\Module\Application\Preferences\UpdateUserAction;
-use Ampache\Module\Application\Preferences\UserAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -42,11 +42,11 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         UpdateUserAction::REQUEST_KEY => UpdateUserAction::class,
-        UserAction::REQUEST_KEY => UserAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
         AdminAction::REQUEST_KEY => AdminAction::class,
         AdminUpdatePreferencesAction::REQUEST_KEY => AdminUpdatePreferencesAction::class,
         UpdatePreferencesAction::REQUEST_KEY => UpdatePreferencesAction::class,
+        ExportPreferencesAction::REQUEST_KEY => ExportPreferencesAction::class,
         GrantAction::REQUEST_KEY => GrantAction::class,
         QuickConnectAuthorizeAction::REQUEST_KEY => QuickConnectAuthorizeAction::class,
     ],

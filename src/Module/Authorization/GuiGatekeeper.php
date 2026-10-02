@@ -25,16 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\User;
+use Override;
 
 /**
  * Routes access checks and other authorization related calls to its static versions
  */
 final readonly class GuiGatekeeper implements GuiGatekeeperInterface
 {
-    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
+    public function __construct(
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private ConfigContainerInterface $configContainer,
+    ) {}
 
     public function getUser(): ?User
     {
@@ -54,10 +59,24 @@ final readonly class GuiGatekeeper implements GuiGatekeeperInterface
             : 0;
     }
 
+    #[Override]
+    public function isDemoMode(): bool
+    {
+        return $this->configContainer->isDemoMode();
+    }
+
     public function mayAccess(
         AccessTypeEnum $type,
         AccessLevelEnum $level,
     ): bool {
         return $this->privilegeChecker->check($type, $level);
+    }
+
+    #[Override]
+    public function mayAdminister(): bool
+    {
+        // demo mode answers every privilege check with true, so it never reaches the level test
+        return $this->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            && !$this->isDemoMode();
     }
 }

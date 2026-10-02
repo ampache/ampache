@@ -38,18 +38,70 @@ if (!$this->hasTab()) {
 Ui::show_box_top($this->getTitle(), 'box box_preferences');
 
 if ($this->hasPreferenceForm()) { ?>
+<div class="pref-screen" data-preferences-scope>
+<div class="pref-bar">
+    <span class="pref-subject">
+        <span class="pref-subject-label"><?php echo $this->e($this->getSubjectKind()); ?></span>
+        <?php if ($this->getSubjectName() !== '') { ?>
+        <span class="pref-subject-name"><?php echo $this->e($this->getSubjectName()); ?></span>
+        <?php } ?>
+    </span>
+    <label class="pref-search" for="pref-filter">
+        <?php echo $this->raw(Ui::get_material_symbol('search', T_('Filter'))); ?>
+        <input type="search" id="pref-filter" data-pref-filter placeholder="<?php echo $this->e(T_('Filter by name, description or key')); ?>" />
+        <button type="button" class="pref-search-clear" data-pref-clear title="<?php echo $this->e(T_('Clear')); ?>" hidden>&times;</button>
+    </label>
+    <span class="pref-chips">
+        <button type="button" class="pref-chip" data-pref-scope-filter="all" aria-pressed="true"><?php echo T_('All'); ?> <span class="pref-chip-count"><?php echo $this->e($this->countAll()); ?></span></button>
+        <button type="button" class="pref-chip" data-pref-scope-filter="differing" aria-pressed="false"><?php echo T_('Differs from default'); ?> <span class="pref-chip-count"><?php echo $this->e($this->countDiffering()); ?></span></button>
+        <button type="button" class="pref-chip" data-pref-scope-filter="changed" aria-pressed="false"><?php echo T_('Unsaved'); ?> <span class="pref-chip-count" data-pref-dirty-count>0</span></button>
+    </span>
+    <a class="pref-export nohtml" href="<?php echo $this->e($this->getExportUrl()); ?>"
+       title="<?php echo $this->e(T_('Downloads every preference, from every tab, as a JSON file')); ?>">
+        <?php echo $this->raw(Ui::get_material_symbol('download', T_('Export'))); ?>
+        <?php echo T_('Export all preferences'); ?>
+    </a>
+</div>
+<?php if ($this->getSubjectWarning() !== '') { ?>
+<p class="pref-subject-warning"><?php echo $this->e($this->getSubjectWarning()); ?></p>
+<?php } ?>
 <form method="post" name="preferences" action="<?php echo $this->e($this->getActionUrl()); ?>" enctype="multipart/form-data">
-<?php echo $this->raw($this->renderPreferenceBox()); ?>
-<div class="formValidation">
-    <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
+<?php $box      = $this->getBoxView();
+    $sections   = $box->getSubcategories();
+    if (count($sections) > 1) { ?>
+<nav class="pref-sections" aria-label="<?php echo $this->e(T_('Sections')); ?>">
+    <?php foreach ($sections as $anchor => $heading) { ?>
+    <a href="#<?php echo $this->e($anchor); ?>"><?php echo $this->e($heading); ?></a>
+    <?php } ?>
+</nav>
+<?php }
+    echo $this->raw($box->render()); ?>
+<p class="pref-empty" data-pref-empty hidden><?php echo T_('No preference matches this filter.'); ?></p>
+<div class="formValidation pref-actions">
+    <details class="pref-summary" data-pref-summary
+        data-pref-empty-label="<?php echo $this->e(T_('(empty)')); ?>"
+        data-pref-secret-label="<?php echo $this->e(T_('(a new value)')); ?>"
+        data-pref-confirm-title="<?php echo $this->e(T_('Apply these changes?')); ?>"
+        data-pref-everyone="<?php echo $this->e(T_('for every account')); ?>"
+        data-pref-level-label="<?php echo $this->e(T_('Access level')); ?>"
+        data-pref-warn-everyone="<?php echo $this->e(T_('%d of these changes will be written to every existing account, overwriting what each account chose. This cannot be undone.')); ?>"
+        data-pref-summary-label="<?php echo $this->e(T_('Changes to apply: %d')); ?>" hidden>
+        <summary data-pref-summary-title></summary>
+        <ul data-pref-summary-list></ul>
+    </details>
+    <input class="button" type="submit" data-pref-submit value="<?php echo $this->e(T_('Update Preferences')); ?>" />
+    <?php if ($this->isServerSubject()) { ?>
+    <label class="pref-applyall"><input type="checkbox" data-pref-apply-all-toggle /> <?php echo T_('Tick "apply to all" on every change'); ?></label>
+    <?php } ?>
     <?php echo $this->raw(Core::form_register('update_preference')); ?>
     <input type="hidden" name="tab" value="<?php echo $this->e($this->getTab()); ?>" />
     <input type="hidden" name="method" value="<?php echo $this->e($this->getRequestAction()); ?>" />
-    <?php if ($this->isUserIdCarried()) { ?>
+    <?php if ($this->isOtherUser()) { ?>
     <input type="hidden" name="user_id" value="<?php echo $this->e($this->getUserId()); ?>" />
     <?php } ?>
 </div>
 </form>
+</div>
 <?php }
 
 // the account templates bring their own form, so this does not wrap them in one

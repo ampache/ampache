@@ -6,8 +6,6 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,8 +20,7 @@ trait UserAdminAccessTestTrait
         static::expectException(AccessDeniedException::class);
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())
@@ -42,8 +39,7 @@ trait UserAdminAccessTestTrait
     public function testHandleReturnsNullIfDemoMode(): void
     {
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(true);
 
         $this->configContainer->expects(static::once())
@@ -61,8 +57,7 @@ trait UserAdminAccessTestTrait
         static::expectException(AccessDeniedException::class);
 
         $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->method('mayAdminister')
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);

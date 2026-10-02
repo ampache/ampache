@@ -58,23 +58,23 @@ $albumId = $album->getId(); ?>
         </span>
     </td>
     <td class="<?php echo $this->e($this->getClassArtist()); ?>"><?php echo $this->raw($album->getArtistLink()); ?></td>
-    <td class="cel_songs optional"><?php echo $this->e($album->getSongCount()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Songs')); ?>" class="cel_songs optional"><?php echo $this->e($album->getSongCount()); ?></td>
     <td class="cel_year">
 <?php if ($album->canShowYear()) {
     echo $this->e($album->getDisplayYear());
 } ?>
     </td>
 <?php if ($this->isShowPlayedTimes()) { ?>
-    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($album->getPlayedTimes()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Played')); ?>" class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($album->getPlayedTimes()); ?></td>
 <?php }
 if (!$this->isHideGenre()) { ?>
-    <td class="<?php echo $this->e($this->getClassTags()); ?> optional"><?php echo $this->raw($album->getGenre()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Genres')); ?>" class="<?php echo $this->e($this->getClassTags()); ?> optional"><?php echo $this->raw($album->getGenre()); ?></td>
 <?php }
 if (!$this->isHideMood()) { ?>
-    <td class="<?php echo $this->e($this->getClassMoods()); ?> optional"><?php echo $this->raw($album->getMoods()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Moods')); ?>" class="<?php echo $this->e($this->getClassMoods()); ?> optional"><?php echo $this->raw($album->getMoods()); ?></td>
 <?php }
 if ($this->isUsingRatings()) { ?>
-    <td class="cel_ratings">
+    <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
         <div class="rating">
             <span class="cel_rating" id="rating_<?php echo $albumId; ?>_album_disk"><?php echo $this->raw($album->getRating()); ?></span>
             <span class="cel_userflag" id="userflag_<?php echo $albumId; ?>_album_disk"><?php echo $this->raw($album->getUserFlags()); ?></span>

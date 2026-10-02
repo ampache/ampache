@@ -25,11 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,19 +45,19 @@ final readonly class AdminAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Make sure only admins here
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
+        if (!$gatekeeper->mayAdminister()) {
             throw new AccessDeniedException();
         }
 
-        $tab  = $request->getQueryParams()['tab'] ?? '';
+        $tab  = (string) ($request->getQueryParams()['tab'] ?? '');
         $user = $gatekeeper->getUser();
         if ($user !== null) {
             $this->ui->showHeader();
             echo $this->preferencesViewFactory->create(
                 $gatekeeper,
-                T_('Server'),
-                $user->get_preferences($tab, true)
+                PreferenceSubject::serverPreferences($user),
+                $user,
+                $tab
             )->render();
         }
 

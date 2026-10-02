@@ -71,7 +71,7 @@ $songId = $song->getId(); ?>
         <td class="cel_artist"><?php echo $this->raw($song->getArtistLink()); ?></td>
 <?php   }
     if ($this->isShowComposer()) { ?>
-        <td class="cel_composer"><?php echo $this->e($song->getComposer()); ?></td>
+        <td data-label="<?php echo $this->e(T_('Composer')); ?>" class="cel_composer"><?php echo $this->e($song->getComposer()); ?></td>
 <?php   }
     if (!$this->isHideAlbum()) {
         if ($this->isAlbumGroup()) { ?>
@@ -94,24 +94,24 @@ $songId = $song->getId(); ?>
     }
 }
 if (!$this->isHideYear()) { ?>
-    <td class="cel_year"><?php echo $this->e($song->getYear()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Year')); ?>" class="cel_year"><?php echo $this->e($song->getYear()); ?></td>
 <?php }
 if ($this->isTableView()) {
     if (!$this->isHideGenre()) { ?>
-        <td class="cel_tags"><?php echo $this->raw($song->getGenre()); ?></td>
+        <td data-label="<?php echo $this->e(T_('Genres')); ?>" class="cel_tags"><?php echo $this->raw($song->getGenre()); ?></td>
 <?php   }
     if (!$this->isHideMood()) { ?>
-        <td class="cel_moods"><?php echo $this->raw($song->getMoods()); ?></td>
+        <td data-label="<?php echo $this->e(T_('Moods')); ?>" class="cel_moods"><?php echo $this->raw($song->getMoods()); ?></td>
 <?php   } ?>
         <td class="cel_time"><?php echo $this->e($song->getPlayDuration()); ?></td>
 <?php   if ($this->isShowLicense()) { ?>
-        <td class="cel_license"><?php echo $this->raw($song->getLicenseLink()); ?></td>
+        <td data-label="<?php echo $this->e(T_('License')); ?>" class="cel_license"><?php echo $this->raw($song->getLicenseLink()); ?></td>
 <?php   }
     if ($config->isShowPlayedTimesEnabled()) { ?>
-        <td class="cel_counter"><?php echo $this->e($song->getNumberPlayed()); ?></td>
+        <td data-label="<?php echo $this->e(T_('Played')); ?>" class="cel_counter"><?php echo $this->e($song->getNumberPlayed()); ?></td>
 <?php   }
     if ($config->isShowSkippedTimesEnabled()) { ?>
-        <td class="cel_counter"><?php echo $this->e($song->getNumberSkipped()); ?></td>
+        <td data-label="<?php echo $this->e(T_('Skipped')); ?>" class="cel_counter"><?php echo $this->e($song->getNumberSkipped()); ?></td>
 <?php   }
 } else {
     if (!$this->isHideGenre()) { ?>
@@ -132,7 +132,7 @@ if ($this->isTableView()) {
 <?php   }
 }
 if ($this->isUsingRatings()) { ?>
-        <td class="cel_ratings">
+        <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getRating()); ?></span>
                 <span class="cel_userflag" id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getUserFlags()); ?></span>
@@ -140,7 +140,7 @@ if ($this->isUsingRatings()) { ?>
         </td>
 <?php } ?>
 <?php if ($this->isShowAddDate()) { ?>
-    <td class="cel_add_date optional"><?php echo $this->e($song->getAdditionTime()); ?></td>
+    <td data-label="<?php echo $this->e(T_('Added')); ?>" class="cel_add_date optional"><?php echo $this->e($song->getAdditionTime()); ?></td>
 <?php } ?>
     <td class="cel_action">
 <?php if ($song->canPostShout()) { ?>

@@ -56,7 +56,7 @@ if ($this->areRatingsShown()) {
 <?php if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
-<table class="tabledata striped-rows <?php echo $this->e($browse->get_css_class()); ?>" data-objecttype="smartplaylist">
+<table class="tabledata striped-rows<?php echo $this->e($this->getLayoutClass()); ?>" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>

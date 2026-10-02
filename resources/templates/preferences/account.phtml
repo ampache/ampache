@@ -26,6 +26,7 @@ declare(strict_types=1);
 // preferences/account.phtml -- rendered by Ampache\Gui\Preferences\AccountView
 
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Preferences\AccountView $this */
@@ -153,6 +154,7 @@ if (!$readOnly) { ?>
     </table>
     <?php if (!$readOnly) { ?>
     <div class="formValidation">
+        <?php echo $this->raw(Core::form_register('update_user')); ?>
         <input type="hidden" name="user_id" value="<?php echo $userId; ?>" />
         <input type="hidden" name="tab" value="<?php echo $this->e($this->getTab()); ?>" />
         <input class="button" type="submit" value="<?php echo $this->e(T_('Update Account')); ?>" />
