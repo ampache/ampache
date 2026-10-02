@@ -1,20 +1,5 @@
 # CHANGELOG
 
-## Ampache 8.3.0
-
-### Changed (8.3.0)
-
-* Browse lists
-  * Browse lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways: songs, albums, artists, playlists, smart playlists, playlist contents, labels, radio stations, videos, podcasts and their episodes
-  * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
-  * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
-  * The column headers become a strip of sort links; a header you cannot sort by is dropped, and a row left with none of them disappears
-  * Play, add to playlist and the row actions no longer wait for a hover
-
-### Fixed (8.3.0)
-
-* Dragging to reorder a playlist or a song list now works on a touch screen
-
 ## Ampache 8.2.2
 
 ### Added (8.2.2)
@@ -39,6 +24,12 @@
 
 ### Changed (8.2.2)
 
+* Browse lists
+  * Browse lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways: songs, albums, artists, playlists, smart playlists, playlist contents, labels, radio stations, videos, podcasts and their episodes
+  * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
+  * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
+  * The column headers become a strip of sort links; a header you cannot sort by is dropped, and a row left with none of them disappears
+  * Play, add to playlist and the row actions no longer wait for a hover
 * Preferences
   * The confirmation names which changes the per-row `Apply to All` writes into every existing account
   * Access levels are read from `Preference::DEFAULTS` rather than a second list that had fallen out of step with it
@@ -55,6 +46,7 @@
 
 ### Fixed (8.2.2)
 
+* Dragging to reorder a playlist or a song list now works on a touch screen
 * Preferences
   * The account tab could never be saved, every submit answering 403
   * `api_force_version` did not offer version 8, so a resubmit silently reset it to 0
