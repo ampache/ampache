@@ -1,5 +1,53 @@
 # CHANGELOG
 
+## Ampache 8.2.2
+
+### Added (8.2.2)
+
+* Preferences
+  * One page for your own preferences, the server's, and an admin editing another account
+  * The shipped default and the server value beside each preference, with one-click restore
+  * Inline help on ~130 preferences, with links to the documentation
+  * A filter box, plus filters for "differs from default" and "unsaved"
+  * A section jump list, and a catch-all section for preferences that belong to none
+  * Warnings when another preference, or a config setting, silently cancels the one being set
+  * A confirmation listing every change before it is written
+  * `Export all preferences`, a JSON download of the whole configuration
+  * Plugins can explain their own preferences through `PluginPreferenceHelpInterface`
+  * The Update button stays inert until something on the page actually changed
+* Database 821002
+  * Corrected the `integer`/`string` type on eight preferences that are switches
+  * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
+  * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
+  * Converted `preference`.`category` from a plain `varchar` to an `enum` of its seven real values
+  * Shrank `preference`.`subcategory` from `varchar(128)` to `varchar(32)` and pinned it to `utf8mb3`
+
+### Changed (8.2.2)
+
+* Preferences
+  * The confirmation names which changes the per-row `Apply to All` writes into every existing account
+  * Access levels are read from `Preference::DEFAULTS` rather than a second list that had fallen out of step with it
+  * Resetting levels to default now also covers the 29 preferences the old list left out
+  * `admin/users.php?action=show_preferences` renders the shared preferences screen
+  * The `default` preset is read from `Preference::DEFAULTS` instead of a copy that had drifted on eleven values and was missing thirty-five preferences
+  * Whether a setting is a switch is read from its declared type, so the debug page no longer relies on a list that had fallen behind
+
+### Removed (8.2.2)
+
+* `preferences.php?action=user`, which required admin but only ever showed your own preferences
+* `Ui::createPreferenceInput()` and `Ui::showPreferenceBox()`, replaced by a type-driven renderer
+* The `Preference::DEFAULT_LEVELS` constant, replaced by `Preference::defaultLevels()`
+
+### Fixed (8.2.2)
+
+* Preferences
+  * The account tab could never be saved, every submit answering 403
+  * `api_force_version` did not offer version 8, so a resubmit silently reset it to 0
+  * `localplay_level` and `upload_access_level` did not offer the Guest level
+  * The Last.fm and Libre.fm authorisation callback accepted a forged link
+  * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
+  * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
+
 ## Ampache 8.2.1
 
 ### Fixed (8.2.1)
@@ -13,10 +61,7 @@
 
 ### Added (8.2.0)
 
-* Database 810030
-  * Corrected the `integer`/`string` type on eight preferences that are switches
-  * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
-  * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
+* Database 810029
   * Added an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
@@ -28,24 +73,7 @@
   * Removed the dead `tvshow`/`tvshow_season` values from the `object_type` enum on `cache_object_count`, `cache_object_count_run`, `image`, `object_count`, `rating`, `tag_map`, `user_activity` and `user_flag`
   * Converted `object_type` from a plain `varchar` to an `enum` of its real, verified values on `album_map`, `artist_map`, `catalog_map`, `folder_map`, `collection_map`, `bookmark`, `tmp_playlist`, `tmp_playlist_data`, `recommendation`, `user_shout` and `collection`
   * Widened `bookmark`/`tmp_playlist`'s `object_type` enum to the same playable-media list as `playlist_data`/`tmp_playlist_data`, so a new playable type needs no further migration
-  * Added `embed_player` preference, offering a player to sites that link here
-  * Corrected `preference`.`name`'s collation to match `user_preference`.`name`, fixing an "Illegal mix of collations" error in `admin:updateDatabase`
-  * Corrected the `bool` type on `home_recently_played_all` and `show_wrapped`
-  * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
-  * Added `jellyfin_backend_enable` preference
-  * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
   * Converted `playlist_folder_map`.`object_type`, `preference`.`type` and `stream_playlist`.`type` from a plain `varchar` to an `enum` of their real, verified values
-* Preferences
-  * One page for your own preferences, the server's, and an admin editing another account
-  * The shipped default and the server value beside each preference, with one-click restore
-  * Inline help on ~130 preferences, with links to the documentation
-  * A filter box, plus filters for "differs from default" and "unsaved"
-  * A section jump list, and a catch-all section for preferences that belong to none
-  * Warnings when another preference, or a config setting, silently cancels the one being set
-  * A confirmation listing every change before it is written
-  * `Export all preferences`, a JSON download of the whole configuration
-  * Plugins can explain their own preferences through `PluginPreferenceHelpInterface`
-  * The Update button stays inert until something on the page actually changed
 * Jellyfin
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
@@ -65,13 +93,6 @@
 
 ### Changed (8.2.0)
 
-* Preferences
-  * The confirmation names which changes the per-row `Apply to All` writes into every existing account
-  * Access levels are read from `Preference::DEFAULTS` rather than a second list that had fallen out of step with it
-  * Resetting levels to default now also covers the 29 preferences the old list left out
-  * `admin/users.php?action=show_preferences` renders the shared preferences screen
-  * The `default` preset is read from `Preference::DEFAULTS` instead of a copy that had drifted on eleven values and was missing thirty-five preferences
-  * Whether a setting is a switch is read from its declared type, so the debug page no longer relies on a list that had fallen behind
 * Updated Seafile SDK to `dev-master`
 * Updated Composer and NPM dependencies
 * `wanted_types` now includes `single` and `ep` by default
@@ -81,26 +102,14 @@
 * A password change or API key rotation now ends the sessions that credential had opened
 * `bin/cli run:updateDb` now compares every table and column against `resources/sql/ampache.sql` and only reports/fixes the ones that don't match, instead of unconditionally rewriting every table and column to one global charset; id/token/enum columns the schema pins to `utf8mb3` are left alone
 
-### Removed (8.2.0)
-
-* `preferences.php?action=user`, which required admin but only ever showed your own preferences
-* `Ui::createPreferenceInput()` and `Ui::showPreferenceBox()`, replaced by a type-driven renderer
-* The `Preference::DEFAULT_LEVELS` constant, replaced by `Preference::defaultLevels()`
-
 ### Fixed (8.2.0)
 
-* Preferences
-  * The account tab could never be saved, every submit answering 403
-  * `api_force_version` did not offer version 8, so a resubmit silently reset it to 0
-  * `localplay_level` and `upload_access_level` did not offer the Guest level
-  * A preference written in one request was still read back stale in that same request
-  * The Last.fm and Libre.fm authorisation callback accepted a forged link
-  * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
-  * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
 * Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
+* Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
 * A stored `theme_name` reached `get_theme()` as a path segment without being confined to the themes directory
+* A preference written in one request was still read back stale in that same request
 * The slideshow armed itself without the Flickr plugin
 * Subsonic `getIndexes` returned an empty index on any library whose `folder_map` has not been rebuilt
 * Garbage collection incorrectly removed parent-only folders
