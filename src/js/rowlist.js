@@ -43,13 +43,19 @@ function rowlistToggleCell(row) {
     return cell;
 }
 
-// An icon already carries its wording in its own <title>, so a folded action can name itself for free.
+// An icon already carries its wording in its own <title>, so a folded action can name itself for free. An
+// anchor that spells its own action out keeps it: the <title> inside its svg is not text the reader sees.
 function rowlistLabelActions(row) {
     $(row).find("td.cel_action a, td.cel_add .cel_item_add a, td.cel_add_list .cel_item_add a").each(function () {
         var title = this.querySelector("svg > title");
         var text = (title !== null) ? title.textContent : (this.getAttribute("title") || "");
+        var shown = Array.prototype.filter.call(this.childNodes, function (node) {
+            return node.nodeName.toLowerCase() !== "svg";
+        }).map(function (node) {
+            return node.textContent;
+        }).join("").trim();
 
-        if (text === "" || this.querySelector("span.rowlist-action-text") !== null) {
+        if (text === "" || shown !== "") {
             return;
         }
 

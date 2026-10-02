@@ -71,7 +71,7 @@ if ($this->canAddToPlaylist()) { ?>
 <?php if (!$this->isTableView()) { ?>
 <td data-label="<?php echo $this->e(T_('Podcast')); ?>" class="cel_podcast"><?php echo $this->raw($libitem->getPodcastLink()); ?></td>
 <?php } ?>
-<td data-label="<?php echo $this->e(T_('Time')); ?>" class="<?php echo $this->e($this->getClassTime()); ?>"><?php echo $this->e($libitem->get_f_time()); ?></td>
+<td class="<?php echo $this->e($this->getClassTime()); ?>"><?php echo $this->e($libitem->get_f_time()); ?></td>
 <?php if ($this->isShowPlayedTimes()) { ?>
     <td data-label="<?php echo $this->e(T_('Played')); ?>" class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->total_count); ?></td>
     <?php } ?>

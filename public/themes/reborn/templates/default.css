@@ -3082,8 +3082,8 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         order: 20;
         flex: 0 0 100%;
         width: auto !important;
-        min-width: 0 !important;
-        max-width: none !important;
+        min-width: 0;
+        max-width: none;
         margin-top: 6px;
         padding: 0;
         border: 0;
@@ -3158,7 +3158,9 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     /* First line: what names the item, how long it is, and the two gestures that matter. */
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_select, .cel_play, .cel_cover, .cel_albumart, .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_streamname, .cel_drag, .cel_expand) {
+    table.tabledata.rowlist > tbody > tr > td:is(
+        .cel_select, .cel_play, .cel_cover, .cel_song, .cel_title, .cel_album,
+        .cel_artist, .cel_playlist, .cel_label, .cel_streamname, .cel_drag, .cel_expand) {
         display: block;
         flex: 0 0 auto;
         margin-top: 0;
@@ -3186,7 +3188,6 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     table.tabledata.rowlist > tbody > tr:hover > td.cel_play .cel_play_content {
         display: block;
         order: 2;
-        min-width: 1.4em;
         color: var(--amp-muted);
         font-size: 0.8em;
         font-variant-numeric: tabular-nums;
@@ -3202,28 +3203,29 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         display: none;
     }
 
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_cover, .cel_albumart) {
+    table.tabledata.rowlist > tbody > tr > td.cel_cover {
         order: 3;
     }
 
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_cover, .cel_albumart) img {
+    table.tabledata.rowlist > tbody > tr > td.cel_cover img {
         width: 40px;
         height: auto;
     }
 
     /* An open row is looked at rather than scanned past, so the thumbnail opens it at a readable size. */
-    table.tabledata.rowlist > tbody > tr.rowlist-open > td:is(.cel_cover, .cel_albumart) {
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_cover {
         order: 19;
         flex: 0 0 100%;
         margin-top: 8px;
     }
 
-    table.tabledata.rowlist > tbody > tr.rowlist-open > td:is(.cel_cover, .cel_albumart) img {
+    table.tabledata.rowlist > tbody > tr.rowlist-open > td.cel_cover img {
         width: 160px;
     }
 
     /* A flex basis of zero: a long title shrinks on its line instead of claiming one of its own. */
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_streamname) {
+    table.tabledata.rowlist > tbody > tr > td:is(
+        .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_streamname) {
         display: -webkit-box;
         order: 4;
         flex: 1 1 0;

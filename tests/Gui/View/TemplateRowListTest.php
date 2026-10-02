@@ -71,7 +71,7 @@ class TemplateRowListTest extends TestCase
             'cel_play', 'getClassCover', 'cel_title', 'cel_add', 'cel_action',
         ],
         'podcast_episode_row.phtml' => [
-            'cel_play', 'getClassCover', 'cel_title', 'cel_add', 'cel_action',
+            'cel_play', 'getClassCover', 'cel_title', 'cel_add', 'getClassTime', 'cel_action',
         ],
         'live_stream_row.phtml' => [
             'cel_play', 'getClassCover', 'cel_streamname', 'cel_add', 'cel_action',

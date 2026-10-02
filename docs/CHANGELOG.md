@@ -5,7 +5,7 @@
 ### Changed (8.3.0)
 
 * Browse lists
-  * Every browse list is laid out as two-line rows on a narrow screen instead of a table that scrolls sideways: songs, albums, artists, playlists, smart playlists, playlist contents, labels, radio stations, videos, podcasts and their episodes
+  * Browse lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways: songs, albums, artists, playlists, smart playlists, playlist contents, labels, radio stations, videos, podcasts and their episodes
   * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
   * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
   * The column headers become a strip of sort links; a header you cannot sort by is dropped, and a row left with none of them disappears
