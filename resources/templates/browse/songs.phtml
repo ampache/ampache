@@ -46,7 +46,7 @@ if ($browse->is_show_header()) {
     <?php if ($showMultiselect) {
         echo $this->raw((new MultiselectActionsView($multiselect_actions))->render());
     } ?>
-    <table id="reorder_songs_table_<?php echo $this->e($tableKey); ?>" class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="song" data-offset="<?php echo $this->e($browse->get_start()); ?>">
+    <table id="reorder_songs_table_<?php echo $this->e($tableKey); ?>" class="tabledata striped-rows<?php echo $this->e($this->getLayoutClass()); ?>" data-objecttype="song" data-offset="<?php echo $this->e($browse->get_start()); ?>">
         <thead>
             <tr class="th-top">
                 <?php foreach ($columns as $column) { ?>
