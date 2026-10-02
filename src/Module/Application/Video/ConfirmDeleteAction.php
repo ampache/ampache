@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +43,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
+        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private DeletionUrlResolverInterface $deletionUrlResolver,
@@ -51,6 +53,10 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
+        }
+
+        if ($this->requestParser->verifyForm('delete_video') === false) {
+            throw new AccessDeniedException();
         }
 
         $video = new Video(
