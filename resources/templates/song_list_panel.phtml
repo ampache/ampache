@@ -37,7 +37,7 @@ if ($this->areRatingsShown()) {
     Rating::build_cache('song', $this->getSongIds());
     Userflag::build_cache('song', $this->getSongIds());
 } ?>
-<table id="<?php echo $this->e($this->getTableId()); ?>" class="tabledata striped-rows">
+<table id="<?php echo $this->e($this->getTableId()); ?>" class="tabledata rowlist striped-rows" data-objecttype="song">
     <thead>
     <tr class="th-top">
         <?php foreach ($columns as $column) { ?>

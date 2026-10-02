@@ -508,8 +508,57 @@ export function sortPlaylistRender() {
     }
 }
 
+// jQuery UI's sortable listens for mouse events, which a mobile browser emits for a tap but never for a drag.
+function sortPlaylistMouseEvent(type, touch, target) {
+    target.dispatchEvent(new MouseEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        button: 0,
+        buttons: (type === "mouseup") ? 0 : 1,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        screenX: touch.screenX,
+        screenY: touch.screenY
+    }));
+}
+
+// Only the reorder handle translates its touches, so a finger anywhere else on the row still scrolls the list.
+function sortPlaylistTouchDrag() {
+    function move(event) {
+        sortPlaylistMouseEvent("mousemove", event.touches[0], document);
+        event.preventDefault();
+    }
+
+    function end(event) {
+        document.removeEventListener("touchmove", move, {passive: false});
+        document.removeEventListener("touchend", end);
+        document.removeEventListener("touchcancel", end);
+        sortPlaylistMouseEvent("mouseup", event.changedTouches[0], document);
+    }
+
+    // Delegated from the document, so a browse replaced by an ajax refresh needs no rebinding.
+    document.addEventListener("touchstart", function (event) {
+        var handle = (event.touches.length === 1)
+            ? event.target.closest("tbody[id^=\"sortableplaylist_\"] td.cel_drag")
+            : null;
+
+        if (handle === null) {
+            return;
+        }
+
+        sortPlaylistMouseEvent("mousedown", event.touches[0], handle);
+        // Listening for moves only while one is under way: a permanent non-passive listener would make the
+        // browser wait on javascript for every scroll frame of every page.
+        document.addEventListener("touchmove", move, {passive: false});
+        document.addEventListener("touchend", end);
+        document.addEventListener("touchcancel", end);
+    }, {passive: true});
+}
+
 $(document).ready(function () {
     sortPlaylistRender();
+    sortPlaylistTouchDrag();
 });
 
 export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshAction) {

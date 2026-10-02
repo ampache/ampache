@@ -3,6 +3,7 @@ import * as Artist from './artist.js';
 import * as Base from './base.js';
 import * as Multiselect from './multiselect.js';
 import './preferences.js';
+import './rowlist.js';
 import * as Search from './search.js';
 import * as Sidebar from './sidebar.js';
 import * as Slideshow from './slideshow.js';

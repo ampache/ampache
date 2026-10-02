@@ -35,10 +35,10 @@ $label = $this->getLabel(); ?>
     <?php Art::display('label', $label->id, $this->getName(), ['width' => 100, 'height' => 100], $this->getLabelUrl()); ?>
 </td>
 <td class="cel_label"><?php echo $this->raw($label->get_f_link()); ?></td>
-<td class="cel_category"><?php echo $this->e($label->category); ?></td>
-<td class="cel_artists"><?php echo $this->e($label->get_artist_count()); ?></td>
-<td class="cel_country"><?php echo $this->e($label->country); ?></td>
-<td class="cel_active"><?php echo $label->active ? T_('Active') : T_('Inactive'); ?></td>
+<td data-label="<?php echo $this->e(T_('Category')); ?>" class="cel_category"><?php echo $this->e($label->category); ?></td>
+<td data-label="<?php echo $this->e(T_('Artists')); ?>" class="cel_artists"><?php echo $this->e($label->get_artist_count()); ?></td>
+<td data-label="<?php echo $this->e(T_('Country')); ?>" class="cel_country"><?php echo $this->e($label->country); ?></td>
+<td data-label="<?php echo $this->e(T_('Status')); ?>" class="cel_active"><?php echo $label->active ? T_('Active') : T_('Inactive'); ?></td>
 <td class="cel_action">
 <?php if ($this->mayInteract()) {
     if ($this->mayAddToPlaylist()) { ?>

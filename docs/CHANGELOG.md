@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Ampache 8.3.0
+
+### Changed (8.3.0)
+
+* Browse lists
+  * Song, album, artist, playlist, playlist content and label lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways
+  * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
+  * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
+  * The column headers become a scrolling strip, so sorting stays reachable
+  * Play, add to playlist and the row actions no longer wait for a hover
+
+### Fixed (8.3.0)
+
+* Dragging to reorder a playlist or a song list now works on a touch screen
+
 ## Ampache 8.2.2
 
 ### Added (8.2.2)

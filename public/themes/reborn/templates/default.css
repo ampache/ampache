@@ -3011,6 +3011,258 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     .multiselect-actions {
         position: static;
     }
+
+    /* A table marked `rowlist` keeps its markup and gives up its grid: two lines per row, the rest folded
+       away behind the chevron src/js/rowlist.js appends. */
+    table.rowlist:not(.gridview) {
+        display: block;
+        overflow-x: visible;
+    }
+
+    /* The sort links survive as one scrolling strip; repeating them in the footer is noise on a phone. */
+    table.rowlist:not(.gridview) > thead {
+        display: block;
+    }
+
+    table.rowlist:not(.gridview) > thead > tr.th-top {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 2px 8px 5px;
+    }
+
+    table.rowlist:not(.gridview) > thead > tr.th-top > th {
+        display: block;
+        flex: 0 0 auto;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        padding: 0 !important;
+        border: 0;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    table.rowlist:not(.gridview) > thead > tr.th-top > th:empty {
+        display: none;
+    }
+
+    table.rowlist:not(.gridview) > tfoot {
+        display: none;
+    }
+
+    table.rowlist:not(.gridview) > tbody {
+        display: block;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 10px;
+        padding: 6px 8px;
+    }
+
+    /* The line break between what is always shown and what the second line carries. */
+    table.rowlist:not(.gridview) > tbody > tr::after {
+        content: "";
+        order: 8;
+        flex: 0 0 100%;
+    }
+
+    /* A cell is folded until one of the rules below claims it for the first or the second line. */
+    table.rowlist:not(.gridview) > tbody > tr > td {
+        display: none;
+        order: 20;
+        flex: 0 0 100%;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        margin-top: 6px;
+        padding: 0;
+        border: 0;
+        text-align: left;
+    }
+
+    /* A tap leaves :hover stuck on a touch screen, and the theme paints it in the accent colour. */
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open,
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open:hover,
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open:focus {
+        background-color: var(--amp-raised);
+        background-image: none;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td {
+        display: block;
+    }
+
+    /* The panel reads as a description list first and a toolbar last, whatever order the markup emits. */
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_add, .cel_add_list) {
+        order: 25;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_action {
+        order: 26;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td.cel_ratings {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Both toolbars only come out on hover in a table, which a touch screen never produces. */
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td:is(.cel_add, .cel_add_list) .cel_item_add {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+    }
+
+    /* A column the server had nothing to put in would show as a bare label. */
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td:empty {
+        display: none;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td[data-label]::before {
+        content: attr(data-label) " ";
+        color: var(--amp-muted);
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_action {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_action, .cel_add, .cel_add_list) a {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_action, .cel_add, .cel_add_list) .rowlist-action-text {
+        display: inline;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td.cel_action {
+        display: flex;
+    }
+
+    /* First line: what names the item, how long it is, and the two gestures that matter. */
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_select, .cel_play, .cel_cover, .cel_albumart, .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_drag, .cel_expand) {
+        display: block;
+        flex: 0 0 auto;
+        margin-top: 0;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_select {
+        order: 1;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_play {
+        display: flex;
+        order: 2;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* No hover on a touch screen: the play button is always out, and the track number sits beside it. */
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_play .cel_play_hover,
+    table.rowlist:not(.gridview) > tbody > tr:hover > td.cel_play .cel_play_hover {
+        display: block;
+        order: 1;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_play .cel_play_content,
+    table.rowlist:not(.gridview) > tbody > tr:hover > td.cel_play .cel_play_content {
+        display: block;
+        order: 2;
+        min-width: 1.4em;
+        color: var(--amp-muted);
+        font-size: 0.8em;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_play .cel_play_content b {
+        font-weight: normal;
+    }
+
+    /* Play next and play last are conveniences; one row can only spare the width for playing. */
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_play .cel_play_hover > *:nth-child(n+2) {
+        display: none;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_cover, .cel_albumart) {
+        order: 3;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_cover, .cel_albumart) img {
+        width: 40px !important;
+        height: auto !important;
+    }
+
+    /* An open row is looked at rather than scanned past, so the thumbnail opens it at a readable size. */
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td:is(.cel_cover, .cel_albumart) {
+        order: 19;
+        flex: 0 0 100%;
+        margin-top: 8px;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr.rowlist-open > td:is(.cel_cover, .cel_albumart) img {
+        width: 160px !important;
+    }
+
+    /* A flex basis of zero: a long title shrinks on its line instead of claiming one of its own. */
+    table.rowlist:not(.gridview) > tbody > tr > td:is(.cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name) {
+        display: -webkit-box;
+        order: 4;
+        flex: 1 1 0;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow-wrap: anywhere;
+    }
+
+    table.rowlist[data-objecttype="song"]:not(.gridview) > tbody > tr > td.cel_time,
+    table.rowlist[data-objecttype="media"]:not(.gridview) > tbody > tr > td.cel_time,
+    table.rowlist[data-objecttype="playlist"]:not(.gridview) > tbody > tr > td.cel_time {
+        display: block;
+        order: 5;
+        flex: 0 0 auto;
+        margin-top: 0;
+        color: var(--amp-muted);
+        font-size: 0.85em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_drag {
+        order: 6;
+    }
+
+    table.rowlist:not(.gridview) > tbody > tr > td.cel_expand {
+        order: 7;
+    }
+
+    /* Second line: only what the first could not hold and the reader still needs to tell two rows apart. */
+    table.rowlist[data-objecttype="song"]:not(.gridview) > tbody > tr > td:is(.cel_artist, .cel_album),
+    table.rowlist[data-objecttype="media"]:not(.gridview) > tbody > tr > td.cel_artist,
+    table.rowlist[data-objecttype="album"]:not(.gridview) > tbody > tr > td:is(.cel_artist, .cel_year),
+    table.rowlist[data-objecttype="album_disk"]:not(.gridview) > tbody > tr > td:is(.cel_artist, .cel_year) {
+        display: block;
+        order: 9;
+        flex: 0 1 auto;
+        max-width: 100%;
+        margin-top: 0;
+        overflow: hidden;
+        color: var(--amp-muted);
+        font-size: 0.85em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 /* --------------------------
@@ -4045,5 +4297,79 @@ tbody tr.pref-subcategory:first-child > td {
     table.preferences .cel_reference,
     table.preferences .cel_level {
         display: none;
+    }
+}
+
+/* The reorder handle drives the drag itself, so the browser must not take the gesture away to scroll. */
+td.cel_drag {
+    touch-action: none;
+}
+
+/* The chevron's cell has a place only in the narrow row layout. */
+td.cel_expand,
+th.cel_expand {
+    display: none;
+}
+
+/* Grid view blockifies every cell with an !important of its own, so this needs the same weight. */
+table.gridview td.cel_expand,
+table.gridview th.cel_expand {
+    display: none !important;
+}
+
+/* The narrow layout spells its actions out; a table column has a header to do that for it. */
+.rowlist-action-text {
+    display: none;
+    font-size: 0.85em;
+}
+
+button.rowlist-toggle {
+    display: flex;
+    border-radius: 0;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--amp-muted);
+    cursor: pointer;
+}
+
+button.rowlist-toggle::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.18s ease;
+}
+
+/* Every button in the theme is an orange slab; this one is an affordance inside a row. */
+button.rowlist-toggle:hover,
+button.rowlist-toggle:focus {
+    background: none;
+    box-shadow: none;
+}
+
+button.rowlist-toggle:focus-visible {
+    outline: 2px solid var(--amp-accent);
+    outline-offset: -2px;
+}
+
+button.rowlist-toggle[aria-expanded="true"] {
+    color: var(--amp-accent);
+}
+
+button.rowlist-toggle[aria-expanded="true"]::before {
+    transform: translateY(2px) rotate(225deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button.rowlist-toggle::before {
+        transition: none;
     }
 }

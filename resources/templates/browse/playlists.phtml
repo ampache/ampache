@@ -58,7 +58,7 @@ if ($this->mayAdd()) { ?>
 if ($browse->is_show_header()) {
     echo $this->raw((new ListHeaderView($browse, true, $argument_param))->render());
 } ?>
-<table class="tabledata striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist">
+<table class="tabledata rowlist striped-rows<?php echo $this->e($this->getTableClass()); ?>" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
             <?php foreach ($columns as $column) { ?>
