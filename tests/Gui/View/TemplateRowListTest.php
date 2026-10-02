@@ -61,6 +61,9 @@ class TemplateRowListTest extends TestCase
         'label_row.phtml' => [
             'getCoverCellClass', 'cel_label', 'cel_action',
         ],
+        'live_stream_row.phtml' => [
+            'cel_play', 'getClassCover', 'cel_streamname', 'cel_add', 'cel_action',
+        ],
     ];
 
     public function testEveryFoldedCellSaysWhatItHolds(): void

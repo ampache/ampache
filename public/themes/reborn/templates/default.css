@@ -3087,6 +3087,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         margin-top: 6px;
         padding: 0;
         border: 0;
+        overflow-wrap: anywhere;
         text-align: left;
     }
 
@@ -3157,7 +3158,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     /* First line: what names the item, how long it is, and the two gestures that matter. */
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_select, .cel_play, .cel_cover, .cel_albumart, .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_drag, .cel_expand) {
+    table.tabledata.rowlist > tbody > tr > td:is(.cel_select, .cel_play, .cel_cover, .cel_albumart, .cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_streamname, .cel_drag, .cel_expand) {
         display: block;
         flex: 0 0 auto;
         margin-top: 0;
@@ -3222,7 +3223,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     }
 
     /* A flex basis of zero: a long title shrinks on its line instead of claiming one of its own. */
-    table.tabledata.rowlist > tbody > tr > td:is(.cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name) {
+    table.tabledata.rowlist > tbody > tr > td:is(.cel_song, .cel_title, .cel_album, .cel_artist, .cel_playlist, .cel_label, .cel_name, .cel_streamname) {
         display: -webkit-box;
         order: 4;
         flex: 1 1 0;
