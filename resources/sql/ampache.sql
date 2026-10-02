@@ -1184,7 +1184,8 @@ CREATE TABLE IF NOT EXISTS `recommendation_item` (
   `name` varchar(256) DEFAULT NULL,
   `rel` varchar(256) DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `recommendation_item_recommendation_IDX` (`recommendation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

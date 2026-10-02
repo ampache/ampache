@@ -6,7 +6,8 @@
 
 ### Added (8.2.0)
 
-* Database 810025
+* Database 810026
+  * Added an index on `recommendation_item`.`recommendation` for the similar artists/songs lookup
   * Added `musicbrainz_server` and `musicbrainz_throttle` preferences to support custom MusicBrainz mirrors and configurable request throttling
   * Added `jellyfin_backend_enable` preference
   * Added `jellyfin_quick_connect` table and `quickconnect_enable` preference for QuickConnect pairing
