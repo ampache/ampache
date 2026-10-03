@@ -222,6 +222,20 @@ class PreferenceChoiceProviderTest extends TestCase
         $this->assertArrayHasKey('web_player', (array) $subjectAllows, 'the web player is always offered');
     }
 
+    /**
+     * A window the statistics cache has never built answers an empty ranking, so it must not be on offer at all.
+     */
+    public function testTheStatisticsWindowsOfferedAreTheOnesTheCacheAlwaysBuilds(): void
+    {
+        $choices = $this->choicesOf('popularvariety_days');
+
+        foreach ([0, 7, 10] as $window) {
+            $this->assertArrayHasKey($window, $choices, sprintf('the cache always builds %d but it is not offered', $window));
+        }
+
+        $this->assertNotSame('0 days', $choices[0], 'a zero window is the whole history, not a span of no days');
+    }
+
     public function testTheUploadCatalogListIsLedByAMinusOneMeaningNone(): void
     {
         $this->catalogRepository->method('getIds')->willReturn([3, 7]);

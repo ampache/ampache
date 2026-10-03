@@ -34,6 +34,7 @@ use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Preference;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
@@ -90,6 +91,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
                 'ram' => T_('RAM'),
                 'xspf' => T_('XSPF'),
             ],
+            'popularvariety_days' => $this->getStatisticsWindows(),
             'ratingmatch_stars' => [
                 0 => T_('Disabled'),
                 1 => T_('1 Star'),
@@ -218,6 +220,23 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
         }
 
         $choices[999] = T_('Remove all previous tracks');
+
+        return $choices;
+    }
+
+    /**
+     * Only the windows the statistics cache already holds: asking for any other one answers an empty ranking.
+     *
+     * @return array<array-key, string>
+     */
+    private function getStatisticsWindows(): array
+    {
+        $choices = [];
+        foreach (Preference::cachedThresholds() as $days) {
+            $choices[$days] = ($days === 0)
+                ? T_('All time')
+                : sprintf(nT_('%d day', '%d days', $days), $days);
+        }
 
         return $choices;
     }

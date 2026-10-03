@@ -59,6 +59,7 @@ final class PluginEnum
         'musicbrainz' => AmpacheMusicBrainz::class,
         'paypal' => AmpachePaypal::class,
         'piwik' => AmpachePiwik::class,
+        'popularvariety' => AmpachePopularVariety::class,
         'rssview' => AmpacheRSSView::class,
         'shouthome' => AmpacheShoutHome::class,
         'streambandwidth' => AmpacheStreamBandwidth::class,
