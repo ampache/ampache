@@ -116,6 +116,18 @@ final class VaInfo implements VaInfoInterface
 
     private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
+    /**
+     * The tag format written back for each extension. Anything absent cannot be tagged at all.
+     *
+     * @var array<string, string>
+     */
+    private const array TAG_FORMATS = [
+        'mp3' => 'id3v2.3',
+        'flac' => 'metaflac',
+        'oga' => 'vorbiscomment',
+        'ogg' => 'vorbiscomment',
+    ];
+
     public string $encoding          = '';
     public string $encodingId3v1     = '';
     public string $encodingId3v2     = '';
@@ -229,6 +241,14 @@ final class VaInfo implements VaInfoInterface
                 $this->_getID3->encoding = $this->encodingId3v2;
             }
         }
+    }
+
+    /**
+     * Whether tags can be written back into this file, so a caller can give up before it builds any.
+     */
+    public static function canWriteTags(string $filename): bool
+    {
+        return array_key_exists(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::TAG_FORMATS);
     }
 
     /**
@@ -435,6 +455,22 @@ final class VaInfo implements VaInfoInterface
         $info['size'] ??= $size;
 
         return $info;
+    }
+
+    /**
+     * The tags a file already carries in the block it is written back to, empty when it carries none there.
+     *
+     * getID3 reports an untagged file, and one that keeps its tags in any other block, without the key at all.
+     *
+     * @param array<string, mixed> $data the result of read_id3()
+     * @return array<string, mixed>
+     */
+    public static function existingTags(array $data): array
+    {
+        $fileformat = $data['fileformat'] ?? '';
+        $block      = ($fileformat === 'flac' || $fileformat === 'ogg') ? 'vorbiscomment' : 'id3v2';
+
+        return $data['tags'][$block] ?? [];
     }
 
     /**
@@ -888,14 +924,8 @@ final class VaInfo implements VaInfoInterface
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
-        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
-        $extensionMap  = [
-            'mp3' => 'id3v2.3',
-            'flac' => 'metaflac',
-            'oga' => 'vorbiscomment',
-            'ogg' => 'vorbiscomment',
-        ];
-        if (!array_key_exists(strtolower($extension), $extensionMap)) {
+        $extension     = strtolower(pathinfo($this->filename, PATHINFO_EXTENSION));
+        if (!self::canWriteTags($this->filename)) {
             $this->logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -904,7 +934,7 @@ final class VaInfo implements VaInfoInterface
             return;
         }
 
-        $format                       = $extensionMap[$extension];
+        $format                       = self::TAG_FORMATS[$extension];
         $tagWriter->filename          = $this->filename;
         $tagWriter->tagformats        = [$format];
         $tagWriter->overwrite_tags    = true;
