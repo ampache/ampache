@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 8.2.3
+
+### Changed (8.2.3)
+
+* An album or album disk with no cover of its own shows the blank cover placeholder instead of the album artist's art, so Edit/Find Art and Reset Art on it now always target the album
+
 ## Ampache 8.2.2
 
 ### Added (8.2.2)
