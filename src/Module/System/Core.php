@@ -286,11 +286,13 @@ class Core
             return filter_var($ip, FILTER_VALIDATE_IP);
         }
 
+        if (!filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
+            return '';
+        }
+
         $ip = $stripZoneFromIpv6($_SERVER['REMOTE_ADDR']);
 
-        return (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR'))
-            ? filter_var($ip, FILTER_VALIDATE_IP) ?: ''
-            : '';
+        return filter_var($ip, FILTER_VALIDATE_IP) ?: '';
     }
 
     /**
