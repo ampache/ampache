@@ -42,6 +42,11 @@ class AmpachePopularVarietyTest extends TestCase
         $this->assertFalse($this->isFirstOfBoth(2, 7, [1 => true], [7 => true]));
     }
 
+    public function testAPreferenceItDoesNotOwnIsLeftToWhoeverDoes(): void
+    {
+        $this->assertNull(new AmpachePopularVariety()->getPreferenceHelp('catalogfav_max_items', '5'));
+    }
+
     public function testARecordAlreadyShownIsSkippedEvenWithAnotherPerformer(): void
     {
         $this->assertFalse($this->isFirstOfBoth(1, 9, [1 => true], [7 => true]));
@@ -58,9 +63,38 @@ class AmpachePopularVarietyTest extends TestCase
         $this->assertTrue($this->isFirstOfBoth(2, 9, [1 => true], [7 => true]));
     }
 
+    public function testEveryPreferenceItInstallsIsExplained(): void
+    {
+        $plugin = new AmpachePopularVariety();
+
+        foreach (['popularvariety_max_items', 'popularvariety_order'] as $name) {
+            $this->assertNotNull(
+                $plugin->getPreferenceHelp($name, '10'),
+                sprintf('`%s` would be the only preference on the screen with nothing to say', $name)
+            );
+        }
+    }
+
     public function testNothingShownYetLetsAnythingThrough(): void
     {
         $this->assertTrue($this->isFirstOfBoth(1, 7, [], []));
+    }
+
+    public function testTheNameTheScreenLooksItUpByResolvesBackToIt(): void
+    {
+        $this->assertSame(
+            AmpachePopularVariety::class,
+            PluginEnum::LIST[strtolower(new AmpachePopularVariety()->name)] ?? null,
+            'the screen finds a plugin by lowercasing its name, so a space in it silently hides the help'
+        );
+    }
+
+    public function testThePluginDeclaresTheHelpInterface(): void
+    {
+        $this->assertContains(
+            PluginPreferenceHelpInterface::class,
+            class_implements(AmpachePopularVariety::class) ?: []
+        );
     }
 
     /**

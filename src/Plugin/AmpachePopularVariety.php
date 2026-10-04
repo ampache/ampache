@@ -42,7 +42,7 @@ use Override;
  * the list is the same album over and over. This one keeps the ranking and shows the first track of each album
  * and of each artist, which turns a wall of one cover into a wall of the library.
  */
-class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeInterface
+class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeInterface, PluginPreferenceHelpInterface
 {
     /**
      * Enough candidates that a handful of prolific albums cannot empty the panel on their own.
@@ -62,7 +62,7 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
     public string $min_ampache = '370021';
 
     #[Override]
-    public string $name = 'Popular Variety';
+    public string $name = 'PopularVariety';
 
     #[Override]
     public string $url = '';
@@ -128,6 +128,16 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
         echo '</table>';
         Ui::show_box_bottom();
         echo '</div>';
+    }
+
+    #[Override]
+    public function getPreferenceHelp(string $preference, ?string $value): ?string
+    {
+        return match ($preference) {
+            'popularvariety_max_items' => T_('How many tracks the panel shows. Each one is the most played of its album and of its artist, so a higher number reaches further down the ranking rather than repeating a record.'),
+            'popularvariety_order' => T_('Where the panel sits among the other home page panels. Lower comes first, and panels sharing a number keep the order the plugins were installed in.'),
+            default => null,
+        };
     }
 
     #[Override]
