@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Api\PlaylistTrackBudget;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -43,6 +44,7 @@ final class UserPlaylistsMethod implements MethodInterface
 
     public function __construct(
         private BrowseFactoryInterface $browseFactory,
+        private PlaylistTrackBudget $trackBudget,
     ) {}
 
     /**
@@ -108,8 +110,11 @@ final class UserPlaylistsMethod implements MethodInterface
             return $response;
         }
 
-        $output->setOffset($apiVersion, $input['offset'] ?? 0);
-        $output->setLimit($apiVersion, $input['limit'] ?? 0);
+        $offset = (int) ($input['offset'] ?? 0);
+        $limit  = (int) ($input['limit'] ?? 0);
+
+        $output->setOffset($apiVersion, $offset);
+        $output->setLimit($apiVersion, ($include) ? $this->trackBudget->limitFor($results, $offset, $limit) : $limit);
 
         $response->getBody()->write(
             $output->playlists($apiVersion, $results, $user, $input['auth'], $include)
