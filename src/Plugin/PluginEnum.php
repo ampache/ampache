@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use ReflectionClass;
+
 /**
  * This class contains information about plugins
  */
@@ -70,4 +72,40 @@ final class PluginEnum
         'personalfav_display' => AmpachePersonalFavorites::class,
         'ratingmatch' => AmpacheRatingMatch::class,
     ];
+
+    /**
+     * The plugin a stored name belongs to, whether that name is a key here or the one an operator reads.
+     *
+     * A preference files itself under the plugin's own `$name`, which carries spaces and dots and is not
+     * always the key: twelve of them differ, so looking a plugin up by key alone silently finds nothing.
+     *
+     * @return class-string<AmpachePluginInterface>|null
+     */
+    public static function resolve(string $name): ?string
+    {
+        $key = strtolower($name);
+
+        return self::LIST[$key] ?? self::byDisplayName()[$key] ?? null;
+    }
+
+    /**
+     * Built from what each plugin declares rather than from a second list that would drift away from it.
+     *
+     * @return array<string, class-string<AmpachePluginInterface>>
+     */
+    private static function byDisplayName(): array
+    {
+        static $names = null;
+        if ($names === null) {
+            $names = [];
+            foreach (self::LIST as $class) {
+                $declared = new ReflectionClass($class)->getDefaultProperties()['name'] ?? null;
+                if (is_string($declared) && $declared !== '') {
+                    $names[strtolower($declared)] = $class;
+                }
+            }
+        }
+
+        return $names;
+    }
 }

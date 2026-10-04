@@ -56,7 +56,7 @@ class Plugin
     public function __construct(?string $name = null)
     {
         $controller = ($name)
-            ? PluginEnum::LIST[strtolower($name)] ?? null
+            ? PluginEnum::resolve($name)
             : null;
         if ($controller === null) {
             debug_event(self::class, 'Cannot find plugin `' . $name . '`.', 1);
