@@ -70,13 +70,23 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
     #[Override]
     public string $version = '000001';
 
-    private int $days     = 30;
     private int $maxitems = 10;
     private int $order    = 0;
 
     public function __construct()
     {
         $this->description = T_('Popular songs on homepage, one per album and artist');
+    }
+
+    /**
+     * Whether this record and this performer are both new to the panel, which is what keeps it varied.
+     *
+     * @param array<int, true> $albums records already shown
+     * @param array<int, true> $artists performers already shown
+     */
+    private static function isFirstOfBoth(int $album, ?int $artist, array $albums, array $artists): bool
+    {
+        return !isset($albums[$album]) && ($artist === null || !isset($artists[$artist]));
     }
 
     #[Override]
@@ -127,10 +137,6 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
             return false;
         }
 
-        if (!Preference::insert('popularvariety_days', T_('Popular variety window in days'), 10, AccessLevelEnum::USER->value, 'special', 'plugins', $this->name)) {
-            return false;
-        }
-
         return Preference::insert('popularvariety_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
@@ -145,8 +151,6 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
             $this->maxitems = 10;
         }
 
-        $this->days = $this->nearestWindow((int) ($data['popularvariety_days'] ?? 10), Preference::cachedThresholds());
-
         $this->order = (int) ($data['popularvariety_order'] ?? 0);
 
         return true;
@@ -157,7 +161,6 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
     {
         return (
             Preference::delete('popularvariety_max_items')
-            && Preference::delete('popularvariety_days')
             && Preference::delete('popularvariety_order')
         );
     }
@@ -169,22 +172,6 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
     }
 
     /**
-     * A window the statistics cache never ran answers an empty ranking, so the nearest one it holds is used.
-     *
-     * @param list<int> $windows
-     */
-    private function nearestWindow(int $days, array $windows): int
-    {
-        if ($windows === [] || in_array($days, $windows, true)) {
-            return $days;
-        }
-
-        usort($windows, static fn(int $left, int $right): int => abs($left - $days) <=> abs($right - $days));
-
-        return $windows[0];
-    }
-
-    /**
      * The ranking is read in order and an album or an artist already shown is skipped, so the panel keeps the
      * most played track of each rather than the most played tracks overall.
      *
@@ -192,7 +179,8 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
      */
     private function pickVaried(): array
     {
-        $ids = Stats::get_top('song', $this->maxitems * self::OVERSAMPLE, $this->days);
+        // the window the dashboard already reads, which the statistics cache is always built for
+        $ids = Stats::get_top('song', $this->maxitems * self::OVERSAMPLE, AmpConfig::get_int('stats_threshold', 7));
         if ($ids === []) {
             return [];
         }
@@ -203,7 +191,7 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
         $artists = [];
         foreach ($ids as $id) {
             $song = new Song((int) $id);
-            if ($song->isNew() || isset($albums[$song->album]) || ($song->artist !== null && isset($artists[$song->artist]))) {
+            if ($song->isNew() || !self::isFirstOfBoth($song->album, $song->artist, $albums, $artists)) {
                 continue;
             }
 

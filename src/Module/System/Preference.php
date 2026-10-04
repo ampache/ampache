@@ -732,26 +732,6 @@ class Preference extends database_object
     private function __construct() {}
 
     /**
-     * The windows the statistics cache can answer: the three the task always builds, plus any other it has
-     * been asked to keep. A window it has never run would answer an empty list rather than an error.
-     *
-     * @return list<int>
-     */
-    public static function cachedThresholds(): array
-    {
-        $values     = [0, 7, 10];
-        $db_results = Dba::read("SELECT DISTINCT `threshold` FROM `cache_object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream';");
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $values[] = (int) $row['threshold'];
-        }
-
-        $values = array_values(array_unique($values));
-        sort($values);
-
-        return $values;
-    }
-
-    /**
      * clean_preferences
      * This removes any garbage
      */
@@ -1033,8 +1013,6 @@ class Preference extends database_object
     {
         return match ($name) {
             'upload_catalog' => $user->get_catalogs('music'),
-            // only the windows the statistics cache already holds: anything else answers nothing at all
-            'popularvariety_days' => self::cachedThresholds(),
             'playlist_type' => [
                 'simple_m3u',
                 'pls',

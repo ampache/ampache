@@ -29,46 +29,48 @@ use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
 /**
- * Covers the window the panel reads its ranking over.
+ * The rule that turns a play count ranking into a panel worth looking at.
  *
- * With `cron_cache` on, the ranking is only answered for the windows the statistics task has actually built. A
- * window outside that set returns nothing at all, and the panel then renders as an empty space rather than an
- * error, so a stored value that no longer matches has to be brought back onto the list before it is used.
+ * A ranking on a deep catalogue is won by whichever record someone listened through, so the top of the list
+ * is the same cover over and over. Keeping only the first track of each album and of each artist is the whole
+ * plugin: get it wrong and the panel is either repetitive again or silently short.
  */
 class AmpachePopularVarietyTest extends TestCase
 {
-    public function testAnEmptyCacheLeavesTheStoredWindowAlone(): void
+    public function testAPerformerAlreadyShownIsSkippedEvenOnAnotherRecord(): void
     {
-        $this->assertSame(30, $this->nearest(30, []));
+        $this->assertFalse($this->isFirstOfBoth(2, 7, [1 => true], [7 => true]));
     }
 
-    public function testAWindowOutsideTheCacheMovesToTheNearestOneInIt(): void
+    public function testARecordAlreadyShownIsSkippedEvenWithAnotherPerformer(): void
     {
-        $this->assertSame(365, $this->nearest(300, [0, 7, 10, 50, 365]));
+        $this->assertFalse($this->isFirstOfBoth(1, 9, [1 => true], [7 => true]));
     }
 
-    public function testAWindowTheCacheHoldsIsUsedAsItIs(): void
+    public function testATrackWithNoPerformerIsJudgedOnItsRecordAlone(): void
     {
-        $this->assertSame(50, $this->nearest(50, [0, 7, 10, 50, 365]));
+        $this->assertTrue($this->isFirstOfBoth(2, null, [1 => true], [7 => true]));
+        $this->assertFalse($this->isFirstOfBoth(1, null, [1 => true], [7 => true]));
     }
 
-    public function testTheAllTimeWindowIsAsEligibleAsAnyOther(): void
+    public function testBothBeingNewIsWhatLetsATrackThrough(): void
     {
-        $this->assertSame(0, $this->nearest(2, [0, 50]));
+        $this->assertTrue($this->isFirstOfBoth(2, 9, [1 => true], [7 => true]));
     }
 
-    public function testTheNearestWindowIsTheClosestOneAndNotSimplyTheSmallest(): void
+    public function testNothingShownYetLetsAnythingThrough(): void
     {
-        $this->assertSame(50, $this->nearest(40, [0, 7, 10, 50, 365]));
+        $this->assertTrue($this->isFirstOfBoth(1, 7, [], []));
     }
 
     /**
-     * @param list<int> $windows
+     * @param array<int, true> $albums
+     * @param array<int, true> $artists
      */
-    private function nearest(int $days, array $windows): int
+    private function isFirstOfBoth(int $album, ?int $artist, array $albums, array $artists): bool
     {
-        $method = new ReflectionMethod(AmpachePopularVariety::class, 'nearestWindow');
+        $method = new ReflectionMethod(AmpachePopularVariety::class, 'isFirstOfBoth');
 
-        return $method->invoke(new AmpachePopularVariety(), $days, $windows);
+        return $method->invoke(null, $album, $artist, $albums, $artists);
     }
 }
