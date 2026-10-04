@@ -111,7 +111,18 @@ class ThrottledHttpAdapter extends AbstractHttpAdapter
 
         $this->waitBeforeTheNextCall();
 
-        return json_decode($request->body, $returnArray);
+        $response = json_decode($request->body, $returnArray);
+
+        // a non-2xx status or non-JSON body (both seen from musicbrainz.org under load) decodes to null here
+        if (!is_array($response) && !is_object($response)) {
+            throw new Exception(sprintf(
+                'MusicBrainz request to %s failed with HTTP %d',
+                $url,
+                $request->status_code,
+            ));
+        }
+
+        return $response;
     }
 
     /**
