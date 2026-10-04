@@ -274,14 +274,25 @@ class Core
      */
     public static function get_user_ip(): string
     {
+        // link-local address can have the interface at the end of an ipv6 address
+        // it's not relevant to the ip lookup so we can safely strip it
+        // ex fe80::1234:5678:abcd:ef01%enp3s0
+        $stripZoneFromIpv6 = fn($ip) => explode('%', $ip, 2)[0];
+
         // get the x forward if it's valid
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-            return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
+            $ip = $stripZoneFromIpv6($_SERVER['HTTP_X_FORWARDED_FOR']);
+
+            return filter_var($ip, FILTER_VALIDATE_IP);
         }
 
-        return (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR'))
-            ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: ''
-            : '';
+        if (!filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
+            return '';
+        }
+
+        $ip = $stripZoneFromIpv6($_SERVER['REMOTE_ADDR']);
+
+        return filter_var($ip, FILTER_VALIDATE_IP) ?: '';
     }
 
     /**
