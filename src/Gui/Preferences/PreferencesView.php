@@ -26,59 +26,118 @@ declare(strict_types=1);
 namespace Ampache\Gui\Preferences;
 
 use Ampache\Gui\View\AbstractView;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * The preferences page, which is one of four different things depending on the tab.
- *
- * The template this replaced opened its `<form>` inside a conditional and closed it outside every
- * conditional, so three of the four paths emitted a stray `</form>`; the account tab brings its own form
- * and the modules tab has none. `show_box_top()` was likewise inside the tab check while
- * `show_box_bottom()` was outside it, so no tab at all produced a box that only closed.
+ * The preferences page: the same screen for the visitor's own preferences, the server's, or another account's
  */
 final class PreferencesView extends AbstractView
 {
-    /**
-     * @param array<string, mixed> $preferences
-     */
-    public function __construct(
-        private readonly UiInterface $ui,
-        private readonly string $webPath,
-        private readonly string $fullname,
-        private readonly array $preferences,
-        private readonly string $tab,
-        private readonly string $requestAction,
-        private readonly int $userId,
-        private readonly bool $isAdmin,
-        private readonly bool $simpleUserMode,
-    ) {}
+    /** Tabs that carry their own form instead of a list of preferences, so no category matches them */
+    public const string ACCOUNT_TAB = 'account';
+
+    public const string QUICK_CONNECT_TAB = 'quickconnect';
 
     /**
-     * The account tab brings its own form; simple mode gets a read-only version of the same fields.
+     * @param list<PreferenceItem> $items the preferences of the tab being shown
      */
+    public function __construct(
+        private readonly string $webPath,
+        private readonly PreferenceSubject $subject,
+        private readonly array $items,
+        private readonly string $tab,
+        private readonly bool $isAdmin,
+        private readonly bool $simpleUserMode,
+        private readonly PreferenceInputRenderer $renderer,
+    ) {}
+
+    public function countAll(): int
+    {
+        return count($this->items);
+    }
+
+    /**
+     * How many of the shown preferences no longer match what Ampache ships
+     */
+    public function countDiffering(): int
+    {
+        return count(array_filter(
+            $this->items,
+            static fn(PreferenceItem $item): bool => $item->differsFromShipped()
+        ));
+    }
+
     public function getAccountView(User $client): AccountView
     {
         return new AccountView($client, $this->webPath, $this->simpleUserMode && !$this->isAdmin);
     }
 
+    /**
+     * Another account's preferences post to the admin endpoint, which already guards and redirects.
+     */
     public function getActionUrl(): string
     {
-        return $this->webPath . '/preferences.php?action=update_preferences';
+        return $this->webPath . '/preferences.php?action='
+            . ($this->isOtherUser() ? 'admin_update_preferences' : 'update_preferences');
+    }
+
+    public function getBoxView(): PreferenceBoxView
+    {
+        return new PreferenceBoxView($this->items, $this->subject, $this->renderer, $this->tab);
     }
 
     /**
-     * The QuickConnect tab brings its own form, same as the account tab.
+     * The export link, which needs `nohtml` or the global link interception swallows the download
      */
+    public function getExportUrl(): string
+    {
+        return $this->webPath . '/preferences.php?action=export_preferences' . match (true) {
+            $this->subject->isServer => '&method=admin',
+            $this->isOtherUser() => '&user_id=' . $this->subject->userId,
+            default => '',
+        };
+    }
+
     public function getQuickConnectView(): QuickConnectView
     {
         return new QuickConnectView($this->webPath);
     }
 
+    /**
+     * What the save posts back as `method`, which is how the write path knows it targets the server.
+     */
     public function getRequestAction(): string
     {
-        return $this->requestAction;
+        return ($this->subject->isServer) ? 'admin' : 'show';
+    }
+
+    /**
+     * What the visitor is looking at, in their words: an account, or the server itself.
+     */
+    public function getSubjectKind(): string
+    {
+        return ($this->subject->isServer) ? T_('Server') : T_('Account');
+    }
+
+    /**
+     * The server has no name of its own, so naming it twice would just repeat the word.
+     */
+    public function getSubjectName(): string
+    {
+        return ($this->subject->isServer) ? '' : $this->subject->label;
+    }
+
+    /**
+     * What the visitor is told they are about to change, which is the part that goes wrong silently.
+     */
+    public function getSubjectWarning(): string
+    {
+        return match (true) {
+            $this->subject->isServer => T_('Server values. Saving here changes what new accounts start with; existing accounts keep what they already have.'),
+            $this->subject->isSelf => '',
+            default => sprintf(/* HINT: Username */ T_('You are editing the preferences of %s'), $this->subject->label),
+        };
     }
 
     public function getTab(): string
@@ -86,28 +145,25 @@ final class PreferencesView extends AbstractView
         return $this->tab;
     }
 
+    /**
+     * The box renders its title with raw(), and a full name is whatever its owner typed.
+     */
     public function getTitle(): string
     {
         /* HINT: Username FullName */
-        return sprintf(T_('Editing %s Preferences'), $this->e($this->fullname));
+        return sprintf(T_('Editing %s Preferences'), $this->e($this->subject->label));
     }
 
     public function getUserId(): int
     {
-        return $this->userId;
+        return $this->subject->userId;
     }
 
-    /**
-     * The modules tab has no preference form of its own; everything else does.
-     */
     public function hasPreferenceForm(): bool
     {
-        return $this->hasTab() && !$this->isAccountTab() && !$this->isQuickConnectTab() && $this->tab !== 'modules';
+        return $this->items !== [] && !$this->isAccountTab() && !$this->isQuickConnectTab();
     }
 
-    /**
-     * With no tab there is nothing to edit, so the page renders nothing rather than an empty box.
-     */
     public function hasTab(): bool
     {
         return $this->tab !== '';
@@ -115,31 +171,22 @@ final class PreferencesView extends AbstractView
 
     public function isAccountTab(): bool
     {
-        return $this->tab === 'account';
+        return $this->tab === self::ACCOUNT_TAB;
+    }
+
+    public function isOtherUser(): bool
+    {
+        return !$this->subject->isSelf && !$this->subject->isServer;
     }
 
     public function isQuickConnectTab(): bool
     {
-        return $this->tab === 'quickconnect';
+        return $this->tab === self::QUICK_CONNECT_TAB;
     }
 
-    /**
-     * Only an admin edits someone else's preferences, so only then is the user id carried in the form.
-     */
-    public function isUserIdCarried(): bool
+    public function isServerSubject(): bool
     {
-        return $this->isAdmin;
-    }
-
-    /**
-     * The box builder echoes rather than returns.
-     */
-    public function renderPreferenceBox(): string
-    {
-        ob_start();
-        $this->ui->showPreferenceBox($this->preferences[$this->tab] ?? []);
-
-        return (string) ob_get_clean();
+        return $this->subject->isServer;
     }
 
     #[Override]

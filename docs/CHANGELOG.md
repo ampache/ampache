@@ -1,5 +1,67 @@
 # CHANGELOG
 
+## Ampache 8.2.3
+
+### Changed (8.2.3)
+
+* An album or album disk with no cover of its own shows the blank cover placeholder instead of the album artist's art, so Edit/Find Art and Reset Art on it now always target the album
+
+## Ampache 8.2.2
+
+### Added (8.2.2)
+
+* Preferences
+  * One page for your own preferences, the server's, and an admin editing another account
+  * The shipped default and the server value beside each preference, with one-click restore
+  * Inline help on ~130 preferences, with links to the documentation
+  * A filter box, plus filters for "differs from default" and "unsaved"
+  * A section jump list, and a catch-all section for preferences that belong to none
+  * Warnings when another preference, or a config setting, silently cancels the one being set
+  * A confirmation listing every change before it is written
+  * `Export all preferences`, a JSON download of the whole configuration
+  * Plugins can explain their own preferences through `PluginPreferenceHelpInterface`
+  * The Update button stays inert until something on the page actually changed
+* Database 821002
+  * Corrected the `integer`/`string` type on eight preferences that are switches
+  * Removed `sidebar_order_video`, which never ordered anything: the sidebar has no video section
+  * Removed `allow_personal_info_agent`, unread since 4.3.0, where the agent column became admin-only
+  * Converted `preference`.`category` from a plain `varchar` to an `enum` of its seven real values
+  * Shrank `preference`.`subcategory` from `varchar(128)` to `varchar(32)` and pinned it to `utf8mb3`
+
+### Changed (8.2.2)
+
+* Browse lists
+  * Browse lists are laid out as two-line rows on a narrow screen instead of a table that scrolls sideways: songs, albums, artists, playlists, smart playlists, playlist contents, labels, radio stations, videos, podcasts and their episodes
+  * The Songs, Top Tracks and Similar Songs panels of an artist page follow the same layout
+  * A chevron on each row folds out the remaining columns, one row open at a time, with the cover art shown large and every action named
+  * The column headers become a strip of sort links; a header you cannot sort by is dropped, and a row left with none of them disappears
+  * Play, add to playlist and the row actions no longer wait for a hover
+* Preferences
+  * The confirmation names which changes the per-row `Apply to All` writes into every existing account
+  * Access levels are read from `Preference::DEFAULTS` rather than a second list that had fallen out of step with it
+  * Resetting levels to default now also covers the 29 preferences the old list left out
+  * `admin/users.php?action=show_preferences` renders the shared preferences screen
+  * The `default` preset is read from `Preference::DEFAULTS` instead of a copy that had drifted on eleven values and was missing thirty-five preferences
+  * Whether a setting is a switch is read from its declared type, so the debug page no longer relies on a list that had fallen behind
+
+### Removed (8.2.2)
+
+* `preferences.php?action=user`, which required admin but only ever showed your own preferences
+* `Ui::createPreferenceInput()` and `Ui::showPreferenceBox()`, replaced by a type-driven renderer
+* The `Preference::DEFAULT_LEVELS` constant, replaced by `Preference::defaultLevels()`
+
+### Fixed (8.2.2)
+
+* Dragging to reorder a playlist or a song list now works on a touch screen
+* Preferences
+  * The account tab could never be saved, every submit answering 403
+  * `api_force_version` did not offer version 8, so a resubmit silently reset it to 0
+  * `localplay_level` and `upload_access_level` did not offer the Guest level
+  * The Last.fm and Libre.fm authorisation callback accepted a forged link
+  * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
+  * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
+* `login.php` redirected straight back to `update.php` with a pending database update, looping forever (`ERR_TOO_MANY_REDIRECTS`) instead of showing the login form
+
 ## Ampache 8.2.1
 
 ### Fixed (8.2.1)

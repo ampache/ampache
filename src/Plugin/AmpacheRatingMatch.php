@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
 
-class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
+class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface, PluginPreferenceHelpInterface
 {
     #[Override]
     public string $categories = 'save_rating';
@@ -94,6 +94,25 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         private readonly SongTagWriterInterface $songTagWriter,
     ) {
         $this->description   = T_('Raise the album and artist rating to match the highest song rating');
+    }
+
+    /**
+     * The rules are a private little language, so they are explained against whatever the field holds.
+     */
+    #[Override]
+    public function getPreferenceHelp(string $preference, ?string $value): ?string
+    {
+        if (str_ends_with($preference, '_rule')) {
+            return T_('Write how many plays, optionally followed by a comma and how many skips: `5` or `5,2`. Leave it empty to never apply this rating automatically.')
+                . ' ' . $this->describeRule($value);
+        }
+
+        return match ($preference) {
+            'ratingmatch_stars' => T_('Ratings below this many stars are not copied to the album and the artist, and are not written to file tags. 0 turns the whole sync off, which is the shipped default.'),
+            'ratingmatch_flags' => T_('Marking a track as loved also marks its album and its artist.'),
+            'ratingmatch_write_tags' => T_('Writes the rating into the file itself, so it survives a rescan and follows the file elsewhere. Ampache must be able to write to your music files.'),
+            default => null,
+        };
     }
 
     /**
@@ -416,5 +435,32 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         }
 
         return true;
+    }
+
+    /**
+     * What the rule currently in the field actually does.
+     */
+    private function describeRule(?string $value): string
+    {
+        $parts = array_values(array_filter(explode(',', (string) $value), static fn(string $part): bool => trim($part) !== ''));
+        $plays = (int) ($parts[0] ?? 0);
+        $skips = (int) ($parts[1] ?? 0);
+
+        if ($parts === [] || ($plays === 0 && $skips === 0)) {
+            return T_('Right now: never applied.');
+        }
+
+        if (count($parts) === 1) {
+            /* HINT: number of plays */
+            return sprintf(nT_('Right now: applied after %d play.', 'Right now: applied after %d plays.', $plays), $plays);
+        }
+
+        if ($plays === 0) {
+            /* HINT: number of skips */
+            return sprintf(nT_('Right now: applied after %d skip.', 'Right now: applied after %d skips.', $skips), $skips);
+        }
+
+        /* HINT: %1$d number of plays, %2$d number of skips */
+        return sprintf(T_('Right now: applied once there are at least %1$d plays and %2$d skips.'), $plays, $skips);
     }
 }

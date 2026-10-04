@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -36,6 +37,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -52,58 +54,35 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $isServer = Core::get_post('method') === 'admin';
+        $user     = $gatekeeper->getUser();
+
+        // demo mode answers every level check with true, so it is refused here rather than three layers down
         if (
-            (
-                Core::get_post('method') === 'admin'
-                && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
-            )
+            !$user instanceof User
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $gatekeeper->isDemoMode()
+            || ($isServer && !$gatekeeper->mayAdminister())
             || !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }
 
-        $system = false;
-        /* Reset the Theme */
-        if (Core::get_post('method') === 'admin') {
-            $user_id            = '-1';
-            $system             = true;
-            $fullname           = T_('Server');
-            $_REQUEST['action'] = 'admin';
-        } else {
-            $user_id  = Core::get_global('user')?->getId();
-            $fullname = Core::get_global('user')?->fullname;
-        }
-
-        /* Update and reset preferences */
-        $this->preferencesFromRequestUpdater->update((int) $user_id);
+        $this->preferencesFromRequestUpdater->update($isServer ? User::INTERNAL_SYSTEM_USER_ID : $user->getId());
         Preference::init();
 
         // Reset gettext so that it's clear whether the preference took
-        // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        if (Core::get_post('method') === 'admin') {
-            $notification_text = T_('Server preferences updated successfully');
-        } else {
-            $notification_text = T_('User preferences updated successfully');
-        }
-
-        $user = $gatekeeper->getUser();
-
         $this->ui->showHeader();
+        display_notification($isServer ? T_('Server preferences updated successfully') : T_('User preferences updated successfully'));
 
-        if (!empty($notification_text)) {
-            display_notification($notification_text);
-        }
-
-        if ($user !== null) {
-            // Show the default preferences page
-            echo $this->preferencesViewFactory->create(
-                $gatekeeper,
-                $fullname,
-                $user->get_preferences($_REQUEST['tab'], $system)
-            )->render();
-        }
+        echo $this->preferencesViewFactory->create(
+            $gatekeeper,
+            $isServer ? PreferenceSubject::serverPreferences($user) : PreferenceSubject::ownPreferences($user),
+            $user,
+            (string) (((array) $request->getParsedBody())['tab'] ?? '')
+        )->render();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

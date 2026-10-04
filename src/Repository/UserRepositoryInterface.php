@@ -164,7 +164,7 @@ interface UserRepositoryInterface
     /**
      * Reads the preference rows behind the settings pages, joined to their descriptions
      *
-     * @return list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string}>
+     * @return list<array{name: string, description: string, category: string, subcategory: ?string, type: string, level: int, value: ?string, default_value: ?string}>
      */
     public function getPreferenceRows(int $userId, ?string $category, bool $excludeSystem): array;
 

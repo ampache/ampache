@@ -25,124 +25,181 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Gui\Preferences\PreferenceInputRenderer;
+use Ampache\Gui\Preferences\PreferenceSubject;
+use Ampache\Gui\Preferences\PreferencesView;
+use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
+use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\PreferenceRepositoryInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Mockery\MockInterface;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ShowPreferencesActionTest extends TestCase
+class ShowPreferencesActionTest extends MockeryTestCase
 {
-    private ModelFactoryInterface&MockObject $modelFactory;
-    private PreferenceRepositoryInterface&MockObject $preferenceRepository;
+    private MockInterface|ConfigContainerInterface $configContainer;
+    private MockInterface|ModelFactoryInterface $modelFactory;
+    private MockInterface|PreferencesViewFactoryInterface $preferencesViewFactory;
     private ShowPreferencesAction $subject;
-    private UiInterface&MockObject $ui;
+    private MockInterface|UiInterface $ui;
 
-    public function testRunErrorsIfUserWasNotFound(): void
+    #[Override]
+    public function setUp(): void
     {
-        $request    = $this->createMock(ServerRequestInterface::class);
-        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $user       = $this->createMock(User::class);
-
-        $userId = 666;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
-            ->willReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testShowsPreferences(): void
-    {
-        $request    = $this->createMock(ServerRequestInterface::class);
-        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $user       = $this->createMock(User::class);
-
-        $userId      = 666;
-        $preferences = [
-            ['name' => 'some-name', 'description' => 'Some Description', 'value' => 'some-value'],
-        ];
-
-        $gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
-            ->willReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        $this->preferenceRepository->expects(static::once())
-            ->method('getAll')
-            ->with($user)
-            ->willReturn($preferences);
-
-        $this->ui->expects(static::once())
-            ->method('createPreferenceInput')
-            ->with('some-name', 'some-value');
-
-        ob_start();
-
-        try {
-            $result = $this->subject->run($request, $gatekeeper);
-        } finally {
-            $output = (string) ob_get_clean();
-        }
-
-        self::assertNull($result);
-        self::assertStringContainsString('Some Description', $output);
-        self::assertStringContainsString('admin_update_preferences', $output);
-    }
-
-    protected function setUp(): void
-    {
-        $this->ui                   = $this->createMock(UiInterface::class);
-        $this->modelFactory         = $this->createMock(ModelFactoryInterface::class);
-        $this->preferenceRepository = $this->createMock(PreferenceRepositoryInterface::class);
+        $this->ui                     = $this->mock(UiInterface::class);
+        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
+        $this->preferencesViewFactory = $this->mock(PreferencesViewFactoryInterface::class);
 
         $this->subject = new ShowPreferencesAction(
             $this->ui,
             $this->modelFactory,
-            $this->preferenceRepository,
+            $this->preferencesViewFactory,
         );
+    }
+
+    public function testANonAdminIsRefusedBeforeAnythingIsLoaded(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $gatekeeper->shouldReceive('mayAdminister')
+            ->once()
+            ->andReturnFalse();
+
+        $this->modelFactory->shouldNotReceive('createUser');
+        $this->ui->shouldNotReceive('showHeader');
+
+        $this->expectException(AccessDeniedException::class);
+
+        $this->subject->run($this->mock(ServerRequestInterface::class), $gatekeeper);
+    }
+
+    public function testAnUnknownAccountIsNotFound(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $operator   = $this->mock(User::class);
+        $target     = $this->mock(User::class);
+
+        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('getUser')->andReturn($operator);
+        $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '666']);
+        $this->modelFactory->shouldReceive('createUser')->with(666)->once()->andReturn($target);
+        $target->shouldReceive('isNew')->once()->andReturnTrue();
+
+        $this->ui->shouldNotReceive('showHeader');
+
+        $this->expectException(ObjectNotFoundException::class);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    /**
+     * Demo mode grants every privilege, which is why the gatekeeper answers this question and not a level.
+     */
+    public function testDemoModeIsRefused(): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $gatekeeper->shouldReceive('mayAdminister')->once()->andReturnFalse();
+
+        $this->modelFactory->shouldNotReceive('createUser');
+
+        $this->expectException(AccessDeniedException::class);
+
+        $this->subject->run($this->mock(ServerRequestInterface::class), $gatekeeper);
+    }
+
+    public function testItRendersTheRequestedAccountAndNotTheOperator(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $operator   = $this->mock(User::class);
+        $target     = $this->mock(User::class);
+
+        $operator->fullname = 'admin';
+        $target->fullname   = 'bituur';
+        $operator->shouldReceive('getId')->andReturn(1);
+        $target->shouldReceive('getId')->andReturn(7);
+        $target->shouldReceive('isNew')->once()->andReturnFalse();
+
+        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('getUser')->andReturn($operator);
+        $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '7', 'tab' => 'streaming']);
+        $this->modelFactory->shouldReceive('createUser')->with(7)->once()->andReturn($target);
+
+        $captured = null;
+        $this->preferencesViewFactory->shouldReceive('create')
+            ->once()
+            ->andReturnUsing(function ($gate, $subject, $user, $tab) use (&$captured): PreferencesView {
+                $captured = [$subject, $user, $tab];
+
+                // render() is final, so this is a real view with no tab -- the path that renders nothing
+                return new PreferencesView('', $subject, [], '', false, false, new PreferenceInputRenderer());
+            });
+
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+
+        try {
+            $this->subject->run($request, $gatekeeper);
+        } finally {
+            ob_get_clean();
+        }
+
+        /** @var array{0: PreferenceSubject, 1: User, 2: string} $captured */
+        $this->assertSame(7, $captured[0]->userId, 'the subject is the account asked for');
+        $this->assertSame('bituur', $captured[0]->label);
+        $this->assertFalse($captured[0]->isSelf);
+        $this->assertSame($operator, $captured[1], 'editability follows the operator, not the subject');
+        $this->assertSame('streaming', $captured[2]);
+    }
+
+    /**
+     * The account form always renders and writes the signed-in account, whatever the page is titled.
+     */
+    public function testTheAccountTabIsNeverShownForSomeoneElse(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $operator   = $this->mock(User::class);
+        $target     = $this->mock(User::class);
+
+        $operator->fullname = 'admin';
+        $target->fullname   = 'bituur';
+        $operator->shouldReceive('getId')->andReturn(1);
+        $target->shouldReceive('getId')->andReturn(7);
+        $target->shouldReceive('isNew')->andReturnFalse();
+
+        $gatekeeper->shouldReceive('mayAdminister')->andReturnTrue();
+        $gatekeeper->shouldReceive('getUser')->andReturn($operator);
+        $request->shouldReceive('getQueryParams')->andReturn(['user_id' => '7', 'tab' => 'account']);
+        $this->modelFactory->shouldReceive('createUser')->with(7)->andReturn($target);
+
+        $captured = null;
+        $this->preferencesViewFactory->shouldReceive('create')
+            ->andReturnUsing(function ($gate, $subject, $user, $tab) use (&$captured): PreferencesView {
+                $captured = $tab;
+
+                return new PreferencesView('', $subject, [], '', false, false, new PreferenceInputRenderer());
+            });
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+
+        try {
+            $this->subject->run($request, $gatekeeper);
+        } finally {
+            ob_get_clean();
+        }
+
+        $this->assertSame('interface', $captured, 'the account tab would show the admin their own form');
     }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-28 04:07+1000\n"
+"POT-Creation-Date: 2026-10-03 09:06+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,6 +124,9 @@ msgid "Play last"
 msgstr ""
 
 msgid "Add to Temporary Playlist"
+msgstr ""
+
+msgid "More"
 msgstr ""
 
 msgid "Editing Existing User"
@@ -249,6 +252,21 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
+msgid "Songs"
+msgstr ""
+
+msgid "Played"
+msgstr ""
+
+msgid "Genres"
+msgstr ""
+
+msgid "Moods"
+msgstr ""
+
+msgid "Rating"
+msgstr ""
+
 msgid "Direct URL to Image"
 msgstr ""
 
@@ -315,9 +333,6 @@ msgstr ""
 msgid "Albums"
 msgstr ""
 
-msgid "Songs"
-msgstr ""
-
 msgid "Top Tracks"
 msgstr ""
 
@@ -328,6 +343,9 @@ msgid "Similar Artists"
 msgstr ""
 
 msgid "Similar Songs"
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "Disabled"
@@ -474,7 +492,13 @@ msgstr ""
 msgid "Create Smart Playlist"
 msgstr ""
 
+msgid "Save Track Order"
+msgstr ""
+
 msgid "Do you really want to delete this Folder?"
+msgstr ""
+
+msgid "Reorder"
 msgstr ""
 
 msgid "Duration"
@@ -531,16 +555,10 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-msgid "Reorder"
-msgstr ""
-
 msgid "Owner"
 msgstr ""
 
 msgid "Type"
-msgstr ""
-
-msgid "Save Track Order"
 msgstr ""
 
 msgid "This Collection is empty"
@@ -619,12 +637,6 @@ msgid "Barcode"
 msgstr ""
 
 msgid "Original Year"
-msgstr ""
-
-msgid "Genres"
-msgstr ""
-
-msgid "Moods"
 msgstr ""
 
 msgid "Overwrite tags of sub songs"
@@ -2001,9 +2013,6 @@ msgstr ""
 msgid "No items"
 msgstr ""
 
-msgid "More"
-msgstr ""
-
 msgid "Log out"
 msgstr ""
 
@@ -2070,6 +2079,13 @@ msgstr ""
 msgid "Do you really want to delete this Playlist?"
 msgstr ""
 
+msgid "Last Update"
+msgstr ""
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr ""
+
 msgid "Smart Playlist Edit"
 msgstr ""
 
@@ -2083,6 +2099,9 @@ msgid "Save as Playlist"
 msgstr ""
 
 msgid "Waveform"
+msgstr ""
+
+msgid "Publication Date"
 msgstr ""
 
 msgid "Sync"
@@ -2157,7 +2176,62 @@ msgstr ""
 msgid "Update Account"
 msgstr ""
 
+msgid "Filter"
+msgstr ""
+
+msgid "Filter by name, description or key"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Differs from default"
+msgstr ""
+
+msgid "Unsaved"
+msgstr ""
+
+msgid "Downloads every preference, from every tab, as a JSON file"
+msgstr ""
+
+msgid "Export all preferences"
+msgstr ""
+
+msgid "Sections"
+msgstr ""
+
+msgid "No preference matches this filter."
+msgstr ""
+
+msgid "(empty)"
+msgstr ""
+
+msgid "(a new value)"
+msgstr ""
+
+msgid "Apply these changes?"
+msgstr ""
+
+msgid "for every account"
+msgstr ""
+
+msgid "Access Level"
+msgstr ""
+
+#, php-format
+msgid ""
+"%d of these changes will be written to every existing account, overwriting "
+"what each account chose. This cannot be undone."
+msgstr ""
+
+#, php-format
+msgid "Changes to apply: %d"
+msgstr ""
+
 msgid "Update Preferences"
+msgstr ""
+
+msgid "Tick \"apply to all\" on every change"
 msgstr ""
 
 msgid "Preference"
@@ -2166,10 +2240,40 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
+msgid "Reference"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
 msgid "Apply to All"
 msgstr ""
 
-msgid "Access Level"
+msgid "Differs from the value Ampache ships"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Read only"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Read the documentation"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid "Copy what the server holds; it will not follow later server changes"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Also write this value to every existing account"
 msgstr ""
 
 msgid "Enter the code shown on the other device to sign it in."
@@ -2244,6 +2348,9 @@ msgstr ""
 msgid "Enqueue"
 msgstr ""
 
+msgid "Item Limit"
+msgstr ""
+
 msgid "Rules"
 msgstr ""
 
@@ -2292,9 +2399,6 @@ msgstr ""
 msgid "Uploads"
 msgstr ""
 
-msgid "Help"
-msgstr ""
-
 msgid "Ampache Wiki"
 msgstr ""
 
@@ -2305,6 +2409,15 @@ msgid "Cookie Information"
 msgstr ""
 
 msgid "Admin Disabled"
+msgstr ""
+
+msgid "License"
+msgstr ""
+
+msgid "Skipped"
+msgstr ""
+
+msgid "Added"
 msgstr ""
 
 msgid "Connected Users"
@@ -2359,9 +2472,6 @@ msgid "Latest Ampache version"
 msgstr ""
 
 msgid "GitHub Branch"
-msgstr ""
-
-msgid "Last Update"
 msgstr ""
 
 msgid "Force check"
@@ -2506,12 +2616,6 @@ msgstr ""
 msgid "User is Offline Now"
 msgstr ""
 
-msgid "Played"
-msgstr ""
-
-msgid "Skipped"
-msgstr ""
-
 msgid "Following"
 msgstr ""
 
@@ -2525,6 +2629,9 @@ msgid "Active Playlist"
 msgstr ""
 
 msgid "Subtitle"
+msgstr ""
+
+msgid "Resolution"
 msgstr ""
 
 msgid "Video Information"
@@ -2578,11 +2685,6 @@ msgstr ""
 msgid "Upgrade"
 msgstr ""
 
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr ""
-
 msgid "Album Disk"
 msgstr ""
 
@@ -2591,9 +2693,6 @@ msgid "%d song"
 msgid_plural "%d songs"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Time"
-msgstr ""
 
 #, php-format
 msgid "Played %d time"
@@ -2619,9 +2718,6 @@ msgid_plural "%d albums"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Rating"
-msgstr ""
-
 msgid "Starts With"
 msgstr ""
 
@@ -2640,10 +2736,6 @@ msgstr ""
 msgid "Remove {count} selected items from this collection?"
 msgstr ""
 
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr ""
-
 msgid "Holds"
 msgstr ""
 
@@ -2657,9 +2749,6 @@ msgid "Remove from playlist"
 msgstr ""
 
 msgid "Remove {count} selected items from this playlist?"
-msgstr ""
-
-msgid "Publication Date"
 msgstr ""
 
 msgid "Sender"
@@ -2686,15 +2775,6 @@ msgstr ""
 msgid "Date Added"
 msgstr ""
 
-msgid "Item Limit"
-msgstr ""
-
-msgid "License"
-msgstr ""
-
-msgid "Added"
-msgstr ""
-
 msgid "Registration Date"
 msgstr ""
 
@@ -2702,9 +2782,6 @@ msgid "Last IP"
 msgstr ""
 
 msgid "Online"
-msgstr ""
-
-msgid "Resolution"
 msgstr ""
 
 msgid "Trending"
@@ -2898,6 +2975,939 @@ msgid "%d episode"
 msgid_plural "%d episodes"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Year ascending"
+msgstr ""
+
+msgid "Year descending"
+msgstr ""
+
+msgid "Name ascending"
+msgstr ""
+
+msgid "Name descending"
+msgstr ""
+
+msgid "Send on Add"
+msgstr ""
+
+msgid "Send and Clear on Add"
+msgstr ""
+
+msgid "Clear on Send"
+msgstr ""
+
+msgid "M3U"
+msgstr ""
+
+msgid "Simple M3U"
+msgstr ""
+
+msgid "PLS"
+msgstr ""
+
+msgid "Asx"
+msgstr ""
+
+msgid "RAM"
+msgstr ""
+
+msgid "XSPF"
+msgstr ""
+
+msgid "1 Star"
+msgstr ""
+
+msgid "2 Stars"
+msgstr ""
+
+msgid "3 Stars"
+msgstr ""
+
+msgid "4 Stars"
+msgstr ""
+
+msgid "5 Stars"
+msgstr ""
+
+msgid "Never"
+msgstr ""
+
+msgid "Always"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+#. HINT: API version number
+#, php-format
+msgid "Allow API%s Only"
+msgstr ""
+
+msgid "Match my theme"
+msgstr ""
+
+msgid "Keep last played track"
+msgstr ""
+
+#. HINT: Keep (2|3|4|5|10) previous tracks
+#, php-format
+msgid "Keep %s previous tracks"
+msgstr ""
+
+msgid "Remove all previous tracks"
+msgstr ""
+
+msgid ""
+"Treats a multi-disc release as one album instead of one row per disc. "
+"Turning it off makes browse, search and the artist page list album disks "
+"individually; API and Subsonic album lists keep their own shape either way."
+msgstr ""
+
+msgid ""
+"Splits the album list on an artist page into a section per release type, so "
+"albums, EPs, live records and singles sit under their own headings. Off, the "
+"artist page shows one flat list."
+msgstr ""
+
+msgid ""
+"Order of the release-type sections on an artist page, as a comma-separated "
+"list of types. Types left out of the list follow the ones named, and the "
+"whole setting is idle while release types are not grouped."
+msgstr ""
+
+msgid ""
+"Default ordering of album lists when the browse carries no sort of its own. "
+"It also decides the order of the album lists returned by the API."
+msgstr ""
+
+msgid ""
+"Show what you are listening to right now to other users. Administrators see "
+"the now playing list in full whatever this says."
+msgstr ""
+
+msgid ""
+"Show what you listened to recently to other users. With it off your activity "
+"feed is hidden and your plays drop out of everyone else statistics pages."
+msgstr ""
+
+msgid ""
+"Show the date and time of your recent plays. With it off your profile "
+"reports the last seen time as Never rather than leaving the field out."
+msgstr ""
+
+msgid ""
+"Raise a desktop notification on every track change. It only works in the "
+"embedded player, and the browser still has to grant the notification "
+"permission."
+msgstr ""
+
+msgid ""
+"How long a track-change notification stays on screen, in seconds. 0 leaves "
+"it up until it is dismissed, and the setting is idle while browser "
+"notifications are off."
+msgstr ""
+
+msgid ""
+"Image served for an album with no artwork, as an absolute http or https url. "
+"Browse pages still draw a placeholder when that is enabled, but everything "
+"else — the API, Subsonic, RSS feeds, the web player — serves this image "
+"instead."
+msgstr ""
+
+msgid ""
+"An ICU date pattern applied to every date and time on the site in place of "
+"the one the language implies. Leave it empty to follow the language."
+msgstr ""
+
+msgid ""
+"Puts your own avatar in the header instead of the site logo. An account with "
+"no avatar gets the generic silhouette, not the site logo."
+msgstr ""
+
+msgid ""
+"Timezone used to display dates, overriding the one PHP is configured with. A "
+"name PHP does not recognize is silently cleared when the form is saved."
+msgstr ""
+
+msgid ""
+"Hides the one-click play and add buttons on an album, artist or folder "
+"holding more media than this, so a huge item is not queued by accident. 0 "
+"removes the limit."
+msgstr ""
+
+msgid ""
+"Draws a placeholder tile from the item name and artist when no cover exists, "
+"instead of one shared blank image. Nothing is stored: the drawing is rebuilt "
+"on each request. Setting a custom blank album image turns it off everywhere "
+"except the browse pages."
+msgstr ""
+
+msgid ""
+"Which drawing style the placeholder tiles use. Auto follows the theme color, "
+"and a template that no longer exists falls back to the first one available."
+msgstr ""
+
+msgid ""
+"Drops the per-song artist column on an album whose songs all share one "
+"artist. Albums crediting several artists keep the column whatever this says."
+msgstr ""
+
+msgid ""
+"Shows the Videos of the Moment panel on the home page. It stays hidden while "
+"video features are disabled, whatever this is set to."
+msgstr ""
+
+msgid ""
+"Lets Recently Played list podcast episodes, videos and radio alongside songs "
+"instead of songs alone. It governs your profile page and the statistics page "
+"too, not only the home panel."
+msgstr ""
+
+msgid ""
+"Replaces the browse form at the top of the home page with the dashboard "
+"widget picker."
+msgstr ""
+
+msgid ""
+"Comma-separated list of item types that open on the A to Z jump bar rather "
+"than a plain list. Empty means no type does."
+msgstr ""
+
+msgid ""
+"Sends this account to the mini player on login and on every page it would "
+"otherwise render. It restricts navigation only and is no substitute for an "
+"access level."
+msgstr ""
+
+msgid ""
+"Collapses the now playing list to the most recent stream per user instead of "
+"one line per concurrent stream."
+msgstr ""
+
+msgid ""
+"How many items the of the Moment panels pick at random. A value of zero or "
+"less falls back to six."
+msgstr ""
+
+msgid ""
+"How many items one page of a browse shows before paging. It is also the size "
+"of a random selection."
+msgstr ""
+
+msgid ""
+"How many rows the popular, recently played and last shouts lists return."
+msgstr ""
+
+msgid ""
+"Adds the license column to song lists. It shows nothing unless licensing is "
+"also enabled server-side."
+msgstr ""
+
+msgid ""
+"Adds a lyrics link to the web player control bar. The lyrics page itself "
+"stays reachable either way."
+msgstr ""
+
+msgid ""
+"Appends the original release year to an album title when the record carries "
+"one and it differs from the pressing year."
+msgstr ""
+
+msgid ""
+"Adds a play count column to browse rows. While it is off the counts are not "
+"even queried, so turning it on costs one extra statistics lookup per page."
+msgstr ""
+
+msgid ""
+"Appends the owner name to a playlist title. Your own playlists are never "
+"annotated."
+msgstr ""
+
+msgid ""
+"Adds a skip count column to browse rows. Like the play count, the figure is "
+"only queried when the column is shown."
+msgstr ""
+
+msgid ""
+"Appends the album version, such as a remaster or deluxe tag, to the album "
+"title when the record carries one."
+msgstr ""
+
+msgid ""
+"Removes the arrows that fold the sidebar into its narrow form. Together with "
+"the light sidebar it pins the sidebar to that form."
+msgstr ""
+
+msgid "Opens the sidebar in its narrow, icon-only form by default."
+msgstr ""
+
+msgid ""
+"Position of the Browse menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Dashboard menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Information menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Playlist menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Search menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Seconds of inactivity before the web player fades into a full-screen artist "
+"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
+"anything to show."
+msgstr ""
+
+msgid ""
+"Puts the playing track in the browser tab title. Share pages never do it, "
+"whatever this says."
+msgstr ""
+
+msgid ""
+"How many days back the statistics pages look. 0 means all time, which is the "
+"case the cached counts are built for."
+msgstr ""
+
+msgid ""
+"Light or dark variant of the chosen theme. It also picks the logo and icon "
+"set, and the template the drawn placeholder art uses under Auto."
+msgstr ""
+
+msgid ""
+"Moves the main navigation into a bar across the top of the page instead of "
+"the sidebar layout."
+msgstr ""
+
+msgid ""
+"Pins the header in place so it stays visible while the page scrolls. Only "
+"themes built for it react."
+msgstr ""
+
+msgid ""
+"Sorts and reports albums by their original release year rather than the year "
+"of the pressing. An album with no original year falls back to the normal one."
+msgstr ""
+
+msgid ""
+"Asks the browser to confirm before leaving the page while something is "
+"playing. Only the embedded player does it, not a share page."
+msgstr ""
+
+msgid ""
+"Pauses this tab when another tab starts playing, so two players do not talk "
+"over each other. Tabs agree through browser storage, so it only covers the "
+"same browser profile."
+msgstr ""
+
+msgid ""
+"Offers democratic play, where listeners vote on what comes next, as a "
+"playback type. It governs the interface: the democratic API methods answer "
+"whether or not it is set."
+msgstr ""
+
+msgid ""
+"Offers Localplay, which drives a player running beside the server, as a "
+"playback type. Installing a Localplay plugin switches this on for every user."
+msgstr ""
+
+msgid ""
+"Master switch for streaming. The server setting and the account preference "
+"both have to be on, and the Jellyfin endpoints check the pair as well."
+msgstr ""
+
+msgid ""
+"Exposes the video side of the library in menus, searches and graphs. An API "
+"client asking for video while it is off is refused outright, not merely "
+"shown nothing."
+msgstr ""
+
+msgid ""
+"Marks every API stream as a download, so no play count or now playing entry "
+"is recorded for it. Clients can already ask for that per request; this "
+"forces it."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 3. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 4. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 5. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 6. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 8. It is the newest version, so "
+"there is nothing to roll forward to and a client asking for it is refused "
+"outright when this is off."
+msgstr ""
+
+msgid ""
+"Answer every API client with this version regardless of what it asked for. 0 "
+"keeps the negotiated version, and a forced version is ignored unless that "
+"version is also enabled above."
+msgstr ""
+
+msgid ""
+"Playlists whose name starts with this string are left out of API and "
+"Subsonic listings. The match is on the prefix only, and an empty value hides "
+"nothing."
+msgstr ""
+
+msgid ""
+"Leaves a smartlist out of API and Subsonic listings when a normal playlist "
+"of the same name and owner exists, so a client does not show the pair twice. "
+"Some methods let a client ask for the duplicates anyway."
+msgstr ""
+
+msgid ""
+"Keep one bookmark per item instead of a history: a new position replaces the "
+"previous one for the same item. With it off bookmarks pile up."
+msgstr ""
+
+msgid ""
+"Lets users fetch the original file instead of streaming it. Zip batch "
+"downloads ride on it too, so turning it off takes them with it; the API and "
+"Subsonic backends have their own download settings."
+msgstr ""
+
+msgid ""
+"Lets the browser send the listener position with a play so statistics can be "
+"mapped. Both ends check it: the page does not ask the browser, and the "
+"server refuses a position sent anyway."
+msgstr ""
+
+msgid ""
+"Which Localplay backend is driven, such as mpd or upnp. With none chosen the "
+"Localplay actions and the Subsonic jukebox role have nothing to talk to."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to control Localplay. An unset value fails "
+"closed at administrator rather than open."
+msgstr ""
+
+msgid ""
+"Send an email when a private message arrives. Nothing goes out unless the "
+"account also carries an address and the server has mail enabled."
+msgstr ""
+
+msgid ""
+"Lets users publish a link to an item for people without an account. Turning "
+"it off also kills links already handed out, because every visit rechecks the "
+"setting."
+msgstr ""
+
+msgid ""
+"Marks every Subsonic stream as a download, so no play count or now playing "
+"entry is recorded for it. A client that scrobbles on its own still registers "
+"plays."
+msgstr ""
+
+msgid ""
+"Lists only album artists in the Subsonic artist index instead of everyone "
+"credited on a track. Useful for clients that drown in featured artists."
+msgstr ""
+
+msgid ""
+"Answer with the original Subsonic API instead of the OpenSubsonic one. Older "
+"clients cope better, but every OpenSubsonic-only method stops answering. API "
+"key authentication keeps working either way."
+msgstr ""
+
+msgid ""
+"Report only your own ratings and favorites to Subsonic clients. With it off, "
+"starred lists mix in what other users rated."
+msgstr ""
+
+msgid ""
+"Which catalog receives uploaded files. Uploads stay disabled while this is "
+"unset, whatever the upload switch says."
+msgstr ""
+
+msgid ""
+"Drop votes cast by users who are no longer connected. The sweep runs each "
+"time the democratic playlist is read, not on a schedule."
+msgstr ""
+
+msgid ""
+"Adds the parent album or podcast next to a title in playlist rows, which "
+"helps when a playlist mixes sources. Rows with no parent are unchanged."
+msgstr ""
+
+msgid ""
+"What adding to the playlist does to what is already there: append at the "
+"end, insert after the current track, or replace it."
+msgstr ""
+
+msgid ""
+"File format handed out when the basket is sent as a playlist: m3u, pls, xspf "
+"and so on. It is what an external player receives, not what the web player "
+"uses."
+msgstr ""
+
+msgid ""
+"Refuse to add an item a playlist already contains. API and Subsonic clients "
+"can still ask for the check to be skipped on a given call."
+msgstr ""
+
+msgid ""
+"Authorization link for Last.fm, not a field to fill in. Follow it once to "
+"let Ampache scrobble; the session token lands in the account by itself."
+msgstr ""
+
+msgid ""
+"Base address used for MusicBrainz lookups. Leave it empty for the public "
+"service, or point it at your own mirror."
+msgstr ""
+
+msgid ""
+"Pause between two MusicBrainz calls, in hundredths of a second. The public "
+"service expects one; 0 removes the wait and only makes sense against your "
+"own mirror."
+msgstr ""
+
+msgid ""
+"Starts the web player with broadcasting already armed, so what you play is "
+"offered to listeners without another click."
+msgstr ""
+
+msgid ""
+"Output format forced on API streams, overriding the audio default. Setting "
+"it also marks transcoding as allowed for API clients."
+msgstr ""
+
+msgid ""
+"Output format forced on web player streams, overriding the audio default. "
+"Setting it also marks transcoding as allowed for the web player."
+msgstr ""
+
+msgid ""
+"Format audio is re-encoded to when transcoding happens. A file already in "
+"that format is sent as it is rather than re-encoded to itself."
+msgstr ""
+
+msgid ""
+"Format video is re-encoded to when transcoding happens. As with audio, a "
+"file already in that format is passed through untouched."
+msgstr ""
+
+msgid "Volume the web player starts at, between 0 and 1."
+msgstr ""
+
+msgid ""
+"Ceiling shared between the streams currently being downsampled: each one "
+"gets the ceiling divided by their number. 0 turns the sharing off, and only "
+"listeners whose playback type is downsample are counted."
+msgstr ""
+
+msgid ""
+"Floor for a shared-bandwidth stream. A stream that would be pushed under it "
+"is refused with a server busy error instead of being sent at an unusable "
+"quality."
+msgstr ""
+
+msgid ""
+"How playback is delivered: the web player, a plain stream handed to an "
+"external player, downsampled streaming, Localplay or democratic. Only "
+"downsample listeners count toward the shared bandwidth ceiling."
+msgstr ""
+
+msgid ""
+"Upper speed limit for a single download, in kilobytes per second. 0 removes "
+"the limit, and it throttles the bytes on the wire rather than the encoding "
+"bitrate."
+msgstr ""
+
+msgid ""
+"Whether Ampache may re-encode a file before sending it. Default only "
+"transcodes formats the player cannot handle, never always sends the "
+"original, always re-encodes everything; never also blocks waveform "
+"generation, which reuses the same pipeline."
+msgstr ""
+
+msgid ""
+"Target bitrate for re-encoded streams, in bits per second. It is still "
+"capped per output format, and the API and web player can override it with "
+"their own value."
+msgstr ""
+
+msgid ""
+"Bitrate used for API streams in place of the default. 0 means no override, "
+"not an unlimited rate."
+msgstr ""
+
+msgid ""
+"Bitrate used for web player streams in place of the default. 0 means no "
+"override, not an unlimited rate."
+msgstr ""
+
+msgid ""
+"How many already played tracks the web player keeps above the current one "
+"before trimming them. Disabled keeps the whole history, and Remove all "
+"previous tracks keeps none."
+msgstr ""
+
+msgid ""
+"Lets users add files to the library themselves. Nothing can be uploaded "
+"until a destination catalog is chosen as well, and the account still has to "
+"reach the upload access level."
+msgstr ""
+
+msgid ""
+"Poll GitHub for a newer Ampache release and flag it in the header. Turning "
+"it off also freezes the stored last check time, so nothing is polled again "
+"until it comes back on."
+msgstr ""
+
+msgid ""
+"At import, compare an incoming file against the library and insert a match "
+"as disabled instead of active. It only applies to music catalogs, and the "
+"row is still created."
+msgstr ""
+
+msgid ""
+"Read play counts and statistics from a table built ahead of time instead of "
+"counting rows on every page. It needs the cron task to actually run; without "
+"it the figures freeze where the last run left them."
+msgstr ""
+
+msgid ""
+"Adds the plays recorded since the cached counts were built on top of them, "
+"so all time figures are not a run behind. It does nothing unless the cached "
+"counts are in use."
+msgstr ""
+
+msgid ""
+"Serve the DAAP protocol, which iTunes and compatible players browse. The "
+"endpoint answers Disabled outright while this is off."
+msgstr ""
+
+msgid ""
+"Single password guarding the DAAP endpoint. Left empty, DAAP asks for "
+"nothing at all; it is one shared secret rather than per-account credentials."
+msgstr ""
+
+msgid ""
+"Feed the democratic playlist from a saved search instead of a normal "
+"playlist."
+msgstr ""
+
+msgid ""
+"Custom tag fields kept out of the edit form and out of what the catalog "
+"writes back. It is merged with the free-text list of extra fields below."
+msgstr ""
+
+msgid ""
+"Extra field names to disable on top of the ones picked from the list, comma "
+"separated. Use it for fields the list does not offer."
+msgstr ""
+
+msgid ""
+"Serve stream URLs over plain HTTP even when the site runs on HTTPS. Only "
+"useful for players that cannot do TLS."
+msgstr ""
+
+msgid "Serve the Jellyfin API. Experimental."
+msgstr ""
+
+msgid ""
+"Refuse to start a track that is already in the now playing list, whoever is "
+"listening. A stale row left by a player that never closed its connection "
+"then blocks that track until it is cleaned up."
+msgstr ""
+
+msgid ""
+"Let API sessions live until they are revoked instead of expiring. Convenient "
+"for always-on clients, but a leaked token then stays valid until the session "
+"cache is cleared by hand."
+msgstr ""
+
+msgid ""
+"Episodes past this many newest ones are deleted from a podcast once a sync "
+"has downloaded something. 0 keeps every episode."
+msgstr ""
+
+msgid ""
+"How many freshly published episodes a sync downloads. 0 means all of them "
+"and -1 means none, so 0 is not the way to turn downloads off."
+msgstr ""
+
+msgid ""
+"Let a device pair by showing a short code instead of asking for a password."
+msgstr ""
+
+msgid ""
+"Days a new share link stays valid, used when the person creating it picks no "
+"date. 0 creates links that never expire."
+msgstr ""
+
+msgid ""
+"Write stream and art URLs as paths instead of query strings, which needs the "
+"rewrite rules in the web server. API responses always use plain query "
+"strings regardless, and the UPnP backend always uses the rewritten form."
+msgstr ""
+
+msgid "Serve the Subsonic API, used by many third-party players."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to upload. It is checked on top of the upload "
+"switch, so raising it locks users out without turning uploads off."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file edit its tags without being a content manager. "
+"They still cannot re-file it: the artist, album and owner fields are "
+"stripped from what they submit."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file delete it from disk without being a manager. "
+"Deleting from disk has to be enabled server-side as well."
+msgstr ""
+
+msgid ""
+"Move and rename an uploaded file to where the catalog pattern says it "
+"belongs, instead of leaving it where it landed."
+msgstr ""
+
+msgid ""
+"Command run in the upload directory once a file has arrived, with %FILE% "
+"replaced by its path. It stays dead until upload scripts are allowed in the "
+"configuration file."
+msgstr ""
+
+msgid ""
+"Give every uploader a folder of their own under the catalog. An account "
+"whose username does not resolve cannot upload at all."
+msgstr ""
+
+msgid ""
+"Drops the artist section from the uploads listing, for a server where the "
+"uploader is the artist. It changes that listing only, not how a track is "
+"credited."
+msgstr ""
+
+msgid ""
+"Serve UPnP and DLNA so devices on the network find the library on their own."
+msgstr ""
+
+msgid ""
+"Expose the library over WebDAV, so it can be mounted as a network drive."
+msgstr ""
+
+msgid "bps"
+msgstr ""
+
+msgid "the source file rate"
+msgstr ""
+
+msgid "no ceiling"
+msgstr ""
+
+msgid "no floor"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid "Nothing to choose from"
+msgstr ""
+
+msgid "Only the account holder can grant access"
+msgstr ""
+
+#. HINT: Plugin Name
+#, php-format
+msgid "Click to grant %s access to Ampache"
+msgstr ""
+
+msgid "The Subsonic backend is off, so this has no effect."
+msgstr ""
+
+msgid "The DAAP backend is off, so this password protects nothing."
+msgstr ""
+
+msgid ""
+"Jellyfin clients cannot reach QuickConnect while the Jellyfin backend is "
+"off. Ampache clients still can."
+msgstr ""
+
+msgid ""
+"That API version is disabled, so the forced version is ignored and clients "
+"negotiate another one."
+msgstr ""
+
+msgid ""
+"The cron cache is off, so live plays are counted anyway and this changes "
+"nothing."
+msgstr ""
+
+msgid "Sharing is off, so no share is ever created to expire."
+msgstr ""
+
+msgid "Drawn placeholders are off, so this style is never used."
+msgstr ""
+
+msgid ""
+"A custom blank album image is set, so drawn placeholders only appear on "
+"browse pages. The API, Subsonic, feeds and the web player serve that image "
+"instead."
+msgstr ""
+
+msgid ""
+"The minimum star rating is 0, which turns the whole sync off: nothing is "
+"written to your files."
+msgstr ""
+
+msgid "The favourites widget is off, so this list is never shown."
+msgstr ""
+
+msgid ""
+"The sidebar can no longer be collapsed, and this only applies to its "
+"collapsed form."
+msgstr ""
+
+msgid ""
+"The full sidebar can no longer be opened, and the filter box only lives "
+"there."
+msgstr ""
+
+msgid "Albums are not grouped by release type, so this order is never used."
+msgstr ""
+
+msgid "Browser notifications are off, so nothing is ever shown for this long."
+msgstr ""
+
+msgid "Video is disabled on this server, so this panel never appears."
+msgstr ""
+
+msgid ""
+"Licensing is off in the server configuration file, so no licence is ever "
+"shown."
+msgstr ""
+
+msgid ""
+"Every stream on this server needs a session, so no embedded player is ever "
+"offered to other sites."
+msgstr ""
+
+msgid ""
+"Broadcasting is off in the server configuration file, so the player never "
+"starts one."
+msgstr ""
+
+msgid ""
+"Video is disabled on this server, so the Video entry is never drawn anyway."
+msgstr ""
+
+msgid ""
+"Your playback type does not hand out playlists, so this only shapes the "
+"\"Download Playlist\" link."
+msgstr ""
+
+msgid ""
+"This playback type is no longer allowed on the server, so it is not offered "
+"here: pick another one, nothing plays with it."
+msgstr ""
+
+msgid "The matching limit is unlimited, so this window is never used."
+msgstr ""
+
+msgid ""
+"Stream limits need statistical graphs, which are off in the server "
+"configuration file. Nothing is enforced."
+msgstr ""
+
+msgid "That sidebar section is hidden, so its order is never used."
+msgstr ""
+
+msgid "Transcoding is off, so this is never read."
+msgstr ""
+
+msgid ""
+"The web player has its own bitrate set, which wins over this one for the web "
+"player."
+msgstr ""
+
+msgid "The API has its own bitrate set, which wins over this one for the API."
+msgstr ""
+
+msgid ""
+"The web player output format wins over this one, and it applies to most "
+"streams, not only the web player."
+msgstr ""
+
+msgid ""
+"The floor is only applied while a maximum bitrate is set, and a maximum of 1 "
+"counts as none."
+msgstr ""
+
+msgid ""
+"Uploads are allowed but no destination catalog is chosen, so every upload "
+"fails."
+msgstr ""
+
+msgid ""
+"Upload scripts are disabled in the server configuration file, so this "
+"command never runs."
+msgstr ""
+
+msgid ""
+"Deleting from disk is off in the server configuration file, so no delete "
+"button ever appears."
+msgstr ""
+
+msgid "New episodes are never downloaded, so nothing is ever pruned either."
+msgstr ""
+
+msgid ""
+"Server values. Saving here changes what new accounts start with; existing "
+"accounts keep what they already have."
+msgstr ""
+
+#. HINT: Username
+#, php-format
+msgid "You are editing the preferences of %s"
+msgstr ""
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr ""
 
 msgid "Return to Login Page"
 msgstr ""
@@ -3168,9 +4178,6 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-msgid "Undo"
-msgstr ""
-
 msgid "File is too large"
 msgstr ""
 
@@ -3214,9 +4221,6 @@ msgid "Minimum resolution is {minResolution}"
 msgstr ""
 
 msgid "Maximum resolution is {maxResolution}"
-msgstr ""
-
-msgid "Never"
 msgstr ""
 
 msgid "Display"
@@ -3813,9 +4817,6 @@ msgid "Podcast information updated from the feed"
 msgstr ""
 
 msgid "The feed could not be read"
-msgstr ""
-
-msgid "Server"
 msgstr ""
 
 msgid "Your account has been updated"
@@ -4756,7 +5757,10 @@ msgstr ""
 msgid "The destination charset"
 msgstr ""
 
-msgid "Convert filenames to utf8"
+msgid "Name of Catalog (optional)"
+msgstr ""
+
+msgid "Convert filenames to utf8 in `some-catalog`"
 msgstr ""
 
 msgid "php-iconv is required for this functionality, quitting"
@@ -4795,7 +5799,7 @@ msgstr ""
 msgid "Metadata write mode (`linux` or `windows`)"
 msgstr ""
 
-msgid "Export album art for Linux"
+msgid "Export album art for Linux from `some-catalog`"
 msgstr ""
 
 msgid "Start Album Art Dump"
@@ -4986,9 +5990,6 @@ msgstr ""
 msgid "Sort a single file or folder path"
 msgstr ""
 
-msgid "Name of Catalog (optional)"
-msgstr ""
-
 msgid "Sort song files"
 msgstr ""
 
@@ -5123,6 +6124,21 @@ msgstr ""
 msgid "Table engine: %s"
 msgstr ""
 
+msgid "Nothing out of sync. No changes needed"
+msgstr ""
+
+#, php-format
+msgid "Found %d entries out of sync with your configured charset:"
+msgstr ""
+
+#, php-format
+msgid "Fixed %s"
+msgstr ""
+
+#, php-format
+msgid "Failed to fix %s"
+msgstr ""
+
 msgid "Collection Items"
 msgstr ""
 
@@ -5155,21 +6171,6 @@ msgid "Browse was not found or expired, try reloading the page"
 msgstr ""
 
 msgid "0 Stars"
-msgstr ""
-
-msgid "1 Star"
-msgstr ""
-
-msgid "2 Stars"
-msgstr ""
-
-msgid "3 Stars"
-msgstr ""
-
-msgid "4 Stars"
-msgstr ""
-
-msgid "5 Stars"
 msgstr ""
 
 msgid "Album Data"
@@ -5768,94 +6769,6 @@ msgstr ""
 msgid "Add to playlist / collection"
 msgstr ""
 
-msgid "On"
-msgstr ""
-
-msgid "Off"
-msgstr ""
-
-msgid "bps"
-msgstr ""
-
-msgid "0 = use the source file rate"
-msgstr ""
-
-msgid "KB/s"
-msgstr ""
-
-msgid "M3U"
-msgstr ""
-
-msgid "Simple M3U"
-msgstr ""
-
-msgid "PLS"
-msgstr ""
-
-msgid "Asx"
-msgstr ""
-
-msgid "RAM"
-msgstr ""
-
-msgid "XSPF"
-msgstr ""
-
-msgid "Allow API3 Only"
-msgstr ""
-
-msgid "Allow API4 Only"
-msgstr ""
-
-msgid "Allow API5 Only"
-msgstr ""
-
-msgid "Allow API6 Only"
-msgstr ""
-
-msgid "Keep last played track"
-msgstr ""
-
-#. HINT: Keep (2|3|4|5|10) previous tracks
-#, php-format
-msgid "Keep %s previous tracks"
-msgstr ""
-
-msgid "Remove all previous tracks"
-msgstr ""
-
-msgid "Send on Add"
-msgstr ""
-
-msgid "Send and Clear on Add"
-msgstr ""
-
-msgid "Clear on Send"
-msgstr ""
-
-msgid "Always"
-msgstr ""
-
-msgid "Year ascending"
-msgstr ""
-
-msgid "Year descending"
-msgstr ""
-
-msgid "Name ascending"
-msgstr ""
-
-msgid "Name descending"
-msgstr ""
-
-#. HINT: Plugin Name
-#, php-format
-msgid "Click to grant %s access to Ampache"
-msgstr ""
-
-msgid "Match my theme"
-msgstr ""
-
 msgid "Unknown Artist"
 msgstr ""
 
@@ -6084,6 +6997,25 @@ msgstr ""
 msgid "Raise the album and artist rating to match the highest song rating"
 msgstr ""
 
+msgid ""
+"Write how many plays, optionally followed by a comma and how many skips: `5` "
+"or `5,2`. Leave it empty to never apply this rating automatically."
+msgstr ""
+
+msgid ""
+"Ratings below this many stars are not copied to the album and the artist, "
+"and are not written to file tags. 0 turns the whole sync off, which is the "
+"shipped default."
+msgstr ""
+
+msgid "Marking a track as loved also marks its album and its artist."
+msgstr ""
+
+msgid ""
+"Writes the rating into the file itself, so it survives a rescan and follows "
+"the file elsewhere. Ampache must be able to write to your music files."
+msgstr ""
+
 msgid "Minimum star rating to match"
 msgstr ""
 
@@ -6109,6 +7041,28 @@ msgid "Match rule for Flags"
 msgstr ""
 
 msgid "Save ratings to file tags when changed"
+msgstr ""
+
+msgid "Right now: never applied."
+msgstr ""
+
+#. HINT: number of plays
+#, php-format
+msgid "Right now: applied after %d play."
+msgid_plural "Right now: applied after %d plays."
+msgstr[0] ""
+msgstr[1] ""
+
+#. HINT: number of skips
+#, php-format
+msgid "Right now: applied after %d skip."
+msgid_plural "Right now: applied after %d skips."
+msgstr[0] ""
+msgstr[1] ""
+
+#. HINT: %1$d number of plays, %2$d number of skips
+#, php-format
+msgid "Right now: applied once there are at least %1$d plays and %2$d skips."
 msgstr ""
 
 msgid "RSS View"
@@ -6943,10 +7897,6 @@ msgid "Allow Localplay Play"
 msgstr ""
 
 #: Ampache preference description
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Ampache preference description
 msgid "Share Now Playing information"
 msgstr ""
 
@@ -7176,6 +8126,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow Downloads"
+msgstr ""
+
+#: Ampache preference description
+msgid "Allow an embedded player when a link to this server is posted on another site"
 msgstr ""
 
 #: Ampache preference description
@@ -7496,10 +8450,6 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Ampache preference description
-msgid "Custom CSS Order - Video"
 msgstr ""
 
 #: Ampache preference description

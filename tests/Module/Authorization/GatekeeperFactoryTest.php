@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Mockery\MockInterface;
@@ -32,6 +33,7 @@ use Override;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private MockInterface|PrivilegeCheckerInterface|null $privilegeChecker;
     private ?GatekeeperFactory $subject;
 
@@ -47,9 +49,12 @@ class GatekeeperFactoryTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse()->byDefault();
 
         $this->subject = new GatekeeperFactory(
-            $this->privilegeChecker
+            $this->privilegeChecker,
+            $this->configContainer
         );
     }
 }

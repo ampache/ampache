@@ -69,16 +69,16 @@ if ($this->canAddToPlaylist()) { ?>
     </span>
 </td>
 <?php if (!$this->isTableView()) { ?>
-<td class="cel_podcast"><?php echo $this->raw($libitem->getPodcastLink()); ?></td>
+<td data-label="<?php echo $this->e(T_('Podcast')); ?>" class="cel_podcast"><?php echo $this->raw($libitem->getPodcastLink()); ?></td>
 <?php } ?>
 <td class="<?php echo $this->e($this->getClassTime()); ?>"><?php echo $this->e($libitem->get_f_time()); ?></td>
 <?php if ($this->isShowPlayedTimes()) { ?>
-    <td class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->total_count); ?></td>
+    <td data-label="<?php echo $this->e(T_('Played')); ?>" class="<?php echo $this->e($this->getClassCounter()); ?> optional"><?php echo $this->e($libitem->total_count); ?></td>
     <?php } ?>
-<td class="cel_pubdate optional"><?php echo $this->e($libitem->getPubDate()->format(DATE_ATOM)); ?></td>
-<td class="cel_state optional"><?php echo $this->e($libitem->getState()->toDescription()); ?></td>
+<td data-label="<?php echo $this->e(T_('Publication Date')); ?>" class="cel_pubdate optional"><?php echo $this->e($libitem->getPubDate()->format(DATE_ATOM)); ?></td>
+<td data-label="<?php echo $this->e(T_('Status')); ?>" class="cel_state optional"><?php echo $this->e($libitem->getState()->toDescription()); ?></td>
 <?php if ($this->isShowRatings()) { ?>
-        <td class="cel_ratings">
+        <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $itemId; ?>_podcast_episode">
                     <?php echo $this->raw(Rating::show($itemId, 'podcast_episode')); ?>

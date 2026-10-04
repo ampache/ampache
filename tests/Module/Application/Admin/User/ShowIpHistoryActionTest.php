@@ -29,8 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -73,8 +71,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $user->fullname = $userFullName;
         $user->username = $userName;
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -155,8 +152,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->method('getWebPath')
             ->willReturn($webPath);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -218,8 +214,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
 
         static::expectException(ObjectNotFoundException::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnTrue();
 
@@ -247,8 +242,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+        $gatekeeper->shouldReceive('mayAdminister')
             ->once()
             ->andReturnFalse();
 
