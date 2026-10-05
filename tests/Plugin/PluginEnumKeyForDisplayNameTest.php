@@ -29,70 +29,45 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Finding a plugin from a name that was stored rather than typed.
+ * Finding the key a plugin's stored display name belongs to.
  *
  * A preference files itself under the plugin's own `$name`, which is what an operator reads and carries
- * spaces and dots. Twelve of the thirty-nine differ from their key, so a lookup by key alone answers
- * nothing for them, and the preferences screen then shows their settings with no help and no error.
+ * spaces and dots. Twelve of the thirty-nine differ from their key, so the preferences screen's lookup by
+ * key alone answered nothing for them, showing their settings with no help and no error.
  */
-class PluginEnumResolveTest extends TestCase
+class PluginEnumKeyForDisplayNameTest extends TestCase
 {
     /**
-     * @return list<array{0: string, 1: class-string}>
+     * @return list<array{0: string, 1: string}>
      */
     public static function displayNames(): array
     {
         $names = [];
-        foreach (PluginEnum::LIST as $class) {
+        foreach (PluginEnum::LIST as $key => $class) {
             $declared = new ReflectionClass($class)->getDefaultProperties()['name'] ?? null;
             if (is_string($declared) && $declared !== '') {
-                $names[] = [$declared, $class];
+                $names[] = [$declared, (string) $key];
             }
         }
 
         return $names;
     }
 
-    /**
-     * @return list<array{0: string, 1: class-string}>
-     */
-    public static function keys(): array
-    {
-        $keys = [];
-        foreach (PluginEnum::LIST as $key => $class) {
-            $keys[] = [(string) $key, $class];
-        }
-
-        return $keys;
-    }
-
     public function testANameNoPluginCarriesResolvesToNothing(): void
     {
-        $this->assertNull(PluginEnum::resolve('not a plugin'));
-        $this->assertNull(PluginEnum::resolve(''));
+        $this->assertNull(PluginEnum::keyForDisplayName('not a plugin'));
+        $this->assertNull(PluginEnum::keyForDisplayName(''));
     }
 
-    /**
-     * @param class-string $class
-     */
     #[\PHPUnit\Framework\Attributes\DataProvider('displayNames')]
-    public function testEveryPluginIsFoundByTheNameItsPreferencesAreFiledUnder(string $name, string $class): void
+    public function testEveryPluginIsFoundByTheNameItsPreferencesAreFiledUnder(string $name, string $key): void
     {
-        $this->assertSame($class, PluginEnum::resolve($name));
-    }
-
-    /**
-     * @param class-string $class
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('keys')]
-    public function testEveryPluginIsStillFoundByItsKey(string $key, string $class): void
-    {
-        $this->assertSame($class, PluginEnum::resolve($key));
+        $this->assertSame($key, PluginEnum::keyForDisplayName($name));
     }
 
     public function testTheLookupIgnoresCase(): void
     {
-        $this->assertSame(AmpacheCatalogFavorites::class, PluginEnum::resolve('CATALOG FAVORITES'));
-        $this->assertSame(AmpacheCatalogFavorites::class, PluginEnum::resolve('CatalogFavorites'));
+        $this->assertSame('catalogfavorites', PluginEnum::keyForDisplayName('CATALOG FAVORITES'));
+        $this->assertSame('catalogfavorites', PluginEnum::keyForDisplayName('catalog favorites'));
     }
 }

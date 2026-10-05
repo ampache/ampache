@@ -74,38 +74,37 @@ final class PluginEnum
     ];
 
     /**
-     * The plugin a stored name belongs to, whether that name is a key here or the one an operator reads.
+     * The key a stored display name belongs to.
      *
      * A preference files itself under the plugin's own `$name`, which carries spaces and dots and is not
-     * always the key: twelve of them differ, so looking a plugin up by key alone silently finds nothing.
-     *
-     * @return class-string<AmpachePluginInterface>|null
+     * always the key: twelve of them differ. Only `PreferenceCollector::pluginHelp()` starts from a stored
+     * name rather than a key, so this stays out of `Plugin::__construct()` deliberately — that constructor
+     * runs on every plugin lookup in the app, including ones fed by unvalidated request input, and this
+     * reflects every plugin class to build its index.
      */
-    public static function resolve(string $name): ?string
+    public static function keyForDisplayName(string $name): ?string
     {
-        $key = strtolower($name);
-
-        return self::LIST[$key] ?? self::byDisplayName()[$key] ?? null;
+        return self::byDisplayName()[strtolower($name)] ?? null;
     }
 
     /**
      * Built from what each plugin declares rather than from a second list that would drift away from it.
      *
-     * @return array<string, class-string<AmpachePluginInterface>>
+     * @return array<string, string>
      */
     private static function byDisplayName(): array
     {
-        static $names = null;
-        if ($names === null) {
-            $names = [];
-            foreach (self::LIST as $class) {
+        static $keys = null;
+        if ($keys === null) {
+            $keys = [];
+            foreach (self::LIST as $key => $class) {
                 $declared = new ReflectionClass($class)->getDefaultProperties()['name'] ?? null;
                 if (is_string($declared) && $declared !== '') {
-                    $names[strtolower($declared)] = $class;
+                    $keys[strtolower($declared)] = $key;
                 }
             }
         }
 
-        return $names;
+        return $keys;
     }
 }
