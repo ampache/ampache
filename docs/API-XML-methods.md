@@ -1469,11 +1469,29 @@ Edit a placeholder for the current media that you can return to later.
 
 * return
 
-```XML
-<root>
-    <bookmark>
-</root>
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field           | Type                                                  | Nullable | Optional | Notes                                               |
+|-----------------|-------------------------------------------------------|:--------:|:--------:|-----------------------------------------------------|
+| id              | string                                                |    NO    |    NO    |                                                     |
+| owner           | string                                                |    NO    |    NO    |                                                     |
+| object_type     | string                                                |   YES    |    NO    |                                                     |
+| object_id       | string                                                |    NO    |    NO    |                                                     |
+| position        | integer                                               |    NO    |    NO    |                                                     |
+| client          | string                                                |   YES    |    NO    |                                                     |
+| creation_date   | integer                                               |    NO    |    NO    |                                                     |
+| update_date     | integer                                               |    NO    |    NO    |                                                     |
+| song            | array&lt;[SongObject](#song)&gt;                      |    NO    |   YES    | see [SongObject](#song) fields                      |
+| podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |   YES    | see [PodcastEpisodeObject](#podcast_episode) fields |
+| video           | array&lt;[VideoObject](#video)&gt;                    |    NO    |   YES    | see [VideoObject](#video) fields                    |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws
 
@@ -1972,9 +1990,34 @@ Leave `object_type` out for a mixed collection, or set it to pin the collection 
 | 'type'        | string | `public`, `private` (Default: `private`)   |      YES |
 | 'object_type' | string | Pin the collection to a single object_type |      YES |
 
-* return array
+* return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field                      | Type    | Nullable | Optional | Notes |
+|----------------------------|---------|:--------:|:--------:|-------|
+| id                         | string  |    NO    |    NO    |       |
+| name                       | string  |    NO    |    NO    |       |
+| owner                      | string  |   YES    |    NO    |       |
+| type                       | string  |   YES    |    NO    |       |
+| object_type                | string  |   YES    |    NO    |       |
+| items                      | integer |    NO    |    NO    |       |
+| has_art                    | boolean |    NO    |    NO    |       |
+| playlist_folder_id         | string  |    NO    |   YES    |       |
+| playlist_folder_sort_order | integer |    NO    |   YES    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2012,9 +2055,34 @@ The two lists must name the same number of entries or the call is refused. Pairs
 | 'items'       | string | Comma separated `object_type:object_id` pairs                   |      YES |
 | 'tracks'      | string | Comma separated positions matched to `items` in order           |      YES |
 
-* return array
+* return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field                      | Type    | Nullable | Optional | Notes |
+|----------------------------|---------|:--------:|:--------:|-------|
+| id                         | string  |    NO    |    NO    |       |
+| name                       | string  |    NO    |    NO    |       |
+| owner                      | string  |   YES    |    NO    |       |
+| type                       | string  |   YES    |    NO    |       |
+| object_type                | string  |   YES    |    NO    |       |
+| items                      | integer |    NO    |    NO    |       |
+| has_art                    | boolean |    NO    |    NO    |       |
+| playlist_folder_id         | string  |    NO    |   YES    |       |
+| playlist_folder_sort_order | integer |    NO    |   YES    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -3641,11 +3709,24 @@ Create a live_stream (radio station) object.
 
 * return
 
-```XML
-<root>
-    <live_stream>
-</root>
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field    | Type   | Nullable | Optional | Notes |
+|----------|--------|:--------:|:--------:|-------|
+| id       | string |    NO    |    NO    |       |
+| name     | string |   YES    |    NO    |       |
+| url      | string |   YES    |    NO    |       |
+| codec    | string |   YES    |    NO    |       |
+| catalog  | string |    NO    |    NO    |       |
+| site_url | string |   YES    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws
 
@@ -3989,12 +4070,36 @@ This create a new playlist and return it
 
 * return
 
-```XML
-<root>
-    <total_count>
-    <playlist>
-</root>
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field                      | Type                           | Nullable | Optional | Notes                                  |
+|----------------------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id                         | string                         |    NO    |    NO    |                                        |
+| name                       | string                         |   YES    |    NO    |                                        |
+| owner                      | string                         |   YES    |    NO    |                                        |
+| user                       | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items                      | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type                       | string                         |   YES    |    NO    |                                        |
+| art                        | string                         |   YES    |    NO    |                                        |
+| has_access                 | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate            | boolean                        |    NO    |    NO    |                                        |
+| has_art                    | boolean                        |    NO    |    NO    |                                        |
+| flag                       | boolean                        |    NO    |    NO    |                                        |
+| rating                     | integer                        |   YES    |    NO    |                                        |
+| averagerating              | number                         |   YES    |    NO    |                                        |
+| md5                        | string                         |   YES    |    NO    |                                        |
+| last_update                | integer                        |   YES    |    NO    |                                        |
+| time                       | integer                        |    NO    |    NO    |                                        |
+| playlist_folder_id         | string                         |    NO    |   YES    |                                        |
+| playlist_folder_sort_order | integer                        |    NO    |   YES    |                                        |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws
 
@@ -4433,9 +4538,32 @@ Create a folder in the calling user's tree. The name may not contain a `/`, beca
 
 `parent` defaults to the root when omitted; `sort_order` defaults to appended (last among its siblings) when omitted.
 
-* return array
+* return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -4455,9 +4583,32 @@ Change a folder's name, parent or position. Anything not sent is left as it is; 
 | 'parent'     | string  | New parent as an id or a name path, or `0` for the root |      YES |
 | 'sort_order' | integer | New position among its siblings                         |      YES |
 
-* return array
+* return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -4692,12 +4843,36 @@ Takes the url and catalog parameters.
 
 * return
 
-```XML
-<root>
-    <total_count>
-    <podcast>
-</root>
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field           | Type                                                  | Nullable | Optional | Notes                                               |
+|-----------------|-------------------------------------------------------|:--------:|:--------:|-----------------------------------------------------|
+| id              | string                                                |    NO    |    NO    |                                                     |
+| name            | string                                                |   YES    |    NO    |                                                     |
+| description     | string                                                |    NO    |    NO    |                                                     |
+| language        | string                                                |    NO    |    NO    |                                                     |
+| copyright       | string                                                |    NO    |    NO    |                                                     |
+| feed_url        | string                                                |    NO    |    NO    |                                                     |
+| generator       | string                                                |    NO    |    NO    |                                                     |
+| website         | string                                                |    NO    |    NO    |                                                     |
+| build_date      | string                                                |    NO    |    NO    |                                                     |
+| sync_date       | string                                                |    NO    |    NO    |                                                     |
+| public_url      | string                                                |    NO    |    NO    |                                                     |
+| art             | string                                                |   YES    |    NO    |                                                     |
+| has_art         | boolean                                               |    NO    |    NO    |                                                     |
+| flag            | boolean                                               |    NO    |    NO    |                                                     |
+| rating          | integer                                               |   YES    |    NO    |                                                     |
+| averagerating   | number                                                |   YES    |    NO    |                                                     |
+| catalog         | string                                                |    NO    |    NO    |                                                     |
+| podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |    NO    | see [PodcastEpisodeObject](#podcast_episode) fields |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws
 

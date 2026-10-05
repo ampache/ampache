@@ -1353,11 +1353,25 @@ Edit a placeholder for the current media that you can return to later.
 | 'date'     | integer | update time (Default: UNIXTIME())                            |      YES |
 | 'include'  | integer | 0,1, if true include the object in the bookmark              |      YES |
 
-* return array
+* return object
 
-```JSON
-"bookmark": []
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+Returns a single object.
+
+| Field           | Type                                                  | Nullable | Optional | Notes                                               |
+|-----------------|-------------------------------------------------------|:--------:|:--------:|-----------------------------------------------------|
+| id              | string                                                |    NO    |    NO    |                                                     |
+| owner           | string                                                |    NO    |    NO    |                                                     |
+| object_type     | string                                                |   YES    |    NO    |                                                     |
+| object_id       | string                                                |    NO    |    NO    |                                                     |
+| position        | integer                                               |    NO    |    NO    |                                                     |
+| client          | string                                                |   YES    |    NO    |                                                     |
+| creation_date   | integer                                               |    NO    |    NO    |                                                     |
+| update_date     | integer                                               |    NO    |    NO    |                                                     |
+| song            | array&lt;[SongObject](#song)&gt;                      |    NO    |   YES    | see [SongObject](#song) fields                      |
+| podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |   YES    | see [PodcastEpisodeObject](#podcast_episode) fields |
+| video           | array&lt;[VideoObject](#video)&gt;                    |    NO    |   YES    | see [VideoObject](#video) fields                    |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws object
 
@@ -1807,6 +1821,25 @@ Leave `object_type` out for a mixed collection, or set it to pin the collection 
 * return array
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field                      | Type    | Nullable | Optional | Notes |
+|----------------------------|---------|:--------:|:--------:|-------|
+| id                         | string  |    NO    |    NO    |       |
+| name                       | string  |    NO    |    NO    |       |
+| owner                      | string  |   YES    |    NO    |       |
+| type                       | string  |   YES    |    NO    |       |
+| object_type                | string  |   YES    |    NO    |       |
+| items                      | integer |    NO    |    NO    |       |
+| has_art                    | boolean |    NO    |    NO    |       |
+| playlist_folder_id         | string  |    NO    |   YES    |       |
+| playlist_folder_sort_order | integer |    NO    |   YES    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -1847,6 +1880,25 @@ The two lists must name the same number of entries or the call is refused. Pairs
 * return array
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field                      | Type    | Nullable | Optional | Notes |
+|----------------------------|---------|:--------:|:--------:|-------|
+| id                         | string  |    NO    |    NO    |       |
+| name                       | string  |    NO    |    NO    |       |
+| owner                      | string  |   YES    |    NO    |       |
+| type                       | string  |   YES    |    NO    |       |
+| object_type                | string  |   YES    |    NO    |       |
+| items                      | integer |    NO    |    NO    |       |
+| has_art                    | boolean |    NO    |    NO    |       |
+| playlist_folder_id         | string  |    NO    |   YES    |       |
+| playlist_folder_sort_order | integer |    NO    |   YES    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -3323,20 +3375,20 @@ Create a live_stream (radio station) object.
 | 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
 
-* return array
+* return object
 
-```JSON
-"id": "",
-"name": "",
-"artists": 0,
-"summary": "",
-"external_link": "'",
-"address": "",
-"category": "",
-"email": "",
-"website": "",
-"user": 0
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+Returns a single object.
+
+| Field    | Type   | Nullable | Optional | Notes |
+|----------|--------|:--------:|:--------:|-------|
+| id       | string |    NO    |    NO    |       |
+| name     | string |   YES    |    NO    |       |
+| url      | string |   YES    |    NO    |       |
+| codec    | string |   YES    |    NO    |       |
+| catalog  | string |    NO    |    NO    |       |
+| site_url | string |   YES    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws object
 
@@ -3655,11 +3707,32 @@ This create a new playlist and return it
 | 'name' | string | Playlist name                       |       NO |
 | 'type' | string | `public`, `private` (Playlist type) |      YES |
 
-* return array
+* return object
 
-```JSON
-"playlist": []
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+Returns a single object.
+
+| Field                      | Type                           | Nullable | Optional | Notes                                  |
+|----------------------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id                         | string                         |    NO    |    NO    |                                        |
+| name                       | string                         |   YES    |    NO    |                                        |
+| owner                      | string                         |   YES    |    NO    |                                        |
+| user                       | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items                      | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type                       | string                         |   YES    |    NO    |                                        |
+| art                        | string                         |   YES    |    NO    |                                        |
+| has_access                 | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate            | boolean                        |    NO    |    NO    |                                        |
+| has_art                    | boolean                        |    NO    |    NO    |                                        |
+| flag                       | boolean                        |    NO    |    NO    |                                        |
+| rating                     | integer                        |   YES    |    NO    |                                        |
+| averagerating              | number                         |   YES    |    NO    |                                        |
+| md5                        | string                         |   YES    |    NO    |                                        |
+| last_update                | integer                        |   YES    |    NO    |                                        |
+| time                       | integer                        |    NO    |    NO    |                                        |
+| playlist_folder_id         | string                         |    NO    |   YES    |                                        |
+| playlist_folder_sort_order | integer                        |    NO    |   YES    |                                        |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws object
 
@@ -4063,6 +4136,23 @@ Create a folder in the calling user's tree. The name may not contain a `/`, beca
 * return array
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -4085,6 +4175,23 @@ Change a folder's name, parent or position. Anything not sent is left as it is; 
 * return array
 
 <!-- GENERATED:RESPONSE:BEGIN -->
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -4299,11 +4406,32 @@ Takes the url and catalog parameters.
 | 'url'     | string | rss url for podcast |       NO |
 | 'catalog' | string | podcast catalog     |       NO |
 
-* return array
+* return object
 
-```JSON
-"podcast": []
-```
+<!-- GENERATED:RESPONSE:BEGIN -->
+Returns a single object.
+
+| Field           | Type                                                  | Nullable | Optional | Notes                                               |
+|-----------------|-------------------------------------------------------|:--------:|:--------:|-----------------------------------------------------|
+| id              | string                                                |    NO    |    NO    |                                                     |
+| name            | string                                                |   YES    |    NO    |                                                     |
+| description     | string                                                |    NO    |    NO    |                                                     |
+| language        | string                                                |    NO    |    NO    |                                                     |
+| copyright       | string                                                |    NO    |    NO    |                                                     |
+| feed_url        | string                                                |    NO    |    NO    |                                                     |
+| generator       | string                                                |    NO    |    NO    |                                                     |
+| website         | string                                                |    NO    |    NO    |                                                     |
+| build_date      | string                                                |    NO    |    NO    |                                                     |
+| sync_date       | string                                                |    NO    |    NO    |                                                     |
+| public_url      | string                                                |    NO    |    NO    |                                                     |
+| art             | string                                                |   YES    |    NO    |                                                     |
+| has_art         | boolean                                               |    NO    |    NO    |                                                     |
+| flag            | boolean                                               |    NO    |    NO    |                                                     |
+| rating          | integer                                               |   YES    |    NO    |                                                     |
+| averagerating   | number                                                |   YES    |    NO    |                                                     |
+| catalog         | string                                                |    NO    |    NO    |                                                     |
+| podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |    NO    | see [PodcastEpisodeObject](#podcast_episode) fields |
+<!-- GENERATED:RESPONSE:END -->
 
 * throws object
 
