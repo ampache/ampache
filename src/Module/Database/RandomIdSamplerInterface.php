@@ -29,7 +29,8 @@ interface RandomIdSamplerInterface
 {
     /**
      * Picks up to $limit random ids matching $whereSql, without `ORDER BY RAND()`'s whole-table sort cost.
-     * $whereSql matching only a thin slice of the id range can legitimately come back short of $limit.
+     * Draws a uniformly random id and keeps it only on an exact match, so every matching id is equally
+     * likely; $whereSql matching only a thin slice of the id range can legitimately come back short of $limit.
      *
      * @param list<mixed> $params bound to $whereSql (repeated once per candidate id it probes)
      * @return list<int>

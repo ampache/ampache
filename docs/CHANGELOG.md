@@ -4,7 +4,11 @@
 
 ### Changed (8.2.3)
 
-* An album or album disk with no cover of its own shows the blank cover placeholder instead of the album artist's art, so Edit/Find Art and Reset Art on it now always target the album
+* An album or album disk with no cover falls back to the blank placeholder, not the album artist's art — Edit/Find Art and Reset Art on it now target the album
+
+### Fixed (8.2.3)
+
+* Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 
 ## Ampache 8.2.2
 
