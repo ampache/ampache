@@ -2354,14 +2354,15 @@ final class Json8_Data
      * playlist_folders
      *
      * The calling user's folder tree as a flat list; clients rebuild the hierarchy from each `parent`.
+     * A null entry is the root, reported as id 0.
      *
-     * @param list<PlaylistFolder> $folders
+     * @param list<?PlaylistFolder> $folders
      * @return string JSON Object "playlist_folder"
      */
     public function playlist_folders(array $folders, User $user, bool $object = true): string
     {
         $this->count = $this->count ?: count($folders);
-        $md5         = md5(serialize(array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $folders)));
+        $md5         = md5(serialize(array_map(static fn(?PlaylistFolder $folder): int => $folder?->getId() ?? PlaylistFolder::ROOT, $folders)));
         $JSON        = $this->playlist_folders_array($folders, $user);
 
         if ($object) {
@@ -2380,7 +2381,9 @@ final class Json8_Data
     /**
      * playlist_folders_array
      *
-     * @param list<PlaylistFolder> $folders
+     * A null entry is the root, which has no row of its own, reported as id 0.
+     *
+     * @param list<?PlaylistFolder> $folders
      * @return array<int, array{
      *     id: string,
      *     name: string,
@@ -2397,12 +2400,13 @@ final class Json8_Data
 
         $JSON = [];
         foreach ($folders as $folder) {
-            $JSON[] = [
-                "id" => (string) $folder->getId(),
-                "name" => $folder->getName(),
-                "parent" => (string) $folder->getParentId(),
-                "sort_order" => $folder->getSortOrder(),
-                "items" => $counts[$folder->getId()] ?? 0,
+            $folderId = $folder?->getId() ?? PlaylistFolder::ROOT;
+            $JSON[]   = [
+                "id" => (string) $folderId,
+                "name" => $folder?->getName() ?? '',
+                "parent" => (string) ($folder?->getParentId() ?? PlaylistFolder::ROOT),
+                "sort_order" => $folder?->getSortOrder() ?? 0,
+                "items" => $counts[$folderId] ?? 0,
             ];
         }
 

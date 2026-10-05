@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
@@ -59,7 +58,7 @@ final class PlaylistFolder8Method implements MethodInterface
      *
      * One folder's metadata, without its contents
      *
-     * filter = (string) the folder, as an id or a name path such as /Rock/Live
+     * filter = (string) the folder, as an id or a name path such as /Rock/Live //optional, root when omitted
      *
      * @param array{
      *     filter?: string,
@@ -67,7 +66,6 @@ final class PlaylistFolder8Method implements MethodInterface
      *     auth: string,
      * } $input
      *
-     * @throws RequestParamMissingException
      * @throws ResultEmptyException
      */
     public function handle(
@@ -78,7 +76,7 @@ final class PlaylistFolder8Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $folder = $this->loadFolder($input, $user);
+        $folder = $this->loadFolderOrRoot($input, $user);
 
         $response->getBody()->write(
             $output->playlistFolders($apiVersion, [$folder], $user)

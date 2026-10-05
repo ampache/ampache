@@ -1397,20 +1397,22 @@ final class Xml8_Data
      * playlist_folders
      *
      * The calling user's folder tree as a flat list; clients rebuild the hierarchy from each `parent`.
+     * A null entry is the root, which has no row of its own, reported as id 0.
      *
-     * @param list<PlaylistFolder> $folders
+     * @param list<?PlaylistFolder> $folders
      */
     public function playlist_folders(array $folders, User $user, bool $full_xml = true): string
     {
         $this->count = $this->count ?: count($folders);
-        $md5         = md5(serialize(array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $folders)));
+        $md5         = md5(serialize(array_map(static fn(?PlaylistFolder $folder): int => $folder?->getId() ?? PlaylistFolder::ROOT, $folders)));
         $folders     = array_values(Api::filter_objects($folders, $this->count, $this->offset, $this->limit, $full_xml));
         $counts      = $this->playlistFolderRepository->getItemCounts($user);
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($folders as $folder) {
-            $string .= "<playlist_folder id=\"" . $folder->getId() . "\">\n\t<name><![CDATA[" . $folder->getName() . "]]></name>\n\t<parent>" . $folder->getParentId() . "</parent>\n\t<sort_order>" . $folder->getSortOrder() . "</sort_order>\n\t<items>" . ($counts[$folder->getId()] ?? 0) . "</items>\n</playlist_folder>\n";
+            $folderId = $folder?->getId() ?? PlaylistFolder::ROOT;
+            $string .= "<playlist_folder id=\"" . $folderId . "\">\n\t<name><![CDATA[" . ($folder?->getName() ?? '') . "]]></name>\n\t<parent>" . ($folder?->getParentId() ?? PlaylistFolder::ROOT) . "</parent>\n\t<sort_order>" . ($folder?->getSortOrder() ?? 0) . "</sort_order>\n\t<items>" . ($counts[$folderId] ?? 0) . "</items>\n</playlist_folder>\n";
         }
 
         return Api::output_xml($string, $full_xml);

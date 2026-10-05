@@ -4334,6 +4334,236 @@ Each `song` entry ([SongObject](#song)):
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api8/docs/xml-responses/playlist_songs.xml)
 
+### playlist_folders
+
+A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them.
+
+This returns the whole tree as a flat list; rebuild the hierarchy from each folder's `parent`, where 0 is the root.
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder
+
+One folder's own details, without its contents. A folder belonging to another user reports as not found rather than forbidden, so a tree cannot be probed from outside.
+
+| Input    | Type   | Description                                                                     | Optional |
+|----------|--------|---------------------------------------------------------------------------------|---------:|
+| 'filter' | string | The folder, as an id or a name path such as `/Rock/Live`; the root when omitted |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `playlist_folder` list.
+
+| Field           | Type                                                   | Nullable | Optional | Notes                                                |
+|-----------------|--------------------------------------------------------|:--------:|:--------:|------------------------------------------------------|
+| total_count     | integer                                                |    NO    |    NO    |                                                      |
+| md5             | string                                                 |    NO    |    NO    |                                                      |
+| playlist_folder | array&lt;[PlaylistFolderObject](#playlist_folders)&gt; |    NO    |    NO    | see [PlaylistFolderObject](#playlist_folders) fields |
+
+Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
+
+| Field      | Type    | Nullable | Optional | Notes |
+|------------|---------|:--------:|:--------:|-------|
+| id         | string  |    NO    |    NO    |       |
+| name       | string  |    NO    |    NO    |       |
+| parent     | string  |    NO    |    NO    |       |
+| sort_order | integer |    NO    |    NO    |       |
+| items      | integer |    NO    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_create
+
+Create a folder in the calling user's tree. The name may not contain a `/`, because that is the path separator, and must be unique among its siblings; the comparison is case-insensitive, so `Rock` and `rock` collide.
+
+| Input        | Type    | Description                           | Optional |
+|--------------|---------|---------------------------------------|---------:|
+| 'name'       | string  | Folder name                           |       NO |
+| 'parent'     | string  | Parent folder as an id or a name path |      YES |
+| 'sort_order' | integer | Position among its siblings           |      YES |
+
+`parent` defaults to the root when omitted; `sort_order` defaults to appended (last among its siblings) when omitted.
+
+* return array
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_edit
+
+Change a folder's name, parent or position. Anything not sent is left as it is; at least one of `name`, `parent` or `sort_order` must be sent. Moving a folder into its own subtree is refused, because it would detach the branch from the tree.
+
+| Input        | Type    | Description                                             | Optional |
+|--------------|---------|---------------------------------------------------------|---------:|
+| 'filter'     | string  | The folder, as an id or a name path                     |       NO |
+| 'name'       | string  | New name                                                |      YES |
+| 'parent'     | string  | New parent as an id or a name path, or `0` for the root |      YES |
+| 'sort_order' | integer | New position among its siblings                         |      YES |
+
+* return array
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_delete
+
+Delete a folder. It must hold neither a child folder nor a filed list; the lists themselves are never touched, so emptying a folder means moving its contents out first.
+
+| Input    | Type   | Description                         | Optional |
+|----------|--------|-------------------------------------|---------:|
+| 'filter' | string | The folder, as an id or a name path |       NO |
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_items
+
+The playlists, smartlists and collections filed in one folder. The root is not a stored folder: it holds every list the calling user can see that has not been filed elsewhere, so a newly created playlist appears there without anything having been written for it.
+
+| Input    | Type    | Description                                                                         | Optional |
+|----------|---------|-------------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | The folder, as an id or a name path; `0` or `/` for the root; the root when omitted |      YES |
+| 'offset' | integer | Return results starting from this index position                                    |      YES |
+| 'limit'  | integer | Maximum number of results to return                                                 |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field           | Type   | Nullable | Optional | Notes                                             |
+|-----------------|--------|:--------:|:--------:|---------------------------------------------------|
+| playlist_folder | object |    NO    |    NO    | `{id, name, parent, sort_order, items, contents}` |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_add
+
+File a playlist, smartlist or collection into a folder. A list already filed is moved rather than duplicated: it sits in exactly one of the calling user's folders at a time.
+
+| Input        | Type    | Description                                                                                         | Optional |
+|--------------|---------|-----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'     | string  | The folder, as an id or a name path; `0` or `/` returns the list to the root; the root when omitted |      YES |
+| 'id'         | integer | UID of the list to file                                                                             |       NO |
+| 'type'       | string  | `playlist`, `smartlist`, `collection`                                                               |       NO |
+| 'sort_order' | integer | Position among its siblings                                                                         |      YES |
+
+`sort_order` defaults to appended (last among its siblings) when omitted.
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### playlist_folder_remove
+
+Take a list out of its folder. The list itself is untouched and reappears at the root, because an unfiled list has no placement row at all.
+
+| Input  | Type    | Description                           | Optional |
+|--------|---------|---------------------------------------|---------:|
+| 'id'   | integer | UID of the list                       |       NO |
+| 'type' | string  | `playlist`, `smartlist`, `collection` |       NO |
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ### podcast
 
 Get the podcast from it's id.
