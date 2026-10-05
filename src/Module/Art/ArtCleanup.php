@@ -228,7 +228,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
 
                     // check if this even exists in the database
                     $className = ObjectTypeToClassNameMapper::map($type);
-                    $item      = new $className($object_id);
+                    $item      = new $className((int) $object_id);
                     /** @var library_item $item */
                     $exists = $item->isNew() === false;
                     if (!$exists) {
