@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 
@@ -83,20 +84,14 @@ final readonly class PlaylistTrackBudget
      */
     private function trackCounts(array $ids): array
     {
-        $isSearch = static fn(int|string $id): bool => str_starts_with((string) $id, 'smart_');
-
-        $playlistIds = array_values(array_filter($ids, static fn(int|string $id): bool => !$isSearch($id)));
-        $searchIds   = array_map(
-            static fn(int|string $id): int => (int) substr((string) $id, 6),
-            array_values(array_filter($ids, $isSearch)),
-        );
+        $split = Playlist::split_mixed_ids($ids);
 
         $counts = [];
-        foreach ($this->playlistRepository->getRowsByIds($playlistIds) as $row) {
+        foreach ($this->playlistRepository->getRowsByIds($split['playlist']) as $row) {
             $counts[(string) $row['id']] = (int) ($row['last_count'] ?? 0);
         }
 
-        foreach ($this->searchRepository->getRowsByIds($searchIds) as $row) {
+        foreach ($this->searchRepository->getRowsByIds($split['search']) as $row) {
             $counts['smart_' . $row['id']] = (int) ($row['last_count'] ?? 0);
         }
 
