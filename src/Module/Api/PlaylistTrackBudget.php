@@ -55,7 +55,7 @@ final readonly class PlaylistTrackBudget
      */
     public function limitFor(array $results, int $offset, int $limit): int
     {
-        $page = array_slice(array_values($results), $offset, ($limit > 0) ? $limit : null);
+        $page = array_slice($results, $offset, ($limit > 0) ? $limit : null);
         if ($page === []) {
             return $limit;
         }
@@ -83,14 +83,19 @@ final readonly class PlaylistTrackBudget
      */
     private function trackCounts(array $ids): array
     {
-        $searches = array_filter($ids, static fn(int|string $id): bool => str_starts_with((string) $id, 'smart_'));
+        $isSearch = static fn(int|string $id): bool => str_starts_with((string) $id, 'smart_');
+
+        $playlistIds = array_values(array_filter($ids, static fn(int|string $id): bool => !$isSearch($id)));
+        $searchIds   = array_map(
+            static fn(int|string $id): int => (int) substr((string) $id, 6),
+            array_values(array_filter($ids, $isSearch)),
+        );
 
         $counts = [];
-        foreach ($this->playlistRepository->getRowsByIds(array_values(array_diff_key($ids, $searches))) as $row) {
+        foreach ($this->playlistRepository->getRowsByIds($playlistIds) as $row) {
             $counts[(string) $row['id']] = (int) ($row['last_count'] ?? 0);
         }
 
-        $searchIds = array_map(static fn(int|string $id): int => (int) substr((string) $id, 6), array_values($searches));
         foreach ($this->searchRepository->getRowsByIds($searchIds) as $row) {
             $counts['smart_' . $row['id']] = (int) ($row['last_count'] ?? 0);
         }
