@@ -74,7 +74,7 @@ Ui::show_box_top(($isEdit) ? T_('Edit Folder') : T_('Create Folder'), 'box box_p
     <?php } else { ?>
     <?php echo $this->raw($this->getFormToken('add_playlist_folder')); ?>
     <?php } ?>
-    <a class="button" href="<?php echo $this->e($this->getCancelUrl()); ?>"><?php echo T_('Cancel'); ?></a>
+    <input type="button" value="<?php echo $this->e(T_('Cancel')); ?>" onClick="NavigateTo('<?php echo $this->e($this->getCancelUrl()); ?>');" />
     <input class="button" type="submit" value="<?php echo ($isEdit) ? T_('Save') : T_('Create'); ?>" />
 </div>
 </form>
