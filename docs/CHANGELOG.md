@@ -1,12 +1,24 @@
 # CHANGELOG
 
-## Ampache 8.2.3
+## Ampache 8.3.0
 
-### Changed (8.2.3)
+### Added (8.3.0)
+
+* Playlist Folders
+  * Cancel button on the create/edit folder form
+  * A folder can be shared read-only with other users via a Public/Private switch, restricted to Content Manager (level 50) and above
+  * A shared folder you don't care about can be marked (`*`) rather than removed, so it stays usable
+  * API `playlist_folder_create` and `playlist_folder_edit` take a `type` (private/public) parameter
+  * API `playlist_folders` also lists other users' shared top-level folders, flagging hidden ones
+* Database 830002
+  * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
+  * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
+
+### Changed (8.3.0)
 
 * An album or album disk with no cover falls back to the blank placeholder, not the album artist's art — Edit/Find Art and Reset Art on it now target the album
 
-### Fixed (8.2.3)
+### Fixed (8.3.0)
 
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 

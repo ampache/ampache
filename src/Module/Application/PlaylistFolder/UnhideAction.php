@@ -26,36 +26,31 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\PlaylistFolder;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Gui\Form\PlaylistFolderFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\PlaylistFolderRepositoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode\RFC\RFC7231;
 
 /**
- * Shows the create-a-playlist-folder form
+ * Reverses a previous hide(), clearing the `*` marker a shared folder carries in the current user's root
  */
-final readonly class ShowCreateAction implements ApplicationActionInterface
+final readonly class UnhideAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'show_create';
+    public const string REQUEST_KEY = 'unhide';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private PlaylistFolderTreeFormatterInterface $treeFormatter,
-        private RequestParserInterface $requestParser,
-        private UiInterface $ui,
+        private PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private ResponseFactoryInterface $responseFactory,
     ) {}
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
+        if (!check_http_referer()) {
             throw new AccessDeniedException();
         }
 
@@ -64,21 +59,12 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $parentId = (int) ($request->getQueryParams()['folder'] ?? PlaylistFolder::ROOT);
+        $folderId = (int) ($request->getQueryParams()['folder'] ?? 0);
 
-        $this->ui->showHeader();
-        echo new PlaylistFolderFormView(
-            $this->configContainer->getWebPath(),
-            null,
-            $this->requestParser->getFromRequest('name'),
-            $parentId,
-            $this->treeFormatter->flatten($user),
-            'private',
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        )->render();
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
+        $this->playlistFolderRepository->unhide($user->getId(), $folderId);
 
-        return null;
+        return $this->responseFactory
+            ->createResponse(RFC7231::FOUND)
+            ->withHeader('Location', $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder');
     }
 }

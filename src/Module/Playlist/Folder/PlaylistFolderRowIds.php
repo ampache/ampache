@@ -41,8 +41,29 @@ final readonly class PlaylistFolderRowIds implements PlaylistFolderRowIdsInterfa
     public function getRowIds(User $user, ?PlaylistFolder $folder): array
     {
         $entries = [];
-        foreach ($this->playlistFolderRepository->getChildren($user, $folder?->getId() ?? PlaylistFolder::ROOT) as $child) {
-            $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => $child->getSortOrder()];
+
+        if ($folder === null) {
+            foreach ($this->playlistFolderRepository->getChildren($user, PlaylistFolder::ROOT) as $child) {
+                $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => $child->getSortOrder()];
+            }
+
+            // other users' shared top-level folders, appended after the viewer's own
+            $shared = $this->playlistFolderRepository->getPublicRootFolders($user->getId());
+            usort(
+                $shared,
+                static fn(PlaylistFolder $a, PlaylistFolder $b): int => [$a->getUserId(), $a->getSortOrder()] <=> [$b->getUserId(), $b->getSortOrder()]
+            );
+            foreach ($shared as $index => $child) {
+                $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => PHP_INT_MAX - count($shared) + $index];
+            }
+        } elseif ($folder->isVisible($user)) {
+            foreach ($this->playlistFolderRepository->getChildren($user, $folder->getId()) as $child) {
+                $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => $child->getSortOrder()];
+            }
+        } else {
+            foreach ($this->playlistFolderRepository->getPublicChildren($folder->getUserId(), $folder->getId()) as $child) {
+                $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => $child->getSortOrder()];
+            }
         }
 
         foreach ($this->itemsLoader->getItems($user, $folder) as $item) {

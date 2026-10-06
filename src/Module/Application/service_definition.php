@@ -470,6 +470,8 @@ return [
     PlaylistFolder\ShowEditAction::class => autowire(PlaylistFolder\ShowEditAction::class),
     PlaylistFolder\EditAction::class => autowire(PlaylistFolder\EditAction::class),
     PlaylistFolder\DeleteAction::class => autowire(PlaylistFolder\DeleteAction::class),
+    PlaylistFolder\HideAction::class => autowire(PlaylistFolder\HideAction::class),
+    PlaylistFolder\UnhideAction::class => autowire(PlaylistFolder\UnhideAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
     CollectionAction::class => autowire(CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),

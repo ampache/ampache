@@ -31,6 +31,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -64,12 +65,14 @@ final class PlaylistFolderEdit8Method implements MethodInterface
      * name       = (string) new name //optional
      * parent     = (string) new parent as an id or a name path, or 0 for the root //optional
      * sort_order = (integer) new position among its siblings //optional
+     * type       = (string) 'private', 'public' //optional, public requires Content Manager
      *
      * @param array{
      *     filter?: string,
      *     name?: string,
      *     parent?: string,
      *     sort_order?: int,
+     *     type?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -90,15 +93,24 @@ final class PlaylistFolderEdit8Method implements MethodInterface
         $name      = (isset($input['name'])) ? (string) $input['name'] : null;
         $parentId  = (array_key_exists('parent', $input)) ? $this->resolveParentId($input, $user) : null;
         $sortOrder = (isset($input['sort_order'])) ? (int) $input['sort_order'] : null;
+        $type      = (isset($input['type'])) ? (((string) $input['type'] === 'public') ? 'public' : 'private') : null;
 
-        if ($name === null && $parentId === null && $sortOrder === null) {
+        if ($type === 'public' && $user->access < AccessLevelEnum::CONTENT_MANAGER->value) {
+            $response->getBody()->write(
+                $output->error($apiVersion, ErrorCodeEnum::ACCESS_DENIED, 'Access Denied', self::ACTION, 'type')
+            );
+
+            return $response;
+        }
+
+        if ($name === null && $parentId === null && $sortOrder === null && $type === null) {
             throw new RequestParamMissingException(
-                sprintf('Bad Request: %s', 'name, parent or sort_order')
+                sprintf('Bad Request: %s', 'name, parent, sort_order or type')
             );
         }
 
         // A refusal here is a name a sibling holds or a move into the folder's own subtree
-        if (!$this->playlistFolderRepository->update($folder->getId(), $name, $parentId, $sortOrder)) {
+        if (!$this->playlistFolderRepository->update($folder->getId(), $name, $parentId, $sortOrder, $type)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,

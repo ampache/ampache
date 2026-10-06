@@ -5308,6 +5308,12 @@
           "sort_order": {
             "type": "integer"
           },
+          "type": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
           "items": {
             "type": "integer"
           }
@@ -5317,6 +5323,8 @@
           "name",
           "parent",
           "sort_order",
+          "type",
+          "hidden",
           "items"
         ],
         "additionalProperties": true
@@ -5383,6 +5391,12 @@
               "sort_order": {
                 "type": "integer"
               },
+              "type": {
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
               "items": {
                 "type": "integer"
               },
@@ -5398,6 +5412,8 @@
               "name",
               "parent",
               "sort_order",
+              "type",
+              "hidden",
               "items",
               "contents"
             ],
@@ -5421,6 +5437,14 @@
           },
           "sort_order": {
             "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "private",
+              "public"
+            ],
+            "type": "string",
+            "description": "Private when omitted; public requires Content Manager access (level 50)"
           }
         },
         "additionalProperties": true
@@ -5437,6 +5461,14 @@
           },
           "sort_order": {
             "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "private",
+              "public"
+            ],
+            "type": "string",
+            "description": "Public requires Content Manager access (level 50)"
           }
         },
         "additionalProperties": true
@@ -21165,7 +21197,7 @@
         "tags": [
           "Playlist Folders"
         ],
-        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
+        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; hidden marks the ones you have chosen to hide from your own root, without dropping them from the list. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
         "operationId": "playlistFolders"
       },
       "put": {
@@ -21194,6 +21226,19 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "private",
+                "public"
+              ],
+              "type": "string"
+            },
+            "description": "Private when omitted; public requires Content Manager access (level 50)"
           }
         ],
         "responses": {
@@ -21372,6 +21417,19 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "private",
+                "public"
+              ],
+              "type": "string"
+            },
+            "description": "Public requires Content Manager access (level 50)"
           }
         ],
         "responses": {

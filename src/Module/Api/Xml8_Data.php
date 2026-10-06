@@ -1406,13 +1406,15 @@ final class Xml8_Data
         $this->count = $this->count ?: count($folders);
         $md5         = md5(serialize(array_map(static fn(?PlaylistFolder $folder): int => $folder?->getId() ?? PlaylistFolder::ROOT, $folders)));
         $folders     = array_values(Api::filter_objects($folders, $this->count, $this->offset, $this->limit, $full_xml));
-        $counts      = $this->playlistFolderRepository->getItemCounts($user);
+        $counts      = $this->playlistFolderItemCounts($folders, $user);
+        $hiddenIds   = array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $this->playlistFolderRepository->getHiddenFolders($user->getId()));
 
         $string = ($full_xml) ? "<total_count>" . $this->count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($folders as $folder) {
             $folderId = $folder?->getId() ?? PlaylistFolder::ROOT;
-            $string .= "<playlist_folder id=\"" . $folderId . "\">\n\t<name><![CDATA[" . ($folder?->getName() ?? '') . "]]></name>\n\t<parent>" . ($folder?->getParentId() ?? PlaylistFolder::ROOT) . "</parent>\n\t<sort_order>" . ($folder?->getSortOrder() ?? 0) . "</sort_order>\n\t<items>" . ($counts[$folderId] ?? 0) . "</items>\n</playlist_folder>\n";
+            $hidden   = in_array($folderId, $hiddenIds, true) ? 1 : 0;
+            $string .= "<playlist_folder id=\"" . $folderId . "\">\n\t<name><![CDATA[" . ($folder?->getName() ?? '') . "]]></name>\n\t<parent>" . ($folder?->getParentId() ?? PlaylistFolder::ROOT) . "</parent>\n\t<sort_order>" . ($folder?->getSortOrder() ?? 0) . "</sort_order>\n\t<type>" . ($folder?->getType() ?? 'private') . "</type>\n\t<hidden>" . $hidden . "</hidden>\n\t<items>" . ($counts[$folderId] ?? 0) . "</items>\n</playlist_folder>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -2194,6 +2196,29 @@ final class Xml8_Data
         $this->offset = $offset;
 
         return $rendered;
+    }
+
+    /**
+     * Item counts for $user's own tree, plus each shared folder's owner, since a merged root mixes both
+     *
+     * @param list<?PlaylistFolder> $folders
+     * @return array<int, int>
+     */
+    private function playlistFolderItemCounts(array $folders, User $user): array
+    {
+        $counts        = $this->playlistFolderRepository->getItemCounts($user->getId());
+        $foreignOwners = [];
+        foreach ($folders as $folder) {
+            if ($folder !== null && $folder->getUserId() !== $user->getId()) {
+                $foreignOwners[$folder->getUserId()] = true;
+            }
+        }
+
+        foreach (array_keys($foreignOwners) as $ownerId) {
+            $counts += $this->playlistFolderRepository->getItemCounts($ownerId);
+        }
+
+        return $counts;
     }
 
     /**

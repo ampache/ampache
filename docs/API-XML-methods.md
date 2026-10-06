@@ -4441,7 +4441,7 @@ Each `song` entry ([SongObject](#song)):
 
 ### playlist_folders
 
-A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them.
+A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
 
 This returns the whole tree as a flat list; rebuild the hierarchy from each folder's `parent`, where 0 is the root.
 
@@ -4475,6 +4475,8 @@ Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
 | name       | string  |    NO    |    NO    |       |
 | parent     | string  |    NO    |    NO    |       |
 | sort_order | integer |    NO    |    NO    |       |
+| type       | string  |    NO    |    NO    |       |
+| hidden     | boolean |    NO    |    NO    |       |
 | items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4517,6 +4519,8 @@ Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
 | name       | string  |    NO    |    NO    |       |
 | parent     | string  |    NO    |    NO    |       |
 | sort_order | integer |    NO    |    NO    |       |
+| type       | string  |    NO    |    NO    |       |
+| hidden     | boolean |    NO    |    NO    |       |
 | items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4535,8 +4539,9 @@ Create a folder in the calling user's tree. The name may not contain a `/`, beca
 | 'name'       | string  | Folder name                           |       NO |
 | 'parent'     | string  | Parent folder as an id or a name path |      YES |
 | 'sort_order' | integer | Position among its siblings           |      YES |
+| 'type'       | string  | `private`, `public`                   |      YES |
 
-`parent` defaults to the root when omitted; `sort_order` defaults to appended (last among its siblings) when omitted.
+`parent` defaults to the root when omitted; `sort_order` defaults to appended (last among its siblings) when omitted; `type` defaults to `private` when omitted and setting `public` requires Content Manager access (level 50).
 
 * return
 
@@ -4563,6 +4568,8 @@ Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
 | name       | string  |    NO    |    NO    |       |
 | parent     | string  |    NO    |    NO    |       |
 | sort_order | integer |    NO    |    NO    |       |
+| type       | string  |    NO    |    NO    |       |
+| hidden     | boolean |    NO    |    NO    |       |
 | items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4574,14 +4581,15 @@ Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
 
 ### playlist_folder_edit
 
-Change a folder's name, parent or position. Anything not sent is left as it is; at least one of `name`, `parent` or `sort_order` must be sent. Moving a folder into its own subtree is refused, because it would detach the branch from the tree.
+Change a folder's name, parent, position or visibility. Anything not sent is left as it is; at least one of `name`, `parent`, `sort_order` or `type` must be sent. Moving a folder into its own subtree is refused, because it would detach the branch from the tree.
 
-| Input        | Type    | Description                                             | Optional |
-|--------------|---------|---------------------------------------------------------|---------:|
-| 'filter'     | string  | The folder, as an id or a name path                     |       NO |
-| 'name'       | string  | New name                                                |      YES |
-| 'parent'     | string  | New parent as an id or a name path, or `0` for the root |      YES |
-| 'sort_order' | integer | New position among its siblings                         |      YES |
+| Input        | Type    | Description                                                                      | Optional |
+|--------------|---------|----------------------------------------------------------------------------------|---------:|
+| 'filter'     | string  | The folder, as an id or a name path                                              |       NO |
+| 'name'       | string  | New name                                                                         |      YES |
+| 'parent'     | string  | New parent as an id or a name path, or `0` for the root                          |      YES |
+| 'sort_order' | integer | New position among its siblings                                                  |      YES |
+| 'type'       | string  | `private`, `public`; setting `public` requires Content Manager access (level 50) |      YES |
 
 * return
 
@@ -4608,6 +4616,8 @@ Each `playlist_folder` entry ([PlaylistFolderObject](#playlist_folders)):
 | name       | string  |    NO    |    NO    |       |
 | parent     | string  |    NO    |    NO    |       |
 | sort_order | integer |    NO    |    NO    |       |
+| type       | string  |    NO    |    NO    |       |
+| hidden     | boolean |    NO    |    NO    |       |
 | items      | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4658,9 +4668,9 @@ The playlists, smartlists and collections filed in one folder. The root is not a
 
 Returns a single object.
 
-| Field           | Type   | Nullable | Optional | Notes                                             |
-|-----------------|--------|:--------:|:--------:|---------------------------------------------------|
-| playlist_folder | object |    NO    |    NO    | `{id, name, parent, sort_order, items, contents}` |
+| Field           | Type   | Nullable | Optional | Notes                                                           |
+|-----------------|--------|:--------:|:--------:|-----------------------------------------------------------------|
+| playlist_folder | object |    NO    |    NO    | `{id, name, parent, sort_order, type, hidden, items, contents}` |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws

@@ -71,8 +71,12 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
             ? $this->playlistFolderRepository->findById($folderId)
             : null;
 
-        // another user's folder is not yours to browse, and a stale/removed id is not distinguishable from it
-        if ($folderId > PlaylistFolder::ROOT && (!$folder instanceof PlaylistFolder || !$folder->isVisible($user))) {
+        // a shared folder is readable when it and every ancestor up to the root are public
+        if (
+            $folderId > PlaylistFolder::ROOT
+            && (!$folder instanceof PlaylistFolder
+                || (!$folder->isVisible($user) && !$this->playlistFolderRepository->isReadableBy($folderId, $user->getId())))
+        ) {
             throw new AccessDeniedException('Access Denied: playlist folder filter');
         }
 
