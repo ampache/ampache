@@ -77,7 +77,7 @@ final class Ping3Method implements MethodInterface
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
             // perpetual sessions do not expire
             $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)

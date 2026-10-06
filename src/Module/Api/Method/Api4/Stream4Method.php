@@ -29,7 +29,6 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -111,7 +110,7 @@ final class Stream4Method implements MethodInterface
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return $response->withStatus(302);
