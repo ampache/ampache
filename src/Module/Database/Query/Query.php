@@ -191,7 +191,7 @@ class Query
             'label' => LabelQuery::FILTERS,
             'license', 'license_hidden' => LicenseQuery::FILTERS,
             'live_stream' => LiveStreamQuery::FILTERS,
-            'playlist_folder' => PlaylistFolderQuery::FILTERS,
+            'playlist_folder', 'playlist_folder_hidden' => PlaylistFolderQuery::FILTERS,
             'playlist_localplay' => PlaylistLocalplayQuery::FILTERS,
             'playlist_media' => PlaylistMediaQuery::FILTERS,
             'playlist_search' => PlaylistSearchQuery::FILTERS,
@@ -942,6 +942,7 @@ class Query
                 $this->queryType = new LiveStreamQuery();
                 break;
             case 'playlist_folder':
+            case 'playlist_folder_hidden':
                 $this->queryType = new PlaylistFolderQuery();
                 break;
             case 'playlist_localplay':

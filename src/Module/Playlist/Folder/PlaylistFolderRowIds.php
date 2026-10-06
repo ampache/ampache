@@ -38,17 +38,36 @@ final readonly class PlaylistFolderRowIds implements PlaylistFolderRowIdsInterfa
         private PlaylistFolderRepositoryInterface $playlistFolderRepository,
     ) {}
 
+    public function getHiddenRowIds(User $user): array
+    {
+        return array_map(
+            static fn(PlaylistFolder $folder): string => sprintf('%s-%d', self::TYPE_FOLDER, $folder->getId()),
+            $this->playlistFolderRepository->getHiddenFolders($user->getId())
+        );
+    }
+
     public function getRowIds(User $user, ?PlaylistFolder $folder): array
     {
         $entries = [];
 
         if ($folder === null) {
+            // A folder the viewer has hidden -- their own or one shared with them -- is split into its own
+            // list rather than shown here; see `getHiddenRowIds()`
+            $hiddenIds = $this->hiddenFolderIds($user);
+
             foreach ($this->playlistFolderRepository->getChildren($user, PlaylistFolder::ROOT) as $child) {
+                if (in_array($child->getId(), $hiddenIds, true)) {
+                    continue;
+                }
+
                 $entries[] = ['type' => self::TYPE_FOLDER, 'id' => $child->getId(), 'sort_order' => $child->getSortOrder()];
             }
 
             // other users' shared top-level folders, appended after the viewer's own
-            $shared = $this->playlistFolderRepository->getPublicRootFolders($user->getId());
+            $shared = array_values(array_filter(
+                $this->playlistFolderRepository->getPublicRootFolders($user->getId()),
+                static fn(PlaylistFolder $sharedFolder): bool => !in_array($sharedFolder->getId(), $hiddenIds, true)
+            ));
             usort(
                 $shared,
                 static fn(PlaylistFolder $a, PlaylistFolder $b): int => [$a->getUserId(), $a->getSortOrder()] <=> [$b->getUserId(), $b->getSortOrder()]
@@ -82,6 +101,17 @@ final readonly class PlaylistFolderRowIds implements PlaylistFolderRowIdsInterfa
         return array_map(
             static fn(array $entry): string => sprintf('%s-%d', $entry['type'], $entry['id']),
             $entries
+        );
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function hiddenFolderIds(User $user): array
+    {
+        return array_map(
+            static fn(PlaylistFolder $hidden): int => $hidden->getId(),
+            $this->playlistFolderRepository->getHiddenFolders($user->getId())
         );
     }
 }

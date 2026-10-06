@@ -187,6 +187,11 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         });
     }
 
+    public function getHiddenViewUrl(): string
+    {
+        return $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder&hidden=1';
+    }
+
     public function getHideFolderUrl(int $folderId): string
     {
         return $this->configContainer->getWebPath() . '/playlist_folder.php?action=hide&folder=' . $folderId;
@@ -242,12 +247,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     public function getRowName(PlaylistFolder|playlist_object $item): string
     {
         if ($item instanceof PlaylistFolder) {
-            $name = $this->e($item->getName());
-            if ($this->isHiddenForViewer($item)) {
-                $name .= ' <span class="playlist-folder-hidden-marker" title="' . $this->e(T_('Hidden from your root view')) . '">*</span>';
-            }
-
-            return '<a href="' . $this->e($this->getFolderUrl($item->getId())) . '">' . $name . '</a>';
+            return '<a href="' . $this->e($this->getFolderUrl($item->getId())) . '">' . $this->e($item->getName()) . '</a>';
         }
 
         return $item->get_f_link();
@@ -404,6 +404,10 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function getTitle(): string
     {
+        if ($this->isHiddenView()) {
+            return $this->e(T_('Hidden'));
+        }
+
         $home = $this->e(T_('Home'));
 
         $folder = $this->getCurrentFolder();
@@ -426,6 +430,14 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return $this->configContainer->getWebPath() . '/playlist_folder.php?action=unhide&folder=' . $folderId;
     }
 
+    /**
+     * Whether the viewer has anything to see on the "Hidden" tab -- which only ever appears then
+     */
+    public function hasAnyHidden(): bool
+    {
+        return $this->getHiddenFolders() !== [];
+    }
+
     public function isDirectplayEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY);
@@ -444,6 +456,14 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         }
 
         return false;
+    }
+
+    /**
+     * Whether this render is the dedicated "Hidden" browse rather than a real folder level
+     */
+    public function isHiddenView(): bool
+    {
+        return $this->getBrowse()->get_type() === 'playlist_folder_hidden';
     }
 
     public function isOwnFolder(PlaylistFolder $folder): bool

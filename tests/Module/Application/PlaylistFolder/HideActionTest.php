@@ -54,6 +54,7 @@ class HideActionTest extends MockeryTestCase
         $this->gatekeeper->shouldReceive('getUser')->andReturn($user);
         $this->requestParser($folder->getId());
         $this->playlistFolderRepository->shouldReceive('findById')->with(11)->andReturn($folder);
+        $this->playlistFolderRepository->shouldReceive('isReadableBy')->with(11, 2)->andReturn(true);
         $this->playlistFolderRepository->shouldReceive('hide')->with(2, 11)->once();
 
         $response = $this->mock(ResponseInterface::class);
@@ -63,19 +64,22 @@ class HideActionTest extends MockeryTestCase
         self::assertSame($response, $this->subject->run($this->request(), $this->gatekeeper));
     }
 
-    public function testRunThrowsWhenFolderBelongsToTheCurrentUser(): void
+    public function testRunHidesTheCallersOwnFolder(): void
     {
-        self::expectException(AccessDeniedException::class);
-
         $user   = $this->viewerUser(9);
         $folder = $this->folder(11, 9, 0, 'Metal');
 
         $this->gatekeeper->shouldReceive('getUser')->andReturn($user);
         $this->requestParser($folder->getId());
         $this->playlistFolderRepository->shouldReceive('findById')->with(11)->andReturn($folder);
-        $this->playlistFolderRepository->shouldReceive('hide')->never();
+        $this->playlistFolderRepository->shouldReceive('isReadableBy')->with(11, 9)->andReturn(true);
+        $this->playlistFolderRepository->shouldReceive('hide')->with(9, 11)->once();
 
-        $this->subject->run($this->request(), $this->gatekeeper);
+        $response = $this->mock(ResponseInterface::class);
+        $response->shouldReceive('withHeader')->with('Location', 'https://ampache.test/browse.php?action=playlist_folder')->andReturn($response);
+        $this->responseFactory->shouldReceive('createResponse')->andReturn($response);
+
+        self::assertSame($response, $this->subject->run($this->request(), $this->gatekeeper));
     }
 
     public function testRunThrowsWhenFolderDoesNotExist(): void
@@ -85,6 +89,22 @@ class HideActionTest extends MockeryTestCase
         $this->gatekeeper->shouldReceive('getUser')->andReturn($this->viewerUser(2));
         $this->requestParser(11);
         $this->playlistFolderRepository->shouldReceive('findById')->with(11)->andReturn(null);
+        $this->playlistFolderRepository->shouldReceive('hide')->never();
+
+        $this->subject->run($this->request(), $this->gatekeeper);
+    }
+
+    public function testRunThrowsWhenFolderIsNotReadableByTheViewer(): void
+    {
+        self::expectException(AccessDeniedException::class);
+
+        $user   = $this->viewerUser(2);
+        $folder = $this->folder(11, 20, 0, 'Metal');
+
+        $this->gatekeeper->shouldReceive('getUser')->andReturn($user);
+        $this->requestParser($folder->getId());
+        $this->playlistFolderRepository->shouldReceive('findById')->with(11)->andReturn($folder);
+        $this->playlistFolderRepository->shouldReceive('isReadableBy')->with(11, 2)->andReturn(false);
         $this->playlistFolderRepository->shouldReceive('hide')->never();
 
         $this->subject->run($this->request(), $this->gatekeeper);

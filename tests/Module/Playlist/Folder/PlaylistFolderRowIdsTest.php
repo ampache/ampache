@@ -37,6 +37,21 @@ class PlaylistFolderRowIdsTest extends MockeryTestCase
     private PlaylistFolderRepositoryInterface&MockInterface $playlistFolderRepository;
     private PlaylistFolderRowIds $subject;
 
+    public function testGetHiddenRowIdsReturnsEveryFolderTheViewerHasHidden(): void
+    {
+        $user      = $this->mock(User::class);
+        $ownHidden = PlaylistFolder::fromRow(['id' => 4, 'user' => 9, 'parent' => 0, 'name' => 'Builder']);
+        $shared    = PlaylistFolder::fromRow(['id' => 11, 'user' => 20, 'parent' => 0, 'name' => 'Metal', 'type' => 'public']);
+
+        $user->shouldReceive('getId')->andReturn(9);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([$ownHidden, $shared]);
+
+        self::assertSame(
+            ['playlist_folder-4', 'playlist_folder-11'],
+            $this->subject->getHiddenRowIds($user)
+        );
+    }
+
     public function testGetRowIdsAppendsSharedTopLevelFoldersAfterTheViewersOwnAtTheRoot(): void
     {
         $user       = $this->mock(User::class);
@@ -46,10 +61,31 @@ class PlaylistFolderRowIdsTest extends MockeryTestCase
         $user->shouldReceive('getId')->andReturn(9);
         $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([$own]);
         $this->playlistFolderRepository->shouldReceive('getPublicRootFolders')->with(9)->once()->andReturn([$sharedById]);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([]);
         $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([]);
 
         self::assertSame(
             ['playlist_folder-3', 'playlist_folder-11'],
+            $this->subject->getRowIds($user, null)
+        );
+    }
+
+    public function testGetRowIdsExcludesFoldersTheViewerHasHiddenOwnAndShared(): void
+    {
+        $user         = $this->mock(User::class);
+        $ownVisible   = PlaylistFolder::fromRow(['id' => 3, 'user' => 9, 'parent' => 0, 'name' => 'Live', 'sort_order' => 0]);
+        $ownHidden    = PlaylistFolder::fromRow(['id' => 4, 'user' => 9, 'parent' => 0, 'name' => 'Builder', 'sort_order' => 1]);
+        $sharedHidden = PlaylistFolder::fromRow(['id' => 11, 'user' => 20, 'parent' => 0, 'name' => 'Metal', 'sort_order' => 0, 'type' => 'public']);
+
+        $user->shouldReceive('getId')->andReturn(9);
+        $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([$ownVisible, $ownHidden]);
+        $this->playlistFolderRepository->shouldReceive('getPublicRootFolders')->with(9)->once()->andReturn([$sharedHidden]);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([$ownHidden, $sharedHidden]);
+        $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([]);
+
+        // Hidden folders -- own or shared -- are split into `getHiddenRowIds()` instead of listed here
+        self::assertSame(
+            ['playlist_folder-3'],
             $this->subject->getRowIds($user, null)
         );
     }
@@ -62,6 +98,7 @@ class PlaylistFolderRowIdsTest extends MockeryTestCase
         $user->shouldReceive('getId')->andReturn(9);
         $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([$subfolder]);
         $this->playlistFolderRepository->shouldReceive('getPublicRootFolders')->with(9)->once()->andReturn([]);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([]);
         $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([
             ['object_id' => 10, 'object_type' => 'playlist', 'sort_order' => 1],
             ['object_id' => 20, 'object_type' => 'search', 'sort_order' => 3],
@@ -84,6 +121,7 @@ class PlaylistFolderRowIdsTest extends MockeryTestCase
         $user->shouldReceive('getId')->andReturn(9);
         $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([$subfolder1, $subfolder2]);
         $this->playlistFolderRepository->shouldReceive('getPublicRootFolders')->with(9)->once()->andReturn([]);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([]);
         $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([
             ['object_id' => 10, 'object_type' => 'playlist', 'sort_order' => 0],
             ['object_id' => 20, 'object_type' => 'search', 'sort_order' => 0],
@@ -130,6 +168,7 @@ class PlaylistFolderRowIdsTest extends MockeryTestCase
         $user->shouldReceive('getId')->andReturn(9);
         $this->playlistFolderRepository->shouldReceive('getChildren')->with($user, 0)->once()->andReturn([]);
         $this->playlistFolderRepository->shouldReceive('getPublicRootFolders')->with(9)->once()->andReturn([]);
+        $this->playlistFolderRepository->shouldReceive('getHiddenFolders')->with(9)->once()->andReturn([]);
         $this->itemsLoader->shouldReceive('getItems')->with($user, null)->once()->andReturn([
             ['object_id' => 4, 'object_type' => 'collection', 'sort_order' => 0],
             ['object_id' => 10, 'object_type' => 'playlist', 'sort_order' => 1],

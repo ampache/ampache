@@ -7,8 +7,9 @@
 * Playlist Folders
   * Cancel button on the create/edit folder form
   * A folder can be shared read-only with other users via a Public/Private switch, restricted to Content Manager (level 50) and above
-  * A shared folder you don't care about can be marked (`*`) rather than removed, so it stays usable
+  * Any top-level folder -- your own or one shared with you -- can be hidden from your main list, with a "Hidden" tab to view and unhide them, like the Genres browse
   * API `playlist_folder_create` and `playlist_folder_edit` take a `type` (private/public) parameter
+  * API `playlist_folder_edit` takes a `hidden` parameter; it is the one field a caller may set on a folder they do not own
   * API `playlist_folders` also lists other users' shared top-level folders, flagging hidden ones
 * Database 830002
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
