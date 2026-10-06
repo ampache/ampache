@@ -67,12 +67,15 @@ if ($browse->is_show_header()) {
 
     if ($folderId === PlaylistFolder::ROOT && ($isHiddenView || $this->hasAnyHidden())) { ?>
 <div class="category_options">
-    <a class="category<?php echo (!$isHiddenView) ? ' current' : ''; ?>" href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>">
+    <?php if ($isHiddenView) { ?>
+    <a class="category current" href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>">
         <?php echo T_('All'); ?>
     </a>
-    <a class="category<?php echo ($isHiddenView) ? ' current' : ''; ?>" href="<?php echo $this->e($this->getHiddenViewUrl()); ?>">
-        <?php echo T_('Hidden'); ?> (<?php echo count($this->getHiddenFolders()); ?>)
+    <?php } else { ?>
+    <a class="category current" href="<?php echo $this->e($this->getHiddenViewUrl()); ?>">
+        <?php echo T_('Hidden'); ?>
     </a>
+    <?php } ?>
 </div>
     <?php }
 
