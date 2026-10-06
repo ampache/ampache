@@ -37,7 +37,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teapot\StatusCode\RFC\RFC7231;
 
 /**
- * Marks a folder another user has shared as hidden for the current user; it stays listed and usable
+ * Marks a folder -- the current user's own or one shared with them -- as hidden in their own root
+ *
+ * It stays listed and usable; the mark is a personal declutter, not a visibility change for anyone else.
  */
 final readonly class HideAction implements ApplicationActionInterface
 {
@@ -58,7 +60,11 @@ final readonly class HideAction implements ApplicationActionInterface
         $user     = $gatekeeper->getUser();
         $folderId = (int) ($request->getQueryParams()['folder'] ?? 0);
         $folder   = $this->playlistFolderRepository->findById($folderId);
-        if ($user === null || !$folder instanceof PlaylistFolder || $folder->isVisible($user)) {
+        if (
+            $user === null
+            || !$folder instanceof PlaylistFolder
+            || !$this->playlistFolderRepository->isReadableBy($folderId, $user->getId())
+        ) {
             throw new AccessDeniedException();
         }
 

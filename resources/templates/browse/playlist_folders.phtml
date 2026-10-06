@@ -131,32 +131,25 @@ if ($browse->is_show_header()) {
             <?php } ?>
             <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
             <td class="cel_action essential">
-                <?php if ($row['item'] instanceof PlaylistFolder) {
-                    if ($this->isOwnFolder($row['item'])) {
-                        if ($mayCreate) { ?>
+                <?php
+                if ($row['item'] instanceof PlaylistFolder) {
+                    if ($this->isOwnFolder($row['item']) && $mayCreate) { ?>
                 <a href="<?php echo $this->e($this->getEditFolderUrl($row['item']->getId())); ?>">
                     <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
                 </a>
                 <a href="<?php echo $this->e($this->getDeleteFolderUrl($row['item']->getId())); ?>" data-confirm="<?php echo T_('Do you really want to delete this Folder?'); ?>">
                     <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
                 </a>
-                        <?php }
-                        } elseif ($folderId === PlaylistFolder::ROOT) {
-                            if ($this->isHiddenForViewer($row['item'])) { ?>
-                <a href="<?php echo $this->e($this->getUnhideFolderUrl($row['item']->getId())); ?>">
-                    <?php echo $this->raw(Ui::get_material_symbol('visibility', T_('Unhide'))); ?>
-                </a>
-                            <?php } else { ?>
-                <a href="<?php echo $this->e($this->getHideFolderUrl($row['item']->getId())); ?>">
-                    <?php echo $this->raw(Ui::get_material_symbol('visibility_off', T_('Hide'))); ?>
-                </a>
-                            <?php }
-                            }
+                    <?php }
+                    if ($folderId === PlaylistFolder::ROOT) {
+                        echo $this->raw($this->renderHideToggle($row['item']));
+                    }
                 } elseif ($row['item'] instanceof Playlist) {
                     echo $this->raw($this->renderPlaylistActions($row['item']));
                 } elseif ($row['item'] instanceof Search) {
                     echo $this->raw($this->renderSearchActions($row['item']));
-                } ?>
+                }
+            ?>
             </td>
             <td class="cel_drag">
                 <?php if ($mayCreate && (!($row['item'] instanceof PlaylistFolder) || $this->isOwnFolder($row['item']))) {

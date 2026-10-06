@@ -432,7 +432,8 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
-     * Whether the viewer dismissed this shared folder from their own root; it stays usable, only marked
+     * Whether the viewer dismissed this folder -- their own or one shared with them -- from their own
+     * root; it stays usable, only marked
      */
     public function isHiddenForViewer(PlaylistFolder $folder): bool
     {
@@ -459,6 +460,22 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         return $this->gatekeeperFactory->createGuiGatekeeper()->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             && ($folder === null || $this->isOwnFolder($folder));
+    }
+
+    /**
+     * The Hide/Unhide action cell for a root-level folder, own or shared; toggles on the current mark
+     */
+    public function renderHideToggle(PlaylistFolder $folder): string
+    {
+        if ($this->isHiddenForViewer($folder)) {
+            return '<a href="' . $this->e($this->getUnhideFolderUrl($folder->getId())) . '">'
+                . Ui::get_material_symbol('visibility', T_('Unhide'))
+                . '</a>';
+        }
+
+        return '<a href="' . $this->e($this->getHideFolderUrl($folder->getId())) . '">'
+            . Ui::get_material_symbol('visibility_off', T_('Hide'))
+            . '</a>';
     }
 
     /**
