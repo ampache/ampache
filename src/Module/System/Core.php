@@ -280,10 +280,11 @@ class Core
         $stripZoneFromIpv6 = fn($ip) => explode('%', $ip, 2)[0];
 
         // get the x forward if it's valid
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $ip = $stripZoneFromIpv6($_SERVER['HTTP_X_FORWARDED_FOR']);
-
-            return filter_var($ip, FILTER_VALIDATE_IP);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return filter_var($ip, FILTER_VALIDATE_IP);
+            }
         }
 
         if (!filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
