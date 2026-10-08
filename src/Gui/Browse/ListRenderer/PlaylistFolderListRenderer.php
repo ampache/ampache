@@ -189,12 +189,12 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
     public function getHiddenViewUrl(): string
     {
-        return $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder&hidden=1';
+        return $this->configContainer->getWebPath('/client') . '/browse.php?action=playlist_folder&hidden=1';
     }
 
     public function getHideFolderUrl(int $folderId): string
     {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=hide&folder=' . $folderId;
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=hide&folder=' . $folderId;
     }
 
     /**
@@ -427,7 +427,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
     public function getUnhideFolderUrl(int $folderId): string
     {
-        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=unhide&folder=' . $folderId;
+        return $this->configContainer->getWebPath('/client') . '/playlist_folder.php?action=unhide&folder=' . $folderId;
     }
 
     /**

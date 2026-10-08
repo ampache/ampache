@@ -27,9 +27,11 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\PlaylistFolder\CreateAction;
 use Ampache\Module\Application\PlaylistFolder\DeleteAction;
 use Ampache\Module\Application\PlaylistFolder\EditAction;
+use Ampache\Module\Application\PlaylistFolder\HideAction;
 use Ampache\Module\Application\PlaylistFolder\SetSortOrderAction;
 use Ampache\Module\Application\PlaylistFolder\ShowCreateAction;
 use Ampache\Module\Application\PlaylistFolder\ShowEditAction;
+use Ampache\Module\Application\PlaylistFolder\UnhideAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -44,6 +46,8 @@ $dic->get(ApplicationRunner::class)->run(
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         EditAction::REQUEST_KEY => EditAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
+        HideAction::REQUEST_KEY => HideAction::class,
+        UnhideAction::REQUEST_KEY => UnhideAction::class,
         SetSortOrderAction::REQUEST_KEY => SetSortOrderAction::class,
     ],
     ShowCreateAction::REQUEST_KEY

@@ -72,6 +72,6 @@ final readonly class HideAction implements ApplicationActionInterface
 
         return $this->responseFactory
             ->createResponse(RFC7231::FOUND)
-            ->withHeader('Location', $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder');
+            ->withHeader('Location', $this->configContainer->getWebPath('/client') . '/browse.php?action=playlist_folder');
     }
 }

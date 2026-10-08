@@ -56,7 +56,7 @@ final class PlaylistFolderFormView extends AbstractFormView
     {
         $parentId = $this->getParentId();
 
-        return $this->getWebPath() . '/browse.php?action=playlist_folder' . (($parentId > 0) ? '&folder=' . $parentId : '');
+        return $this->getWebPath('/client') . '/browse.php?action=playlist_folder' . (($parentId > 0) ? '&folder=' . $parentId : '');
     }
 
     public function getFolderId(): ?int
