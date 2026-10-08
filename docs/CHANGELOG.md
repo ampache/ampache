@@ -14,15 +14,16 @@
 * Database 830002
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
   * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
-  * Removed predictable `MD5(username)` API sessions created by older releases (GHSA-w28w-q7qp-8989)
+  * Removed predictable `MD5(username)` API sessions created by older releases
 
 ### Changed (8.3.0)
 
-* An album or album disk with no cover falls back to the blank placeholder, not the album artist's art — Edit/Find Art and Reset Art on it now target the album
+* An album or album disk with no cover falls back to the blank placeholder, not the album artist's art
 
 ### Fixed (8.3.0)
 
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
+* Edit/Find Art and Reset Art on Albums target the album correctly
 
 ## Ampache 8.2.2
 
@@ -735,7 +736,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
 * The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory. Over a million rows that went from 1.42s to 0.08s
 * The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for one explicitly returns it, so a saved waveform is reused instead of being regenerated from the audio every time
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes, and the per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`. Only relevant if you carry local patches
+* Internal namespaces reorganised (only relevant if you carry local patches)
+  * `Ampache\Application` is gone; its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`
+  * `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums
+  * The API version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes
+  * The per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`
+  * `Query` and `Browse` swapped the parts each held that belonged to the other: `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()`, and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
