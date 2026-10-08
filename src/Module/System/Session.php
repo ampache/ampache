@@ -90,7 +90,11 @@ final readonly class Session implements SessionInterface
             }
 
             // make sure the global is set too
-            self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
+            self::createGlobalUser(
+                isset($_SESSION['userdata']['username'])
+                    ? User::get_from_username($_SESSION['userdata']['username'])
+                    : null
+            );
             // make sure the prefs are set too
             Preference::init();
         }
