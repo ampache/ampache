@@ -24,6 +24,8 @@
 
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 * Edit/Find Art and Reset Art on Albums target the album correctly
+* A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
+* Scanning folders (`run:updateCatalog -s`, "Scan Folders"/"Scan All Folders") on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, which MySQL only added in 8.0.4
 
 ## Ampache 8.2.2
 
