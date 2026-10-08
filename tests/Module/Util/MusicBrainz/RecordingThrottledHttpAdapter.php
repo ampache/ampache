@@ -33,7 +33,9 @@ use WpOrg\Requests\Response;
  */
 final class RecordingThrottledHttpAdapter extends ThrottledHttpAdapter
 {
-    public string $requested = '';
+    public string $requested             = '';
+    public string $responseBody          = '{}';
+    public int|false $responseStatusCode = 200;
 
     /**
      * @param array<string, string> $headers
@@ -44,8 +46,9 @@ final class RecordingThrottledHttpAdapter extends ThrottledHttpAdapter
     {
         $this->requested = $url;
 
-        $response       = new Response();
-        $response->body = '{}';
+        $response              = new Response();
+        $response->body        = $this->responseBody;
+        $response->status_code = $this->responseStatusCode;
 
         return $response;
     }

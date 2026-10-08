@@ -359,9 +359,9 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * A flat list of playlist folders. API8 only.
+     * A flat list of playlist folders. API8 only. A null entry is the root, reported as id 0.
      *
-     * @param list<PlaylistFolder> $folders
+     * @param list<?PlaylistFolder> $folders
      */
     public function playlistFolders(
         int $apiVersion,

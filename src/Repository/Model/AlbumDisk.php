@@ -241,25 +241,11 @@ class AlbumDisk extends database_object implements
      */
     public function display_art(array $size, bool $force = false): void
     {
-        if (Art::has_db($this->album_id, 'album')) {
-            $title = (!empty($this->get_parent_fullname()))
-                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
-                : $this->get_fullname();
+        $title = (!empty($this->get_parent_fullname()))
+            ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
+            : $this->get_fullname();
 
-            Art::display('album', $this->album_id, $title, $size, $this->get_link());
-        } elseif (
-            $this->album->album_artist
-            && (
-                Art::has_db($this->album->album_artist, 'artist')
-                || $force
-            )
-        ) {
-            $title = (!empty($this->get_parent_fullname()))
-                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
-                : $this->get_fullname();
-
-            Art::display('artist', $this->album->album_artist, $title, $size, $this->get_link());
-        }
+        Art::display('album', $this->album_id, $title, $size, $this->get_link());
     }
 
     /**

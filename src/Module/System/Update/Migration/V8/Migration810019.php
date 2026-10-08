@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V8;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -40,6 +41,12 @@ final class Migration810019 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `session` WHERE `type` = 'api' AND `id` = MD5(`username`);");
+        // Matched in PHP rather than SQL's MD5(), which MySQL 9.6 dropped from its default install.
+        $db_results = Dba::read("SELECT `id`, `username` FROM `session` WHERE `type` = 'api';");
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['username'] !== null && $row['id'] === md5((string) $row['username'])) {
+                $this->updateDatabase("DELETE FROM `session` WHERE `type` = 'api' AND `id` = ?;", [$row['id']]);
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -62,6 +63,27 @@ final class Migration800010 extends AbstractMigration
         // folder
         $this->updateDatabase("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video
-        $this->updateDatabase("INSERT INTO folder_map (folder_id, object_id, object_type, name, catalog, path_name) SELECT f.id, s.id, 'song', SUBSTRING_INDEX(s.file, '/', -1), s.catalog, REGEXP_REPLACE(s.file, '/[^/]+$', '') FROM song s INNER JOIN folder f ON f.catalog = s.catalog AND f.path_name = REGEXP_REPLACE(s.file, '/[^/]+$', '') LEFT JOIN folder_map fm ON fm.object_id = s.id AND fm.object_type = 'song' WHERE fm.object_id IS NULL;");
+        // Split in PHP, not SQL's REGEXP_REPLACE()/SUBSTRING_INDEX() — MySQL 5.x predates REGEXP_REPLACE entirely.
+        $db_results = Dba::read("SELECT `s`.`id`, `s`.`catalog`, `s`.`file` FROM `song` AS `s` LEFT JOIN `folder_map` AS `fm` ON `fm`.`object_id` = `s`.`id` AND `fm`.`object_type` = 'song' WHERE `fm`.`object_id` IS NULL;");
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $file      = (string) $row['file'];
+            $lastSlash = strrpos($file, '/');
+            $pathName  = ($lastSlash === false) ? $file : substr($file, 0, $lastSlash);
+            $name      = ($lastSlash === false) ? $file : substr($file, $lastSlash + 1);
+
+            $folderRow = Dba::fetch_assoc(Dba::read(
+                'SELECT `id` FROM `folder` WHERE `catalog` = ? AND `path_name` = ?;',
+                [$row['catalog'], $pathName]
+            ));
+            $folderId = (int) ($folderRow['id'] ?? 0);
+            if ($folderId <= 0) {
+                continue;
+            }
+
+            $this->updateDatabase(
+                'INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) VALUES (?, ?, ?, ?, ?, ?);',
+                [$folderId, $row['id'], 'song', $name, $row['catalog'], $pathName]
+            );
+        }
     }
 }

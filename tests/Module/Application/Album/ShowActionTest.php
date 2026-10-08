@@ -61,6 +61,55 @@ class ShowActionTest extends MockeryTestCase
      * DI container the unit bootstrap has none of. What the action decides is covered elsewhere: the
      * editability rule by `AlbumEditabilityCheckerTest`, and the rendered markup over http.
      */
+    /**
+     * A scraper stores the `embed=1` url once and keeps asking for it, long after the player was switched
+     * off or the album taken down. Falling through to the page put the whole site in a 420 pixel frame.
+     */
+    public function testRunAnswersAFrameWithACardAndNeverWithTheWholePage(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
+
+        $albumId        = 42;
+        $album->catalog = 1;
+
+        $user->catalogs['music'] = [1];
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album' => (string) $albumId, 'embed' => '1']);
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->ui->shouldNotReceive('showHeader');
+        $this->ui->shouldNotReceive('showFooter');
+
+        ob_start();
+        $result = $this->subject->run($request, $gatekeeper);
+        $html   = (string) ob_get_clean();
+
+        $this->assertNull($result);
+        $this->assertStringNotContainsString('You have requested an object that does not exist', $html);
+        $this->assertStringContainsString('noindex', $html, 'the frame is answered by the standalone card');
+        $this->assertStringNotContainsString('<script', $html);
+    }
+
     public function testRunShowsErrorIfAlbumDoesNotExist(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);

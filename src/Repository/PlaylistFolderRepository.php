@@ -68,6 +68,8 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
 
         $statements[] = ['DELETE FROM `playlist_folder` WHERE `user` NOT IN (SELECT `id` FROM `user`);', []];
         $statements[] = ['DELETE FROM `playlist_folder_map` WHERE `user` NOT IN (SELECT `id` FROM `user`);', []];
+        $statements[] = ['DELETE FROM `playlist_folder_hide` WHERE `user` NOT IN (SELECT `id` FROM `user`);', []];
+        $statements[] = ['DELETE FROM `playlist_folder_hide` WHERE `folder` NOT IN (SELECT `id` FROM `playlist_folder`);', []];
 
         // A dangling parent or folder is re-homed to the root, so a bug elsewhere flattens a tree instead of losing it
         $statements[] = [
@@ -105,6 +107,7 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
         string $name,
         int $parentId = PlaylistFolder::ROOT,
         ?int $sortOrder = null,
+        string $type = 'private',
     ): ?int {
         if (!PlaylistFolder::isValidName($name)) {
             return null;
@@ -120,7 +123,8 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
             $user->getId(),
             $name,
             $parentId,
-            $sortOrder ?? $this->nextSortOrder($user->getId(), $parentId)
+            $sortOrder ?? $this->nextSortOrder($user->getId(), $parentId),
+            in_array($type, ['private', 'public'], true) ? $type : 'private'
         );
     }
 
@@ -192,13 +196,24 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
     }
 
     /**
+     * @return list<PlaylistFolder>
+     */
+    public function getHiddenFolders(int $viewerId): array
+    {
+        return $this->hydrate(
+            'SELECT `playlist_folder`.* FROM `playlist_folder` INNER JOIN `playlist_folder_hide` ON `playlist_folder_hide`.`folder` = `playlist_folder`.`id` WHERE `playlist_folder_hide`.`user` = ? ORDER BY `playlist_folder`.`user`, `playlist_folder`.`sort_order`, `playlist_folder`.`name`;',
+            [$viewerId]
+        );
+    }
+
+    /**
      * @return array<int, int>
      */
-    public function getItemCounts(User $user): array
+    public function getItemCounts(int $userId): array
     {
         $result = $this->connection->query(
             'SELECT `folder`, COUNT(*) AS `items` FROM `playlist_folder_map` WHERE `user` = ? GROUP BY `folder`;',
-            [$user->getId()]
+            [$userId]
         );
 
         $counts = [];
@@ -299,11 +314,44 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
     /**
      * @return list<PlaylistFolder>
      */
+    public function getPublicChildren(int $ownerId, int $parentId): array
+    {
+        return $this->hydrate(
+            "SELECT * FROM `playlist_folder` WHERE `user` = ? AND `parent` = ? AND `type` = 'public' ORDER BY `sort_order`, `name`;",
+            [$ownerId, $parentId]
+        );
+    }
+
+    /**
+     * Every other user's top-level public folder, hidden ones included; the viewer still has to be able to
+     * use a folder they chose to declutter, so hiding only marks it, it never removes it from this list.
+     *
+     * @return list<PlaylistFolder>
+     */
+    public function getPublicRootFolders(int $viewerId): array
+    {
+        return $this->hydrate(
+            "SELECT * FROM `playlist_folder` WHERE `parent` = 0 AND `type` = 'public' AND `user` != ? ORDER BY `user`, `sort_order`, `name`;",
+            [$viewerId]
+        );
+    }
+
+    /**
+     * @return list<PlaylistFolder>
+     */
     public function getTree(User $user): array
     {
         return $this->hydrate(
             'SELECT * FROM `playlist_folder` WHERE `user` = ? ORDER BY `parent`, `sort_order`, `name`;',
             [$user->getId()]
+        );
+    }
+
+    public function hide(int $viewerId, int $folderId): void
+    {
+        $this->connection->query(
+            'INSERT INTO `playlist_folder_hide` (`user`, `folder`, `date`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `date` = VALUES(`date`);',
+            [$viewerId, $folderId, time()]
         );
     }
 
@@ -328,6 +376,40 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
         ) === 0;
     }
 
+    public function isReadableBy(int $folderId, int $viewerId): bool
+    {
+        if ($folderId <= PlaylistFolder::ROOT) {
+            return true; // the root is not a real row; everyone has one
+        }
+
+        $seen      = [];
+        $currentId = $folderId;
+        while ($currentId > PlaylistFolder::ROOT && !isset($seen[$currentId])) {
+            $seen[$currentId] = true;
+
+            $row = $this->connection->query(
+                'SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;',
+                [$currentId]
+            )->fetch(PDO::FETCH_ASSOC);
+
+            if (!is_array($row)) {
+                return false; // dangling id
+            }
+
+            if ((int) $row['user'] === $viewerId) {
+                return true; // the viewer's own subtree, regardless of its visibility
+            }
+
+            if ($row['type'] !== 'public') {
+                return false; // this link in the chain is private to someone else
+            }
+
+            $currentId = (int) $row['parent'];
+        }
+
+        return true;
+    }
+
     public function persist(PlaylistFolder $folder): ?int
     {
         if (!PlaylistFolder::isValidName($folder->getName()) || $folder->getUserId() <= 0) {
@@ -338,7 +420,8 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
             $folder->getUserId(),
             $folder->getName(),
             $folder->getParentId(),
-            $folder->getSortOrder()
+            $folder->getSortOrder(),
+            $folder->getType()
         );
     }
 
@@ -377,6 +460,14 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
         return true;
     }
 
+    public function unhide(int $viewerId, int $folderId): void
+    {
+        $this->connection->query(
+            'DELETE FROM `playlist_folder_hide` WHERE `user` = ? AND `folder` = ?;',
+            [$viewerId, $folderId]
+        );
+    }
+
     public function unplace(User $user, int $objectId, string $objectType): void
     {
         $this->connection->query(
@@ -390,6 +481,7 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
         ?string $name = null,
         ?int $parentId = null,
         ?int $sortOrder = null,
+        ?string $type = null,
     ): bool {
         // The owner is read directly rather than through the model, so a write never warms the row cache
         $userId = (int) $this->connection->fetchOne(
@@ -430,6 +522,11 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
         if ($sortOrder !== null) {
             $sets[]   = '`sort_order` = ?';
             $params[] = $sortOrder;
+        }
+
+        if ($type !== null && in_array($type, ['private', 'public'], true)) {
+            $sets[]   = '`type` = ?';
+            $params[] = $type;
         }
 
         if ($sets === []) {
@@ -502,12 +599,12 @@ final readonly class PlaylistFolderRepository implements PlaylistFolderRepositor
     /**
      * Store one folder, reporting null when a sibling already holds the name
      */
-    private function insert(int $userId, string $name, int $parentId, int $sortOrder): ?int
+    private function insert(int $userId, string $name, int $parentId, int $sortOrder, string $type = 'private'): ?int
     {
         try {
             $this->connection->query(
-                'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?);',
-                [$userId, $parentId, $name, $sortOrder, time(), time()]
+                'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?);',
+                [$userId, $parentId, $name, $sortOrder, in_array($type, ['private', 'public'], true) ? $type : 'private', time(), time()]
             );
         } catch (DatabaseException) {
             return null;

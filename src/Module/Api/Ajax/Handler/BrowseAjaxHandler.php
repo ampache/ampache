@@ -196,7 +196,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                         // Delete it!
                         $playlist->delete();
-                        $key = 'playlist_row_' . $playlist->id;
+                        // the standalone playlist browse and the playlist-folder browse key their rows differently
+                        $keys = ['playlist_row_' . $playlist->id, 'track_playlist-' . $playlist->id];
                         break;
                     case 'smartplaylist':
                         $playlist = $this->modelFactory->createSmartlist((int) Core::get_request('id'));
@@ -205,7 +206,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         }
 
                         $playlist->delete();
-                        $key = 'smartplaylist_row_' . $playlist->id;
+                        $keys = ['smartplaylist_row_' . $playlist->id, 'track_search-' . $playlist->id];
                         break;
                     case 'live_stream':
                         if (!$user->has_access(AccessLevelEnum::MANAGER)) {
@@ -218,13 +219,15 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                             $this->liveStreamRepository->delete($liveStream);
                         }
 
-                        $key = 'live_stream_' . $liveStreamId;
+                        $keys = ['live_stream_' . $liveStreamId];
                         break;
                     default:
                         return;
                 }
 
-                $results[$key] = '';
+                foreach ($keys as $key) {
+                    $results[$key] = '';
+                }
 
                 break;
             case 'page':

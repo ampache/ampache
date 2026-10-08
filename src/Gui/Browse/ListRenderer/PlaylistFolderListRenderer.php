@@ -46,6 +46,7 @@ use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Override;
 
 /**
@@ -63,6 +64,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         private readonly GatekeeperFactoryInterface $gatekeeperFactory,
         private readonly GuiFactoryInterface $guiFactory,
         private readonly PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private readonly UserRepositoryInterface $userRepository,
         private readonly ZipHandlerInterface $zipHandler,
     ) {}
 
@@ -171,6 +173,31 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
+     * Folders the viewer has hidden from their own root; hiding only de-emphasises a folder, so this never
+     * removes it from the listing -- it is used to mark the row and to decide which toggle action to show.
+     *
+     * @return list<PlaylistFolder>
+     */
+    public function getHiddenFolders(): array
+    {
+        return $this->cachePerRender('hiddenFolders', function (): array {
+            $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
+
+            return ($user !== null) ? $this->playlistFolderRepository->getHiddenFolders($user->getId()) : [];
+        });
+    }
+
+    public function getHiddenViewUrl(): string
+    {
+        return $this->configContainer->getWebPath() . '/browse.php?action=playlist_folder&hidden=1';
+    }
+
+    public function getHideFolderUrl(int $folderId): string
+    {
+        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=hide&folder=' . $folderId;
+    }
+
+    /**
      * The Add cell the standalone playlist/smart-playlist browses show for this item; a folder is not
      * addable to a playlist itself, so it gets none.
      */
@@ -228,7 +255,17 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
     public function getRowOwner(PlaylistFolder|playlist_object $item): string
     {
-        return ($item instanceof PlaylistFolder) ? '' : (string) $item->username;
+        if (!$item instanceof PlaylistFolder) {
+            return (string) $item->username;
+        }
+
+        if ($this->isOwnFolder($item)) {
+            return '';
+        }
+
+        $owner = $this->userRepository->findById($item->getUserId());
+
+        return ($owner !== null) ? sprintf(T_('Shared by %s'), $owner->getUsername()) : '';
     }
 
     /**
@@ -367,6 +404,10 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function getTitle(): string
     {
+        if ($this->isHiddenView()) {
+            return $this->e(T_('Hidden'));
+        }
+
         $home = $this->e(T_('Home'));
 
         $folder = $this->getCurrentFolder();
@@ -384,15 +425,77 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return implode(' / ', $crumbs);
     }
 
+    public function getUnhideFolderUrl(int $folderId): string
+    {
+        return $this->configContainer->getWebPath() . '/playlist_folder.php?action=unhide&folder=' . $folderId;
+    }
+
+    /**
+     * Whether the viewer has anything to see on the "Hidden" tab -- which only ever appears then
+     */
+    public function hasAnyHidden(): bool
+    {
+        return $this->getHiddenFolders() !== [];
+    }
+
     public function isDirectplayEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY);
     }
 
+    /**
+     * Whether the viewer dismissed this folder -- their own or one shared with them -- from their own
+     * root; it stays usable, only marked
+     */
+    public function isHiddenForViewer(PlaylistFolder $folder): bool
+    {
+        foreach ($this->getHiddenFolders() as $hidden) {
+            if ($hidden->getId() === $folder->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether this render is the dedicated "Hidden" browse rather than a real folder level
+     */
+    public function isHiddenView(): bool
+    {
+        return $this->getBrowse()->get_type() === 'playlist_folder_hidden';
+    }
+
+    public function isOwnFolder(PlaylistFolder $folder): bool
+    {
+        return $folder->isVisible($this->gatekeeperFactory->createGuiGatekeeper()->getUser());
+    }
+
+    /**
+     * False for a folder shared by another user, so the toolbar and per-row drag/edit controls stay hidden.
+     */
     public function mayCreate(): bool
     {
-        return $this->gatekeeperFactory->createGuiGatekeeper()
-            ->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+        $folder = $this->getCurrentFolder();
+
+        return $this->gatekeeperFactory->createGuiGatekeeper()->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && ($folder === null || $this->isOwnFolder($folder));
+    }
+
+    /**
+     * The Hide/Unhide action cell for a root-level folder, own or shared; toggles on the current mark
+     */
+    public function renderHideToggle(PlaylistFolder $folder): string
+    {
+        if ($this->isHiddenForViewer($folder)) {
+            return '<a href="' . $this->e($this->getUnhideFolderUrl($folder->getId())) . '">'
+                . Ui::get_material_symbol('visibility', T_('Unhide'))
+                . '</a>';
+        }
+
+        return '<a href="' . $this->e($this->getHideFolderUrl($folder->getId())) . '">'
+            . Ui::get_material_symbol('visibility_off', T_('Hide'))
+            . '</a>';
     }
 
     /**
@@ -495,8 +598,23 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         /** @var array<int, int> */
         return $this->cachePerRender('itemCounts', function (): array {
             $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
+            if ($user === null) {
+                return [];
+            }
 
-            return ($user !== null) ? $this->playlistFolderRepository->getItemCounts($user) : [];
+            $counts        = $this->playlistFolderRepository->getItemCounts($user->getId());
+            $foreignOwners = [];
+            foreach ($this->getRows() as $row) {
+                if ($row['item'] instanceof PlaylistFolder && !$this->isOwnFolder($row['item'])) {
+                    $foreignOwners[$row['item']->getUserId()] = true;
+                }
+            }
+
+            foreach (array_keys($foreignOwners) as $ownerId) {
+                $counts += $this->playlistFolderRepository->getItemCounts($ownerId);
+            }
+
+            return $counts;
         });
     }
 

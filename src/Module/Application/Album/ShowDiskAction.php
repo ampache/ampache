@@ -28,7 +28,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Gui\Partial\PageMeta;
-use Ampache\Gui\Playback\EmbedTracksTrait;
+use Ampache\Gui\Playback\MediaEmbedTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -50,7 +50,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowDiskAction implements ApplicationActionInterface
 {
-    use EmbedTracksTrait;
+    use MediaEmbedTrait;
 
     public const string REQUEST_KEY = 'show_disk';
 
@@ -69,20 +69,24 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
     {
         $user        = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs    = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
+        $query       = $request->getQueryParams();
+        $albumDiskId = (int) ($query['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
         $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
+        if (!empty($query['embed'])) {
             $webPath = AmpConfig::get_web_path();
-            echo (new MediaEmbedView(
-                (string) $albumDisk->get_fullname(),
-                (string) $albumDisk->get_parent_fullname(),
-                $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=128x128',
-                $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId,
-                $this->embeddedSongs($this->albumRepository->getSongsByAlbumDisk($albumDiskId))
-            ))->render();
+            $pageUrl = $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId;
+            echo ($shown && MediaEmbedView::isOffered())
+                ? (new MediaEmbedView(
+                    (string) $albumDisk->get_fullname(),
+                    (string) $albumDisk->get_parent_fullname(),
+                    $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=128x128',
+                    $pageUrl,
+                    $this->embeddedSongs($this->albumRepository->getSongsByAlbumDisk($albumDiskId))
+                ))->render()
+                : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
         }

@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// playback/media_embed_unavailable.phtml -- rendered by Ampache\Gui\Playback\MediaEmbedUnavailableView
+
+/** @var Ampache\Gui\Playback\MediaEmbedUnavailableView $this */
+
+$logo = $this->getLogoUrl(); ?>
+<!DOCTYPE html>
+<html lang="<?php echo $this->e($this->getDocumentLanguage()); ?>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title><?php echo $this->e($this->getSiteTitle()); ?></title>
+<style>
+    /* self-contained: this page is framed by a site whose stylesheet is none of our business */
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 13px/1.4 system-ui, sans-serif; color: #eee; background: #1b1b1b; }
+    /* the frame was sized by the card a scraper stored, so this has to sit right at 128 and at 340 */
+    .gone { display: flex; gap: 12px; align-items: center; justify-content: center; height: 100vh; padding: 10px; }
+    .gone img { width: 48px; height: 48px; object-fit: contain; flex: none; }
+    .gone .name { font-weight: 600; }
+    .gone .meta { min-width: 0; }
+    .gone p { margin: 0; }
+    .gone .away { color: #aaa; }
+    .gone a { color: inherit; }
+    .gone a:hover, .gone a:focus { text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="gone">
+    <?php if ($logo !== '') { ?>
+    <img src="<?php echo $this->e($logo); ?>" alt="">
+    <?php } ?>
+    <div class="meta">
+        <p class="name"><?php echo T_('This player is no longer available'); ?></p>
+        <p class="away">
+            <a href="<?php echo $this->e($this->getLinkUrl()); ?>" target="_blank" rel="noopener">
+                <?php printf(
+                    /* HINT: name of this Ampache server */
+                    T_('Open on %s'),
+                    $this->e($this->getSiteTitle())
+                ); ?> &rarr;
+            </a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

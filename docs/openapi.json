@@ -5308,6 +5308,12 @@
           "sort_order": {
             "type": "integer"
           },
+          "type": {
+            "type": "string"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
           "items": {
             "type": "integer"
           }
@@ -5317,6 +5323,8 @@
           "name",
           "parent",
           "sort_order",
+          "type",
+          "hidden",
           "items"
         ],
         "additionalProperties": true
@@ -5383,6 +5391,12 @@
               "sort_order": {
                 "type": "integer"
               },
+              "type": {
+                "type": "string"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
               "items": {
                 "type": "integer"
               },
@@ -5398,6 +5412,8 @@
               "name",
               "parent",
               "sort_order",
+              "type",
+              "hidden",
               "items",
               "contents"
             ],
@@ -5421,6 +5437,14 @@
           },
           "sort_order": {
             "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "private",
+              "public"
+            ],
+            "type": "string",
+            "description": "Private when omitted; public requires Content Manager access (level 50)"
           }
         },
         "additionalProperties": true
@@ -5437,6 +5461,18 @@
           },
           "sort_order": {
             "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "private",
+              "public"
+            ],
+            "type": "string",
+            "description": "Public requires Content Manager access (level 50)"
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "True to mark the folder hidden in the caller's own root, false to unhide. The one field a caller may set on a folder they do not own"
           }
         },
         "additionalProperties": true
@@ -21165,7 +21201,7 @@
         "tags": [
           "Playlist Folders"
         ],
-        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
+        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; hidden marks the ones you have chosen to hide from your own root, without dropping them from the list. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
         "operationId": "playlistFolders"
       },
       "put": {
@@ -21194,6 +21230,19 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "private",
+                "public"
+              ],
+              "type": "string"
+            },
+            "description": "Private when omitted; public requires Content Manager access (level 50)"
           }
         ],
         "responses": {
@@ -21372,6 +21421,28 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "private",
+                "public"
+              ],
+              "type": "string"
+            },
+            "description": "Public requires Content Manager access (level 50)"
+          },
+          {
+            "in": "query",
+            "name": "hidden",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "True to mark the folder hidden in the caller's own root, false to unhide. The one field a caller may set on a folder they do not own"
           }
         ],
         "responses": {
@@ -21405,7 +21476,7 @@
         "tags": [
           "Playlist Folders"
         ],
-        "description": "Renames, re-parents or repositions a folder. Anything not sent is left alone. Moving a folder into its own subtree is refused, because it would detach the branch from the tree.",
+        "description": "Renames, re-parents, repositions or (un)hides a folder. Anything not sent is left alone. Moving a folder into its own subtree is refused, because it would detach the branch from the tree. hidden is the one field a caller may also set on a folder they do not own.",
         "requestBody": {
           "required": false,
           "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
