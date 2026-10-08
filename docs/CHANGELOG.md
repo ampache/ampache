@@ -26,6 +26,9 @@
 * Edit/Find Art and Reset Art on Albums target the album correctly
 * A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
 * Scanning folders (`run:updateCatalog -s`, "Scan Folders"/"Scan All Folders") on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, which MySQL only added in 8.0.4
+* Updating a share you don't own (API `updateShare`/Subsonic `updateshare`) reported success without changing anything, instead of the access-denied error it now gives
+* `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
+* Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
 
 ## Ampache 8.2.2
 
