@@ -14,6 +14,7 @@
 * Database 830002
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
   * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
+  * Removed predictable `MD5(username)` API sessions created by older releases (GHSA-w28w-q7qp-8989)
 
 ### Changed (8.3.0)
 
