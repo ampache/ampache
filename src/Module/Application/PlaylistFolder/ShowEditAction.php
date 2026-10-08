@@ -72,7 +72,9 @@ final readonly class ShowEditAction implements ApplicationActionInterface
             $folder->getId(),
             $folder->getName(),
             $folder->getParentId(),
-            $this->treeFormatter->flatten($user, $folder->getId())
+            $this->treeFormatter->flatten($user, $folder->getId()),
+            $folder->getType(),
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -65,14 +65,21 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: playlist folders are only available to a logged in user.');
         }
 
-        $input    = $request->getQueryParams();
-        $folderId = (isset($input['folder'])) ? (int) $input['folder'] : PlaylistFolder::ROOT;
+        $input  = $request->getQueryParams();
+        $hidden = make_bool($input['hidden'] ?? false);
+
+        // The hidden view is a cross-folder list, so a `folder` filter alongside it is meaningless
+        $folderId = (!$hidden && isset($input['folder'])) ? (int) $input['folder'] : PlaylistFolder::ROOT;
         $folder   = ($folderId > PlaylistFolder::ROOT)
             ? $this->playlistFolderRepository->findById($folderId)
             : null;
 
-        // another user's folder is not yours to browse, and a stale/removed id is not distinguishable from it
-        if ($folderId > PlaylistFolder::ROOT && (!$folder instanceof PlaylistFolder || !$folder->isVisible($user))) {
+        // a shared folder is readable when it and every ancestor up to the root are public
+        if (
+            $folderId > PlaylistFolder::ROOT
+            && (!$folder instanceof PlaylistFolder
+                || (!$folder->isVisible($user) && !$this->playlistFolderRepository->isReadableBy($folderId, $user->getId())))
+        ) {
             throw new AccessDeniedException('Access Denied: playlist folder filter');
         }
 
@@ -81,7 +88,7 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
         }
 
         $browse = $this->browseFactory->create();
-        $browse->set_type(self::REQUEST_KEY);
+        $browse->set_type($hidden ? 'playlist_folder_hidden' : self::REQUEST_KEY);
         $browse->set_use_pages(true);
 
         $this->ui->showHeader();
@@ -90,7 +97,10 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
             $browse->add_supplemental_object(self::REQUEST_KEY, $folder);
         }
 
-        $browse->show_objects($this->rowIds->getRowIds($user, $folder), true);
+        $browse->show_objects(
+            $hidden ? $this->rowIds->getHiddenRowIds($user) : $this->rowIds->getRowIds($user, $folder),
+            !$hidden
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

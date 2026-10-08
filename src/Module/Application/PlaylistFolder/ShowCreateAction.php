@@ -72,7 +72,9 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
             null,
             $this->requestParser->getFromRequest('name'),
             $parentId,
-            $this->treeFormatter->flatten($user)
+            $this->treeFormatter->flatten($user),
+            'private',
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         )->render();
         $this->ui->showQueryStats();
         $this->ui->showFooter();

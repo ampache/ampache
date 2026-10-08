@@ -558,19 +558,11 @@ class Album extends database_object implements
      */
     public function display_art(array $size, bool $force = false): void
     {
-        if (Art::has_db($this->id, 'album')) {
-            $title = ($this->get_parent_fullname() != "")
-                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
-                : $this->get_fullname();
+        $title = ($this->get_parent_fullname() != "")
+            ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
+            : $this->get_fullname();
 
-            Art::display('album', $this->id, $title, $size, $this->get_link());
-        } elseif ($this->album_artist && (Art::has_db($this->album_artist, 'artist') || $force)) {
-            $title = ($this->get_parent_fullname() != "")
-                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
-                : $this->get_fullname();
-
-            Art::display('artist', $this->album_artist, $title, $size, $this->get_link());
-        }
+        Art::display('album', $this->id, $title, $size, $this->get_link());
     }
 
     /**

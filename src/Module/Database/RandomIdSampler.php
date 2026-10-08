@@ -27,7 +27,7 @@ namespace Ampache\Module\Database;
 
 final readonly class RandomIdSampler implements RandomIdSamplerInterface
 {
-    // total probe budget is $limit times this; a probe landing on a gap or duplicate finds nothing new
+    // total probe budget is $limit times this; a probe missing the table or re-drawing a found id wastes the attempt
     private const int MAX_ATTEMPTS_PER_ID = 10;
 
     public function __construct(private DatabaseConnectionInterface $connection) {}
@@ -56,7 +56,7 @@ final readonly class RandomIdSampler implements RandomIdSamplerInterface
             return $this->allMatchingIdsShuffled($table, $idColumn, $whereSql, $params);
         }
 
-        $probeSql = sprintf('SELECT `%s` FROM `%s` %s AND `%s` >= ? ORDER BY `%s` LIMIT 1', $idColumn, $table, $whereSql, $idColumn, $idColumn);
+        $probeSql = sprintf('SELECT `%s` FROM `%s` %s AND `%s` = ? LIMIT 1', $idColumn, $table, $whereSql, $idColumn);
 
         $ids      = [];
         $attempts = 0;

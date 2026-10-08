@@ -86,23 +86,13 @@ final class AlbumPageView extends AbstractView
 
     public function getArt(): string
     {
-        $name      = '[' . $this->getParentName() . '] ' . $this->getFullname();
-        $size      = ['width' => 384, 'height' => 384];
-        $album_id  = $this->getUploadAlbumId();
-        $artist_id = $this->getArtistId();
+        $name     = '[' . $this->getParentName() . '] ' . $this->getFullname();
+        $size     = ['width' => 384, 'height' => 384];
+        $album_id = $this->getUploadAlbumId();
 
         ob_start();
         // art is stored against the album; a disk has none of its own
-        if (
-            !Art::has_db($album_id, 'album')
-            && $artist_id
-            && Art::has_db($artist_id, 'artist')
-        ) {
-            // no cover of its own, so fall back to the album artist like Album::display_art() does for a listing
-            Art::display('artist', $artist_id, $name, $size, null, true, false);
-        } else {
-            Art::display('album', $album_id, $name, $size, null, true, false);
-        }
+        Art::display('album', $album_id, $name, $size, null, true, false);
 
         return (string) ob_get_clean();
     }

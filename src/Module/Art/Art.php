@@ -39,6 +39,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Plugin\AmpacheDiscogs;
@@ -1752,7 +1753,12 @@ class Art extends database_object
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
             foreach ($songs as $song_id) {
-                $song        = new Song($song_id);
+                $song = new Song($song_id);
+                // the tags of a format nothing can write back would be read and built only to be dropped again
+                if ($song->file === null || !VaInfo::canWriteTags($song->file)) {
+                    continue;
+                }
+
                 $description = ($this->object_type === 'artist') ? $song->get_parent_fullname() : $object->get_fullname();
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
@@ -1760,10 +1766,10 @@ class Art extends database_object
 
                 $ndata      = [];
                 $data       = $vainfo->read_id3();
-                $fileformat = $data['fileformat'];
+                $fileformat = $data['fileformat'] ?? '';
                 $apics      = ($fileformat == 'flac' || $fileformat == 'ogg')
-                    ? $data['flac']['PICTURE']
-                    : $data['id3v2']['APIC'];
+                    ? $data['flac']['PICTURE'] ?? null
+                    : $data['id3v2']['APIC'] ?? null;
 
                 /* is the file flac or mp3? */
                 $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
@@ -1815,8 +1821,7 @@ class Art extends database_object
                 }
 
                 unset($apics);
-                $tags  = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'vorbiscomment' : 'id3v2';
-                $ndata = array_merge($ndata, $vainfo->prepare_metadata_for_writing($data['tags'][$tags]));
+                $ndata = array_merge($ndata, $vainfo->prepare_metadata_for_writing(VaInfo::existingTags($data)));
                 $vainfo->write_id3($ndata);
             } // foreach song
         } // write_id3

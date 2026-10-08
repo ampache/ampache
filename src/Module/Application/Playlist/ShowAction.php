@@ -27,7 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\PageMeta;
-use Ampache\Gui\Playback\EmbedTracksTrait;
+use Ampache\Gui\Playback\MediaEmbedTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Gui\Playlist\PlaylistPageView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -43,7 +43,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
-    use EmbedTracksTrait;
+    use MediaEmbedTrait;
 
     public const string REQUEST_KEY = 'show';
 
@@ -63,15 +63,18 @@ final readonly class ShowAction implements ApplicationActionInterface
         $public = !$playlist->isNew() && ($playlist->has_collaborate() || $playlist->type !== 'private');
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($public && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($_REQUEST['embed'])) {
+        if (!empty($_REQUEST['embed'])) {
             $webPath = AmpConfig::get_web_path('/client');
-            echo (new MediaEmbedView(
-                (string) $playlist->name,
-                (string) $playlist->username,
-                $webPath . '/image.php?object_id=' . $playlist->id . '&object_type=playlist&size=128x128',
-                $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id,
-                $this->embeddedSongs($playlist->get_songs())
-            ))->render();
+            $pageUrl = $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id;
+            echo ($public && MediaEmbedView::isOffered())
+                ? (new MediaEmbedView(
+                    (string) $playlist->name,
+                    (string) $playlist->username,
+                    $webPath . '/image.php?object_id=' . $playlist->id . '&object_type=playlist&size=128x128',
+                    $pageUrl,
+                    $this->embeddedSongs($playlist->get_songs())
+                ))->render()
+                : $this->embedUnavailable($public, $pageUrl);
 
             return null;
         }

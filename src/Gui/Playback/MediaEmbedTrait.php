@@ -25,14 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playback;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Song;
 
 /**
- * The songs a `MediaEmbedView` offers, shared by every action that can render one.
+ * What an action answers a frame with, shared by every action a scraper can point at.
  *
  * Relies on the host class having a `ModelFactoryInterface $modelFactory` property.
  */
-trait EmbedTracksTrait
+trait MediaEmbedTrait
 {
     /**
      * Capped: the frame is a taster on someone else's page, not a way to walk a whole library, and every
@@ -49,5 +50,19 @@ trait EmbedTracksTrait
         }
 
         return $songs;
+    }
+
+    /**
+     * What a frame gets when there is no player to put in it, which a stale card keeps asking for.
+     *
+     * The page itself is never an answer here: a 420 pixel frame would then hold the whole site.
+     */
+    private function embedUnavailable(bool $visible, string $pageUrl): string
+    {
+        http_response_code(MediaEmbedUnavailableView::statusFor($visible));
+
+        return (new MediaEmbedUnavailableView(
+            ($visible) ? $pageUrl : (string) AmpConfig::get_web_path()
+        ))->render();
     }
 }
