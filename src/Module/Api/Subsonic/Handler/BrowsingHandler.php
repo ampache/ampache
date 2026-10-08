@@ -73,14 +73,14 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getalbum(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $album = Subsonic_Api::getAmpacheObject($sub_id);
-        if (!$album instanceof Album || $album->isNew()) {
+        // a withdrawn album is refused like an id that was never there, so nothing says it exists
+        if (!$album instanceof Album || $album->isNew() || !$album->isVisible($user)) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -224,14 +224,14 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = new Artist(Subsonic_Api::getAmpacheId($sub_id));
-        if ($artist->isNew()) {
+        // a withdrawn artist is refused like an id that was never there, so nothing says it exists
+        if ($artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -473,6 +473,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog || $object instanceof Folder) {
+            // a withdrawn album or artist is refused like an id that was never there, so nothing says it exists
+            if (($object instanceof Album || $object instanceof Artist) && !$object->isVisible($user)) {
+                $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->responseHandler->addXmlResponse(__FUNCTION__);

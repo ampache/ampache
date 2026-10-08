@@ -45,6 +45,48 @@ class Album3MethodTest extends MockeryTestCase
     private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?Album3Method $subject;
 
+    /**
+     * A withdrawn release is refused exactly like an id that was never there, so nothing in the response
+     * tells a listener that the album exists at all.
+     */
+    public function testHandleRefusesAnAlbumTheCallerCannotSee(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
+
+        $albumId = 666;
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $album->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnFalse();
+
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage((string) $albumId);
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $albumId],
+            $user,
+            3
+        );
+    }
+
     public function testHandleReturnsOutput(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -67,6 +109,10 @@ class Album3MethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $album->shouldReceive('isVisible')
+            ->with($user)
+            ->once()
+            ->andReturnTrue();
         $album->shouldReceive('getId')
             ->withNoArgs()
             ->once()

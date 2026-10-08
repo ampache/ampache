@@ -26,8 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -37,6 +39,7 @@ final class Artist3Method implements MethodInterface
     public const string ACTION = 'artist';
 
     public function __construct(
+        private ModelFactoryInterface $modelFactory,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
@@ -51,6 +54,7 @@ final class Artist3Method implements MethodInterface
      *     auth: string,
      * } $input
      * @param 3 $apiVersion
+     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -60,7 +64,17 @@ final class Artist3Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $uid     = scrub_in((string) $input['filter']);
+        $uid    = scrub_in((string) $input['filter']);
+        $artist = $this->modelFactory->createArtist((int) $uid);
+        if ($artist->isNew()) {
+            throw new ResultEmptyException($uid);
+        }
+
+        // a withdrawn artist is refused like an id that was never there, so nothing says it exists
+        if (!$artist->isVisible($user)) {
+            throw new ResultEmptyException($uid);
+        }
+
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
