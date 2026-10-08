@@ -30,7 +30,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Query;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Tmp_Playlist;
@@ -91,7 +90,11 @@ final readonly class Session implements SessionInterface
             }
 
             // make sure the global is set too
-            self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
+            self::createGlobalUser(
+                isset($_SESSION['userdata']['username'])
+                    ? User::get_from_username($_SESSION['userdata']['username'])
+                    : null
+            );
             // make sure the prefs are set too
             Preference::init();
         }
@@ -461,7 +464,7 @@ final readonly class Session implements SessionInterface
     public static function destroy_perpetual(): void
     {
         $sql = "DELETE FROM `session` WHERE `expire` = 0 AND `type` = ?;";
-        Dba::write($sql, [AccessTypeEnum::API->value]);
+        Dba::write($sql, ['api']);
     }
 
     /**

@@ -130,7 +130,7 @@ class RandomIdSamplerTest extends TestCase
                     return 100;
                 }
 
-                self::assertStringContainsString('SELECT `id` FROM `song` WHERE 1=1 AND `id` >= ? ORDER BY `id` LIMIT 1', $sql);
+                self::assertStringContainsString('SELECT `id` FROM `song` WHERE 1=1 AND `id` = ? LIMIT 1', $sql);
 
                 return array_shift($probeResults);
             });

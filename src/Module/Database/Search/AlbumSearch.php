@@ -325,6 +325,10 @@ final class AlbumSearch implements SearchInterface
                 case 'days_added':
                     $where[] = sprintf('`album`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
+                case 'days_updated':
+                    $where[]      = sprintf('`song`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $join['song'] = true;
+                    break;
                 case 'played_times':
                     $where[]      = sprintf('`album`.`total_count` %s ?', $operator_sql);
                     $parameters[] = $input;

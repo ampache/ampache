@@ -2354,14 +2354,15 @@ final class Json8_Data
      * playlist_folders
      *
      * The calling user's folder tree as a flat list; clients rebuild the hierarchy from each `parent`.
+     * A null entry is the root, reported as id 0.
      *
-     * @param list<PlaylistFolder> $folders
+     * @param list<?PlaylistFolder> $folders
      * @return string JSON Object "playlist_folder"
      */
     public function playlist_folders(array $folders, User $user, bool $object = true): string
     {
         $this->count = $this->count ?: count($folders);
-        $md5         = md5(serialize(array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $folders)));
+        $md5         = md5(serialize(array_map(static fn(?PlaylistFolder $folder): int => $folder?->getId() ?? PlaylistFolder::ROOT, $folders)));
         $JSON        = $this->playlist_folders_array($folders, $user);
 
         if ($object) {
@@ -2380,12 +2381,16 @@ final class Json8_Data
     /**
      * playlist_folders_array
      *
-     * @param list<PlaylistFolder> $folders
+     * A null entry is the root, which has no row of its own, reported as id 0.
+     *
+     * @param list<?PlaylistFolder> $folders
      * @return array<int, array{
      *     id: string,
      *     name: string,
      *     parent: string,
      *     sort_order: int,
+     *     type: string,
+     *     hidden: bool,
      *     items: int
      * }>
      */
@@ -2393,16 +2398,20 @@ final class Json8_Data
     {
         $this->count = $this->count ?: count($folders);
         $folders     = array_values(Api::filter_objects($folders, $this->count, $this->offset, $this->limit));
-        $counts      = $this->playlistFolderRepository->getItemCounts($user);
+        $counts      = $this->playlistFolderItemCounts($folders, $user);
+        $hiddenIds   = array_map(static fn(PlaylistFolder $folder): int => $folder->getId(), $this->playlistFolderRepository->getHiddenFolders($user->getId()));
 
         $JSON = [];
         foreach ($folders as $folder) {
-            $JSON[] = [
-                "id" => (string) $folder->getId(),
-                "name" => $folder->getName(),
-                "parent" => (string) $folder->getParentId(),
-                "sort_order" => $folder->getSortOrder(),
-                "items" => $counts[$folder->getId()] ?? 0,
+            $folderId = $folder?->getId() ?? PlaylistFolder::ROOT;
+            $JSON[]   = [
+                "id" => (string) $folderId,
+                "name" => $folder?->getName() ?? '',
+                "parent" => (string) ($folder?->getParentId() ?? PlaylistFolder::ROOT),
+                "sort_order" => $folder?->getSortOrder() ?? 0,
+                "type" => $folder?->getType() ?? 'private',
+                "hidden" => in_array($folderId, $hiddenIds, true),
+                "items" => $counts[$folderId] ?? 0,
             ];
         }
 
@@ -3930,6 +3939,29 @@ final class Json8_Data
         }
 
         return $indexed;
+    }
+
+    /**
+     * Item counts for $user's own tree, plus each shared folder's owner, since a merged root mixes both
+     *
+     * @param list<?PlaylistFolder> $folders
+     * @return array<int, int>
+     */
+    private function playlistFolderItemCounts(array $folders, User $user): array
+    {
+        $counts        = $this->playlistFolderRepository->getItemCounts($user->getId());
+        $foreignOwners = [];
+        foreach ($folders as $folder) {
+            if ($folder !== null && $folder->getUserId() !== $user->getId()) {
+                $foreignOwners[$folder->getUserId()] = true;
+            }
+        }
+
+        foreach (array_keys($foreignOwners) as $ownerId) {
+            $counts += $this->playlistFolderRepository->getItemCounts($ownerId);
+        }
+
+        return $counts;
     }
 
     /**

@@ -216,118 +216,122 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                         continue;
                     }
 
-                    $object_path = $type_path . DIRECTORY_SEPARATOR . $object_id . DIRECTORY_SEPARATOR . 'default';
-                    if (!is_dir($object_path)) {
-                        continue;
-                    }
+                    $object_dir  = $type_path . DIRECTORY_SEPARATOR . $object_id;
+                    $object_path = $object_dir . DIRECTORY_SEPARATOR . 'default';
 
-                    $files = scandir($object_path);
-                    if ($files === false || $files === ['.', '..']) {
-                        continue;
-                    }
-
-                    // check if this even exists in the database
-                    $className = ObjectTypeToClassNameMapper::map($type);
-                    $item      = new $className($object_id);
-                    /** @var library_item $item */
-                    $exists = $item->isNew() === false;
-                    if (!$exists) {
-                        $interactor->info(
-                            sprintf(
-                                'Object does not exist: %s/%s',
-                                $type,
-                                $object_id
-                            ),
-                            true
-                        );
-                    }
-
-                    foreach ($files as $file) {
-                        // Look for art files with size in the filename (e.g., art-128x128.jpg)
-                        if (preg_match('/^art-(\d+x\d+)\./', $file, $matches)) {
+                    if (is_dir($object_path)) {
+                        $files = scandir($object_path);
+                        if ($files !== false && $files !== ['.', '..']) {
+                            // check if this even exists in the database
+                            $className = ObjectTypeToClassNameMapper::map($type);
+                            $item      = new $className((int) $object_id);
+                            /** @var library_item $item */
+                            $exists = $item->isNew() === false;
                             if (!$exists) {
-                                if ($delete) {
-                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
-                                    $interactor->info(
-                                        sprintf(
-                                            'DELETE: %s',
-                                            $object_path . DIRECTORY_SEPARATOR . $file
-                                        ),
-                                        true
-                                    );
-                                }
-
-                                continue;
+                                $interactor->info(
+                                    sprintf(
+                                        'Object does not exist: %s/%s',
+                                        $type,
+                                        $object_id
+                                    ),
+                                    true
+                                );
                             }
 
-                            $size = $matches[1];
-                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
-                                if ($delete) {
-                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
-                                    $interactor->info(
-                                        sprintf(
-                                            'DELETE: %s',
-                                            $object_path . DIRECTORY_SEPARATOR . $file
-                                        ),
-                                        true
-                                    );
-                                } else {
-                                    $interactor->info(
-                                        sprintf(
-                                            'Thumbnail is not in the database: %s/%s/%s (size: %s)',
-                                            $type,
-                                            $object_id,
-                                            $file,
-                                            $size
-                                        ),
-                                        true
-                                    );
+                            foreach ($files as $file) {
+                                // Look for art files with size in the filename (e.g., art-128x128.jpg)
+                                if (preg_match('/^art-(\d+x\d+)\./', $file, $matches)) {
+                                    if (!$exists) {
+                                        if ($delete) {
+                                            unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                            $interactor->info(
+                                                sprintf(
+                                                    'DELETE: %s',
+                                                    $object_path . DIRECTORY_SEPARATOR . $file
+                                                ),
+                                                true
+                                            );
+                                        }
+
+                                        continue;
+                                    }
+
+                                    $size = $matches[1];
+                                    if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
+                                        if ($delete) {
+                                            unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                            $interactor->info(
+                                                sprintf(
+                                                    'DELETE: %s',
+                                                    $object_path . DIRECTORY_SEPARATOR . $file
+                                                ),
+                                                true
+                                            );
+                                        } else {
+                                            $interactor->info(
+                                                sprintf(
+                                                    'Thumbnail is not in the database: %s/%s/%s (size: %s)',
+                                                    $type,
+                                                    $object_id,
+                                                    $file,
+                                                    $size
+                                                ),
+                                                true
+                                            );
+                                        }
+                                    }
+                                }
+
+                                if (preg_match('/^art-(original)\./', $file, $matches)) {
+                                    if (!$exists) {
+                                        if ($delete) {
+                                            unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                            $interactor->info(
+                                                sprintf(
+                                                    'DELETE: %s',
+                                                    $object_path . DIRECTORY_SEPARATOR . $file
+                                                ),
+                                                true
+                                            );
+                                        }
+
+                                        continue;
+                                    }
+
+                                    $size = $matches[1];
+                                    if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
+                                        if ($delete) {
+                                            unlink($object_path . DIRECTORY_SEPARATOR . $file);
+                                            $interactor->info(
+                                                sprintf(
+                                                    'DELETE: %s',
+                                                    $object_path . DIRECTORY_SEPARATOR . $file
+                                                ),
+                                                true
+                                            );
+                                        } else {
+                                            $interactor->info(
+                                                sprintf(
+                                                    'Image is not in the database: %s/%s/%s (size: %s)',
+                                                    $type,
+                                                    $object_id,
+                                                    $file,
+                                                    $size
+                                                ),
+                                                true
+                                            );
+                                        }
+                                    }
                                 }
                             }
                         }
 
-                        if (preg_match('/^art-(original)\./', $file, $matches)) {
-                            if (!$exists) {
-                                if ($delete) {
-                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
-                                    $interactor->info(
-                                        sprintf(
-                                            'DELETE: %s',
-                                            $object_path . DIRECTORY_SEPARATOR . $file
-                                        ),
-                                        true
-                                    );
-                                }
-
-                                continue;
-                            }
-
-                            $size = $matches[1];
-                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
-                                if ($delete) {
-                                    unlink($object_path . DIRECTORY_SEPARATOR . $file);
-                                    $interactor->info(
-                                        sprintf(
-                                            'DELETE: %s',
-                                            $object_path . DIRECTORY_SEPARATOR . $file
-                                        ),
-                                        true
-                                    );
-                                } else {
-                                    $interactor->info(
-                                        sprintf(
-                                            'Image is not in the database: %s/%s/%s (size: %s)',
-                                            $type,
-                                            $object_id,
-                                            $file,
-                                            $size
-                                        ),
-                                        true
-                                    );
-                                }
-                            }
-                        }
+                        // clear out the size directory once every orphaned file in it is gone
+                        $this->removeEmptyDirectory($object_path, $interactor, $delete);
                     }
+
+                    // clear out the object directory once its only child (the size directory above) is gone
+                    $this->removeEmptyDirectory($object_dir, $interactor, $delete);
                 }
             }
 
@@ -391,6 +395,30 @@ final readonly class ArtCleanup implements ArtCleanupInterface
         } else {
             $interactor->error(
                 'No local metadata directory configured, skipping thumbnail migration',
+                true
+            );
+        }
+    }
+
+    /**
+     * Removes a directory left with nothing in it, reporting it in test mode instead of removing it
+     */
+    private function removeEmptyDirectory(string $path, Interactor $interactor, bool $delete): void
+    {
+        $remaining = scandir($path);
+        if ($remaining === false || $remaining !== ['.', '..']) {
+            return;
+        }
+
+        if ($delete) {
+            rmdir($path);
+            $interactor->info(
+                sprintf('DELETE: %s', $path),
+                true
+            );
+        } else {
+            $interactor->info(
+                sprintf('Empty directory: %s', $path),
                 true
             );
         }

@@ -85,7 +85,7 @@ final class UpdatePodcast4Method implements MethodInterface
         if ($podcast !== null) {
             if ($this->podcastSyncer->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . $object_id, null, $input['api_format']);
-                Session::extend($input['auth'], AccessTypeEnum::API->value);
+                Session::extend($input['auth'], 'api');
             } else {
                 Api4::message('error', 'Failed to sync episodes for podcast: ' . $object_id, '400', $input['api_format']);
             }

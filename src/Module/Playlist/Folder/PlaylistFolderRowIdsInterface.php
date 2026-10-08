@@ -35,9 +35,17 @@ use Ampache\Repository\Model\User;
 interface PlaylistFolderRowIdsInterface
 {
     /**
+     * Every folder the viewer has hidden -- their own or one shared with them -- for the dedicated
+     * "Hidden" browse, the one place they still appear.
+     *
+     * @return list<string>
+     */
+    public function getHiddenRowIds(User $user): array;
+
+    /**
      * The subfolders of $folder interleaved with the playlists and smartlists filed in it, in `sort_order`,
      * each id encoded as `playlist_folder-N`/`playlist-N`/`search-N` for `PlaylistFolderListRenderer` to
-     * split back apart.
+     * split back apart. A folder the viewer has hidden is excluded; see `getHiddenRowIds()`.
      *
      * @return list<string>
      */

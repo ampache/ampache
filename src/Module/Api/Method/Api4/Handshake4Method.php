@@ -171,7 +171,7 @@ final class Handshake4Method implements MethodInterface
 
             if ($client instanceof User) {
                 if ($exists) {
-                    Session::extend($input['auth'], AccessTypeEnum::API->value);
+                    Session::extend($input['auth'], 'api');
                     $token = $input['auth'];
                 } else {
                     // Create the session
@@ -197,7 +197,7 @@ final class Handshake4Method implements MethodInterface
                         Session::destroy($data['apikey']);
                         $token = Session::create($data);
                     } else {
-                        Session::extend($data['apikey'], AccessTypeEnum::API->value);
+                        Session::extend($data['apikey'], 'api');
                         $token = $data['apikey'];
                     }
                 }

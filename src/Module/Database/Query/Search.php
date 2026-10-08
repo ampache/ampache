@@ -1485,6 +1485,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);

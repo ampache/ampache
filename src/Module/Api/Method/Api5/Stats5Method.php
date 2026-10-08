@@ -33,7 +33,6 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\Statistics\Rating;
@@ -294,7 +293,7 @@ final class Stats5Method implements MethodInterface
         };
 
         if ($type === 'video') {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
         }
 
         return $response->withBody(

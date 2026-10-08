@@ -132,6 +132,7 @@ return [
             'democratic' => get(DemocraticListRenderer::class),
             'playlist' => get(PlaylistListRenderer::class),
             'playlist_folder' => get(PlaylistFolderListRenderer::class),
+            'playlist_folder_hidden' => get(PlaylistFolderListRenderer::class),
             'playlist_localplay' => get(LocalplayPlaylistListRenderer::class),
             'playlist_media' => get(PlaylistMediaListRenderer::class),
             'playlist_search' => get(SmartPlaylistListRenderer::class),

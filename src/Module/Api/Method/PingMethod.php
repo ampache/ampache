@@ -99,7 +99,7 @@ final class PingMethod implements MethodInterface
             array_key_exists('auth', $input)
             && Session::exists(AccessTypeEnum::API->value, $input['auth'])
         ) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
 
             // perpetual sessions do not expire
             $perpetual     = (bool) $this->configContainer->get(ConfigurationKeyEnum::PERPETUAL_API_SESSION);

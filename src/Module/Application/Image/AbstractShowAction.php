@@ -161,8 +161,10 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     if (array_key_exists('form', $_SESSION)) {
                         $filename    = $this->requestParser->getFromRequest('image_index');
                         $object_type = $this->requestParser->getFromRequest('object_type');
-                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], $object_type);
-                        $mime        = $_SESSION['form']['images'][$filename]['mime'];
+                        // a stale/expired session, or an image_index outside the candidate list, leaves no data to draw
+                        $imageData   = $_SESSION['form']['images'][$filename] ?? [];
+                        $image       = Art::get_from_source($imageData, $object_type);
+                        $mime        = (string) ($imageData['mime'] ?? '');
                         $typeManaged = true;
                     }
 

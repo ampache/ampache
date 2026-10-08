@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 8.3.0
+
+### Changed (830000)
+
+* `playlist_folder_create`, `playlist_folder_edit` (API8)
+  * New `type` parameter (`private`/`public`) sets whether the folder is shared read-only with other users
+  * Setting `public` requires Content Manager access (level 50); the response `PlaylistFolderObject` now reports `type`
+* `playlist_folder_edit` (API8)
+  * New `hidden` parameter marks (`true`) or unmarks (`false`) the folder as hidden in the caller's own root
+  * It is the one field a caller may set on a folder they do not own; every other field still requires ownership
+* `playlist_folders` (API8)
+  * Now also returns other users' shared top-level folders, appended after the caller's own tree
+  * The response `PlaylistFolderObject` now reports `hidden`, true for a shared folder the caller has hidden from their own root; a hidden folder stays in the list and in its item count
+
 ## API 8.2.0
 
 ### Added (820000)
