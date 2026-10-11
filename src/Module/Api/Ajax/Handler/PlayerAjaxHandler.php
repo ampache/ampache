@@ -102,6 +102,9 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                                 : $albumText,
                             'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
+                            'lyrics' => (AmpConfig::get_bool('show_lyrics'))
+                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_lyrics&song_id=' . $media->id . '\')">' . T_('Show Lyrics') . '</a>'
+                                : '',
                         ];
                     }
                 }

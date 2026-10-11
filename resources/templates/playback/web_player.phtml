@@ -95,6 +95,9 @@ $labels = $this->getLabels(); ?>
                 $('.playing_actions').html(data.actions);
                 ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
             }
+            if (data.lyrics) {
+                $('.playing_lyrics').html(data.lyrics);
+            }
         }).fail(scheduleNowPlayingRetry);
     }
 
