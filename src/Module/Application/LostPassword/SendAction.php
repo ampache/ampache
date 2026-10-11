@@ -59,9 +59,11 @@ final class SendAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $allowLostPassword = $this->configContainer->get(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD);
         if (
             !Mailer::is_mail_enabled() ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
+            !make_bool($allowLostPassword)
         ) {
             throw new AccessDeniedException();
         }

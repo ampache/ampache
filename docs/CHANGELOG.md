@@ -2,9 +2,27 @@
 
 ## Ampache 7.10.4
 
+### Added (7.10.4)
+
+* Config version 88
+  * Added `allow_lost_password` (default `false`) to gate the Lost Password feature
+
+### Changed (7.10.4)
+
+* Updated Composer and NPM packages
+
 ### Fixed (7.10.4)
 
 * Subsonic `search3` rejected a missing or empty `query` (regression since 7.10.0), breaking clients (e.g. Substreamer) that load the full library through an empty search; restored the same "browse everything" behaviour `search2` already has
+* A local catalog file move/rename resolved the wrong catalog id for songs, videos and podcast episodes, using a lookup meant for a different case (#4527)
+* `http` authentication no longer accepts a client-supplied `HTTP_REMOTE_USER` header as an identity; only the server-set `REMOTE_USER` is trusted
+* Header-authenticated session ids were `md5(username)`, guessable from a username; now derived from the credential
+* `update.php` skipped auth based on a request parameter, letting anyone reach the update dispatcher
+* `batch.php` skipped catalog scoping for stream-session requests, allowing bulk download outside the catalog filter
+* `lost_password` is now disabled by default, and blocked for Content Manager, Manager and Admin accounts
+* Password comparisons in the API handshake (API3-6), token login, remember-me login, and apikey/stream-token/reset-token lookups are now constant-time, closing a timing side-channel on login
+* Subsonic `updateshare` on a share you don't own reported success without changing anything, instead of the access-denied error it now gives
+* A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
 
 ## Ampache 7.10.3
 

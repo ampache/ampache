@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 6
+
+### Changed (692006)
+
+* `lost_password` (ALL)
+  * Disabled by default; requires `allow_lost_password` to be enabled
+  * Also blocked for Content Manager and Manager accounts
+
+### Fixed (692006)
+
+* Session id after header auth was `md5(username)`; now derived from the credential
+* `handshake` (ALL)
+  * Password comparison is now constant-time, closing a timing side-channel
+
 ## API 6.9.2 Build 5
 
 This version is being released for Ampache7 **only**
