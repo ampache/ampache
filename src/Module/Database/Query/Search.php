@@ -870,7 +870,9 @@ class Search extends playlist_object
             'enabled', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
-            'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
+            'last_play', 'last_skip', 'last_play_or_skip', 'last_play_album', 'last_skip_album', 'last_play_or_skip_album',
+            'last_play_artist', 'last_skip_artist', 'last_play_or_skip_artist', 'last_play_song', 'last_skip_song',
+            'last_play_or_skip_song', 'days_added', 'days_updated' => 'days',
             'recent_played' => 'recent_played',
             'recent_added' => 'recent_added', 'recent_updated' => 'recent_updated',
             'playlist', 'smartplaylist' => 'boolean_subsearch',
@@ -1442,6 +1444,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_song', T_('My Last Play (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_song', T_('My Last Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_song', T_('My Last Play or Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_artist', T_('My Last Play (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_artist', T_('My Last Skip (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_artist', T_('My Last Play or Skip (Artist)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
@@ -1567,6 +1575,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_song', T_('My Last Play (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_song', T_('My Last Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_song', T_('My Last Play or Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_album', T_('My Last Play (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_album', T_('My Last Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_album', T_('My Last Play or Skip (Album)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
@@ -1901,6 +1915,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_album', T_('My Last Play (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_album', T_('My Last Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_album', T_('My Last Play or Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_artist', T_('My Last Play (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_artist', T_('My Last Skip (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_artist', T_('My Last Play or Skip (Artist)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);

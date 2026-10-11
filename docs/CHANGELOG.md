@@ -15,6 +15,8 @@
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
   * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
   * Removed predictable `MD5(username)` API sessions created by older releases
+* Search
+  * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
 
 ### Changed (8.3.0)
 

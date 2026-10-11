@@ -354,6 +354,7 @@ final readonly class ArtistSearch implements SearchInterface
                     $where[] = "`played_" . $my_type . ('`.`artist_id` ' . $operator_sql);
                     break;
                 case 'last_play':
+                case 'last_play_artist':
                     $my_type = 'artist';
                     if (!array_key_exists('last_play', $table)) {
                         $table['last_play'] = '';
@@ -365,7 +366,46 @@ final readonly class ArtistSearch implements SearchInterface
                     $where[]      = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
                     $parameters[] = $input;
                     break;
+                case 'last_play_song':
+                    $my_type = 'artist';
+                    if (!array_key_exists('last_play', $table)) {
+                        $table['last_play'] = '';
+                    }
+
+                    $table['last_play'] .= (strpos($table['last_play'], "last_play_song_" . $my_type . "_" . $search_user_id))
+                        ? ""
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['stream'], $search_user_id) . " AS `last_play_song_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_song_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_song_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
+                    $where[]      = "`last_play_song_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
+                case 'last_play_album':
+                case 'last_skip_album':
+                case 'last_play_or_skip_album':
+                    /** @var string $rulename */
+                    $rulename = $rule[0];
+                    // the album is dated by its own streams; skips only exist on songs so they are rolled up to the album
+                    $history  = substr($rulename, 0, -6);
+                    $alias    = $rulename . "_" . $search_user_id;
+                    $subquery = match ($history) {
+                        'last_play' => PlayHistorySubquery::lastDate('album', ['stream'], $search_user_id),
+                        'last_skip' => PlayHistorySubquery::lastSongDateBy('album', ['skip'], $search_user_id),
+                        default => PlayHistorySubquery::lastSongDateBy('album', ['stream', 'skip'], $search_user_id),
+                    };
+                    if (!array_key_exists($history, $table)) {
+                        $table[$history] = '';
+                    }
+
+                    $table[$history] .= (strpos($table[$history], "`" . $alias . "`"))
+                        ? ""
+                        : "LEFT JOIN " . $subquery . " AS `" . $alias . "` ON `album`.`id` = `" . $alias . "`.`object_id` AND `" . $alias . "`.`object_type` = 'album'";
+                    $where[]       = "`" . $alias . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $parameters[]  = $input;
+                    $join['album'] = true;
+                    break;
                 case 'last_skip':
+                case 'last_skip_artist':
+                case 'last_skip_song':
                     $my_type = 'artist';
                     if (!array_key_exists('last_skip', $table)) {
                         $table['last_skip'] = '';
@@ -379,6 +419,8 @@ final readonly class ArtistSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'last_play_or_skip':
+                case 'last_play_or_skip_artist':
+                case 'last_play_or_skip_song':
                     $my_type = 'artist';
                     if (!array_key_exists('last_play_or_skip', $table)) {
                         $table['last_play_or_skip'] = '';

@@ -354,6 +354,32 @@ final class SongSearch implements SearchInterface
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
+                case 'last_play_album':
+                case 'last_play_artist':
+                case 'last_skip_album':
+                case 'last_skip_artist':
+                case 'last_play_or_skip_album':
+                case 'last_play_or_skip_artist':
+                    /** @var string $rulename */
+                    $rulename = $rule[0];
+                    // the suffix names the parent compared and the prefix is the history it reads, matching the album and artist searches
+                    $my_type   = (str_ends_with($rulename, '_album')) ? 'album' : 'artist';
+                    $history   = substr($rulename, 0, -(strlen($my_type) + 1));
+                    $alias     = $rulename . "_" . $search_user_id;
+                    $subquery  = match ($history) {
+                        'last_play' => PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id),
+                        'last_skip' => PlayHistorySubquery::lastSongDateBy($my_type, ['skip'], $search_user_id),
+                        default => PlayHistorySubquery::lastSongDateBy($my_type, ['stream', 'skip'], $search_user_id),
+                    };
+                    if (!array_key_exists($history, $table)) {
+                        $table[$history] = '';
+                    }
+
+                    $table[$history] .= (strpos($table[$history], "`" . $alias . "`"))
+                        ? ""
+                        : "LEFT JOIN " . $subquery . " AS `" . $alias . "` ON `song`.`" . $my_type . "` = `" . $alias . "`.`object_id` AND `" . $alias . "`.`object_type` = '" . $my_type . "'";
+                    $where[] = "`" . $alias . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    break;
                 case 'days_added':
                     $where[] = sprintf('`song`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
