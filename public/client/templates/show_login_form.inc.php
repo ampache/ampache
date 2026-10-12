@@ -104,7 +104,7 @@ $_SESSION['login'] = true; ?>
                 <?php if (AmpConfig::get('allow_public_registration') && (Mailer::is_mail_enabled() || AmpConfig::get('user_no_email_confirm', false))) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
-                <?php if (Mailer::is_mail_enabled()) { ?>
+                <?php if (Mailer::is_mail_enabled() && AmpConfig::get('allow_lost_password', false)) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
                 <?php } ?>
                 </div>

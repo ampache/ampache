@@ -74,6 +74,12 @@ final class LostPassword6Method
             return false;
         }
 
+        if (!make_bool(AmpConfig::get('allow_lost_password'))) {
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'allow_lost_password', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         if (!Api6::check_parameter($input, ['auth'], self::ACTION)) {
             return false;
         }

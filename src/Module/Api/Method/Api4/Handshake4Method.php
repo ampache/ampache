@@ -154,7 +154,7 @@ final class Handshake4Method
 
                 $sha1pass = hash('sha256', $timestamp . $realpwd);
 
-                if ($sha1pass !== $passphrase) {
+                if (!hash_equals($sha1pass, $passphrase)) {
                     $client = null;
                 }
             }
