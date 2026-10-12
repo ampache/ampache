@@ -32,8 +32,9 @@ interface PluginSaveMediaplayInterface extends AmpachePluginInterface
     /**
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
+     * @param int|null $date when the play started, now when null
      */
-    public function save_mediaplay(Song $song): bool;
+    public function save_mediaplay(Song $song, ?int $date = null): bool;
 
     /**
      * set_flag

@@ -31,15 +31,15 @@ This is passed as a type argument and will only return this object in results
 
 @param array $input
 
-| Input    | Type    | Description                                                                                            | Optional |
-|----------|---------|--------------------------------------------------------------------------------------------------------|---------:|
-| operator | string  | and, or (whether to match one rule or all)                                                             |       NO |
-| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                          |       NO |
-| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                   |      YES |
+| Input    | Type    | Description                                                                                                                                                          | Optional |
+|----------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| operator | string  | and, or (whether to match one rule or all)                                                                                                                           |       NO |
+| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                                                                                        |       NO |
+| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                                                                                 |      YES |
 | type     | string  | `song` (default), `album`, `album_disk`, `artist`, `album_artist`, `song_artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `tag`, `user`, `video` |      YES |
-| random   | boolean | `0`, `1` (random order of results; default to 0)                                                       |      YES |
-| offset   | integer |                                                                                                        |      YES |
-| limit'   | integer |                                                                                                        |      YES |
+| random   | boolean | `0`, `1` (random order of results; default to 0)                                                                                                                     |      YES |
+| offset   | integer |                                                                                                                                                                      |      YES |
+| limit'   | integer |                                                                                                                                                                      |      YES |
 
 ## Using advanced_search
 
@@ -129,23 +129,32 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | other_user_album  | Another User (Album)  | user_numeric      |                                 song                                  |
 | other_user_artist | Another User (Artist) | user_numeric      |                                 song                                  |
 
-| Play History              | Title                     | Operator Type     |                  Valid Types                  |
-|---------------------------|---------------------------|-------------------|:---------------------------------------------:|
-| played_times              | # Played                  | numeric           | song, album, artist, podcast, podcast_episode |
-| skipped_times             | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
-| played_or_skipped_times   | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
-| play_skip_ratio           | Played/Skipped ratio      | numeric           |                      song                     |
-| last_play                 | My Last Play              | days              | song, album, artist, podcast, podcast_episode |
-| last_skip                 | My Last Skip              | days              | song, album, artist, podcast, podcast_episode |
-| last_play_or_skip         | My Last Play OR skip      | days              | song, album, artist, podcast, podcast_episode |
-| played                    | Played                    | boolean           | song, album, artist, podcast, podcast_episode |
-| myplayed                  | Played by Me              | boolean           | song, album, artist, podcast, podcast_episode |
-| myplayedalbum             | Played by Me (Album)      | boolean           |                     song                      |
-| myplayedartist            | Played by Me (Artist)     | boolean           |                  song, album                  |
-| myplayed_times            | # Played by Me            | numeric           | song, album, artist, podcast, podcast_episode |
-| myskipped_times           | # Skipped by Me           | numeric           | song, album, artist, podcast, podcast_episode |
-| myplayed_or_skipped_times | # Played or Skipped by Me | numeric           | song, album, artist, podcast, podcast_episode |
-| recent_played             | Recently Played           | numeric_limit     |              song, album, artist              |
+| Play History              | Title                         | Operator Type |                  Valid Types                  |
+|---------------------------|-------------------------------|---------------|:---------------------------------------------:|
+| played_times              | # Played                      | numeric       | song, album, artist, podcast, podcast_episode |
+| skipped_times             | # Skipped                     | numeric       | song, album, artist, podcast, podcast_episode |
+| played_or_skipped_times   | # Skipped                     | numeric       | song, album, artist, podcast, podcast_episode |
+| play_skip_ratio           | Played/Skipped ratio          | numeric       |                     song                      |
+| last_play                 | My Last Play                  | days          | song, album, artist, podcast, podcast_episode |
+| last_skip                 | My Last Skip                  | days          | song, album, artist, podcast, podcast_episode |
+| last_play_or_skip         | My Last Play OR skip          | days          | song, album, artist, podcast, podcast_episode |
+| last_play_song            | My Last Play (Song)           | days          |                 album, artist                 |
+| last_skip_song            | My Last Skip (Song)           | days          |                 album, artist                 |
+| last_play_or_skip_song    | My Last Play OR skip (Song)   | days          |                 album, artist                 |
+| last_play_album           | My Last Play (Album)          | days          |              song, album, artist              |
+| last_skip_album           | My Last Skip (Album)          | days          |              song, album, artist              |
+| last_play_or_skip_album   | My Last Play OR skip (Album)  | days          |              song, album, artist              |
+| last_play_artist          | My Last Play (Artist)         | days          |              song, album, artist              |
+| last_skip_artist          | My Last Skip (Artist)         | days          |              song, album, artist              |
+| last_play_or_skip_artist  | My Last Play OR skip (Artist) | days          |              song, album, artist              |
+| played                    | Played                        | boolean       | song, album, artist, podcast, podcast_episode |
+| myplayed                  | Played by Me                  | boolean       | song, album, artist, podcast, podcast_episode |
+| myplayedalbum             | Played by Me (Album)          | boolean       |                     song                      |
+| myplayedartist            | Played by Me (Artist)         | boolean       |                  song, album                  |
+| myplayed_times            | # Played by Me                | numeric       | song, album, artist, podcast, podcast_episode |
+| myskipped_times           | # Skipped by Me               | numeric       | song, album, artist, podcast, podcast_episode |
+| myplayed_or_skipped_times | # Played or Skipped by Me     | numeric       | song, album, artist, podcast, podcast_episode |
+| recent_played             | Recently Played               | numeric_limit |              song, album, artist              |
 
 | Genre Rules        | Title                          | Operator Type |     Valid Types     |
 |--------------------|--------------------------------|---------------|:-------------------:|

@@ -39,7 +39,8 @@ final class Migration794004 extends AbstractMigration
     public function migrate(): void
     {
         // set the original disk id to be the unique album_disk (if one already doesn't exist)
-        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE (`name` = 'Unknown (Orphaned)' OR `name` = ?) AND `catalog` = 0) AND NOT EXISTS ( SELECT 1 FROM `album_disk` AS `check` WHERE `check`.`album_id` = `album_disk`.`album_id` AND `check`.`catalog` = 0);", [T_('Unknown (Orphaned)')]);
+        // IGNORE: the same disk can sit in several catalogs, only the first can take `catalog` = 0 and the rest are merged into it and deleted below
+        $this->updateDatabase("UPDATE IGNORE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE (`name` = 'Unknown (Orphaned)' OR `name` = ?) AND `catalog` = 0) AND NOT EXISTS ( SELECT 1 FROM `album_disk` AS `check` WHERE `check`.`album_id` = `album_disk`.`album_id` AND `check`.`catalog` = 0);", [T_('Unknown (Orphaned)')]);
 
         // Find duplicate orphans and remove them
         $tables = [

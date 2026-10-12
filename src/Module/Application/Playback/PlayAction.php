@@ -791,8 +791,8 @@ final readonly class PlayAction implements ApplicationActionInterface
                             }
                         } elseif (!$share_id && $record_stats) {
                             // internal scrobbling (user_activity and object_count tables)
-                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class) {
-                                // scrobble plugins
+                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class && $player !== 'webplayer') {
+                                // scrobble plugins; the web player sends its own once the skip timer has passed
                                 User::save_mediaplay($user, $media);
                             }
                         } elseif ($share_id > 0) {
@@ -1302,8 +1302,8 @@ final readonly class PlayAction implements ApplicationActionInterface
                             [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class) {
-                            // scrobble plugins
+                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class && $player !== 'webplayer') {
+                            // scrobble plugins; the web player sends its own once the skip timer has passed
                             User::save_mediaplay($user, $media);
                         }
                     } elseif ($share_id > 0) {
@@ -1361,6 +1361,9 @@ final readonly class PlayAction implements ApplicationActionInterface
         }
 
         $bytes_streamed = 0;
+
+        // a direct file already streams at its known size, so only a transcode is ever buffered whole
+        $send_all_in_once = $send_all_in_once && $transcode;
 
         // Actually do the streaming
         $buf_all = '';

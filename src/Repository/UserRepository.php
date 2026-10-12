@@ -811,7 +811,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         while ($row = $dbResults->fetch(PDO::FETCH_ASSOC)) {
             $email_hash = hash('sha256', (string) $row['email']);
             $user_token = hash('sha256', $row['username'] . $email_hash);
-            if ($token === $user_token) {
+            if (hash_equals($user_token, $token)) {
                 return (int) $row['id'];
             }
         }

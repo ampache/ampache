@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -1023,13 +1024,7 @@ class Preference extends database_object
             ],
             'lang' => array_keys(get_languages()),
             'localplay_controller' => array_keys(LocalPlayTypeEnum::TYPE_MAPPING),
-            'api_force_version' => [
-                0,
-                3,
-                4,
-                5,
-                6
-            ],
+            'api_force_version' => [0, ...Api::API_VERSIONS],
             'ratingmatch_stars' => [
                 '0',
                 '1',

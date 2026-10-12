@@ -134,10 +134,12 @@ class ShareTest extends TestCase
     public function testUpdateAppliesTheDataAndPersists(): void
     {
         $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
 
         $subject = new Share();
 
         $subject->id          = 666;
+        $subject->user        = 42;
         $subject->description = 'old-description';
 
         $this->shareRepository->expects(static::once())
@@ -168,10 +170,12 @@ class ShareTest extends TestCase
     public function testUpdateKeepsTheCurrentDescriptionWhenNoneIsSupplied(): void
     {
         $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
 
         $subject = new Share();
 
         $subject->id          = 666;
+        $subject->user        = 42;
         $subject->description = 'old-description';
 
         $this->shareRepository->expects(static::once())
@@ -192,13 +196,46 @@ class ShareTest extends TestCase
         self::assertSame('old-description', $subject->description);
     }
 
+    /**
+     * A non-owner, non-manager update must not reach the repository at all -- it was previously sent through
+     * unchanged and reported success even though the statement's own ownership scoping silently wrote nothing
+     */
+    public function testUpdateRefusesANonOwnerWithoutWritingAnything(): void
+    {
+        $user = $this->createMock(User::class);
+        $user->method('has_access')->willReturn(false);
+        $user->method('getId')->willReturn(99);
+
+        $subject       = new Share();
+        $subject->id   = 666;
+        $subject->user = 42;
+
+        $this->shareRepository->expects(static::never())
+            ->method('update');
+
+        self::assertFalse(
+            $subject->update(
+                [
+                    'max_counter' => '42',
+                    'expire' => '7',
+                    'allow_stream' => '1',
+                    'allow_download' => '1',
+                    'description' => 'some-description',
+                ],
+                $user
+            )
+        );
+    }
+
     public function testUpdateReturnsFalseIfTheWriteFailed(): void
     {
         $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(42);
 
         $subject = new Share();
 
-        $subject->id = 666;
+        $subject->id   = 666;
+        $subject->user = 42;
 
         $this->shareRepository->expects(static::once())
             ->method('update')
