@@ -24,12 +24,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
  * Older releases created header-authenticated API sessions keyed by `MD5(username)`, a value anyone
  * could compute without ever holding a real credential. Those rows let a forged `Authorization` header
  * impersonate the user until the session expired, or forever under `perpetual_api_session`.
+ *
+ * The matching is done in PHP rather than with SQL's `MD5()` because some MySQL/MariaDB builds
+ * (e.g. OpenSSL compiled in FIPS mode) disable that function and error out instead of running it.
  */
 final class Migration794006 extends AbstractMigration
 {
@@ -39,6 +43,16 @@ final class Migration794006 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `session` WHERE `type` = 'api' AND `id` = MD5(`username`);");
+        $db_results = Dba::query("SELECT `id`, `username` FROM `session` WHERE `type` = 'api';");
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $username = (string) $row['username'];
+            if ($username !== '' && $row['id'] === md5($username)) {
+                $this->updateDatabase(
+                    "DELETE FROM `session` WHERE `type` = 'api' AND `id` = ?;",
+                    [$row['id']]
+                );
+            }
+        }
     }
 }
