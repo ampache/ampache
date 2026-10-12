@@ -21,6 +21,10 @@
 ### Changed (8.3.0)
 
 * An album or album disk with no cover falls back to the blank placeholder, not the album artist's art
+* The web player scrobbles a song to Last.fm, Libre.fm and ListenBrainz once it has played past the `skip_timer`, not when it starts, stamped with its start time
+* Config version 101
+  * `send_full_stream` is now off by default, and updating the config file removes the old `webplayer` default, which never applied
+  * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
 
 ### Fixed (8.3.0)
 

@@ -101,6 +101,11 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             return '';
         }
 
+        // @todo remove after 8.3.0. The default option never applied and should be removed after this release has settled
+        if ((int) ($current['config_version'] ?? 0) < 101 && ($current['send_full_stream'] ?? '') === 'webplayer') {
+            unset($current['send_full_stream']);
+        }
+
         $data  = explode("\n", $dist);
         $final = "";
         foreach ($data as $line) {
