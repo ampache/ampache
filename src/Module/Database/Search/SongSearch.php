@@ -330,7 +330,13 @@ final class SongSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column  = "`last_play_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     break;
                 case 'last_skip':
                     $my_type = 'song';
@@ -341,7 +347,13 @@ final class SongSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
-                    $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column  = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'song';
@@ -352,7 +364,13 @@ final class SongSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column  = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     break;
                 case 'last_play_album':
                 case 'last_play_artist':
@@ -378,13 +396,29 @@ final class SongSearch implements SearchInterface
                     $table[$history] .= (strpos($table[$history], "`" . $alias . "`"))
                         ? ""
                         : "LEFT JOIN " . $subquery . " AS `" . $alias . "` ON `song`.`" . $my_type . "` = `" . $alias . "`.`object_id` AND `" . $alias . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`" . $alias . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column  = "`" . $alias . "`.`date`";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`song`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "(`song`.`addition_time` >= $cutoff)",
+                        '!>' => "(`song`.`addition_time` <= $cutoff)",
+                        default => "`song`.`addition_time` $operator_sql $cutoff",
+                    };
                     break;
                 case 'days_updated':
-                    $where[] = sprintf('`song`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "(`song`.`update_time` >= $cutoff)",
+                        '!>' => "(`song`.`update_time` <= $cutoff)",
+                        default => "`song`.`update_time` $operator_sql $cutoff",
+                    };
                     break;
                 case 'played_times':
                     $where[]      = sprintf('(`song`.`total_count` %s ?)', $operator_sql);

@@ -363,7 +363,12 @@ final readonly class ArtistSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[]      = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_play_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     break;
                 case 'last_play_song':
@@ -375,7 +380,12 @@ final readonly class ArtistSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_song_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['stream'], $search_user_id) . " AS `last_play_song_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_song_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_song_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
-                    $where[]      = "`last_play_song_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_play_song_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -399,7 +409,12 @@ final readonly class ArtistSearch implements SearchInterface
                     $table[$history] .= (strpos($table[$history], "`" . $alias . "`"))
                         ? ""
                         : "LEFT JOIN " . $subquery . " AS `" . $alias . "` ON `album`.`id` = `" . $alias . "`.`object_id` AND `" . $alias . "`.`object_type` = 'album'";
-                    $where[]       = "`" . $alias . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column        = "`" . $alias . "`.`date`";
+                    $where[]       = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[]  = $input;
                     $join['album'] = true;
                     break;
@@ -414,7 +429,12 @@ final readonly class ArtistSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
-                    $where[]      = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -429,12 +449,22 @@ final readonly class ArtistSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
-                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`artist`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "(`artist`.`addition_time` >= $cutoff)",
+                        '!>' => "(`artist`.`addition_time` <= $cutoff)",
+                        default => "`artist`.`addition_time` $operator_sql $cutoff",
+                    };
                     break;
                 case 'played_times':
                     $where[]      = sprintf('`artist`.`total_count` %s ?', $operator_sql);

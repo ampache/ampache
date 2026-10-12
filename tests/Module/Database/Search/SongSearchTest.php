@@ -60,6 +60,17 @@ class SongSearchTest extends MockeryTestCase
     }
 
     /**
+     * `addition_time` is never NULL, so "not added before" is a plain operator swap with no OR branch
+     */
+    public function testDaysAddedNotBeforeSwapsTheOperator(): void
+    {
+        $result = $this->ruleSql([['days_added', 'notlt', 14]]);
+
+        $this->assertStringContainsString('`song`.`addition_time` >= (UNIX_TIMESTAMP() - (14 * 86400))', $result['where_sql']);
+        $this->assertStringNotContainsString('IS NULL', $result['where_sql']);
+    }
+
+    /**
      * an album is dated by its own stream rows, matched through the song's album column
      */
     public function testLastPlayAlbumComparesTheAlbumsOwnPlayDate(): void
@@ -82,6 +93,21 @@ class SongSearchTest extends MockeryTestCase
         $this->assertStringContainsString('GROUP BY `parent_song`.`artist`', $result['table_sql']);
         $this->assertStringContainsString('ON `song`.`artist` = `last_skip_artist_2`.`object_id`', $result['table_sql']);
         $this->assertStringContainsString('`last_skip_artist_2`.`date` < (UNIX_TIMESTAMP() - (30 * 86400))', $result['where_sql']);
+    }
+
+    /**
+     * a song that was never skipped has no row in the LEFT JOIN subquery, so "not skipped after"
+     * must also match a NULL date or a smartlist built to exclude recent skips would drop every
+     * song that was never skipped at all
+     */
+    public function testLastSkipNotAfterAlsoMatchesASongNeverSkipped(): void
+    {
+        $result = $this->ruleSql([['last_skip', 'notgt', 7]]);
+
+        $this->assertStringContainsString(
+            '(`last_skip_song_2`.`date` IS NULL OR `last_skip_song_2`.`date` <= (UNIX_TIMESTAMP() - (7 * 86400)))',
+            $result['where_sql']
+        );
     }
 
     /**

@@ -139,6 +139,8 @@ class Search extends playlist_object
         'days' => [
             ['name' => 'lt', 'description' => 'before (x) days ago', 'sql' => '<'],
             ['name' => 'gt', 'description' => 'after (x) days ago', 'sql' => '>'],
+            ['name' => 'notlt', 'description' => 'is not before (x) days ago', 'sql' => '!<'],
+            ['name' => 'notgt', 'description' => 'is not after (x) days ago', 'sql' => '!>'],
         ],
 
         'recent_played' => [

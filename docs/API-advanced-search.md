@@ -216,18 +216,18 @@ Select your operator (integer only!) based on the type or your selected search
 
 **NOTE** with the numeric_limit and is_true operators the operator is ignored, but still required
 
-| rule_1_operator | text / tags                       | numeric / user_numeric                       | date   | boolean, boolean_numeric, boolean_subsearch, days |
-|:---------------:|-----------------------------------|----------------------------------------------|--------|---------------------------------------------------|
-|        0        | contains                          | is greater than or equal to / has loved      | before | is true / before (x) days ago                     |
-|        1        | does not contain                  | is less than or equal to / has rated 5 stars | after  | is false / after (x) days ago                     |
-|        2        | starts with                       | equals / has rated 4 stars                   |        |                                                   |
-|        3        | ends with                         | does not equal / has rated 3 stars           |        |                                                   |
-|        4        | is                                | is greater than / has rated 2 stars          |        |                                                   |
-|        5        | is not                            | is less than / has rated 1 stars             |        |                                                   |
-|  6 (Text Only)  | sounds like                       |                                              |        |                                                   |
-|  7 (Text Only)  | does not sound like               |                                              |        |                                                   |
-|  8 (Text Only)  | matches regular expression        |                                              |        |                                                   |
-|  9 (Text Only)  | does not match regular expression |                                              |        |                                                   |
+| rule_1_operator | text / tags                       | numeric / user_numeric                       | date   | boolean, boolean_numeric, boolean_subsearch  | days                       |
+|:---------------:|-----------------------------------|----------------------------------------------|--------|:--------------------------------------------:|----------------------------|
+|        0        | contains                          | is greater than or equal to / has loved      | before | is true                                      | before (x) days ago        |
+|        1        | does not contain                  | is less than or equal to / has rated 5 stars | after  | is false                                     | after (x) days ago         |
+|        2        | starts with                       | equals / has rated 4 stars                   |        |                                              | is not before (x) days ago |
+|        3        | ends with                         | does not equal / has rated 3 stars           |        |                                              | is not after (x) days ago  |
+|        4        | is                                | is greater than / has rated 2 stars          |        |                                              |                            |
+|        5        | is not                            | is less than / has rated 1 stars             |        |                                              |                            |
+|  6 (Text Only)  | sounds like                       |                                              |        |                                              |                            |
+|  7 (Text Only)  | does not sound like               |                                              |        |                                              |                            |
+|  8 (Text Only)  | matches regular expression        |                                              |        |                                              |                            |
+|  9 (Text Only)  | does not match regular expression |                                              |        |                                              |                            |
 
 Send the correct input based on the type of search.
 

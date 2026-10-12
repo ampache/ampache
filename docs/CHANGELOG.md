@@ -17,6 +17,7 @@
   * Removed predictable `MD5(username)` API sessions created by older releases
 * Search
   * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
+  * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
 
 ### Changed (8.3.0)
 
