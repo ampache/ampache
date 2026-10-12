@@ -1211,7 +1211,7 @@ class Catalog_local extends Catalog
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalogId = self::_get_catalog_id_from_file($new_file);
                 $newCatalog   = self::create_from_id($newCatalogId);
                 if ($newCatalog === null) {
                     return false;

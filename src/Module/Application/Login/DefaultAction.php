@@ -139,7 +139,7 @@ final class DefaultAction implements ApplicationActionInterface
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
                 (isset($_POST['username'])) ||
-                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && isset($_SERVER['REMOTE_USER']))
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
@@ -153,13 +153,8 @@ final class DefaultAction implements ApplicationActionInterface
                         $username = (string)$_POST['username'];
                         $password = $_POST['password'] ?? '';
                     } else {
-                        if (isset($_SERVER['REMOTE_USER'])) {
-                            $username = (string) Core::get_server('REMOTE_USER');
-                        } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-                            $username = (string) Core::get_server('HTTP_REMOTE_USER');
-                        } else {
-                            $username = '';
-                        }
+                        // HTTP_REMOTE_USER is a client-supplied request header and must never be trusted as an identity.
+                        $username = (isset($_SERVER['REMOTE_USER'])) ? (string) Core::get_server('REMOTE_USER') : '';
                         $password = '';
                     }
 
