@@ -15,10 +15,16 @@
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
   * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
   * Removed predictable `MD5(username)` API sessions created by older releases
+* Search
+  * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
 
 ### Changed (8.3.0)
 
 * An album or album disk with no cover falls back to the blank placeholder, not the album artist's art
+* The web player scrobbles a song to Last.fm, Libre.fm and ListenBrainz once it has played past the `skip_timer`, not when it starts, stamped with its start time
+* Config version 101
+  * `send_full_stream` is now off by default, and updating the config file removes the old `webplayer` default, which never applied
+  * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
 
 ### Fixed (8.3.0)
 
@@ -26,6 +32,10 @@
 * Edit/Find Art and Reset Art on Albums target the album correctly
 * A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
 * Scanning folders (`run:updateCatalog -s`, "Scan Folders"/"Scan All Folders") on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, which MySQL only added in 8.0.4
+* Updating a share you don't own (API `updateShare`/Subsonic `updateshare`) reported success without changing anything, instead of the access-denied error it now gives
+* `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
+* Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
+* A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
 
 ## Ampache 8.2.2
 

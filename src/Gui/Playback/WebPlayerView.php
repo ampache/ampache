@@ -163,6 +163,14 @@ final class WebPlayerView extends AbstractView
         return (string) AmpConfig::get('site_title', '');
     }
 
+    /**
+     * The raw `skip_timer` setting: seconds when above 1, a fraction of the song when below it.
+     */
+    public function getSkipTimer(): float
+    {
+        return (float) AmpConfig::get('skip_timer', 20);
+    }
+
     public function getWebPath(): string
     {
         return $this->webPath;

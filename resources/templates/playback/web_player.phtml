@@ -60,6 +60,7 @@ $labels = $this->getLabels(); ?>
     var nowPlayingAttempts = 0;
     var nowPlayingMaxAttempts = 8;
     var nowPlayingRetryMs = 2000;
+    var nowPlayingDuration = 0;
 
     function pollNowPlaying()
     {
@@ -84,6 +85,7 @@ $labels = $this->getLabels(); ?>
             nowPlayingPending = false;
             nowPlayingActive = false;
             nowPlayingObjectId = data.object_id;
+            nowPlayingDuration = data.duration || 0;
             $('.playing_title').html(data.title);
             $('.playing_artist').html(data.artist);
             if (data.art) {
@@ -94,6 +96,9 @@ $labels = $this->getLabels(); ?>
             if (data.actions) {
                 $('.playing_actions').html(data.actions);
                 ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
+            }
+            if (data.lyrics) {
+                $('.playing_lyrics').html(data.lyrics);
             }
         }).fail(scheduleNowPlayingRetry);
     }
@@ -162,6 +167,54 @@ $labels = $this->getLabels(); ?>
         return !!item && item['media_type'] === 'live_stream';
     }
 
+    // The server holds back the web player's scrobble, so it is sent from here once the song has played past the skip timer.
+    var skipTimer = <?php echo $this->getSkipTimer(); ?>;
+    var scrobbleListened = 0;
+    var scrobbleLastTime = null;
+    var scrobbleSent = false;
+
+    // Mirrors AmpConfig::get_skip_timer(), capped so a song shorter than the timer still counts once it has played through.
+    function scrobbleThreshold(duration)
+    {
+        var known = isFinite(duration) && duration > 0;
+        var threshold = 20;
+        if (Math.trunc(skipTimer) > 1) {
+            threshold = Math.trunc(skipTimer);
+        } else if (skipTimer > 0 && skipTimer < 1) {
+            if (!known) {
+                return Infinity;
+            }
+            threshold = Math.trunc(duration * skipTimer);
+        }
+
+        return (known) ? Math.min(threshold, Math.max(1, duration - 1)) : threshold;
+    }
+
+    function scrobbleReset()
+    {
+        scrobbleListened = 0;
+        scrobbleLastTime = null;
+        scrobbleSent = false;
+    }
+
+    // Only forward progress counts, so seeking ahead never turns a skip into a play.
+    function scrobbleProgress(status, duration)
+    {
+        var position = status.currentTime || 0;
+        if (!status.paused && scrobbleLastTime !== null && position > scrobbleLastTime && position - scrobbleLastTime < 2) {
+            scrobbleListened += position - scrobbleLastTime;
+        }
+        scrobbleLastTime = position;
+        if (scrobbleSent || scrobbleListened < scrobbleThreshold(duration) || typeof jsAjaxUrl === 'undefined' || jplaylist === null) {
+            return;
+        }
+        var item = jplaylist.playlist[jplaylist.current];
+        if (item && ['song', 'random', 'democratic'].indexOf(item['media_type']) !== -1) {
+            scrobbleSent = true;
+            $.getJSON(jsAjaxUrl + '?page=player&action=scrobble');
+        }
+    }
+
     // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
     // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
     function nowPlayingTrackChanged()
@@ -169,6 +222,7 @@ $labels = $this->getLabels(); ?>
         var placeholder = isPlaceholderTrack();
         cancelNowPlayingRetry();
         nowPlayingSeenId = null;
+        nowPlayingDuration = 0;
         nowPlayingPending = placeholder;
         nowPlayingAttempts = 0;
         clearNowPlayingArt();
@@ -503,6 +557,12 @@ if ($this->showSongPageTitle()) {
         $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
+<?php if (!$this->isShare()) { ?>
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, scrobbleReset);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function (event) {
+            scrobbleProgress(event.jPlayer.status, jpKnownDuration() || nowPlayingDuration || event.jPlayer.status.duration);
+        });
+<?php } ?>
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadeddata, refreshNowPlaying);
         $("#jquery_jplayer_1").bind($.jPlayer.event.playing, refreshNowPlaying);
 

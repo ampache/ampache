@@ -407,6 +407,10 @@ class Share extends database_object
      */
     public function update(array $data, User $user): bool
     {
+        if (!$this->isAccessible($user)) {
+            return false;
+        }
+
         $this->max_counter    = (int) ($data['max_counter']);
         $this->expire_days    = (int) ($data['expire']);
         $this->allow_stream   = ($data['allow_stream'] == '1');

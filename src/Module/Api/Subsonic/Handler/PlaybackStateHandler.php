@@ -49,6 +49,23 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
     ) {}
 
     /**
+     * Whether the client reports a finished stream rather than a now playing notification.
+     *
+     * The parameter is optional, and its absence means a submission: `docs/openapi-opensubsonic.json` gives it
+     * `"default": true`, so a client that never sends it would otherwise never scrobble anything.
+     *
+     * @param array<string, mixed> $input
+     */
+    private static function isSubmission(array $input): bool
+    {
+        if (!array_key_exists('submission', $input)) {
+            return true;
+        }
+
+        return strtolower((string) $input['submission']) === 'true' || (string) $input['submission'] === '1';
+    }
+
+    /**
      * getNowPlaying
      *
      * Returns what is currently being played by all users.
@@ -353,7 +370,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
             return;
         }
 
-        $submission = (array_key_exists('submission', $input) && (strtolower($input['submission']) === 'true' || $input['submission'] === '1'));
+        $submission = self::isSubmission($input);
         $client     = scrub_in((string) ($input['c'] ?? 'Subsonic'));
 
         if (!is_array($sub_ids)) {
@@ -388,10 +405,6 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
                     if ($media->set_played($user->id, $client, [], $time) && get_class($media) == Song::class) {
                         User::save_mediaplay($user, $media);
                     }
-                }
-                // Submission is false and not a repeat. let repeats go through to saveplayqueue
-                if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
-                    $media->set_played($user->id, $client, [], $time);
                 }
             }
         }

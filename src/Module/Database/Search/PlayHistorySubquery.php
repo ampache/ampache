@@ -115,6 +115,18 @@ final class PlayHistorySubquery
     }
 
     /**
+     * MAX song play date rolled up to the song's album or artist. Columns: object_id, object_type, user, date.
+     * Album and artist rows only record streams, so this is how a skip is dated for either of them.
+     *
+     * @param 'album'|'artist' $parent
+     * @param list<string> $countTypes
+     */
+    public static function lastSongDateBy(string $parent, array $countTypes, ?int $userId): string
+    {
+        return "(SELECT `parent_song`.`" . $parent . "` AS `object_id`, '" . $parent . "' AS `object_type`, `song_date`.`user`, MAX(`song_date`.`date`) AS `date` FROM " . self::lastDate('song', $countTypes, $userId) . " AS `song_date` INNER JOIN `song` AS `parent_song` ON `parent_song`.`id` = `song_date`.`object_id` GROUP BY `parent_song`.`" . $parent . "`, `song_date`.`user`)";
+    }
+
+    /**
      * The consolidation gate: the summary table only holds data while this threshold is set, so it
      * is the flag for whether the play-history rules read `object_count` alone or both tables.
      */

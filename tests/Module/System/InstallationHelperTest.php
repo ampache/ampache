@@ -31,12 +31,25 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InstallationHelperTest extends MockeryTestCase
 {
     private string $configFile = '';
     private string $file       = '';
     private InstallationHelper $subject;
+
+    /**
+     * @return array<string, array{array<string, string>, string}>
+     */
+    public static function sendFullStreamProvider(): array
+    {
+        return [
+            'old default from before version 101' => [['config_version' => '100', 'send_full_stream' => 'webplayer'], ';send_full_stream = "webplayer"'],
+            'other value from before version 101' => [['config_version' => '100', 'send_full_stream' => 'api'], 'send_full_stream = "api"'],
+            'webplayer chosen from version 101' => [['config_version' => '101', 'send_full_stream' => 'webplayer'], 'send_full_stream = "webplayer"'],
+        ];
+    }
 
     public function testAnAlreadyPrefixedTargetIsNotPrefixedTwice(): void
     {
@@ -97,6 +110,20 @@ class InstallationHelperTest extends MockeryTestCase
             $rules,
             $this->subject->install_check_rewrite_rules($this->writeRules($rules), '/ampache', true)
         );
+    }
+
+    /**
+     * @param array<string, string> $current
+     */
+    #[DataProvider('sendFullStreamProvider')]
+    public function testGenerateConfigOnlyDropsTheRetiredSendFullStreamDefault(array $current, string $expected): void
+    {
+        $lines = array_values(array_filter(
+            explode("\n", $this->subject->generate_config($current)),
+            static fn(string $line): bool => str_contains($line, 'send_full_stream =')
+        ));
+
+        self::assertSame([$expected], $lines);
     }
 
     /**

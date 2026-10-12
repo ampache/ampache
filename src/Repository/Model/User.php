@@ -373,15 +373,16 @@ class User extends database_object
 
     /**
      * save_mediaplay
+     * @param int|null $date when the play started, now when null
      */
-    public static function save_mediaplay(User $user, Song $media): void
+    public static function save_mediaplay(User $user, Song $media, ?int $date = null): void
     {
         foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
                     debug_event(self::class, 'save_mediaplay... ' . $plugin_name, 5);
-                    $plugin->_plugin->save_mediaplay($media);
+                    $plugin->_plugin->save_mediaplay($media, $date);
                 }
             } catch (Exception $error) {
                 debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);

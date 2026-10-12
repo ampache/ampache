@@ -60,9 +60,43 @@ class SongSearchTest extends MockeryTestCase
     }
 
     /**
+     * an album is dated by its own stream rows, matched through the song's album column
+     */
+    public function testLastPlayAlbumComparesTheAlbumsOwnPlayDate(): void
+    {
+        $result = $this->ruleSql([['last_play_album', 'gt', 7]]);
+
+        $this->assertStringContainsString("WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream'", $result['table_sql']);
+        $this->assertStringContainsString('ON `song`.`album` = `last_play_album_2`.`object_id`', $result['table_sql']);
+        $this->assertStringContainsString('`last_play_album_2`.`date` > (UNIX_TIMESTAMP() - (7 * 86400))', $result['where_sql']);
+    }
+
+    /**
+     * album and artist rows never record a skip, so a skip is rolled up from the songs the artist holds
+     */
+    public function testLastSkipArtistRollsSongSkipsUpToTheArtist(): void
+    {
+        $result = $this->ruleSql([['last_skip_artist', 'lt', 30]]);
+
+        $this->assertStringContainsString("WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip'", $result['table_sql']);
+        $this->assertStringContainsString('GROUP BY `parent_song`.`artist`', $result['table_sql']);
+        $this->assertStringContainsString('ON `song`.`artist` = `last_skip_artist_2`.`object_id`', $result['table_sql']);
+        $this->assertStringContainsString('`last_skip_artist_2`.`date` < (UNIX_TIMESTAMP() - (30 * 86400))', $result['where_sql']);
+    }
+
+    /**
      * @return array{table_sql: string, where_sql: string, join: array<string, bool>}
      */
     private function albumRatingSql(bool $albumGroup): array
+    {
+        return $this->ruleSql([['albumrating', 'gte', 4]], $albumGroup);
+    }
+
+    /**
+     * @param list<array{0: string, 1: string, 2: int|string}> $rules
+     * @return array{table_sql: string, where_sql: string, join: array<string, bool>}
+     */
+    private function ruleSql(array $rules, bool $albumGroup = true): array
     {
         AmpConfig::set('album_group', $albumGroup, true);
         AmpConfig::set('catalog_disable', false, true);
@@ -83,7 +117,7 @@ class SongSearchTest extends MockeryTestCase
         $search              = new Search(0, 'song', $user);
         $search->search_user = $user;
         // set_rules() reaches an access check, so the rules are given in the shape it would have produced
-        $search->rules = [['albumrating', 'gte', 4]];
+        $search->rules = $rules;
 
         $result = new SongSearch()->getSql($search);
 
