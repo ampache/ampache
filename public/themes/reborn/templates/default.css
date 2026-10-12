@@ -1884,7 +1884,7 @@ div.box.box_rules {
 }
 
 .collaborate-select {
-    height: 90px;
+    height: auto;
 }
 
 .home-plugin-flex {
