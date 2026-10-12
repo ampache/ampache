@@ -48,7 +48,7 @@ final class Migration700005 extends AbstractMigration
         }
 
         foreach ($playlists as $playlist_id => $last_count) {
-            Dba::write("UPDATE `playlist` SET `last_count` = ? WHERE `id` = ?", [$playlist_id, $last_count], true);
+            Dba::write("UPDATE `playlist` SET `last_count` = ? WHERE `id` = ?", [$last_count, $playlist_id], true);
         }
     }
 }

@@ -113,7 +113,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $email_hash = hash('sha256', (string) $row['email']);
             $user_token = hash('sha256', $row['username'] . $email_hash);
-            if ($token === $user_token) {
+            if (hash_equals($user_token, $token)) {
                 return (int)$row['id'];
             }
         }
@@ -336,7 +336,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 if ($row['apikey'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['apikey']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $apikey) {
+                    if (hash_equals($passphrase, $apikey)) {
                         return new User((int) $row['id']);
                     }
                 }
@@ -369,7 +369,7 @@ final readonly class UserRepository implements UserRepositoryInterface
                 if ($row['streamtoken'] && $row['username']) {
                     $key        = hash('sha256', (string) $row['streamtoken']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase === $streamToken) {
+                    if (hash_equals($passphrase, $streamToken)) {
                         return new User((int) $row['id']);
                     }
                 }

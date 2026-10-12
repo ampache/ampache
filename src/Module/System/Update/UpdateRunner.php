@@ -87,6 +87,170 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration830002 needs no rollback. It adds the `playlist_folder_hide` table, which
+        // Ampache7 never reads, since it has no `playlist_folder` feature for it to belong to.
+
+        // Migration\V8\Migration830001 needs no rollback. It adds `playlist_folder`.`type`; Ampache7 does not
+        // read the `playlist_folder` table at all.
+
+        if ($currentVersion >= 821002) {
+            // Migration\V8\Migration821002 (Ampache7 plugins and the preference_create API write free text here)
+            if (
+                !Dba::write('ALTER TABLE `preference` MODIFY COLUMN `category` varchar(128) DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `preference` MODIFY COLUMN `subcategory` varchar(128) DEFAULT NULL;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 821001) {
+            // Migration\V8\Migration821001 (restore the preferences deleted by the migration)
+            // Ampache7 still reads both: the agent one gates the streaming agent in recently played and the
+            // sidebar one orders the video block. The `boolean` type fixes are kept, Ampache7 renders them fine
+            if (
+                !Preference::insert('allow_personal_info_agent', 'Share Recently Played information - Allow access to streaming agent', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy') ||
+                !Preference::insert('sidebar_order_video', 'Custom CSS Order - Video', '20', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810028) {
+            // Migration\V8\Migration810028 and Migration810030 (Ampache7 still writes `bool` for
+            // `home_recently_played_all` and `show_wrapped` when it repairs its preferences, which the enum rejects)
+            if (!Dba::write('ALTER TABLE `preference` MODIFY COLUMN `type` varchar(128) DEFAULT NULL;')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration810027 needs no rollback. It converts the Ampache8-only `playlist_folder_map`.
+
+        // Migration\V8\Migration810026 needs no rollback. It adds an index on `recommendation_item` that Ampache7's
+        // similar artist/song lookup benefits from just the same.
+
+        if ($currentVersion >= 810024) {
+            // Migration\V8\Migration810024 (put back the plain `varchar` Ampache7 declares; `collection` is
+            // Ampache8-only and left alone)
+            if (
+                !Dba::write('ALTER TABLE `recommendation` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810023) {
+            // Migration\V8\Migration810023 and Migration810025 (put back the plain `varchar` Ampache7 declares)
+            if (
+                !Dba::write('ALTER TABLE `bookmark` MODIFY COLUMN `object_type` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `tmp_playlist` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `tmp_playlist_data` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810022) {
+            // Migration\V8\Migration810022 (put back the plain `varchar` Ampache7 declares; `folder_map` is dropped
+            // by the `>= 800010` block below and `collection_map` is Ampache8-only)
+            if (
+                !Dba::write('ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;') ||
+                !Dba::write('ALTER TABLE `catalog_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration810021 needs no rollback of its own. It removed `tvshow`/`tvshow_season` from the
+        // `object_type` enums, and the `>= 800004` block below puts back the full Ampache7 spelling of each.
+
+        // Migration\V8\Migration810020 needs no rollback. It only pins the charset on Ampache8-only tables.
+
+        // Migration\V8\Migration810019 needs no rollback. It deleted predictable API sessions, and this method
+        // truncates the whole `session` table anyway.
+
+        if ($currentVersion >= 810018) {
+            // Migration\V8\Migration810018 (Ampache7 has no embedded player)
+            if (!Preference::delete('embed_player')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration810016 and Migration810017 need no rollback. They fix the `bool` type to `boolean`
+        // and match `preference`.`name`'s collation to `user_preference`.`name`; both are correct for Ampache7 too.
+
+        if ($currentVersion >= 810013) {
+            // Migration\V8\Migration810013 and Migration810015 (Ampache7 has no Jellyfin backend). The
+            // `jellyfin_quick_connect` table only holds short-lived pairing codes and is left in place
+            if (
+                !Preference::delete('jellyfin_backend_enable') ||
+                !Preference::delete('quickconnect_enable')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810012) {
+            // Migration\V8\Migration810012 (Ampache7's MusicBrainz plugin always calls musicbrainz.org)
+            if (
+                !Preference::delete('musicbrainz_server') ||
+                !Preference::delete('musicbrainz_throttle')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration810011 needs no rollback. Ampache7 never reads `album`/`artist`.`enabled`, and the
+        // column defaults to 1 for the rows Ampache7 inserts. A withdrawn album or artist shows again in Ampache7.
+
+        // Migration\V8\Migration810007 to Migration810010 need no rollback. They recompute playlist counts, add
+        // indexes and add `folder`.`time`, which goes with the `folder` table in the `>= 800007` block below.
+
+        if ($currentVersion >= 810006) {
+            // Migration\V8\Migration810006 (Ampache7 has no branding section and keeps `site_title` per user)
+            // rebuild_all_preferences() at the end puts back the per-user `site_title` rows the migration deleted
+            if (
+                !Preference::delete('custom_apple_touch_icon') ||
+                !Preference::delete('custom_share_image') ||
+                !Preference::delete('site_description') ||
+                !Dba::write("UPDATE `preference` SET `subcategory` = 'interface' WHERE `name` IN ('custom_favicon', 'custom_login_logo', 'custom_login_background', 'custom_text_footer');") ||
+                !Dba::write("UPDATE `preference` SET `category` = 'interface', `subcategory` = 'custom' WHERE `name` = 'site_title';")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810005) {
+            // Migration\V8\Migration810005 (Ampache7 has no drawn artwork)
+            if (
+                !Preference::delete('generated_art') ||
+                !Preference::delete('generated_art_template')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 810004) {
+            // Migration\V8\Migration810004 (Ampache7 has no page type icons)
+            if (!Preference::delete('page_title_icons')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration810002 and Migration810003 need no rollback. They add indexes; the covering
+        // `image` key that replaced `object_id` still leads with `object_id`, so Ampache7 keeps the same access path.
+
+        if ($currentVersion >= 810001) {
+            // Migration\V8\Migration810001 (Ampache7 has no Composer column)
+            if (!Preference::delete('show_composer')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration802001 and Migration802002 need no rollback. They add an index to `folder_map`,
+        // which the `>= 800010` block below drops, and the short-lived `pow_challenge` table Ampache7 never reads.
+
         // Migration\V8\Migration801003 needs no rollback. It raises `headphones_api_url`/`headphones_api_key` to
         // Manager level; a downgrade should keep that restriction rather than reopen the access-level hole it fixed.
 

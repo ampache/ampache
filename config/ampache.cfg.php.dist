@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 87
+config_version = 88
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -188,6 +188,9 @@ session_cookiesecure = 0
 ; Auth Methods
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
+; "http" trusts the server-set REMOTE_USER variable as an already-authenticated identity, with no
+; password check. Only enable it behind a web server or reverse proxy that performs real authentication
+; (mod_auth*, an SSO module) and guarantees no client request header can set REMOTE_USER itself.
 ; DEFAULT: mysql
 ; VALUES: mysql,ldap,http,pam,external
 auth_methods = "mysql"
@@ -1124,6 +1127,14 @@ site_charset = "UTF-8"
 ; If you don't have an email server, make sure to enable user_no_email_confirm below
 ; DEFAULT: "false"
 ;allow_public_registration = "true"
+
+; Allow users to reset a forgotten password by email.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php as well as the
+; API's lost_password action, so a stranger can't trigger reset mail to your users by posting
+; to either of them directly.
+; Only relevant on a server with mail enabled; without mail the feature is already off.
+; DEFAULT: "false"
+;allow_lost_password = "true"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
