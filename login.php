@@ -30,7 +30,7 @@ use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
-// the update redirect targets login when auth is required, so login has to stay reachable with an outdated database too
+// update.php redirects here when auth is required, so login must stay reachable with an outdated database too
 define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
