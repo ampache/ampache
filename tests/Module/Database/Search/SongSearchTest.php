@@ -60,6 +60,28 @@ class SongSearchTest extends MockeryTestCase
     }
 
     /**
+     * a lone top-level group (the shape every web-UI search now produces, via its always-present
+     * "group 0") has no sibling fragment to combine with, so wrapping it in parens protects no
+     * precedence -- it must read exactly like the equivalent flat rule list, not gain a redundant pair
+     */
+    public function testALoneGroupWithNoSiblingsAddsNoRedundantParens(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_id' => 0,
+                'group_operator' => 'or',
+                'rules' => [
+                    ['title', 'contain', 'Rock'],
+                    ['title', 'contain', 'Pop'],
+                ],
+            ],
+        ]);
+
+        $this->assertSame('(`song`.`title` LIKE ? OR `song`.`title` LIKE ?) AND `song`.`enabled` = 1', $result['where_sql']);
+        $this->assertSame(['%Rock%', '%Pop%'], $result['parameters']);
+    }
+
+    /**
      * `addition_time` is never NULL, so "not added before" is a plain operator swap with no OR branch
      */
     public function testDaysAddedNotBeforeSwapsTheOperator(): void

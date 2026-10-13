@@ -44,23 +44,25 @@ final class RuleGroupCombiner
         $allHaving       = [];
         $whereFragments  = [];
         $havingFragments = [];
+        $hasSiblingGroups = count($rules) > 1;
 
         foreach ($rules as $rule) {
             $isGroup       = array_key_exists('rules', $rule);
             $groupRules    = $isGroup ? $rule['rules'] : [$rule];
             $groupOperator = $isGroup ? strtoupper((string) ($rule['group_operator'] ?? 'and')) : 'AND';
+            $wrapInParens  = $isGroup && $hasSiblingGroups;
 
             $result = $evaluator($groupRules);
 
             $allWhere  = [...$allWhere, ...$result['where']];
             $allHaving = [...$allHaving, ...$result['having']];
 
-            $whereFragment = self::combineFragment($result['where'], $groupOperator, $isGroup);
+            $whereFragment = self::combineFragment($result['where'], $groupOperator, $wrapInParens);
             if ($whereFragment !== '') {
                 $whereFragments[] = $whereFragment;
             }
 
-            $havingFragment = self::combineFragment($result['having'], $groupOperator, $isGroup);
+            $havingFragment = self::combineFragment($result['having'], $groupOperator, $wrapInParens);
             if ($havingFragment !== '') {
                 $havingFragments[] = $havingFragment;
             }
@@ -77,14 +79,15 @@ final class RuleGroupCombiner
     }
 
     /**
-     * Parenthesizes only an explicit group, never by fragment count -- a class like `PlaylistSearch`
-     * emits more than one fragment per ungrouped rule, and that must stay unwrapped.
+     * Parenthesizes only when the caller says this fragment has a sibling to combine with, never by
+     * fragment count -- a class like `PlaylistSearch` emits more than one fragment per ungrouped
+     * rule, and that must stay unwrapped.
      * @param string[] $fragments
      */
-    private static function combineFragment(array $fragments, string $operator, bool $isGroup): string
+    private static function combineFragment(array $fragments, string $operator, bool $wrapInParens): string
     {
         $combined = implode(sprintf(' %s ', $operator), $fragments);
 
-        return ($isGroup && count($fragments) > 1) ? '(' . $combined . ')' : $combined;
+        return ($wrapInParens && count($fragments) > 1) ? '(' . $combined . ')' : $combined;
     }
 }
