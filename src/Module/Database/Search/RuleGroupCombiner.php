@@ -40,10 +40,10 @@ final class RuleGroupCombiner
      */
     public static function combine(array $rules, string $logicOperator, Closure $evaluator): array
     {
-        $allWhere        = [];
-        $allHaving       = [];
-        $whereFragments  = [];
-        $havingFragments = [];
+        $allWhere         = [];
+        $allHaving        = [];
+        $whereFragments   = [];
+        $havingFragments  = [];
         $hasSiblingGroups = count($rules) > 1;
 
         foreach ($rules as $rule) {
