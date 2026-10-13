@@ -6174,6 +6174,46 @@
         "schema": {
           "type": "string"
         }
+      },
+      "Rule1Group": {
+        "in": "query",
+        "name": "rule_1_group",
+        "required": false,
+        "description": "Group id for rule 1, to combine it under a group_<id>_operator",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "Rule2Group": {
+        "in": "query",
+        "name": "rule_2_group",
+        "required": false,
+        "description": "Group id for rule 2, to combine it under a group_<id>_operator",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "Rule3Group": {
+        "in": "query",
+        "name": "rule_3_group",
+        "required": false,
+        "description": "Group id for rule 3, to combine it under a group_<id>_operator",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "Group1Operator": {
+        "in": "query",
+        "name": "group_1_operator",
+        "required": false,
+        "description": "and, or (operator joining the rules assigned to group 1)",
+        "schema": {
+          "enum": [
+            "and",
+            "or"
+          ],
+          "type": "string"
+        }
       }
     },
     "examples": {
@@ -6551,7 +6591,7 @@
   "paths": {
     "/album-disks/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchAlbumDisks",
         "parameters": [
           {
@@ -6599,6 +6639,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -7263,7 +7315,7 @@
     },
     "/albums/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchAlbums",
         "parameters": [
           {
@@ -7311,6 +7363,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -8964,7 +9028,7 @@
     },
     "/artists/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchArtists",
         "parameters": [
           {
@@ -9025,6 +9089,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -14536,7 +14612,7 @@
     },
     "/genres/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchGenres",
         "parameters": [
           {
@@ -14584,6 +14660,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -17885,7 +17973,7 @@
     },
     "/labels/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchLabels",
         "parameters": [
           {
@@ -17933,6 +18021,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -21943,7 +22043,7 @@
     },
     "/playlists/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchPlaylists",
         "parameters": [
           {
@@ -21991,6 +22091,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -78989,7 +79101,7 @@
     },
     "/podcast-episodes/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchPodcastEpisodes",
         "parameters": [
           {
@@ -79037,6 +79149,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -80899,7 +81023,7 @@
     },
     "/podcasts/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchPodcasts",
         "parameters": [
           {
@@ -80947,6 +81071,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -93784,7 +93920,7 @@
     },
     "/songs/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchSongs",
         "parameters": [
           {
@@ -93832,6 +93968,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -98392,7 +98540,7 @@
     },
     "/users/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchUsers",
         "parameters": [
           {
@@ -98440,6 +98588,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {
@@ -99377,7 +99537,7 @@
     },
     "/videos/search": {
       "get": {
-        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
         "operationId": "searchVideos",
         "parameters": [
           {
@@ -99425,6 +99585,18 @@
           },
           {
             "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
           }
         ],
         "responses": {

@@ -68,8 +68,65 @@ class ArtistSearchTest extends MockeryTestCase
     }
 
     /**
-     * @param list<array{0: string, 1: string, 2: int|string}> $rules
-     * @return array{table_sql: string, where_sql: string}
+     * `?` placeholder order must match parameter order across two groups, not rule-definition order
+     */
+    public function testParameterOrderMatchesAcrossGroups(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['id', 'gt', 5],
+                    ['id', 'gt', 9],
+                ],
+            ],
+            ['yearformed', 'gt', 2000],
+        ]);
+
+        $this->assertSame([5, 9, 2000], $result['parameters']);
+    }
+
+    /**
+     * an OR'd group combined with an ungrouped rule parenthesizes only the group
+     */
+    public function testTwoGroupsCombineWithParensAndOuterOperator(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['id', 'gt', 5],
+                    ['id', 'gt', 9],
+                ],
+            ],
+            ['yearformed', 'gt', 2000],
+        ]);
+
+        $this->assertSame(
+            '((`artist`.`id` > ? OR `artist`.`id` > ?) AND `artist`.`yearformed` > ?) AND `artist`.`enabled` = 1',
+            $result['where_sql']
+        );
+    }
+
+    /**
+     * an ungrouped rule list must produce today's exact flat implode, with no parens added anywhere
+     */
+    public function testUngroupedRulesProduceAFlatImplode(): void
+    {
+        $result = $this->ruleSql([
+            ['id', 'gt', 5],
+            ['yearformed', 'gt', 2000],
+        ]);
+
+        $this->assertSame(
+            '(`artist`.`id` > ? AND `artist`.`yearformed` > ?) AND `artist`.`enabled` = 1',
+            $result['where_sql']
+        );
+    }
+
+    /**
+     * @param list<array<int, mixed>|array{group_operator: string, rules: list<array<int, mixed>>}> $rules
+     * @return array{table_sql: string, where_sql: string, parameters: array<int, mixed>}
      */
     private function ruleSql(array $rules): array
     {
@@ -98,6 +155,7 @@ class ArtistSearchTest extends MockeryTestCase
         return [
             'table_sql' => $result['table_sql'],
             'where_sql' => $result['where_sql'],
+            'parameters' => $result['parameters'],
         ];
     }
 }

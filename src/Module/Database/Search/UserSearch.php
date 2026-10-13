@@ -46,14 +46,44 @@ final class UserSearch implements SearchInterface
     public function getSql(
         Search $search,
     ): array {
-        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
-
-        $where      = [];
         $table      = [];
         $join       = [];
         $parameters = [];
 
-        foreach ($search->rules as $rule) {
+        $combined = RuleGroupCombiner::combine(
+            $search->rules,
+            $search->logic_operator ?? 'and',
+            function (array $rules) use ($search, &$parameters): array {
+                return $this->evaluateRules($rules, $search, $parameters);
+            },
+        );
+
+        ksort($table);
+
+        return [
+            'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',
+            'join' => $join,
+            'where' => $combined['where'],
+            'where_sql' => $combined['where_sql'],
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => $combined['having_sql'],
+            'parameters' => $parameters,
+        ];
+    }
+
+    /**
+     * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
+     * @param list<array<int, mixed>> $rules
+     * @param array<int, mixed> $parameters
+     * @return array{where: string[], having: string[]}
+     */
+    private function evaluateRules(array $rules, Search $search, array &$parameters): array
+    {
+        $where = [];
+
+        foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
@@ -116,19 +146,6 @@ final class UserSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
-        ksort($table);
-
-        return [
-            'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',
-            'join' => $join,
-            'where' => $where,
-            'where_sql' => $where_sql,
-            'table' => $table,
-            'table_sql' => '',
-            'group_sql' => '',
-            'having_sql' => '',
-            'parameters' => $parameters,
-        ];
+        return ['where' => $where, 'having' => []];
     }
 }

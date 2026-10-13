@@ -1535,7 +1535,7 @@ registration_mandatory_fields = "fullname"
 ;transcode_aiff = "allowed"
 ;transcode_ape = "allowed"
 ;transcode_shn = "allowed"
-transcode_mp3 = "allowed"
+;transcode_mp3 = "allowed"
 ;;; Video
 ;transcode_avi = "allowed"
 ;transcode_flv = "allowed"

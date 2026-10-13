@@ -2,6 +2,12 @@
 
 ## API 8.3.0
 
+### Added (830000)
+
+* `advanced_search` (API8)
+  * New `rule_*_group` and `group_*_operator` parameters combine a subset of rules into one group with its own AND/OR match, joined by the top-level `operator` -- exactly two levels, a group cannot contain another group
+  * Not the same thing as `search_group`'s "group" -- that names a bundle of object types to search across, unrelated to this rule grouping
+
 ### Changed (830000)
 
 * `playlist_folder_create`, `playlist_folder_edit` (API8)

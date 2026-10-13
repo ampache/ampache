@@ -82,24 +82,33 @@ final class AdvancedSearchMethod implements MethodInterface
      *   * rule operator (e.g. rule_1_operator, rule_2_operator)
      *   * rule input (e.g. rule_1_input, rule_2_input)
      *
+     * A rule may optionally carry rule_<n>_group (int) to combine it with every other rule sharing
+     * that id under one group_<id>_operator ('and'/'or'), instead of the top-level operator -- exactly
+     * two levels, a group id cannot nest another group. (Unrelated to search_group's "group" -- that
+     * is a named bundle of object types to search across, not a rule grouping.)
+     *
      * Refer to the wiki for further information on rule_* types and data
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * operator        = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1          = (string)
-     * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) song by default //optional
-     * random          = (boolean) 0, 1 (random order of results; default to 0) //optional
-     * offset          = (integer) //optional
-     * limit           = (integer) //optional
+     * operator         = (string) 'and', 'or' (whether to match one rule or all)
+     * rule_1           = (string)
+     * rule_1_operator  = (integer) 0|1|2|3|4|5|6
+     * rule_1_input     = (mixed) The string, date, integer you are searching for
+     * rule_1_group     = (integer) group id for this rule //optional
+     * group_1_operator = (string) 'and', 'or' (operator joining rule group 1's own rules) //optional
+     * type             = (string) song by default //optional
+     * random           = (boolean) 0, 1 (random order of results; default to 0) //optional
+     * offset           = (integer) //optional
+     * limit            = (integer) //optional
      *
      * @param array{
      *     operator?: string,
      *     rule_1?: string,
      *     rule_1_operator?: int,
      *     rule_1_input?: mixed,
+     *     rule_1_group?: int,
+     *     group_1_operator?: string,
      *     type?: string,
      *     offset?: int,
      *     limit?: int,
