@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-03 09:06+1000\n"
+"POT-Creation-Date: 2026-10-13 10:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -483,6 +483,9 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
+msgid "Hidden"
+msgstr ""
+
 msgid "Create Folder"
 msgstr ""
 
@@ -801,9 +804,6 @@ msgid "More Metadata"
 msgstr ""
 
 msgid "Less Metadata"
-msgstr ""
-
-msgid "Hidden"
 msgstr ""
 
 msgid "Re-tag"
@@ -1283,6 +1283,9 @@ msgid "Edit Folder"
 msgstr ""
 
 msgid "Parent"
+msgstr ""
+
+msgid "Visibility"
 msgstr ""
 
 msgid "Popular"
@@ -2013,6 +2016,14 @@ msgstr ""
 msgid "No items"
 msgstr ""
 
+msgid "This player is no longer available"
+msgstr ""
+
+#. HINT: name of this Ampache server
+#, php-format
+msgid "Open on %s"
+msgstr ""
+
 msgid "Log out"
 msgstr ""
 
@@ -2357,6 +2368,12 @@ msgstr ""
 msgid "Match"
 msgstr ""
 
+msgid "all groups"
+msgstr ""
+
+msgid "any groups"
+msgstr ""
+
 msgid "all rules"
 msgstr ""
 
@@ -2364,6 +2381,9 @@ msgid "any rule"
 msgstr ""
 
 msgid "Add Another Rule"
+msgstr ""
+
+msgid "Add Group"
 msgstr ""
 
 msgid "Create Share"
@@ -2740,6 +2760,16 @@ msgid "Holds"
 msgstr ""
 
 msgid "Votes"
+msgstr ""
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Unhide"
+msgstr ""
+
+msgid "Hide"
 msgstr ""
 
 msgid "Playlist Name"
@@ -3936,10 +3966,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Anywhere"
-msgstr ""
-
-#, php-format
-msgid "Shared by %s"
 msgstr ""
 
 msgid "Post to Shoutbox"
@@ -6245,6 +6271,24 @@ msgstr ""
 msgid "My Last Play or Skip"
 msgstr ""
 
+msgid "My Last Play (Song)"
+msgstr ""
+
+msgid "My Last Skip (Song)"
+msgstr ""
+
+msgid "My Last Play or Skip (Song)"
+msgstr ""
+
+msgid "My Last Play (Artist)"
+msgstr ""
+
+msgid "My Last Skip (Artist)"
+msgstr ""
+
+msgid "My Last Play or Skip (Artist)"
+msgstr ""
+
 msgid "Played by Me"
 msgstr ""
 
@@ -6315,6 +6359,15 @@ msgid "Album Count"
 msgstr ""
 
 msgid "My Rating (Album)"
+msgstr ""
+
+msgid "My Last Play (Album)"
+msgstr ""
+
+msgid "My Last Skip (Album)"
+msgstr ""
+
+msgid "My Last Play or Skip (Album)"
 msgstr ""
 
 msgid "MusicBrainz ID (Album)"
@@ -6992,6 +7045,23 @@ msgid "Piwik Site ID"
 msgstr ""
 
 msgid "Piwik URL"
+msgstr ""
+
+msgid "Popular songs on homepage, one per album and artist"
+msgstr ""
+
+msgid ""
+"How many tracks the panel shows. Each one is the most played of its album "
+"and of its artist, so a higher number reaches further down the ranking "
+"rather than repeating a record."
+msgstr ""
+
+msgid ""
+"Where the panel sits among the other home page panels. Lower comes first, "
+"and panels sharing a number keep the order the plugins were installed in."
+msgstr ""
+
+msgid "Popular variety max items"
 msgstr ""
 
 msgid "Raise the album and artist rating to match the highest song rating"

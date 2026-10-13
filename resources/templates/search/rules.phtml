@@ -29,32 +29,65 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Search\SearchRulesView $this */
 
-$operator = $this->getLogicOperator();
-$webPath  = $this->getWebPath(); ?>
+$operator             = $this->getLogicOperator();
+$primaryGroupOperator = $this->getPrimaryGroupOperator();
+$webPath              = $this->getWebPath(); ?>
 <script src="<?php echo $this->e($webPath); ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $this->e($webPath); ?>/lib/javascript/search-data.php?type=<?php echo $this->e($this->getCurrentType()); ?>"></script>
 <?php Ui::show_box_top(T_('Rules') . '...', 'box box_rules'); ?>
-<table class="tabledata">
-    <tbody id="searchtable">
+<div class="search-rules">
+<table class="tabledata search-rules-table">
+    <colgroup>
+        <col style="width: 32%" /><col style="width: 24%" /><col style="width: 32%" /><col style="width: 6%" /><col style="width: 6%" />
+    </colgroup>
+    <tbody>
         <tr id="rules_operator">
             <td><?php echo T_('Match'); ?></td>
             <td>
                 <select name="operator">
-                    <option value="and"<?php echo ($operator !== 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('all rules'); ?></option>
-                    <option value="or"<?php echo ($operator === 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('any rule'); ?></option>
+                    <option value="and"<?php echo ($operator !== 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('all groups'); ?></option>
+                    <option value="or"<?php echo ($operator === 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('any groups'); ?></option>
                 </select>
-            </td>
-        </tr>
-        <tr id="rules_addrowbutton">
-            <td>
-                <a id="addrowbutton" href="javascript:void(0)">
-                    <?php echo $this->raw(Ui::get_material_symbol('add_circle')); ?>
-                    <?php echo T_('Add Another Rule'); ?>
-                </a>
-                <script>$('#addrowbutton').on('click', SearchRow.add);</script>
             </td>
         </tr>
     </tbody>
 </table>
+<table class="tabledata search-rules-table">
+    <colgroup>
+        <col style="width: 32%" /><col style="width: 24%" /><col style="width: 32%" /><col style="width: 6%" /><col style="width: 6%" />
+    </colgroup>
+    <tbody id="searchtable">
+        <tr id="rules_group_0_operator">
+            <td><?php echo T_('Match'); ?></td>
+            <td>
+                <select name="group_0_operator">
+                    <option value="and"<?php echo ($primaryGroupOperator !== 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('all rules'); ?></option>
+                    <option value="or"<?php echo ($primaryGroupOperator === 'or') ? ' selected="selected"' : ''; ?>><?php echo T_('any rule'); ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr id="rules_addrowbutton">
+            <td colspan="5">
+                <a id="addrowbutton" href="javascript:void(0)">
+                    <?php echo $this->raw(Ui::get_material_symbol('add_circle')); ?>
+                    <?php echo T_('Add Another Rule'); ?>
+                </a>
+                <script>$('#addrowbutton').on('click', function () { SearchRow.add(undefined, undefined, undefined, undefined, 0); });</script>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div id="searchgroupsbutton" style="margin-top: 10px">
+    <a id="addgroupbutton" href="javascript:void(0)">
+        <?php echo $this->raw(Ui::get_material_symbol('add_circle')); ?>
+        <?php echo T_('Add Group'); ?>
+    </a>
+    <script>$('#addgroupbutton').on('click', function () {
+        var groupId = SearchRow.addGroup();
+        SearchRow.add(undefined, undefined, undefined, undefined, groupId);
+    });</script>
+</div>
+<div id="searchgroups"></div>
+</div>
 <?php Ui::show_box_bottom(); ?>
 <?php echo $this->raw($this->getRuleScript()); ?>

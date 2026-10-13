@@ -22,9 +22,10 @@
 
 var rowIter = 1;
 var rowCount = 0;
+var groupIter = 0;
 // A search row is the js selection menu created for the search pages
 var SearchRow = {
-    add(ruleType, operator, input, subtype) {
+    add(ruleType, operator, input, subtype, groupId) {
         if (typeof(ruleType) != "string") {
             ruleType = 0;
         } else {
@@ -66,16 +67,103 @@ var SearchRow = {
         cells[2].appendChild(SearchRow.constructInput(ruleType, rowIter, input));
         cells[3].innerHTML = removeIcon;
 
+        // a group id targets this row's hidden field and its tbody; omitted it behaves exactly as before
+        var hasGroup = (typeof groupId !== "undefined" && groupId !== null);
+        if (hasGroup) {
+            var groupField = document.createElement("input");
+            groupField.type = "hidden";
+            groupField.name = "rule_" + rowIter + "_group";
+            groupField.value = groupId;
+            cells[4].appendChild(groupField);
+        }
+
         jQuery.each(cells, function(i) {
             row.appendChild(cells[i]);
         });
 
-        $("#searchtable").append(row);
+        // group 0 is the primary group, rendered statically as #searchtable rather than a group tbody
+        var target = (hasGroup && groupId !== 0) ? $("#searchtable_group_" + groupId) : $("#searchtable");
+        target.append(row);
         rowCount++;
 
         $(cells[3]).on("click", function(){if(rowCount > 1) { $(this).parent().remove(); rowCount--; }});
 
         rowIter++;
+    },
+    addGroup(groupId, groupOperator) {
+        if (typeof groupId === "undefined" || groupId === null) {
+            groupId = ++groupIter;
+        } else if (groupId > groupIter) {
+            groupIter = groupId;
+        }
+
+        var tbody = document.createElement("tbody");
+        tbody.id = "searchtable_group_" + groupId;
+
+        var headerRow = document.createElement("tr");
+        var headerCells = [];
+        for (var h = 0; h < 5; h++) {
+            headerCells[h] = document.createElement("td");
+        }
+        headerCells[0].innerHTML = matchLabel;
+
+        var operatorSelect = document.createElement("select");
+        operatorSelect.name = "group_" + groupId + "_operator";
+        [["and", matchAllLabel], ["or", matchAnyLabel]].forEach(function (pair) {
+            var option = document.createElement("option");
+            option.value = pair[0];
+            option.innerHTML = pair[1];
+            option.selected = (pair[0] === groupOperator);
+            operatorSelect.appendChild(option);
+        });
+        headerCells[1].appendChild(operatorSelect);
+
+        var removeSpan = document.createElement("span");
+        removeSpan.innerHTML = removeIcon;
+        headerCells[3].appendChild(removeSpan);
+
+        jQuery.each(headerCells, function (i) {
+            headerRow.appendChild(headerCells[i]);
+        });
+
+        var addRuleRow = document.createElement("tr");
+        var addRuleCell = document.createElement("td");
+        addRuleCell.colSpan = 5;
+        addRuleCell.innerHTML = addRuleIcon;
+        addRuleRow.appendChild(addRuleCell);
+
+        tbody.appendChild(headerRow);
+        tbody.appendChild(addRuleRow);
+
+        var table = document.createElement("table");
+        table.className = "tabledata search-rules-table";
+        // matches rules.phtml's <colgroup> so this group's columns line up with the rest of the form
+        var colgroup = document.createElement("colgroup");
+        [32, 24, 32, 6, 6].forEach(function (pct) {
+            var col = document.createElement("col");
+            col.style.width = pct + "%";
+            colgroup.appendChild(col);
+        });
+        table.appendChild(colgroup);
+        table.appendChild(tbody);
+
+        var container = document.createElement("div");
+        container.className = "searchgroup";
+        container.id = "searchgroup_" + groupId;
+        container.appendChild(table);
+
+        $("#searchgroups").append(container);
+
+        $(addRuleCell).on("click", function () { SearchRow.add(undefined, undefined, undefined, undefined, groupId); });
+        $(removeSpan).on("click", function () {
+            var ruleRows = tbody.children.length - 2;
+            if (rowCount - ruleRows > 0) {
+                rowCount -= ruleRows;
+                $(container).remove();
+            }
+        });
+
+        return groupId;
     },
     constructInput(ruleType, ruleNumber, input) {
         if (input == null || typeof input == "undefined") {

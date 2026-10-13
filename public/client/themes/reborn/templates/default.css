@@ -1884,7 +1884,7 @@ div.box.box_rules {
 }
 
 .collaborate-select {
-    height: 90px;
+    height: auto;
 }
 
 .home-plugin-flex {
@@ -2577,6 +2577,24 @@ table.tabledata tbody tr.withdrawn > td:first-child {
 .rss-item-thumb {
     width: auto;
     max-height: 48px;
+}
+
+/* search/rules.phtml: the primary rule list, the add-group button and each group box are separate
+   tables, so a shared `<colgroup>` is what lines up their labels/selects/inputs with each other --
+   `table-layout: fixed` alone takes its column count from a row's own cell count, which a 2-cell
+   row (the "Match" rows) would otherwise rescale to fill the table instead of leaving room to spare. */
+.search-rules-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* a <select>/<input> sizes to its own content by default, which overflows a fixed-width cell and
+   visually squeezes its neighbour -- constrain it to the cell `table-layout: fixed` already gave it. */
+.search-rules-table td > select,
+.search-rules-table td > input {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* --------------------------
@@ -3272,6 +3290,34 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         font-size: 0.85em;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    /* search/rules.phtml: each rule/group row folds into a vertical stack of full-width fields
+       instead of forcing the fixed-width desktop grid into horizontal scroll. table.tabledata td's
+       own `padding: 3px 10px 3px 0` is content-box by default, so width:100% plus that padding
+       overflowed its row by exactly the right-padding amount -- border-box keeps it inside 100%. */
+    .search-rules-table,
+    .search-rules-table > tbody,
+    .search-rules-table > tbody > tr,
+    .search-rules-table > tbody > tr > td {
+        display: block;
+        box-sizing: border-box;
+        width: 100% !important;
+    }
+
+    .search-rules-table > tbody > tr {
+        margin-bottom: 10px;
+    }
+
+    .search-rules-table > tbody > tr > td:empty {
+        display: none;
+    }
+
+    /* .formValidation's buttons wrap onto a second line on a narrow viewport with no vertical gap,
+       so a wrapped row sits flush against the one above it. */
+    .formValidation input,
+    .formValidation a {
+        margin-bottom: 8px;
     }
 }
 

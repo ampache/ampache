@@ -139,6 +139,8 @@ class Search extends playlist_object
         'days' => [
             ['name' => 'lt', 'description' => 'before (x) days ago', 'sql' => '<'],
             ['name' => 'gt', 'description' => 'after (x) days ago', 'sql' => '>'],
+            ['name' => 'notlt', 'description' => 'is not before (x) days ago', 'sql' => '!<'],
+            ['name' => 'notgt', 'description' => 'is not after (x) days ago', 'sql' => '!>'],
         ],
 
         'recent_played' => [
@@ -170,7 +172,10 @@ class Search extends playlist_object
     public string $objectType; // the type of object you want to return (self::VALID_TYPES)
     public ?int $random = 0;
 
-    /** @var array<int, array<int, mixed>> $rules */
+    /**
+     * A top-level element is a plain rule tuple, or a 2-level group wrapper -- see `RuleGroupCombiner`.
+     * @var list<array<int, mixed>|array{group_id?: int, group_operator: string, rules: list<array<int, mixed>>}> $rules
+     */
     public array $rules = []; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public User $search_user; // user running the search
@@ -269,11 +274,7 @@ class Search extends playlist_object
             }
 
             // make sure saved rules match the correct names
-            $rule_count = 0;
-            foreach ($this->rules as $rule) {
-                $this->rules[$rule_count][0] = $this->_set_rule_name($rule[0]);
-                ++$rule_count;
-            }
+            $this->_normalizeRuleNames();
 
             // When loading a search use the owner ID for the search
             if ($this->user > 0) {
@@ -1005,6 +1006,21 @@ class Search extends playlist_object
     }
 
     /**
+     * The primary (group 0) rule section's own operator, read from a saved wrapper when one exists.
+     * A saved search predating groups never had one, so it falls back to the search's own operator.
+     */
+    public function getPrimaryGroupOperator(): string
+    {
+        foreach ($this->rules as $rule) {
+            if (array_key_exists('rules', $rule) && ($rule['group_id'] ?? null) === 0) {
+                return (string) $rule['group_operator'];
+            }
+        }
+
+        return (string) ($this->logic_operator ?? 'and');
+    }
+
+    /**
      * set_order_by
      * Allow some display flexibility
      */
@@ -1093,7 +1109,8 @@ class Search extends playlist_object
             }
         }
 
-        // get the data for each rule group the user sent
+        // get the data for each rule group the user sent, bucketing by the optional 'rule_<N>_group' id
+        $grouped = [];
         foreach ($user_rules as $ruleID) {
             $rule_name = $this->_set_rule_name($data["rule_" . $ruleID]);
             $rule_type = $this->get_rule_type_by_name($rule_name);
@@ -1111,9 +1128,11 @@ class Search extends playlist_object
                 $rule_input = str_replace("|", "\0", $rule_input);
             }
 
-            // attach the rules to the search
+            $groupID = isset($data['rule_' . $ruleID . '_group']) ? (int) $data['rule_' . $ruleID . '_group'] : null;
+
+            // attach the rules to the search, or to their group's bucket if one was sent
             foreach (explode('|', $rule_input) as $input) {
-                $this->rules[] = [
+                $tuple = [
                     $rule_name,
                     // name
                     $rule_operator,
@@ -1122,21 +1141,55 @@ class Search extends playlist_object
                     // input
                     $data['rule_' . $ruleID . '_subtype'] ?? null,
                 ];
+
+                if ($groupID === null) {
+                    $this->rules[] = $tuple;
+                } else {
+                    $grouped[$groupID][] = $tuple;
+                }
             }
+        }
+
+        // append each non-empty group as one wrapper, stamping its own id so to_js() can tell the
+        // always-present primary group (id 0) apart from an explicit one without relying on position
+        foreach ($grouped as $groupID => $groupRules) {
+            $this->rules[] = [
+                'group_id' => $groupID,
+                'group_operator' => self::normalizeLogicOperator($data['group_' . $groupID . '_operator'] ?? 'and'),
+                'rules' => $groupRules,
+            ];
         }
     }
 
     /**
      * to_js
      *
-     * Outputs the javascript necessary to re-show the current set of rules.
+     * Outputs the javascript necessary to re-show the current set of rules, groups included.
      */
     public function to_js(): string
     {
         $javascript = "";
+        $groupID    = 0;
         foreach ($this->rules as $rule) {
-            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out(T_($rule[1])) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
+            $isGroup    = array_key_exists('rules', $rule);
+            $groupRules = $isGroup ? $rule['rules'] : [$rule];
+            // an ungrouped rule belongs to the always-present primary group (id 0), which
+            // rules.phtml renders statically rather than via a SearchRow.addGroup() call
+            $thisGroup = 0;
+
+            if ($isGroup) {
+                // a stamped id (new data) wins; a legacy wrapper with none is auto-numbered as before
+                $thisGroup = $rule['group_id'] ?? ++$groupID;
+
+                if ($thisGroup !== 0) {
+                    // @see search.js SearchRow.addGroup(groupId, groupOperator)
+                    $javascript .= '<script>SearchRow.addGroup(' . $thisGroup . ', "' . scrub_out($rule['group_operator']) . '"); </script>';
+                }
+            }
+
+            foreach ($groupRules as $innerRule) {
+                $javascript .= $this->_rule_to_js($innerRule, $thisGroup);
+            }
         }
 
         return $javascript;
@@ -1178,7 +1231,8 @@ class Search extends playlist_object
             $prefix = substr($key, 0, 4);
             $value  = (string) $value;
 
-            if ($prefix === 'rule' && strlen($value)) {
+            // 'rule_<N>_group' keeps the 'rule' prefix; 'group_<G>_operator' needs its own, or it's dropped silently
+            if (($prefix === 'rule' || $prefix === 'grou') && strlen($value)) {
                 $request[$key] = Dba::escape($value);
             }
         }
@@ -2105,6 +2159,32 @@ class Search extends playlist_object
     private function _get_types_video(): array
     {
         return [$this->_get_rule_text('file', T_('Filename'))];
+    }
+
+    /**
+     * Renames every rule to its canonical alias, recursing into a group wrapper's own rules so a saved
+     * grouped search doesn't crash on the group wrapper's missing integer key `0`.
+     */
+    private function _normalizeRuleNames(): void
+    {
+        foreach ($this->rules as $index => $rule) {
+            if (array_key_exists('rules', $rule)) {
+                foreach ($rule['rules'] as $innerIndex => $innerRule) {
+                    $this->rules[$index]['rules'][$innerIndex][0] = $this->_set_rule_name($innerRule[0]);
+                }
+            } else {
+                $this->rules[$index][0] = $this->_set_rule_name($rule[0]);
+            }
+        }
+    }
+
+    /**
+     * @see search.js SearchRow.add(ruleType, operator, input, subtype, groupId)
+     * @param array<int, mixed> $rule
+     */
+    private function _rule_to_js(array $rule, int $groupID): string
+    {
+        return '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out(T_($rule[1])) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '", ' . $groupID . '); </script>';
     }
 
     /**
