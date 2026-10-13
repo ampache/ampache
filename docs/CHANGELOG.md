@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Ampache 7.10.5
+
+### Fixed (7.10.5)
+
+* An outdated database bounced `login.php` to `update.php`, which requires a session and bounced back to `login.php`, looping forever instead of showing the login form (#4547)
+* Downgrading from Ampache8 left the `rightbar_always_show` preference behind; it's now removed like the other Ampache8-only preferences
+
 ## Ampache 7.10.4
 
 ### Added (7.10.4)
