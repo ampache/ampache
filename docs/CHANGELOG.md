@@ -18,6 +18,8 @@
 * Search
   * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
   * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
+  * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
+  * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
 
 ### Changed (8.3.0)
 

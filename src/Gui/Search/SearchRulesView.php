@@ -64,6 +64,21 @@ final class SearchRulesView extends AbstractView
     }
 
     /**
+     * The primary (always-present) group's own operator. A saved search predating groups never had
+     * one, so it falls back to the search's own operator -- the value that combined those rules before.
+     */
+    public function getPrimaryGroupOperator(): string
+    {
+        $operator = Core::get_request('group_0_operator');
+        if ($operator === '') {
+            $operator                     = ($this->playlist instanceof Search) ? $this->playlist->getPrimaryGroupOperator() : 'and';
+            $_REQUEST['group_0_operator'] = $operator;
+        }
+
+        return strtolower($operator);
+    }
+
+    /**
      * The saved rules as javascript, or an empty row when there are none to show.
      */
     public function getRuleScript(): string
@@ -76,8 +91,8 @@ final class SearchRulesView extends AbstractView
             $out = $search->to_js();
         }
 
-        // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-        return ($out) ?: '<script>SearchRow.add();</script>';
+        // @see search.js SearchRow.add(ruleType, operator, input, subtype, groupId) -- the primary group is id 0
+        return ($out) ?: '<script>SearchRow.add(undefined, undefined, undefined, undefined, 0);</script>';
     }
 
     public function getWebPath(): string

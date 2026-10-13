@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-12 20:55+1000\n"
+"POT-Creation-Date: 2026-10-13 10:08+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2368,6 +2368,12 @@ msgstr ""
 msgid "Match"
 msgstr ""
 
+msgid "all groups"
+msgstr ""
+
+msgid "any groups"
+msgstr ""
+
 msgid "all rules"
 msgstr ""
 
@@ -2375,6 +2381,9 @@ msgid "any rule"
 msgstr ""
 
 msgid "Add Another Rule"
+msgstr ""
+
+msgid "Add Group"
 msgstr ""
 
 msgid "Create Share"

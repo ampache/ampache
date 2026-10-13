@@ -58,9 +58,18 @@ final readonly class ShowAction implements ApplicationActionInterface
         $content .= 'var basetypes = ';
         $content .= $this->arrayToJSON($search->get_basetypes(true)) . ";\n";
         $content .= sprintf(
-            'removeIcon = \'<a href="javascript:void(0)">%s</a>\';',
+            'removeIcon = \'<a href="javascript:void(0)">%s</a>\';' . "\n",
             Ui::get_material_symbol('hide_source', T_('Remove'))
         );
+        // a group's own "add rule" link, built client-side so it survives both a fresh group and a reloaded one
+        $content .= sprintf(
+            'addRuleIcon = \'<a href="javascript:void(0)">%s %s</a>\';' . "\n",
+            Ui::get_material_symbol('add_circle'),
+            T_('Add Another Rule')
+        );
+        $content .= 'matchLabel = ' . json_encode(T_('Match')) . ";\n";
+        $content .= 'matchAllLabel = ' . json_encode(T_('all rules')) . ";\n";
+        $content .= 'matchAnyLabel = ' . json_encode(T_('any rule')) . ';';
 
         return $this->responseFactory
             ->createResponse()

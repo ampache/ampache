@@ -500,16 +500,18 @@ Just add 1 to the rule value to create a new group of rules.
 * Optional (Metadata searches **only**)
   * rule_1_subtype
 
-| Input    | Type    | Description                                            | Optional |
-|----------|---------|--------------------------------------------------------|---------:|
-| operator | string  | and, or (whether to match one rule or all)             |       NO |
-| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]          |       NO |
-| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]   |      YES |
-| type     | string  | `song`, `album`, `artist`, `label`, `playlist`         |       NO |
-|          |         | `podcast`, `podcast_episode`, `genre`, `user`, `video` |          |
-| random   | boolean | `0`, `1` (random order of results; default to 0)       |      YES |
-| 'offset' | integer | Return results starting from this index position       |      YES |
-| 'limit'  | integer | Maximum number of results to return                    |      YES |
+| Input            | Type    | Description                                                           | Optional |
+|------------------|---------|-----------------------------------------------------------------------|---------:|
+| operator         | string  | and, or (whether to match one rule or all)                            |       NO |
+| rule_*           | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                         |       NO |
+| rule_*           | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                  |      YES |
+| rule_*_group     | integer | Group id for this rule, to combine it with other rules sharing the id |      YES |
+| group_*_operator | string  | `and`, `or` (operator joining the rules assigned to that group id)    |      YES |
+| type             | string  | `song`, `album`, `artist`, `label`, `playlist`                        |       NO |
+|                  |         | `podcast`, `podcast_episode`, `genre`, `user`, `video`                |          |
+| random           | boolean | `0`, `1` (random order of results; default to 0)                      |      YES |
+| 'offset'         | integer | Return results starting from this index position                      |      YES |
+| 'limit'          | integer | Maximum number of results to return                                   |      YES |
 
 * return array
 
@@ -4832,16 +4834,18 @@ This is the current name for the [advanced_search](#advanced_search) method; par
 
 Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page for details about creating searches.
 
-| Input    | Type    | Description                                            | Optional |
-|----------|---------|--------------------------------------------------------|---------:|
-| operator | string  | and, or (whether to match one rule or all)             |       NO |
-| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]          |       NO |
-| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]   |      YES |
-| type     | string  | `song`, `album`, `artist`, `label`, `playlist`         |       NO |
-|          |         | `podcast`, `podcast_episode`, `genre`, `user`, `video` |          |
-| random   | boolean | `0`, `1` (random order of results; default to 0)       |      YES |
-| 'offset' | integer | Return results starting from this index position       |      YES |
-| 'limit'  | integer | Maximum number of results to return                    |      YES |
+| Input            | Type    | Description                                                           | Optional |
+|------------------|---------|-----------------------------------------------------------------------|---------:|
+| operator         | string  | and, or (whether to match one rule or all)                            |       NO |
+| rule_*           | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                         |       NO |
+| rule_*           | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                  |      YES |
+| rule_*_group     | integer | Group id for this rule, to combine it with other rules sharing the id |      YES |
+| group_*_operator | string  | `and`, `or` (operator joining the rules assigned to that group id)    |      YES |
+| type             | string  | `song`, `album`, `artist`, `label`, `playlist`                        |       NO |
+|                  |         | `podcast`, `podcast_episode`, `genre`, `user`, `video`                |          |
+| random           | boolean | `0`, `1` (random order of results; default to 0)                      |      YES |
+| 'offset'         | integer | Return results starting from this index position                      |      YES |
+| 'limit'          | integer | Maximum number of results to return                                   |      YES |
 
 * return array
 

@@ -55,22 +55,130 @@ final readonly class ArtistSearch implements SearchInterface
     public function getSql(
         Search $search,
     ): array {
-        $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
-        $catalog_disable    = AmpConfig::get('catalog_disable');
-        $catalog_filter     = AmpConfig::get('catalog_filter');
-        $album_artist       = ($this->subType === 'album_artist');
-        $song_artist        = ($this->subType === 'song_artist');
+        $search_user_id  = $search->search_user->getId();
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $catalog_filter  = AmpConfig::get('catalog_filter');
+        $album_artist    = ($this->subType === 'album_artist');
+        $song_artist     = ($this->subType === 'song_artist');
 
-        $where      = [];
         $table      = [];
         $join       = [];
         $group      = [];
-        $having     = [];
         $parameters = [];
-        $showAlbum  = AmpConfig::get('album_group');
 
-        foreach ($search->rules as $rule) {
+        $combined = RuleGroupCombiner::combine(
+            $search->rules,
+            $search->logic_operator ?? 'and',
+            function (array $rules) use ($search, &$join, &$table, &$parameters): array {
+                return $this->evaluateRules($rules, $search, $join, $table, $parameters);
+            },
+        );
+
+        $where     = $combined['where'];
+        $where_sql = $combined['where_sql'];
+
+        $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        if (array_key_exists('song', $join)) {
+            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
+            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song'";
+        }
+
+        if (array_key_exists('album', $join)) {
+            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
+            $table['4_album_map']  = "LEFT JOIN `album_map` ON `album_map`.`object_id` = `artist`.`id` AND `artist_map`.`object_type` = `album_map`.`object_type`";
+            $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
+        }
+
+        if ($join['catalog'] || $search->catalog_id) {
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
+            $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql = "`catalog_se`.`enabled` = '1'";
+            }
+        }
+
+        $where_sql = WithdrawnFilter::apply($where_sql, 'artist', $search_user_id);
+
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
+            }
+        }
+
+        if ($join['catalog_map']) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = ($search_user_id > 0)
+                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = ($search_user_id > 0)
+                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+
+        ///if (array_key_exists('count', $join)) {
+        ///    $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`user`='" . $search_user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `artist`.`id`";
+        ///}
+        if (array_key_exists('image', $join)) {
+            $table['image'] = "LEFT JOIN `image` ON `image`.`object_id` = `artist`.`id` AND `image`.`object_type` = 'artist' AND `image`.`size` = 'original'";
+        }
+
+        if ($album_artist) {
+            $where_sql = $where_sql === '' || $where_sql === '0' ? "`artist`.`album_count` > 0" : "(" . $where_sql . ") AND `artist`.`album_count` > 0";
+        }
+
+        if ($song_artist) {
+            $where_sql = $where_sql === '' || $where_sql === '0' ? "`artist`.`song_count` > 0" : "(" . $where_sql . ") AND `artist`.`song_count` > 0";
+        }
+
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = $combined['having_sql'];
+
+        return [
+            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name`, `artist`.`weight` FROM `artist`",
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters,
+        ];
+    }
+
+    /**
+     * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
+     *
+     * `$join` and `$table` are shared across every group call, not reset per group, so a
+     * once-per-user join (e.g. `favorite`/`rating`) is never duplicated across group boundaries.
+     * @param list<array<int, mixed>> $rules
+     * @param array<string, bool> $join
+     * @param array<string, string> $table
+     * @param array<int, mixed> $parameters
+     * @return array{where: string[], having: string[]}
+     */
+    private function evaluateRules(
+        array $rules,
+        Search $search,
+        array &$join,
+        array &$table,
+        array &$parameters,
+    ): array {
+        $search_user_id = $search->search_user->getId();
+        $showAlbum      = AmpConfig::get('album_group');
+        $where          = [];
+
+        foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
@@ -660,84 +768,6 @@ final readonly class ArtistSearch implements SearchInterface
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
-        $join['catalog_map'] = $catalog_filter;
-
-        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
-
-        if (array_key_exists('song', $join)) {
-            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
-            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song'";
-        }
-
-        if (array_key_exists('album', $join)) {
-            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
-            $table['4_album_map']  = "LEFT JOIN `album_map` ON `album_map`.`object_id` = `artist`.`id` AND `artist_map`.`object_type` = `album_map`.`object_type`";
-            $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
-        }
-
-        if ($join['catalog'] || $search->catalog_id) {
-            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
-            $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
-            } else {
-                $where_sql = "`catalog_se`.`enabled` = '1'";
-            }
-        }
-
-        $where_sql = WithdrawnFilter::apply($where_sql, 'artist', $search_user_id);
-
-        if ($search->catalog_id) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
-            } else {
-                $where_sql = "`catalog_map_artist`.`catalog_id` = " . $search->catalog_id;
-            }
-        }
-
-        if ($join['catalog_map']) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = ($search_user_id > 0)
-                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            } else {
-                $where_sql = ($search_user_id > 0)
-                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            }
-        }
-
-        ///if (array_key_exists('count', $join)) {
-        ///    $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`user`='" . $search_user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `artist`.`id`";
-        ///}
-        if (array_key_exists('image', $join)) {
-            $table['image'] = "LEFT JOIN `image` ON `image`.`object_id` = `artist`.`id` AND `image`.`object_type` = 'artist' AND `image`.`size` = 'original'";
-        }
-
-        if ($album_artist) {
-            $where_sql = $where_sql === '' || $where_sql === '0' ? "`artist`.`album_count` > 0" : "(" . $where_sql . ") AND `artist`.`album_count` > 0";
-        }
-
-        if ($song_artist) {
-            $where_sql = $where_sql === '' || $where_sql === '0' ? "`artist`.`song_count` > 0" : "(" . $where_sql . ") AND `artist`.`song_count` > 0";
-        }
-
-        ksort($table);
-        $table_sql  = implode(' ', $table);
-        $group_sql  = implode(',', $group);
-        $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
-
-        return [
-            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name`, `artist`.`weight` FROM `artist`",
-            'join' => $join,
-            'where' => $where,
-            'where_sql' => $where_sql,
-            'table' => $table,
-            'table_sql' => $table_sql,
-            'group_sql' => $group_sql,
-            'having_sql' => $having_sql,
-            'parameters' => $parameters,
-        ];
+        return ['where' => $where, 'having' => []];
     }
 }

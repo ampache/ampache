@@ -47,19 +47,79 @@ final class VideoSearch implements SearchInterface
     public function getSql(
         Search $search,
     ): array {
-        $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
-        $catalog_disable    = AmpConfig::get('catalog_disable');
-        $catalog_filter     = AmpConfig::get('catalog_filter');
+        $search_user_id  = $search->search_user->getId();
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $catalog_filter  = AmpConfig::get('catalog_filter');
 
-        $where      = [];
         $table      = [];
         $join       = [];
         $group      = [];
-        $having     = [];
         $parameters = [];
 
-        foreach ($search->rules as $rule) {
+        $combined = RuleGroupCombiner::combine(
+            $search->rules,
+            $search->logic_operator ?? 'and',
+            function (array $rules) use ($search, &$parameters): array {
+                return $this->evaluateRules($rules, $search, $parameters);
+            },
+        );
+
+        $where      = $combined['where'];
+        $where_sql  = $combined['where_sql'];
+        $having_sql = $combined['having_sql'];
+
+        $join['catalog_map'] = $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `video`.`catalog`";
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+            } else {
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+            }
+        }
+
+        if ($join['catalog_map']) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = ($search_user_id > 0)
+                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = ($search_user_id > 0)
+                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+
+        ksort($table);
+        $table_sql = implode(' ', $table);
+        $group_sql = implode(',', $group);
+
+        return [
+            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file`, `video`.`time`, `video`.`weight` FROM `video`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters,
+        ];
+    }
+
+    /**
+     * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
+     * @param list<array<int, mixed>> $rules
+     * @param array<int, mixed> $parameters
+     * @return array{where: string[], having: string[]}
+     */
+    private function evaluateRules(array $rules, Search $search, array &$parameters): array
+    {
+        $where = [];
+
+        foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
@@ -96,47 +156,6 @@ final class VideoSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $join['catalog_map'] = $catalog_filter;
-        $join['catalog']     = $catalog_disable || $catalog_filter;
-
-        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
-
-        if ($join['catalog']) {
-            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `video`.`catalog`";
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
-            } else {
-                $where_sql = "`catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
-            }
-        }
-
-        if ($join['catalog_map']) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = ($search_user_id > 0)
-                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            } else {
-                $where_sql = ($search_user_id > 0)
-                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            }
-        }
-
-        ksort($table);
-        $table_sql  = implode(' ', $table);
-        $group_sql  = implode(',', $group);
-        $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
-
-        return [
-            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file`, `video`.`time`, `video`.`weight` FROM `video`',
-            'join' => $join,
-            'where' => $where,
-            'where_sql' => $where_sql,
-            'table' => $table,
-            'table_sql' => $table_sql,
-            'group_sql' => $group_sql,
-            'having_sql' => $having_sql,
-            'parameters' => $parameters,
-        ];
+        return ['where' => $where, 'having' => []];
     }
 }

@@ -111,7 +111,119 @@ class SongSearchTest extends MockeryTestCase
     }
 
     /**
-     * @return array{table_sql: string, where_sql: string, join: array<string, bool>}
+     * `$metadata` is shared across every group call in one `getSql()`, so two `metadata` rules on
+     * the same field split across two groups still combine into a single `EXISTS` clause
+     */
+    public function testMetadataRuleCombinesAcrossGroupsIntoOneExistsClause(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [['metadata', 'equal', 'Pop', 5]],
+            ],
+            [
+                'group_operator' => 'or',
+                'rules' => [['metadata', 'equal', 'Rock', 5]],
+            ],
+        ]);
+
+        $this->assertSame(1, substr_count($result['where_sql'], 'EXISTS ('));
+        $this->assertStringContainsString(
+            "`metadata`.`field` = 5 AND (`metadata`.`data` = ? AND `metadata`.`data` = ?)",
+            $result['where_sql']
+        );
+        $this->assertSame(['"Pop"', '"Rock"'], $result['parameters']);
+    }
+
+    /**
+     * `?` placeholder order must match parameter order across two groups, not rule-definition order
+     */
+    public function testParameterOrderMatchesAcrossGroups(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['title', 'contain', 'Rock'],
+                    ['title', 'contain', 'Pop'],
+                ],
+            ],
+            ['time', 'gt', 3],
+        ]);
+
+        $this->assertSame(['%Rock%', '%Pop%', 180], $result['parameters']);
+    }
+
+    /**
+     * an OR'd group combined with an ungrouped rule parenthesizes only the group
+     */
+    public function testTwoGroupsCombineWithParensAndOuterOperator(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['title', 'contain', 'Rock'],
+                    ['title', 'contain', 'Pop'],
+                ],
+            ],
+            ['time', 'gt', 3],
+        ]);
+
+        $this->assertSame(
+            '((`song`.`title` LIKE ? OR `song`.`title` LIKE ?) AND `song`.`time` > ?) AND `song`.`enabled` = 1',
+            $result['where_sql']
+        );
+    }
+
+    /**
+     * two independent groups plus an ungrouped rule each parenthesize and operate separately, and
+     * parameter order still follows definition order across all three fragments
+     */
+    public function testTwoIndependentGroupsCoexistWithAnUngroupedRule(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['title', 'contain', 'Rock'],
+                    ['title', 'contain', 'Pop'],
+                ],
+            ],
+            ['time', 'gt', 3],
+            [
+                'group_operator' => 'and',
+                'rules' => [
+                    ['title', 'contain', 'Foo'],
+                    ['title', 'contain', 'Bar'],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            '((`song`.`title` LIKE ? OR `song`.`title` LIKE ?) AND `song`.`time` > ? AND (`song`.`title` LIKE ? AND `song`.`title` LIKE ?)) AND `song`.`enabled` = 1',
+            $result['where_sql']
+        );
+        $this->assertSame(['%Rock%', '%Pop%', 180, '%Foo%', '%Bar%'], $result['parameters']);
+    }
+
+    /**
+     * an ungrouped rule list must produce today's exact flat implode, with no parens added anywhere
+     */
+    public function testUngroupedRulesProduceAFlatImplode(): void
+    {
+        $result = $this->ruleSql([
+            ['title', 'contain', 'Rock'],
+            ['time', 'gt', 3],
+        ]);
+
+        // the outer parens come from `WithdrawnFilter::apply()`, not from grouping -- no inner paren is added
+        $this->assertSame('(`song`.`title` LIKE ? AND `song`.`time` > ?) AND `song`.`enabled` = 1', $result['where_sql']);
+        $this->assertSame(['%Rock%', 180], $result['parameters']);
+    }
+
+    /**
+     * @return array{table_sql: string, where_sql: string, join: array<string, bool>, parameters: array<int, mixed>}
      */
     private function albumRatingSql(bool $albumGroup): array
     {
@@ -119,8 +231,8 @@ class SongSearchTest extends MockeryTestCase
     }
 
     /**
-     * @param list<array{0: string, 1: string, 2: int|string}> $rules
-     * @return array{table_sql: string, where_sql: string, join: array<string, bool>}
+     * @param list<array<int, mixed>|array{group_operator: string, rules: list<array<int, mixed>>}> $rules
+     * @return array{table_sql: string, where_sql: string, join: array<string, bool>, parameters: array<int, mixed>}
      */
     private function ruleSql(array $rules, bool $albumGroup = true): array
     {
@@ -151,6 +263,7 @@ class SongSearchTest extends MockeryTestCase
             'table_sql' => $result['table_sql'],
             'where_sql' => $result['where_sql'],
             'join' => $result['join'],
+            'parameters' => $result['parameters'],
         ];
     }
 }

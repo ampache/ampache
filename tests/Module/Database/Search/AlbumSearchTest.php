@@ -68,7 +68,66 @@ class AlbumSearchTest extends MockeryTestCase
     }
 
     /**
-     * @param list<array{0: string, 1: string, 2: int|string}> $rules
+     * `$subsearch_count` is shared across every group call, so two `smartplaylist` rules split
+     * across two groups mint distinct derived-table aliases instead of both reusing `sp_1`
+     */
+    public function testSmartplaylistAliasesStayUniqueAcrossGroups(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [['smartplaylist', 'equal', 0]],
+            ],
+            [
+                'group_operator' => 'or',
+                'rules' => [['smartplaylist', 'equal', 0]],
+            ],
+        ]);
+
+        $this->assertStringContainsString('AS sp_1)', $result['where_sql']);
+        $this->assertStringContainsString('AS sp_2)', $result['where_sql']);
+    }
+
+    /**
+     * an OR'd group combined with an ungrouped rule parenthesizes only the group
+     */
+    public function testTwoGroupsCombineWithParensAndOuterOperator(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['id', 'gt', 5],
+                    ['id', 'gt', 9],
+                ],
+            ],
+            ['year', 'gt', 2000],
+        ]);
+
+        $this->assertSame(
+            '((`album`.`id` > ? OR `album`.`id` > ?) AND `album`.`year` > ?) AND `album`.`enabled` = 1',
+            $result['where_sql']
+        );
+    }
+
+    /**
+     * an ungrouped rule list must produce today's exact flat implode, with no parens added anywhere
+     */
+    public function testUngroupedRulesProduceAFlatImplode(): void
+    {
+        $result = $this->ruleSql([
+            ['id', 'gt', 5],
+            ['year', 'gt', 2000],
+        ]);
+
+        $this->assertSame(
+            '(`album`.`id` > ? AND `album`.`year` > ?) AND `album`.`enabled` = 1',
+            $result['where_sql']
+        );
+    }
+
+    /**
+     * @param list<array<int, mixed>|array{group_operator: string, rules: list<array<int, mixed>>}> $rules
      * @return array{table_sql: string, where_sql: string}
      */
     private function ruleSql(array $rules): array
