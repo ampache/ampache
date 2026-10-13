@@ -11,10 +11,11 @@
   * API `playlist_folder_create` and `playlist_folder_edit` take a `type` (private/public) parameter
   * API `playlist_folder_edit` takes a `hidden` parameter; it is the one field a caller may set on a folder they do not own
   * API `playlist_folders` also lists other users' shared top-level folders, flagging hidden ones
-* Database 830002
+* Database 830003
   * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
   * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
   * Removed predictable `MD5(username)` API sessions created by older releases
+  * Added `rightbar_always_show` preference to keep the rightbar open while empty
 * Search
   * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
   * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
