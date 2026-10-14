@@ -469,11 +469,13 @@ class Catalog_local extends Catalog
                 }
             } catch (Throwable $error) {
                 // a malformed tag raises an Error rather than an Exception, and one unreadable file must not stop the catalog
+                $message = $error->getMessage() ?: $error::class;
                 $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
+                    T_('Error') . ' ' . $message,
                     true
                 );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+                AmpError::add('catalog_add', sprintf(T_('Unable to add "%s": %s'), $full_file, $message));
+                debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
 
@@ -1920,11 +1922,13 @@ class Catalog_local extends Catalog
                     $this->_scan_folder($full_file, $interactor);
                 }
             } catch (Throwable $error) {
+                $message = $error->getMessage() ?: $error::class;
                 $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
+                    T_('Error') . ' ' . $message,
                     true
                 );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+                AmpError::add('catalog_scan', sprintf(T_('Unable to add "%s": %s'), $full_file, $message));
+                debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
 
