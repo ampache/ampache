@@ -25,11 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
-use FilesystemIterator;
 use PHPUnit\Framework\TestCase;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
 
 /**
  * An entry point defines `OUTDATED_DATABASE_OK` before requiring `Config/Init.php` to stay reachable with a
@@ -37,6 +33,9 @@ use SplFileInfo;
  */
 class OutdatedDatabaseBypassTest extends TestCase
 {
+    use EntryPointFileScanningTrait;
+
+
     /**
      * Every file that must keep defining `OUTDATED_DATABASE_OK`, with the one-line reason it needs to.
      *
@@ -71,66 +70,15 @@ class OutdatedDatabaseBypassTest extends TestCase
 
     public function testOnlyTheKnownEntryPointsBypassTheOutdatedDatabaseCheck(): void
     {
-        $repositoryRoot = realpath(__DIR__ . '/../../..');
-
-        self::assertIsString($repositoryRoot);
-
-        $actual = [];
-        foreach ($this->getEntryPointFiles($repositoryRoot) as $relativePath) {
-            $contents = (string) file_get_contents($repositoryRoot . '/' . $relativePath);
-
-            if (str_contains($contents, 'OUTDATED_DATABASE_OK')) {
-                $actual[] = $relativePath;
-            }
-        }
-
-        sort($actual);
-
         $expected = self::EXPECTED_BYPASS_FILES;
         sort($expected);
 
         self::assertSame(
             $expected,
-            $actual,
+            $this->getEntryPointFilesDefining('OUTDATED_DATABASE_OK'),
             'A file started or stopped bypassing InitializationHandlerDatabaseUpdate. If deliberate, update '
             . 'EXPECTED_BYPASS_FILES with a one-line reason; otherwise this is the recurring bug where an entry '
             . 'point loses (or silently gains) the outdated-database bypass.'
         );
-    }
-
-    /**
-     * Entry points are every `public/` or `bin/cli` file that boots through `Config/Init.php` -- anything
-     * else (templates, assets, vendored libs) never reaches `InitializationHandlerDatabaseUpdate` at all.
-     *
-     * @return list<string>
-     */
-    private function getEntryPointFiles(string $repositoryRoot): array
-    {
-        $entryPoints = ['bin/cli'];
-
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($repositoryRoot . '/public', FilesystemIterator::SKIP_DOTS)
-        );
-
-        /** @var SplFileInfo $file */
-        foreach ($iterator as $file) {
-            if ($file->getExtension() !== 'php') {
-                continue;
-            }
-
-            $contents = (string) file_get_contents((string) $file->getRealPath());
-
-            if (!str_contains($contents, 'Config/Init.php')) {
-                continue;
-            }
-
-            $entryPoints[] = str_replace(
-                [$repositoryRoot . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR],
-                ['', '/'],
-                (string) $file->getRealPath()
-            );
-        }
-
-        return $entryPoints;
     }
 }
