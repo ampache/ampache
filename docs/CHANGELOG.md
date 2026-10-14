@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 7.10.6
+
+### Fixed (7.10.6)
+
+* Subsonic/OpenSubsonic `scrobble` without a `submission` parameter is a finished stream, not a now playing notification; it was never scrobbled to Last.fm/ListenBrainz (#4544)
+
 ## Ampache 7.10.5
 
 ### Fixed (7.10.5)
