@@ -92,6 +92,6 @@ class ScrobbleSubmissionTest extends TestCase
      */
     private function isSubmission(string $handler, array $input): bool
     {
-        return new ReflectionMethod($handler, 'isSubmission')->invoke(null, $input);
+        return (new ReflectionMethod($handler, 'isSubmission'))->invoke(null, $input);
     }
 }
