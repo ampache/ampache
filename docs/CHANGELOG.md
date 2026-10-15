@@ -21,6 +21,7 @@
   * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
   * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
   * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
+  * `Length` and `Size Limit` options for a song or video search, trimming the result list to a target total duration/file size the same way Random Selection already does
 
 ### Changed (8.3.0)
 
