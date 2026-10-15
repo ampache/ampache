@@ -45,6 +45,7 @@
 * Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
 * Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
 * Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
+* A podcast feed double-escaped its summary and episode descriptions (`les proc&amp;amp;egrave;s`), producing invalid XML whenever the source feed used named HTML entities
 
 ## Ampache 8.2.2
 

@@ -181,9 +181,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     : $media->get_link(),
                 'isPermaLink' => 'true',
                 'link' => $media->get_link(),
-                'description' => ($media instanceof Song)
-                    ? $media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname()
-                    : $media->get_description(),
+                'description' => $this->buildMediaDescription($media),
                 'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
                 'image' => $this->getMediaImageUrl($media),
@@ -285,6 +283,17 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function hasOwner(): bool
     {
         return ($this->playable->get_user_owner() ?? 0) > 0;
+    }
+
+    /**
+     * A song has no description of its own, so one is built from its names; scrub_out() matches
+     * get_description()'s own escaping, so the template can raw() either branch alike.
+     */
+    private function buildMediaDescription(Song|Podcast_Episode $media): string
+    {
+        return ($media instanceof Song)
+            ? scrub_out($media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname())
+            : $media->get_description();
     }
 
     /**
