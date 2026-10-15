@@ -815,8 +815,7 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeType(string $type): string
     {
-        // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms
-        // need an entry here
+        // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms need an entry here
         return match (self::_dashesToUnderscores($type)) {
             'album_artists' => 'album_artist',
             'album_disks' => 'album_disk',
