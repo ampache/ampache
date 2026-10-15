@@ -40,8 +40,11 @@
 * `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
 * Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
 * A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
-* Writing tags to an mp3 (rating a song, or any tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
+* Writing tags to an mp3 (rating a song, embedding cover art, or any other tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
 * Rating a song wiped every other tag (title, artist, album, genre, ...) on its mp3 file instead of preserving them
+* Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
+* Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
+* Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
 
 ## Ampache 8.2.2
 
