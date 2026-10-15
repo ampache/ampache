@@ -207,6 +207,8 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             if (isset($songMeta['Popularimeter'])) {
                 $ndata['Popularimeter'] = $songMeta['Popularimeter'];
             }
+
+            $this->mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
         } else {
             $songMeta       = $this->getVorbisMetadata($song);
             $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
@@ -365,15 +367,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
                 if (!empty($id3v2Data)) {
                     unset($id3v2Data['text']);
-                    foreach ($id3v2Data as $key => $value) {
-                        if (is_array($value) && isset($value[0])) {
-                            if (isset($ndata[$key])) {
-                                $ndata[$key][] = $value[0];
-                            } else {
-                                $ndata[$key] = [];
-                            }
-                        }
-                    }
+                    $this->copyId3v2Frames($ndata, $id3v2Data);
                 }
 
                 if (!in_array($user->email, [null, '', '0'], true)) {
@@ -392,6 +386,8 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
+
+                $this->mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
             } else {
                 $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
@@ -472,6 +468,24 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
             $vainfo->write_id3($ndata);
         } // catalog type = local
+    }
+
+    /**
+     * Copy existing ID3v2 frames into the write buffer, keyed by comment name with one value per frame.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function copyId3v2Frames(array &$ndata, array $id3v2Data): void
+    {
+        foreach ($id3v2Data as $key => $value) {
+            if (is_array($value) && isset($value[0])) {
+                if (!isset($ndata[$key])) {
+                    $ndata[$key] = [];
+                }
+
+                $ndata[$key][] = $value[0];
+            }
+        }
     }
 
     /**
@@ -702,6 +716,31 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         return $meta;
+    }
+
+    /**
+     * getID3's ID3v2 writer has no frame for a bare track/disk total, so it must be combined into the
+     * "track/total" TRCK and "disk/total" TPOS value before writing or the total is silently dropped.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function mergeId3v2Totals(array &$ndata, array $id3v2Data, ?int $track, ?int $disk): void
+    {
+        if (isset($ndata['track_number'])) {
+            $totaltracks           = $id3v2Data['totaltracks'][0] ?? null;
+            $ndata['track_number'] = (!empty($totaltracks))
+                ? [$track . '/' . $totaltracks]
+                : [(string) $track];
+        }
+
+        unset($ndata['totaltracks']);
+
+        if (isset($ndata['part_of_a_set'])) {
+            $totaldisks             = explode('/', (string) ($id3v2Data['part_of_a_set'][0] ?? ''))[1] ?? null;
+            $ndata['part_of_a_set'] = (!empty($totaldisks))
+                ? [$disk . '/' . $totaldisks]
+                : [(string) $disk];
+        }
     }
 
     private function search_txxx(int|string $description, array $ndata): ?int
