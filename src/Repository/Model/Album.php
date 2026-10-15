@@ -1081,6 +1081,7 @@ class Album extends database_object implements
 
                 $this->name   = $new_name;
                 $this->prefix = $aPrefix;
+                $updated      = true;
             }
 
             if ($year !== $this->year) {
@@ -1113,36 +1114,44 @@ class Album extends database_object implements
 
             if ($mbid != $this->mbid) {
                 self::_update_field(AlbumFieldEnum::MBID, $mbid, $this->id);
+                $updated = true;
             }
 
             if ($mbid_group != $this->mbid_group) {
                 self::_update_field(AlbumFieldEnum::MBID_GROUP, $mbid_group, $this->id);
+                $updated = true;
             }
 
             if ($album_artist !== $this->album_artist) {
                 self::_update_field(AlbumFieldEnum::ALBUM_ARTIST, $album_artist, $this->id);
                 self::add_album_map($this->id, 'album', (int) $album_artist);
                 self::remove_album_map($this->id, 'album', (int) $this->album_artist);
+                $updated = true;
             }
 
             if ($release_type != $this->release_type) {
                 self::_update_field(AlbumFieldEnum::RELEASE_TYPE, $release_type, $this->id);
+                $updated = true;
             }
 
-            if ($release_type != $this->release_status) {
+            if ($release_status != $this->release_status) {
                 self::_update_field(AlbumFieldEnum::RELEASE_STATUS, $release_status, $this->id);
+                $updated = true;
             }
 
             if ($original_year !== $this->original_year) {
                 self::_update_field(AlbumFieldEnum::ORIGINAL_YEAR, $original_year, $this->id);
+                $updated = true;
             }
 
             if ($barcode != $this->barcode) {
                 self::_update_field(AlbumFieldEnum::BARCODE, $barcode, $this->id);
+                $updated = true;
             }
 
             if ($catalog_number != $this->catalog_number) {
                 self::_update_field(AlbumFieldEnum::CATALOG_NUMBER, $catalog_number, $this->id);
+                $updated = true;
             }
 
             if ($version != $this->version) {

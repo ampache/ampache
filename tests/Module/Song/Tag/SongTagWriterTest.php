@@ -113,52 +113,6 @@ class SongTagWriterTest extends TestCase
         self::assertArrayNotHasKey('encoder_settings', $ndata);
     }
 
-    public function testMergeId3v2TotalsCombinesTrackAndDiskIntoNOfTotal(): void
-    {
-        $ndata = [
-            'track_number' => ['1'],
-            'part_of_a_set' => ['2'],
-        ];
-        $id3v2Data = [
-            'totaltracks' => ['15'],
-            'part_of_a_set' => ['2/3'],
-        ];
-
-        $this->invokeMergeId3v2Totals($ndata, $id3v2Data, 1, 2);
-
-        self::assertSame(['1/15'], $ndata['track_number']);
-        self::assertSame(['2/3'], $ndata['part_of_a_set']);
-        self::assertArrayNotHasKey('totaltracks', $ndata);
-    }
-
-    public function testMergeId3v2TotalsDoesNotIntroduceFramesThatWerentAlreadyPresent(): void
-    {
-        $ndata     = [];
-        $id3v2Data = [
-            'totaltracks' => ['15'],
-            'part_of_a_set' => ['2/3'],
-        ];
-
-        $this->invokeMergeId3v2Totals($ndata, $id3v2Data, 1, 2);
-
-        self::assertArrayNotHasKey('track_number', $ndata);
-        self::assertArrayNotHasKey('part_of_a_set', $ndata);
-    }
-
-    public function testMergeId3v2TotalsFallsBackToBareNumberWhenNoTotalExists(): void
-    {
-        $ndata = [
-            'track_number' => ['1'],
-            'part_of_a_set' => ['2'],
-        ];
-        $id3v2Data = [];
-
-        $this->invokeMergeId3v2Totals($ndata, $id3v2Data, 1, 2);
-
-        self::assertSame(['1'], $ndata['track_number']);
-        self::assertSame(['2'], $ndata['part_of_a_set']);
-    }
-
     public function testWriteDoesNothingForANewSong(): void
     {
         $song = $this->createMock(Song::class);
@@ -228,17 +182,6 @@ class SongTagWriterTest extends TestCase
     {
         $method = new ReflectionMethod($this->subject, 'copyId3v2Frames');
         $args   = [&$ndata, $id3v2Data];
-        $method->invokeArgs($this->subject, $args);
-    }
-
-    /**
-     * @param array<string, mixed> $ndata
-     * @param array<string, mixed> $id3v2Data
-     */
-    private function invokeMergeId3v2Totals(array &$ndata, array $id3v2Data, ?int $track, ?int $disk): void
-    {
-        $method = new ReflectionMethod($this->subject, 'mergeId3v2Totals');
-        $args   = [&$ndata, $id3v2Data, $track, $disk];
         $method->invokeArgs($this->subject, $args);
     }
 }

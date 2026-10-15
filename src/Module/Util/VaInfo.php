@@ -536,6 +536,32 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
+     * getID3's ID3v2 writer has no frame for a bare track/disk total, so it must be combined into the
+     * "track/total" TRCK and "disk/total" TPOS value before writing or the total is silently dropped.
+     * Vorbis comments carry the total as their own field and must not be passed through this.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    public static function mergeId3v2Totals(array &$ndata, array $id3v2Data, ?int $track, ?int $disk): void
+    {
+        if (isset($ndata['track_number'])) {
+            $totaltracks           = $id3v2Data['totaltracks'][0] ?? null;
+            $ndata['track_number'] = (!empty($totaltracks))
+                ? [$track . '/' . $totaltracks]
+                : [(string) $track];
+        }
+
+        unset($ndata['totaltracks']);
+
+        if (isset($ndata['part_of_a_set'])) {
+            $totaldisks             = explode('/', (string) ($id3v2Data['part_of_a_set'][0] ?? ''))[1] ?? null;
+            $ndata['part_of_a_set'] = (!empty($totaldisks))
+                ? [$disk . '/' . $totaldisks]
+                : [(string) $disk];
+        }
+    }
+
+    /**
      * parse_isrc_array
      * Return only valid isrc data
      * @param string[]|string|null $isrc

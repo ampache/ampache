@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
@@ -287,6 +288,17 @@ class SongTest extends MockeryTestCase
         self::assertSame(120.0, $song->bpm);
     }
 
+    public function testUpdateDoesNotWriteTagsForANonTagField(): void
+    {
+        $song          = new Song();
+        $song->id      = 123;
+        $song->bitrate = 128000;
+
+        $this->mockUpdateDependencies()->shouldNotReceive('write');
+
+        $song->update(['bitrate' => 320000]);
+    }
+
     public function testUpdateEnabledNeverConsultsTheOwnerToLowerTheLevel(): void
     {
         $owner     = $this->mock(User::class);
@@ -316,6 +328,55 @@ class SongTest extends MockeryTestCase
         Song::update_enabled(true, 666);
 
         unset($GLOBALS['user']);
+    }
+
+    public function testUpdateSkipsTheTagWriteWhenNothingActuallyChanged(): void
+    {
+        $song        = new Song();
+        $song->id    = 123;
+        $song->title = 'Same Title';
+
+        $this->mockUpdateDependencies()->shouldNotReceive('write');
+
+        $newId = $song->update(['title' => 'Same Title']);
+
+        self::assertSame(123, $newId);
+    }
+
+    public function testUpdateWritesTagsWhenATagRelevantFieldChanges(): void
+    {
+        $song        = new Song();
+        $song->id    = 123;
+        $song->title = 'Old Title';
+
+        $songTagWriter = $this->mockUpdateDependencies();
+        $songTagWriter->shouldReceive('write')->once()->with($song);
+
+        $song->update(['title' => 'New Title']);
+    }
+
+    /**
+     * Wires the dic a Song::update() call reaches through: a permissive repository and privilege checker,
+     * plus a SongTagWriterInterface mock the caller sets its own write()/write-never expectation on.
+     */
+    private function mockUpdateDependencies(): mixed
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('setField')->andReturn(true);
+        $songRepository->shouldReceive('setDataField')->andReturn(true);
+
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->shouldReceive('check')->andReturnTrue();
+
+        $songTagWriter = $this->mock(SongTagWriterInterface::class);
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+        $dic->shouldReceive('get')->with(PrivilegeCheckerInterface::class)->andReturn($privilegeChecker);
+        $dic->shouldReceive('get')->with(SongTagWriterInterface::class)->andReturn($songTagWriter);
+        $GLOBALS['dic'] = $dic;
+
+        return $songTagWriter;
     }
 
     /**

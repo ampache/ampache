@@ -208,7 +208,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 $ndata['Popularimeter'] = $songMeta['Popularimeter'];
             }
 
-            $this->mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
+            VaInfo::mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
         } else {
             $songMeta       = $this->getVorbisMetadata($song);
             $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
@@ -387,7 +387,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                     );
                 }
 
-                $this->mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
+                VaInfo::mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
             } else {
                 $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
@@ -716,31 +716,6 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         return $meta;
-    }
-
-    /**
-     * getID3's ID3v2 writer has no frame for a bare track/disk total, so it must be combined into the
-     * "track/total" TRCK and "disk/total" TPOS value before writing or the total is silently dropped.
-     * @param array<string, mixed> $ndata
-     * @param array<string, mixed> $id3v2Data
-     */
-    private function mergeId3v2Totals(array &$ndata, array $id3v2Data, ?int $track, ?int $disk): void
-    {
-        if (isset($ndata['track_number'])) {
-            $totaltracks           = $id3v2Data['totaltracks'][0] ?? null;
-            $ndata['track_number'] = (!empty($totaltracks))
-                ? [$track . '/' . $totaltracks]
-                : [(string) $track];
-        }
-
-        unset($ndata['totaltracks']);
-
-        if (isset($ndata['part_of_a_set'])) {
-            $totaldisks             = explode('/', (string) ($id3v2Data['part_of_a_set'][0] ?? ''))[1] ?? null;
-            $ndata['part_of_a_set'] = (!empty($totaldisks))
-                ? [$disk . '/' . $totaldisks]
-                : [(string) $disk];
-        }
     }
 
     private function search_txxx(int|string $description, array $ndata): ?int
