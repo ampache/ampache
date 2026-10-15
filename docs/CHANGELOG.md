@@ -46,6 +46,7 @@
 * Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
 * Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
 * A podcast feed double-escaped its summary and episode descriptions (`les proc&amp;amp;egrave;s`), producing invalid XML whenever the source feed used named HTML entities
+* Browsing songs sorted by artist fell back to id/import order within an artist instead of title, so two songs by the same artist rarely read alphabetically
 
 ## Ampache 8.2.2
 

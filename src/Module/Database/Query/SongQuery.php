@@ -311,7 +311,9 @@ final class SongQuery implements QueryInterface
                 $query->set_join_and('LEFT', '`album_disk`', '`album_disk`.`album_id`', '`song`.`album`', '`album_disk`.`disk`', '`song`.`disk`', 100);
                 break;
             case 'artist':
-                $sql = "`artist`.`name`";
+                // title is the secondary key, so songs by the same artist land alphabetically rather than by id/import order
+                $sql   = sprintf('`artist`.`name` %s, `song`.`title`', $order);
+                $order = '';
                 $query->set_join('LEFT', "`artist`", "`artist`.`id`", "`song`.`artist`", 100);
                 break;
             case 'rating':
