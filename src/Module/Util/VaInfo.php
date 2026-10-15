@@ -38,6 +38,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use getID3;
+use getid3_lib;
 use getid3_writetags;
 use Psr\Log\LoggerInterface;
 
@@ -699,6 +700,39 @@ final class VaInfo implements VaInfoInterface
         }
 
         return 0;
+    }
+
+    /**
+     * parse_synced_lyrics
+     *
+     * Converts a SYLT frame's timestamped entries into LRC-style `[mm:ss.xx]` text for the shared lyrics parser.
+     * @param array<int, array<string, mixed>> $sylt_frames
+     * @param string $baseEncoding the charset SYLT text entries are converted to, matching USLT's own target
+     */
+    public static function parse_synced_lyrics(array $sylt_frames, string $baseEncoding): ?string
+    {
+        foreach ($sylt_frames as $frame) {
+            if ((int) ($frame['contenttypeid'] ?? -1) !== 1 || (int) ($frame['timestampformat'] ?? 0) !== 2 || empty($frame['lyrics'])) {
+                continue;
+            }
+
+            $lines = [];
+            foreach ($frame['lyrics'] as $entry) {
+                $text = trim(str_replace(["\r\n", "\r", "\n"], ' ', getid3_lib::iconv_fallback((string) $frame['encoding'], $baseEncoding, (string) ($entry['data'] ?? ''))));
+                if ($text === '') {
+                    continue;
+                }
+
+                $milliseconds = (int) ($entry['timestamp'] ?? 0);
+                $lines[]      = sprintf('[%02d:%02d.%02d]%s', intdiv($milliseconds, 60000), intdiv($milliseconds % 60000, 1000), intdiv($milliseconds % 1000, 10), $text);
+            }
+
+            if ($lines !== []) {
+                return implode("\n", $lines);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1524,6 +1558,14 @@ final class VaInfo implements VaInfoInterface
                 }
 
                 $parsed['rating'][$rating_user] = self::parse_rating((int) $popm['rating']);
+            }
+        }
+
+        // SYLT carries synced lyrics as timestamped entries; prefer it over the plain USLT lyrics parsed above.
+        if (array_key_exists('SYLT', $id3v2) && is_array($id3v2['SYLT'])) {
+            $synced_lyrics = self::parse_synced_lyrics($id3v2['SYLT'], (string) ($id3v2['encoding'] ?? $this->encoding));
+            if ($synced_lyrics !== null) {
+                $parsed['lyrics'] = $synced_lyrics;
             }
         }
 
