@@ -56,10 +56,10 @@ final readonly class WantedManager implements WantedManagerInterface
         ?User $user = null
     ): void {
         if ($this->wantedRepository->getAcceptedCount() > 0) {
-            /** @var object{error?: string, release-group: string} $album */
+            /** @var object{error?: string, release-group?: string} $album */
             $album = $this->musicBrainz->lookup('release', $mbid, ['release-groups']);
 
-            if ($album !== null && $album->{'release-group'}) {
+            if ($album !== null && isset($album->{'release-group'})) {
                 $this->wantedRepository->deleteByMusicbrainzId(
                     print_r($album->{'release-group'}, true),
                     $user
