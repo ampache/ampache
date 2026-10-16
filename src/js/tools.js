@@ -106,6 +106,21 @@ function positionDialogNear(selector, source, offsetLeft) {
     frame.css({position: "fixed", top: Math.max(top, 10) + "px", left: Math.max(left, 10) + "px"});
 }
 
+// A session that expired since the page loaded makes this fetch land on the full login page instead of
+// the dialog fragment; reload the whole window rather than embed a login form inside the small popup.
+function loadDialogContent(target, url, onLoaded) {
+    $(target).load(url, function(responseText, textStatus) {
+        if (textStatus !== "error" && typeof responseText === "string" && responseText.indexOf("id=\"loginPage\"") !== -1) {
+            window.location.reload();
+
+            return;
+        }
+        if (onLoaded) {
+            onLoaded();
+        }
+    });
+}
+
 var closeplaylist;
 export function overlayclickclose() {
     if (closeplaylist) {
@@ -145,7 +160,7 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
         open() {
             closeplaylist = 1;
             $(document).on("click.playlistdialog", overlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 $("#playlistdialog").focus();
             });
         },
@@ -264,7 +279,7 @@ export function showBroadcastsDialog(e) {
         open() {
             closebroadcasts = 1;
             $(document).on("click.broadcastsdialog", broverlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 positionDialogNear("#broadcastsdialog", e, -180);
                 $("#broadcastsdialog").focus();
             });
@@ -325,7 +340,7 @@ export function showShareDialog(e, object_type, object_id) {
         open() {
             closeshare = 1;
             $(document).on("click.sharedialog", shoverlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 $("#sharedialog").focus();
             });
         },
@@ -436,7 +451,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             position: { my: "center top", at: "center top+40", of: window },
             show: { effect: "fade", duration: 400 },
             open() {
-                $(this).load(parent.contentUrl, function() {
+                loadDialogContent(this, parent.contentUrl, function() {
                     if ($("#edit_tags").length > 0) {
                         $("#edit_tags").tagit({
                             allowSpaces: true,

@@ -95,6 +95,14 @@ final readonly class SearchAction implements ApplicationActionInterface
                 $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
             )->render();
             $results = Search::run($_REQUEST);
+            if (in_array($searchType, ['song', 'video'], true)) {
+                $length    = (int) $this->requestParser->getFromRequest('length');
+                $sizeLimit = (int) $this->requestParser->getFromRequest('size_limit');
+                if ($length > 0 || $sizeLimit > 0) {
+                    $results = Search::truncateByLimits($results, $searchType, $length, $sizeLimit);
+                }
+            }
+
             $browse->set_type($searchType);
             $browse->show_objects($results);
             $browse->store();

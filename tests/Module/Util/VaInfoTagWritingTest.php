@@ -93,6 +93,52 @@ class VaInfoTagWritingTest extends TestCase
         $this->assertTrue(VaInfo::canWriteTags($filename));
     }
 
+    public function testMergeId3v2TotalsCombinesTrackAndDiskIntoNOfTotal(): void
+    {
+        $ndata = [
+            'track_number' => ['1'],
+            'part_of_a_set' => ['2'],
+        ];
+        $id3v2Data = [
+            'totaltracks' => ['15'],
+            'part_of_a_set' => ['2/3'],
+        ];
+
+        VaInfo::mergeId3v2Totals($ndata, $id3v2Data, 1, 2);
+
+        $this->assertSame(['1/15'], $ndata['track_number']);
+        $this->assertSame(['2/3'], $ndata['part_of_a_set']);
+        $this->assertArrayNotHasKey('totaltracks', $ndata);
+    }
+
+    public function testMergeId3v2TotalsDoesNotIntroduceFramesThatWerentAlreadyPresent(): void
+    {
+        $ndata     = [];
+        $id3v2Data = [
+            'totaltracks' => ['15'],
+            'part_of_a_set' => ['2/3'],
+        ];
+
+        VaInfo::mergeId3v2Totals($ndata, $id3v2Data, 1, 2);
+
+        $this->assertArrayNotHasKey('track_number', $ndata);
+        $this->assertArrayNotHasKey('part_of_a_set', $ndata);
+    }
+
+    public function testMergeId3v2TotalsFallsBackToBareNumberWhenNoTotalExists(): void
+    {
+        $ndata = [
+            'track_number' => ['1'],
+            'part_of_a_set' => ['2'],
+        ];
+        $id3v2Data = [];
+
+        VaInfo::mergeId3v2Totals($ndata, $id3v2Data, 1, 2);
+
+        $this->assertSame(['1'], $ndata['track_number']);
+        $this->assertSame(['2'], $ndata['part_of_a_set']);
+    }
+
     public function testTheExtensionIsReadWithoutRegardToCase(): void
     {
         $this->assertTrue(VaInfo::canWriteTags('/music/TRACK.MP3'));

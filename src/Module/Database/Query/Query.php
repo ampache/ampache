@@ -446,10 +446,6 @@ class Query
      */
     public function save_objects(array $object_ids): bool
     {
-        // Saving these objects has two operations, one holds it in
-        // a local variable and then second holds it in a row in the
-        // tmp_browse table
-
         // Only do this if it's not a simple browse
         if (!$this->is_simple()) {
             $this->_cache = $object_ids;
@@ -1357,9 +1353,6 @@ class Query
      */
     private function _resort_objects(): void
     {
-        // There are two ways to do this.. the easy way...
-        // and the vollmer way, hopefully we don't have to
-        // do it the vollmer way
         if ($this->is_simple()) {
             $sql = $this->_get_sql();
         } else {

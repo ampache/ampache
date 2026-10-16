@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playback;
 
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Democratic;
 use Override;
 
@@ -66,12 +67,7 @@ final class DemocraticFormView extends AbstractView
      */
     public function getLevels(): array
     {
-        return [
-            25 => T_('User'),
-            50 => T_('Content Manager'),
-            75 => T_('Catalog Manager'),
-            100 => T_('Admin'),
-        ];
+        return AccessLevelEnum::selectableDescriptions();
     }
 
     public function getName(): string

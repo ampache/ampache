@@ -21,6 +21,7 @@
   * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
   * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
   * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
+  * `Length` and `Size Limit` options for a song or video search, trimming the result list to a target total duration/file size the same way Random Selection already does
 
 ### Changed (8.3.0)
 
@@ -40,6 +41,13 @@
 * `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
 * Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
 * A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
+* Writing tags to an mp3 (rating a song, embedding cover art, or any other tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
+* Rating a song wiped every other tag (title, artist, album, genre, ...) on its mp3 file instead of preserving them
+* Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
+* Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
+* Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
+* A podcast feed double-escaped its summary and episode descriptions (`les proc&amp;amp;egrave;s`), producing invalid XML whenever the source feed used named HTML entities
+* Browsing songs sorted by artist fell back to id/import order within an artist instead of title, so two songs by the same artist rarely read alphabetically
 
 ## Ampache 8.2.2
 

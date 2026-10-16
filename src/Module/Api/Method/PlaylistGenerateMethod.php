@@ -107,6 +107,8 @@ final class PlaylistGenerateMethod implements MethodInterface
         $results = Search::query(Search::prepare($data, $user))['results'];
         shuffle($results);
 
+        $totalCount = count($results);
+
         // slice the array if there is a limit
         if ($limit > 0) {
             $results = array_slice($results, 0, $limit);
@@ -120,6 +122,7 @@ final class PlaylistGenerateMethod implements MethodInterface
             return $response;
         }
 
+        $output->setCount($apiVersion, $totalCount);
         $output->setOffset($apiVersion, $offset);
         $output->setLimit($apiVersion, $limit);
 

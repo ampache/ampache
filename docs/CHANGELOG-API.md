@@ -20,6 +20,13 @@
   * Now also returns other users' shared top-level folders, appended after the caller's own tree
   * The response `PlaylistFolderObject` now reports `hidden`, true for a shared folder the caller has hidden from their own root; a hidden folder stays in the list and in its item count
 
+### Fixed (830000)
+
+* `playlist_generate` (API5, API6, API8)
+  * `flag=1` reported `total_count` for the whole catalog instead of the flagged result, while still listing only the flagged songs
+* `stats` (API6, API8)
+  * `filter=flagged`, `newest`, `highest`, `frequent`, `recent` and `forgotten` all reported `total_count` for the whole catalog instead of the actual result count; `random` is unaffected, since it is a sample of the catalog by design
+
 ## API 8.2.0
 
 ### Added (820000)

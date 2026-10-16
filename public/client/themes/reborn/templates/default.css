@@ -1883,8 +1883,10 @@ div.box.box_rules {
     font-family: monospace;
 }
 
-.collaborate-select {
-    height: auto;
+.edit_dialog_content select.collaborate-select {
+    box-sizing: content-box;
+    padding: 0;
+    height: 100px !important;
 }
 
 .home-plugin-flex {
