@@ -344,6 +344,70 @@ class Search extends playlist_object
     }
 
     /**
+     * applyDurationAndSizeLimits
+     *
+     * Pure budget-trimming pass, factored out of truncateByLimits() so it is testable without a database.
+     * Walks the given rows in the order they were handed in and keeps only as many as fit within an
+     * optional total duration (minutes) and/or total size (MB) cap, fuzzily skipping a row that would
+     * blow the budget rather than reordering to fit a smaller one in its place.
+     * @param array<int, array{size: int, time: int}> $rows keyed by object id, in the order to keep them
+     * @return int[]
+     */
+    public static function applyDurationAndSizeLimits(array $rows, int $length, int $sizeLimit): array
+    {
+        if ($rows === [] || ($length <= 0 && $sizeLimit <= 0)) {
+            return array_keys($rows);
+        }
+
+        $results    = [];
+        $size_total = 0.0;
+        $fuzzy_size = 0;
+        $time_total = 0;
+        $fuzzy_time = 0;
+        foreach ($rows as $object_id => $row) {
+            if ($sizeLimit > 0) {
+                $new_size = ($row['size'] / 1024) / 1024;
+                if ($fuzzy_size > 100) {
+                    break;
+                }
+
+                if (($size_total + $new_size) > $sizeLimit) {
+                    ++$fuzzy_size;
+                    continue;
+                }
+
+                $size_total += $new_size;
+            }
+
+            if ($length > 0) {
+                $new_time = (int) floor($row['time'] / 60);
+                if ($fuzzy_time > 100) {
+                    break;
+                }
+
+                if (($time_total + $new_time) > $length) {
+                    ++$fuzzy_time;
+                    continue;
+                }
+
+                $time_total += $new_time;
+            }
+
+            $results[] = $object_id;
+
+            if ($sizeLimit > 0 && ($sizeLimit - floor($size_total)) < 4) {
+                break;
+            }
+
+            if ($length > 0 && ($length - $time_total) < 2) {
+                break;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Caches a page of smartlists, their owners and their art in three reads instead of three per list
      *
      * @param array<int|string> $ids
@@ -592,6 +656,42 @@ class Search extends playlist_object
         }
 
         return $results;
+    }
+
+    /**
+     * truncateByLimits
+     *
+     * Trims an ordered song/video id list down to a total duration and/or file-size budget, preserving
+     * the order the search already produced rather than re-sorting to pack it in tighter.
+     * @param int[] $objectIds
+     * @return int[]
+     */
+    public static function truncateByLimits(array $objectIds, string $type, int $length, int $sizeLimit): array
+    {
+        if ($objectIds === [] || ($length <= 0 && $sizeLimit <= 0) || !in_array($type, ['song', 'video'], true)) {
+            return $objectIds;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($objectIds), '?'));
+        $db_results   = Dba::read(
+            sprintf('SELECT `id`, `size`, `time` FROM `%s` WHERE `id` IN (%s)', $type, $placeholders),
+            $objectIds
+        );
+
+        $rowsById = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $rowsById[(int) $row['id']] = ['size' => (int) $row['size'], 'time' => (int) $row['time']];
+        }
+
+        // keep the caller's order; an id dropped from the result set (deleted between search and here) is skipped
+        $rows = [];
+        foreach ($objectIds as $object_id) {
+            if (isset($rowsById[$object_id])) {
+                $rows[$object_id] = $rowsById[$object_id];
+            }
+        }
+
+        return self::applyDurationAndSizeLimits($rows, $length, $sizeLimit);
     }
 
     /**

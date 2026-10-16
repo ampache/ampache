@@ -111,6 +111,50 @@ class SearchTest extends MockeryTestCase
         ];
     }
 
+    /**
+     * a duration budget stops once what remains is too little to usefully fit anything else
+     */
+    public function testApplyDurationAndSizeLimitsCapsByTotalDuration(): void
+    {
+        $rows = [
+            1 => ['size' => 0, 'time' => 120],
+            2 => ['size' => 0, 'time' => 120],
+            3 => ['size' => 0, 'time' => 60],
+            4 => ['size' => 0, 'time' => 60],
+        ];
+
+        $this->assertSame([1, 2, 3], Search::applyDurationAndSizeLimits($rows, 6, 0));
+    }
+
+    /**
+     * a size budget skips an oversized row rather than stopping the whole pass there, so a smaller row
+     * further down the ordered list can still fit -- proves the fuzzy behaviour, not just a hard cutoff
+     */
+    public function testApplyDurationAndSizeLimitsFuzzilySkipsAnOversizedRow(): void
+    {
+        $rows = [
+            1 => ['size' => 3 * 1024 * 1024, 'time' => 0],
+            2 => ['size' => 3 * 1024 * 1024, 'time' => 0],
+            3 => ['size' => 5 * 1024 * 1024, 'time' => 0],
+            4 => ['size' => 1 * 1024 * 1024, 'time' => 0],
+        ];
+
+        $this->assertSame([1, 2, 4], Search::applyDurationAndSizeLimits($rows, 0, 10));
+    }
+
+    /**
+     * no budget set at all returns every id, in the order it was handed in
+     */
+    public function testApplyDurationAndSizeLimitsReturnsEveryIdWhenNoBudgetIsSet(): void
+    {
+        $rows = [
+            5 => ['size' => 999999, 'time' => 999999],
+            2 => ['size' => 999999, 'time' => 999999],
+        ];
+
+        $this->assertSame([5, 2], Search::applyDurationAndSizeLimits($rows, 0, 0));
+    }
+
     #[DataProvider('ruleNameProvider')]
     public function testEveryOfferedRuleNameResolvesToItsBaseType(string $rule, string $expected): void
     {
@@ -409,6 +453,24 @@ class SearchTest extends MockeryTestCase
             '<script>SearchRow.add("title","contain","Rock", "", 0); </script>',
             $search->to_js()
         );
+    }
+
+    /**
+     * truncateByLimits() never reaches `Dba::read()` for a type with no natural per-row size/time of its own
+     * (an aggregate type like album or artist), so this is provable without a database
+     */
+    public function testTruncateByLimitsLeavesNonSongVideoTypesUntouched(): void
+    {
+        $this->assertSame([1, 2, 3], Search::truncateByLimits([1, 2, 3], 'album', 60, 100));
+    }
+
+    /**
+     * with no length and no size_limit set there is nothing to trim, so the ids pass straight through
+     * without a database query
+     */
+    public function testTruncateByLimitsLeavesTheListUntouchedWithNoBudgetSet(): void
+    {
+        $this->assertSame([1, 2, 3], Search::truncateByLimits([1, 2, 3], 'song', 0, 0));
     }
 
     /**

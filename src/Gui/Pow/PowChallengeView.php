@@ -97,8 +97,7 @@ final class PowChallengeView extends AbstractView
         }
 
         // A referer naming a host has to name this one. Where the request cannot say which host it
-        // is being served as, there is nothing to check it against, so it is refused rather than
-        // guessed at.
+        // is being served as, there is nothing to check it against, so it is refused rather than guessed.
         if (isset($referer['host'])) {
             $host = $target['host'] ?? parse_url($this->webPath, PHP_URL_HOST);
 

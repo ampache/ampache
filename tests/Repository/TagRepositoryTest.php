@@ -41,14 +41,48 @@ class TagRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private TagRepository $subject;
 
-    public function testAddMapReturnsTheNewMapId(): void
+    public function testAddMapReturnsTheExistingIdWhenTheMapWasAlreadyThere(): void
     {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(0);
+
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
                 'INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)',
                 [666, 0, 'song', 42]
-            );
+            )
+            ->willReturn($statement);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `tag_map` WHERE `tag_id` = ? AND `user` = ? AND `object_type` = ? AND `object_id` = ?',
+                [666, 0, 'song', 42]
+            )
+            ->willReturn('7');
+
+        // a merge-redirected or concurrent re-add must not throw InsertIdInvalidException
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        self::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
+    }
+
+    public function testAddMapReturnsTheNewMapId(): void
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(1);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)',
+                [666, 0, 'song', 42]
+            )
+            ->willReturn($statement);
 
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')

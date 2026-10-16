@@ -1822,6 +1822,10 @@ class Art extends database_object
 
                 unset($apics);
                 $ndata = array_merge($ndata, $vainfo->prepare_metadata_for_writing(VaInfo::existingTags($data)));
+                if ($fileformat === 'mp3') {
+                    VaInfo::mergeId3v2Totals($ndata, VaInfo::existingTags($data), $song->track, $song->disk);
+                }
+
                 $vainfo->write_id3($ndata);
             } // foreach song
         } // write_id3

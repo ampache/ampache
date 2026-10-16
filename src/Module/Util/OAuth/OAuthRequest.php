@@ -94,10 +94,8 @@ class OAuthRequest implements Stringable
         $http_url    = $http_url ?: $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = $http_method ?: $_SERVER['REQUEST_METHOD'];
 
-        // We weren't handed any parameters, so let's find the ones relevant to
-        // this request.
-        // If you run XML-RPC or similar you should use this to provide your own
-        // parsed parameter-list
+        // We weren't handed any parameters, so let's find the ones relevant to this request.
+        // If you run XML-RPC or similar you should use this to provide your own parsed parameter-list
         if (!$parameters) {
             // Find request headers
             $request_headers = OAuthUtil::get_headers();

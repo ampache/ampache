@@ -207,6 +207,8 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             if (isset($songMeta['Popularimeter'])) {
                 $ndata['Popularimeter'] = $songMeta['Popularimeter'];
             }
+
+            VaInfo::mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
         } else {
             $songMeta       = $this->getVorbisMetadata($song);
             $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
@@ -365,15 +367,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
                 if (!empty($id3v2Data)) {
                     unset($id3v2Data['text']);
-                    foreach ($id3v2Data as $key => $value) {
-                        if (is_array($value) && isset($value[0])) {
-                            if (isset($ndata[$key])) {
-                                $ndata[$key][] = $value[0];
-                            } else {
-                                $ndata[$key] = [];
-                            }
-                        }
-                    }
+                    $this->copyId3v2Frames($ndata, $id3v2Data);
                 }
 
                 if (!in_array($user->email, [null, '', '0'], true)) {
@@ -392,6 +386,8 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
+
+                VaInfo::mergeId3v2Totals($ndata, $id3v2Data, $song->track, $song->disk);
             } else {
                 $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
@@ -472,6 +468,24 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
             $vainfo->write_id3($ndata);
         } // catalog type = local
+    }
+
+    /**
+     * Copy existing ID3v2 frames into the write buffer, keyed by comment name with one value per frame.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function copyId3v2Frames(array &$ndata, array $id3v2Data): void
+    {
+        foreach ($id3v2Data as $key => $value) {
+            if (is_array($value) && isset($value[0])) {
+                if (!isset($ndata[$key])) {
+                    $ndata[$key] = [];
+                }
+
+                $ndata[$key][] = $value[0];
+            }
+        }
     }
 
     /**

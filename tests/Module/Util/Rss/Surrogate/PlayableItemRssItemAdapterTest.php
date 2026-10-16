@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 class PlayableItemRssItemAdapterTest extends TestCase
 {
@@ -85,6 +86,34 @@ class PlayableItemRssItemAdapterTest extends TestCase
         self::assertSame(
             [['podcast_episode', 666], ['podcast', 12]],
             PlayableItemRssItemAdapter::artSources($episode)
+        );
+    }
+
+    /**
+     * A podcast episode's own get_description() already scrub_out()'s its text; a song has no description of
+     * its own, so one is built from plain, unescaped name getters and must be scrubbed the same way, or the
+     * rss template (which raw()s both branches alike) emits unescaped markup for a song but not an episode.
+     */
+    public function testBuildMediaDescriptionScrubsASongsBuiltDescriptionLikeAnEpisodesOwnOne(): void
+    {
+        $song        = $this->createMock(Song::class);
+        $song->album = 0;
+        $song->method('get_fullname')->willReturn('Rock & Roll');
+        $song->method('get_album_fullname')->willReturn('Greatest Hits');
+        $song->method('get_parent_fullname')->willReturn('AC/DC');
+
+        $episode = $this->createMock(Podcast_Episode::class);
+        $episode->method('get_description')->willReturn('Rock &amp; Roll Hour');
+
+        $method = new ReflectionMethod($this->subject, 'buildMediaDescription');
+
+        self::assertSame(
+            'Rock &amp; Roll - Greatest Hits - AC/DC',
+            $method->invoke($this->subject, $song),
+        );
+        self::assertSame(
+            'Rock &amp; Roll Hour',
+            $method->invoke($this->subject, $episode),
         );
     }
 

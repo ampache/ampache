@@ -2368,6 +2368,8 @@ class Song extends database_object implements
      */
     public function update(array $data): int
     {
+        $changed = false;
+
         foreach ($data as $key => $value) {
             //debug_event(self::class, $key . '=' . $value, 5);
             switch ($key) {
@@ -2378,6 +2380,7 @@ class Song extends database_object implements
                     if ($new_artist_id > 0) {
                         $this->artist = $new_artist_id;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
+                        $changed = $changed || ($new_artist_id !== $old_artist_id);
                     }
                     break;
                 case 'album_name':
@@ -2386,6 +2389,7 @@ class Song extends database_object implements
                     $new_album_id = Album::check($this->catalog, (string) $value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
+                    $changed = $changed || ($new_album_id !== $old_album_id);
                     break;
                 case 'artist':
                     // Change artist the song is assigned to
@@ -2393,6 +2397,7 @@ class Song extends database_object implements
                         $old_artist_id = $this->artist;
                         $new_artist_id = (int) $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
+                        $changed = true;
                     }
                     break;
                 case 'album':
@@ -2401,6 +2406,7 @@ class Song extends database_object implements
                         $old_album_id = $this->$key;
                         $new_album_id = (int) $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
+                        $changed = true;
                     }
                     break;
                 case 'disk':
@@ -2412,6 +2418,7 @@ class Song extends database_object implements
 
                         self::update_disk($new_disk, $this->id);
                         $this->disk = $new_disk;
+                        $changed    = true;
 
                         if ($new_album_disk > 0 && $new_album_disk !== $this->album_disk) {
                             self::_update_item('album_disk', $new_album_disk, $this->id, AccessLevelEnum::CONTENT_MANAGER, true);
@@ -2429,12 +2436,14 @@ class Song extends database_object implements
                     if ($value != $this->comment) {
                         self::update_comment((string) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'composer':
                     if ($value != $this->composer) {
                         self::update_composer((string) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'enabled':
@@ -2449,6 +2458,7 @@ class Song extends database_object implements
                     if ($value != $this->label) {
                         self::update_label((string) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'language':
@@ -2461,12 +2471,14 @@ class Song extends database_object implements
                     if ($value != $this->license) {
                         self::update_license((int) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'mbid':
                     if ($value != $this->mbid) {
                         self::update_mbid((string) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'mode':
@@ -2491,12 +2503,14 @@ class Song extends database_object implements
                     if ($value != $this->title) {
                         self::update_title((string) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'track':
                     if ($value != $this->track) {
                         self::update_track((int) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'user_upload':
@@ -2509,25 +2523,29 @@ class Song extends database_object implements
                     if ($value != $this->year) {
                         self::update_year((int) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
+                        $changed = true;
                     }
                     break;
                 case 'edit_tags':
-                    Tag::update_tag_list((string) $value, 'song', $this->id, true);
+                    $changed    = Tag::update_tag_list((string) $value, 'song', $this->id, true) || $changed;
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     break;
                 case 'edit_moods':
                     // no from_file_tags, so these belong to whoever is editing and outlive the next scan
-                    Mood::update_mood_list((string) $value, 'song', $this->id, true);
+                    $changed = Mood::update_mood_list((string) $value, 'song', $this->id, true) || $changed;
                     break;
                 case 'metadata':
-                    $this->updateMetadata($value);
+                    $changed = $this->updateMetadata($value) || $changed;
                     break;
             }
         }
 
-        $this->getSongTagWriter()->write(
-            $this
-        );
+        // writing tags rewrites the whole id3v2/vorbis block, so only do it when a file-backed field actually moved
+        if ($changed) {
+            $this->getSongTagWriter()->write(
+                $this
+            );
+        }
 
         return $this->id;
     }
@@ -2535,9 +2553,11 @@ class Song extends database_object implements
     /**
      * Update Metadata from array
      * @param array<string, scalar> $meta_value
+     * @return bool whether any metadata value actually changed
      */
-    public function updateMetadata(array $meta_value): void
+    public function updateMetadata(array $meta_value): bool
     {
+        $changed = false;
         if ($this->getMetadataManager()->isCustomMetadataEnabled()) {
             $metadataRepository = $this->getMetadataRepository();
 
@@ -2547,12 +2567,15 @@ class Song extends database_object implements
                     $metadata->setData((string) $value);
                     try {
                         $metadata->save();
+                        $changed = true;
                     } catch (DatabaseException $error) {
                         debug_event(self::class, 'Failed to save metadata: ' . $error->getMessage(), 2);
                     }
                 }
             }
         }
+
+        return $changed;
     }
 
     /**

@@ -97,17 +97,6 @@ final class ApiHandler implements ApiHandlerInterface
         $this->userRepository  = $userRepository;
     }
 
-    /**
-     * Fold the dashed REST spelling of a resource or action onto its canonical snake_case name
-     *
-     * This is the single rule that lets every REST path use dashes (`album-disks/{id}/songs`) without
-     * each name needing its own alias in the maps above.
-     */
-    private static function _dashesToUnderscores(string $value): string
-    {
-        return str_replace('-', '_', $value);
-    }
-
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -673,7 +662,7 @@ final class ApiHandler implements ApiHandlerInterface
         // REST paths spell multi-word names with a dash (`podcast-episodes`, `now-playing`,
         // `album-disks`); RPC actions are snake_case. Converting first means only genuine renames
         // need an entry below -- a new dashed path never needs an alias adding here.
-        $action = self::_dashesToUnderscores($action);
+        $action = str_replace('-', '_', $action);
 
         $action = match ($action) {
             'albums_songs' => 'album_songs',
@@ -815,9 +804,8 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeType(string $type): string
     {
-        // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms
-        // need an entry here
-        return match (self::_dashesToUnderscores($type)) {
+        // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms need an entry here
+        return match (str_replace('-', '_', $type)) {
             'album_artists' => 'album_artist',
             'album_disks' => 'album_disk',
             'albums' => 'album',
@@ -839,7 +827,7 @@ final class ApiHandler implements ApiHandlerInterface
             'songs' => 'song',
             'users' => 'user',
             'videos' => 'video',
-            default => self::_dashesToUnderscores($type),
+            default => str_replace('-', '_', $type),
         };
     }
 

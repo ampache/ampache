@@ -30,6 +30,7 @@ use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 use Override;
 
@@ -41,7 +42,10 @@ use Override;
  */
 final class SearchFormView extends AbstractView
 {
-    private const array LIMITS = [1, 5, 10, 25, 50, 100, 250, 500];
+    private const array LENGTHS = [15, 30, 60, 120, 240, 480, 960];
+    private const array LIMITS  = [1, 5, 10, 25, 50, 100, 250, 500];
+
+    private const array SIZES = [64, 128, 256, 512, 1024];
 
     public function __construct(
         private readonly ?Browse $browse,
@@ -110,6 +114,24 @@ final class SearchFormView extends AbstractView
     }
 
     /**
+     * @return list<array{value: int, label: string}>
+     */
+    public function getLengths(): array
+    {
+        $lengths = [['value' => 0, 'label' => T_('Unlimited')]];
+        foreach (self::LENGTHS as $value) {
+            $lengths[] = [
+                'value' => $value,
+                'label' => ($value < 60)
+                    ? sprintf(nT_('%d minute', '%d minutes', $value), $value)
+                    : sprintf(nT_('%d hour', '%d hours', (int) ($value / 60)), (int) ($value / 60)),
+            ];
+        }
+
+        return $lengths;
+    }
+
+    /**
      * @return list<int>
      */
     public function getLimits(): array
@@ -127,9 +149,32 @@ final class SearchFormView extends AbstractView
         return $this->playlist;
     }
 
+    public function getSelectedLength(): int
+    {
+        return (int) ($this->getData()['length'] ?? 0);
+    }
+
     public function getSelectedLimit(): int
     {
         return (int) ($this->getData()['limit'] ?? 0);
+    }
+
+    public function getSelectedSize(): int
+    {
+        return (int) ($this->getData()['size_limit'] ?? 0);
+    }
+
+    /**
+     * @return list<array{value: int, label: string}>
+     */
+    public function getSizes(): array
+    {
+        $sizes = [['value' => 0, 'label' => T_('Unlimited')]];
+        foreach (self::SIZES as $value) {
+            $sizes[] = ['value' => $value, 'label' => Ui::format_bytes($value * 1048576)];
+        }
+
+        return $sizes;
     }
 
     public function getWebPath(): string
@@ -140,6 +185,15 @@ final class SearchFormView extends AbstractView
     public function isRandom(): bool
     {
         return (int) ($this->getData()['random'] ?? 0) === 1;
+    }
+
+    /**
+     * Length/size budgets only make sense for a type whose rows carry their own duration and file size rather than
+     * an aggregate of their children's -- song and video, not album/artist/etc.
+     */
+    public function showLengthLimit(): bool
+    {
+        return in_array($this->getCurrentType(), ['song', 'video'], true);
     }
 
     public function showPermalink(): bool

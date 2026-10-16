@@ -447,13 +447,13 @@ final class Xml5_Data
      */
     public function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
+        // you might not want the joined tables for playlists
+        $total_count = $this->count ?: ((AmpConfig::get('hide_search', false) && $object_type == 'playlist')
+            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
+            : Catalog::get_update_info($object_type, $user->id));
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        // you might not want the joined tables for playlists
-        $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
-            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
-            : Catalog::get_update_info($object_type, $user->id);
         $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n" : '';
 
         // here is where we call the object type
@@ -904,10 +904,11 @@ final class Xml5_Data
      */
     public function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('song', $user->id);
         $this->count = $this->count ?: count($objects);
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n" : '';
 
         Song::build_cache($objects);
         Rating::build_cache('song', $objects);

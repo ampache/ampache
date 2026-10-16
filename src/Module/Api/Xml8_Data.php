@@ -241,11 +241,12 @@ final class Xml8_Data
      */
     public function album_disks(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('album_disk', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album_disk', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -309,11 +310,12 @@ final class Xml8_Data
      */
     public function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('album', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -380,11 +382,12 @@ final class Xml8_Data
      */
     public function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('artist', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Artist::build_cache($objects);
         Rating::build_cache('artist', $objects);
@@ -1046,6 +1049,10 @@ final class Xml8_Data
      */
     public function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
+        // you might not want the joined tables for playlists
+        $total_count = $this->count ?: ((AmpConfig::get('hide_search', false) && $object_type == 'playlist')
+            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
+            : Catalog::get_update_info($object_type, $user->id));
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
@@ -1071,10 +1078,6 @@ final class Xml8_Data
                 break;
         }
 
-        // you might not want the joined tables for playlists
-        $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
-            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
-            : Catalog::get_update_info($object_type, $user->id);
         $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         // here is where we call the object type
@@ -1429,13 +1432,13 @@ final class Xml8_Data
      */
     public function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $full_xml = true): string
     {
+        $total_count = $this->count ?: ((AmpConfig::get('hide_search', false))
+            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
+            : Catalog::get_update_info('playlist', $user->id));
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $total_count = (AmpConfig::get('hide_search', false))
-            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
-            : Catalog::get_update_info('playlist', $user->id);
         $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         $placements = $this->playlistFolderRepository->getPlacementMap($user);
@@ -1524,11 +1527,12 @@ final class Xml8_Data
      */
     public function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('podcast_episode', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Podcast_Episode::build_cache($objects);
         Rating::build_cache('podcast_episode', $objects);
@@ -1560,13 +1564,14 @@ final class Xml8_Data
      */
     public function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('podcast', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit);
 
         $podcastRepository = $this->podcastRepository;
 
-        $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         Podcast::build_cache($objects);
         Rating::build_cache('podcast', $objects);
@@ -1929,11 +1934,12 @@ final class Xml8_Data
      */
     public function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('song', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Song::build_cache($objects);
         Rating::build_cache('song', $objects);
@@ -2119,11 +2125,12 @@ final class Xml8_Data
      */
     public function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
+        $totalCount  = $this->count ?: Catalog::get_update_info('video', $user->id);
         $this->count = $this->count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = Api::filter_objects($objects, $this->count, $this->offset, $this->limit, $full_xml);
 
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . $totalCount . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Video::build_cache($objects);
         Rating::build_cache('video', $objects);

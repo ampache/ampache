@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -40,6 +41,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
     public function __construct(
         private RequestParserInterface $requestParser,
         private BrowseFactoryInterface $browseFactory,
+        private ConfigContainerInterface $configContainer,
     ) {}
 
     public function handle(User $user): void
@@ -51,13 +53,27 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         $results     = [];
         $action      = $this->requestParser->getFromRequest('action');
 
+        // Votes are gated by webplayer_level so a lowered level also opens voting, not just playback
+        $mayVote = Access::check(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::fromTextual($this->configContainer->get('webplayer_level') ?? 'user')
+        );
+
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
+                if (!$mayVote) {
+                    return;
+                }
+
                 $democratic->remove_vote((int) ($_REQUEST['row_id'] ?? 0));
                 $show_browse = true;
                 break;
             case 'add_vote':
+                if (!$mayVote) {
+                    return;
+                }
+
                 $democratic->add_vote(
                     [
                         [
