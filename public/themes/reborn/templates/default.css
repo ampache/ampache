@@ -1884,6 +1884,8 @@ div.box.box_rules {
 }
 
 .collaborate-select {
+    box-sizing: content-box;
+    padding: 0;
     height: auto;
 }
 
