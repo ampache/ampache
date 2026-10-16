@@ -1886,7 +1886,7 @@ div.box.box_rules {
 .edit_dialog_content select.collaborate-select {
     box-sizing: content-box;
     padding: 0;
-    height: 100px;
+    height: 100px !important;
 }
 
 .home-plugin-flex {
