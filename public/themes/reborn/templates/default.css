@@ -1883,7 +1883,7 @@ div.box.box_rules {
     font-family: monospace;
 }
 
-.collaborate-select {
+.edit_dialog_content select.collaborate-select {
     box-sizing: content-box;
     padding: 0;
     height: 100px;
