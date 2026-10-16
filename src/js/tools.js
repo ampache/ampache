@@ -410,6 +410,15 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
                 type: "POST",
                 data: $(parent.editFormId).serializeArray(),
                 success(resp) {
+                    // an expired session redirects the save itself to the login page, so resp arrives
+                    // as its HTML string instead of the expected XML document -- reload rather than
+                    // read .lastChild off it and silently fail to save with the dialog already closed
+                    if (typeof resp === "string" && resp.indexOf("id=\"loginPage\"") !== -1) {
+                        window.location.reload();
+
+                        return;
+                    }
+
                     $("#editdialog").dialog("close");
 
                     if (parent.refreshRowPrefix !== "") {
@@ -422,7 +431,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
 
                         var url = jsAjaxServer + "/edit.server.php?action=refresh_updated&type=" + parent.editType + "&id=" + new_id + argument_string;
                         // Reload only table
-                        $("#" + parent.refreshRowPrefix + parent.editId).load(url, function() {
+                        loadDialogContent("#" + parent.refreshRowPrefix + parent.editId, url, function() {
                             // Update the current row identifier with new id
                             $("#" + parent.refreshRowPrefix + parent.editId).attr("id", parent.refreshRowPrefix + new_id);
                         });
@@ -607,7 +616,7 @@ export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refre
             success(resp) {
                 var url = jsAjaxServer + "/refresh_reordered.server.php?action=" + parent.refreshAction + "&id=" + parent.itemId;
                 // Reload only table
-                $("#reordered_list_" + parent.itemId).load(url, function () {
+                loadDialogContent("#reordered_list_" + parent.itemId, url, function () {
                     $("#sortableplaylist_" + parent.itemId).sortable({
                         axis: "y",
                         delay: 200
