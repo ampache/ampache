@@ -57,7 +57,7 @@ final class Gatekeeper implements GatekeeperInterface
 
     public function extendSession(string $auth): void
     {
-        Session::extend($auth, AccessTypeEnum::API->value);
+        Session::extend($auth, 'api');
     }
 
     public function getAuth(string $requestKey = 'auth'): string

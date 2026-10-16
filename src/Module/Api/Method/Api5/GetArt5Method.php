@@ -31,7 +31,6 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Art\Art;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -126,7 +125,7 @@ final class GetArt5Method implements MethodInterface
 
         $art = $this->resolveArt($type, $object_id, $user);
 
-        Session::extend($input['auth'], AccessTypeEnum::API->value);
+        Session::extend($input['auth'], 'api');
 
         $image = $art->getImage($size, $fallback);
         if ($image === null) {

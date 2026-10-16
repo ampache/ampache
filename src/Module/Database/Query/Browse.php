@@ -97,6 +97,7 @@ class Browse extends Query
         'license',
         'live_stream',
         'mood',
+        'playlist_folder_hidden',
         'playlist_folder',
         'playlist_localplay',
         'playlist_media',
@@ -141,6 +142,7 @@ class Browse extends Query
         'live_stream',
         'playlist',
         'playlist_folder',
+        'playlist_folder_hidden',
         'podcast',
         'podcast_episode',
         'song',
@@ -157,6 +159,7 @@ class Browse extends Query
         'genre',
         'mood',
         'playlist_folder',
+        'playlist_folder_hidden',
         'playlist_localplay',
         'playlist_media',
     ];
@@ -595,7 +598,7 @@ class Browse extends Query
         // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
         $prefetchable = ($type !== 'song_preview');
         // a folder/playlist_folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
-        $persistable = ($prefetchable && $type !== 'folder' && $type !== 'playlist_folder');
+        $persistable = ($prefetchable && $type !== 'folder' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden');
         if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
         } elseif ($persistable) {
@@ -797,7 +800,7 @@ class Browse extends Query
             'license', 'license_hidden' => T_('Media Licenses'),
             'live_stream' => T_('Radio Stations') . $match,
             'playlist' => T_('Playlists') . $match,
-            'playlist_folder' => T_('Playlist Folders'),
+            'playlist_folder', 'playlist_folder_hidden' => T_('Playlist Folders'),
             'playlist_localplay' => T_('Current Playlist'),
             'playlist_media' => T_('Playlist Items') . $match,
             'playlist_search', 'smartplaylist' => T_('Smart Playlists') . $match,
@@ -955,7 +958,7 @@ class Browse extends Query
             'label' => Label::build_cache($this->_squashList($object_ids)),
             'catalog' => Catalog::build_cache($this->_squashList($object_ids)),
             'collection' => Collection::build_cache($this->_squashList($object_ids)),
-            'folder', 'collection_items', 'playlist_folder' => $this->_prefetchMixedTypes($object_ids),
+            'folder', 'collection_items', 'playlist_folder', 'playlist_folder_hidden' => $this->_prefetchMixedTypes($object_ids),
             'user', 'follower' => User::build_cache($this->_squashList($object_ids)),
             'share' => Share::build_cache($this->_squashList($object_ids)),
             'broadcast' => Broadcast::build_cache($this->_squashList($object_ids)),
@@ -965,7 +968,7 @@ class Browse extends Query
         };
 
         // 'folder'/'collection_items'/'playlist_folder' already warmed their own split-by-type groups above
-        if ($type !== 'folder' && $type !== 'collection_items' && $type !== 'playlist_folder' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+        if ($type !== 'folder' && $type !== 'collection_items' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
             $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
         }
     }

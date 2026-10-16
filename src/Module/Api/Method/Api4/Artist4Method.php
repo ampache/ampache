@@ -27,8 +27,10 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -41,12 +43,14 @@ final class Artist4Method implements MethodInterface
     public const string ACTION = 'artist';
 
     public function __construct(
+        private ModelFactoryInterface $modelFactory,
         private StreamFactoryInterface $streamFactory,
     ) {}
 
     /**
      * @param array<string, mixed> $input
      * @param 4 $apiVersion
+     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -61,7 +65,18 @@ final class Artist4Method implements MethodInterface
         }
 
         // version 4 hands the filter through as a string rather than casting it to an id
-        $results = [scrub_in((string) ($input['filter'] ?? ''))];
+        $uid    = scrub_in((string) ($input['filter'] ?? ''));
+        $artist = $this->modelFactory->createArtist((int) $uid);
+        if ($artist->isNew()) {
+            throw new ResultEmptyException($uid);
+        }
+
+        // a withdrawn artist is refused like an id that was never there, so nothing says it exists
+        if (!$artist->isVisible($user)) {
+            throw new ResultEmptyException($uid);
+        }
+
+        $results = [$uid];
 
         $include = [];
         if (array_key_exists('include', $input)) {

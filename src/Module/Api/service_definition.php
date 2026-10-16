@@ -277,6 +277,7 @@ return [
     Method\PodcastDeleteMethod::class => autowire(),
     Method\PodcastEpisodesMethod::class => autowire(),
     Method\BookmarksMethod::class => autowire(),
+    PlaylistTrackBudget::class => autowire(),
     Method\PlaylistsMethod::class => autowire(),
     Method\SmartlistsMethod::class => autowire(),
     Method\UserPlaylistsMethod::class => autowire(),

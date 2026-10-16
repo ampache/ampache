@@ -108,7 +108,7 @@ final class SystemUpdateMethod implements MethodInterface
             // check that the update completed or failed.
             $hasUpdate = AutoUpdate::is_update_available(true);
             if ($hasUpdate) {
-                Session::extend($input['auth'], AccessTypeEnum::API->value);
+                Session::extend($input['auth'], 'api');
 
                 $response->getBody()->write(
                     $output->error(
@@ -139,7 +139,7 @@ final class SystemUpdateMethod implements MethodInterface
 
         if ($updated) {
             // there was an update and it was successful
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
 
             $response->getBody()->write(
                 $output->success($apiVersion, 'update successful')

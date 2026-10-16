@@ -131,7 +131,7 @@ final class UpdatePodcastMethod implements MethodInterface
             return $response;
         }
 
-        Session::extend($input['auth'], AccessTypeEnum::API->value);
+        Session::extend($input['auth'], 'api');
 
         $response->getBody()->write(
             $output->success($apiVersion, 'Synced episodes for podcast: ' . $objectId)

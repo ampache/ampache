@@ -47,19 +47,104 @@ final class PodcastSearch implements SearchInterface
     public function getSql(
         Search $search,
     ): array {
-        $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
-        $catalog_disable    = AmpConfig::get('catalog_disable');
-        $catalog_filter     = AmpConfig::get('catalog_filter');
+        $search_user_id  = $search->search_user->getId();
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $catalog_filter  = AmpConfig::get('catalog_filter');
 
-        $where      = [];
         $table      = [];
         $join       = [];
         $group      = [];
-        $having     = [];
         $parameters = [];
 
-        foreach ($search->rules as $rule) {
+        $combined = RuleGroupCombiner::combine(
+            $search->rules,
+            $search->logic_operator ?? 'and',
+            function (array $rules) use ($search, &$join, &$table, &$parameters): array {
+                return $this->evaluateRules($rules, $search, $join, $table, $parameters);
+            },
+        );
+
+        $where     = $combined['where'];
+        $where_sql = $combined['where_sql'];
+
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        if (array_key_exists('podcast_episode', $join)) {
+            $table['0_podcast'] = "LEFT JOIN `podcast_episode` ON `podcast_episode`.`podcast` = `podcast`.`id`";
+        }
+
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast`.`catalog`";
+            if ($catalog_disable) {
+                if ($where_sql !== '' && $where_sql !== '0') {
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
+                }
+            }
+        }
+
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `podcast`.`catalog` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`podcast`.`catalog` = " . $search->catalog_id;
+            }
+        }
+
+        if ($join['catalog_map']) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = ($search_user_id > 0)
+                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = ($search_user_id > 0)
+                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = $combined['having_sql'];
+
+        return [
+            'base' => 'SELECT DISTINCT(`podcast`.`id`), `podcast`.`title`, `podcast`.`weight` FROM `podcast`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters,
+        ];
+    }
+
+    /**
+     * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
+     *
+     * `$join` and `$table` are shared across every group call, not reset per group, so a
+     * once-per-user join (e.g. `favorite`/`rating`) is never duplicated across group boundaries.
+     * @param list<array<int, mixed>> $rules
+     * @param array<string, bool> $join
+     * @param array<string, string> $table
+     * @param array<int, mixed> $parameters
+     * @return array{where: string[], having: string[]}
+     */
+    private function evaluateRules(
+        array $rules,
+        Search $search,
+        array &$join,
+        array &$table,
+        array &$parameters,
+    ): array {
+        $search_user_id = $search->search_user->getId();
+        $where          = [];
+
+        foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
@@ -235,7 +320,13 @@ final class PodcastSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column  = "`last_play_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     break;
                 case 'last_skip':
                     $my_type = 'podcast_episode';
@@ -246,7 +337,13 @@ final class PodcastSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
-                    $where[]                 = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column                  = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff                  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[]                 = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     $join['podcast_episode'] = true;
                     break;
                 case 'last_play_or_skip':
@@ -258,15 +355,31 @@ final class PodcastSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[]                 = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $column                  = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $cutoff                  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[]                 = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= $cutoff)",
+                        '!>' => "($column IS NULL OR $column <= $cutoff)",
+                        default => "$column $operator_sql $cutoff",
+                    };
                     $join['podcast_episode'] = true;
                     break;
                 case 'days_added':
-                    $where[]                 = sprintf('`podcast_episode`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff                  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[]                 = match ($operator_sql) {
+                        '!<' => "(`podcast_episode`.`addition_time` >= $cutoff)",
+                        '!>' => "(`podcast_episode`.`addition_time` <= $cutoff)",
+                        default => "`podcast_episode`.`addition_time` $operator_sql $cutoff",
+                    };
                     $join['podcast_episode'] = true;
                     break;
                 case 'days_updated':
-                    $where[]                 = sprintf('`podcast_episode`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff                  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[]                 = match ($operator_sql) {
+                        '!<' => "(`podcast_episode`.`update_time` >= $cutoff)",
+                        '!>' => "(`podcast_episode`.`update_time` <= $cutoff)",
+                        default => "`podcast_episode`.`update_time` $operator_sql $cutoff",
+                    };
                     $join['podcast_episode'] = true;
                     break;
                 case 'played_times':
@@ -396,61 +509,6 @@ final class PodcastSearch implements SearchInterface
             } // switch on ruletype
         } // foreach rule
 
-        $join['catalog']     = $catalog_disable || $catalog_filter;
-        $join['catalog_map'] = $catalog_filter;
-
-        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
-
-        if (array_key_exists('podcast_episode', $join)) {
-            $table['0_podcast'] = "LEFT JOIN `podcast_episode` ON `podcast_episode`.`podcast` = `podcast`.`id`";
-        }
-
-        if ($join['catalog']) {
-            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast`.`catalog`";
-            if ($catalog_disable) {
-                if ($where_sql !== '' && $where_sql !== '0') {
-                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
-                } else {
-                    $where_sql = "`catalog_se`.`enabled` = '1'";
-                }
-            }
-        }
-
-        if ($search->catalog_id) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `podcast`.`catalog` = " . $search->catalog_id;
-            } else {
-                $where_sql = "`podcast`.`catalog` = " . $search->catalog_id;
-            }
-        }
-
-        if ($join['catalog_map']) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = ($search_user_id > 0)
-                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            } else {
-                $where_sql = ($search_user_id > 0)
-                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            }
-        }
-
-        ksort($table);
-        $table_sql  = implode(' ', $table);
-        $group_sql  = implode(',', $group);
-        $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
-
-        return [
-            'base' => 'SELECT DISTINCT(`podcast`.`id`), `podcast`.`title`, `podcast`.`weight` FROM `podcast`',
-            'join' => $join,
-            'where' => $where,
-            'where_sql' => $where_sql,
-            'table' => $table,
-            'table_sql' => $table_sql,
-            'group_sql' => $group_sql,
-            'having_sql' => $having_sql,
-            'parameters' => $parameters,
-        ];
+        return ['where' => $where, 'having' => []];
     }
 }

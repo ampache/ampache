@@ -41,6 +41,7 @@ $web_path = AmpConfig::get_web_path();
     var jsAmpConfigGeolocation = "<?php echo AmpConfig::get_bool('geolocation'); ?>";
     var jsAmpConfigLibitemContextmenu = "<?php echo AmpConfig::get_bool('libitem_contextmenu'); ?>";
     var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
+    var jsAmpConfigRightbarAlwaysShow = "<?php echo AmpConfig::get_bool('rightbar_always_show'); ?>";
     var jsAmpConfigSlideshowTime = "<?php echo (int) (AmpConfig::get('slideshow_time', 0)); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo AmpConfig::get_bool('sidebar_hide_switcher'); ?>";
     var jsAmpConfigSongPageTitle = "<?php echo AmpConfig::get_bool('song_page_title'); ?>";

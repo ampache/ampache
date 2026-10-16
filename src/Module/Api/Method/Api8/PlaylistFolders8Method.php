@@ -33,7 +33,7 @@ use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Returns the calling user's playlist folder tree
+ * Returns the calling user's playlist folder tree, plus other users' shared top-level folders
  *
  * Only api version 8 knows about playlist folders.
  */
@@ -53,7 +53,8 @@ final class PlaylistFolders8Method implements MethodInterface
      * playlist_folders
      * MINIMUM_API_VERSION=800000
      *
-     * The whole tree as a flat list; clients rebuild the hierarchy from each folder's `parent`.
+     * The whole tree as a flat list, plus other users' shared top-level folders appended after it; clients
+     * rebuild the hierarchy from each folder's `parent` and tell the two apart by `hidden`/ownership.
      *
      * offset = (integer) //optional
      * limit  = (integer) //optional
@@ -73,7 +74,10 @@ final class PlaylistFolders8Method implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        $folders = $this->playlistFolderRepository->getTree($user);
+        $folders = array_merge(
+            $this->playlistFolderRepository->getTree($user),
+            $this->playlistFolderRepository->getPublicRootFolders($user->getId())
+        );
         if ($folders === []) {
             $response->getBody()->write(
                 $output->writeEmpty($apiVersion, 'playlist_folder')

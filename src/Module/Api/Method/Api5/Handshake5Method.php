@@ -210,7 +210,7 @@ final class Handshake5Method implements MethodInterface
 
             if ($client instanceof User) {
                 if ($exists) {
-                    Session::extend($input['auth'], AccessTypeEnum::API->value);
+                    Session::extend($input['auth'], 'api');
                     $token = $input['auth'];
                 } else {
                     $token = $this->createSession($client, $data_version, $input);
@@ -281,7 +281,7 @@ final class Handshake5Method implements MethodInterface
             return Session::create($data);
         }
 
-        Session::extend($data['apikey'], AccessTypeEnum::API->value);
+        Session::extend($data['apikey'], 'api');
 
         return $data['apikey'];
     }

@@ -1367,6 +1367,12 @@ SHARED_PARAMETERS: dict[str, dict] = {
     "Rule3": _q("rule_3", "Rule field/key for rule 3", {"type": "string"}),
     "Rule3Operator": _q("rule_3_operator", "Operator for rule 3", {"type": "string"}),
     "Rule3Input": _q("rule_3_input", "Input value for rule 3", {"type": "string"}),
+    # 2-level AND/OR rule grouping (query, all optional). A rule carrying rule_N_group is combined
+    # with the other rules sharing that id under group_G_operator, instead of the top-level operator.
+    "Rule1Group": _q("rule_1_group", "Group id for rule 1, to combine it under a group_<id>_operator", {"type": "integer"}),
+    "Rule2Group": _q("rule_2_group", "Group id for rule 2, to combine it under a group_<id>_operator", {"type": "integer"}),
+    "Rule3Group": _q("rule_3_group", "Group id for rule 3, to combine it under a group_<id>_operator", {"type": "integer"}),
+    "Group1Operator": _q("group_1_operator", "and, or (operator joining the rules assigned to group 1)", {"enum": ["and", "or"], "type": "string"}),
     # object identifiers (path)
     "AlbumId": _path_id("album_id", "album"),
     "AlbumDiskId": _path_id("album_disk_id", "album disk"),

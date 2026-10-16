@@ -52,6 +52,42 @@ trait PlaylistFolderLoaderTrait
     }
 
     /**
+     * The folder named by `filter`, addressed by id or by name path, own or another user's alike.
+     *
+     * Unlike `loadFolder()`, ownership is not required -- only readability, so a folder shared with the
+     * caller resolves too. A name path only ever resolves within the caller's own tree, so another
+     * user's folder must be addressed by id. An unreadable folder reports not found rather than denied,
+     * so a tree cannot be probed from outside.
+     *
+     * @param array<string, mixed> $input
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
+     */
+    private function loadAnyFolder(array $input, User $user): PlaylistFolder
+    {
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
+        }
+
+        $filter = (string) $input['filter'];
+        $folder = ($this->isObjectId($filter))
+            ? $this->playlistFolderRepository->findById((int) $filter)
+            : $this->playlistFolderRepository->findByPath($user, $filter);
+
+        if (
+            $folder === null
+            || !$this->playlistFolderRepository->isReadableBy($folder->getId(), $user->getId())
+        ) {
+            throw new ResultEmptyException($filter);
+        }
+
+        return $folder;
+    }
+
+    /**
      * The folder named by `filter`, addressed by id or by name path.
      *
      * Another user's folder reports not found rather than denied, so a tree cannot be probed from outside.

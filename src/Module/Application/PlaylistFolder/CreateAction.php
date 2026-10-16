@@ -72,6 +72,9 @@ final readonly class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $canMakePublic = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+        $type          = ($canMakePublic && $this->requestParser->getFromRequest('visibility') === 'public') ? 'public' : 'private';
+
         $name = $this->requestParser->getFromRequest('name');
         if (!PlaylistFolder::isValidName($name)) {
             AmpError::add('name', T_('Name is required'));
@@ -80,17 +83,17 @@ final readonly class CreateAction implements ApplicationActionInterface
         $parentId = (int) $this->requestParser->getFromRequest('parent');
 
         if (AmpError::occurred()) {
-            echo $this->formView($user, $name, $parentId)->render();
+            echo $this->formView($user, $name, $parentId, $type, $canMakePublic)->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
             return null;
         }
 
-        $folderId = $this->playlistFolderRepository->create($user, $name, $parentId);
+        $folderId = $this->playlistFolderRepository->create($user, $name, $parentId, type: $type);
         if ($folderId === null) {
             AmpError::add('name', T_('That name already exists'));
-            echo $this->formView($user, $name, $parentId)->render();
+            echo $this->formView($user, $name, $parentId, $type, $canMakePublic)->render();
         } else {
             $this->ui->showConfirmation(
                 T_('Folder created'),
@@ -109,14 +112,16 @@ final readonly class CreateAction implements ApplicationActionInterface
         return null;
     }
 
-    private function formView(User $user, string $name, int $parentId): PlaylistFolderFormView
+    private function formView(User $user, string $name, int $parentId, string $type, bool $canMakePublic): PlaylistFolderFormView
     {
         return new PlaylistFolderFormView(
             $this->configContainer->getWebPath(),
             null,
             $name,
             $parentId,
-            $this->treeFormatter->flatten($user)
+            $this->treeFormatter->flatten($user),
+            $type,
+            $canMakePublic
         );
     }
 }

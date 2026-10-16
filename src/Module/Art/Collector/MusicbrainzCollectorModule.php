@@ -141,10 +141,8 @@ final readonly class MusicbrainzCollectorModule implements CollectorModuleInterf
             }
         }
 
-        // The next bit is based directly on the MusicBrainz server code
-        // that displays cover art.
-        // I'm leaving in the releaseuri info for the moment, though
-        // it's not going to be used.
+        // The next bit is based directly on the MusicBrainz server code that displays cover art.
+        // I'm leaving in the releaseuri info for the moment, though it's not going to be used.
         $coverartsites   = [];
         $coverartsites[] = [
             'name' => "CD Baby",

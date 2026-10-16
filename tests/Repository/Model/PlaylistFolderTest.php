@@ -74,7 +74,15 @@ class PlaylistFolderTest extends TestCase
         self::assertSame(3, $folder->getParentId());
         self::assertSame('Live', $folder->getName());
         self::assertSame(5, $folder->getSortOrder());
+        self::assertSame('private', $folder->getType());
         self::assertFalse($folder->isNew());
+    }
+
+    public function testFromRowHydratesAnExplicitType(): void
+    {
+        $folder = PlaylistFolder::fromRow(['id' => '7', 'user' => '42', 'name' => 'Live', 'type' => 'public']);
+
+        self::assertSame('public', $folder->getType());
     }
 
     public function testIsValidTypeAcceptsOnlyTheStoredSpellings(): void
@@ -113,6 +121,7 @@ class PlaylistFolderTest extends TestCase
         self::assertTrue($folder->isNew());
         self::assertSame(0, $folder->getId());
         self::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
+        self::assertSame('private', $folder->getType());
     }
 
     /**
@@ -147,6 +156,28 @@ class PlaylistFolderTest extends TestCase
         $folder->setParentId(-5);
 
         self::assertSame(PlaylistFolder::ROOT, $folder->getParentId());
+    }
+
+    /**
+     * A refused type must leave the previous one alone rather than defaulting it
+     */
+    public function testSetTypeKeepsThePreviousTypeWhenRefused(): void
+    {
+        $folder = new PlaylistFolder();
+        $folder->setType('public');
+
+        $folder->setType('bogus');
+
+        self::assertSame('public', $folder->getType());
+    }
+
+    public function testSetTypeStoresAnAcceptedValue(): void
+    {
+        $folder = new PlaylistFolder();
+
+        $folder->setType('public');
+
+        self::assertSame('public', $folder->getType());
     }
 
     public function testTypeSpellingsRoundTripBetweenTableAndApi(): void

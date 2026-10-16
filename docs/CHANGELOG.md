@@ -1,5 +1,54 @@
 # CHANGELOG
 
+## Ampache 8.3.0
+
+### Added (8.3.0)
+
+* Playlist Folders
+  * Cancel button on the create/edit folder form
+  * A folder can be shared read-only with other users via a Public/Private switch, restricted to Content Manager (level 50) and above
+  * Any top-level folder -- your own or one shared with you -- can be hidden from your main list, with a "Hidden" tab to view and unhide them, like the Genres browse
+  * API `playlist_folder_create` and `playlist_folder_edit` take a `type` (private/public) parameter
+  * API `playlist_folder_edit` takes a `hidden` parameter; it is the one field a caller may set on a folder they do not own
+  * API `playlist_folders` also lists other users' shared top-level folders, flagging hidden ones
+* Database 830003
+  * Added `playlist_folder`.`type`, so a folder can be shared read-only with other users
+  * Added `playlist_folder_hide` table, so a shared folder can be marked as hidden for one viewer
+  * Removed predictable `MD5(username)` API sessions created by older releases
+  * Added `rightbar_always_show` preference to keep the rightbar open while empty
+* Search
+  * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
+  * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
+  * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
+  * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
+  * `Length` and `Size Limit` options for a song or video search, trimming the result list to a target total duration/file size the same way Random Selection already does
+
+### Changed (8.3.0)
+
+* An album or album disk with no cover falls back to the blank placeholder, not the album artist's art
+* The web player scrobbles a song to Last.fm, Libre.fm and ListenBrainz once it has played past the `skip_timer`, not when it starts, stamped with its start time
+* Config version 101
+  * `send_full_stream` is now off by default, and updating the config file removes the old `webplayer` default, which never applied
+  * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
+
+### Fixed (8.3.0)
+
+* Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
+* Edit/Find Art and Reset Art on Albums target the album correctly
+* A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
+* Scanning folders (`run:updateCatalog -s`, "Scan Folders"/"Scan All Folders") on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, which MySQL only added in 8.0.4
+* Updating a share you don't own (API `updateShare`/Subsonic `updateshare`) reported success without changing anything, instead of the access-denied error it now gives
+* `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
+* Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
+* A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
+* Writing tags to an mp3 (rating a song, embedding cover art, or any other tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
+* Rating a song wiped every other tag (title, artist, album, genre, ...) on its mp3 file instead of preserving them
+* Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
+* Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
+* Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
+* A podcast feed double-escaped its summary and episode descriptions (`les proc&amp;amp;egrave;s`), producing invalid XML whenever the source feed used named HTML entities
+* Browsing songs sorted by artist fell back to id/import order within an artist instead of title, so two songs by the same artist rarely read alphabetically
+
 ## Ampache 8.2.2
 
 ### Added (8.2.2)
@@ -711,7 +760,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * A song browse reads the artists of every song on the page in one `artist_map` query instead of one per song; a 50 song page went from 143 queries to 95
 * The row count a browse shows above its pages is counted by the database instead of by reading every matching row into memory. Over a million rows that went from 1.42s to 0.08s
 * The stored waveform is no longer read alongside a song's comment, lyrics and replaygain, so a browse stops pulling a blob per song that nothing on the page draws. Asking for one explicitly returns it, so a saved waveform is reused instead of being regenerated from the audio every time
-* Internal namespaces reorganised: `Ampache\Application` is gone (its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`), and `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have all left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums. The api version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes, and the per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`. `Query` and `Browse` swapped the parts each held that belonged to the other, so `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()` and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`. Only relevant if you carry local patches
+* Internal namespaces reorganised (only relevant if you carry local patches)
+  * `Ampache\Application` is gone; its ajax and upnp applications are now `Ampache\Module\Api\Ajax` and `Ampache\Module\Api\Upnp`
+  * `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums
+  * The API version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes
+  * The per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`
+  * `Query` and `Browse` swapped the parts each held that belonged to the other: `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()`, and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme

@@ -75,6 +75,12 @@ final readonly class EditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $canMakePublic = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+        // null leaves the stored visibility untouched when the user isn't permitted to change it
+        $type = $canMakePublic
+            ? (($this->requestParser->getFromRequest('visibility') === 'public') ? 'public' : 'private')
+            : null;
+
         $name = $this->requestParser->getFromRequest('name');
         if (!PlaylistFolder::isValidName($name)) {
             AmpError::add('name', T_('Name is required'));
@@ -86,7 +92,7 @@ final readonly class EditAction implements ApplicationActionInterface
             AmpError::add('parent', T_('A folder cannot contain itself'));
         }
 
-        if (!AmpError::occurred() && !$this->playlistFolderRepository->update($folder->getId(), $name, $parentId)) {
+        if (!AmpError::occurred() && !$this->playlistFolderRepository->update($folder->getId(), $name, $parentId, type: $type)) {
             AmpError::add('name', T_('That name already exists'));
         }
 
@@ -96,7 +102,9 @@ final readonly class EditAction implements ApplicationActionInterface
                 $folder->getId(),
                 $name,
                 $parentId,
-                $this->treeFormatter->flatten($user, $folder->getId())
+                $this->treeFormatter->flatten($user, $folder->getId()),
+                $type ?? $folder->getType(),
+                $canMakePublic
             )->render();
             $this->ui->showQueryStats();
             $this->ui->showFooter();

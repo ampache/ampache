@@ -31,6 +31,7 @@ use Ampache\Gui\Broadcast\BroadcastListenersView;
 use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -93,6 +94,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'found' => true,
                             'object_type' => $current['object_type'],
                             'object_id' => $current['object_id'],
+                            'duration' => $media->time,
                             'title' => '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_song&song_id=' . $media->id . '\')" title="' . $titleText . '">' . $titleText . '</a>',
                             'artist' => ($artistId > 0)
                                 ? '<a href="javascript:NavigateTo(\'' . $web_path . '/artists.php?action=show&artist=' . $artistId . '\')">' . $artistText . '</a>'
@@ -102,12 +104,44 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                                 : $albumText,
                             'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
+                            'lyrics' => (AmpConfig::get_bool('show_lyrics'))
+                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_lyrics&song_id=' . $media->id . '\')">' . T_('Show Lyrics') . '</a>'
+                                : '',
                         ];
                     }
                 }
 
                 header('Content-Type: application/json');
                 echo json_encode($data);
+
+                return;
+            case 'scrobble':
+                // the web player calls this once a song passes the skip timer; only this client's latest unscrobbled play is sent
+                $scrobbled = false;
+                $current   = ($user->getId() > 0)
+                    ? Stream::get_latest_now_playing([(string) session_id(), $user->streamtoken ?? ''])
+                    : null;
+                $lastPlay = ($current !== null && $current['object_type'] === 'song')
+                    ? Stats::get_last_play($user->getId())
+                    : null;
+                if (
+                    $current !== null
+                    && $lastPlay !== null
+                    && $lastPlay['object_type'] === 'song'
+                    && $lastPlay['count_type'] === 'stream'
+                    && (int) $lastPlay['object_id'] === $current['object_id']
+                    && ($_SESSION['webplayer_scrobble'] ?? 0) !== (int) $lastPlay['id']
+                ) {
+                    $song = new Song($current['object_id']);
+                    if (!$song->isNew()) {
+                        $_SESSION['webplayer_scrobble'] = (int) $lastPlay['id'];
+                        User::save_mediaplay($user, $song, (int) $lastPlay['date']);
+                        $scrobbled = true;
+                    }
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode(['scrobbled' => $scrobbled]);
 
                 return;
             case 'stream_session':

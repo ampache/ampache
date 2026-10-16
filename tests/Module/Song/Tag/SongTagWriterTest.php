@@ -34,6 +34,7 @@ use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use ReflectionMethod;
 
 class SongTagWriterTest extends TestCase
 {
@@ -76,6 +77,40 @@ class SongTagWriterTest extends TestCase
 
         self::assertNull($result);
         self::assertArrayNotHasKey('attached_picture', $ndata);
+    }
+
+    public function testCopyId3v2FramesAppendsToAFrameAlreadyPresent(): void
+    {
+        $ndata     = ['title' => ['Existing']];
+        $id3v2Data = ['title' => ['From File']];
+
+        $this->invokeCopyId3v2Frames($ndata, $id3v2Data);
+
+        self::assertSame(['Existing', 'From File'], $ndata['title']);
+    }
+
+    public function testCopyId3v2FramesCopiesEveryFrameIntoAnEmptyBuffer(): void
+    {
+        $ndata     = [];
+        $id3v2Data = [
+            'title' => ['Some Title'],
+            'artist' => ['Some Artist'],
+        ];
+
+        $this->invokeCopyId3v2Frames($ndata, $id3v2Data);
+
+        self::assertSame(['Some Title'], $ndata['title']);
+        self::assertSame(['Some Artist'], $ndata['artist']);
+    }
+
+    public function testCopyId3v2FramesSkipsAFrameWithNoValue(): void
+    {
+        $ndata     = [];
+        $id3v2Data = ['encoder_settings' => []];
+
+        $this->invokeCopyId3v2Frames($ndata, $id3v2Data);
+
+        self::assertArrayNotHasKey('encoder_settings', $ndata);
     }
 
     public function testWriteDoesNothingForANewSong(): void
@@ -137,5 +172,16 @@ class SongTagWriterTest extends TestCase
             $this->utilityFactory,
             $this->logger,
         );
+    }
+
+    /**
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function invokeCopyId3v2Frames(array &$ndata, array $id3v2Data): void
+    {
+        $method = new ReflectionMethod($this->subject, 'copyId3v2Frames');
+        $args   = [&$ndata, $id3v2Data];
+        $method->invokeArgs($this->subject, $args);
     }
 }

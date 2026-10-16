@@ -82,6 +82,14 @@ final class MediaEmbedView extends AbstractView
             || !AmpConfig::get('require_session');
     }
 
+    /**
+     * Whether this server hands a player to other sites at all: the operator's switch and what it needs.
+     */
+    public static function isOffered(): bool
+    {
+        return (bool) AmpConfig::get('embed_player') && self::isAvailable();
+    }
+
     public function getArtUrl(): string
     {
         return $this->artUrl;

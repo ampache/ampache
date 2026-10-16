@@ -61,6 +61,7 @@ final class PlaylistFolder extends database_object implements ModelInterface
     public string $name     = '';
     public int $parent      = self::ROOT;
     public int $sort_order  = 0;
+    public string $type     = 'private';
     public int $user        = 0;
 
     public function __construct(?int $folderId = 0)
@@ -143,6 +144,11 @@ final class PlaylistFolder extends database_object implements ModelInterface
         return $this->sort_order;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
     public function getUserId(): int
     {
         return $this->user;
@@ -171,7 +177,7 @@ final class PlaylistFolder extends database_object implements ModelInterface
             return;
         }
 
-        $repository->update($this->id, $this->name, $this->parent, $this->sort_order);
+        $repository->update($this->id, $this->name, $this->parent, $this->sort_order, $this->type);
     }
 
     public function setName(string $name): self
@@ -197,6 +203,15 @@ final class PlaylistFolder extends database_object implements ModelInterface
         return $this;
     }
 
+    public function setType(string $type): self
+    {
+        if (in_array($type, ['private', 'public'], true)) {
+            $this->type = $type;
+        }
+
+        return $this;
+    }
+
     public function setUserId(int $userId): self
     {
         $this->user = $userId;
@@ -213,6 +228,7 @@ final class PlaylistFolder extends database_object implements ModelInterface
         $this->parent      = (int) ($row['parent'] ?? self::ROOT);
         $this->name        = (string) ($row['name'] ?? '');
         $this->sort_order  = (int) ($row['sort_order'] ?? 0);
+        $this->type        = (string) ($row['type'] ?? 'private');
         $this->date        = (int) ($row['date'] ?? 0);
         $this->last_update = (int) ($row['last_update'] ?? 0);
     }

@@ -30,7 +30,6 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Random;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -140,7 +139,7 @@ final class Stream5Method implements MethodInterface
         }
 
         if (!empty($url)) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
+            Session::extend($input['auth'], 'api');
 
             return $response
                 ->withStatus(302)

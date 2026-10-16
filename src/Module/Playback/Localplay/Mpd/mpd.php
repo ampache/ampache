@@ -1024,8 +1024,7 @@ class mpd
             ? $value
             : 100;
 
-        // If we're not compatible with SETVOL, we'll try adjusting
-        // using VOLUME
+        // If we're not compatible with SETVOL, we'll try adjusting using VOLUME
         if ($this->_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
             $command = self::COMMAND_SETVOL;
         } else {

@@ -431,14 +431,9 @@ class Ui implements UiInterface
 
         self::$_used_symbols[$symbol_key] = true;
 
-        // In AJAX fragments there is no page sprite emitted before </body>,
-        // and each fragment is injected into its own DOM node via innerHTML,
-        // so it must be self-contained. Emit the hidden <symbol> inline the
-        // first time an icon appears in this response; every later occurrence
-        // is just a <use>. Duplicate ids are ignored by the browser, so this
-        // is safe even when the page sprite already holds the same symbol.
+        // Emit each icon's <symbol> inline on first use so a <use> never outraces the once-per-page footer sprite.
         $prefix = '';
-        if (defined('AJAX_INCLUDE') && !isset(self::$_emitted_symbols[$symbol_key])) {
+        if (!isset(self::$_emitted_symbols[$symbol_key])) {
             self::$_emitted_symbols[$symbol_key] = true;
             $viewbox                             = ($symbol['viewbox'] !== '')
                 ? ' viewBox="' . $symbol['viewbox'] . '"'

@@ -119,6 +119,10 @@ class WebPlayer
         $types    = self::get_types($item, $url_data, $transcode_cfg, $force_type);
         $url      = $url_data['base_url'];
         $media    = self::get_media_object($url_data);
+        // marks the stream as the web player's own, which holds back the scrobble until the skip timer has passed
+        if (str_contains($url, '/play/') && !array_key_exists('player', $url_data)) {
+            $url .= '&player=webplayer';
+        }
         // stream urls that don't send a type (democratic playlists)
         $item->type = (empty($item->type) && !empty($url_data['type']))
             ? $url_data['type']

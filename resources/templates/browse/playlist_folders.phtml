@@ -43,6 +43,7 @@ $rows           = $this->getRows();
 $mayCreate      = $this->mayCreate();
 $showRatings    = $this->showRatings();
 $folderId       = $this->getCurrentFolderId();
+$isHiddenView   = $this->isHiddenView();
 
 if ($showRatings) {
     $playlistIds = [];
@@ -64,7 +65,21 @@ if ($showRatings) {
 if ($browse->is_show_header()) {
     Ui::show_box_top($this->raw($this->getTitle()), 'info-box');
 
-    if ($mayCreate) { ?>
+    if ($folderId === PlaylistFolder::ROOT && ($isHiddenView || $this->hasAnyHidden())) { ?>
+<div class="category_options">
+    <?php if ($isHiddenView) { ?>
+    <a class="category" href="<?php echo $this->e($this->getFolderUrl(PlaylistFolder::ROOT)); ?>">
+        <?php echo T_('All'); ?>
+    </a>
+    <?php } else { ?>
+    <a class="category" href="<?php echo $this->e($this->getHiddenViewUrl()); ?>">
+        <?php echo T_('Hidden'); ?>
+    </a>
+    <?php } ?>
+</div>
+    <?php }
+
+    if ($mayCreate && !$isHiddenView) { ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -131,8 +146,9 @@ if ($browse->is_show_header()) {
             <?php } ?>
             <td class="cel_owner essential"><?php echo $this->e($this->getRowOwner($row['item'])); ?></td>
             <td class="cel_action essential">
-                <?php if ($row['item'] instanceof PlaylistFolder) {
-                    if ($mayCreate) { ?>
+                <?php
+                if ($row['item'] instanceof PlaylistFolder) {
+                    if ($this->isOwnFolder($row['item']) && $mayCreate) { ?>
                 <a href="<?php echo $this->e($this->getEditFolderUrl($row['item']->getId())); ?>">
                     <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
                 </a>
@@ -140,14 +156,18 @@ if ($browse->is_show_header()) {
                     <?php echo $this->raw(Ui::get_material_symbol('close', T_('Delete'))); ?>
                 </a>
                     <?php }
-                    } elseif ($row['item'] instanceof Playlist) {
-                        echo $this->raw($this->renderPlaylistActions($row['item']));
-                    } elseif ($row['item'] instanceof Search) {
-                        echo $this->raw($this->renderSearchActions($row['item']));
-                    } ?>
+                    if ($folderId === PlaylistFolder::ROOT) {
+                        echo $this->raw($this->renderHideToggle($row['item']));
+                    }
+                } elseif ($row['item'] instanceof Playlist) {
+                    echo $this->raw($this->renderPlaylistActions($row['item']));
+                } elseif ($row['item'] instanceof Search) {
+                    echo $this->raw($this->renderSearchActions($row['item']));
+                }
+            ?>
             </td>
             <td class="cel_drag">
-                <?php if ($mayCreate) {
+                <?php if (!$isHiddenView && $mayCreate && (!($row['item'] instanceof PlaylistFolder) || $this->isOwnFolder($row['item']))) {
                     echo $this->raw(Ui::get_material_symbol('drag_indicator', T_('Reorder')));
                 } ?>
             </td>

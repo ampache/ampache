@@ -47,20 +47,122 @@ final class AlbumDiskSearch implements SearchInterface
     public function getSql(
         Search $search,
     ): array {
-        $search_user_id     = $search->search_user->getId();
-        $sql_logic_operator = strtoupper($search->logic_operator ?? 'and');
-        $catalog_disable    = AmpConfig::get('catalog_disable');
-        $catalog_filter     = AmpConfig::get('catalog_filter');
-        $subsearch_count    = 0;
+        $search_user_id  = $search->search_user->getId();
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $catalog_filter  = AmpConfig::get('catalog_filter');
 
-        $where      = [];
-        $table      = [];
-        $join       = [];
-        $group      = [];
-        $having     = [];
-        $parameters = [];
+        $table           = [];
+        $join            = [];
+        $group           = [];
+        $parameters      = [];
+        $subsearch_count = 0;
 
-        foreach ($search->rules as $rule) {
+        $combined = RuleGroupCombiner::combine(
+            $search->rules,
+            $search->logic_operator ?? 'and',
+            function (array $rules) use ($search, &$join, &$table, &$group, &$parameters, &$subsearch_count): array {
+                return $this->evaluateRules($rules, $search, $join, $table, $group, $parameters, $subsearch_count);
+            },
+        );
+
+        $where     = $combined['where'];
+        $where_sql = $combined['where_sql'];
+
+        $join['song']        = array_key_exists('song', $join);
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        // always join the album table
+        $table['0_album'] = "LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id`";
+
+        if (array_key_exists('album_map', $join)) {
+            $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
+            $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
+        }
+
+        if ($join['song']) {
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";
+        }
+
+        if ($join['catalog']) {
+            $table['3_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `album_disk`.`catalog`";
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql = "`catalog_se`.`enabled` = '1'";
+            }
+        }
+
+        $where_sql = WithdrawnFilter::apply($where_sql, 'album_disk', $search_user_id);
+
+        if ($search->catalog_id) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = "(" . $where_sql . ") AND `album_disk`.`catalog` = " . $search->catalog_id;
+            } else {
+                $where_sql = "`album_disk`.`catalog` = " . $search->catalog_id;
+            }
+        }
+
+        if ($join['catalog_map']) {
+            if ($where_sql !== '' && $where_sql !== '0') {
+                $where_sql = ($search_user_id > 0)
+                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = ($search_user_id > 0)
+                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
+                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+
+        if (array_key_exists('image', $join)) {
+            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
+            $where_sql       = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
+        }
+
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = $combined['having_sql'];
+
+        return [
+            'base' => 'SELECT `album_disk`.`id` AS `id`, `album`.`name` FROM `album_disk`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters,
+        ];
+    }
+
+    /**
+     * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
+     *
+     * `$table`, `$group` and `$subsearch_count` are shared across every group call, not reset per
+     * group, so a derived-table alias stays unique and `GROUP BY` carries every rule's own entry.
+     * @param list<array<int, mixed>> $rules
+     * @param array<string, bool> $join
+     * @param array<string, string> $table
+     * @param string[] $group
+     * @param array<int, mixed> $parameters
+     * @return array{where: string[], having: string[]}
+     */
+    private function evaluateRules(
+        array $rules,
+        Search $search,
+        array &$join,
+        array &$table,
+        array &$group,
+        array &$parameters,
+        int &$subsearch_count,
+    ): array {
+        $search_user_id = $search->search_user->getId();
+        $where          = [];
+
+        foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
@@ -288,7 +390,12 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `album`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[]      = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_play_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     break;
                 case 'last_skip':
@@ -300,7 +407,12 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
-                    $where[]      = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -313,12 +425,31 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
-                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
+                    $column       = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date`";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "($column IS NULL OR $column >= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        '!>' => "($column IS NULL OR $column <= (UNIX_TIMESTAMP() - (? * 86400)))",
+                        default => "$column $operator_sql (UNIX_TIMESTAMP() - (? * 86400))",
+                    };
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`album`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
+                    $cutoff  = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[] = match ($operator_sql) {
+                        '!<' => "(`album`.`addition_time` >= $cutoff)",
+                        '!>' => "(`album`.`addition_time` <= $cutoff)",
+                        default => "`album`.`addition_time` $operator_sql $cutoff",
+                    };
+                    break;
+                case 'days_updated':
+                    $cutoff       = "(UNIX_TIMESTAMP() - (" . (int) $input . " * 86400))";
+                    $where[]      = match ($operator_sql) {
+                        '!<' => "(`song`.`update_time` >= $cutoff)",
+                        '!>' => "(`song`.`update_time` <= $cutoff)",
+                        default => "`song`.`update_time` $operator_sql $cutoff",
+                    };
+                    $join['song'] = true;
                     break;
                 case 'played_times':
                     $where[]      = sprintf('`album_disk`.`total_count` %s ?', $operator_sql);
@@ -616,75 +747,6 @@ final class AlbumDiskSearch implements SearchInterface
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join);
-        $join['catalog']     = $catalog_disable || $catalog_filter;
-        $join['catalog_map'] = $catalog_filter;
-
-        $where_sql = implode(sprintf(' %s ', $sql_logic_operator), $where);
-
-        // always join the album table
-        $table['0_album'] = "LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id`";
-
-        if (array_key_exists('album_map', $join)) {
-            $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
-            $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
-        }
-
-        if ($join['song']) {
-            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";
-        }
-
-        if ($join['catalog']) {
-            $table['3_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `album_disk`.`catalog`";
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
-            } else {
-                $where_sql = "`catalog_se`.`enabled` = '1'";
-            }
-        }
-
-        $where_sql = WithdrawnFilter::apply($where_sql, 'album_disk', $search_user_id);
-
-        if ($search->catalog_id) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = "(" . $where_sql . ") AND `album_disk`.`catalog` = " . $search->catalog_id;
-            } else {
-                $where_sql = "`album_disk`.`catalog` = " . $search->catalog_id;
-            }
-        }
-
-        if ($join['catalog_map']) {
-            if ($where_sql !== '' && $where_sql !== '0') {
-                $where_sql = ($search_user_id > 0)
-                    ? "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            } else {
-                $where_sql = ($search_user_id > 0)
-                    ? "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)"
-                    : "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)";
-            }
-        }
-
-        if (array_key_exists('image', $join)) {
-            $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
-            $where_sql       = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
-        }
-
-        ksort($table);
-        $table_sql  = implode(' ', $table);
-        $group_sql  = implode(',', $group);
-        $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
-
-        return [
-            'base' => 'SELECT `album_disk`.`id` AS `id`, `album`.`name` FROM `album_disk`',
-            'join' => $join,
-            'where' => $where,
-            'where_sql' => $where_sql,
-            'table' => $table,
-            'table_sql' => $table_sql,
-            'group_sql' => $group_sql,
-            'having_sql' => $having_sql,
-            'parameters' => $parameters,
-        ];
+        return ['where' => $where, 'having' => []];
     }
 }

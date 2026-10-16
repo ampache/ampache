@@ -31,15 +31,17 @@ This is passed as a type argument and will only return this object in results
 
 @param array $input
 
-| Input    | Type    | Description                                                                                            | Optional |
-|----------|---------|--------------------------------------------------------------------------------------------------------|---------:|
-| operator | string  | and, or (whether to match one rule or all)                                                             |       NO |
-| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                          |       NO |
-| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                   |      YES |
-| type     | string  | `song` (default), `album`, `album_disk`, `artist`, `album_artist`, `song_artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `tag`, `user`, `video` |      YES |
-| random   | boolean | `0`, `1` (random order of results; default to 0)                                                       |      YES |
-| offset   | integer |                                                                                                        |      YES |
-| limit'   | integer |                                                                                                        |      YES |
+| Input            | Type    | Description                                                                                                                                                          | Optional |
+|------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| operator         | string  | and, or (whether to match one rule or all)                                                                                                                           |       NO |
+| rule_*           | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                                                                                        |       NO |
+| rule_*           | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                                                                                 |      YES |
+| rule_*_group     | integer | Group id for this rule, to combine it with other rules sharing the id (see "Grouping rules" below)                                                                   |      YES |
+| group_*_operator | string  | `and`, `or` (operator joining the rules assigned to that group id)                                                                                                   |      YES |
+| type             | string  | `song` (default), `album`, `album_disk`, `artist`, `album_artist`, `song_artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `tag`, `user`, `video` |      YES |
+| random           | boolean | `0`, `1` (random order of results; default to 0)                                                                                                                     |      YES |
+| offset           | integer |                                                                                                                                                                      |      YES |
+| limit'           | integer |                                                                                                                                                                      |      YES |
 
 ## Using advanced_search
 
@@ -129,23 +131,32 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | other_user_album  | Another User (Album)  | user_numeric      |                                 song                                  |
 | other_user_artist | Another User (Artist) | user_numeric      |                                 song                                  |
 
-| Play History              | Title                     | Operator Type     |                  Valid Types                  |
-|---------------------------|---------------------------|-------------------|:---------------------------------------------:|
-| played_times              | # Played                  | numeric           | song, album, artist, podcast, podcast_episode |
-| skipped_times             | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
-| played_or_skipped_times   | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
-| play_skip_ratio           | Played/Skipped ratio      | numeric           |                      song                     |
-| last_play                 | My Last Play              | days              | song, album, artist, podcast, podcast_episode |
-| last_skip                 | My Last Skip              | days              | song, album, artist, podcast, podcast_episode |
-| last_play_or_skip         | My Last Play OR skip      | days              | song, album, artist, podcast, podcast_episode |
-| played                    | Played                    | boolean           | song, album, artist, podcast, podcast_episode |
-| myplayed                  | Played by Me              | boolean           | song, album, artist, podcast, podcast_episode |
-| myplayedalbum             | Played by Me (Album)      | boolean           |                     song                      |
-| myplayedartist            | Played by Me (Artist)     | boolean           |                  song, album                  |
-| myplayed_times            | # Played by Me            | numeric           | song, album, artist, podcast, podcast_episode |
-| myskipped_times           | # Skipped by Me           | numeric           | song, album, artist, podcast, podcast_episode |
-| myplayed_or_skipped_times | # Played or Skipped by Me | numeric           | song, album, artist, podcast, podcast_episode |
-| recent_played             | Recently Played           | numeric_limit     |              song, album, artist              |
+| Play History              | Title                         | Operator Type |                  Valid Types                  |
+|---------------------------|-------------------------------|---------------|:---------------------------------------------:|
+| played_times              | # Played                      | numeric       | song, album, artist, podcast, podcast_episode |
+| skipped_times             | # Skipped                     | numeric       | song, album, artist, podcast, podcast_episode |
+| played_or_skipped_times   | # Skipped                     | numeric       | song, album, artist, podcast, podcast_episode |
+| play_skip_ratio           | Played/Skipped ratio          | numeric       |                     song                      |
+| last_play                 | My Last Play                  | days          | song, album, artist, podcast, podcast_episode |
+| last_skip                 | My Last Skip                  | days          | song, album, artist, podcast, podcast_episode |
+| last_play_or_skip         | My Last Play OR skip          | days          | song, album, artist, podcast, podcast_episode |
+| last_play_song            | My Last Play (Song)           | days          |                 album, artist                 |
+| last_skip_song            | My Last Skip (Song)           | days          |                 album, artist                 |
+| last_play_or_skip_song    | My Last Play OR skip (Song)   | days          |                 album, artist                 |
+| last_play_album           | My Last Play (Album)          | days          |              song, album, artist              |
+| last_skip_album           | My Last Skip (Album)          | days          |              song, album, artist              |
+| last_play_or_skip_album   | My Last Play OR skip (Album)  | days          |              song, album, artist              |
+| last_play_artist          | My Last Play (Artist)         | days          |              song, album, artist              |
+| last_skip_artist          | My Last Skip (Artist)         | days          |              song, album, artist              |
+| last_play_or_skip_artist  | My Last Play OR skip (Artist) | days          |              song, album, artist              |
+| played                    | Played                        | boolean       | song, album, artist, podcast, podcast_episode |
+| myplayed                  | Played by Me                  | boolean       | song, album, artist, podcast, podcast_episode |
+| myplayedalbum             | Played by Me (Album)          | boolean       |                     song                      |
+| myplayedartist            | Played by Me (Artist)         | boolean       |                  song, album                  |
+| myplayed_times            | # Played by Me                | numeric       | song, album, artist, podcast, podcast_episode |
+| myskipped_times           | # Skipped by Me               | numeric       | song, album, artist, podcast, podcast_episode |
+| myplayed_or_skipped_times | # Played or Skipped by Me     | numeric       | song, album, artist, podcast, podcast_episode |
+| recent_played             | Recently Played               | numeric_limit |              song, album, artist              |
 
 | Genre Rules        | Title                          | Operator Type |     Valid Types     |
 |--------------------|--------------------------------|---------------|:-------------------:|
@@ -207,18 +218,18 @@ Select your operator (integer only!) based on the type or your selected search
 
 **NOTE** with the numeric_limit and is_true operators the operator is ignored, but still required
 
-| rule_1_operator | text / tags                       | numeric / user_numeric                       | date   | boolean, boolean_numeric, boolean_subsearch, days |
-|:---------------:|-----------------------------------|----------------------------------------------|--------|---------------------------------------------------|
-|        0        | contains                          | is greater than or equal to / has loved      | before | is true / before (x) days ago                     |
-|        1        | does not contain                  | is less than or equal to / has rated 5 stars | after  | is false / after (x) days ago                     |
-|        2        | starts with                       | equals / has rated 4 stars                   |        |                                                   |
-|        3        | ends with                         | does not equal / has rated 3 stars           |        |                                                   |
-|        4        | is                                | is greater than / has rated 2 stars          |        |                                                   |
-|        5        | is not                            | is less than / has rated 1 stars             |        |                                                   |
-|  6 (Text Only)  | sounds like                       |                                              |        |                                                   |
-|  7 (Text Only)  | does not sound like               |                                              |        |                                                   |
-|  8 (Text Only)  | matches regular expression        |                                              |        |                                                   |
-|  9 (Text Only)  | does not match regular expression |                                              |        |                                                   |
+| rule_1_operator | text / tags                       | numeric / user_numeric                       | date   | boolean, boolean_numeric, boolean_subsearch  | days                       |
+|:---------------:|-----------------------------------|----------------------------------------------|--------|:--------------------------------------------:|----------------------------|
+|        0        | contains                          | is greater than or equal to / has loved      | before | is true                                      | before (x) days ago        |
+|        1        | does not contain                  | is less than or equal to / has rated 5 stars | after  | is false                                     | after (x) days ago         |
+|        2        | starts with                       | equals / has rated 4 stars                   |        |                                              | is not before (x) days ago |
+|        3        | ends with                         | does not equal / has rated 3 stars           |        |                                              | is not after (x) days ago  |
+|        4        | is                                | is greater than / has rated 2 stars          |        |                                              |                            |
+|        5        | is not                            | is less than / has rated 1 stars             |        |                                              |                            |
+|  6 (Text Only)  | sounds like                       |                                              |        |                                              |                            |
+|  7 (Text Only)  | does not sound like               |                                              |        |                                              |                            |
+|  8 (Text Only)  | matches regular expression        |                                              |        |                                              |                            |
+|  9 (Text Only)  | does not match regular expression |                                              |        |                                              |                            |
 
 Send the correct input based on the type of search.
 
@@ -262,6 +273,31 @@ To search a mixed type like metadata you must search using 4 rules.
   * rule operator (e.g. rule_1_operator[0], rule_2_operator[12])
   * rule input (e.g. rule_1_input['Prodigy'], rule_2_input['120'])
   * rule subtype (e.g. rule_1_subtype['4'], rule_2_subtype['9'])
+
+### Grouping rules (Ampache 8.3.0+)
+
+A rule may optionally carry `rule_<n>_group` (an int) to bucket it with every other rule sharing
+that id into one group, combined by its own `group_<id>_operator` (`and`/`or`) instead of the
+top-level `operator`. This is exactly two levels -- a group id cannot contain another group -- and
+every rule with no `rule_<n>_group` stays at the top level exactly as before, joined by `operator`
+same as always.
+
+**Not the same thing as `search_group`/`SearchGroupMethod`** (`GET /search/{search_type}/groups`),
+which is a named bundle of *object types* to search across (`all`, `music`, `song_artist`, ...) --
+an unrelated, pre-existing meaning of "group". The grouping described here only ever groups the
+*rules* of one `advanced_search` call.
+
+For example, to find songs titled "Rock" OR "Metal", that are also by an artist named "Deep" --
+i.e. `(title = Rock OR title = Metal) AND artist contains Deep` -- put rules 1 and 2 in group 1
+with an `or` operator, and leave rule 3 ungrouped at the top level with the default `and`:
+
+```
+action=advanced_search&operator=and&type=song
+  &rule_1=title&rule_1_operator=4&rule_1_input=Rock&rule_1_group=1
+  &rule_2=title&rule_2_operator=4&rule_2_input=Metal&rule_2_group=1
+  &group_1_operator=or
+  &rule_3=artist&rule_3_operator=0&rule_3_input=Deep
+```
 
 ### Example URLs
 

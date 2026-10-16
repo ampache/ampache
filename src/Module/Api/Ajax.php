@@ -121,9 +121,7 @@ class Ajax
             $attributes .= ' data-ajax-notice="' . scrub_out($notice) . '"';
         }
 
-        // Generate an <a> so that it's more compliant with older
-        // browsers (ie :hover actions) and also to unify linkbuttons
-        // (w/o ajax) display
+        // Generate an <a> so that it's more compliant with old browsers (ie :hover actions) and to unify linkbuttons (w/o ajax) display
         return "<a href=\"javascript:void(0);\" id=\"" . scrub_out($source) . "\"$attributes $class>" . $string . "</a>\n";
     }
 

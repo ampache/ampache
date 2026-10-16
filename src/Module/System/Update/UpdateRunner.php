@@ -71,8 +71,8 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        /* Nuke All Active session before we start the mojo */
-        $this->connection->query('TRUNCATE session');
+        /* Clear web/stream sessions before migrating; API sessions survive so clients (eg. Jellyfin) stay authenticated */
+        $this->connection->query('DELETE FROM `session` WHERE `type` != ?', ['api']);
 
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
@@ -138,8 +138,8 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        /* Nuke All Active session before we start the mojo */
-        $this->connection->query('TRUNCATE session');
+        /* Clear web/stream sessions before rolling back; API sessions survive so clients (eg. Jellyfin) stay authenticated */
+        $this->connection->query('DELETE FROM `session` WHERE `type` != ?', ['api']);
 
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);

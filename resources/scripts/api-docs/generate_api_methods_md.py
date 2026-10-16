@@ -3,7 +3,7 @@
 docs/API-XML-methods.md with per-field tables generated from the response
 schemas in docs/openapi.json.
 
-For every ``### <action>`` method whose GET 200 response has been wired to a
+For every ``### <action>`` method whose 200 response has been wired to a
 ``$ref`` schema (see generate_openapi_schemas.py), this replaces ONLY the block
 between the ``* return`` marker and the ``* throws`` marker with a
 ``Field | Type | Nullable | Optional | Notes`` table describing exactly what the
@@ -44,9 +44,9 @@ SHARED_END = "<!-- GENERATED:SHARED-REFS:END -->"
 
 _ACTION_RE = re.compile(r"action=([A-Za-z0-9_]+)")
 
-# Mutations answer with the generic success envelope; only POST responses carrying a
-# real payload (democratic) are worth a generated field table.
-POST_SCHEMA_SKIP = {"SuccessResponse"}
+# Most mutations answer with the generic success envelope; only a non-GET response carrying a
+# real payload (e.g. democratic, collection_create, playlist_folder_edit) is worth a field table.
+MUTATION_SCHEMA_SKIP = {"SuccessResponse"}
 
 # schema name -> MD method anchor (a `### <action>` heading, GitHub-slugged) that
 # documents that schema, so ref names in tables can link to it. Populated in main.
@@ -71,13 +71,13 @@ def resolve_ref(spec: dict, ref: str) -> dict:
 
 def action_to_schema_ref(spec: dict) -> dict[str, str]:
     """Map RPC action -> the $ref set on its 200 response (only where one exists
-    and points into components/schemas). GET wins; POST covers the few actions
-    that return data from a mutation (e.g. democratic).
+    and points into components/schemas). GET wins; POST/PUT/PATCH cover the actions
+    that return data from a mutation (e.g. democratic, collection_create).
 
     x-rpc-mapping keys are `VERB /path` (verb-prefixed since the key-format
     normalisation); the verb selects the operation and the rest is the path."""
     out: dict[str, str] = {}
-    for method in ("get", "post"):
+    for method in ("get", "post", "put", "patch"):
         for key, rpc in spec.get("x-rpc-mappings", {}).items():
             match = _ACTION_RE.search(rpc)
             if not match:
@@ -100,7 +100,7 @@ def action_to_schema_ref(spec: dict) -> dict[str, str]:
                 continue
             if method == "get":
                 out[match.group(1)] = ref
-            elif ref_name(ref) not in POST_SCHEMA_SKIP:
+            elif ref_name(ref) not in MUTATION_SCHEMA_SKIP:
                 out.setdefault(match.group(1), ref)
     return out
 

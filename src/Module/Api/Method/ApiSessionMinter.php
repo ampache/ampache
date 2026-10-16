@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
@@ -38,7 +37,7 @@ final class ApiSessionMinter
 {
     public function extend(string $auth): string
     {
-        Session::extend($auth, AccessTypeEnum::API->value);
+        Session::extend($auth, 'api');
 
         return $auth;
     }
@@ -79,7 +78,7 @@ final class ApiSessionMinter
             return Session::create($data);
         }
 
-        Session::extend($data['apikey'], AccessTypeEnum::API->value);
+        Session::extend($data['apikey'], 'api');
 
         return $data['apikey'];
     }

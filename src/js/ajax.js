@@ -117,6 +117,21 @@ $(document).ajaxComplete(function () {
     hoistMaterialSymbols();
 });
 
+// An expired session makes a dataType: "xml" call (ajaxPut/ajaxPost and friends) land on the login
+// page instead, which fails XML parsing and fires here with no visible effect otherwise -- every
+// quick-action button in the app would just silently stop responding. jQuery still fills in
+// responseText on a parse failure, so check it for the login page's marker and reload the whole window.
+var sessionExpiredRedirect = false;
+$(document).ajaxError(function (event, jqXHR) {
+    if (sessionExpiredRedirect) {
+        return;
+    }
+    if (typeof jqXHR.responseText === "string" && jqXHR.responseText.indexOf("id=\"loginPage\"") !== -1) {
+        sessionExpiredRedirect = true;
+        window.location.reload();
+    }
+});
+
 // The page currently rendered into #content, as path+search. Used to tell a real back/forward move
 // apart from a fragment-only one: the lightbox writes #prettyPhoto into the url, and going back over
 // that must not re-fetch the page we are already looking at (the old hashchange handler ignored it).

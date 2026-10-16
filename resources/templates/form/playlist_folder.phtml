@@ -54,6 +54,18 @@ Ui::show_box_top(($isEdit) ? T_('Edit Folder') : T_('Create Folder'), 'box box_p
         <?php echo $this->raw($this->getError('parent')); ?>
     </td>
 </tr>
+<?php if ($this->canMakePublic()) {
+    $type = $this->getType(); ?>
+<tr>
+    <td><?php echo T_('Visibility'); ?></td>
+    <td>
+        <select name="visibility">
+            <option value="public"<?php echo ($type === 'public') ? ' selected="selected"' : ''; ?>><?php echo T_('Public'); ?></option>
+            <option value="private"<?php echo ($type !== 'public') ? ' selected="selected"' : ''; ?>><?php echo T_('Private'); ?></option>
+        </select>
+    </td>
+</tr>
+<?php } ?>
 </table>
 <div class="formValidation">
     <?php if ($isEdit) { ?>
@@ -62,6 +74,7 @@ Ui::show_box_top(($isEdit) ? T_('Edit Folder') : T_('Create Folder'), 'box box_p
     <?php } else { ?>
     <?php echo $this->raw($this->getFormToken('add_playlist_folder')); ?>
     <?php } ?>
+    <input type="button" value="<?php echo $this->e(T_('Cancel')); ?>" onClick="NavigateTo('<?php echo $this->e($this->getCancelUrl()); ?>');" />
     <input class="button" type="submit" value="<?php echo ($isEdit) ? T_('Save') : T_('Create'); ?>" />
 </div>
 </form>

@@ -43,8 +43,7 @@ final class ControlReplyApplication implements ApiApplicationInterface
             return;
         }
 
-        // Make sure beautiful url is enabled
-        // (including upnp)
+        // Make sure beautiful url is enabled (including upnp)
         debug_event('control-reply', "\r\nEntering control-reply", 5);
         AmpConfig::set('stream_beautiful_url', true, true); // XXX needs t be false true
 

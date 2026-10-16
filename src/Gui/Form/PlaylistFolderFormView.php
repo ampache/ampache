@@ -41,8 +41,22 @@ final class PlaylistFolderFormView extends AbstractFormView
         private readonly string $name,
         private readonly int $parentId,
         private readonly array $parentOptions,
+        private readonly string $type = 'private',
+        private readonly bool $canMakePublic = false,
     ) {
         parent::__construct($webPath);
+    }
+
+    public function canMakePublic(): bool
+    {
+        return $this->canMakePublic;
+    }
+
+    public function getCancelUrl(): string
+    {
+        $parentId = $this->getParentId();
+
+        return $this->getWebPath() . '/browse.php?action=playlist_folder' . (($parentId > 0) ? '&folder=' . $parentId : '');
     }
 
     public function getFolderId(): ?int
@@ -66,6 +80,11 @@ final class PlaylistFolderFormView extends AbstractFormView
     public function getParentOptions(): array
     {
         return $this->parentOptions;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function isEdit(): bool
