@@ -1218,14 +1218,14 @@ CREATE TABLE IF NOT EXISTS `search` (
 --
 
 INSERT INTO `search` (`id`, `user`, `type`, `date`, `last_update`, `rules`, `name`, `logic_operator`, `random`, `limit`, `last_count`, `last_duration`, `username`, `collaborate`) VALUES
-('5', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"5\",null]]', 'probe-restored', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('5', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('6', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('7', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('8', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('9', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('10', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('11', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('12', '1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'and', '0', '0', '0', '0', 'admin', NULL),
+('12', '1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', '0', '0', '0', '0', 'admin', NULL),
 ('13', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', '0', '0', '0', '0', 'System', NULL),
 ('14', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', '0', '0', '0', '0', 'System', NULL),
 ('15', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
