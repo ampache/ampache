@@ -404,11 +404,17 @@ final class SongSorter implements SongSorterInterface
             }
 
             if (!unlink($media->file)) {
+                if (is_file($fullname)) {
+                    unlink($fullname);
+                }
+
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to delete "%s"'), $media->file),
                     true
                 );
+
+                return false;
             }
 
             // Update the catalog

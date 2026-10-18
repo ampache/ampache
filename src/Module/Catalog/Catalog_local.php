@@ -1851,15 +1851,25 @@ class Catalog_local extends Catalog
         }
 
         if (!unlink($media->file)) {
+            if (is_file($new_file)) {
+                unlink($new_file);
+            }
+
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to delete "%s"'), $media->file),
                 true
             );
+
+            return false;
         }
 
         // Update the catalog
-        return self::getSongRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId);
+        return match (true) {
+            $media instanceof Video => self::getVideoRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+            $media instanceof Podcast_Episode => self::getPodcastEpisodeRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+            default => self::getSongRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+        };
     }
 
     /**
