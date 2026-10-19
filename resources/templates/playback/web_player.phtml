@@ -378,6 +378,10 @@ $labels = $this->getLabels(); ?>
         }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+            if (isPlaceholderTrack()) {
+                // resuming a random/democratic stream can serve a different song than the one that was paused
+                nowPlayingPending = true;
+            }
             refreshNowPlaying();
             <?php if (!$this->isShare()) { ?>
             sendPlayerState('play', event.jPlayer.status.currentTime);
