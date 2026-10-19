@@ -22,7 +22,10 @@
   * Rules can be grouped with their own AND/OR match, combined by the top-level match, e.g. "(skipped after 7 days OR never played) AND genre is Rock"
   * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
   * `Length`/`Size Limit` options trim a song or video search's results to a target duration/file size, like Random Selection
+  * `days_updated` rule on Album and Album Disk searches, matching the last time a song's tags were updated
 * ID3v2 `SYLT` frames are read for lyrics, preferred over plain `USLT` text when a file carries both
+* The web player and API `player` can report a pause, clearing `now_playing` until play resumes
+* New "Popular Variety" plugin shows one popular song per album/artist on the dashboard, not a ranking one deep catalogue can dominate
 
 ### Changed (8.3.0)
 
@@ -31,6 +34,8 @@
 * Config version 101
   * `send_full_stream` is off by default; updating the config file drops the old `webplayer` default, which never applied
   * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
+  * `transcode_mp3` is disabled by default; a fresh install has no `transcode_cmd` to transcode with
+* `cleanup:art -x` now also removes the empty album/size directories left behind, not just the orphaned files
 
 ### Fixed (8.3.0)
 
@@ -62,6 +67,13 @@
 * Editing an album rewrote `release_status` on every save; the check compared it against `release_type` instead of itself
 * A podcast feed double-escaped its summary/episode descriptions, producing invalid XML when the source used named HTML entities
 * Browsing songs sorted by artist fell back to id/import order within an artist instead of title
+* `perpetual_api_session` compared the wrong internal type string, so a perpetual session never actually outlived the normal timeout
+* A link-local IPv6 address with a zone id (`fe80::1%eth0`) made the recorded client IP blank instead of the address
+* A plugin's preference help text failed to render whenever its display name differed from its internal key (12 plugins)
+* Embedding art into file tags crashed on an album mixing taggable and untaggable formats (e.g. mp3/flac with wav/ape)
+* Disabling the embed player after a social card cached it rendered the whole site in the small frame; now shows "no longer available"
+* The "Show Lyrics" link vanished after the web player advanced to the next song without a full page reload
+* Material-symbol icons could render blank on a page's first load, correcting themselves only after a refresh
 
 ## Ampache 8.2.2
 
