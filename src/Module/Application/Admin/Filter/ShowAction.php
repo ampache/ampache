@@ -57,7 +57,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
-            || !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_FILTER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_FILTER) === false
         ) {
             throw new AccessDeniedException();
         }
