@@ -321,6 +321,27 @@ class TagRepositoryTest extends TestCase
         $this->subject->mergeInto(666, 42);
     }
 
+    public function testMigrateMapsKeepsWhatTheTargetAlreadyHad(): void
+    {
+        // a user who already tagged both sides keeps the tag instead of the destination row being silently dropped
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    [
+                        'INSERT IGNORE INTO `tag_map` (`tag_id`, `object_id`, `object_type`, `user`) SELECT `old_map`.`tag_id`, ?, `old_map`.`object_type`, `old_map`.`user` FROM `tag_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
+                        [42, 'song', 666],
+                    ],
+                    [
+                        'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['song', 666],
+                    ],
+                )
+            );
+
+        $this->subject->migrateMaps('song', 666, 42);
+    }
+
     public function testSetHiddenWritesTheFlagAloneOtherwise(): void
     {
         $this->connection->expects(static::once())

@@ -103,8 +103,12 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
     {
         try {
             $this->connection->query(
-                'UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+                'INSERT IGNORE INTO `catalog_map` (`object_id`, `object_type`, `catalog_id`) SELECT ?, `old_map`.`object_type`, `old_map`.`catalog_id` FROM `catalog_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
                 [$newObjectId, $objectType, $oldObjectId]
+            );
+            $this->connection->query(
+                'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?',
+                [$objectType, $oldObjectId]
             );
         } catch (DatabaseException) {
             return false;

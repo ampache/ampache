@@ -2035,8 +2035,12 @@ class Catalog_local extends Catalog
                 }
             }
 
-            if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
-                $changed++;
+            try {
+                if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
+                    $changed++;
+                }
+            } catch (Throwable $error) {
+                debug_event('local.catalog', sprintf('verify failed for %s %d: %s', $tableName, $row['id'], $error->getMessage()), 1);
             }
         }
 

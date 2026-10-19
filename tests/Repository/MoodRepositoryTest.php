@@ -30,9 +30,12 @@ use Ampache\Repository\Model\Mood;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class MoodRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
     private MoodRepository $subject;
 
@@ -147,6 +150,27 @@ class MoodRepositoryTest extends TestCase
         $result->method('fetch')->willReturn(false);
 
         self::assertSame([], $this->subject->getTopMoods('song', 42, 0));
+    }
+
+    public function testMigrateMapsKeepsWhatTheTargetAlreadyHad(): void
+    {
+        // a user who already set this mood on both sides keeps it instead of the destination row being silently dropped
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    [
+                        'INSERT IGNORE INTO `mood_map` (`mood_id`, `object_id`, `object_type`, `user`) SELECT `old_map`.`mood_id`, ?, `old_map`.`object_type`, `old_map`.`user` FROM `mood_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
+                        [42, 'song', 666],
+                    ],
+                    [
+                        'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['song', 666],
+                    ],
+                )
+            );
+
+        $this->subject->migrateMaps('song', 666, 42);
     }
 
     protected function setUp(): void

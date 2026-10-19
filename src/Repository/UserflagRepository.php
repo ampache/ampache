@@ -199,8 +199,13 @@ final readonly class UserflagRepository implements UserflagRepositoryInterface
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            'INSERT INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) SELECT ?, `old_flag`.`object_type`, `old_flag`.`user`, `old_flag`.`date` FROM `user_flag` AS `old_flag` WHERE `old_flag`.`object_type` = ? AND `old_flag`.`object_id` = ? ON DUPLICATE KEY UPDATE `date` = GREATEST(`user_flag`.`date`, VALUES(`date`))',
             [$newObjectId, $objectType, $oldObjectId]
+        );
+
+        $this->connection->query(
+            'DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?',
+            [$objectType, $oldObjectId]
         );
     }
 

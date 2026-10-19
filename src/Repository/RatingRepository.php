@@ -251,8 +251,13 @@ final readonly class RatingRepository implements RatingRepositoryInterface
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            'INSERT INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) SELECT ?, `old_rating`.`object_type`, `old_rating`.`rating`, `old_rating`.`user`, `old_rating`.`date` FROM `rating` AS `old_rating` WHERE `old_rating`.`object_type` = ? AND `old_rating`.`object_id` = ? ON DUPLICATE KEY UPDATE `rating` = GREATEST(`rating`.`rating`, VALUES(`rating`)), `date` = GREATEST(`rating`.`date`, VALUES(`date`))',
             [$newObjectId, $objectType, $oldObjectId]
+        );
+
+        $this->connection->query(
+            'DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?',
+            [$objectType, $oldObjectId]
         );
     }
 
