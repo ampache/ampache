@@ -4541,6 +4541,7 @@
           "state": {
             "enum": [
               "play",
+              "pause",
               "stop"
             ],
             "type": "string"
@@ -80457,6 +80458,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"
@@ -95688,6 +95690,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"
@@ -100478,6 +100481,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"

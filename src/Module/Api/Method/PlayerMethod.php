@@ -61,7 +61,7 @@ final class PlayerMethod implements MethodInterface
      *
      * filter = (integer) object_id
      * type   = (string) 'song', 'podcast_episode', 'video' (DEFAULT 'song') //optional
-     * state  = (string) 'play', 'stop' (DEFAULT 'play') //optional
+     * state  = (string) 'play', 'pause', 'stop' (DEFAULT 'play') //optional
      * time   = (integer) current song time in whole seconds //optional
      * client = (string) agent/client name //optional
      *
@@ -116,7 +116,7 @@ final class PlayerMethod implements MethodInterface
             return $response;
         }
 
-        if (!in_array($state, ['play', 'stop'])) {
+        if (!in_array($state, ['play', 'pause', 'stop'])) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
@@ -183,7 +183,10 @@ final class PlayerMethod implements MethodInterface
                 ($media->time - $position),
                 (string) $user->username,
                 $type,
-                ($time - $position)
+                ($time - $position),
+                null,
+                null,
+                'playing'
             );
 
             // internal scrobbling (user_activity and object_count tables)
@@ -194,8 +197,23 @@ final class PlayerMethod implements MethodInterface
                 // scrobble plugins
                 User::save_mediaplay($user, $media);
             }
+        } elseif ($state === 'pause') {
+            // a paused client still owns the now_playing row; refresh it with a full track's grace period
+            // so a long pause doesn't let it expire before the client resumes or explicitly stops
+            Stream::garbage_collection();
+            Stream::insert_now_playing(
+                $media->id,
+                $user->getId(),
+                $media->time,
+                (string) $user->username,
+                $type,
+                ($time - $position),
+                null,
+                null,
+                'paused'
+            );
         } else {
-            // A stop/paused state isn't playing. Remove it.
+            // a stopped state isn't playing. Remove it.
             Stream::delete_now_playing((string) $user->username, $media->id, $type, $user->getId());
         }
 
