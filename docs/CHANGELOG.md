@@ -22,6 +22,7 @@
   * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
   * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
   * `Length` and `Size Limit` options for a song or video search, trimming the result list to a target total duration/file size the same way Random Selection already does
+* ID3v2 `SYLT` frames are read for lyrics, preferred over plain `USLT` text when a file carries both
 
 ### Changed (8.3.0)
 
@@ -33,6 +34,12 @@
 
 ### Fixed (8.3.0)
 
+* Re-identifying an album or artist during a catalog scan dropped a user's rating, flag, tag, mood, or catalog mapping instead of merging it with the destination's
+* A failed step while migrating a song's data onto a re-identified album or artist could strand the rest on the old id, later deleted by cleanup
+* An unreadable or corrupt file during catalog verify stopped the rest of the catalog from being checked
+* Deleting a podcast episode removed its library record even when its file could not be deleted (e.g. a read-only disk), leaving an untracked orphan
+* Moving or sorting a catalog file updated the database even when the original file could not be deleted afterward, leaving an untracked duplicate
+* Moving a video or podcast episode during a catalog move updated the `song` table instead of `video`/`podcast_episode`
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 * Edit/Find Art and Reset Art on Albums target the album correctly
 * A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
@@ -43,6 +50,13 @@
 * A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
 * Writing tags to an mp3 (rating a song, embedding cover art, or any other tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
 * Rating a song wiped every other tag (title, artist, album, genre, ...) on its mp3 file instead of preserving them
+* The collaborator picker in an edit dialog only showed one name's height no matter how many collaborators were listed
+* Select dropdown options were unreadable (white text on a white background) in the light theme
+* A session that expired while a playlist/broadcast/share/edit dialog was open, or while saving one, loaded the login page inside the popup, or silently did nothing, instead of returning to the login page
+* Voting on, or opening, Democratic Play ignored the `webplayer_level` preference, letting any user vote regardless of its setting; the page's own level dropdown was also missing `Guest`
+* Adding a file to the catalog logged and displayed no detail when the underlying error carried no message, instead of at least naming the exception
+* Looking up a wanted release's MusicBrainz release group threw when the lookup response had no `release-group` key
+* Tagging an object a second time, from a concurrent request or after a tag merge, threw instead of reusing the existing tag
 * Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
 * Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
 * Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself

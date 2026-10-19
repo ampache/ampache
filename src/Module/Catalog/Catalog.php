@@ -3376,18 +3376,28 @@ abstract class Catalog extends database_object
         if ($old_object_id !== $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
 
-            Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
-            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
-            Recommendation::migrate($object_type, $old_object_id);
-            self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id);
-            Tag::migrate($object_type, $old_object_id, $new_object_id);
-            Mood::migrate($object_type, $old_object_id, $new_object_id);
-            Userflag::migrate($object_type, $old_object_id, $new_object_id);
-            Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::duplicate($object_type, $old_object_id, $new_object_id);
-            Playlist::migrate($object_type, $old_object_id, $new_object_id);
-            Label::migrate($object_type, $old_object_id, $new_object_id);
+            $migrations = [
+                'rating' => static fn() => Rating::migrate($object_type, $old_object_id, $new_object_id),
+                'userflag' => static fn() => Userflag::migrate($object_type, $old_object_id, $new_object_id),
+                'stats' => static fn() => Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id),
+                'useractivity' => static fn() => Useractivity::migrate($object_type, $old_object_id, $new_object_id),
+                'recommendation' => static fn() => Recommendation::migrate($object_type, $old_object_id),
+                'share' => static fn() => self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id),
+                'shout' => static fn() => self::getShoutRepository()->migrate($object_type, $old_object_id, $new_object_id),
+                'tag' => static fn() => Tag::migrate($object_type, $old_object_id, $new_object_id),
+                'mood' => static fn() => Mood::migrate($object_type, $old_object_id, $new_object_id),
+                'art' => static fn() => Art::duplicate($object_type, $old_object_id, $new_object_id),
+                'playlist' => static fn() => Playlist::migrate($object_type, $old_object_id, $new_object_id),
+                'label' => static fn() => Label::migrate($object_type, $old_object_id, $new_object_id),
+            ];
+            foreach ($migrations as $name => $migration) {
+                try {
+                    $migration();
+                } catch (Throwable $error) {
+                    debug_event(self::class, sprintf('migrate %s failed for %s {%d}->{%d}: %s', $name, $object_type, $old_object_id, $new_object_id, $error->getMessage()), 1);
+                }
+            }
+
             if ($object_type === 'artist') {
                 self::getWantedRepository()->migrateArtist($old_object_id, $new_object_id);
                 Artist::update_artist_count($new_object_id);

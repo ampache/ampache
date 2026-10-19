@@ -467,6 +467,10 @@ msgid "Download Rate Limit"
 msgstr ""
 
 #: Ampache preference description
+msgid "Always show the rightbar"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 

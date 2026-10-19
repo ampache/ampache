@@ -31,9 +31,12 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class RatingRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
     private RatingRepository $subject;
@@ -195,11 +198,20 @@ class RatingRepositoryTest extends TestCase
 
     public function testMigrateMovesTheRatingsKeepingWhatTheTargetHad(): void
     {
-        $this->connection->expects(static::once())
+        // a user who rated both sides keeps the higher rating instead of the destination row being silently dropped
+        $this->connection->expects(static::exactly(2))
             ->method('query')
             ->with(
-                'UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-                [42, 'song', 666]
+                ...self::withConsecutive(
+                    [
+                        'INSERT INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) SELECT ?, `old_rating`.`object_type`, `old_rating`.`rating`, `old_rating`.`user`, `old_rating`.`date` FROM `rating` AS `old_rating` WHERE `old_rating`.`object_type` = ? AND `old_rating`.`object_id` = ? ON DUPLICATE KEY UPDATE `rating` = GREATEST(`rating`.`rating`, VALUES(`rating`)), `date` = GREATEST(`rating`.`date`, VALUES(`date`))',
+                        [42, 'song', 666],
+                    ],
+                    [
+                        'DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['song', 666],
+                    ],
+                )
             );
 
         $this->subject->migrate('song', 666, 42);

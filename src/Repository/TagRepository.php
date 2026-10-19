@@ -465,8 +465,12 @@ final readonly class TagRepository implements TagRepositoryInterface
     public function migrateMaps(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            'INSERT IGNORE INTO `tag_map` (`tag_id`, `object_id`, `object_type`, `user`) SELECT `old_map`.`tag_id`, ?, `old_map`.`object_type`, `old_map`.`user` FROM `tag_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
+        );
+        $this->connection->query(
+            'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?',
+            [$objectType, $oldObjectId]
         );
     }
 

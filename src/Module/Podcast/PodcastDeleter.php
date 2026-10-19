@@ -92,12 +92,21 @@ final readonly class PodcastDeleter implements PodcastDeleterInterface
             );
 
             $filePath = (string) $episode->file;
+            $deleted  = true;
 
             if ($this->config->get(ConfigurationKeyEnum::DELETE_FROM_DISK) && Core::is_readable($filePath)) {
-                @unlink($filePath);
+                $deleted = unlink($filePath);
+                if (!$deleted) {
+                    $this->logger->critical(
+                        sprintf('Cannot delete podcast episode file %s. Please check permissions.', $filePath),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                }
             }
 
-            $this->podcastEpisodeRepository->deleteEpisode($episode);
+            if ($deleted) {
+                $this->podcastEpisodeRepository->deleteEpisode($episode);
+            }
         }
 
         Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
