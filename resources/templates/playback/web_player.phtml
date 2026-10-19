@@ -54,13 +54,13 @@ $labels = $this->getLabels(); ?>
     // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
     var nowPlayingSeenId = null;
+    var nowPlayingSeenData = null;
     var nowPlayingPending = false;
     var nowPlayingActive = false;
     var nowPlayingRetry = null;
     var nowPlayingAttempts = 0;
-    var nowPlayingMaxAttempts = 8;
-    // Resolving used to get an accidental head start from a now-removed redundant stream request; without
-    // it the first attempt misses more often, so retrying quickly matters more than it used to.
+    // A cold first play is slower server-side than a later one, so the budget has to cover that worst case.
+    var nowPlayingMaxAttempts = 20;
     var nowPlayingRetryMs = 300;
     var nowPlayingDuration = 0;
     var nowPlayingTriggerTime = 0;
@@ -80,6 +80,7 @@ $labels = $this->getLabels(); ?>
             if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId || stale) {
                 if (data && data.object_id) {
                     nowPlayingSeenId = data.object_id;
+                    nowPlayingSeenData = data;
                 }
                 scheduleNowPlayingRetry();
 
@@ -88,30 +89,37 @@ $labels = $this->getLabels(); ?>
 
             nowPlayingPending = false;
             nowPlayingActive = false;
-            nowPlayingObjectId = data.object_id;
-            nowPlayingDuration = data.duration || 0;
-            <?php if (!$this->isShare()) { ?>
-            // a play/pause sent before this resolved had no id to act on yet; send it now that one is known
-            var jp = $("#jquery_jplayer_1").data('jPlayer');
-            if (jp && jp.status) {
-                sendPlayerState(jp.status.paused ? 'pause' : 'play', jp.status.currentTime);
-            }
-            <?php } ?>
-            $('.playing_title').html(data.title);
-            $('.playing_artist').html(data.artist);
-            if (data.art) {
-                $('.playing_art').attr('src', data.art).show();
-            } else {
-                clearNowPlayingArt();
-            }
-            if (data.actions) {
-                $('.playing_actions').html(data.actions);
-                ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
-            }
-            if (data.lyrics) {
-                $('.playing_lyrics').html(data.lyrics);
-            }
+            applyNowPlaying(data);
         }).fail(scheduleNowPlayingRetry);
+    }
+
+    // Updates the now-playing display from a resolved row, whether it arrived within budget or is the
+    // closest guess left once retries ran out.
+    function applyNowPlaying(data)
+    {
+        nowPlayingObjectId = data.object_id;
+        nowPlayingDuration = data.duration || 0;
+        <?php if (!$this->isShare()) { ?>
+        // a play/pause sent before this resolved had no id to act on yet; send it now that one is known
+        var jp = $("#jquery_jplayer_1").data('jPlayer');
+        if (jp && jp.status) {
+            sendPlayerState(jp.status.paused ? 'pause' : 'play', jp.status.currentTime);
+        }
+        <?php } ?>
+        $('.playing_title').html(data.title);
+        $('.playing_artist').html(data.artist);
+        if (data.art) {
+            $('.playing_art').attr('src', data.art).show();
+        } else {
+            clearNowPlayingArt();
+        }
+        if (data.actions) {
+            $('.playing_actions').html(data.actions);
+            ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
+        }
+        if (data.lyrics) {
+            $('.playing_lyrics').html(data.lyrics);
+        }
     }
 
     function clearNowPlayingArt()
@@ -133,9 +141,11 @@ $labels = $this->getLabels(); ?>
         cancelNowPlayingRetry();
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
             nowPlayingPending = false;
-            // The row kept being rejected because it belongs to the track that just finished, so retiring it as the
-            // baseline stops the next track from accepting it and settling permanently one song behind.
-            if (nowPlayingSeenId !== null) {
+            // Out of retries: show the closest guess rather than leaving the display stuck on the
+            // placeholder forever, and stop the next track settling permanently one song behind.
+            if (nowPlayingSeenData !== null) {
+                applyNowPlaying(nowPlayingSeenData);
+            } else if (nowPlayingSeenId !== null) {
                 nowPlayingObjectId = nowPlayingSeenId;
             }
 
@@ -268,6 +278,7 @@ $labels = $this->getLabels(); ?>
         var placeholder = isPlaceholderTrack();
         cancelNowPlayingRetry();
         nowPlayingSeenId = null;
+        nowPlayingSeenData = null;
         nowPlayingDuration = 0;
         nowPlayingPending = placeholder;
         nowPlayingAttempts = 0;
