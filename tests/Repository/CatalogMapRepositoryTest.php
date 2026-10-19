@@ -32,9 +32,12 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class CatalogMapRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
     private CatalogMapRepository $subject;
@@ -150,11 +153,19 @@ class CatalogMapRepositoryTest extends TestCase
 
     public function testMigrateKeepsWhatTheTargetAlreadyHad(): void
     {
-        $this->connection->expects(static::once())
+        $this->connection->expects(static::exactly(2))
             ->method('query')
             ->with(
-                'UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-                [42, 'artist', 666]
+                ...self::withConsecutive(
+                    [
+                        'INSERT IGNORE INTO `catalog_map` (`object_id`, `object_type`, `catalog_id`) SELECT ?, `old_map`.`object_type`, `old_map`.`catalog_id` FROM `catalog_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
+                        [42, 'artist', 666],
+                    ],
+                    [
+                        'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['artist', 666],
+                    ],
+                )
             );
 
         self::assertTrue($this->subject->migrate('artist', 666, 42));

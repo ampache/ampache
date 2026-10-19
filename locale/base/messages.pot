@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-13 10:08+1000\n"
+"POT-Creation-Date: 2026-10-19 11:45+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2341,6 +2341,12 @@ msgstr ""
 msgid "Unlimited"
 msgstr ""
 
+msgid "Length"
+msgstr ""
+
+msgid "Size Limit"
+msgstr ""
+
 msgid "Permalink"
 msgstr ""
 
@@ -2348,12 +2354,6 @@ msgid "Options"
 msgstr ""
 
 msgid "Play Random Selection"
-msgstr ""
-
-msgid "Length"
-msgstr ""
-
-msgid "Size Limit"
 msgstr ""
 
 msgid "Enqueue"
@@ -5038,7 +5038,7 @@ msgstr ""
 
 #. HINT: filename (file path)
 #, php-format
-msgid "Unable to add Song - %s"
+msgid "Unable to add %s"
 msgstr ""
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
@@ -8396,6 +8396,10 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Always show the rightbar"
 msgstr ""
 
 #: Ampache preference description
