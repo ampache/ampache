@@ -34,6 +34,12 @@
 
 ### Fixed (8.3.0)
 
+* Re-identifying an album or artist during a catalog scan dropped a user's rating, flag, tag, mood, or catalog mapping instead of merging it with the destination's
+* A failed step while migrating a song's data onto a re-identified album or artist could strand the rest on the old id, later deleted by cleanup
+* An unreadable or corrupt file during catalog verify stopped the rest of the catalog from being checked
+* Deleting a podcast episode removed its library record even when its file could not be deleted (e.g. a read-only disk), leaving an untracked orphan
+* Moving or sorting a catalog file updated the database even when the original file could not be deleted afterward, leaving an untracked duplicate
+* Moving a video or podcast episode during a catalog move updated the `song` table instead of `video`/`podcast_episode`
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 * Edit/Find Art and Reset Art on Albums target the album correctly
 * A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
