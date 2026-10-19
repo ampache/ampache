@@ -486,7 +486,6 @@ class Democratic extends Tmp_Playlist
             $user = Core::get_global('user');
         }
 
-        // without a streamtoken, now_playing has to be found by session id, so the stream must be opened under that same id
         $sessionToken = $user?->streamtoken ?: (string) session_id();
         $link         = Stream::get_base_url(false, $sessionToken) . 'uid=' . $user?->id . '&demo_id=' . scrub_out((string) $this->id);
 
