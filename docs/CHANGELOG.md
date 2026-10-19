@@ -6,8 +6,8 @@
 
 * Playlist Folders
   * Cancel button on the create/edit folder form
-  * A folder can be shared read-only with other users via a Public/Private switch, restricted to Content Manager (level 50) and above
-  * Any top-level folder -- your own or one shared with you -- can be hidden from your main list, with a "Hidden" tab to view and unhide them, like the Genres browse
+  * A folder can be shared read-only via a Public/Private switch, restricted to Content Manager (level 50)+
+  * Any top-level folder, your own or shared, can be hidden from your main list via a "Hidden" tab, like the Genres browse
   * API `playlist_folder_create` and `playlist_folder_edit` take a `type` (private/public) parameter
   * API `playlist_folder_edit` takes a `hidden` parameter; it is the one field a caller may set on a folder they do not own
   * API `playlist_folders` also lists other users' shared top-level folders, flagging hidden ones
@@ -17,51 +17,51 @@
   * Removed predictable `MD5(username)` API sessions created by older releases
   * Added `rightbar_always_show` preference to keep the rightbar open while empty
 * Search
-  * `last_play`, `last_skip` and `last_play_or_skip` rules with a `_song`, `_album` or `_artist` suffix across song, album and artist searches
-  * "is not before" and "is not after" operators for every `days` rule (`last_play`, `last_skip`, `days_added`, ...), matching an item that has never played/skipped/etc. as well
-  * Rules can be put into a group with its own AND/OR match, combined by the top-level match, so a smartlist can express e.g. "(skipped after 7 days OR never played) AND genre is Rock"
+  * `last_play`/`last_skip`/`last_play_or_skip` rules take a `_song`/`_album`/`_artist` suffix across all three search types
+  * "is not before"/"is not after" operators for every `days` rule, also matching an item that never played/skipped/etc.
+  * Rules can be grouped with their own AND/OR match, combined by the top-level match, e.g. "(skipped after 7 days OR never played) AND genre is Rock"
   * API `advanced_search` takes the same grouping through new `rule_*_group` and `group_*_operator` parameters
-  * `Length` and `Size Limit` options for a song or video search, trimming the result list to a target total duration/file size the same way Random Selection already does
+  * `Length`/`Size Limit` options trim a song or video search's results to a target duration/file size, like Random Selection
 * ID3v2 `SYLT` frames are read for lyrics, preferred over plain `USLT` text when a file carries both
 
 ### Changed (8.3.0)
 
 * An album or album disk with no cover falls back to the blank placeholder, not the album artist's art
-* The web player scrobbles a song to Last.fm, Libre.fm and ListenBrainz once it has played past the `skip_timer`, not when it starts, stamped with its start time
+* The web player scrobbles to Last.fm/Libre.fm/ListenBrainz after `skip_timer`, not on start, stamped with the start time
 * Config version 101
-  * `send_full_stream` is now off by default, and updating the config file removes the old `webplayer` default, which never applied
+  * `send_full_stream` is off by default; updating the config file drops the old `webplayer` default, which never applied
   * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
 
 ### Fixed (8.3.0)
 
-* Re-identifying an album or artist during a catalog scan dropped a user's rating, flag, tag, mood, or catalog mapping instead of merging it with the destination's
-* A failed step while migrating a song's data onto a re-identified album or artist could strand the rest on the old id, later deleted by cleanup
+* Re-identifying an album or artist during a catalog scan dropped a user's rating/flag/tag/mood/catalog mapping instead of merging it
+* A failed step migrating a re-identified album/artist's data could strand the rest on the old id, later deleted by cleanup
 * An unreadable or corrupt file during catalog verify stopped the rest of the catalog from being checked
-* Deleting a podcast episode removed its library record even when its file could not be deleted (e.g. a read-only disk), leaving an untracked orphan
-* Moving or sorting a catalog file updated the database even when the original file could not be deleted afterward, leaving an untracked duplicate
+* Deleting a podcast episode removed its library record even when its file couldn't be deleted, leaving an untracked orphan
+* Moving or sorting a catalog file updated the database even when the original couldn't be deleted, leaving an untracked duplicate
 * Moving a video or podcast episode during a catalog move updated the `song` table instead of `video`/`podcast_episode`
 * Random song, random artist and dashboard random albums overweighted the id right after a catalog/rating filter or deletion gap
 * Edit/Find Art and Reset Art on Albums target the album correctly
 * A stale, expired or out-of-range art picker selection (`image.php?type=session`) crashed instead of serving an empty response
-* Scanning folders (`run:updateCatalog -s`, "Scan Folders"/"Scan All Folders") on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, which MySQL only added in 8.0.4
-* Updating a share you don't own (API `updateShare`/Subsonic `updateshare`) reported success without changing anything, instead of the access-denied error it now gives
-* `api_force_version`'s allowed values, as read through the `preference`/`preferences` API methods, still stopped at API6; the preferences page dropdown already offered API8
-* Password-reset token lookup (`lostPassword`) compared the derived token with `===` instead of `hash_equals()`, missed by the earlier sweep of the same bug in the API handshake, `session_remember` and login
-* A withdrawn album or artist was still fetchable by id (API3/4/5 `album`/`artist`, Subsonic `getalbum`/`getartist`/`getmusicdirectory`), and songs by a withdrawn artist stayed listed (`artist_songs`, Subsonic `getTopSongs`), even though a browse or search already hid them
-* Writing tags to an mp3 (rating a song, embedding cover art, or any other tag write) dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare track or disc number on every write
+* Scanning folders on MySQL 5.x failed outright; `folder_map` population used `REGEXP_REPLACE()`, added only in MySQL 8.0.4
+* Updating a share you don't own (API `updateShare`/Subsonic `updateshare`) reported success without changing anything
+* `api_force_version`'s allowed values via the `preference`/`preferences` API methods stopped at API6; the UI dropdown already offered API8
+* `lostPassword` compared the token with `===` instead of `hash_equals()`, missed by the earlier handshake/session/login sweep
+* A withdrawn album or artist stayed fetchable by id (API3/4/5, Subsonic), and `artist_songs`/`getTopSongs` still listed its songs
+* Writing tags to an mp3 dropped the track/disc total from `TRCK`/`TPOS`, leaving only the bare number
 * Rating a song wiped every other tag (title, artist, album, genre, ...) on its mp3 file instead of preserving them
 * The collaborator picker in an edit dialog only showed one name's height no matter how many collaborators were listed
 * Select dropdown options were unreadable (white text on a white background) in the light theme
-* A session that expired while a playlist/broadcast/share/edit dialog was open, or while saving one, loaded the login page inside the popup, or silently did nothing, instead of returning to the login page
-* Voting on, or opening, Democratic Play ignored the `webplayer_level` preference, letting any user vote regardless of its setting; the page's own level dropdown was also missing `Guest`
-* Adding a file to the catalog logged and displayed no detail when the underlying error carried no message, instead of at least naming the exception
+* A session expiring while a playlist/broadcast/share/edit dialog was open loaded the login page inside the popup instead of redirecting
+* Democratic Play ignored the `webplayer_level` preference, letting any user vote; its own level dropdown was also missing `Guest`
+* Adding a file logged no detail when the error carried no message, instead of at least naming the exception
 * Looking up a wanted release's MusicBrainz release group threw when the lookup response had no `release-group` key
 * Tagging an object a second time, from a concurrent request or after a tag merge, threw instead of reusing the existing tag
 * Saving a song's edit dialog rewrote its file tags even when nothing in the form actually changed
-* Editing an album's name, MusicBrainz IDs, release type/status, original year, barcode or catalog number never reached its songs' file tags, unlike a year or disk change
-* Editing an album rewrote its `release_status` on every save regardless of whether it changed, because the check compared it against `release_type` instead of itself
-* A podcast feed double-escaped its summary and episode descriptions (`les proc&amp;amp;egrave;s`), producing invalid XML whenever the source feed used named HTML entities
-* Browsing songs sorted by artist fell back to id/import order within an artist instead of title, so two songs by the same artist rarely read alphabetically
+* Editing an album's name, MBIDs, release type/status, original year, barcode or catalog number never reached its songs' file tags
+* Editing an album rewrote `release_status` on every save; the check compared it against `release_type` instead of itself
+* A podcast feed double-escaped its summary/episode descriptions, producing invalid XML when the source used named HTML entities
+* Browsing songs sorted by artist fell back to id/import order within an artist instead of title
 
 ## Ampache 8.2.2
 
