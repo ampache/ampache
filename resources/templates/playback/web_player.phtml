@@ -87,10 +87,10 @@ $labels = $this->getLabels(); ?>
             nowPlayingObjectId = data.object_id;
             nowPlayingDuration = data.duration || 0;
             <?php if (!$this->isShare()) { ?>
-            // a pause sent before this resolved had no id to act on yet; send it now that one is known
+            // a play/pause sent before this resolved had no id to act on yet; send it now that one is known
             var jp = $("#jquery_jplayer_1").data('jPlayer');
-            if (jp && jp.status && jp.status.paused) {
-                sendPlayerState('pause', jp.status.currentTime);
+            if (jp && jp.status) {
+                sendPlayerState(jp.status.paused ? 'pause' : 'play', jp.status.currentTime);
             }
             <?php } ?>
             $('.playing_title').html(data.title);
@@ -185,7 +185,8 @@ $labels = $this->getLabels(); ?>
             return null;
         }
         if (isPlaceholderTrack()) {
-            return (nowPlayingObjectId !== null) ? {oid: nowPlayingObjectId, type: 'song'} : null;
+            // a pending resolution means nowPlayingObjectId still names the track that just ended, not this one
+            return (!nowPlayingPending && nowPlayingObjectId !== null) ? {oid: nowPlayingObjectId, type: 'song'} : null;
         }
         if (item['media_type'] !== 'song' && item['media_type'] !== 'video') {
             return null;
