@@ -95,6 +95,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'found' => true,
                             'object_type' => $current['object_type'],
                             'object_id' => $current['object_id'],
+                            'insertion' => $current['insertion'],
                             'duration' => $media->time,
                             'title' => '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_song&song_id=' . $media->id . '\')" title="' . $titleText . '">' . $titleText . '</a>',
                             'artist' => ($artistId > 0)

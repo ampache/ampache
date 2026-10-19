@@ -63,6 +63,7 @@ $labels = $this->getLabels(); ?>
     // it the first attempt misses more often, so retrying quickly matters more than it used to.
     var nowPlayingRetryMs = 300;
     var nowPlayingDuration = 0;
+    var nowPlayingTriggerTime = 0;
 
     function pollNowPlaying()
     {
@@ -75,7 +76,8 @@ $labels = $this->getLabels(); ?>
             if (window.jpDebug && window.console && window.console.log) {
                 window.console.log('now_playing attempt ' + nowPlayingAttempts + ', holding ' + nowPlayingObjectId, data);
             }
-            if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
+            var stale = data && data.found && typeof data.insertion === 'number' && data.insertion < nowPlayingTriggerTime;
+            if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId || stale) {
                 if (data && data.object_id) {
                     nowPlayingSeenId = data.object_id;
                 }
@@ -269,6 +271,8 @@ $labels = $this->getLabels(); ?>
         nowPlayingDuration = 0;
         nowPlayingPending = placeholder;
         nowPlayingAttempts = 0;
+        // marks when this track started, so pollNowPlaying can tell a fresh row from a stale leftover one
+        nowPlayingTriggerTime = Math.floor(Date.now() / 1000);
         clearNowPlayingArt();
         <?php if (!$this->isVideo() && !$this->isShare()) { ?>
         $('#jquery_jplayer_1').css('visibility', placeholder ? 'hidden' : '');
