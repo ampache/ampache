@@ -26,6 +26,7 @@
 * ID3v2 `SYLT` frames are read for lyrics, preferred over plain `USLT` text when a file carries both
 * The web player and API `player` can report a pause, clearing `now_playing` until play resumes
 * New "Popular Variety" plugin shows one popular song per album/artist on the dashboard, not a ranking one deep catalogue can dominate
+* The web player shows a notification when a track fails to play, such as a random pick that matched nothing
 
 ### Changed (8.3.0)
 
@@ -74,6 +75,8 @@
 * Disabling the embed player after a social card cached it rendered the whole site in the small frame; now shows "no longer available"
 * The "Show Lyrics" link vanished after the web player advanced to the next song without a full page reload
 * Material-symbol icons could render blank on a page's first load, correcting themselves only after a refresh
+* A failed or partially loaded track left the web player's seek bar showing a partial fill instead of its full track background
+* Reloading the page while a random stream was playing could replay the same song instead of picking a new one
 
 ## Ampache 8.2.2
 
