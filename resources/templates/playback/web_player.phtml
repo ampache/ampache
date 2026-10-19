@@ -59,7 +59,9 @@ $labels = $this->getLabels(); ?>
     var nowPlayingRetry = null;
     var nowPlayingAttempts = 0;
     var nowPlayingMaxAttempts = 8;
-    var nowPlayingRetryMs = 2000;
+    // Resolving used to get an accidental head start from a now-removed redundant stream request; without
+    // it the first attempt misses more often, so retrying quickly matters more than it used to.
+    var nowPlayingRetryMs = 300;
     var nowPlayingDuration = 0;
 
     function pollNowPlaying()
