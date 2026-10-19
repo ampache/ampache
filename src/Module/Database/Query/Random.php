@@ -305,7 +305,9 @@ class Random
     public static function get_play_url(string $object_type, int $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string) ($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string) $object_id);
+        // without a streamtoken, now_playing has to be found by session id
+        $sessionToken = $user?->streamtoken ?: (string) session_id();
+        $link         = Stream::get_base_url(false, $sessionToken) . 'uid=' . scrub_out((string) ($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string) $object_id);
 
         return Stream_Url::format($link);
     }
