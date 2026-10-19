@@ -474,7 +474,7 @@ class Catalog_local extends Catalog
                     T_('Error') . ' ' . $message,
                     true
                 );
-                AmpError::add('catalog_add', sprintf(T_('Unable to add "%s": %s'), $full_file, $message));
+                AmpError::add('catalog_add', sprintf(T_('Unable to add %s'), $full_file) . ': ' . $message);
                 debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
@@ -1937,7 +1937,7 @@ class Catalog_local extends Catalog
                     T_('Error') . ' ' . $message,
                     true
                 );
-                AmpError::add('catalog_scan', sprintf(T_('Unable to add "%s": %s'), $full_file, $message));
+                AmpError::add('catalog_scan', sprintf(T_('Unable to add %s'), $full_file) . ': ' . $message);
                 debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
