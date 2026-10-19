@@ -190,7 +190,7 @@ $labels = $this->getLabels(); ?>
         if (item['media_type'] !== 'song' && item['media_type'] !== 'video') {
             return null;
         }
-        var mediaId = jpItemAttr(currentjpitem, 'data-media_id');
+        var mediaId = jpItemAttr($(".jp-playlist li").eq(jplaylist.current), 'data-media_id');
 
         return (mediaId !== '') ? {oid: mediaId, type: item['media_type']} : null;
     }
