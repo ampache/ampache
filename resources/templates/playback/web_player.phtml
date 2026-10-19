@@ -86,6 +86,13 @@ $labels = $this->getLabels(); ?>
             nowPlayingActive = false;
             nowPlayingObjectId = data.object_id;
             nowPlayingDuration = data.duration || 0;
+            <?php if (!$this->isShare()) { ?>
+            // a pause sent before this resolved had no id to act on yet; send it now that one is known
+            var jp = $("#jquery_jplayer_1").data('jPlayer');
+            if (jp && jp.status && jp.status.paused) {
+                sendPlayerState('pause', jp.status.currentTime);
+            }
+            <?php } ?>
             $('.playing_title').html(data.title);
             $('.playing_artist').html(data.artist);
             if (data.art) {
@@ -167,6 +174,27 @@ $labels = $this->getLabels(); ?>
         return !!item && item['media_type'] === 'live_stream';
     }
 
+    // A random/democratic placeholder carries no id of its own; the resolved song is always what it stands for.
+    function currentPlaybackObject()
+    {
+        if (jplaylist === null || !jplaylist.playlist) {
+            return null;
+        }
+        var item = jplaylist.playlist[jplaylist.current];
+        if (!item) {
+            return null;
+        }
+        if (isPlaceholderTrack()) {
+            return (nowPlayingObjectId !== null) ? {oid: nowPlayingObjectId, type: 'song'} : null;
+        }
+        if (item['media_type'] !== 'song' && item['media_type'] !== 'video') {
+            return null;
+        }
+        var mediaId = jpItemAttr(currentjpitem, 'data-media_id');
+
+        return (mediaId !== '') ? {oid: mediaId, type: item['media_type']} : null;
+    }
+
     // The server holds back the web player's scrobble, so it is sent from here once the song has played past the skip timer.
     var skipTimer = <?php echo $this->getSkipTimer(); ?>;
     var scrobbleListened = 0;
@@ -195,6 +223,19 @@ $labels = $this->getLabels(); ?>
         scrobbleListened = 0;
         scrobbleLastTime = null;
         scrobbleSent = false;
+    }
+
+    // Mirrors the API `player` method's states: paused is not playing, so now_playing is cleared until play resumes
+    function sendPlayerState(state, position)
+    {
+        if (typeof jsAjaxUrl === 'undefined') {
+            return;
+        }
+        var obj = currentPlaybackObject();
+        if (obj === null) {
+            return;
+        }
+        $.getJSON(jsAjaxUrl + '?page=player&action=' + state + '&oid=' + obj.oid + '&type=' + obj.type + '&time=' + Math.round(position || 0));
     }
 
     // Only forward progress counts, so seeking ahead never turns a skip into a play.
@@ -338,6 +379,9 @@ $labels = $this->getLabels(); ?>
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
             refreshNowPlaying();
+            <?php if (!$this->isShare()) { ?>
+            sendPlayerState('play', event.jPlayer.status.currentTime);
+            <?php } ?>
             // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
             if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();
@@ -578,6 +622,9 @@ if ($this->showSongPageTitle()) {
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
             cancelNowPlayingRetry();
+            <?php if (!$this->isShare()) { ?>
+            sendPlayerState('pause', event.jPlayer.status.currentTime);
+            <?php } ?>
             if (brkey != '') {
                 sendBroadcastMessage('PLAYER_PLAY', 0);
             }
@@ -589,6 +636,9 @@ if ($this->showSongPageTitle()) {
         $("#jquery_jplayer_1").bind($.jPlayer.event.stop, function (event) {
             // a live stream never reaches its own end, so jPlayer's reset leaves the last position on screen
             cancelNowPlayingRetry();
+            <?php if (!$this->isShare()) { ?>
+            sendPlayerState('stop', 0);
+            <?php } ?>
             var container = $("#jp_container_1");
             container.removeClass('jp-live-stream');
             container.find('.jp-play-bar').stop(true, true).css('width', '0%');

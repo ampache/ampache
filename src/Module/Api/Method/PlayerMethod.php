@@ -197,23 +197,8 @@ final class PlayerMethod implements MethodInterface
                 // scrobble plugins
                 User::save_mediaplay($user, $media);
             }
-        } elseif ($state === 'pause') {
-            // a paused client still owns the now_playing row; refresh it with a full track's grace period
-            // so a long pause doesn't let it expire before the client resumes or explicitly stops
-            Stream::garbage_collection();
-            Stream::insert_now_playing(
-                $media->id,
-                $user->getId(),
-                $media->time,
-                (string) $user->username,
-                $type,
-                ($time - $position),
-                null,
-                null,
-                'paused'
-            );
         } else {
-            // a stopped state isn't playing. Remove it.
+            // paused or stopped: neither is playing, so there is nothing to show as now_playing until play resumes
             Stream::delete_now_playing((string) $user->username, $media->id, $type, $user->getId());
         }
 
