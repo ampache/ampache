@@ -575,6 +575,8 @@ if ($this->showSongPageTitle()) {
                 return;
             }
             container.removeClass('jp-live-stream');
+            // Seek-bar track stays full width always; only the play-bar shows real progress, so a failed load can't look half-loaded.
+            container.find('.jp-seek-bar').css('width', '100%');
 
             var known = jpKnownDuration();
             if (known <= 0) {
@@ -586,7 +588,6 @@ if ($this->showSongPageTitle()) {
                 return;
             }
             var percent = Math.max(0, Math.min(100, ((status.currentTime || 0) / known) * 100));
-            container.find('.jp-seek-bar').css('width', '100%');
             container.find('.jp-play-bar').stop(true, true).css('width', percent + '%');
             container.find('.jp-duration').text(jpFormatDuration(known));
         }
@@ -622,6 +623,13 @@ if ($this->showSongPageTitle()) {
             ) {
                 jplaylist.play(jplaylist.current);
             }
+        });
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.error, function (event) {
+            // a random/democratic pick that matched nothing streams a 404; nothing else ever reports that to the user
+            cancelNowPlayingRetry();
+            $("#jp_container_1").find('.jp-seek-bar').css('width', '100%');
+            displayNotification('<?php echo $this->raw($this->jsText(T_('Playback failed'))); ?>', 8000);
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
