@@ -35,7 +35,7 @@ final class FollowerQuery implements QueryInterface
     protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
 
     // a row is rendered and returned as the account doing the following, so the id has to be that user, not the follow
-    protected string $select = "`user_follower`.`follow_user`";
+    protected string $select = "`user_follower`.`follow_user` AS `id`";
 
     /** @var string[] $sorts */
     protected array $sorts = [
