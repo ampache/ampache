@@ -1439,6 +1439,17 @@ table.gridview td.cel_drag {
     display: none !important;
 }
 
+/* A long name filled four lines inside a cell 25px tall, so three of them were cut off
+   mid-word with nothing to say so. The link already carries the whole name as a tooltip,
+   so one line ending in an ellipsis hides no more than the silent clipping did. */
+table.gridview td.grid_album,
+table.gridview td.grid_artist,
+table.gridview td.grid_song {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 table.gridview tbody tr {
     display: flex;
     flex-flow: row wrap;
