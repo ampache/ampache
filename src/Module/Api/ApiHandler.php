@@ -266,17 +266,8 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             switch ($api_version) {
-                case 3:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $api_version,
-                                501,
-                                'Access Control not Enabled'
-                            )
-                        )
-                    );
                 case 4:
+                case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
@@ -298,21 +289,8 @@ final class ApiHandler implements ApiHandlerInterface
                             )
                         )
                     );
-                case 6:
-                    return $response
-                        ->withStatus(403)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    $api_version,
-                                    ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                    'Access Denied',
-                                    $action,
-                                    'system'
-                                )
-                            )
-                        );
                 case 8:
+                case 6:
                 default:
                     return $response
                         ->withStatus(403)
@@ -348,17 +326,8 @@ final class ApiHandler implements ApiHandlerInterface
             ob_end_clean();
 
             switch ($api_version) {
-                case 3:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $api_version,
-                                401,
-                                'Session Expired'
-                            )
-                        )
-                    );
                 case 4:
+                case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
@@ -380,21 +349,8 @@ final class ApiHandler implements ApiHandlerInterface
                             )
                         )
                     );
-                case 6:
-                    return $response
-                        ->withStatus(401)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    $api_version,
-                                    ErrorCodeEnum::INVALID_HANDSHAKE,
-                                    'Session Expired',
-                                    $action,
-                                    'account'
-                                )
-                            )
-                        );
                 case 8:
+                case 6:
                 default:
                     return $response
                         ->withStatus(401)
@@ -420,17 +376,8 @@ final class ApiHandler implements ApiHandlerInterface
             ob_end_clean();
 
             switch ($api_version) {
-                case 3:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $api_version,
-                                403,
-                                'Unauthorized access attempt to API - ACL Error'
-                            )
-                        )
-                    );
                 case 4:
+                case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
@@ -452,21 +399,8 @@ final class ApiHandler implements ApiHandlerInterface
                             )
                         )
                     );
-                case 6:
-                    return $response
-                        ->withStatus(403)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    $api_version,
-                                    ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                    'Unauthorized access attempt to API - ACL Error',
-                                    $action,
-                                    'account'
-                                )
-                            )
-                        );
                 case 8:
+                case 6:
                 default:
                     return $response
                         ->withStatus(403)
@@ -915,17 +849,8 @@ final class ApiHandler implements ApiHandlerInterface
             return null;
         } catch (ApiException $error) {
             switch ($api_version) {
-                case 3:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $api_version,
-                                $error->getCode(),
-                                $error->getMessage()
-                            )
-                        )
-                    );
                 case 4:
+                case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
@@ -993,17 +918,8 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             switch ($api_version) {
-                case 3:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $api_version,
-                                405,
-                                'Invalid Request'
-                            )
-                        )
-                    );
                 case 4:
+                case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
@@ -1025,21 +941,8 @@ final class ApiHandler implements ApiHandlerInterface
                             )
                         )
                     );
-                case 6:
-                    return $response
-                        ->withStatus(500)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    $api_version,
-                                    ErrorCodeEnum::GENERIC_ERROR,
-                                    'Generic error',
-                                    $action,
-                                    'system'
-                                )
-                            )
-                        );
                 case 8:
+                case 6:
                 default:
                     return $response
                         ->withStatus(500)

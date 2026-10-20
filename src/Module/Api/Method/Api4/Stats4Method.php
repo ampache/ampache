@@ -121,8 +121,9 @@ final class Stats4Method implements MethodInterface
         // else's stats that must stay the caller's own token, or the response hands back a credential
         // that streams as the browsed user
         if ($user_id !== $viewer->id) {
-            $user              = clone $user;
-            $user->streamtoken = $viewer->streamtoken;
+            $user              = clone($user, [
+                "streamtoken" => $viewer->streamtoken
+            ]);
         }
 
         $type   = $input['type'];

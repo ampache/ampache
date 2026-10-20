@@ -598,39 +598,29 @@ class Json4_Data
         // here is where we call the object type
         switch ($object_type) {
             case 'song':
-                /** @var string $results */
                 $results = $this->songs($objects, $user, $auth);
                 break;
             case 'album':
                 $include_array = ($include) ? ['songs'] : [];
-
-                /** @var string $results */
-                $results = $this->albums($objects, $include_array, $user, $auth);
+                $results       = $this->albums($objects, $include_array, $user, $auth);
                 break;
             case 'artist':
                 $include_array = ($include) ? ['songs', 'albums'] : [];
-
-                /** @var string $results */
-                $results = $this->artists($objects, $include_array, $user, $auth);
+                $results       = $this->artists($objects, $include_array, $user, $auth);
                 break;
             case 'playlist':
-                /** @var string $results */
                 $results = $this->playlists($objects, $user, $auth, $include);
                 break;
             case 'share':
-                /** @var string $results */
                 $results = $this->shares($objects, $user);
                 break;
             case 'podcast':
-                /** @var string $results */
                 $results = $this->podcasts($objects, $user, $auth, $include);
                 break;
             case 'podcast_episode':
-                /** @var string $results */
                 $results = $this->podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
-                /** @var string $results */
                 $results = $this->videos($objects, $user, $auth);
                 break;
             default:
