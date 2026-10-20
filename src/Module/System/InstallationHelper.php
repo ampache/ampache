@@ -422,14 +422,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        // Give a new install a home page with something on it instead of an empty one
-        foreach (self::DEFAULT_PLUGINS as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
-                $plugin->install();
-            }
-        }
-
         // Fix the system user preferences
         Preference::fix_user_preferences(-1);
 
@@ -671,6 +663,15 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
             $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = 'lang';";
             Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
+        }
+
+        // Give a new install a home page with something on it instead of an empty one. Here rather than
+        // install_create_account() because the CLI installer never calls that, only the web one does.
+        foreach (self::DEFAULT_PLUGINS as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
+                $plugin->install();
+            }
         }
 
         return true;
