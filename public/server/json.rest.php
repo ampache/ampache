@@ -31,6 +31,7 @@ declare(strict_types=1);
 use Ampache\Module\Api\JsonRestApiApplication;
 use Psr\Container\ContainerInterface;
 
+define('API', true);
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
 

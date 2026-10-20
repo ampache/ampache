@@ -936,7 +936,6 @@ class Song extends database_object implements
         return match ($type) {
             'spx', 'ogg' => 'application/ogg',
             'opus', 'opus_rg', 'opus_car' => 'audio/ogg; codecs=opus',
-            'mp3_rg', 'mp3_car' => 'audio/mpeg',
             'wma', 'asf' => 'audio/x-ms-wma',
             'rm', 'ra' => 'audio/x-realaudio',
             'flac' => 'audio/flac',
@@ -947,7 +946,7 @@ class Song extends database_object implements
             'mkv' => 'audio/x-matroska',
             'wav' => 'audio/wav',
             'webma' => 'audio/webm',
-            default => 'audio/mpeg',
+            default => 'audio/mpeg', // 'mp3_rg', 'mp3_car' => 'audio/mpeg'
         };
     }
 

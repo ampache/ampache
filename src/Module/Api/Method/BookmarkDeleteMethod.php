@@ -158,7 +158,7 @@ final class BookmarkDeleteMethod implements MethodInterface
         }
 
         $find = Bookmark::getBookmarks([
-            'object_type' => $type,
+            'object_type' => (string) $type,
             'object_id' => $objectId,
             'comment' => $comment,
             'user' => $user->getId(),

@@ -184,12 +184,7 @@ export function initTabs()
 // flipField
 // Toggles the disabled property on the specifed field
 export function flipField(field) {
-    if ($(field).disabled === false) {
-        $(field).disabled = true;
-    }
-    else {
-        $(field).disabled = false;
-    }
+    $(field).disabled = $(field).disabled === false;
 }
 
 // updateText

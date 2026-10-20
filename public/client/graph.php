@@ -30,6 +30,7 @@ use Psr\Container\ContainerInterface;
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
+define('API', true);
 define('NO_SESSION', '1');
 
 /** @var ContainerInterface $dic */

@@ -57,7 +57,8 @@ final class RandomAction extends AbstractStreamAction
         return $this->stream(
             [],
             $urls,
-            $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE)
+            $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE),
+            preventCaching: true,
         );
     }
 }

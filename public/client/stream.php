@@ -36,6 +36,8 @@ use Ampache\Module\Application\Stream\TmpPlaylistAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
+define('API', true);
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
