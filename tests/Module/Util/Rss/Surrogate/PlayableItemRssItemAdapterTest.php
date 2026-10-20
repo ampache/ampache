@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -42,6 +44,48 @@ class PlayableItemRssItemAdapterTest extends TestCase
     private library_item&MockObject $playable;
     private PlayableItemRssItemAdapter $subject;
     private User&MockObject $user;
+
+    public function testAnAlbumAnswersWithItsReleaseAndFallsBackToTheGroup(): void
+    {
+        $album       = $this->createMock(Album::class);
+        $album->mbid = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+        $this->assertSame(
+            'https://musicbrainz.org/release/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+            $this->musicBrainzUrl($album)
+        );
+
+        $album->mbid       = null;
+        $album->mbid_group = '11111111-2222-3333-4444-555555555555';
+        $this->assertSame(
+            'https://musicbrainz.org/release-group/11111111-2222-3333-4444-555555555555',
+            $this->musicBrainzUrl($album)
+        );
+    }
+
+    public function testAnArtistAnswersWithItsMusicBrainzUrl(): void
+    {
+        $artist       = $this->createMock(Artist::class);
+        $artist->mbid = 'cf157aed-60a1-4442-bc6f-490f418f496b';
+
+        $this->assertSame(
+            'https://musicbrainz.org/artist/cf157aed-60a1-4442-bc6f-490f418f496b',
+            $this->musicBrainzUrl($artist)
+        );
+    }
+
+    public function testAnItemWithNoIdentifierPublishesNoUrlRatherThanAnEmptyOne(): void
+    {
+        $artist       = $this->createMock(Artist::class);
+        $artist->mbid = null;
+        $this->assertNull($this->musicBrainzUrl($artist));
+
+        $album             = $this->createMock(Album::class);
+        $album->mbid       = null;
+        $album->mbid_group = null;
+        $this->assertNull($this->musicBrainzUrl($album));
+
+        $this->assertNull($this->musicBrainzUrl($this->createMock(library_item::class)));
+    }
 
     public function testArtSourcesDropsAnAlbumlessSong(): void
     {
@@ -206,5 +250,10 @@ class PlayableItemRssItemAdapterTest extends TestCase
             $this->playable,
             $this->user,
         );
+    }
+
+    private function musicBrainzUrl(library_item $item): ?string
+    {
+        return new ReflectionMethod(PlayableItemRssItemAdapter::class, 'musicBrainzUrl')->invoke(null, $item);
     }
 }
