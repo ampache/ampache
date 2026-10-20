@@ -99,10 +99,10 @@ if ($this->isIframed()) { ?>
         return jpmedia;
     }
 
-    function addMedia(media)
+    function addMedia(media, playNow)
     {
         var jpmedia = convertMediaToJPMedia(media);
-        jplaylist.add(jpmedia);
+        jplaylist.add(jpmedia, playNow);
     }
 
     function playNext(media)

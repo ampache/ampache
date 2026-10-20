@@ -7,6 +7,8 @@
 * `advanced_search` (API8)
   * New `rule_*_group` and `group_*_operator` parameters combine a subset of rules into one group with its own AND/OR match, joined by the top-level `operator` -- exactly two levels, a group cannot contain another group
   * Not the same thing as `search_group`'s "group" -- that names a bundle of object types to search across, unrelated to this rule grouping
+* `player` (API6 and API8)
+  * New `pause` `state` value clears `now_playing` (same effect as `stop`); no play is recorded, no scrobble fires
 
 ### Changed (830000)
 
@@ -26,6 +28,8 @@
   * `flag=1` reported `total_count` for the whole catalog instead of the flagged result, while still listing only the flagged songs
 * `stats` (API6, API8)
   * `filter=flagged`, `newest`, `highest`, `frequent`, `recent` and `forgotten` all reported `total_count` for the whole catalog instead of the actual result count; `random` is unaffected, since it is a sample of the catalog by design
+* `playlists`, `user_playlists` (API6, API8)
+  * `include=songs` on a very large library could exhaust memory; the response is now capped at 200,000 rows
 
 ## API 8.2.0
 

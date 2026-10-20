@@ -77,7 +77,7 @@ class PlayerMethodTest extends MockeryTestCase
             ->with(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                'Bad Request: pause',
+                'Bad Request: rewind',
                 PlayerMethod::ACTION,
                 'state'
             )
@@ -101,7 +101,7 @@ class PlayerMethodTest extends MockeryTestCase
                 [
                     'filter' => '666',
                     'type' => 'song',
-                    'state' => 'pause',
+                    'state' => 'rewind',
                     'api_format' => 'json',
                     'auth' => 'some-auth',
                 ],

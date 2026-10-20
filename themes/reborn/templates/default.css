@@ -2910,6 +2910,18 @@ table.tabledata tbody tr.withdrawn > td:first-child {
         display: none !important;
     }
 
+    /* Recently Played isn't part of the rowlist system; drop Album/Year/Last Played/Agent so the rest stays legible. */
+    .box_recently_played .cel_album,
+    .box_recently_skipped .cel_album,
+    .box_recently_played .cel_year,
+    .box_recently_skipped .cel_year,
+    .box_recently_played .cel_lastplayed,
+    .box_recently_skipped .cel_lastskipped,
+    .box_recently_played .cel_agent,
+    .box_recently_skipped .cel_agent {
+        display: none;
+    }
+
     /* The 140px right gutter on the browse header is desktop-only space -- reclaim it. */
     #browse_header {
         margin-right: 0;
