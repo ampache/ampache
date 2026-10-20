@@ -10,14 +10,16 @@
 # Sunghun Park <shpark.x1@gmail.com>, 2017
 # Sunghun Park <shpark.x1@gmail.com>, 2017
 # 유영재 <yjsoft@yjsoft.pe.kr>, 2018
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 15:55+1000\n"
-"PO-Revision-Date: 2015-05-12 16:07+0000\n"
+"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022,2026\n"
-"Language-Team: Korean (Korea) (http://app.transifex.com/ampache/ampache/language/ko_KR/)\n"
+"Language-Team: Korean (Korea) (https://app.transifex.com/ampache/teams/40984/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -131,6 +133,9 @@ msgstr "이전 재생"
 
 msgid "Add to Temporary Playlist"
 msgstr "임시 재생목록에 추가하기"
+
+msgid "More"
+msgstr "더 보기"
 
 msgid "Editing Existing User"
 msgstr "기존 사용자 편집 중"
@@ -255,6 +260,21 @@ msgstr "앨범 편집하기"
 msgid "Download"
 msgstr "내려받기"
 
+msgid "Songs"
+msgstr "노래들"
+
+msgid "Played"
+msgstr "재생됨"
+
+msgid "Genres"
+msgstr "장르"
+
+msgid "Moods"
+msgstr ""
+
+msgid "Rating"
+msgstr "등급"
+
 msgid "Direct URL to Image"
 msgstr "이미지 직접 URL"
 
@@ -322,9 +342,6 @@ msgstr "아티스트 편집하기"
 msgid "Albums"
 msgstr "앨범들"
 
-msgid "Songs"
-msgstr "노래들"
-
 msgid "Top Tracks"
 msgstr "상위 트랙"
 
@@ -336,6 +353,9 @@ msgstr "유사한 아티스트"
 
 msgid "Similar Songs"
 msgstr "유사한 노래들"
+
+msgid "Time"
+msgstr "시간"
 
 msgid "Disabled"
 msgstr "사용불가"
@@ -472,11 +492,29 @@ msgstr "라이센스 만들기"
 msgid "Refresh"
 msgstr "갱신"
 
-msgid "Duration"
-msgstr "기간"
+msgid "Hidden"
+msgstr ""
+
+msgid "Create Folder"
+msgstr ""
 
 msgid "Create Playlist"
 msgstr "재생목록 만들기"
+
+msgid "Create Smart Playlist"
+msgstr ""
+
+msgid "Save Track Order"
+msgstr "트랙 순서 저장하기"
+
+msgid "Do you really want to delete this Folder?"
+msgstr ""
+
+msgid "Reorder"
+msgstr "기록기"
+
+msgid "Duration"
+msgstr "기간"
 
 msgid "No podcast episode found"
 msgstr "팟캐스트 에피스도 없음"
@@ -529,17 +567,11 @@ msgstr "준비 중"
 msgid "Go"
 msgstr "가기"
 
-msgid "Reorder"
-msgstr "기록기"
-
 msgid "Owner"
 msgstr "소유자"
 
 msgid "Type"
 msgstr "형태"
-
-msgid "Save Track Order"
-msgstr "트랙 순서 저장하기"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -618,12 +650,6 @@ msgstr "바코드"
 
 msgid "Original Year"
 msgstr "원년"
-
-msgid "Genres"
-msgstr "장르"
-
-msgid "Moods"
-msgstr ""
 
 msgid "Overwrite tags of sub songs"
 msgstr "하위 노래의 태그를 덮어쓰기"
@@ -709,6 +735,12 @@ msgstr "스트림 URL"
 msgid "Codec"
 msgstr "코덱"
 
+msgid "Folder"
+msgstr ""
+
+msgid "None"
+msgstr "없음"
+
 msgid "Random"
 msgstr "임의"
 
@@ -781,9 +813,6 @@ msgid "More Metadata"
 msgstr "메타데이타 더 보기"
 
 msgid "Less Metadata"
-msgstr ""
-
-msgid "Hidden"
 msgstr ""
 
 msgid "Re-tag"
@@ -1026,7 +1055,9 @@ msgid ""
 "that you visit. They are widely used in order to make websites work, or work"
 " more efficiently, as well as to provide information to the owners of the "
 "site"
-msgstr "쿠키는 사용자가 방문하는 웹 사이트에서 컴퓨터에 저장하는 작은 텍스트 파일입니다. 그것들은 웹사이트가 작동하게 하거나 더 효율적으로 일하기 위해 그리고 사이트의 소유자들에게 정보를 제공하기 위해 널리 사용됩니다."
+msgstr ""
+"쿠키는 사용자가 방문하는 웹 사이트에서 컴퓨터에 저장하는 작은 텍스트 파일입니다. 그것들은 웹사이트가 작동하게 하거나 더 효율적으로 "
+"일하기 위해 그리고 사이트의 소유자들에게 정보를 제공하기 위해 널리 사용됩니다."
 
 msgid "The table below explains the cookies we use and why"
 msgstr "아래 표는 쿠키를 사용하는 이유를 설명하고 있습니다"
@@ -1260,6 +1291,15 @@ msgstr "사용자들"
 msgid "Newest"
 msgstr "최신순"
 
+msgid "Edit Folder"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Visibility"
+msgstr ""
+
 msgid "Popular"
 msgstr "인기순"
 
@@ -1343,7 +1383,9 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "이 화면은 Ampache 데이타베이스 설치와 ampache.cfg.php 파일 생성을 합니다. 진행하기 전에 아래 사전요구사항을 확인하세요."
+msgstr ""
+"이 화면은 Ampache 데이타베이스 설치와 ampache.cfg.php 파일 생성을 합니다. 진행하기 전에 아래 사전요구사항을 "
+"확인하세요."
 
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
@@ -1360,7 +1402,8 @@ msgid ""
 "the information below. You will only be asked for the required config "
 "values. If you would like to make changes to your Ampache install at a later"
 " date simply edit %s"
-msgstr "설치 요구사항을 확인하였다면 아래 정보를 채우세요. 필요 설정값만 요청합니다. 향후 설치 내용을 변경하시려면 %s 파일을 수정하세요"
+msgstr ""
+"설치 요구사항을 확인하였다면 아래 정보를 채우세요. 필요 설정값만 요청합니다. 향후 설치 내용을 변경하시려면 %s 파일을 수정하세요"
 
 msgid "Check"
 msgstr "점검"
@@ -1385,7 +1428,8 @@ msgstr " \"ampache.cfg.php\" 은 쓰기 가능함"
 msgid ""
 "This tests whether PHP can write to config. This is not strictly necessary, "
 "but will help streamline the installation process."
-msgstr "이 과정은 php가 설정 파일을 쓸 수 있는지 검증한다. 엄밀히 필요한 과정은 아니지만 설치 절차를 한번에 끝낼 수 있게 돕는다."
+msgstr ""
+"이 과정은 php가 설정 파일을 쓸 수 있는지 검증한다. 엄밀히 필요한 과정은 아니지만 설치 절차를 한번에 끝낼 수 있게 돕는다."
 
 #, php-format
 msgid ""
@@ -1394,7 +1438,10 @@ msgid ""
 " write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
-msgstr "이 절차는 기본 설정값을 받아서 설정 파일을 생성한다. config 폴더가 쓰기 가능이면 \"write\" 선택하여 Ampache가 설정 파일을 바른 위치에 쓸 수 있게 한다.  \"download\" 선택하면 사용자가 설정 파일을 받아서  설정 파일을  %s 에 두도록 한다. "
+msgstr ""
+"이 절차는 기본 설정값을 받아서 설정 파일을 생성한다. config 폴더가 쓰기 가능이면 \"write\" 선택하여 Ampache가 설정"
+" 파일을 바른 위치에 쓸 수 있게 한다.  \"download\" 선택하면 사용자가 설정 파일을 받아서  설정 파일을  %s 에 두도록 "
+"한다. "
 
 msgid "Generate Configuration File"
 msgstr "설정 파일 생성하기"
@@ -1465,7 +1512,9 @@ msgid ""
 "takes advantage of existing binary applications such as ffmpeg. In order for"
 " transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "트랜스코딩은 음악을 다른 코덱으로 변환해 준다. Ampache 는 다양한 형태의 파일로 변환을 지원해 주는데, ffmpeg를 이용할 수도 있다. 제대로 트랜스코딩을 쓰려면 관련 지원 프로그램을 설치해야 한다."
+msgstr ""
+"트랜스코딩은 음악을 다른 코덱으로 변환해 준다. Ampache 는 다양한 형태의 파일로 변환을 지원해 주는데, ffmpeg를 이용할 수도"
+" 있다. 제대로 트랜스코딩을 쓰려면 관련 지원 프로그램을 설치해야 한다."
 
 msgid ""
 "This section applies the default transcoding configuration according to the "
@@ -1478,9 +1527,6 @@ msgstr "위키 페이지를 보세요"
 
 msgid "Template Configuration"
 msgstr "템플릿 설정"
-
-msgid "None"
-msgstr "없음"
 
 msgid ""
 "No default transcoding application found. You may need to install a popular "
@@ -1562,7 +1608,9 @@ msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
 "slower computers."
-msgstr "이 단계는 Ampache 데이타베이스를 만들어 넣는 과정이니 MySQL 계정이 데이타베이스 생성 권한이 있는지 확인해야 한다. 느린 컴퓨터에서는 시간이 좀 걸릴 수 있다."
+msgstr ""
+"이 단계는 Ampache 데이타베이스를 만들어 넣는 과정이니 MySQL 계정이 데이타베이스 생성 권한이 있는지 확인해야 한다. 느린 "
+"컴퓨터에서는 시간이 좀 걸릴 수 있다."
 
 msgid "Insert Ampache Database"
 msgstr "Ampache 데이타베이스 넣기"
@@ -1609,6 +1657,13 @@ msgid ""
 "You may have reached this page because your %s configuration file was not "
 "parsable"
 msgstr "  %s 설정 파일이 온전하지 않아서 이 화면으로 왔을 수 있습니다"
+
+#. HINT: line number
+#, php-format
+msgid ""
+"The unclosed value looks like it starts around line %d — the parser only "
+"reports where it finally gives up, which is often further down the file"
+msgstr ""
 
 msgid "Please visit the wiki for help"
 msgstr "도움말이 필요하면 위키를 방문하세요"
@@ -1733,7 +1788,8 @@ msgstr "PHP zlib 익스텐션"
 msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly"
 " necessary, but may result in a better experience (zip download)."
-msgstr "zlib 확장자가 활성화되어 있는지 테스트합니다. 반드시 필요한 것은 아니지만 더 나은 환경을 제공할 수 있습니다 (zip 다운로드)."
+msgstr ""
+"zlib 확장자가 활성화되어 있는지 테스트합니다. 반드시 필요한 것은 아니지만 더 나은 환경을 제공할 수 있습니다 (zip 다운로드)."
 
 msgid "WARNING"
 msgstr "경고"
@@ -1799,7 +1855,9 @@ msgstr "PHP 최대 업로드 크기"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Ampache가 중간 파일(>= 20M)을 업로드할 수 있는지 여부를 테스트합니다. 이것은 엄격히 필요한 것은 아니지만, 더 나은 경험을 할 수 있습니다."
+msgstr ""
+"Ampache가 중간 파일(>= 20M)을 업로드할 수 있는지 여부를 테스트합니다. 이것은 엄격히 필요한 것은 아니지만, 더 나은 경험을"
+" 할 수 있습니다."
 
 msgid "PHP integer size"
 msgstr "PHP 정수 크기"
@@ -1808,7 +1866,9 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires a 64-bit operating system."
-msgstr "Ampache가 대용량 파일(> 2GB)을 관리할 수 있는지 여부를 테스트합니다. 이것은 엄격히 필요한 것은 아니지만, 더 나은 경험을 할 수 있습니다. 이를 위해서는 일반적으로 64비트 운영 체제가 필요합니다."
+msgstr ""
+"Ampache가 대용량 파일(> 2GB)을 관리할 수 있는지 여부를 테스트합니다. 이것은 엄격히 필요한 것은 아니지만, 더 나은 경험을 "
+"할 수 있습니다. 이를 위해서는 일반적으로 64비트 운영 체제가 필요합니다."
 
 msgid "PHP mbstring.func_overload"
 msgstr "PHP mbstring.func_overload"
@@ -1820,7 +1880,10 @@ msgid ""
 "is not strictly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "이것은 PHP %s가 ID3 태그 지원을 끊을 수 있으므로 설정되어 있는지 여부를 테스트합니다. 반드시 필요한 것은 아니지만 앰파쉬 ID3 태그 쓰기 지원(기본적으로 비활성화됨)을 mbstring과 함께 사용하도록 설정합니다.func_func는 음악 파일을 되돌릴 수 없는 손상으로 이어질 수 있습니다."
+msgstr ""
+"이것은 PHP %s가 ID3 태그 지원을 끊을 수 있으므로 설정되어 있는지 여부를 테스트합니다. 반드시 필요한 것은 아니지만 앰파쉬 "
+"ID3 태그 쓰기 지원(기본적으로 비활성화됨)을 mbstring과 함께 사용하도록 설정합니다.func_func는 음악 파일을 되돌릴 수 "
+"없는 손상으로 이어질 수 있습니다."
 
 msgid "Configuration file readability"
 msgstr "설정 파일 읽기 가능"
@@ -1954,6 +2017,9 @@ msgstr ""
 msgid "Show less"
 msgstr ""
 
+msgid "Shuffle"
+msgstr "섞기"
+
 msgid "Add to New Playlist"
 msgstr "새 재생목록에 추가하기"
 
@@ -1981,14 +2047,22 @@ msgstr "임의 재생목록"
 msgid "No items"
 msgstr "아이템 없음"
 
-msgid "More"
-msgstr "더 보기"
+msgid "This player is no longer available"
+msgstr ""
+
+#. HINT: name of this Ampache server
+#, php-format
+msgid "Open on %s"
+msgstr ""
 
 msgid "Log out"
 msgstr "로그 아웃"
 
 msgid "Show Lyrics"
 msgstr "가사 보기"
+
+msgid "Playback failed"
+msgstr ""
 
 msgid "Add All to playlist"
 msgstr "전부 재생목록에 추가하기"
@@ -2050,6 +2124,13 @@ msgstr "재생목록 편집"
 msgid "Do you really want to delete this Playlist?"
 msgstr "진짜로 이 재생목록을 지우시겠습니까?"
 
+msgid "Last Update"
+msgstr "마지막 갱신"
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr "# 아이템"
+
 msgid "Smart Playlist Edit"
 msgstr "지능형 재생목록 편집"
 
@@ -2064,6 +2145,9 @@ msgstr "재생목록으로 저장하기"
 
 msgid "Waveform"
 msgstr "파형"
+
+msgid "Publication Date"
+msgstr "발매 날짜"
 
 msgid "Sync"
 msgstr "동기화"
@@ -2137,8 +2221,63 @@ msgstr ""
 msgid "Update Account"
 msgstr "계정 갱신하기"
 
+msgid "Filter"
+msgstr ""
+
+msgid "Filter by name, description or key"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Differs from default"
+msgstr ""
+
+msgid "Unsaved"
+msgstr ""
+
+msgid "Downloads every preference, from every tab, as a JSON file"
+msgstr ""
+
+msgid "Export all preferences"
+msgstr ""
+
+msgid "Sections"
+msgstr ""
+
+msgid "No preference matches this filter."
+msgstr ""
+
+msgid "(empty)"
+msgstr ""
+
+msgid "(a new value)"
+msgstr ""
+
+msgid "Apply these changes?"
+msgstr ""
+
+msgid "for every account"
+msgstr ""
+
+msgid "Access Level"
+msgstr "접근 수준"
+
+#, php-format
+msgid ""
+"%d of these changes will be written to every existing account, overwriting "
+"what each account chose. This cannot be undone."
+msgstr ""
+
+#, php-format
+msgid "Changes to apply: %d"
+msgstr ""
+
 msgid "Update Preferences"
 msgstr "설정 갱신하기"
+
+msgid "Tick \"apply to all\" on every change"
+msgstr ""
 
 msgid "Preference"
 msgstr "선호"
@@ -2146,11 +2285,41 @@ msgstr "선호"
 msgid "Value"
 msgstr "값"
 
+msgid "Reference"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
 msgid "Apply to All"
 msgstr "전체 적용"
 
-msgid "Access Level"
-msgstr "접근 수준"
+msgid "Differs from the value Ampache ships"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Read only"
+msgstr ""
+
+msgid "Help"
+msgstr "도움"
+
+msgid "Read the documentation"
+msgstr ""
+
+msgid "Server"
+msgstr "서버"
+
+msgid "Copy what the server holds; it will not follow later server changes"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Also write this value to every existing account"
+msgstr ""
 
 msgid "Enter the code shown on the other device to sign it in."
 msgstr ""
@@ -2206,6 +2375,12 @@ msgstr "최대 결과"
 msgid "Unlimited"
 msgstr "무제한"
 
+msgid "Length"
+msgstr "길이"
+
+msgid "Size Limit"
+msgstr "크기 제한"
+
 msgid "Permalink"
 msgstr ""
 
@@ -2215,20 +2390,23 @@ msgstr "선택사항들"
 msgid "Play Random Selection"
 msgstr "임의 재생 선택"
 
-msgid "Length"
-msgstr "길이"
-
-msgid "Size Limit"
-msgstr "크기 제한"
-
 msgid "Enqueue"
 msgstr "대기열"
+
+msgid "Item Limit"
+msgstr "아이템 제한"
 
 msgid "Rules"
 msgstr "규칙"
 
 msgid "Match"
 msgstr "일치"
+
+msgid "all groups"
+msgstr ""
+
+msgid "any groups"
+msgstr ""
 
 msgid "all rules"
 msgstr "전체 규칙"
@@ -2238,6 +2416,9 @@ msgstr "아무 규칙"
 
 msgid "Add Another Rule"
 msgstr "다른 규칙 추가하기"
+
+msgid "Add Group"
+msgstr ""
 
 msgid "Create Share"
 msgstr "공유 만들기"
@@ -2263,11 +2444,14 @@ msgstr "활성 인스턴스"
 msgid "Localplay Disabled"
 msgstr "내부 재생 중단됨"
 
+msgid "Account"
+msgstr "계정"
+
+msgid "QuickConnect"
+msgstr ""
+
 msgid "Uploads"
 msgstr "올리기"
-
-msgid "Help"
-msgstr "도움"
 
 msgid "Ampache Wiki"
 msgstr "Ampache 위키"
@@ -2280,6 +2464,15 @@ msgstr "쿠키 정보"
 
 msgid "Admin Disabled"
 msgstr "관리 비활성화됨"
+
+msgid "License"
+msgstr "라이센스"
+
+msgid "Skipped"
+msgstr ""
+
+msgid "Added"
+msgstr "추가됨"
 
 msgid "Connected Users"
 msgstr ""
@@ -2334,9 +2527,6 @@ msgstr "최신 Ampache 버전"
 
 msgid "GitHub Branch"
 msgstr "GitHub 브랜치"
-
-msgid "Last Update"
-msgstr "마지막 갱신"
 
 msgid "Force check"
 msgstr "강제 점검"
@@ -2480,12 +2670,6 @@ msgstr "사용자가 접속함"
 msgid "User is Offline Now"
 msgstr "사용자가 접속해 있지 않음"
 
-msgid "Played"
-msgstr "재생됨"
-
-msgid "Skipped"
-msgstr ""
-
 msgid "Following"
 msgstr "팔로잉"
 
@@ -2500,6 +2684,9 @@ msgstr "활성 재생목록"
 
 msgid "Subtitle"
 msgstr "자막"
+
+msgid "Resolution"
+msgstr "해상도"
 
 msgid "Video Information"
 msgstr "비디오 정보"
@@ -2553,11 +2740,6 @@ msgstr "비활성"
 msgid "Upgrade"
 msgstr "업그레이드"
 
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr " %s 설정 편집 중"
-
 msgid "Album Disk"
 msgstr ""
 
@@ -2565,9 +2747,6 @@ msgstr ""
 msgid "%d song"
 msgid_plural "%d songs"
 msgstr[0] ""
-
-msgid "Time"
-msgstr "시간"
 
 #, php-format
 msgid "Played %d time"
@@ -2591,9 +2770,6 @@ msgid "%d album"
 msgid_plural "%d albums"
 msgstr[0] ""
 
-msgid "Rating"
-msgstr "등급"
-
 msgid "Starts With"
 msgstr "시작하기"
 
@@ -2606,24 +2782,27 @@ msgstr "청취자들"
 msgid "Live"
 msgstr ""
 
-msgid "Parent"
-msgstr ""
-
 msgid "Remove from collection"
 msgstr ""
 
 msgid "Remove {count} selected items from this collection?"
 msgstr ""
 
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr "# 아이템"
-
 msgid "Holds"
 msgstr ""
 
 msgid "Votes"
 msgstr "투표"
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Unhide"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
 
 msgid "Playlist Name"
 msgstr "재생목록 이름"
@@ -2633,9 +2812,6 @@ msgstr ""
 
 msgid "Remove {count} selected items from this playlist?"
 msgstr ""
-
-msgid "Publication Date"
-msgstr "발매 날짜"
 
 msgid "Sender"
 msgstr "보낸이"
@@ -2661,15 +2837,6 @@ msgstr "붙이기"
 msgid "Date Added"
 msgstr "날짜 추가됨"
 
-msgid "Item Limit"
-msgstr "아이템 제한"
-
-msgid "License"
-msgstr "라이센스"
-
-msgid "Added"
-msgstr "추가됨"
-
 msgid "Registration Date"
 msgstr "등록 날짜"
 
@@ -2678,9 +2845,6 @@ msgstr "마지막 접속 IP"
 
 msgid "Online"
 msgstr "온라인"
-
-msgid "Resolution"
-msgstr "해상도"
 
 msgid "Trending"
 msgstr "경향"
@@ -2844,9 +3008,6 @@ msgstr "전체 화면"
 msgid "Restore Screen"
 msgstr "화면 복귀"
 
-msgid "Shuffle"
-msgstr "섞기"
-
 msgid "Shuffle Off"
 msgstr "섞기 끄기"
 
@@ -2876,6 +3037,941 @@ msgid "%d episode"
 msgid_plural "%d episodes"
 msgstr[0] ""
 
+msgid "Other"
+msgstr ""
+
+msgid "Year ascending"
+msgstr "년도 오름차순"
+
+msgid "Year descending"
+msgstr "연도 내림차순"
+
+msgid "Name ascending"
+msgstr "이름 오름차순"
+
+msgid "Name descending"
+msgstr "이름 내림차순"
+
+msgid "Send on Add"
+msgstr "추가하기로 보내기"
+
+msgid "Send and Clear on Add"
+msgstr "추가하기로 보내고 지우기"
+
+msgid "Clear on Send"
+msgstr "보내기를 지우기"
+
+msgid "M3U"
+msgstr "M3U"
+
+msgid "Simple M3U"
+msgstr "단순 M3U"
+
+msgid "PLS"
+msgstr "PLS"
+
+msgid "Asx"
+msgstr "Asx"
+
+msgid "RAM"
+msgstr "RAM"
+
+msgid "XSPF"
+msgstr "XSPF"
+
+msgid "1 Star"
+msgstr "별 1개"
+
+msgid "2 Stars"
+msgstr "별 2개"
+
+msgid "3 Stars"
+msgstr "별 3개"
+
+msgid "4 Stars"
+msgstr "별 4개"
+
+msgid "5 Stars"
+msgstr "별 5개"
+
+msgid "Never"
+msgstr "아니오"
+
+msgid "Always"
+msgstr "항상"
+
+msgid "Off"
+msgstr "끔"
+
+#. HINT: API version number
+#, php-format
+msgid "Allow API%s Only"
+msgstr ""
+
+msgid "Match my theme"
+msgstr ""
+
+msgid "Keep last played track"
+msgstr ""
+
+#. HINT: Keep (2|3|4|5|10) previous tracks
+#, php-format
+msgid "Keep %s previous tracks"
+msgstr ""
+
+msgid "Remove all previous tracks"
+msgstr ""
+
+msgid ""
+"Treats a multi-disc release as one album instead of one row per disc. "
+"Turning it off makes browse, search and the artist page list album disks "
+"individually; API and Subsonic album lists keep their own shape either way."
+msgstr ""
+
+msgid ""
+"Splits the album list on an artist page into a section per release type, so "
+"albums, EPs, live records and singles sit under their own headings. Off, the"
+" artist page shows one flat list."
+msgstr ""
+
+msgid ""
+"Order of the release-type sections on an artist page, as a comma-separated "
+"list of types. Types left out of the list follow the ones named, and the "
+"whole setting is idle while release types are not grouped."
+msgstr ""
+
+msgid ""
+"Default ordering of album lists when the browse carries no sort of its own. "
+"It also decides the order of the album lists returned by the API."
+msgstr ""
+
+msgid ""
+"Show what you are listening to right now to other users. Administrators see "
+"the now playing list in full whatever this says."
+msgstr ""
+
+msgid ""
+"Show what you listened to recently to other users. With it off your activity"
+" feed is hidden and your plays drop out of everyone else statistics pages."
+msgstr ""
+
+msgid ""
+"Show the date and time of your recent plays. With it off your profile "
+"reports the last seen time as Never rather than leaving the field out."
+msgstr ""
+
+msgid ""
+"Raise a desktop notification on every track change. It only works in the "
+"embedded player, and the browser still has to grant the notification "
+"permission."
+msgstr ""
+
+msgid ""
+"How long a track-change notification stays on screen, in seconds. 0 leaves "
+"it up until it is dismissed, and the setting is idle while browser "
+"notifications are off."
+msgstr ""
+
+msgid ""
+"Image served for an album with no artwork, as an absolute http or https url."
+" Browse pages still draw a placeholder when that is enabled, but everything "
+"else — the API, Subsonic, RSS feeds, the web player — serves this image "
+"instead."
+msgstr ""
+
+msgid ""
+"An ICU date pattern applied to every date and time on the site in place of "
+"the one the language implies. Leave it empty to follow the language."
+msgstr ""
+
+msgid ""
+"Puts your own avatar in the header instead of the site logo. An account with"
+" no avatar gets the generic silhouette, not the site logo."
+msgstr ""
+
+msgid ""
+"Timezone used to display dates, overriding the one PHP is configured with. A"
+" name PHP does not recognize is silently cleared when the form is saved."
+msgstr ""
+
+msgid ""
+"Hides the one-click play and add buttons on an album, artist or folder "
+"holding more media than this, so a huge item is not queued by accident. 0 "
+"removes the limit."
+msgstr ""
+
+msgid ""
+"Draws a placeholder tile from the item name and artist when no cover exists,"
+" instead of one shared blank image. Nothing is stored: the drawing is "
+"rebuilt on each request. Setting a custom blank album image turns it off "
+"everywhere except the browse pages."
+msgstr ""
+
+msgid ""
+"Which drawing style the placeholder tiles use. Auto follows the theme color,"
+" and a template that no longer exists falls back to the first one available."
+msgstr ""
+
+msgid ""
+"Drops the per-song artist column on an album whose songs all share one "
+"artist. Albums crediting several artists keep the column whatever this says."
+msgstr ""
+
+msgid ""
+"Shows the Videos of the Moment panel on the home page. It stays hidden while"
+" video features are disabled, whatever this is set to."
+msgstr ""
+
+msgid ""
+"Lets Recently Played list podcast episodes, videos and radio alongside songs"
+" instead of songs alone. It governs your profile page and the statistics "
+"page too, not only the home panel."
+msgstr ""
+
+msgid ""
+"Replaces the browse form at the top of the home page with the dashboard "
+"widget picker."
+msgstr ""
+
+msgid ""
+"Comma-separated list of item types that open on the A to Z jump bar rather "
+"than a plain list. Empty means no type does."
+msgstr ""
+
+msgid ""
+"Sends this account to the mini player on login and on every page it would "
+"otherwise render. It restricts navigation only and is no substitute for an "
+"access level."
+msgstr ""
+
+msgid ""
+"Collapses the now playing list to the most recent stream per user instead of"
+" one line per concurrent stream."
+msgstr ""
+
+msgid ""
+"How many items the of the Moment panels pick at random. A value of zero or "
+"less falls back to six."
+msgstr ""
+
+msgid ""
+"How many items one page of a browse shows before paging. It is also the size"
+" of a random selection."
+msgstr ""
+
+msgid ""
+"How many rows the popular, recently played and last shouts lists return."
+msgstr ""
+
+msgid ""
+"Adds the license column to song lists. It shows nothing unless licensing is "
+"also enabled server-side."
+msgstr ""
+
+msgid ""
+"Adds a lyrics link to the web player control bar. The lyrics page itself "
+"stays reachable either way."
+msgstr ""
+
+msgid ""
+"Appends the original release year to an album title when the record carries "
+"one and it differs from the pressing year."
+msgstr ""
+
+msgid ""
+"Adds a play count column to browse rows. While it is off the counts are not "
+"even queried, so turning it on costs one extra statistics lookup per page."
+msgstr ""
+
+msgid ""
+"Appends the owner name to a playlist title. Your own playlists are never "
+"annotated."
+msgstr ""
+
+msgid ""
+"Adds a skip count column to browse rows. Like the play count, the figure is "
+"only queried when the column is shown."
+msgstr ""
+
+msgid ""
+"Appends the album version, such as a remaster or deluxe tag, to the album "
+"title when the record carries one."
+msgstr ""
+
+msgid ""
+"Removes the arrows that fold the sidebar into its narrow form. Together with"
+" the light sidebar it pins the sidebar to that form."
+msgstr ""
+
+msgid "Opens the sidebar in its narrow, icon-only form by default."
+msgstr ""
+
+msgid ""
+"Position of the Browse menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Dashboard menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Information menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Playlist menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Search menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Seconds of inactivity before the web player fades into a full-screen artist "
+"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
+"anything to show."
+msgstr ""
+
+msgid ""
+"Puts the playing track in the browser tab title. Share pages never do it, "
+"whatever this says."
+msgstr ""
+
+msgid ""
+"How many days back the statistics pages look. 0 means all time, which is the"
+" case the cached counts are built for."
+msgstr ""
+
+msgid ""
+"Light or dark variant of the chosen theme. It also picks the logo and icon "
+"set, and the template the drawn placeholder art uses under Auto."
+msgstr ""
+
+msgid ""
+"Moves the main navigation into a bar across the top of the page instead of "
+"the sidebar layout."
+msgstr ""
+
+msgid ""
+"Pins the header in place so it stays visible while the page scrolls. Only "
+"themes built for it react."
+msgstr ""
+
+msgid ""
+"Sorts and reports albums by their original release year rather than the year"
+" of the pressing. An album with no original year falls back to the normal "
+"one."
+msgstr ""
+
+msgid ""
+"Asks the browser to confirm before leaving the page while something is "
+"playing. Only the embedded player does it, not a share page."
+msgstr ""
+
+msgid ""
+"Pauses this tab when another tab starts playing, so two players do not talk "
+"over each other. Tabs agree through browser storage, so it only covers the "
+"same browser profile."
+msgstr ""
+
+msgid ""
+"Offers democratic play, where listeners vote on what comes next, as a "
+"playback type. It governs the interface: the democratic API methods answer "
+"whether or not it is set."
+msgstr ""
+
+msgid ""
+"Offers Localplay, which drives a player running beside the server, as a "
+"playback type. Installing a Localplay plugin switches this on for every "
+"user."
+msgstr ""
+
+msgid ""
+"Master switch for streaming. The server setting and the account preference "
+"both have to be on, and the Jellyfin endpoints check the pair as well."
+msgstr ""
+
+msgid ""
+"Exposes the video side of the library in menus, searches and graphs. An API "
+"client asking for video while it is off is refused outright, not merely "
+"shown nothing."
+msgstr ""
+
+msgid ""
+"Marks every API stream as a download, so no play count or now playing entry "
+"is recorded for it. Clients can already ask for that per request; this "
+"forces it."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 3. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 4. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 5. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 6. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 8. It is the newest version, so "
+"there is nothing to roll forward to and a client asking for it is refused "
+"outright when this is off."
+msgstr ""
+
+msgid ""
+"Answer every API client with this version regardless of what it asked for. 0"
+" keeps the negotiated version, and a forced version is ignored unless that "
+"version is also enabled above."
+msgstr ""
+
+msgid ""
+"Playlists whose name starts with this string are left out of API and "
+"Subsonic listings. The match is on the prefix only, and an empty value hides"
+" nothing."
+msgstr ""
+
+msgid ""
+"Leaves a smartlist out of API and Subsonic listings when a normal playlist "
+"of the same name and owner exists, so a client does not show the pair twice."
+" Some methods let a client ask for the duplicates anyway."
+msgstr ""
+
+msgid ""
+"Keep one bookmark per item instead of a history: a new position replaces the"
+" previous one for the same item. With it off bookmarks pile up."
+msgstr ""
+
+msgid ""
+"Lets users fetch the original file instead of streaming it. Zip batch "
+"downloads ride on it too, so turning it off takes them with it; the API and "
+"Subsonic backends have their own download settings."
+msgstr ""
+
+msgid ""
+"Lets the browser send the listener position with a play so statistics can be"
+" mapped. Both ends check it: the page does not ask the browser, and the "
+"server refuses a position sent anyway."
+msgstr ""
+
+msgid ""
+"Which Localplay backend is driven, such as mpd or upnp. With none chosen the"
+" Localplay actions and the Subsonic jukebox role have nothing to talk to."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to control Localplay. An unset value fails "
+"closed at administrator rather than open."
+msgstr ""
+
+msgid ""
+"Send an email when a private message arrives. Nothing goes out unless the "
+"account also carries an address and the server has mail enabled."
+msgstr ""
+
+msgid ""
+"Lets users publish a link to an item for people without an account. Turning "
+"it off also kills links already handed out, because every visit rechecks the"
+" setting."
+msgstr ""
+
+msgid ""
+"Marks every Subsonic stream as a download, so no play count or now playing "
+"entry is recorded for it. A client that scrobbles on its own still registers"
+" plays."
+msgstr ""
+
+msgid ""
+"Lists only album artists in the Subsonic artist index instead of everyone "
+"credited on a track. Useful for clients that drown in featured artists."
+msgstr ""
+
+msgid ""
+"Answer with the original Subsonic API instead of the OpenSubsonic one. Older"
+" clients cope better, but every OpenSubsonic-only method stops answering. "
+"API key authentication keeps working either way."
+msgstr ""
+
+msgid ""
+"Report only your own ratings and favorites to Subsonic clients. With it off,"
+" starred lists mix in what other users rated."
+msgstr ""
+
+msgid ""
+"Which catalog receives uploaded files. Uploads stay disabled while this is "
+"unset, whatever the upload switch says."
+msgstr ""
+
+msgid ""
+"Drop votes cast by users who are no longer connected. The sweep runs each "
+"time the democratic playlist is read, not on a schedule."
+msgstr ""
+
+msgid ""
+"Adds the parent album or podcast next to a title in playlist rows, which "
+"helps when a playlist mixes sources. Rows with no parent are unchanged."
+msgstr ""
+
+msgid ""
+"What adding to the playlist does to what is already there: append at the "
+"end, insert after the current track, or replace it."
+msgstr ""
+
+msgid ""
+"File format handed out when the basket is sent as a playlist: m3u, pls, xspf"
+" and so on. It is what an external player receives, not what the web player "
+"uses."
+msgstr ""
+
+msgid ""
+"Refuse to add an item a playlist already contains. API and Subsonic clients "
+"can still ask for the check to be skipped on a given call."
+msgstr ""
+
+msgid ""
+"Authorization link for Last.fm, not a field to fill in. Follow it once to "
+"let Ampache scrobble; the session token lands in the account by itself."
+msgstr ""
+
+msgid ""
+"Base address used for MusicBrainz lookups. Leave it empty for the public "
+"service, or point it at your own mirror."
+msgstr ""
+
+msgid ""
+"Pause between two MusicBrainz calls, in hundredths of a second. The public "
+"service expects one; 0 removes the wait and only makes sense against your "
+"own mirror."
+msgstr ""
+
+msgid ""
+"Starts the web player with broadcasting already armed, so what you play is "
+"offered to listeners without another click."
+msgstr ""
+
+msgid ""
+"Output format forced on API streams, overriding the audio default. Setting "
+"it also marks transcoding as allowed for API clients."
+msgstr ""
+
+msgid ""
+"Output format forced on web player streams, overriding the audio default. "
+"Setting it also marks transcoding as allowed for the web player."
+msgstr ""
+
+msgid ""
+"Format audio is re-encoded to when transcoding happens. A file already in "
+"that format is sent as it is rather than re-encoded to itself."
+msgstr ""
+
+msgid ""
+"Format video is re-encoded to when transcoding happens. As with audio, a "
+"file already in that format is passed through untouched."
+msgstr ""
+
+msgid "Volume the web player starts at, between 0 and 1."
+msgstr ""
+
+msgid ""
+"Ceiling shared between the streams currently being downsampled: each one "
+"gets the ceiling divided by their number. 0 turns the sharing off, and only "
+"listeners whose playback type is downsample are counted."
+msgstr ""
+
+msgid ""
+"Floor for a shared-bandwidth stream. A stream that would be pushed under it "
+"is refused with a server busy error instead of being sent at an unusable "
+"quality."
+msgstr ""
+
+msgid ""
+"How playback is delivered: the web player, a plain stream handed to an "
+"external player, downsampled streaming, Localplay or democratic. Only "
+"downsample listeners count toward the shared bandwidth ceiling."
+msgstr ""
+
+msgid ""
+"Upper speed limit for a single download, in kilobytes per second. 0 removes "
+"the limit, and it throttles the bytes on the wire rather than the encoding "
+"bitrate."
+msgstr ""
+
+msgid ""
+"Whether Ampache may re-encode a file before sending it. Default only "
+"transcodes formats the player cannot handle, never always sends the "
+"original, always re-encodes everything; never also blocks waveform "
+"generation, which reuses the same pipeline."
+msgstr ""
+
+msgid ""
+"Target bitrate for re-encoded streams, in bits per second. It is still "
+"capped per output format, and the API and web player can override it with "
+"their own value."
+msgstr ""
+
+msgid ""
+"Bitrate used for API streams in place of the default. 0 means no override, "
+"not an unlimited rate."
+msgstr ""
+
+msgid ""
+"Bitrate used for web player streams in place of the default. 0 means no "
+"override, not an unlimited rate."
+msgstr ""
+
+msgid ""
+"How many already played tracks the web player keeps above the current one "
+"before trimming them. Disabled keeps the whole history, and Remove all "
+"previous tracks keeps none."
+msgstr ""
+
+msgid ""
+"Lets users add files to the library themselves. Nothing can be uploaded "
+"until a destination catalog is chosen as well, and the account still has to "
+"reach the upload access level."
+msgstr ""
+
+msgid ""
+"Poll GitHub for a newer Ampache release and flag it in the header. Turning "
+"it off also freezes the stored last check time, so nothing is polled again "
+"until it comes back on."
+msgstr ""
+
+msgid ""
+"At import, compare an incoming file against the library and insert a match "
+"as disabled instead of active. It only applies to music catalogs, and the "
+"row is still created."
+msgstr ""
+
+msgid ""
+"Read play counts and statistics from a table built ahead of time instead of "
+"counting rows on every page. It needs the cron task to actually run; without"
+" it the figures freeze where the last run left them."
+msgstr ""
+
+msgid ""
+"Adds the plays recorded since the cached counts were built on top of them, "
+"so all time figures are not a run behind. It does nothing unless the cached "
+"counts are in use."
+msgstr ""
+
+msgid ""
+"Serve the DAAP protocol, which iTunes and compatible players browse. The "
+"endpoint answers Disabled outright while this is off."
+msgstr ""
+
+msgid ""
+"Single password guarding the DAAP endpoint. Left empty, DAAP asks for "
+"nothing at all; it is one shared secret rather than per-account credentials."
+msgstr ""
+
+msgid ""
+"Feed the democratic playlist from a saved search instead of a normal "
+"playlist."
+msgstr ""
+
+msgid ""
+"Custom tag fields kept out of the edit form and out of what the catalog "
+"writes back. It is merged with the free-text list of extra fields below."
+msgstr ""
+
+msgid ""
+"Extra field names to disable on top of the ones picked from the list, comma "
+"separated. Use it for fields the list does not offer."
+msgstr ""
+
+msgid ""
+"Serve stream URLs over plain HTTP even when the site runs on HTTPS. Only "
+"useful for players that cannot do TLS."
+msgstr ""
+
+msgid "Serve the Jellyfin API. Experimental."
+msgstr ""
+
+msgid ""
+"Refuse to start a track that is already in the now playing list, whoever is "
+"listening. A stale row left by a player that never closed its connection "
+"then blocks that track until it is cleaned up."
+msgstr ""
+
+msgid ""
+"Let API sessions live until they are revoked instead of expiring. Convenient"
+" for always-on clients, but a leaked token then stays valid until the "
+"session cache is cleared by hand."
+msgstr ""
+
+msgid ""
+"Episodes past this many newest ones are deleted from a podcast once a sync "
+"has downloaded something. 0 keeps every episode."
+msgstr ""
+
+msgid ""
+"How many freshly published episodes a sync downloads. 0 means all of them "
+"and -1 means none, so 0 is not the way to turn downloads off."
+msgstr ""
+
+msgid ""
+"Let a device pair by showing a short code instead of asking for a password."
+msgstr ""
+
+msgid ""
+"Days a new share link stays valid, used when the person creating it picks no"
+" date. 0 creates links that never expire."
+msgstr ""
+
+msgid ""
+"Write stream and art URLs as paths instead of query strings, which needs the"
+" rewrite rules in the web server. API responses always use plain query "
+"strings regardless, and the UPnP backend always uses the rewritten form."
+msgstr ""
+
+msgid "Serve the Subsonic API, used by many third-party players."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to upload. It is checked on top of the upload "
+"switch, so raising it locks users out without turning uploads off."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file edit its tags without being a content manager. "
+"They still cannot re-file it: the artist, album and owner fields are "
+"stripped from what they submit."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file delete it from disk without being a manager. "
+"Deleting from disk has to be enabled server-side as well."
+msgstr ""
+
+msgid ""
+"Move and rename an uploaded file to where the catalog pattern says it "
+"belongs, instead of leaving it where it landed."
+msgstr ""
+
+msgid ""
+"Command run in the upload directory once a file has arrived, with %FILE% "
+"replaced by its path. It stays dead until upload scripts are allowed in the "
+"configuration file."
+msgstr ""
+
+msgid ""
+"Give every uploader a folder of their own under the catalog. An account "
+"whose username does not resolve cannot upload at all."
+msgstr ""
+
+msgid ""
+"Drops the artist section from the uploads listing, for a server where the "
+"uploader is the artist. It changes that listing only, not how a track is "
+"credited."
+msgstr ""
+
+msgid ""
+"Serve UPnP and DLNA so devices on the network find the library on their own."
+msgstr ""
+
+msgid ""
+"Expose the library over WebDAV, so it can be mounted as a network drive."
+msgstr ""
+
+msgid "bps"
+msgstr ""
+
+msgid "the source file rate"
+msgstr ""
+
+msgid "no ceiling"
+msgstr ""
+
+msgid "no floor"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
+
+msgid "On"
+msgstr "방송"
+
+msgid "Nothing to choose from"
+msgstr ""
+
+msgid "Only the account holder can grant access"
+msgstr ""
+
+#. HINT: Plugin Name
+#, php-format
+msgid "Click to grant %s access to Ampache"
+msgstr "암파치 %s 접근 허용하려면 누르시오"
+
+msgid "The Subsonic backend is off, so this has no effect."
+msgstr ""
+
+msgid "The DAAP backend is off, so this password protects nothing."
+msgstr ""
+
+msgid ""
+"Jellyfin clients cannot reach QuickConnect while the Jellyfin backend is "
+"off. Ampache clients still can."
+msgstr ""
+
+msgid ""
+"That API version is disabled, so the forced version is ignored and clients "
+"negotiate another one."
+msgstr ""
+
+msgid ""
+"The cron cache is off, so live plays are counted anyway and this changes "
+"nothing."
+msgstr ""
+
+msgid "Sharing is off, so no share is ever created to expire."
+msgstr ""
+
+msgid "Drawn placeholders are off, so this style is never used."
+msgstr ""
+
+msgid ""
+"A custom blank album image is set, so drawn placeholders only appear on "
+"browse pages. The API, Subsonic, feeds and the web player serve that image "
+"instead."
+msgstr ""
+
+msgid ""
+"The minimum star rating is 0, which turns the whole sync off: nothing is "
+"written to your files."
+msgstr ""
+
+msgid "The favourites widget is off, so this list is never shown."
+msgstr ""
+
+msgid ""
+"The sidebar can no longer be collapsed, and this only applies to its "
+"collapsed form."
+msgstr ""
+
+msgid ""
+"The full sidebar can no longer be opened, and the filter box only lives "
+"there."
+msgstr ""
+
+msgid "Albums are not grouped by release type, so this order is never used."
+msgstr ""
+
+msgid "Browser notifications are off, so nothing is ever shown for this long."
+msgstr ""
+
+msgid "Video is disabled on this server, so this panel never appears."
+msgstr ""
+
+msgid ""
+"Licensing is off in the server configuration file, so no licence is ever "
+"shown."
+msgstr ""
+
+msgid ""
+"Every stream on this server needs a session, so no embedded player is ever "
+"offered to other sites."
+msgstr ""
+
+msgid ""
+"Broadcasting is off in the server configuration file, so the player never "
+"starts one."
+msgstr ""
+
+msgid ""
+"Video is disabled on this server, so the Video entry is never drawn anyway."
+msgstr ""
+
+msgid ""
+"Your playback type does not hand out playlists, so this only shapes the "
+"\"Download Playlist\" link."
+msgstr ""
+
+msgid ""
+"This playback type is no longer allowed on the server, so it is not offered "
+"here: pick another one, nothing plays with it."
+msgstr ""
+
+msgid "The matching limit is unlimited, so this window is never used."
+msgstr ""
+
+msgid ""
+"Stream limits need statistical graphs, which are off in the server "
+"configuration file. Nothing is enforced."
+msgstr ""
+
+msgid "That sidebar section is hidden, so its order is never used."
+msgstr ""
+
+msgid "Transcoding is off, so this is never read."
+msgstr ""
+
+msgid ""
+"The web player has its own bitrate set, which wins over this one for the web"
+" player."
+msgstr ""
+
+msgid "The API has its own bitrate set, which wins over this one for the API."
+msgstr ""
+
+msgid ""
+"The web player output format wins over this one, and it applies to most "
+"streams, not only the web player."
+msgstr ""
+
+msgid ""
+"The floor is only applied while a maximum bitrate is set, and a maximum of 1"
+" counts as none."
+msgstr ""
+
+msgid ""
+"Uploads are allowed but no destination catalog is chosen, so every upload "
+"fails."
+msgstr ""
+
+msgid ""
+"Upload scripts are disabled in the server configuration file, so this "
+"command never runs."
+msgstr ""
+
+msgid ""
+"Deleting from disk is off in the server configuration file, so no delete "
+"button ever appears."
+msgstr ""
+
+msgid "New episodes are never downloaded, so nothing is ever pruned either."
+msgstr ""
+
+msgid ""
+"Server values. Saving here changes what new accounts start with; existing "
+"accounts keep what they already have."
+msgstr ""
+
+#. HINT: Username
+#, php-format
+msgid "You are editing the preferences of %s"
+msgstr ""
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr " %s 설정 편집 중"
+
 msgid "Return to Login Page"
 msgstr "로그인 화면으로 돌아가기"
 
@@ -2902,10 +3998,6 @@ msgstr[0] "%d  시간"
 
 msgid "Anywhere"
 msgstr "아무 곳"
-
-#, php-format
-msgid "Shared by %s"
-msgstr ""
 
 msgid "Post to Shoutbox"
 msgstr "Shoutbox에 등록하기"
@@ -2961,12 +4053,6 @@ msgstr "접근 거부됨"
 msgid "Localplay Controller Not Defined"
 msgstr "내부 재생 컨트롤러를 정의하지 못함"
 
-msgid "Account"
-msgstr "계정"
-
-msgid "QuickConnect"
-msgstr ""
-
 msgid "No lyrics found."
 msgstr "가사없음"
 
@@ -2975,9 +4061,6 @@ msgstr "노래 편집"
 
 #, php-format
 msgid "Track %d"
-msgstr ""
-
-msgid "Play on the current player"
 msgstr ""
 
 msgid "Song Information"
@@ -3097,7 +4180,9 @@ msgstr "%s - 업데이트"
 msgid ""
 "This page handles all database updates to Ampache starting with %1$s. Your "
 "current version is %2$s with database version %3$s"
-msgstr "이 페이지는 %1$s으로 시작하는 Ampache에 대한 모든 데이터베이스 업데이트를 처리합니다. 현재 버전은 데이터베이스 %3$s버전의 %2$s입니다."
+msgstr ""
+"이 페이지는 %1$s으로 시작하는 Ampache에 대한 모든 데이터베이스 업데이트를 처리합니다. 현재 버전은 데이터베이스 %3$s버전의 "
+"%2$s입니다."
 
 msgid ""
 "Drag & Drop your files or <span class=\"filepond--label-action\"> Browse "
@@ -3152,9 +4237,6 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-msgid "Undo"
-msgstr ""
-
 msgid "File is too large"
 msgstr ""
 
@@ -3200,9 +4282,6 @@ msgstr ""
 msgid "Maximum resolution is {maxResolution}"
 msgstr ""
 
-msgid "Never"
-msgstr "아니오"
-
 msgid "Display"
 msgstr "화면"
 
@@ -3238,6 +4317,10 @@ msgstr "아직 구성된 목록이 없습니다. 미디어 스트리밍을 시�
 
 msgid "Added to playlist"
 msgstr "재생목록에 추가하였습니다"
+
+#, php-format
+msgid "Ampache version: %s"
+msgstr ""
 
 msgid "Received an empty UPnP request"
 msgstr "공백인 UPnP 요청을 받음"
@@ -3667,9 +4750,6 @@ msgstr ""
 msgid "The Playlist has been deleted"
 msgstr "재생목록을 삭제하였습니다"
 
-msgid "Folder"
-msgstr ""
-
 msgid "This Folder will be deleted"
 msgstr ""
 
@@ -3715,6 +4795,18 @@ msgstr ""
 
 msgid "Playlist created"
 msgstr "재생목록 생성하였습니다"
+
+msgid "Folder created"
+msgstr ""
+
+msgid "This folder is not empty"
+msgstr ""
+
+msgid "A folder cannot contain itself"
+msgstr ""
+
+msgid "Folder updated"
+msgstr ""
 
 #. HINT: Number of songs
 #, php-format
@@ -3782,9 +4874,6 @@ msgstr ""
 
 msgid "The feed could not be read"
 msgstr ""
-
-msgid "Server"
-msgstr "서버"
 
 msgid "Your account has been updated"
 msgstr "사용자 계정을 갱신하였습니다"
@@ -3978,8 +5067,8 @@ msgstr "동작중인 비츠 갱신"
 
 #. HINT: filename (file path)
 #, php-format
-msgid "Unable to add Song - %s"
-msgstr "노래 %s 추가할 수 없음"
+msgid "Unable to add %s"
+msgstr ""
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "비츠 카탈로그를 선택하였으나 데이타베이스 파일이 없음"
@@ -4283,7 +5372,9 @@ msgid ""
 "API Call Delay is the delay inserted between repeated requests to Seafile "
 "(such as during an Add or Clean action) to accommodate Seafile's Rate "
 "Limiting."
-msgstr "API 호출 지연은 Seafile(예를 들어 추가 또는 제거 작업 중)의 속도 제한을 수용하기 위해 Seafile에 대한 반복된 요청 사이에 삽입되는 지연입니다."
+msgstr ""
+"API 호출 지연은 Seafile(예를 들어 추가 또는 제거 작업 중)의 속도 제한을 수용하기 위해 Seafile에 대한 반복된 요청 "
+"사이에 삽입되는 지연입니다."
 
 msgid "The default is tuned towards Seafile's default rate limit settings."
 msgstr "기본값은 Seafile의 기본 속도 제한 설정에 맞춰 조정됩니다."
@@ -4587,10 +5678,6 @@ msgstr "데이터베이스를 최신 버전으로 업데이트하기"
 msgid "Display database update information"
 msgstr "데이터베이스 업데이트 정보 표시하기"
 
-#, php-format
-msgid "Ampache version: %s"
-msgstr ""
-
 #. HINT: config version string (e.g. 62)
 #, php-format
 msgid "Config version: %s"
@@ -4723,8 +5810,11 @@ msgstr "`fire-and-forget`-모드를 활성화합니다(이름 변경 시 프롬�
 msgid "The destination charset"
 msgstr "대상 charset"
 
-msgid "Convert filenames to utf8"
-msgstr "파일 이름을 utf8로 변환하기"
+msgid "Name of Catalog (optional)"
+msgstr "카탈로그 이름(선택사항)"
+
+msgid "Convert filenames to utf8 in `some-catalog`"
+msgstr ""
 
 msgid "php-iconv is required for this functionality, quitting"
 msgstr "이 기능에는 php-iconv 가 필요함, 중단처리"
@@ -4762,8 +5852,8 @@ msgstr "앨범 아트 내보내기"
 msgid "Metadata write mode (`linux` or `windows`)"
 msgstr "메타데이터 쓰기 모드 (`linux` 또는 `windows`)"
 
-msgid "Export album art for Linux"
-msgstr "Linux용 앨범 아트 내보내기"
+msgid "Export album art for Linux from `some-catalog`"
+msgstr ""
 
 msgid "Start Album Art Dump"
 msgstr "앨범 아트 내려받기 시작"
@@ -4953,9 +6043,6 @@ msgstr "`Various Artists`의 기본 이름 설정하기"
 msgid "Sort a single file or folder path"
 msgstr ""
 
-msgid "Name of Catalog (optional)"
-msgstr "카탈로그 이름(선택사항)"
-
 msgid "Sort song files"
 msgstr "곡 파일 정렬"
 
@@ -5090,7 +6177,25 @@ msgstr "데이터 정렬 대상: %s"
 msgid "Table engine: %s"
 msgstr "테이블 엔진: %s"
 
+msgid "Nothing out of sync. No changes needed"
+msgstr ""
+
+#, php-format
+msgid "Found %d entries out of sync with your configured charset:"
+msgstr ""
+
+#, php-format
+msgid "Fixed %s"
+msgstr ""
+
+#, php-format
+msgid "Failed to fix %s"
+msgstr ""
+
 msgid "Collection Items"
+msgstr ""
+
+msgid "Playlist Folders"
 msgstr ""
 
 msgid "Current Playlist"
@@ -5119,21 +6224,6 @@ msgstr "검색할 수 없거나 만료됨, 페이지를 다시 읽으세요"
 
 msgid "0 Stars"
 msgstr "별 0개"
-
-msgid "1 Star"
-msgstr "별 1개"
-
-msgid "2 Stars"
-msgstr "별 2개"
-
-msgid "3 Stars"
-msgstr "별 3개"
-
-msgid "4 Stars"
-msgstr "별 4개"
-
-msgid "5 Stars"
-msgstr "별 5개"
 
 msgid "Album Data"
 msgstr "앨범 데이터"
@@ -5207,6 +6297,24 @@ msgstr "최근 건너뜀"
 msgid "My Last Play or Skip"
 msgstr "최근 재생 또는 건너뜀"
 
+msgid "My Last Play (Song)"
+msgstr ""
+
+msgid "My Last Skip (Song)"
+msgstr ""
+
+msgid "My Last Play or Skip (Song)"
+msgstr ""
+
+msgid "My Last Play (Artist)"
+msgstr ""
+
+msgid "My Last Skip (Artist)"
+msgstr ""
+
+msgid "My Last Play or Skip (Artist)"
+msgstr ""
+
 msgid "Played by Me"
 msgstr "사용자가 재생함"
 
@@ -5278,6 +6386,15 @@ msgstr ""
 
 msgid "My Rating (Album)"
 msgstr "평가(앨범)"
+
+msgid "My Last Play (Album)"
+msgstr ""
+
+msgid "My Last Skip (Album)"
+msgstr ""
+
+msgid "My Last Play or Skip (Album)"
+msgstr ""
 
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz 아이디 (앨범)"
@@ -5726,94 +6843,6 @@ msgstr ""
 msgid "Add to playlist / collection"
 msgstr ""
 
-msgid "On"
-msgstr "방송"
-
-msgid "Off"
-msgstr "끔"
-
-msgid "bps"
-msgstr ""
-
-msgid "0 = use the source file rate"
-msgstr ""
-
-msgid "KB/s"
-msgstr ""
-
-msgid "M3U"
-msgstr "M3U"
-
-msgid "Simple M3U"
-msgstr "단순 M3U"
-
-msgid "PLS"
-msgstr "PLS"
-
-msgid "Asx"
-msgstr "Asx"
-
-msgid "RAM"
-msgstr "RAM"
-
-msgid "XSPF"
-msgstr "XSPF"
-
-msgid "Allow API3 Only"
-msgstr "API3만 허용"
-
-msgid "Allow API4 Only"
-msgstr "API4만 허용"
-
-msgid "Allow API5 Only"
-msgstr "API5만 허용"
-
-msgid "Allow API6 Only"
-msgstr ""
-
-msgid "Keep last played track"
-msgstr ""
-
-#. HINT: Keep (2|3|4|5|10) previous tracks
-#, php-format
-msgid "Keep %s previous tracks"
-msgstr ""
-
-msgid "Remove all previous tracks"
-msgstr ""
-
-msgid "Send on Add"
-msgstr "추가하기로 보내기"
-
-msgid "Send and Clear on Add"
-msgstr "추가하기로 보내고 지우기"
-
-msgid "Clear on Send"
-msgstr "보내기를 지우기"
-
-msgid "Always"
-msgstr "항상"
-
-msgid "Year ascending"
-msgstr "년도 오름차순"
-
-msgid "Year descending"
-msgstr "연도 내림차순"
-
-msgid "Name ascending"
-msgstr "이름 오름차순"
-
-msgid "Name descending"
-msgstr "이름 내림차순"
-
-#. HINT: Plugin Name
-#, php-format
-msgid "Click to grant %s access to Ampache"
-msgstr "암파치 %s 접근 허용하려면 누르시오"
-
-msgid "Match my theme"
-msgstr ""
-
 msgid "Unknown Artist"
 msgstr "알수없는 아티스트"
 
@@ -6039,8 +7068,44 @@ msgstr "Piwik 사이트 아이디"
 msgid "Piwik URL"
 msgstr "Piwik URL"
 
+msgid "Popular songs on homepage, one per album and artist"
+msgstr ""
+
+msgid ""
+"How many tracks the panel shows. Each one is the most played of its album "
+"and of its artist, so a higher number reaches further down the ranking "
+"rather than repeating a record."
+msgstr ""
+
+msgid ""
+"Where the panel sits among the other home page panels. Lower comes first, "
+"and panels sharing a number keep the order the plugins were installed in."
+msgstr ""
+
+msgid "Popular variety max items"
+msgstr ""
+
 msgid "Raise the album and artist rating to match the highest song rating"
 msgstr "가장 높은 노래 등급에 맞게 앨범 및 아티스트 등급 올리기"
+
+msgid ""
+"Write how many plays, optionally followed by a comma and how many skips: `5`"
+" or `5,2`. Leave it empty to never apply this rating automatically."
+msgstr ""
+
+msgid ""
+"Ratings below this many stars are not copied to the album and the artist, "
+"and are not written to file tags. 0 turns the whole sync off, which is the "
+"shipped default."
+msgstr ""
+
+msgid "Marking a track as loved also marks its album and its artist."
+msgstr ""
+
+msgid ""
+"Writes the rating into the file itself, so it survives a rescan and follows "
+"the file elsewhere. Ampache must be able to write to your music files."
+msgstr ""
 
 msgid "Minimum star rating to match"
 msgstr "일치하는 최소 별 등급"
@@ -6067,6 +7132,26 @@ msgid "Match rule for Flags"
 msgstr "플래그 일치 규칙"
 
 msgid "Save ratings to file tags when changed"
+msgstr ""
+
+msgid "Right now: never applied."
+msgstr ""
+
+#. HINT: number of plays
+#, php-format
+msgid "Right now: applied after %d play."
+msgid_plural "Right now: applied after %d plays."
+msgstr[0] ""
+
+#. HINT: number of skips
+#, php-format
+msgid "Right now: applied after %d skip."
+msgid_plural "Right now: applied after %d skips."
+msgstr[0] ""
+
+#. HINT: %1$d number of plays, %2$d number of skips
+#, php-format
+msgid "Right now: applied once there are at least %1$d plays and %2$d skips."
 msgstr ""
 
 msgid "RSS View"
@@ -6898,10 +7983,6 @@ msgid "Allow Localplay Play"
 msgstr ""
 
 #: Ampache preference description
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Ampache preference description
 msgid "Share Now Playing information"
 msgstr ""
 
@@ -7142,6 +8223,12 @@ msgid "Allow Downloads"
 msgstr ""
 
 #: Ampache preference description
+msgid ""
+"Allow an embedded player when a link to this server is posted on another "
+"site"
+msgstr ""
+
+#: Ampache preference description
 msgid "Transcode output format - Audio Default"
 msgstr ""
 
@@ -7242,10 +8329,6 @@ msgid "Use Jellyfin backend"
 msgstr ""
 
 #: Ampache preference description
-msgid "Use Jellyfin QuickConnect"
-msgstr ""
-
-#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr ""
 
@@ -7338,7 +8421,15 @@ msgid "Popular Threshold"
 msgstr ""
 
 #: Ampache preference description
+msgid "Enable QuickConnect service"
+msgstr ""
+
+#: Ampache preference description
 msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Always show the rightbar"
 msgstr ""
 
 #: Ampache preference description
@@ -7463,10 +8554,6 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Ampache preference description
-msgid "Custom CSS Order - Video"
 msgstr ""
 
 #: Ampache preference description

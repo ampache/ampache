@@ -10,14 +10,16 @@
 # Paulo Schopf, 2017-2025
 # Rodrigo Emmanuel Santana Borges <rodrigoesborges@gmail.com>, 2021
 # Wellington Oliveira dos Santos <welblade@gmail.com>, 2016
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Ampache\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-09-14 15:55+1000\n"
-"PO-Revision-Date: 2015-05-12 16:07+0000\n"
+"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Paulo Schopf, 2017-2025\n"
-"Language-Team: Portuguese (Brazil) (http://app.transifex.com/ampache/ampache/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/ampache/teams/40984/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -131,6 +133,9 @@ msgstr "Tocar por último"
 
 msgid "Add to Temporary Playlist"
 msgstr "Adicionar a uma playlist temporária"
+
+msgid "More"
+msgstr "Mais"
 
 msgid "Editing Existing User"
 msgstr "Editando Usuário Existente"
@@ -255,6 +260,21 @@ msgstr "Editar álbum"
 msgid "Download"
 msgstr "Baixar"
 
+msgid "Songs"
+msgstr "Músicas "
+
+msgid "Played"
+msgstr "Tocada"
+
+msgid "Genres"
+msgstr "Gêneros"
+
+msgid "Moods"
+msgstr ""
+
+msgid "Rating"
+msgstr "Classificação"
+
 msgid "Direct URL to Image"
 msgstr "URL direta para a imagem"
 
@@ -308,7 +328,9 @@ msgstr "Randomizar todos para uma playlist temporária"
 
 msgid ""
 "Are you sure? This will overwrite Artist details using MusicBrainz data"
-msgstr "Tem certeza? Isso irá sobrescrever os detalhes do Artista usando os dados do MusicBrainz"
+msgstr ""
+"Tem certeza? Isso irá sobrescrever os detalhes do Artista usando os dados do"
+" MusicBrainz"
 
 msgid "Update details from MusicBrainz"
 msgstr "Atualizar detalhes pelo MusicBrainz"
@@ -322,9 +344,6 @@ msgstr "Editar artista"
 msgid "Albums"
 msgstr "Álbuns "
 
-msgid "Songs"
-msgstr "Músicas "
-
 msgid "Top Tracks"
 msgstr "Trilhas Top"
 
@@ -336,6 +355,9 @@ msgstr "Artistas similares"
 
 msgid "Similar Songs"
 msgstr "Músicas similares"
+
+msgid "Time"
+msgstr "Duração"
 
 msgid "Disabled"
 msgstr "Desabilitado"
@@ -472,11 +494,29 @@ msgstr "Criar Licença"
 msgid "Refresh"
 msgstr "Atualizar"
 
-msgid "Duration"
-msgstr "Duração"
+msgid "Hidden"
+msgstr "Oculto"
+
+msgid "Create Folder"
+msgstr ""
 
 msgid "Create Playlist"
 msgstr "Criar Playlist"
+
+msgid "Create Smart Playlist"
+msgstr ""
+
+msgid "Save Track Order"
+msgstr "Salvar a ordem das trilhas"
+
+msgid "Do you really want to delete this Folder?"
+msgstr ""
+
+msgid "Reorder"
+msgstr "Reordenar"
+
+msgid "Duration"
+msgstr "Duração"
 
 msgid "No podcast episode found"
 msgstr "Nenhum episódio de podcast encontrado"
@@ -529,17 +569,11 @@ msgstr "Torná-lo pronto..."
 msgid "Go"
 msgstr "Ir"
 
-msgid "Reorder"
-msgstr "Reordenar"
-
 msgid "Owner"
 msgstr "Proprietário"
 
 msgid "Type"
 msgstr "Tipo"
-
-msgid "Save Track Order"
-msgstr "Salvar a ordem das trilhas"
 
 msgid "This Collection is empty"
 msgstr ""
@@ -618,12 +652,6 @@ msgstr "Código de barras"
 
 msgid "Original Year"
 msgstr "Ano original"
-
-msgid "Genres"
-msgstr "Gêneros"
-
-msgid "Moods"
-msgstr ""
 
 msgid "Overwrite tags of sub songs"
 msgstr "Sobrescrever etiquetas de músicas secundárias"
@@ -709,6 +737,12 @@ msgstr "URL do stream"
 msgid "Codec"
 msgstr "Codec"
 
+msgid "Folder"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhuma"
+
 msgid "Random"
 msgstr "Aleatório"
 
@@ -782,9 +816,6 @@ msgstr "Mais metadatos"
 
 msgid "Less Metadata"
 msgstr ""
-
-msgid "Hidden"
-msgstr "Oculto"
 
 msgid "Re-tag"
 msgstr "Reetiquetar"
@@ -865,12 +896,16 @@ msgid "Please enable 'catalog_filter' in your sever config file"
 msgstr "Ative o 'catalog_filter' no arquivo de configuração do servidor"
 
 msgid "Catalog filters are a way to stop users accessing different catalogs"
-msgstr "Filtros de catálogo são uma maneira de impedir usuários de acessarem diferentes catálogos"
+msgstr ""
+"Filtros de catálogo são uma maneira de impedir usuários de acessarem "
+"diferentes catálogos"
 
 msgid ""
 "If you do not tick a catalog, it will be hidden from users that you assign "
 "to this filter"
-msgstr "Se você não marcar um catálogo, ele ficará oculto para os usuários que você atribuir a este filtro"
+msgstr ""
+"Se você não marcar um catálogo, ele ficará oculto para os usuários que você "
+"atribuir a este filtro"
 
 msgid "Filter Name"
 msgstr "Nome do Filtro"
@@ -887,7 +922,10 @@ msgstr "Novos catálogos são adicionados ao grupo DEFAULT quando criados"
 msgid ""
 "In the form below enter either a local path (i.e. /data/music) or the URL to"
 " a remote Ampache installation (i.e http://theotherampache.com)"
-msgstr "No formulário abaixo, insira um caminho local (ou seja, /data/music) ou o URL para uma instalação remota do Ampache (ou seja, http://theotherampache.com)"
+msgstr ""
+"No formulário abaixo, insira um caminho local (ou seja, /data/music) ou o "
+"URL para uma instalação remota do Ampache (ou seja, "
+"http://theotherampache.com)"
 
 msgid "Catalog Name"
 msgstr "Nome do catálogo"
@@ -908,7 +946,9 @@ msgid "Gather Art"
 msgstr "Coletar arte"
 
 msgid "Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)"
-msgstr "Criar playlists a partir de arquivos da playlist. (m3u, m3u8, asx, pls, xspf)"
+msgstr ""
+"Criar playlists a partir de arquivos da playlist. (m3u, m3u8, asx, pls, "
+"xspf)"
 
 msgid "Music"
 msgstr "Música"
@@ -1026,7 +1066,11 @@ msgid ""
 "that you visit. They are widely used in order to make websites work, or work"
 " more efficiently, as well as to provide information to the owners of the "
 "site"
-msgstr "Cookies são pequenos arquivos de texto que são colocados no seu computador por sites que você visita. Eles são utilizados a fim de que funcionem ou trabalhem de forma mais eficiente, bem como para fornecer informações para os proprietários do site."
+msgstr ""
+"Cookies são pequenos arquivos de texto que são colocados no seu computador "
+"por sites que você visita. Eles são utilizados a fim de que funcionem ou "
+"trabalhem de forma mais eficiente, bem como para fornecer informações para "
+"os proprietários do site."
 
 msgid "The table below explains the cookies we use and why"
 msgstr "A tabela abaixo lista os cookies que usamos e o porquê:"
@@ -1050,7 +1094,8 @@ msgid "Keep latest web player volume"
 msgstr "Manter o último volume do player da web"
 
 msgid "Show/Hide column [column_index] when browsing [object_type] objects"
-msgstr "Mostrar/Ocultar coluna [column_index] ao navegar por objetos [object_type]"
+msgstr ""
+"Mostrar/Ocultar coluna [column_index] ao navegar por objetos [object_type]"
 
 msgid "Use alphabet when browsing [object_type] objects"
 msgstr "Usar navegação alfabética em objetos [object_type]"
@@ -1162,15 +1207,20 @@ msgstr ""
 
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
-msgstr "O Ampache coloca cookies no seu computador para ajudar a melhorar este site."
+msgstr ""
+"O Ampache coloca cookies no seu computador para ajudar a melhorar este site."
 
 msgid ""
 "Cookies are used for core site functionality and are not used for tracking "
 "or analytics."
-msgstr "Os cookies são usados para funcionalidade central do site e não são usados para rastreamento nem para análise."
+msgstr ""
+"Os cookies são usados para funcionalidade central do site e não são usados "
+"para rastreamento nem para análise."
 
 msgid "By logging in you agree to the use of cookies while using this site."
-msgstr "Ao iniciar a sessão você concorda com o uso de cookies enquanto estiver usando este site."
+msgstr ""
+"Ao iniciar a sessão você concorda com o uso de cookies enquanto estiver "
+"usando este site."
 
 msgid "Submit"
 msgstr "Enviar"
@@ -1260,6 +1310,15 @@ msgstr "Usuários"
 msgid "Newest"
 msgstr "Mais novos"
 
+msgid "Edit Folder"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Visibility"
+msgstr ""
+
 msgid "Popular"
 msgstr "Populares"
 
@@ -1308,7 +1367,9 @@ msgstr "Erro"
 msgid ""
 "The following error has occurred, you will be automatically redirected in 10"
 " seconds."
-msgstr "Ocorreu o seguinte erro e você será redirecionado automaticamente em 10 segundos."
+msgstr ""
+"Ocorreu o seguinte erro e você será redirecionado automaticamente em 10 "
+"segundos."
 
 msgid "Error Messages"
 msgstr "Mensagens de Erro"
@@ -1328,7 +1389,10 @@ msgstr "Passo 3 - Configurar a conta inicial"
 msgid ""
 "This step creates your initial Ampache admin account. Once your admin "
 "account has been created you will be redirected to the login page."
-msgstr "Esta etapa cria sua conta inicial de administrador do Ampache. Uma vez que sua conta de administrador estiver criada, você será redirecionado para a página de login."
+msgstr ""
+"Esta etapa cria sua conta inicial de administrador do Ampache. Uma vez que "
+"sua conta de administrador estiver criada, você será redirecionado para a "
+"página de login."
 
 msgid "Create Admin Account"
 msgstr "Criar conta de administrador"
@@ -1343,11 +1407,16 @@ msgid ""
 "This page handles the installation of the Ampache database and the creation "
 "of the ampache.cfg.php file. Before you continue please make sure that you "
 "have the following prerequisites:"
-msgstr "Esta página processa a instalação do banco de dados do Ampache e a criação do arquivo ampache.cfg.php. Antes de continuar certifique-se de que você tem os seguintes pré-requisitos:"
+msgstr ""
+"Esta página processa a instalação do banco de dados do Ampache e a criação "
+"do arquivo ampache.cfg.php. Antes de continuar certifique-se de que você tem"
+" os seguintes pré-requisitos:"
 
 msgid ""
 "A MySQL server with a username and password that can create/modify databases"
-msgstr "Um servidor MySQL com um nome de usuário e senha que possa criar/modificar bancos de dados"
+msgstr ""
+"Um servidor MySQL com um nome de usuário e senha que possa criar/modificar "
+"bancos de dados"
 
 #. HINT: %1 and %2 refer to Ampache configuration files
 #, php-format
@@ -1360,7 +1429,11 @@ msgid ""
 "the information below. You will only be asked for the required config "
 "values. If you would like to make changes to your Ampache install at a later"
 " date simply edit %s"
-msgstr "Depois de ter garantir que os requisitos acima estão atendidos, preencha as informações abaixo. A você só será pedido os valores de configuração necessários. Se quiser alterar a instalação do Ampache posteriormente, basta editar %s"
+msgstr ""
+"Depois de ter garantir que os requisitos acima estão atendidos, preencha as "
+"informações abaixo. A você só será pedido os valores de configuração "
+"necessários. Se quiser alterar a instalação do Ampache posteriormente, basta"
+" editar %s"
 
 msgid "Check"
 msgstr "Verificar"
@@ -1377,7 +1450,9 @@ msgstr "\"ampache.sql\" é legível"
 msgid ""
 "This tests whether the file needed to initialize the database structure is "
 "available."
-msgstr "Isso testa se o arquivo necessário para inicializar a estrutura do banco de dados está disponível."
+msgstr ""
+"Isso testa se o arquivo necessário para inicializar a estrutura do banco de "
+"dados está disponível."
 
 msgid "\"ampache.cfg.php\" is writable"
 msgstr "\"ampache.cfg.php\" é gravável"
@@ -1385,7 +1460,9 @@ msgstr "\"ampache.cfg.php\" é gravável"
 msgid ""
 "This tests whether PHP can write to config. This is not strictly necessary, "
 "but will help streamline the installation process."
-msgstr "Isso testa se o PHP pode gravar o arquivo de configuração. Isso não é estritamente necessário, mas ajudará a otimizar o processo de instalação."
+msgstr ""
+"Isso testa se o PHP pode gravar o arquivo de configuração. Isso não é "
+"estritamente necessário, mas ajudará a otimizar o processo de instalação."
 
 #, php-format
 msgid ""
@@ -1394,7 +1471,11 @@ msgid ""
 " write the config file directly to the correct location. If you select "
 "\"download\" it will prompt you to download the config file, and you can "
 "then manually place the config file in %s."
-msgstr "Esta etapa utiliza os valores básicos de configuração e gera o arquivo de configuração. Se a pasta config/ for gravável, você pode selecionar \"write\" para que o Ampache grave o arquivo de configuração diretamente. Se escolher \"baixar\", após baixá-lo você deverá colocá-lo manualmente em %s."
+msgstr ""
+"Esta etapa utiliza os valores básicos de configuração e gera o arquivo de "
+"configuração. Se a pasta config/ for gravável, você pode selecionar "
+"\"write\" para que o Ampache grave o arquivo de configuração diretamente. Se"
+" escolher \"baixar\", após baixá-lo você deverá colocá-lo manualmente em %s."
 
 msgid "Generate Configuration File"
 msgstr "Gerando o Arquivo de Configuração"
@@ -1432,7 +1513,9 @@ msgstr "Tipo de Instalação"
 msgid ""
 "Optimize Ampache for your use case. The installer will enable/disable "
 "features automatically."
-msgstr "Otimizar o Ampache para seu caso. O instalador irá habilitar/desabilitar recursos automaticamente."
+msgstr ""
+"Otimizar o Ampache para seu caso. O instalador irá habilitar/desabilitar "
+"recursos automaticamente."
 
 msgid "Default"
 msgstr "Padrão"
@@ -1446,14 +1529,18 @@ msgstr "Minimalista"
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
 " Interface."
-msgstr "Somente os recursos essenciais estão ativados para transmissão de suas músicas via interface Web."
+msgstr ""
+"Somente os recursos essenciais estão ativados para transmissão de suas "
+"músicas via interface Web."
 
 msgid "Community"
 msgstr "Comunidade"
 
 msgid ""
 "Recommended settings when using Ampache as a frontend for a music community."
-msgstr "Configurações recomendadas ao usar o Ampache como interface para uma comunidade musical."
+msgstr ""
+"Configurações recomendadas ao usar o Ampache como interface para uma "
+"comunidade musical."
 
 msgid "Allow Transcoding"
 msgstr "Permitir transcodificação"
@@ -1465,13 +1552,22 @@ msgid ""
 "takes advantage of existing binary applications such as ffmpeg. In order for"
 " transcoding to work you must first install the supporting applications and "
 "ensure that they are executable by the web server."
-msgstr "A transcodificação permite converter a codificação da músicas. O Ampache suporta transcodificação instantânea de qualquer tipo de arquivo com base no usuário, player, endereço IP ou largura de banda disponível. Para transcodificar, o Ampache aproveita os aplicativos existentes, como o ffmpeg. Para que isso funcione, você deve primeiro instalar os aplicativos de suporte e garantir que eles sejam executáveis pelo servidor web."
+msgstr ""
+"A transcodificação permite converter a codificação da músicas. O Ampache "
+"suporta transcodificação instantânea de qualquer tipo de arquivo com base no"
+" usuário, player, endereço IP ou largura de banda disponível. Para "
+"transcodificar, o Ampache aproveita os aplicativos existentes, como o "
+"ffmpeg. Para que isso funcione, você deve primeiro instalar os aplicativos "
+"de suporte e garantir que eles sejam executáveis pelo servidor web."
 
 msgid ""
 "This section applies the default transcoding configuration according to the "
 "application you want to use. You may need to customize settings once setup "
 "has ended."
-msgstr "Esta seção aplica a configuração padrão de transcodificação de acordo com o aplicativo que você deseja usar. Pode ser necessário personalizar as configurações assim que a instalação terminar."
+msgstr ""
+"Esta seção aplica a configuração padrão de transcodificação de acordo com o "
+"aplicativo que você deseja usar. Pode ser necessário personalizar as "
+"configurações assim que a instalação terminar."
 
 msgid "See wiki page"
 msgstr "Ver página da wiki"
@@ -1479,14 +1575,15 @@ msgstr "Ver página da wiki"
 msgid "Template Configuration"
 msgstr "Configuração do modelo"
 
-msgid "None"
-msgstr "Nenhuma"
-
 msgid ""
 "No default transcoding application found. You may need to install a popular "
 "application (FFmpeg, avconv ...) or customize transcoding settings manually "
 "after installation."
-msgstr "Nenhum aplicativo padrão de transcodificação foi encontrado. Pode ser necessário instalar um aplicativo popular (FFmpeg, avconv, etc.) ou personalizar as configurações de transcodificação manualmente após a instalação."
+msgstr ""
+"Nenhum aplicativo padrão de transcodificação foi encontrado. Pode ser "
+"necessário instalar um aplicativo popular (FFmpeg, avconv, etc.) ou "
+"personalizar as configurações de transcodificação manualmente após a "
+"instalação."
 
 msgid "Players"
 msgstr "Players"
@@ -1494,12 +1591,17 @@ msgstr "Players"
 msgid ""
 "Ampache is more than only a web interface. Several backends are implemented "
 "to ensure you can stream your media to any player."
-msgstr "Ampache é mais do que apenas uma interface web. Vários backends são implementados para garantir que você possa transmitir sua mídia para qualquer player."
+msgstr ""
+"Ampache é mais do que apenas uma interface web. Vários backends são "
+"implementados para garantir que você possa transmitir sua mídia para "
+"qualquer player."
 
 msgid ""
 "Select each backend to enable. Depending on the backend, you may need to "
 "perform additional configuration."
-msgstr "Selecione cada backend a habilitar. Dependendo do backend, pode ser necessário executar configurações adicionais."
+msgstr ""
+"Selecione cada backend a habilitar. Dependendo do backend, pode ser "
+"necessário executar configurações adicionais."
 
 msgid "File Insight"
 msgstr "Detalhes do arquivo"
@@ -1562,7 +1664,10 @@ msgid ""
 "This step creates and inserts the Ampache database, so please provide a "
 "MySQL account with database creation rights. This may take some time on "
 "slower computers."
-msgstr "Esta etapa cria e insere o banco de dados Ampache, portanto, forneça uma conta MySQL com direitos de criação de banco de dados. Isso pode levar algum tempo em computadores mais lentos."
+msgstr ""
+"Esta etapa cria e insere o banco de dados Ampache, portanto, forneça uma "
+"conta MySQL com direitos de criação de banco de dados. Isso pode levar algum"
+" tempo em computadores mais lentos."
 
 msgid "Insert Ampache Database"
 msgstr "Inserir banco de dados do Ampache"
@@ -1608,7 +1713,16 @@ msgstr "Erro na Análise da Configuração Ampache"
 msgid ""
 "You may have reached this page because your %s configuration file was not "
 "parsable"
-msgstr "Você pode ter acessado esta página porque seu %s arquivo de configuração não é analisável"
+msgstr ""
+"Você pode ter acessado esta página porque seu %s arquivo de configuração não"
+" é analisável"
+
+#. HINT: line number
+#, php-format
+msgid ""
+"The unclosed value looks like it starts around line %d — the parser only "
+"reports where it finally gives up, which is often further down the file"
+msgstr ""
 
 msgid "Please visit the wiki for help"
 msgstr "Visite o wiki para mais ajuda"
@@ -1619,7 +1733,9 @@ msgstr "Instalação"
 msgid ""
 "You may have reached this page because Ampache was unable to load the "
 "required dependencies"
-msgstr "Você pode ter acessado esta página porque o Ampache não conseguiu carregar as dependências necessárias"
+msgstr ""
+"Você pode ter acessado esta página porque o Ampache não conseguiu carregar "
+"as dependências necessárias"
 
 msgid "Debug Page"
 msgstr "Página de Depuração"
@@ -1630,7 +1746,9 @@ msgstr "Depuração"
 msgid ""
 "You may have reached this page because a configuration error has occurred. "
 "Debug information is below."
-msgstr "Você pode ter chegado a esta página porque ocorreu um erro de configuração. As informações de depuração estão abaixo."
+msgstr ""
+"Você pode ter chegado a esta página porque ocorreu um erro de configuração. "
+"As informações de depuração estão abaixo."
 
 msgid "Web Installation"
 msgstr "Instalação web"
@@ -1641,7 +1759,9 @@ msgstr "Versão do PHP"
 msgid ""
 "This tests whether you are running at least the minimum version of PHP "
 "required by Ampache."
-msgstr "Isso testa se você está executando pelo menos a versão mínima do PHP exigido pelo Ampache."
+msgstr ""
+"Isso testa se você está executando pelo menos a versão mínima do PHP exigido"
+" pelo Ampache."
 
 msgid "Dependencies"
 msgstr "Dependências"
@@ -1661,7 +1781,9 @@ msgstr "Extensão de hash PHP"
 msgid ""
 "This tests whether you have the hash extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão de hash habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão de hash habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 msgid "SHA256"
 msgstr "SHA256"
@@ -1669,7 +1791,9 @@ msgstr "SHA256"
 msgid ""
 "This tests whether the hash extension supports SHA256. This algorithm is "
 "required by Ampache."
-msgstr "Isso testa se a extensão de hash SHA256 é suportada. Este algoritmo é necessário pelo Ampache."
+msgstr ""
+"Isso testa se a extensão de hash SHA256 é suportada. Este algoritmo é "
+"necessário pelo Ampache."
 
 msgid "PHP PDO extension"
 msgstr "Extensão PDO PHP"
@@ -1677,7 +1801,9 @@ msgstr "Extensão PDO PHP"
 msgid ""
 "This tests whether you have the PDO extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão PDO habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão PDO habilitada. Esta extensão é necessária"
+" pelo Ampache."
 
 msgid "MySQL"
 msgstr "MySQL"
@@ -1685,7 +1811,9 @@ msgstr "MySQL"
 msgid ""
 "This tests whether the MySQL driver for PDO is enabled. This driver is "
 "required by Ampache."
-msgstr "Isso testa se o driver do MySQL para PDO está habilitado. Este driver é necessário pelo Ampache."
+msgstr ""
+"Isso testa se o driver do MySQL para PDO está habilitado. Este driver é "
+"necessário pelo Ampache."
 
 msgid "PHP session extension"
 msgstr "Extensão session PHP"
@@ -1693,7 +1821,9 @@ msgstr "Extensão session PHP"
 msgid ""
 "This tests whether you have the session extension enabled. This extension is"
 " required by Ampache."
-msgstr "Isso testa se você tem a extensão session habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão session habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 msgid "PHP iconv extension"
 msgstr "Extensão iconv PHP"
@@ -1701,7 +1831,9 @@ msgstr "Extensão iconv PHP"
 msgid ""
 "This tests whether you have the iconv extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão iconv habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão iconv habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 msgid "PHP JSON extension"
 msgstr "Extensão JSON PHP"
@@ -1709,7 +1841,9 @@ msgstr "Extensão JSON PHP"
 msgid ""
 "This tests whether you have the JSON extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão JSON habilitada. Esta extensão é necessária pelo Ampache."
+msgstr ""
+"Isso testa se você tem a extensão JSON habilitada. Esta extensão é "
+"necessária pelo Ampache."
 
 msgid "PHP intl extension"
 msgstr "Extensão PHP intl"
@@ -1717,7 +1851,9 @@ msgstr "Extensão PHP intl"
 msgid ""
 "This tests whether you have the intl extension enabled. This extension is "
 "required by Ampache."
-msgstr "Isso testa se você tem a extensão intl ativada. Esta extensão é exigida pela Ampache."
+msgstr ""
+"Isso testa se você tem a extensão intl ativada. Esta extensão é exigida pela"
+" Ampache."
 
 msgid "PHP cURL extension"
 msgstr "Extensão PHP cURL"
@@ -1725,7 +1861,9 @@ msgstr "Extensão PHP cURL"
 msgid ""
 "This tests whether you have the cURL extension enabled. This is not strictly"
 " necessary, but may result in a better experience."
-msgstr "Isso testa se você tem a extensão cURL ativada. Isso não é estritamente necessário, mas pode resultar em uma experiência melhor."
+msgstr ""
+"Isso testa se você tem a extensão cURL ativada. Isso não é estritamente "
+"necessário, mas pode resultar em uma experiência melhor."
 
 msgid "PHP zlib extension"
 msgstr "Extensão zlib PHP"
@@ -1733,7 +1871,10 @@ msgstr "Extensão zlib PHP"
 msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly"
 " necessary, but may result in a better experience (zip download)."
-msgstr "Isso testa se você tem a extensão zlib habilitada. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência (baixar arquivos em formato zip)."
+msgstr ""
+"Isso testa se você tem a extensão zlib habilitada. Isto não é estritamente "
+"necessário, mas pode resultar em uma melhor experiência (baixar arquivos em "
+"formato zip)."
 
 msgid "WARNING"
 msgstr "AVISO"
@@ -1767,7 +1908,9 @@ msgstr "Extensão PHP SimpleXML"
 msgid ""
 "This tests whether you have the SimpleXML extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se você tem a extensão SimpleXML ativada. Isso não é estritamente necessário, mas pode resultar em uma experiência melhor."
+msgstr ""
+"Isso testa se você tem a extensão SimpleXML ativada. Isso não é estritamente"
+" necessário, mas pode resultar em uma experiência melhor."
 
 msgid "PHP GD extension"
 msgstr "Extensão PHP GD"
@@ -1775,7 +1918,9 @@ msgstr "Extensão PHP GD"
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
-msgstr "Isso testa se você tem a extensão GD habilitada. Isso não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se você tem a extensão GD habilitada. Isso não é estritamente "
+"necessário, mas pode resultar em uma melhor experiência."
 
 msgid "PHP memory limit override"
 msgstr "Sobrescrever limite de memória do PHP"
@@ -1783,7 +1928,9 @@ msgstr "Sobrescrever limite de memória do PHP"
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se Ampache pode sobrescrever o limite de memória. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se Ampache pode sobrescrever o limite de memória. Isto não é "
+"estritamente necessário, mas pode resultar em uma melhor experiência."
 
 msgid "PHP execution time override"
 msgstr "Sobrescrever tempo de execução do PHP"
@@ -1791,7 +1938,10 @@ msgstr "Sobrescrever tempo de execução do PHP"
 msgid ""
 "This tests whether Ampache can override the limit on maximum execution time."
 " This is not strictly necessary, but may result in a better experience."
-msgstr "Isso testa se Ampache pode sobrescrever o limite de tempo máximo de execução do PHP. Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se Ampache pode sobrescrever o limite de tempo máximo de execução"
+" do PHP. Isto não é estritamente necessário, mas pode resultar em uma melhor"
+" experiência."
 
 msgid "PHP max upload size"
 msgstr "Tamanho máximo de upload do PHP"
@@ -1799,7 +1949,9 @@ msgstr "Tamanho máximo de upload do PHP"
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
-msgstr "Isso testa se o Ampache pode fazer upload de arquivos médios (> = 20M). Isto não é estritamente necessário, mas pode resultar em uma melhor experiência."
+msgstr ""
+"Isso testa se o Ampache pode fazer upload de arquivos médios (> = 20M). Isto"
+" não é estritamente necessário, mas pode resultar em uma melhor experiência."
 
 msgid "PHP integer size"
 msgstr "Tamanho de inteiro PHP"
@@ -1808,7 +1960,10 @@ msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
 "requires a 64-bit operating system."
-msgstr "Isso testa se o Ampache pode gerenciar arquivos grandes (> 2 GB). Isso não é estritamente necessário, mas pode resultar em uma experiência melhor. Isso geralmente requer um sistema operacional de 64 bits."
+msgstr ""
+"Isso testa se o Ampache pode gerenciar arquivos grandes (> 2 GB). Isso não é"
+" estritamente necessário, mas pode resultar em uma experiência melhor. Isso "
+"geralmente requer um sistema operacional de 64 bits."
 
 msgid "PHP mbstring.func_overload"
 msgstr "PHP mbstring.func_overload"
@@ -1820,7 +1975,11 @@ msgid ""
 "is not strictly necessary, but enabling Ampache ID3 tag write support "
 "(disabled by default) along with mbstring.func_overload may result in "
 "irreversible corruption of your music files."
-msgstr "Isso testa se o PHP %s está definido, pois pode interromper o suporte à tag ID3. Isso não é estritamente necessário, mas habilitar o suporte à gravação de tags Ampache ID3 (desativado por padrão) junto com mbstring.func_overload pode resultar em uma corrupção irreversível de seus arquivos de música."
+msgstr ""
+"Isso testa se o PHP %s está definido, pois pode interromper o suporte à tag "
+"ID3. Isso não é estritamente necessário, mas habilitar o suporte à gravação "
+"de tags Ampache ID3 (desativado por padrão) junto com mbstring.func_overload"
+" pode resultar em uma corrupção irreversível de seus arquivos de música."
 
 msgid "Configuration file readability"
 msgstr "Legibilidade do arquivo de configuração"
@@ -1828,12 +1987,16 @@ msgstr "Legibilidade do arquivo de configuração"
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file is"
 " either not in the correct location, or not readable."
-msgstr "Este teste tenta ler o arquivo config/ampache.cfg.php. Se falhar, o arquivo não está no local correto ou não está legível."
+msgstr ""
+"Este teste tenta ler o arquivo config/ampache.cfg.php. Se falhar, o arquivo "
+"não está no local correto ou não está legível."
 
 msgid ""
 "If you are installing Ampache for the first time you can ignore this warning"
 " and proceed to the installer."
-msgstr "Se estiver instalando Ampache pela primeira vez, ignore este aviso e continue a instalação."
+msgstr ""
+"Se estiver instalando Ampache pela primeira vez, ignore este aviso e "
+"continue a instalação."
 
 msgid "Configuration file validity"
 msgstr "Validade do arquivo de configuração"
@@ -1841,12 +2004,17 @@ msgstr "Validade do arquivo de configuração"
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that Ampache is able to completely parse your config file."
-msgstr "Este teste garante que você tenha definido todas as variáveis de configuração necessárias e que o Ampache possa analisar seu arquivo de configuração inteiramente."
+msgstr ""
+"Este teste garante que você tenha definido todas as variáveis de "
+"configuração necessárias e que o Ampache possa analisar seu arquivo de "
+"configuração inteiramente."
 
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
-msgstr "Isso tenta conectar-se ao banco de dados usando os valores lidos em seu arquivo de configuração."
+msgstr ""
+"Isso tenta conectar-se ao banco de dados usando os valores lidos em seu "
+"arquivo de configuração."
 
 msgid "Database tables"
 msgstr "Tabelas do banco de dados"
@@ -1854,7 +2022,9 @@ msgstr "Tabelas do banco de dados"
 msgid ""
 "This checks a few key tables to make sure that the Ampache database exists, "
 "and the user has access to the database"
-msgstr "Isso verifica algumas tabelas principais para garantir que o banco de dados Ampache exista e o usuário tenha acesso a ele."
+msgstr ""
+"Isso verifica algumas tabelas principais para garantir que o banco de dados "
+"Ampache exista e o usuário tenha acesso a ele."
 
 msgid "Database autocommit"
 msgstr ""
@@ -1876,7 +2046,10 @@ msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
 "then your web_path is not set correctly."
-msgstr "Isso garante que sua variável web_path esteja definida corretamente e que podemos acessar a página de índice. Se você não vir uma marca de checagem aqui, então seu web_path não está definido corretamente."
+msgstr ""
+"Isso garante que sua variável web_path esteja definida corretamente e que "
+"podemos acessar a página de índice. Se você não vir uma marca de checagem "
+"aqui, então seu web_path não está definido corretamente."
 
 msgid "Date"
 msgstr "Data"
@@ -1954,6 +2127,9 @@ msgstr ""
 msgid "Show less"
 msgstr ""
 
+msgid "Shuffle"
+msgstr "Misturar"
+
 msgid "Add to New Playlist"
 msgstr "Adicionar à uma nova playlist"
 
@@ -1981,14 +2157,22 @@ msgstr "Playlist aleatória"
 msgid "No items"
 msgstr "Nenhum item"
 
-msgid "More"
-msgstr "Mais"
+msgid "This player is no longer available"
+msgstr ""
+
+#. HINT: name of this Ampache server
+#, php-format
+msgid "Open on %s"
+msgstr ""
 
 msgid "Log out"
 msgstr "Sair"
 
 msgid "Show Lyrics"
 msgstr "Mostrar letra"
+
+msgid "Playback failed"
+msgstr ""
 
 msgid "Add All to playlist"
 msgstr "Adicionar todos à playlist"
@@ -2024,7 +2208,8 @@ msgid "Unsupported"
 msgstr "Não suportado"
 
 msgid "This media is not supported by the player. Is your browser up to date?"
-msgstr "Esta mídia não é suportada pelo player. Seu navegador está atualizado?"
+msgstr ""
+"Esta mídia não é suportada pelo player. Seu navegador está atualizado?"
 
 msgid "Are you sure? This will replace the current track order"
 msgstr ""
@@ -2050,6 +2235,13 @@ msgstr "Editar Playlist"
 msgid "Do you really want to delete this Playlist?"
 msgstr "Quer realmente excluir esta Playlist?"
 
+msgid "Last Update"
+msgstr "Última atualização"
+
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr "# Items"
+
 msgid "Smart Playlist Edit"
 msgstr "Editar Playlist Inteligente"
 
@@ -2064,6 +2256,9 @@ msgstr "Salvar como Playlist"
 
 msgid "Waveform"
 msgstr "Forma de onda"
+
+msgid "Publication Date"
+msgstr "Data de publicação"
 
 msgid "Sync"
 msgstr "Syncronizar"
@@ -2137,8 +2332,63 @@ msgstr ""
 msgid "Update Account"
 msgstr "Atualizar conta"
 
+msgid "Filter"
+msgstr ""
+
+msgid "Filter by name, description or key"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Differs from default"
+msgstr ""
+
+msgid "Unsaved"
+msgstr ""
+
+msgid "Downloads every preference, from every tab, as a JSON file"
+msgstr ""
+
+msgid "Export all preferences"
+msgstr ""
+
+msgid "Sections"
+msgstr ""
+
+msgid "No preference matches this filter."
+msgstr ""
+
+msgid "(empty)"
+msgstr ""
+
+msgid "(a new value)"
+msgstr ""
+
+msgid "Apply these changes?"
+msgstr ""
+
+msgid "for every account"
+msgstr ""
+
+msgid "Access Level"
+msgstr "Nível de acesso"
+
+#, php-format
+msgid ""
+"%d of these changes will be written to every existing account, overwriting "
+"what each account chose. This cannot be undone."
+msgstr ""
+
+#, php-format
+msgid "Changes to apply: %d"
+msgstr ""
+
 msgid "Update Preferences"
 msgstr "Atualizar preferências"
+
+msgid "Tick \"apply to all\" on every change"
+msgstr ""
 
 msgid "Preference"
 msgstr "Preferências"
@@ -2146,11 +2396,41 @@ msgstr "Preferências"
 msgid "Value"
 msgstr "Valor"
 
+msgid "Reference"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
 msgid "Apply to All"
 msgstr "Aplicar para todos"
 
-msgid "Access Level"
-msgstr "Nível de acesso"
+msgid "Differs from the value Ampache ships"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Read only"
+msgstr ""
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Read the documentation"
+msgstr ""
+
+msgid "Server"
+msgstr "Servidor"
+
+msgid "Copy what the server holds; it will not follow later server changes"
+msgstr ""
+
+msgid "Undo"
+msgstr "Desfazer"
+
+msgid "Also write this value to every existing account"
+msgstr ""
 
 msgid "Enter the code shown on the other device to sign it in."
 msgstr ""
@@ -2206,6 +2486,12 @@ msgstr "Máximo de resultados"
 msgid "Unlimited"
 msgstr "Ilimitado"
 
+msgid "Length"
+msgstr "Duração"
+
+msgid "Size Limit"
+msgstr "Limite de tamanho"
+
 msgid "Permalink"
 msgstr "Permalink"
 
@@ -2215,20 +2501,23 @@ msgstr "Opções"
 msgid "Play Random Selection"
 msgstr "Tocar seleção aleatória"
 
-msgid "Length"
-msgstr "Duração"
-
-msgid "Size Limit"
-msgstr "Limite de tamanho"
-
 msgid "Enqueue"
 msgstr "Adicionar à lista"
+
+msgid "Item Limit"
+msgstr "Limite de itens"
 
 msgid "Rules"
 msgstr "Regras"
 
 msgid "Match"
 msgstr "Confere"
+
+msgid "all groups"
+msgstr ""
+
+msgid "any groups"
+msgstr ""
 
 msgid "all rules"
 msgstr "todas as regras"
@@ -2238,6 +2527,9 @@ msgstr "qualquer regra"
 
 msgid "Add Another Rule"
 msgstr "Adicionar outra regra"
+
+msgid "Add Group"
+msgstr ""
 
 msgid "Create Share"
 msgstr "Criar compartilhamento"
@@ -2263,11 +2555,14 @@ msgstr "Ativar instância"
 msgid "Localplay Disabled"
 msgstr "Player local desabilitado"
 
+msgid "Account"
+msgstr "Conta"
+
+msgid "QuickConnect"
+msgstr ""
+
 msgid "Uploads"
 msgstr "Envios"
-
-msgid "Help"
-msgstr "Ajuda"
 
 msgid "Ampache Wiki"
 msgstr "Wiki Ampache"
@@ -2280,6 +2575,15 @@ msgstr "Informação do cookie"
 
 msgid "Admin Disabled"
 msgstr "Administração Desativada"
+
+msgid "License"
+msgstr "Licença"
+
+msgid "Skipped"
+msgstr "Ignorada"
+
+msgid "Added"
+msgstr "Adicionado"
 
 msgid "Connected Users"
 msgstr "Usuários Conectados"
@@ -2334,9 +2638,6 @@ msgstr "Versão mais nova do Ampache"
 
 msgid "GitHub Branch"
 msgstr "Ramificação do GitHub"
-
-msgid "Last Update"
-msgstr "Última atualização"
 
 msgid "Force check"
 msgstr "Forçar checagem"
@@ -2417,7 +2718,8 @@ msgid "Paste"
 msgstr "Colar"
 
 msgid "Leave the artist and album fields blank to read file tags"
-msgstr "Deixe os campos do artista e do álbum em branco para ler as tags do arquivo"
+msgstr ""
+"Deixe os campos do artista e do álbum em branco para ler as tags do arquivo"
 
 msgid ""
 "The music license you choose may give away some rights in an irrevocable "
@@ -2480,12 +2782,6 @@ msgstr "Usuário está online"
 msgid "User is Offline Now"
 msgstr "Usuário está offline"
 
-msgid "Played"
-msgstr "Tocada"
-
-msgid "Skipped"
-msgstr "Ignorada"
-
 msgid "Following"
 msgstr "Seguindo"
 
@@ -2500,6 +2796,9 @@ msgstr "Playlist ativa"
 
 msgid "Subtitle"
 msgstr "Legenda"
+
+msgid "Resolution"
+msgstr "Resolução"
 
 msgid "Video Information"
 msgstr "Informações do vídeo"
@@ -2553,11 +2852,6 @@ msgstr "Desativar"
 msgid "Upgrade"
 msgstr "Atualizar"
 
-#. HINT: Username FullName
-#, php-format
-msgid "Editing %s Preferences"
-msgstr "Editando Preferências %s "
-
 msgid "Album Disk"
 msgstr ""
 
@@ -2567,9 +2861,6 @@ msgid_plural "%d songs"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-
-msgid "Time"
-msgstr "Duração"
 
 #, php-format
 msgid "Played %d time"
@@ -2597,9 +2888,6 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-msgid "Rating"
-msgstr "Classificação"
-
 msgid "Starts With"
 msgstr "Começa com"
 
@@ -2612,24 +2900,27 @@ msgstr "Ouvintes"
 msgid "Live"
 msgstr ""
 
-msgid "Parent"
-msgstr ""
-
 msgid "Remove from collection"
 msgstr ""
 
 msgid "Remove {count} selected items from this collection?"
 msgstr ""
 
-#. HINT: Number of items in a playlist
-msgid "# Items"
-msgstr "# Items"
-
 msgid "Holds"
 msgstr ""
 
 msgid "Votes"
 msgstr "Votos"
+
+#, php-format
+msgid "Shared by %s"
+msgstr ""
+
+msgid "Unhide"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
 
 msgid "Playlist Name"
 msgstr "Nome da playlist"
@@ -2639,9 +2930,6 @@ msgstr ""
 
 msgid "Remove {count} selected items from this playlist?"
 msgstr ""
-
-msgid "Publication Date"
-msgstr "Data de publicação"
 
 msgid "Sender"
 msgstr "Remetente"
@@ -2667,15 +2955,6 @@ msgstr "Destaque"
 msgid "Date Added"
 msgstr "Adicionado em"
 
-msgid "Item Limit"
-msgstr "Limite de itens"
-
-msgid "License"
-msgstr "Licença"
-
-msgid "Added"
-msgstr "Adicionado"
-
 msgid "Registration Date"
 msgstr "Data de registro"
 
@@ -2684,9 +2963,6 @@ msgstr "Último IP"
 
 msgid "Online"
 msgstr "Online"
-
-msgid "Resolution"
-msgstr "Resolução"
 
 msgid "Trending"
 msgstr "Mais populares"
@@ -2850,9 +3126,6 @@ msgstr "Tela Cheia"
 msgid "Restore Screen"
 msgstr "Restaurar Tela"
 
-msgid "Shuffle"
-msgstr "Misturar"
-
 msgid "Shuffle Off"
 msgstr "Mistura Desligada"
 
@@ -2884,6 +3157,941 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
+msgid "Other"
+msgstr ""
+
+msgid "Year ascending"
+msgstr "Ano ascendente"
+
+msgid "Year descending"
+msgstr "Ano descendente"
+
+msgid "Name ascending"
+msgstr "Nome ascendente"
+
+msgid "Name descending"
+msgstr "Nome descendente"
+
+msgid "Send on Add"
+msgstr "Enviar ao adicionar"
+
+msgid "Send and Clear on Add"
+msgstr "Enviar e apagar ao adicionar"
+
+msgid "Clear on Send"
+msgstr "Apagar ao enviar"
+
+msgid "M3U"
+msgstr "M3U"
+
+msgid "Simple M3U"
+msgstr "M3U simples"
+
+msgid "PLS"
+msgstr "PLS"
+
+msgid "Asx"
+msgstr "Asx"
+
+msgid "RAM"
+msgstr "RAM"
+
+msgid "XSPF"
+msgstr "XSPF"
+
+msgid "1 Star"
+msgstr "1 Estrela"
+
+msgid "2 Stars"
+msgstr "2 Estrelas"
+
+msgid "3 Stars"
+msgstr "3 Estrelas"
+
+msgid "4 Stars"
+msgstr "4 Estrelas"
+
+msgid "5 Stars"
+msgstr "5 Estrelas"
+
+msgid "Never"
+msgstr "Nunca"
+
+msgid "Always"
+msgstr "Sempre"
+
+msgid "Off"
+msgstr "Desligado"
+
+#. HINT: API version number
+#, php-format
+msgid "Allow API%s Only"
+msgstr ""
+
+msgid "Match my theme"
+msgstr ""
+
+msgid "Keep last played track"
+msgstr "Manter a última faixa tocada"
+
+#. HINT: Keep (2|3|4|5|10) previous tracks
+#, php-format
+msgid "Keep %s previous tracks"
+msgstr "Manter %s faixas anteriores"
+
+msgid "Remove all previous tracks"
+msgstr "Remover todas as faixas anteriores"
+
+msgid ""
+"Treats a multi-disc release as one album instead of one row per disc. "
+"Turning it off makes browse, search and the artist page list album disks "
+"individually; API and Subsonic album lists keep their own shape either way."
+msgstr ""
+
+msgid ""
+"Splits the album list on an artist page into a section per release type, so "
+"albums, EPs, live records and singles sit under their own headings. Off, the"
+" artist page shows one flat list."
+msgstr ""
+
+msgid ""
+"Order of the release-type sections on an artist page, as a comma-separated "
+"list of types. Types left out of the list follow the ones named, and the "
+"whole setting is idle while release types are not grouped."
+msgstr ""
+
+msgid ""
+"Default ordering of album lists when the browse carries no sort of its own. "
+"It also decides the order of the album lists returned by the API."
+msgstr ""
+
+msgid ""
+"Show what you are listening to right now to other users. Administrators see "
+"the now playing list in full whatever this says."
+msgstr ""
+
+msgid ""
+"Show what you listened to recently to other users. With it off your activity"
+" feed is hidden and your plays drop out of everyone else statistics pages."
+msgstr ""
+
+msgid ""
+"Show the date and time of your recent plays. With it off your profile "
+"reports the last seen time as Never rather than leaving the field out."
+msgstr ""
+
+msgid ""
+"Raise a desktop notification on every track change. It only works in the "
+"embedded player, and the browser still has to grant the notification "
+"permission."
+msgstr ""
+
+msgid ""
+"How long a track-change notification stays on screen, in seconds. 0 leaves "
+"it up until it is dismissed, and the setting is idle while browser "
+"notifications are off."
+msgstr ""
+
+msgid ""
+"Image served for an album with no artwork, as an absolute http or https url."
+" Browse pages still draw a placeholder when that is enabled, but everything "
+"else — the API, Subsonic, RSS feeds, the web player — serves this image "
+"instead."
+msgstr ""
+
+msgid ""
+"An ICU date pattern applied to every date and time on the site in place of "
+"the one the language implies. Leave it empty to follow the language."
+msgstr ""
+
+msgid ""
+"Puts your own avatar in the header instead of the site logo. An account with"
+" no avatar gets the generic silhouette, not the site logo."
+msgstr ""
+
+msgid ""
+"Timezone used to display dates, overriding the one PHP is configured with. A"
+" name PHP does not recognize is silently cleared when the form is saved."
+msgstr ""
+
+msgid ""
+"Hides the one-click play and add buttons on an album, artist or folder "
+"holding more media than this, so a huge item is not queued by accident. 0 "
+"removes the limit."
+msgstr ""
+
+msgid ""
+"Draws a placeholder tile from the item name and artist when no cover exists,"
+" instead of one shared blank image. Nothing is stored: the drawing is "
+"rebuilt on each request. Setting a custom blank album image turns it off "
+"everywhere except the browse pages."
+msgstr ""
+
+msgid ""
+"Which drawing style the placeholder tiles use. Auto follows the theme color,"
+" and a template that no longer exists falls back to the first one available."
+msgstr ""
+
+msgid ""
+"Drops the per-song artist column on an album whose songs all share one "
+"artist. Albums crediting several artists keep the column whatever this says."
+msgstr ""
+
+msgid ""
+"Shows the Videos of the Moment panel on the home page. It stays hidden while"
+" video features are disabled, whatever this is set to."
+msgstr ""
+
+msgid ""
+"Lets Recently Played list podcast episodes, videos and radio alongside songs"
+" instead of songs alone. It governs your profile page and the statistics "
+"page too, not only the home panel."
+msgstr ""
+
+msgid ""
+"Replaces the browse form at the top of the home page with the dashboard "
+"widget picker."
+msgstr ""
+
+msgid ""
+"Comma-separated list of item types that open on the A to Z jump bar rather "
+"than a plain list. Empty means no type does."
+msgstr ""
+
+msgid ""
+"Sends this account to the mini player on login and on every page it would "
+"otherwise render. It restricts navigation only and is no substitute for an "
+"access level."
+msgstr ""
+
+msgid ""
+"Collapses the now playing list to the most recent stream per user instead of"
+" one line per concurrent stream."
+msgstr ""
+
+msgid ""
+"How many items the of the Moment panels pick at random. A value of zero or "
+"less falls back to six."
+msgstr ""
+
+msgid ""
+"How many items one page of a browse shows before paging. It is also the size"
+" of a random selection."
+msgstr ""
+
+msgid ""
+"How many rows the popular, recently played and last shouts lists return."
+msgstr ""
+
+msgid ""
+"Adds the license column to song lists. It shows nothing unless licensing is "
+"also enabled server-side."
+msgstr ""
+
+msgid ""
+"Adds a lyrics link to the web player control bar. The lyrics page itself "
+"stays reachable either way."
+msgstr ""
+
+msgid ""
+"Appends the original release year to an album title when the record carries "
+"one and it differs from the pressing year."
+msgstr ""
+
+msgid ""
+"Adds a play count column to browse rows. While it is off the counts are not "
+"even queried, so turning it on costs one extra statistics lookup per page."
+msgstr ""
+
+msgid ""
+"Appends the owner name to a playlist title. Your own playlists are never "
+"annotated."
+msgstr ""
+
+msgid ""
+"Adds a skip count column to browse rows. Like the play count, the figure is "
+"only queried when the column is shown."
+msgstr ""
+
+msgid ""
+"Appends the album version, such as a remaster or deluxe tag, to the album "
+"title when the record carries one."
+msgstr ""
+
+msgid ""
+"Removes the arrows that fold the sidebar into its narrow form. Together with"
+" the light sidebar it pins the sidebar to that form."
+msgstr ""
+
+msgid "Opens the sidebar in its narrow, icon-only form by default."
+msgstr ""
+
+msgid ""
+"Position of the Browse menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Dashboard menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Information menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Playlist menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Position of the Search menu in the sidebar. Sections are stacked in "
+"ascending order, so a lower number moves it up."
+msgstr ""
+
+msgid ""
+"Seconds of inactivity before the web player fades into a full-screen artist "
+"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
+"anything to show."
+msgstr ""
+
+msgid ""
+"Puts the playing track in the browser tab title. Share pages never do it, "
+"whatever this says."
+msgstr ""
+
+msgid ""
+"How many days back the statistics pages look. 0 means all time, which is the"
+" case the cached counts are built for."
+msgstr ""
+
+msgid ""
+"Light or dark variant of the chosen theme. It also picks the logo and icon "
+"set, and the template the drawn placeholder art uses under Auto."
+msgstr ""
+
+msgid ""
+"Moves the main navigation into a bar across the top of the page instead of "
+"the sidebar layout."
+msgstr ""
+
+msgid ""
+"Pins the header in place so it stays visible while the page scrolls. Only "
+"themes built for it react."
+msgstr ""
+
+msgid ""
+"Sorts and reports albums by their original release year rather than the year"
+" of the pressing. An album with no original year falls back to the normal "
+"one."
+msgstr ""
+
+msgid ""
+"Asks the browser to confirm before leaving the page while something is "
+"playing. Only the embedded player does it, not a share page."
+msgstr ""
+
+msgid ""
+"Pauses this tab when another tab starts playing, so two players do not talk "
+"over each other. Tabs agree through browser storage, so it only covers the "
+"same browser profile."
+msgstr ""
+
+msgid ""
+"Offers democratic play, where listeners vote on what comes next, as a "
+"playback type. It governs the interface: the democratic API methods answer "
+"whether or not it is set."
+msgstr ""
+
+msgid ""
+"Offers Localplay, which drives a player running beside the server, as a "
+"playback type. Installing a Localplay plugin switches this on for every "
+"user."
+msgstr ""
+
+msgid ""
+"Master switch for streaming. The server setting and the account preference "
+"both have to be on, and the Jellyfin endpoints check the pair as well."
+msgstr ""
+
+msgid ""
+"Exposes the video side of the library in menus, searches and graphs. An API "
+"client asking for video while it is off is refused outright, not merely "
+"shown nothing."
+msgstr ""
+
+msgid ""
+"Marks every API stream as a download, so no play count or now playing entry "
+"is recorded for it. Clients can already ask for that per request; this "
+"forces it."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 3. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 4. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 5. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 6. Turning it off does not refuse "
+"them: they are rolled forward to the next enabled version."
+msgstr ""
+
+msgid ""
+"Answer clients that negotiate API version 8. It is the newest version, so "
+"there is nothing to roll forward to and a client asking for it is refused "
+"outright when this is off."
+msgstr ""
+
+msgid ""
+"Answer every API client with this version regardless of what it asked for. 0"
+" keeps the negotiated version, and a forced version is ignored unless that "
+"version is also enabled above."
+msgstr ""
+
+msgid ""
+"Playlists whose name starts with this string are left out of API and "
+"Subsonic listings. The match is on the prefix only, and an empty value hides"
+" nothing."
+msgstr ""
+
+msgid ""
+"Leaves a smartlist out of API and Subsonic listings when a normal playlist "
+"of the same name and owner exists, so a client does not show the pair twice."
+" Some methods let a client ask for the duplicates anyway."
+msgstr ""
+
+msgid ""
+"Keep one bookmark per item instead of a history: a new position replaces the"
+" previous one for the same item. With it off bookmarks pile up."
+msgstr ""
+
+msgid ""
+"Lets users fetch the original file instead of streaming it. Zip batch "
+"downloads ride on it too, so turning it off takes them with it; the API and "
+"Subsonic backends have their own download settings."
+msgstr ""
+
+msgid ""
+"Lets the browser send the listener position with a play so statistics can be"
+" mapped. Both ends check it: the page does not ask the browser, and the "
+"server refuses a position sent anyway."
+msgstr ""
+
+msgid ""
+"Which Localplay backend is driven, such as mpd or upnp. With none chosen the"
+" Localplay actions and the Subsonic jukebox role have nothing to talk to."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to control Localplay. An unset value fails "
+"closed at administrator rather than open."
+msgstr ""
+
+msgid ""
+"Send an email when a private message arrives. Nothing goes out unless the "
+"account also carries an address and the server has mail enabled."
+msgstr ""
+
+msgid ""
+"Lets users publish a link to an item for people without an account. Turning "
+"it off also kills links already handed out, because every visit rechecks the"
+" setting."
+msgstr ""
+
+msgid ""
+"Marks every Subsonic stream as a download, so no play count or now playing "
+"entry is recorded for it. A client that scrobbles on its own still registers"
+" plays."
+msgstr ""
+
+msgid ""
+"Lists only album artists in the Subsonic artist index instead of everyone "
+"credited on a track. Useful for clients that drown in featured artists."
+msgstr ""
+
+msgid ""
+"Answer with the original Subsonic API instead of the OpenSubsonic one. Older"
+" clients cope better, but every OpenSubsonic-only method stops answering. "
+"API key authentication keeps working either way."
+msgstr ""
+
+msgid ""
+"Report only your own ratings and favorites to Subsonic clients. With it off,"
+" starred lists mix in what other users rated."
+msgstr ""
+
+msgid ""
+"Which catalog receives uploaded files. Uploads stay disabled while this is "
+"unset, whatever the upload switch says."
+msgstr ""
+
+msgid ""
+"Drop votes cast by users who are no longer connected. The sweep runs each "
+"time the democratic playlist is read, not on a schedule."
+msgstr ""
+
+msgid ""
+"Adds the parent album or podcast next to a title in playlist rows, which "
+"helps when a playlist mixes sources. Rows with no parent are unchanged."
+msgstr ""
+
+msgid ""
+"What adding to the playlist does to what is already there: append at the "
+"end, insert after the current track, or replace it."
+msgstr ""
+
+msgid ""
+"File format handed out when the basket is sent as a playlist: m3u, pls, xspf"
+" and so on. It is what an external player receives, not what the web player "
+"uses."
+msgstr ""
+
+msgid ""
+"Refuse to add an item a playlist already contains. API and Subsonic clients "
+"can still ask for the check to be skipped on a given call."
+msgstr ""
+
+msgid ""
+"Authorization link for Last.fm, not a field to fill in. Follow it once to "
+"let Ampache scrobble; the session token lands in the account by itself."
+msgstr ""
+
+msgid ""
+"Base address used for MusicBrainz lookups. Leave it empty for the public "
+"service, or point it at your own mirror."
+msgstr ""
+
+msgid ""
+"Pause between two MusicBrainz calls, in hundredths of a second. The public "
+"service expects one; 0 removes the wait and only makes sense against your "
+"own mirror."
+msgstr ""
+
+msgid ""
+"Starts the web player with broadcasting already armed, so what you play is "
+"offered to listeners without another click."
+msgstr ""
+
+msgid ""
+"Output format forced on API streams, overriding the audio default. Setting "
+"it also marks transcoding as allowed for API clients."
+msgstr ""
+
+msgid ""
+"Output format forced on web player streams, overriding the audio default. "
+"Setting it also marks transcoding as allowed for the web player."
+msgstr ""
+
+msgid ""
+"Format audio is re-encoded to when transcoding happens. A file already in "
+"that format is sent as it is rather than re-encoded to itself."
+msgstr ""
+
+msgid ""
+"Format video is re-encoded to when transcoding happens. As with audio, a "
+"file already in that format is passed through untouched."
+msgstr ""
+
+msgid "Volume the web player starts at, between 0 and 1."
+msgstr ""
+
+msgid ""
+"Ceiling shared between the streams currently being downsampled: each one "
+"gets the ceiling divided by their number. 0 turns the sharing off, and only "
+"listeners whose playback type is downsample are counted."
+msgstr ""
+
+msgid ""
+"Floor for a shared-bandwidth stream. A stream that would be pushed under it "
+"is refused with a server busy error instead of being sent at an unusable "
+"quality."
+msgstr ""
+
+msgid ""
+"How playback is delivered: the web player, a plain stream handed to an "
+"external player, downsampled streaming, Localplay or democratic. Only "
+"downsample listeners count toward the shared bandwidth ceiling."
+msgstr ""
+
+msgid ""
+"Upper speed limit for a single download, in kilobytes per second. 0 removes "
+"the limit, and it throttles the bytes on the wire rather than the encoding "
+"bitrate."
+msgstr ""
+
+msgid ""
+"Whether Ampache may re-encode a file before sending it. Default only "
+"transcodes formats the player cannot handle, never always sends the "
+"original, always re-encodes everything; never also blocks waveform "
+"generation, which reuses the same pipeline."
+msgstr ""
+
+msgid ""
+"Target bitrate for re-encoded streams, in bits per second. It is still "
+"capped per output format, and the API and web player can override it with "
+"their own value."
+msgstr ""
+
+msgid ""
+"Bitrate used for API streams in place of the default. 0 means no override, "
+"not an unlimited rate."
+msgstr ""
+
+msgid ""
+"Bitrate used for web player streams in place of the default. 0 means no "
+"override, not an unlimited rate."
+msgstr ""
+
+msgid ""
+"How many already played tracks the web player keeps above the current one "
+"before trimming them. Disabled keeps the whole history, and Remove all "
+"previous tracks keeps none."
+msgstr ""
+
+msgid ""
+"Lets users add files to the library themselves. Nothing can be uploaded "
+"until a destination catalog is chosen as well, and the account still has to "
+"reach the upload access level."
+msgstr ""
+
+msgid ""
+"Poll GitHub for a newer Ampache release and flag it in the header. Turning "
+"it off also freezes the stored last check time, so nothing is polled again "
+"until it comes back on."
+msgstr ""
+
+msgid ""
+"At import, compare an incoming file against the library and insert a match "
+"as disabled instead of active. It only applies to music catalogs, and the "
+"row is still created."
+msgstr ""
+
+msgid ""
+"Read play counts and statistics from a table built ahead of time instead of "
+"counting rows on every page. It needs the cron task to actually run; without"
+" it the figures freeze where the last run left them."
+msgstr ""
+
+msgid ""
+"Adds the plays recorded since the cached counts were built on top of them, "
+"so all time figures are not a run behind. It does nothing unless the cached "
+"counts are in use."
+msgstr ""
+
+msgid ""
+"Serve the DAAP protocol, which iTunes and compatible players browse. The "
+"endpoint answers Disabled outright while this is off."
+msgstr ""
+
+msgid ""
+"Single password guarding the DAAP endpoint. Left empty, DAAP asks for "
+"nothing at all; it is one shared secret rather than per-account credentials."
+msgstr ""
+
+msgid ""
+"Feed the democratic playlist from a saved search instead of a normal "
+"playlist."
+msgstr ""
+
+msgid ""
+"Custom tag fields kept out of the edit form and out of what the catalog "
+"writes back. It is merged with the free-text list of extra fields below."
+msgstr ""
+
+msgid ""
+"Extra field names to disable on top of the ones picked from the list, comma "
+"separated. Use it for fields the list does not offer."
+msgstr ""
+
+msgid ""
+"Serve stream URLs over plain HTTP even when the site runs on HTTPS. Only "
+"useful for players that cannot do TLS."
+msgstr ""
+
+msgid "Serve the Jellyfin API. Experimental."
+msgstr ""
+
+msgid ""
+"Refuse to start a track that is already in the now playing list, whoever is "
+"listening. A stale row left by a player that never closed its connection "
+"then blocks that track until it is cleaned up."
+msgstr ""
+
+msgid ""
+"Let API sessions live until they are revoked instead of expiring. Convenient"
+" for always-on clients, but a leaked token then stays valid until the "
+"session cache is cleared by hand."
+msgstr ""
+
+msgid ""
+"Episodes past this many newest ones are deleted from a podcast once a sync "
+"has downloaded something. 0 keeps every episode."
+msgstr ""
+
+msgid ""
+"How many freshly published episodes a sync downloads. 0 means all of them "
+"and -1 means none, so 0 is not the way to turn downloads off."
+msgstr ""
+
+msgid ""
+"Let a device pair by showing a short code instead of asking for a password."
+msgstr ""
+
+msgid ""
+"Days a new share link stays valid, used when the person creating it picks no"
+" date. 0 creates links that never expire."
+msgstr ""
+
+msgid ""
+"Write stream and art URLs as paths instead of query strings, which needs the"
+" rewrite rules in the web server. API responses always use plain query "
+"strings regardless, and the UPnP backend always uses the rewritten form."
+msgstr ""
+
+msgid "Serve the Subsonic API, used by many third-party players."
+msgstr ""
+
+msgid ""
+"Lowest access level allowed to upload. It is checked on top of the upload "
+"switch, so raising it locks users out without turning uploads off."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file edit its tags without being a content manager. "
+"They still cannot re-file it: the artist, album and owner fields are "
+"stripped from what they submit."
+msgstr ""
+
+msgid ""
+"Lets whoever uploaded a file delete it from disk without being a manager. "
+"Deleting from disk has to be enabled server-side as well."
+msgstr ""
+
+msgid ""
+"Move and rename an uploaded file to where the catalog pattern says it "
+"belongs, instead of leaving it where it landed."
+msgstr ""
+
+msgid ""
+"Command run in the upload directory once a file has arrived, with %FILE% "
+"replaced by its path. It stays dead until upload scripts are allowed in the "
+"configuration file."
+msgstr ""
+
+msgid ""
+"Give every uploader a folder of their own under the catalog. An account "
+"whose username does not resolve cannot upload at all."
+msgstr ""
+
+msgid ""
+"Drops the artist section from the uploads listing, for a server where the "
+"uploader is the artist. It changes that listing only, not how a track is "
+"credited."
+msgstr ""
+
+msgid ""
+"Serve UPnP and DLNA so devices on the network find the library on their own."
+msgstr ""
+
+msgid ""
+"Expose the library over WebDAV, so it can be mounted as a network drive."
+msgstr ""
+
+msgid "bps"
+msgstr ""
+
+msgid "the source file rate"
+msgstr ""
+
+msgid "no ceiling"
+msgstr ""
+
+msgid "no floor"
+msgstr ""
+
+msgid "KB/s"
+msgstr ""
+
+msgid "On"
+msgstr "Ligado"
+
+msgid "Nothing to choose from"
+msgstr ""
+
+msgid "Only the account holder can grant access"
+msgstr ""
+
+#. HINT: Plugin Name
+#, php-format
+msgid "Click to grant %s access to Ampache"
+msgstr "Clique para conceder acesso %s para o Ampache"
+
+msgid "The Subsonic backend is off, so this has no effect."
+msgstr ""
+
+msgid "The DAAP backend is off, so this password protects nothing."
+msgstr ""
+
+msgid ""
+"Jellyfin clients cannot reach QuickConnect while the Jellyfin backend is "
+"off. Ampache clients still can."
+msgstr ""
+
+msgid ""
+"That API version is disabled, so the forced version is ignored and clients "
+"negotiate another one."
+msgstr ""
+
+msgid ""
+"The cron cache is off, so live plays are counted anyway and this changes "
+"nothing."
+msgstr ""
+
+msgid "Sharing is off, so no share is ever created to expire."
+msgstr ""
+
+msgid "Drawn placeholders are off, so this style is never used."
+msgstr ""
+
+msgid ""
+"A custom blank album image is set, so drawn placeholders only appear on "
+"browse pages. The API, Subsonic, feeds and the web player serve that image "
+"instead."
+msgstr ""
+
+msgid ""
+"The minimum star rating is 0, which turns the whole sync off: nothing is "
+"written to your files."
+msgstr ""
+
+msgid "The favourites widget is off, so this list is never shown."
+msgstr ""
+
+msgid ""
+"The sidebar can no longer be collapsed, and this only applies to its "
+"collapsed form."
+msgstr ""
+
+msgid ""
+"The full sidebar can no longer be opened, and the filter box only lives "
+"there."
+msgstr ""
+
+msgid "Albums are not grouped by release type, so this order is never used."
+msgstr ""
+
+msgid "Browser notifications are off, so nothing is ever shown for this long."
+msgstr ""
+
+msgid "Video is disabled on this server, so this panel never appears."
+msgstr ""
+
+msgid ""
+"Licensing is off in the server configuration file, so no licence is ever "
+"shown."
+msgstr ""
+
+msgid ""
+"Every stream on this server needs a session, so no embedded player is ever "
+"offered to other sites."
+msgstr ""
+
+msgid ""
+"Broadcasting is off in the server configuration file, so the player never "
+"starts one."
+msgstr ""
+
+msgid ""
+"Video is disabled on this server, so the Video entry is never drawn anyway."
+msgstr ""
+
+msgid ""
+"Your playback type does not hand out playlists, so this only shapes the "
+"\"Download Playlist\" link."
+msgstr ""
+
+msgid ""
+"This playback type is no longer allowed on the server, so it is not offered "
+"here: pick another one, nothing plays with it."
+msgstr ""
+
+msgid "The matching limit is unlimited, so this window is never used."
+msgstr ""
+
+msgid ""
+"Stream limits need statistical graphs, which are off in the server "
+"configuration file. Nothing is enforced."
+msgstr ""
+
+msgid "That sidebar section is hidden, so its order is never used."
+msgstr ""
+
+msgid "Transcoding is off, so this is never read."
+msgstr ""
+
+msgid ""
+"The web player has its own bitrate set, which wins over this one for the web"
+" player."
+msgstr ""
+
+msgid "The API has its own bitrate set, which wins over this one for the API."
+msgstr ""
+
+msgid ""
+"The web player output format wins over this one, and it applies to most "
+"streams, not only the web player."
+msgstr ""
+
+msgid ""
+"The floor is only applied while a maximum bitrate is set, and a maximum of 1"
+" counts as none."
+msgstr ""
+
+msgid ""
+"Uploads are allowed but no destination catalog is chosen, so every upload "
+"fails."
+msgstr ""
+
+msgid ""
+"Upload scripts are disabled in the server configuration file, so this "
+"command never runs."
+msgstr ""
+
+msgid ""
+"Deleting from disk is off in the server configuration file, so no delete "
+"button ever appears."
+msgstr ""
+
+msgid "New episodes are never downloaded, so nothing is ever pruned either."
+msgstr ""
+
+msgid ""
+"Server values. Saving here changes what new accounts start with; existing "
+"accounts keep what they already have."
+msgstr ""
+
+#. HINT: Username
+#, php-format
+msgid "You are editing the preferences of %s"
+msgstr ""
+
+#. HINT: Username FullName
+#, php-format
+msgid "Editing %s Preferences"
+msgstr "Editando Preferências %s "
+
 msgid "Return to Login Page"
 msgstr "Retornar para a página de login"
 
@@ -2893,7 +4101,9 @@ msgstr "Por favor, aguarde um administrador ativar sua conta"
 msgid ""
 "An activation key has been sent to the e-mail address you provided. Please "
 "check your e-mail for further information"
-msgstr "Uma chave de ativação foi enviada para seu e-mail. Por favor, verifique-o para maiores informações"
+msgstr ""
+"Uma chave de ativação foi enviada para seu e-mail. Por favor, verifique-o "
+"para maiores informações"
 
 msgid "Your account has been created"
 msgstr "Sua conta foi criada."
@@ -2914,10 +4124,6 @@ msgstr[2] "%d horas"
 
 msgid "Anywhere"
 msgstr "Em qualquer lugar"
-
-#, php-format
-msgid "Shared by %s"
-msgstr ""
 
 msgid "Post to Shoutbox"
 msgstr "Postar na shoutbox"
@@ -2973,12 +4179,6 @@ msgstr "Acesso negado"
 msgid "Localplay Controller Not Defined"
 msgstr "Controlador do player local não definido"
 
-msgid "Account"
-msgstr "Conta"
-
-msgid "QuickConnect"
-msgstr ""
-
 msgid "No lyrics found."
 msgstr "Nenhuma letra encontrada."
 
@@ -2987,9 +4187,6 @@ msgstr "Editar Música"
 
 #, php-format
 msgid "Track %d"
-msgstr ""
-
-msgid "Play on the current player"
 msgstr ""
 
 msgid "Song Information"
@@ -3074,16 +4271,22 @@ msgstr "Ampache Embrulhado"
 msgid ""
 "You have been redirected to this page because you attempted to access a "
 "function that is disabled in the demo."
-msgstr "Você foi redirecionado para esta página porque você tentou acessar uma função que não está ativada na demonstração."
+msgstr ""
+"Você foi redirecionado para esta página porque você tentou acessar uma "
+"função que não está ativada na demonstração."
 
 msgid ""
 "You have been redirected to this page because you do not have access to this"
 " function"
-msgstr "Você foi redirecionado para esta página porque você não tem acesso a esta função"
+msgstr ""
+"Você foi redirecionado para esta página porque você não tem acesso a esta "
+"função"
 
 msgid ""
 "If you believe this is an error please contact an Ampache administrator"
-msgstr "Se você acredita que isso é um erro, entre em contato com o administrador do Ampache"
+msgstr ""
+"Se você acredita que isso é um erro, entre em contato com o administrador do"
+" Ampache"
 
 msgid "This event has been logged"
 msgstr "Este evento foi colocado no log"
@@ -3111,7 +4314,9 @@ msgstr "%s - Atualizar"
 msgid ""
 "This page handles all database updates to Ampache starting with %1$s. Your "
 "current version is %2$s with database version %3$s"
-msgstr "Esta página trata de todas as atualizações do banco de dados para o Ampache, começando com %1$s. Sua versão atual é %2$scom banco de dados versão %3$s."
+msgstr ""
+"Esta página trata de todas as atualizações do banco de dados para o Ampache,"
+" começando com %1$s. Sua versão atual é %2$scom banco de dados versão %3$s."
 
 msgid ""
 "Drag & Drop your files or <span class=\"filepond--label-action\"> Browse "
@@ -3166,9 +4371,6 @@ msgstr "Cancelar"
 msgid "Retry"
 msgstr "Retentar"
 
-msgid "Undo"
-msgstr "Desfazer"
-
 msgid "File is too large"
 msgstr "O arquivo é muto grande"
 
@@ -3214,9 +4416,6 @@ msgstr "A resolução mínima é {minResolution}"
 msgid "Maximum resolution is {maxResolution}"
 msgstr "A resolução máxima é {maxResolution}"
 
-msgid "Never"
-msgstr "Nunca"
-
 msgid "Display"
 msgstr "Tela"
 
@@ -3248,10 +4447,16 @@ msgstr ""
 msgid ""
 "No Catalog configured yet. To start streaming your media, you now need to "
 "%1$s add a Catalog %2$s"
-msgstr "Nenhum catálogo configurado ainda. Para começar a transmitir sua mídia, você precisa %1$s adicionar um catálogo %2$s"
+msgstr ""
+"Nenhum catálogo configurado ainda. Para começar a transmitir sua mídia, você"
+" precisa %1$s adicionar um catálogo %2$s"
 
 msgid "Added to playlist"
 msgstr "Adicionada à playlist"
+
+#, php-format
+msgid "Ampache version: %s"
+msgstr "Versão do Ampache: %s"
 
 msgid "Received an empty UPnP request"
 msgstr "Uma requisição UPnP vazia foi recebida"
@@ -3484,7 +4689,9 @@ msgstr "Seu cache foi limpo"
 msgid ""
 "Your database and associated tables have been updated to match your "
 "currently configured charset"
-msgstr "Seu banco de dados e tabelas associadas foram atualizados para corresponder ao seu conjunto de caracteres atual"
+msgstr ""
+"Seu banco de dados e tabelas associadas foram atualizados para corresponder "
+"ao seu conjunto de caracteres atual"
 
 msgid "This will clear the selected cache"
 msgstr ""
@@ -3571,7 +4778,9 @@ msgstr "Isso irá sobrescrever sua Chave API"
 msgid ""
 "This will replace your existing token. Links with the old token might not "
 "work properly"
-msgstr "Isso substituirá seu token existente. Links com o token antigo podem não funcionar corretamente"
+msgstr ""
+"Isso substituirá seu token existente. Links com o token antigo podem não "
+"funcionar corretamente"
 
 #, php-format
 msgid "%s IP History"
@@ -3640,10 +4849,13 @@ msgstr "Erro na checagem do tamanho do arquivo da arte"
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file was not received correctly"
-msgstr "Não foi possível localizar a arte no momento. Pode ser devido a um erro de escrita ou o arquivo não foi recebido corretamente"
+msgstr ""
+"Não foi possível localizar a arte no momento. Pode ser devido a um erro de "
+"escrita ou o arquivo não foi recebido corretamente"
 
 msgid "Art file failed to insert, check the size does not exceed the limit."
-msgstr "Impossível inserir a arte, verifique se o tamanho não excede o limite."
+msgstr ""
+"Impossível inserir a arte, verifique se o tamanho não excede o limite."
 
 msgid "Failed to update_art for "
 msgstr "Falha ao atualizar artista"
@@ -3684,9 +4896,6 @@ msgstr ""
 
 msgid "The Playlist has been deleted"
 msgstr "A Playlist foi excluída"
-
-msgid "Folder"
-msgstr ""
 
 msgid "This Folder will be deleted"
 msgstr ""
@@ -3733,6 +4942,18 @@ msgstr "%s - Tocando Agora"
 
 msgid "Playlist created"
 msgstr "Playlist criada"
+
+msgid "Folder created"
+msgstr ""
+
+msgid "This folder is not empty"
+msgstr ""
+
+msgid "A folder cannot contain itself"
+msgstr ""
+
+msgid "Folder updated"
+msgstr ""
 
 #. HINT: Number of songs
 #, php-format
@@ -3802,9 +5023,6 @@ msgstr ""
 
 msgid "The feed could not be read"
 msgstr ""
-
-msgid "Server"
-msgstr "Servidor"
 
 msgid "Your account has been updated"
 msgstr "Sua conta foi atualizada"
@@ -3914,7 +5132,9 @@ msgstr "Agora você pode começar a compartilhar a seguinte URL:"
 msgid ""
 "You can also embed this share as a web player into your website, with the "
 "following HTML code:"
-msgstr "Você também pode incorporar esse compartilhamento como um player da web no seu site, com o seguinte código HTML:"
+msgstr ""
+"Você também pode incorporar esse compartilhamento como um player da web no "
+"seu site, com o seguinte código HTML:"
 
 msgid "Failed to create share"
 msgstr "Erro ao criar compartilhamento"
@@ -3923,7 +5143,9 @@ msgid "Share has been deleted"
 msgstr "Compartilhamento excluído"
 
 msgid "The Share will be deleted and no longer accessible to others"
-msgstr "O Compartilhamento será excluído e não estará mais acessível para outras pessoas"
+msgstr ""
+"O Compartilhamento será excluído e não estará mais acessível para outras "
+"pessoas"
 
 msgid "Invalid object selected"
 msgstr "Objeto inválido selecionado"
@@ -3971,7 +5193,8 @@ msgid "Set album_art_store_disk to remove art from the database"
 msgstr "Defina album_art_store_disk para remover a arte do banco de dados"
 
 msgid "local_metadata_dir setting is required to store art on disk"
-msgstr "local_metadata_dir setting é necessário para armazenar a arte no disco"
+msgstr ""
+"local_metadata_dir setting é necessário para armazenar a arte no disco"
 
 #, php-format
 msgid "%d track"
@@ -4000,11 +5223,12 @@ msgstr "Executando atualização do Beets"
 
 #. HINT: filename (file path)
 #, php-format
-msgid "Unable to add Song - %s"
-msgstr "Erro ao adicionar música - %s"
+msgid "Unable to add %s"
+msgstr ""
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
-msgstr "O catálogo Beets foi selecionado, mas nenhum arquivo DB Beets foi fornecido"
+msgstr ""
+"O catálogo Beets foi selecionado, mas nenhum arquivo DB Beets foi fornecido"
 
 #, php-format
 msgid "This path belongs to an existing Beets Catalog: %s"
@@ -4014,7 +5238,8 @@ msgid "Beets Database File"
 msgstr "Arquivo de banco de dados do Beets"
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
-msgstr "O tipo de catálogo remoto foi selecionado, mas o caminho não é uma URL"
+msgstr ""
+"O tipo de catálogo remoto foi selecionado, mas o caminho não é uma URL"
 
 msgid "Beets Server URI"
 msgstr "URI do servidor Beets"
@@ -4027,7 +5252,9 @@ msgid "Error: Catalog with %s already exists"
 msgstr "Erro: Catálogo com %s já existe"
 
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr "Erro: Chave API, Senha a Token de Acesso são Necessários para catálogos Dropbox"
+msgstr ""
+"Erro: Chave API, Senha a Token de Acesso são Necessários para catálogos "
+"Dropbox"
 
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr "\"Chave API\", \"senha\", ou \"token de acesso\": "
@@ -4061,7 +5288,8 @@ msgstr "Clique no botão 'Gerar' para criar um Token de Acesso"
 
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
-msgstr "Copy chave, senha e Token de Acesso do Aplicativo para os seguintes campos."
+msgstr ""
+"Copy chave, senha e Token de Acesso do Aplicativo para os seguintes campos."
 
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
@@ -4190,7 +5418,9 @@ msgstr[2] "horas"
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
-msgstr "Esta subpasta não está dentro de um catálogo existente. A atualização não pode ser processada."
+msgstr ""
+"Esta subpasta não está dentro de um catálogo existente. A atualização não "
+"pode ser processada."
 
 msgid "Updated"
 msgstr "Atualizado"
@@ -4309,20 +5539,27 @@ msgstr "Instale um servidor Seafile conforme descrito na documentação"
 msgid ""
 "Enter URL to server (e.g. 'https://seafile.example.com') and library name "
 "(e.g. 'Music')."
-msgstr "Digite a URL para o servidor (por ex. 'https://seafile.example.com') e o nome da biblioteca (por ex. 'Music')."
+msgstr ""
+"Digite a URL para o servidor (por ex. 'https://seafile.example.com') e o "
+"nome da biblioteca (por ex. 'Music')."
 
 msgid ""
 "API Call Delay is the delay inserted between repeated requests to Seafile "
 "(such as during an Add or Clean action) to accommodate Seafile's Rate "
 "Limiting."
-msgstr "Atraso na Chamada da API é o atraso inserido entre solicitações repetidas ao Seafile (como durante uma ação Adicionar ou Limpar) para acomodar o Limite da Taxa do Seafile."
+msgstr ""
+"Atraso na Chamada da API é o atraso inserido entre solicitações repetidas ao"
+" Seafile (como durante uma ação Adicionar ou Limpar) para acomodar o Limite "
+"da Taxa do Seafile."
 
 msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr "O padrão é ajustado nas configurações de limite da taxa padrão do Seafile."
+msgstr ""
+"O padrão é ajustado nas configurações de limite da taxa padrão do Seafile."
 
 msgid ""
 "After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr "Depois de criar o catálogo, você deve 'Prepará-lo' na tabela do catálogo."
+msgstr ""
+"Depois de criar o catálogo, você deve 'Prepará-lo' na tabela do catálogo."
 
 #. HINT: filename (File path)
 #, php-format
@@ -4368,7 +5605,9 @@ msgstr "Não foi possível autenticar com Seafile"
 
 #, php-format
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
-msgstr "Não foi possível encontrar a biblioteca Seafile chamada \"%s\", nenhuma mídia foi atualizada"
+msgstr ""
+"Não foi possível encontrar a biblioteca Seafile chamada \"%s\", nenhuma "
+"mídia foi atualizada"
 
 msgid "Catalog created"
 msgstr "Catálogo criado"
@@ -4407,11 +5646,14 @@ msgid "Start searching new media art"
 msgstr "Iniciar a procura de arte de mídia nova"
 
 msgid "Update artist information and fetch similar artists from last.fm"
-msgstr "Atualize as informações do artista e busque artistas semelhantes no last.fm"
+msgstr ""
+"Atualize as informações do artista e busque artistas semelhantes no last.fm"
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
-msgstr "Atualizar as informações da etiqueta e buscar detalhes usando o plug-in MusicBrainz"
+msgstr ""
+"Atualizar as informações da etiqueta e buscar detalhes usando o plug-in "
+"MusicBrainz"
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr "Atualize o mapeamento da tabela, contagens e exclua dados da lixeira"
@@ -4621,24 +5863,23 @@ msgstr "Não foi possível atualizar o banco de dados com a última versão"
 msgid "Display database update information"
 msgstr "Mostra informação da atualização do banco de dados"
 
-#, php-format
-msgid "Ampache version: %s"
-msgstr "Versão do Ampache: %s"
-
 #. HINT: config version string (e.g. 62)
 #, php-format
 msgid "Config version: %s"
 msgstr "Versão da configuração: %s"
 
 msgid "Unable to query the database, check your Ampache config"
-msgstr "Não foi possível consultar o banco de dados, verifique a configuração do Ampache"
+msgstr ""
+"Não foi possível consultar o banco de dados, verifique a configuração do "
+"Ampache"
 
 msgid "Missing database tables have been created"
 msgstr "As tabelas ausentes do banco de dados foram criadas"
 
 msgid ""
 "Your database is missing these tables. Use -e|--execute to recreate them"
-msgstr "Seu banco de dados está sem essas tabelas. Use -e|--execute para recriá-las"
+msgstr ""
+"Seu banco de dados está sem essas tabelas. Use -e|--execute para recriá-las"
 
 #, php-format
 msgid "Update failed! %s"
@@ -4647,7 +5888,9 @@ msgstr "A atualização falhou! %s"
 msgid ""
 "Your database version is higher than the Ampache version. Use -e|--execute "
 "to rollback"
-msgstr "A versão do seu banco de dados é superior à do Ampache. Use -e|--execute para reverter"
+msgstr ""
+"A versão do seu banco de dados é superior à do Ampache. Use -e|--execute "
+"para reverter"
 
 msgid "Update Plugins automatically"
 msgstr "Atualizar Plugins automaticamente"
@@ -4688,7 +5931,9 @@ msgstr "Desabilitar simulação"
 
 msgid ""
 "Error: A minimum OR maximum height/width must be specified in the config"
-msgstr "Erro: Só deve ser especificada uma altura/largura mínima OU máxima na configuração"
+msgstr ""
+"Erro: Só deve ser especificada uma altura/largura mínima OU máxima na "
+"configuração"
 
 msgid "Minimum Dimensions: album_art_min_width AND album_art_min_height"
 msgstr "Dimensões Mínimas: album_art_min_width E album_art_min_height"
@@ -4752,13 +5997,17 @@ msgid "Convert filenames using a charset"
 msgstr "Converter nomes de arquivos usando um charset"
 
 msgid "Enables `fire-and-forget`-mode (Disables prompting on rename)"
-msgstr "Habilitar modo `disparar-e-esquecer` (Desabilita pergunta ao renomear)"
+msgstr ""
+"Habilitar modo `disparar-e-esquecer` (Desabilita pergunta ao renomear)"
 
 msgid "The destination charset"
 msgstr "Charset de destino"
 
-msgid "Convert filenames to utf8"
-msgstr "Converter nomes de arquivo para utf8"
+msgid "Name of Catalog (optional)"
+msgstr "Nome do catálogo (opcional)"
+
+msgid "Convert filenames to utf8 in `some-catalog`"
+msgstr ""
 
 msgid "php-iconv is required for this functionality, quitting"
 msgstr "php-iconv é necessário para esta funcionalidade, saindo"
@@ -4796,8 +6045,8 @@ msgstr "Exportar arte do álbum"
 msgid "Metadata write mode (`linux` or `windows`)"
 msgstr "Modo de escrita de metadados (`linux` ou `windows`)"
 
-msgid "Export album art for Linux"
-msgstr "Exportar arte de álbum para Linux"
+msgid "Export album art for Linux from `some-catalog`"
+msgstr ""
 
 msgid "Start Album Art Dump"
 msgstr "Iniciar Dump de Arte do Álbum"
@@ -4839,7 +6088,9 @@ msgstr "Diretório de saída"
 msgid ""
 "Playlist type ('albums', 'artists', 'playlists', 'smartlists'), (default: "
 "playlists)"
-msgstr "Tipo de playlist ('álbuns', 'artistas', 'playlists', 'listas inteligentes'), (padrão: playlists)"
+msgstr ""
+"Tipo de playlist ('álbuns', 'artistas', 'playlists', 'listas inteligentes'),"
+" (padrão: playlists)"
 
 msgid "Output type ('m3u', 'xspf', 'pls'), (default: m3u)"
 msgstr "Tipo de saída ('m3u', 'xspf', 'pls'), (por padrão: m3u)"
@@ -4979,16 +6230,14 @@ msgid "Limit how many moves to allow before stopping"
 msgstr "Limitar quantos movimentos permitir antes de parar"
 
 msgid "Replace all Windows-incompatible characters with an underscore"
-msgstr "Substitua todos os caracteres incompatíveis com o Windows por um sublinhado"
+msgstr ""
+"Substitua todos os caracteres incompatíveis com o Windows por um sublinhado"
 
 msgid "Sets the default name for `Various Artists`"
 msgstr "Define o nome padrão para `Artistas Variados`"
 
 msgid "Sort a single file or folder path"
 msgstr ""
-
-msgid "Name of Catalog (optional)"
-msgstr "Nome do catálogo (opcional)"
 
 msgid "Sort song files"
 msgstr "Ordenar arquivos de canção"
@@ -5043,7 +6292,9 @@ msgstr ""
 msgid ""
 "Perform catalog actions for all files of a catalog. If no options are given,"
 " the defaults actions -ceagt are assumed"
-msgstr "Executar ações de catálogo para todos os arquivos de um catálogo. Se nenhuma opção for dada, as ações padrão - ceagt serão assumidas"
+msgstr ""
+"Executar ações de catálogo para todos os arquivos de um catálogo. Se nenhuma"
+" opção for dada, as ações padrão - ceagt serão assumidas"
 
 msgid "Adds new media files to the database"
 msgstr "Adicionar novos arquivos de mídia ao banco de dados"
@@ -5052,7 +6303,8 @@ msgid "Gathers media Art"
 msgstr "Reúne Arte da mídia"
 
 msgid "Reads your files and updates the database to match changes"
-msgstr "Ler seus arquivos e atualizar o banco de dados para refletir as mudanças"
+msgstr ""
+"Ler seus arquivos e atualizar o banco de dados para refletir as mudanças"
 
 msgid "Find missing files and print a list of filenames"
 msgstr "Encontrar arquivos ausentes e imprimir uma lista de nomes de arquivos"
@@ -5110,7 +6362,8 @@ msgstr "Atualizar o banco de dados"
 
 msgid ""
 "This script makes changes to your database based on your config settings"
-msgstr "Este script faz alterações no banco de dados com base em suas configurações"
+msgstr ""
+"Este script faz alterações no banco de dados com base em suas configurações"
 
 #, php-format
 msgid "Target charset: %s"
@@ -5124,7 +6377,25 @@ msgstr "Compilação alvo: %s"
 msgid "Table engine: %s"
 msgstr "Motor da tabela: %s"
 
+msgid "Nothing out of sync. No changes needed"
+msgstr ""
+
+#, php-format
+msgid "Found %d entries out of sync with your configured charset:"
+msgstr ""
+
+#, php-format
+msgid "Fixed %s"
+msgstr ""
+
+#, php-format
+msgid "Failed to fix %s"
+msgstr ""
+
 msgid "Collection Items"
+msgstr ""
+
+msgid "Playlist Folders"
 msgstr ""
 
 msgid "Current Playlist"
@@ -5155,21 +6426,6 @@ msgstr "A pesquisa não foi encontrada ou expirou. Tente recarregar a página"
 
 msgid "0 Stars"
 msgstr "0 Estrelas"
-
-msgid "1 Star"
-msgstr "1 Estrela"
-
-msgid "2 Stars"
-msgstr "2 Estrelas"
-
-msgid "3 Stars"
-msgstr "3 Estrelas"
-
-msgid "4 Stars"
-msgstr "4 Estrelas"
-
-msgid "5 Stars"
-msgstr "5 Estrelas"
 
 msgid "Album Data"
 msgstr "Dados do Álbum"
@@ -5243,6 +6499,24 @@ msgstr "Última Pulada"
 msgid "My Last Play or Skip"
 msgstr "Última Tocada ou Pulada"
 
+msgid "My Last Play (Song)"
+msgstr ""
+
+msgid "My Last Skip (Song)"
+msgstr ""
+
+msgid "My Last Play or Skip (Song)"
+msgstr ""
+
+msgid "My Last Play (Artist)"
+msgstr ""
+
+msgid "My Last Skip (Artist)"
+msgstr ""
+
+msgid "My Last Play or Skip (Artist)"
+msgstr ""
+
 msgid "Played by Me"
 msgstr "Tocado por Mim"
 
@@ -5314,6 +6588,15 @@ msgstr "Contagem de Álbuns"
 
 msgid "My Rating (Album)"
 msgstr "Minha Classificação (Álbum)"
+
+msgid "My Last Play (Album)"
+msgstr ""
+
+msgid "My Last Skip (Album)"
+msgstr ""
+
+msgid "My Last Play or Skip (Album)"
+msgstr ""
 
 msgid "MusicBrainz ID (Album)"
 msgstr "ID do MusicBrainz (Álbum)"
@@ -5548,10 +6831,13 @@ msgid ""
 msgstr ""
 
 msgid "Unable to connect to the database, check your Ampache config"
-msgstr "Não foi possível conectar-se ao banco de dados, verifique a configuração do Ampache"
+msgstr ""
+"Não foi possível conectar-se ao banco de dados, verifique a configuração do "
+"Ampache"
 
 msgid "Existing database was detected, unable to continue the installation"
-msgstr "O banco de dados existente foi detectado, incapaz de continuar a instalação"
+msgstr ""
+"O banco de dados existente foi detectado, incapaz de continuar a instalação"
 
 #. HINT: Database error message
 #, php-format
@@ -5570,7 +6856,9 @@ msgstr "Criação de usuário administrativo falhou: %s"
 
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
-msgstr "Falha na conexão com o banco de dados: Verifique o nome do host, usuário e senha"
+msgstr ""
+"Falha na conexão com o banco de dados: Verifique o nome do host, usuário e "
+"senha"
 
 msgid "Config file is not writable"
 msgstr "Arquivo de configuração não tem permissão para escrita"
@@ -5597,12 +6885,16 @@ msgstr "Não foi possível criar o banco de dados: %s"
 #. HINT: %1 user, %2 database, %3 host, %4 error message
 #, php-format
 msgid "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": %4$s"
-msgstr "Não foi possível criar o usuário \"%1$s\" com permissões para \"%2$s\" em \"%3$s\": %4$s"
+msgstr ""
+"Não foi possível criar o usuário \"%1$s\" com permissões para \"%2$s\" em "
+"\"%3$s\": %4$s"
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
 #, php-format
 msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
-msgstr "Não foi possível conceder permissões para \"%1$s\" ao usuário \"%2$s\" em \"%3$s\": %4$s"
+msgstr ""
+"Não foi possível conceder permissões para \"%1$s\" ao usuário \"%2$s\" em "
+"\"%3$s\": %4$s"
 
 msgid "Unable to open ampache.sql"
 msgstr "Impossível abrir o ampache.sql"
@@ -5669,12 +6961,16 @@ msgstr "Obrigado pro registrar-se"
 msgid ""
 "Please keep this e-mail for your records. Your account information is as "
 "follows:"
-msgstr "Guarde este e-mail para seu registro. As informações da sua conta são as seguintes:"
+msgstr ""
+"Guarde este e-mail para seu registro. As informações da sua conta são as "
+"seguintes:"
 
 msgid ""
 "To begin using your account, you must verify your e-mail address by vising "
 "the following link:"
-msgstr "Para começar a usar sua conta, verifique seu endereço de e-mail acessando o seguinte link:"
+msgstr ""
+"Para começar a usar sua conta, verifique seu endereço de e-mail acessando o "
+"seguinte link:"
 
 msgid "A new user has registered, the following values were entered:"
 msgstr "Um novo usuário se registrou. Os seguintes valores foram inseridos:"
@@ -5762,94 +7058,6 @@ msgid "Add to list"
 msgstr ""
 
 msgid "Add to playlist / collection"
-msgstr ""
-
-msgid "On"
-msgstr "Ligado"
-
-msgid "Off"
-msgstr "Desligado"
-
-msgid "bps"
-msgstr ""
-
-msgid "0 = use the source file rate"
-msgstr ""
-
-msgid "KB/s"
-msgstr ""
-
-msgid "M3U"
-msgstr "M3U"
-
-msgid "Simple M3U"
-msgstr "M3U simples"
-
-msgid "PLS"
-msgstr "PLS"
-
-msgid "Asx"
-msgstr "Asx"
-
-msgid "RAM"
-msgstr "RAM"
-
-msgid "XSPF"
-msgstr "XSPF"
-
-msgid "Allow API3 Only"
-msgstr "Permitir somente API3"
-
-msgid "Allow API4 Only"
-msgstr "Permitir somente API4"
-
-msgid "Allow API5 Only"
-msgstr "Permitir somente API5"
-
-msgid "Allow API6 Only"
-msgstr "Permitir somente API6"
-
-msgid "Keep last played track"
-msgstr "Manter a última faixa tocada"
-
-#. HINT: Keep (2|3|4|5|10) previous tracks
-#, php-format
-msgid "Keep %s previous tracks"
-msgstr "Manter %s faixas anteriores"
-
-msgid "Remove all previous tracks"
-msgstr "Remover todas as faixas anteriores"
-
-msgid "Send on Add"
-msgstr "Enviar ao adicionar"
-
-msgid "Send and Clear on Add"
-msgstr "Enviar e apagar ao adicionar"
-
-msgid "Clear on Send"
-msgstr "Apagar ao enviar"
-
-msgid "Always"
-msgstr "Sempre"
-
-msgid "Year ascending"
-msgstr "Ano ascendente"
-
-msgid "Year descending"
-msgstr "Ano descendente"
-
-msgid "Name ascending"
-msgstr "Nome ascendente"
-
-msgid "Name descending"
-msgstr "Nome descendente"
-
-#. HINT: Plugin Name
-#, php-format
-msgid "Click to grant %s access to Ampache"
-msgstr "Clique para conceder acesso %s para o Ampache"
-
-msgid "Match my theme"
 msgstr ""
 
 msgid "Unknown Artist"
@@ -5964,7 +7172,9 @@ msgid "User's avatars from Gravatar"
 msgstr "Avatares do usuário do Gravatar"
 
 msgid "Automatically download accepted Wanted List albums with Headphones"
-msgstr "Baixar automaticamente os álbuns aceitos da Lista de Procurados com Headphones"
+msgstr ""
+"Baixar automaticamente os álbuns aceitos da Lista de Procurados com "
+"Headphones"
 
 msgid "Headphones URL"
 msgstr "URL de Headphones"
@@ -6003,7 +7213,8 @@ msgid "Libre.FM Grant URL"
 msgstr "URL de concessão Libre.FM"
 
 msgid "Scrobble songs you play to your ListenBrainz Account"
-msgstr "Grave as preferências musicais do que você toca na sua conta ListenBrainz"
+msgstr ""
+"Grave as preferências musicais do que você toca na sua conta ListenBrainz"
 
 msgid "ListenBrainz User Token"
 msgstr "Token de Usuário ListenBrainz"
@@ -6077,8 +7288,46 @@ msgstr "ID do Site Piwik"
 msgid "Piwik URL"
 msgstr "URL do Piwik"
 
+msgid "Popular songs on homepage, one per album and artist"
+msgstr ""
+
+msgid ""
+"How many tracks the panel shows. Each one is the most played of its album "
+"and of its artist, so a higher number reaches further down the ranking "
+"rather than repeating a record."
+msgstr ""
+
+msgid ""
+"Where the panel sits among the other home page panels. Lower comes first, "
+"and panels sharing a number keep the order the plugins were installed in."
+msgstr ""
+
+msgid "Popular variety max items"
+msgstr ""
+
 msgid "Raise the album and artist rating to match the highest song rating"
-msgstr "Aumente a classificação do álbum e do artista para corresponder à classificação mais alta da música"
+msgstr ""
+"Aumente a classificação do álbum e do artista para corresponder à "
+"classificação mais alta da música"
+
+msgid ""
+"Write how many plays, optionally followed by a comma and how many skips: `5`"
+" or `5,2`. Leave it empty to never apply this rating automatically."
+msgstr ""
+
+msgid ""
+"Ratings below this many stars are not copied to the album and the artist, "
+"and are not written to file tags. 0 turns the whole sync off, which is the "
+"shipped default."
+msgstr ""
+
+msgid "Marking a track as loved also marks its album and its artist."
+msgstr ""
+
+msgid ""
+"Writes the rating into the file itself, so it survives a rescan and follows "
+"the file elsewhere. Ampache must be able to write to your music files."
+msgstr ""
 
 msgid "Minimum star rating to match"
 msgstr "Classificação mínima de estrelas para corresponder"
@@ -6106,6 +7355,30 @@ msgstr "Regra de correspondência para bandeiras"
 
 msgid "Save ratings to file tags when changed"
 msgstr "Salvar avaliações para as tags do arquivo ao alterar"
+
+msgid "Right now: never applied."
+msgstr ""
+
+#. HINT: number of plays
+#, php-format
+msgid "Right now: applied after %d play."
+msgid_plural "Right now: applied after %d plays."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#. HINT: number of skips
+#, php-format
+msgid "Right now: applied after %d skip."
+msgid_plural "Right now: applied after %d skips."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#. HINT: %1$d number of plays, %2$d number of skips
+#, php-format
+msgid "Right now: applied once there are at least %1$d plays and %2$d skips."
+msgstr ""
 
 msgid "RSS View"
 msgstr "Visualização RSS"
@@ -6936,10 +8209,6 @@ msgid "Allow Localplay Play"
 msgstr "Permitir play local"
 
 #: Ampache preference description
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr "Compartilhar Informações do Tocadas Recentemente - Permitir acesso ao agente de streaming"
-
-#: Ampache preference description
 msgid "Share Now Playing information"
 msgstr "Compartilhar informação do Tocando Agora"
 
@@ -6950,7 +8219,9 @@ msgstr "Compartilhar informação do Tocada Recentemente"
 #: Ampache preference description
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
-msgstr "Compartilhar informações do Tocadas Recentemente - Permitir acesso à data/hora de streaming"
+msgstr ""
+"Compartilhar informações do Tocadas Recentemente - Permitir acesso à "
+"data/hora de streaming"
 
 #: Ampache preference description
 msgid "Allow Streaming"
@@ -6968,7 +8239,9 @@ msgstr "Permitir recursos de vídeo"
 msgid ""
 "Force API streams to download. (Enable scrobble in your client to record "
 "stats)"
-msgstr "Forçar fluxos de API para baixar. (Ative o scrobble em seu cliente para registrar estatísticas)"
+msgstr ""
+"Forçar fluxos de API para baixar. (Ative o scrobble em seu cliente para "
+"registrar estatísticas)"
 
 #: Ampache preference description
 msgid "Allow Ampache API3 responses"
@@ -6992,15 +8265,21 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Force a specific API response no matter what version you send"
-msgstr "Forçar uma resposta específica da API, independentemente da versão que você enviar"
+msgstr ""
+"Forçar uma resposta específica da API, independentemente da versão que você "
+"enviar"
 
 #: Ampache preference description
 msgid "Hide playlists in Subsonic and API clients that start with this string"
-msgstr "Ocultar listas de reprodução em clientes Subsonic e API que começam com esta string"
+msgstr ""
+"Ocultar listas de reprodução em clientes Subsonic e API que começam com esta"
+" string"
 
 #: Ampache preference description
 msgid "Hide smartlists that match playlist names in Subsonic and API clients"
-msgstr "Ocultar listas inteligentes que correspondam aos nomes das playlists em clientes Subsonic e API"
+msgstr ""
+"Ocultar listas inteligentes que correspondam aos nomes das playlists em "
+"clientes Subsonic e API"
 
 #: Ampache preference description
 msgid "AutoUpdate last check time"
@@ -7088,11 +8367,15 @@ msgstr "Notificações do navegador Player Web"
 
 #: Ampache preference description
 msgid "Check library item at import time and disable duplicates"
-msgstr "Verificar o item da biblioteca no momento da importação e desabilitar duplicatas"
+msgstr ""
+"Verificar o item da biblioteca no momento da importação e desabilitar "
+"duplicatas"
 
 #: Ampache preference description
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
-msgstr "Cache calculou os dados SQL (ex. estatísticas de cliques em mídia) usando cron"
+msgstr ""
+"Cache calculou os dados SQL (ex. estatísticas de cliques em mídia) usando "
+"cron"
 
 #: Ampache preference description
 msgid ""
@@ -7178,6 +8461,12 @@ msgstr "Personalizar metadados - Desabilitar esses campos"
 #: Ampache preference description
 msgid "Allow Downloads"
 msgstr "Permitir downloads"
+
+#: Ampache preference description
+msgid ""
+"Allow an embedded player when a link to this server is posted on another "
+"site"
+msgstr ""
 
 #: Ampache preference description
 msgid "Transcode output format - Audio Default"
@@ -7280,17 +8569,15 @@ msgid "Use Jellyfin backend"
 msgstr ""
 
 #: Ampache preference description
-msgid "Use Jellyfin QuickConnect"
-msgstr ""
-
-#: Ampache preference description
 msgid "Default webplayer volume"
 msgstr "Volume padrão do Player Web"
 
 #: Ampache preference description
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
-msgstr "Navegação alfabética padrão para os seguintes itens da biblioteca (álbum, artista,...)"
+msgstr ""
+"Navegação alfabética padrão para os seguintes itens da biblioteca (álbum, "
+"artista,...)"
 
 #: Ampache preference description
 msgid "Library item context menu"
@@ -7376,7 +8663,15 @@ msgid "Popular Threshold"
 msgstr "Limite da popularidade"
 
 #: Ampache preference description
+msgid "Enable QuickConnect service"
+msgstr ""
+
+#: Ampache preference description
 msgid "Download Rate Limit"
+msgstr ""
+
+#: Ampache preference description
+msgid "Always show the rightbar"
 msgstr ""
 
 #: Ampache preference description
@@ -7449,7 +8744,9 @@ msgstr "Mostrar legenda do Álbum nos links (se disponível)"
 
 #: Ampache preference description
 msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
-msgstr "Habilitar o acesso ao seu \"Spotify Wrapped\" pessoal de sua página de usuário"
+msgstr ""
+"Habilitar o acesso ao seu \"Spotify Wrapped\" pessoal de sua página de "
+"usuário"
 
 #: Ampache preference description
 msgid "Light sidebar by default"
@@ -7504,10 +8801,6 @@ msgid "Custom CSS Order - Search"
 msgstr "Pedido CSS personalizado - Pesquisa"
 
 #: Ampache preference description
-msgid "Custom CSS Order - Video"
-msgstr "Pedido CSS personalizado - Vídeo"
-
-#: Ampache preference description
 msgid "Website Description - shown when a link to this server is shared"
 msgstr ""
 
@@ -7535,7 +8828,9 @@ msgstr "Habilitar reescrita de URL"
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
-msgstr "Forçar o download de transmissões do Subsonic. (Ative o scrobble no seu cliente para gravar estatísticas)"
+msgstr ""
+"Forçar o download de transmissões do Subsonic. (Ative o scrobble no seu "
+"cliente para gravar estatísticas)"
 
 #: Ampache preference description
 msgid "Use Subsonic backend"
@@ -7547,7 +8842,8 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Enable legacy Subsonic API responses for compatibility issues"
-msgstr "Habilitar respostas da API Subsonic legada para problemas de compatibilidade"
+msgstr ""
+"Habilitar respostas da API Subsonic legada para problemas de compatibilidade"
 
 #: Ampache preference description
 msgid "Use single user data for Subsonic API responses"
@@ -7640,7 +8936,8 @@ msgstr "Pausa automática entre abas"
 #: Ampache preference description
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
-msgstr "Remover faixas antes do item da playlist atual no Player Web quando tocado"
+msgstr ""
+"Remover faixas antes do item da playlist atual no Player Web quando tocado"
 
 #: Ampache preference subcategory
 msgid "Api"

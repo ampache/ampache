@@ -4,6 +4,7 @@
 
 ### Added (8.3.0)
 
+* Translations 2026-10-20
 * Playlist Folders
   * Cancel button on the create/edit folder form
   * A folder can be shared read-only via a Public/Private switch, restricted to Content Manager (level 50)+
