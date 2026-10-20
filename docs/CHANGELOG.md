@@ -37,6 +37,9 @@
   * `send_full_stream` only buffers transcoded streams; a direct file is always sent as it is read
   * `transcode_mp3` is disabled by default; a fresh install has no `transcode_cmd` to transcode with
 * `cleanup:art -x` now also removes the empty album/size directories left behind, not just the orphaned files
+* Plugins
+  * HomeDashboard's default sections are Random and Newest, not Random and Trending
+  * `home_moment_albums` now defaults off for a fresh install; HomeDashboard does this
 
 ### Fixed (8.3.0)
 
@@ -78,6 +81,9 @@
 * A failed or partially loaded track left the web player's seek bar showing a partial fill instead of its full track background
 * Reloading the page while a random stream was playing could replay the same song instead of picking a new one
 * Pausing then resuming a random/democratic web player stream could leave the display stuck on the placeholder
+* Next/Previous, or waiting for a track to finish, on a random/democratic stream could repeat the same song for minutes
+* Albums of the Moment packed its rating and favorite icons into a column about twice the width of the album art
+* A CLI install never enabled the default plugins (HomeDashboard, Catalog Favorites, Personal Favorites)
 
 ## Ampache 8.2.2
 

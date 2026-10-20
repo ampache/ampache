@@ -302,11 +302,11 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             return false;
         }
 
-        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '5', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
-        return Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        return Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
