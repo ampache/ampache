@@ -3844,7 +3844,7 @@ Return the `now_playing` state when completed
 |----------|---------|------------------------------------------------------|---------:|
 | 'filter' | string  | $object_id currently playing/stopping                |       NO |
 | 'type'   | string  | `song`, `video`, `podcast_episode` (Default: `song`) |      YES |
-| 'state'  | string  | `play`, `stop` (Default: `play`)                     |      YES |
+| 'state'  | string  | `play`, `pause`, `stop` (Default: `play`)            |      YES |
 | 'time'   | integer | current play time in whole seconds (Default: 0)      |      YES |
 | 'client' | string  | agent/client name                                    |      YES |
 

@@ -29,8 +29,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 use Override;
 
 /**
@@ -97,9 +99,17 @@ final class WebPlayerPageView extends AbstractView
         }
 
         $streamId = ($this->isShare) ? null : ($_REQUEST['playlist_id'] ?? null);
-
-        return $this->playlist = (is_string($streamId) || is_int($streamId))
+        $playlist = (is_string($streamId) || is_int($streamId))
             ? new Stream_Playlist($streamId)
             : new Stream_Playlist(-1);
+
+        if (WebPlayer::is_playlist_random($playlist)) {
+            $user = Core::get_global('user');
+            if ($user instanceof User && $user->id > 0) {
+                User::set_user_data($user->id, 'random_song', 0);
+            }
+        }
+
+        return $this->playlist = $playlist;
     }
 }

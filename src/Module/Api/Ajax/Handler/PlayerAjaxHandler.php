@@ -33,6 +33,7 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -94,6 +95,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'found' => true,
                             'object_type' => $current['object_type'],
                             'object_id' => $current['object_id'],
+                            'insertion' => $current['insertion'],
                             'duration' => $media->time,
                             'title' => '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_song&song_id=' . $media->id . '\')" title="' . $titleText . '">' . $titleText . '</a>',
                             'artist' => ($artistId > 0)
@@ -142,6 +144,54 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 
                 header('Content-Type: application/json');
                 echo json_encode(['scrobbled' => $scrobbled]);
+
+                return;
+            case 'pause':
+            case 'play':
+            case 'stop':
+                // trusted the same way PlayerMethod trusts filter/type: only ever touches the caller's own state
+                $objectId = (int) $this->requestParser->getFromRequest('oid');
+                $type     = strtolower($this->requestParser->getFromRequest('type') ?: 'song');
+                $success  = false;
+
+                if ($objectId > 0 && in_array($type, ['song', 'video'], true)) {
+                    $className = ObjectTypeToClassNameMapper::map($type);
+                    /** @var Song|Video $media */
+                    $media = new $className($objectId);
+
+                    if (!$media->isNew()) {
+                        $sid      = (string) ($user->streamtoken ?: session_id());
+                        $time     = time();
+                        $position = max(0, (int) $this->requestParser->getFromRequest('time'));
+
+                        if ($action === 'play') {
+                            // resuming shifts the last play's recorded history back to when it actually started (now - position)
+                            if ($media instanceof Song) {
+                                $agent    = Session::agent($sid);
+                                $previous = Stats::get_last_play($user->getId(), $agent);
+                                if ((int) $previous['object_id'] === $media->id && $previous['object_type'] === $type) {
+                                    $time_diff = $time - (int) $previous['date'];
+                                    $old_play  = $time_diff > $media->time * 5;
+                                    if ($position >= 1 || $old_play) {
+                                        Stats::shift_last_play($user->getId(), $agent, (int) $previous['date'], $time - $position);
+                                    }
+                                }
+                            }
+
+                            // resume is a fresh now_playing row, same as a first play: no partial-length math to get wrong
+                            Stream::garbage_collection();
+                            Stream::insert_now_playing($objectId, $user->getId(), $media->time, $sid, $type, null, null, null, 'playing');
+                        } else {
+                            // pause and stop are both "not playing": clear now_playing until play resumes
+                            Stream::delete_now_playing($sid, $objectId, $type, $user->getId());
+                        }
+
+                        $success = true;
+                    }
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode(['success' => $success]);
 
                 return;
             case 'stream_session':
