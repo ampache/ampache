@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\Model\Album;
@@ -42,6 +43,7 @@ use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
@@ -57,6 +59,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UserRepositoryInterface $userRepository,
         private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
+        private LoggerInterface $logger,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,6 +69,9 @@ final readonly class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
+            // an empty body looks like a broken feed, so the log names the settings that produced it
+            $this->logger->notice('RSS feeds are off, check use_rss and demo_mode', [LegacyLogger::CONTEXT_TYPE => self::class]);
+
             return null;
         }
 
