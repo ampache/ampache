@@ -251,7 +251,7 @@ class Preference extends database_object
         'allow_video' => ['0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'boolean', 'options', 'feature'],
         'album_release_type' => ['1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library'],
         'direct_play_limit' => ['500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player'],
-        'home_moment_albums' => ['1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'home_moment_albums' => ['0', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_moment_videos' => ['0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_recently_played' => ['1', 'Show Recently Played', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_now_playing' => ['1', 'Show Now Playing', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],

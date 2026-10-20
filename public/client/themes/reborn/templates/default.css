@@ -2307,7 +2307,15 @@ span.fatalerror {
 }
 
 .random_album .rating {
-    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+/* .cel_rating's table-column width otherwise forces each span to 125px, spreading the row far past the art */
+.random_album .rating .cel_rating {
+    width: auto;
+    max-width: none;
 }
 
 /* --------------------------
