@@ -554,22 +554,19 @@ final readonly class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random === 1) {
-            $last_id   = (int) User::get_user_data($user_id, 'random_song', 0)['random_song'];
-            $last_time = (int) User::get_user_data($user_id, 'random_time', 0)['random_time'];
-            $repeat    = false;
-            if ($last_id > 0) {
-                $last_play = Stats::get_last_play($user_id);
-                $started   = ($last_play['object_type'] === 'song' && (int) $last_play['object_id'] === $last_id)
-                    ? (int) $last_play['date']
-                    : $last_time;
-                $repeat = (($time - $started) < AmpConfig::get_skip_timer(new Song($last_id)->time));
+            $last_id = (int) User::get_user_data($user_id, 'random_song', 0)['random_song'];
+            $repeat  = false;
+            // the webplayer reports its own pause/play/stop state and resets this on every page load
+            if ($last_id > 0 && $player !== 'webplayer') {
+                $current = Stream::get_latest_now_playing([$session_id, (string) $user->streamtoken]);
+                $repeat  = ($current !== null && $current['object_id'] === $last_id);
             }
 
             if ($repeat) {
                 // continue the current object
                 $object_id = $last_id;
                 $this->logger->debug(
-                    'Called random again inside the skip timer, sending last song id: {' . $object_id . '}',
+                    'Random reconnected while still playing, sending last song id: {' . $object_id . '}',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } else {
@@ -604,7 +601,6 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                 if ($object_id !== $last_id) {
                     User::set_user_data($user_id, 'random_song', $object_id);
-                    User::set_user_data($user_id, 'random_time', $time);
                 }
 
                 // play the song instead of going through all the crap
