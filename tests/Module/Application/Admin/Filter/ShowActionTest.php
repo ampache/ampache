@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -49,6 +50,9 @@ class ShowActionTest extends TestCase
     public function testRunRenders(): void
     {
         $this->catalogFilterRepository->method('findGroups')->willReturn(new ArrayIterator([]));
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::CATALOG_FILTER)
+            ->willReturn(true);
 
         $request    = $this->createMock(ServerRequestInterface::class);
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);

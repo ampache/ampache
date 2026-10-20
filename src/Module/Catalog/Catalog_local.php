@@ -469,11 +469,13 @@ class Catalog_local extends Catalog
                 }
             } catch (Throwable $error) {
                 // a malformed tag raises an Error rather than an Exception, and one unreadable file must not stop the catalog
+                $message = $error->getMessage() ?: $error::class;
                 $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
+                    T_('Error') . ' ' . $message,
                     true
                 );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+                AmpError::add('catalog_add', sprintf(T_('Unable to add %s'), $full_file) . ': ' . $message);
+                debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
 
@@ -1849,15 +1851,25 @@ class Catalog_local extends Catalog
         }
 
         if (!unlink($media->file)) {
+            if (is_file($new_file)) {
+                unlink($new_file);
+            }
+
             /* HINT: filename (File path) */
             $interactor?->info(
                 sprintf(T_('There was an error trying to delete "%s"'), $media->file),
                 true
             );
+
+            return false;
         }
 
         // Update the catalog
-        return self::getSongRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId);
+        return match (true) {
+            $media instanceof Video => self::getVideoRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+            $media instanceof Podcast_Episode => self::getPodcastEpisodeRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+            default => self::getSongRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
+        };
     }
 
     /**
@@ -1920,11 +1932,13 @@ class Catalog_local extends Catalog
                     $this->_scan_folder($full_file, $interactor);
                 }
             } catch (Throwable $error) {
+                $message = $error->getMessage() ?: $error::class;
                 $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
+                    T_('Error') . ' ' . $message,
                     true
                 );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+                AmpError::add('catalog_scan', sprintf(T_('Unable to add %s'), $full_file) . ': ' . $message);
+                debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         }
 
@@ -2021,8 +2035,12 @@ class Catalog_local extends Catalog
                 }
             }
 
-            if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
-                $changed++;
+            try {
+                if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
+                    $changed++;
+                }
+            } catch (Throwable $error) {
+                debug_event('local.catalog', sprintf('verify failed for %s %d: %s', $tableName, $row['id'], $error->getMessage()), 1);
             }
         }
 

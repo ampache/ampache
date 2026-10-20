@@ -31,9 +31,12 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class UserflagRepositoryTest extends TestCase
 {
+    use ConsecutiveParams;
+
     private DatabaseConnectionInterface&MockObject $connection;
     private LoggerInterface&MockObject $logger;
     private UserflagRepository $subject;
@@ -140,11 +143,20 @@ class UserflagRepositoryTest extends TestCase
 
     public function testMigrateMovesTheFlagsKeepingWhatTheTargetHad(): void
     {
-        $this->connection->expects(static::once())
+        // a user who flagged both sides keeps the flag instead of the destination row being silently dropped
+        $this->connection->expects(static::exactly(2))
             ->method('query')
             ->with(
-                'UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-                [42, 'song', 666]
+                ...self::withConsecutive(
+                    [
+                        'INSERT INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) SELECT ?, `old_flag`.`object_type`, `old_flag`.`user`, `old_flag`.`date` FROM `user_flag` AS `old_flag` WHERE `old_flag`.`object_type` = ? AND `old_flag`.`object_id` = ? ON DUPLICATE KEY UPDATE `date` = GREATEST(`user_flag`.`date`, VALUES(`date`))',
+                        [42, 'song', 666],
+                    ],
+                    [
+                        'DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['song', 666],
+                    ],
+                )
             );
 
         $this->subject->migrate('song', 666, 42);

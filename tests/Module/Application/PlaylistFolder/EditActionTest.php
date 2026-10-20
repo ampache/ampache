@@ -73,6 +73,27 @@ class EditActionTest extends MockeryTestCase
         self::assertSame('That name already exists', AmpError::get('name'));
     }
 
+    public function testRunLeavesVisibilityUntouchedBelowContentManager(): void
+    {
+        $user   = $this->ownerUser(9);
+        $folder = $this->folder(5, 9, 0, 'Rock');
+
+        $this->guardsPass($user, $folder);
+        $this->playlistFolderRepository->shouldReceive('wouldCycle')->never();
+        $this->playlistFolderRepository->shouldReceive('update')->with(5, 'Jazz', 0, null, null)->once()->andReturn(true);
+
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showConfirmation')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+        self::assertNull($this->subject->run($this->request(), $this->gatekeeper));
+        ob_end_clean();
+
+        self::assertFalse(AmpError::occurred());
+    }
+
     public function testRunRejectsMoveThatWouldCreateACycle(): void
     {
         $user   = $this->ownerUser(9);
@@ -120,7 +141,29 @@ class EditActionTest extends MockeryTestCase
 
         $this->guardsPass($user, $folder);
         $this->playlistFolderRepository->shouldReceive('wouldCycle')->never();
-        $this->playlistFolderRepository->shouldReceive('update')->with(5, 'Jazz', 0)->once()->andReturn(true);
+        $this->playlistFolderRepository->shouldReceive('update')->with(5, 'Jazz', 0, null, null)->once()->andReturn(true);
+
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showConfirmation')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+        self::assertNull($this->subject->run($this->request(), $this->gatekeeper));
+        ob_end_clean();
+
+        self::assertFalse(AmpError::occurred());
+    }
+
+    public function testRunUpdatesVisibilityWhenContentManager(): void
+    {
+        $user   = $this->ownerUser(9);
+        $folder = $this->folder(5, 9, 0, 'Rock');
+
+        $this->guardsPass($user, $folder, canMakePublic: true);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('public');
+        $this->playlistFolderRepository->shouldReceive('wouldCycle')->never();
+        $this->playlistFolderRepository->shouldReceive('update')->with(5, 'Jazz', 0, null, 'public')->once()->andReturn(true);
 
         $this->ui->shouldReceive('showHeader')->once();
         $this->ui->shouldReceive('showConfirmation')->once();
@@ -168,9 +211,10 @@ class EditActionTest extends MockeryTestCase
         ]);
     }
 
-    private function guardsPass(User&MockInterface $user, PlaylistFolder $folder, string $parentId = '0'): void
+    private function guardsPass(User&MockInterface $user, PlaylistFolder $folder, string $parentId = '0', bool $canMakePublic = false): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)->andReturn(true);
+        $this->gatekeeper->shouldReceive('mayAccess')->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)->andReturn($canMakePublic);
         $this->gatekeeper->shouldReceive('getUser')->andReturn($user);
         $this->requestParser->shouldReceive('verifyForm')->with('edit_playlist_folder')->andReturn(true);
         $this->requestParser->shouldReceive('getFromRequest')->with('folder')->andReturn((string) $folder->getId());

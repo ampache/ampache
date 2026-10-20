@@ -484,7 +484,7 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param 8 $apiVersion
-     * @param list<PlaylistFolder> $folders
+     * @param list<?PlaylistFolder> $folders
      */
     public function playlistFolders(
         int $apiVersion,

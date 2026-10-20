@@ -67,9 +67,28 @@ class MediaEmbedViewTest extends TestCase
         );
     }
 
+    public function testAServerThatRequiresASessionOffersNoPlayerEvenWhenTheSwitchIsOn(): void
+    {
+        $this->given(useAuth: true, requireSession: true);
+        AmpConfig::set('embed_player', true, true);
+
+        $this->assertFalse(MediaEmbedView::isOffered());
+    }
+
+    public function testASwitchedOffPlayerIsNotOfferedOnAnOtherwiseCapableServer(): void
+    {
+        $this->given(useAuth: false, requireSession: false);
+
+        AmpConfig::set('embed_player', false, true);
+        $this->assertFalse(MediaEmbedView::isOffered());
+
+        AmpConfig::set('embed_player', true, true);
+        $this->assertTrue(MediaEmbedView::isOffered());
+    }
+
     protected function setUp(): void
     {
-        foreach (['use_auth', 'require_session'] as $key) {
+        foreach (['use_auth', 'require_session', 'embed_player'] as $key) {
             $this->config[$key] = AmpConfig::get($key);
         }
     }

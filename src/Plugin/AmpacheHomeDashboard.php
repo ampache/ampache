@@ -231,7 +231,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             return false;
         }
 
-        if (!Preference::insert('homedash_newest', T_('Newest'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('homedash_newest', T_('Newest'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -239,7 +239,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             return false;
         }
 
-        if (!Preference::insert('homedash_trending', T_('Trending'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('homedash_trending', T_('Trending'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 

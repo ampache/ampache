@@ -57,6 +57,7 @@ class CreateActionTest extends MockeryTestCase
         $user = $this->mock(User::class);
 
         $this->guardsPass($user);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('private');
         $this->requestParser->shouldReceive('getFromRequest')->with('name')->andReturn('');
         $this->requestParser->shouldReceive('getFromRequest')->with('parent')->andReturn('0');
 
@@ -80,6 +81,7 @@ class CreateActionTest extends MockeryTestCase
         $user = $this->mock(User::class);
 
         $this->guardsPass($user);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('private');
         $this->requestParser->shouldReceive('getFromRequest')->with('name')->andReturn('Rock');
         $this->requestParser->shouldReceive('getFromRequest')->with('parent')->andReturn('0');
 
@@ -98,15 +100,62 @@ class CreateActionTest extends MockeryTestCase
         self::assertSame('That name already exists', AmpError::get('name'));
     }
 
+    public function testRunCoercesPublicRequestToPrivateBelowContentManager(): void
+    {
+        $user = $this->mock(User::class);
+
+        $this->guardsPass($user, canMakePublic: false);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('public');
+        $this->requestParser->shouldReceive('getFromRequest')->with('name')->andReturn('Rock');
+        $this->requestParser->shouldReceive('getFromRequest')->with('parent')->andReturn('0');
+
+        $this->playlistFolderRepository->shouldReceive('create')->with($user, 'Rock', 0, null, 'private')->once()->andReturn(5);
+
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showConfirmation')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+        self::assertNull($this->subject->run($this->request(), $this->gatekeeper));
+        ob_end_clean();
+
+        self::assertFalse(AmpError::occurred());
+    }
+
     public function testRunCreatesFolderOnValidInput(): void
     {
         $user = $this->mock(User::class);
 
         $this->guardsPass($user);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('private');
         $this->requestParser->shouldReceive('getFromRequest')->with('name')->andReturn('Rock');
         $this->requestParser->shouldReceive('getFromRequest')->with('parent')->andReturn('0');
 
-        $this->playlistFolderRepository->shouldReceive('create')->with($user, 'Rock', 0)->once()->andReturn(5);
+        $this->playlistFolderRepository->shouldReceive('create')->with($user, 'Rock', 0, null, 'private')->once()->andReturn(5);
+
+        $this->ui->shouldReceive('showHeader')->once();
+        $this->ui->shouldReceive('showConfirmation')->once();
+        $this->ui->shouldReceive('showQueryStats')->once();
+        $this->ui->shouldReceive('showFooter')->once();
+
+        ob_start();
+        self::assertNull($this->subject->run($this->request(), $this->gatekeeper));
+        ob_end_clean();
+
+        self::assertFalse(AmpError::occurred());
+    }
+
+    public function testRunCreatesPublicFolderWhenContentManager(): void
+    {
+        $user = $this->mock(User::class);
+
+        $this->guardsPass($user, canMakePublic: true);
+        $this->requestParser->shouldReceive('getFromRequest')->with('visibility')->andReturn('public');
+        $this->requestParser->shouldReceive('getFromRequest')->with('name')->andReturn('Rock');
+        $this->requestParser->shouldReceive('getFromRequest')->with('parent')->andReturn('0');
+
+        $this->playlistFolderRepository->shouldReceive('create')->with($user, 'Rock', 0, null, 'public')->once()->andReturn(5);
 
         $this->ui->shouldReceive('showHeader')->once();
         $this->ui->shouldReceive('showConfirmation')->once();
@@ -156,9 +205,10 @@ class CreateActionTest extends MockeryTestCase
         new ReflectionProperty(AmpError::class, 'state')->setValue(null, false);
     }
 
-    private function guardsPass(User&MockInterface $user): void
+    private function guardsPass(User&MockInterface $user, bool $canMakePublic = false): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)->andReturn(true);
+        $this->gatekeeper->shouldReceive('mayAccess')->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)->andReturn($canMakePublic);
         $this->gatekeeper->shouldReceive('getUser')->andReturn($user);
         $this->configContainer->shouldReceive('isFeatureEnabled')->with(ConfigurationKeyEnum::DEMO_MODE)->andReturn(false);
         $this->requestParser->shouldReceive('verifyForm')->with('add_playlist_folder')->andReturn(true);

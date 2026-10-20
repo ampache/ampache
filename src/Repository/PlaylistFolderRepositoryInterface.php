@@ -35,7 +35,7 @@ interface PlaylistFolderRepositoryInterface
     /**
      * Create a folder, returning its id, or null when the name is unusable or already taken by a sibling
      */
-    public function create(User $user, string $name, int $parentId = PlaylistFolder::ROOT, ?int $sortOrder = null): ?int;
+    public function create(User $user, string $name, int $parentId = PlaylistFolder::ROOT, ?int $sortOrder = null, string $type = 'private'): ?int;
 
     /**
      * Remove an empty folder; a folder holding child folders or placements is left alone
@@ -57,13 +57,20 @@ interface PlaylistFolderRepositoryInterface
     public function getChildren(User $user, int $parentId = PlaylistFolder::ROOT): array;
 
     /**
+     * Top-level folders this viewer has hidden, so a caller can mark or unhide them
+     *
+     * @return list<PlaylistFolder>
+     */
+    public function getHiddenFolders(int $viewerId): array;
+
+    /**
      * How many lists sit in each of this user's folders, keyed by folder id
      *
      * Returned for the whole tree at once so a listing does not run one count per folder.
      *
      * @return array<int, int>
      */
-    public function getItemCounts(User $user): array;
+    public function getItemCounts(int $userId): array;
 
     /**
      * Ids this user has filed into a real folder, so a root listing can subtract them
@@ -96,6 +103,20 @@ interface PlaylistFolderRepositoryInterface
     public function getPlacements(User $user, int $folderId): array;
 
     /**
+     * Direct subfolders of $parentId that are public, in display order
+     *
+     * @return list<PlaylistFolder>
+     */
+    public function getPublicChildren(int $ownerId, int $parentId): array;
+
+    /**
+     * Every other user's top-level public folder, hidden ones included, for merging into their own root
+     *
+     * @return list<PlaylistFolder>
+     */
+    public function getPublicRootFolders(int $viewerId): array;
+
+    /**
      * Every folder in this user's tree, flat and ordered; callers rebuild the hierarchy from `parent`
      *
      * @return list<PlaylistFolder>
@@ -103,9 +124,19 @@ interface PlaylistFolderRepositoryInterface
     public function getTree(User $user): array;
 
     /**
+     * Mark a folder shared with $viewerId as hidden in their merged root, until unhidden
+     */
+    public function hide(int $viewerId, int $folderId): void;
+
+    /**
      * Whether the folder holds neither a child folder nor a placement
      */
     public function isEmpty(int $folderId): bool;
+
+    /**
+     * Whether $viewerId may read $folderId: its owner, or every ancestor up to the root must be public
+     */
+    public function isReadableBy(int $folderId, int $viewerId): bool;
 
     /**
      * Write a new folder and return its id, or null when it could not be stored
@@ -121,14 +152,19 @@ interface PlaylistFolderRepositoryInterface
     public function place(User $user, int $objectId, string $objectType, ?int $folderId, ?int $sortOrder = null): bool;
 
     /**
+     * Reverse a previous hide(), clearing the hidden mark in $viewerId's merged root
+     */
+    public function unhide(int $viewerId, int $folderId): void;
+
+    /**
      * Remove this user's placement for one list, returning it to the root
      */
     public function unplace(User $user, int $objectId, string $objectType): void;
 
     /**
-     * Change a folder's name, parent or position; null leaves a field alone
+     * Change a folder's name, parent, position or visibility; null leaves a field alone
      */
-    public function update(int $folderId, ?string $name = null, ?int $parentId = null, ?int $sortOrder = null): bool;
+    public function update(int $folderId, ?string $name = null, ?int $parentId = null, ?int $sortOrder = null, ?string $type = null): bool;
 
     /**
      * Whether making $newParentId the parent of $folderId would put the folder inside its own subtree

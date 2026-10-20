@@ -30,6 +30,7 @@ use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\PlaylistFolder;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Shared by the API and the web browse, so what "the root" means never drifts between them.
@@ -40,13 +41,35 @@ final readonly class PlaylistFolderItemsLoader implements PlaylistFolderItemsLoa
         private BrowseFactoryInterface $browseFactory,
         private CollectionRepositoryInterface $collectionRepository,
         private PlaylistFolderRepositoryInterface $playlistFolderRepository,
+        private UserRepositoryInterface $userRepository,
     ) {}
 
     public function getItems(User $user, ?PlaylistFolder $folder): array
     {
-        return ($folder === null)
-            ? $this->rootItems($user)
-            : $this->playlistFolderRepository->getPlacements($user, $folder->getId());
+        if ($folder === null) {
+            return $this->rootItems($user);
+        }
+
+        if ($user->getId() === $folder->getUserId()) {
+            return $this->playlistFolderRepository->getPlacements($user, $folder->getId());
+        }
+
+        // a shared folder's items are the owner's placements, filtered to what the viewer may see
+        $owner = $this->userRepository->findById($folder->getUserId());
+        if ($owner === null) {
+            return [];
+        }
+
+        $placements = $this->playlistFolderRepository->getPlacements($owner, $folder->getId());
+        $visible    = array_flip(array_map(
+            static fn(array $entry): string => sprintf('%s-%d', $entry['object_type'], $entry['object_id']),
+            $this->visibleLists($user)
+        ));
+
+        return array_values(array_filter(
+            $placements,
+            static fn(array $p): bool => isset($visible[sprintf('%s-%d', $p['object_type'], $p['object_id'])])
+        ));
     }
 
     /**

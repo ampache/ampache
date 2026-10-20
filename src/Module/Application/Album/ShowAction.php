@@ -29,7 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumPageView;
 use Ampache\Gui\Partial\PageMeta;
-use Ampache\Gui\Playback\EmbedTracksTrait;
+use Ampache\Gui\Playback\MediaEmbedTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Album\Edit\AlbumEditabilityCheckerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -51,7 +51,7 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
-    use EmbedTracksTrait;
+    use MediaEmbedTrait;
 
     public const string REQUEST_KEY = 'show';
 
@@ -71,20 +71,24 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $albumId  = (int) ($request->getQueryParams()['album'] ?? 0);
+        $query    = $request->getQueryParams();
+        $albumId  = (int) ($query['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
         $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs)) && $album->isVisible($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($request->getQueryParams()['embed'])) {
+        if (!empty($query['embed'])) {
             $webPath = AmpConfig::get_web_path();
-            echo (new MediaEmbedView(
-                (string) $album->get_fullname(),
-                (string) $album->get_parent_fullname(),
-                $webPath . '/image.php?object_id=' . $albumId . '&object_type=album&size=128x128',
-                $webPath . '/albums.php?action=show&album=' . $albumId,
-                $this->embeddedSongs($this->albumRepository->getSongs($albumId))
-            ))->render();
+            $pageUrl = $webPath . '/albums.php?action=show&album=' . $albumId;
+            echo ($shown && MediaEmbedView::isOffered())
+                ? (new MediaEmbedView(
+                    (string) $album->get_fullname(),
+                    (string) $album->get_parent_fullname(),
+                    $webPath . '/image.php?object_id=' . $albumId . '&object_type=album&size=128x128',
+                    $pageUrl,
+                    $this->embeddedSongs($this->albumRepository->getSongs($albumId))
+                ))->render()
+                : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
         }

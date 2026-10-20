@@ -60,7 +60,8 @@ final class PlaylistRandomAction extends AbstractStreamAction
         return $this->stream(
             $mediaIds,
             [],
-            $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE)
+            $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE),
+            preventCaching: true,
         );
     }
 }

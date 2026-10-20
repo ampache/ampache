@@ -38,6 +38,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use getID3;
+use getid3_lib;
 use getid3_writetags;
 use Psr\Log\LoggerInterface;
 
@@ -115,6 +116,18 @@ final class VaInfo implements VaInfoInterface
     private const string ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
 
     private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
+
+    /**
+     * The tag format written back for each extension. Anything absent cannot be tagged at all.
+     *
+     * @var array<string, string>
+     */
+    private const array TAG_FORMATS = [
+        'mp3' => 'id3v2.3',
+        'flac' => 'metaflac',
+        'oga' => 'vorbiscomment',
+        'ogg' => 'vorbiscomment',
+    ];
 
     public string $encoding          = '';
     public string $encodingId3v1     = '';
@@ -229,6 +242,14 @@ final class VaInfo implements VaInfoInterface
                 $this->_getID3->encoding = $this->encodingId3v2;
             }
         }
+    }
+
+    /**
+     * Whether tags can be written back into this file, so a caller can give up before it builds any.
+     */
+    public static function canWriteTags(string $filename): bool
+    {
+        return array_key_exists(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::TAG_FORMATS);
     }
 
     /**
@@ -438,6 +459,22 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
+     * The tags a file already carries in the block it is written back to, empty when it carries none there.
+     *
+     * getID3 reports an untagged file, and one that keeps its tags in any other block, without the key at all.
+     *
+     * @param array<string, mixed> $data the result of read_id3()
+     * @return array<string, mixed>
+     */
+    public static function existingTags(array $data): array
+    {
+        $fileformat = $data['fileformat'] ?? '';
+        $block      = ($fileformat === 'flac' || $fileformat === 'ogg') ? 'vorbiscomment' : 'id3v2';
+
+        return $data['tags'][$block] ?? [];
+    }
+
+    /**
      * get_default_info
      *
      * @return array<string, null>
@@ -496,6 +533,32 @@ final class VaInfo implements VaInfoInterface
         //debug_event(self::class, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
 
         return $returned_keys;
+    }
+
+    /**
+     * getID3's ID3v2 writer has no frame for a bare track/disk total, so it must be combined into the
+     * "track/total" TRCK and "disk/total" TPOS value before writing or the total is silently dropped.
+     * Vorbis comments carry the total as their own field and must not be passed through this.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $id3v2Data
+     */
+    public static function mergeId3v2Totals(array &$ndata, array $id3v2Data, ?int $track, ?int $disk): void
+    {
+        if (isset($ndata['track_number'])) {
+            $totaltracks           = $id3v2Data['totaltracks'][0] ?? null;
+            $ndata['track_number'] = (!empty($totaltracks))
+                ? [$track . '/' . $totaltracks]
+                : [(string) $track];
+        }
+
+        unset($ndata['totaltracks']);
+
+        if (isset($ndata['part_of_a_set'])) {
+            $totaldisks             = explode('/', (string) ($id3v2Data['part_of_a_set'][0] ?? ''))[1] ?? null;
+            $ndata['part_of_a_set'] = (!empty($totaldisks))
+                ? [$disk . '/' . $totaldisks]
+                : [(string) $disk];
+        }
     }
 
     /**
@@ -663,6 +726,39 @@ final class VaInfo implements VaInfoInterface
         }
 
         return 0;
+    }
+
+    /**
+     * parse_synced_lyrics
+     *
+     * Converts a SYLT frame's timestamped entries into LRC-style `[mm:ss.xx]` text for the shared lyrics parser.
+     * @param array<int, array<string, mixed>> $sylt_frames
+     * @param string $baseEncoding the charset SYLT text entries are converted to, matching USLT's own target
+     */
+    public static function parse_synced_lyrics(array $sylt_frames, string $baseEncoding): ?string
+    {
+        foreach ($sylt_frames as $frame) {
+            if ((int) ($frame['contenttypeid'] ?? -1) !== 1 || (int) ($frame['timestampformat'] ?? 0) !== 2 || empty($frame['lyrics'])) {
+                continue;
+            }
+
+            $lines = [];
+            foreach ($frame['lyrics'] as $entry) {
+                $text = trim(str_replace(["\r\n", "\r", "\n"], ' ', getid3_lib::iconv_fallback((string) $frame['encoding'], $baseEncoding, (string) ($entry['data'] ?? ''))));
+                if ($text === '') {
+                    continue;
+                }
+
+                $milliseconds = (int) ($entry['timestamp'] ?? 0);
+                $lines[]      = sprintf('[%02d:%02d.%02d]%s', intdiv($milliseconds, 60000), intdiv($milliseconds % 60000, 1000), intdiv($milliseconds % 1000, 10), $text);
+            }
+
+            if ($lines !== []) {
+                return implode("\n", $lines);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -888,14 +984,8 @@ final class VaInfo implements VaInfoInterface
     {
         $TaggingFormat = 'UTF-8';
         $tagWriter     = new getid3_writetags();
-        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
-        $extensionMap  = [
-            'mp3' => 'id3v2.3',
-            'flac' => 'metaflac',
-            'oga' => 'vorbiscomment',
-            'ogg' => 'vorbiscomment',
-        ];
-        if (!array_key_exists(strtolower($extension), $extensionMap)) {
+        $extension     = strtolower(pathinfo($this->filename, PATHINFO_EXTENSION));
+        if (!self::canWriteTags($this->filename)) {
             $this->logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -904,7 +994,7 @@ final class VaInfo implements VaInfoInterface
             return;
         }
 
-        $format                       = $extensionMap[$extension];
+        $format                       = self::TAG_FORMATS[$extension];
         $tagWriter->filename          = $this->filename;
         $tagWriter->tagformats        = [$format];
         $tagWriter->overwrite_tags    = true;
@@ -1494,6 +1584,14 @@ final class VaInfo implements VaInfoInterface
                 }
 
                 $parsed['rating'][$rating_user] = self::parse_rating((int) $popm['rating']);
+            }
+        }
+
+        // SYLT carries synced lyrics as timestamped entries; prefer it over the plain USLT lyrics parsed above.
+        if (array_key_exists('SYLT', $id3v2) && is_array($id3v2['SYLT'])) {
+            $synced_lyrics = self::parse_synced_lyrics($id3v2['SYLT'], (string) ($id3v2['encoding'] ?? $this->encoding));
+            if ($synced_lyrics !== null) {
+                $parsed['lyrics'] = $synced_lyrics;
             }
         }
 

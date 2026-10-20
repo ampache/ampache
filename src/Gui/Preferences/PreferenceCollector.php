@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
+use Ampache\Plugin\PluginEnum;
 use Ampache\Plugin\PluginPreferenceHelpInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -209,7 +210,8 @@ final readonly class PreferenceCollector
 
             $owner = $row['subcategory'];
             if (!array_key_exists($owner, $plugins)) {
-                $loaded          = new Plugin($owner)->_plugin;
+                $key             = PluginEnum::keyForDisplayName($owner) ?? $owner;
+                $loaded          = new Plugin($key)->_plugin;
                 $plugins[$owner] = ($loaded instanceof PluginPreferenceHelpInterface) ? $loaded : null;
             }
 

@@ -52,6 +52,21 @@ class ThrottledHttpAdapterTest extends TestCase
         self::assertLessThan(0.5, microtime(true) - $started);
     }
 
+    /**
+     * musicbrainz.org answers a 503 with a plain-text body under load, which json_decode turns into null;
+     * returning that would violate the array|object return type with an uncatchable TypeError instead
+     */
+    public function testANonJsonBodyIsRaisedAsACatchableException(): void
+    {
+        $subject                     = $this->adapter();
+        $subject->responseBody       = 'Service Unavailable';
+        $subject->responseStatusCode = 503;
+
+        $this->expectException(Exception::class);
+
+        $subject->call('release/435dfd7a-efee-42fb-ae22-a2dabfdc5e26', [], self::OPTIONS);
+    }
+
     public function testAServerThatIsNotAUrlFallsBackToThePublicOne(): void
     {
         $subject = $this->adapter('this is not a url');

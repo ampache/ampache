@@ -41,14 +41,48 @@ class TagRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private TagRepository $subject;
 
-    public function testAddMapReturnsTheNewMapId(): void
+    public function testAddMapReturnsTheExistingIdWhenTheMapWasAlreadyThere(): void
     {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(0);
+
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
                 'INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)',
                 [666, 0, 'song', 42]
-            );
+            )
+            ->willReturn($statement);
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `tag_map` WHERE `tag_id` = ? AND `user` = ? AND `object_type` = ? AND `object_id` = ?',
+                [666, 0, 'song', 42]
+            )
+            ->willReturn('7');
+
+        // a merge-redirected or concurrent re-add must not throw InsertIdInvalidException
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        self::assertSame(7, $this->subject->addMap(666, 'song', 42, 0));
+    }
+
+    public function testAddMapReturnsTheNewMapId(): void
+    {
+        $statement = $this->createMock(PDOStatement::class);
+        $statement->method('rowCount')
+            ->willReturn(1);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)',
+                [666, 0, 'song', 42]
+            )
+            ->willReturn($statement);
 
         $this->connection->expects(static::once())
             ->method('getLastInsertedId')
@@ -285,6 +319,27 @@ class TagRepositoryTest extends TestCase
             );
 
         $this->subject->mergeInto(666, 42);
+    }
+
+    public function testMigrateMapsKeepsWhatTheTargetAlreadyHad(): void
+    {
+        // a user who already tagged both sides keeps the tag instead of the destination row being silently dropped
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    [
+                        'INSERT IGNORE INTO `tag_map` (`tag_id`, `object_id`, `object_type`, `user`) SELECT `old_map`.`tag_id`, ?, `old_map`.`object_type`, `old_map`.`user` FROM `tag_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
+                        [42, 'song', 666],
+                    ],
+                    [
+                        'DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?',
+                        ['song', 666],
+                    ],
+                )
+            );
+
+        $this->subject->migrateMaps('song', 666, 42);
     }
 
     public function testSetHiddenWritesTheFlagAloneOtherwise(): void

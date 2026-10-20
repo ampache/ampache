@@ -62,7 +62,7 @@ final readonly class PreferenceInputRenderer
             'transcode_bitrate_api' => [0, 1000, T_('bps'), 'transcode_bitrate', null],
             'max_bit_rate' => [0, 1000, T_('bps'), null, T_('no ceiling')],
             'min_bit_rate' => [0, 1000, T_('bps'), null, T_('no floor')],
-            'rate_limit' => [0, 1024, T_('KB/s'), null, T_('unlimited')],
+            'rate_limit' => [0, 1024, T_('KB/s'), null, T_('Unlimited')],
         ];
     }
 

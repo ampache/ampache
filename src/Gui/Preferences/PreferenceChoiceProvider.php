@@ -56,7 +56,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
         // the shared row is inherited by every new account, so one person's playlists do not belong in it
         $owner = ($subject->isServer) ? null : $subject->user;
 
-        $choices = match ($name) {
+        return match ($name) {
             'album_sort' => [
                 'default' => T_('Default'),
                 'year_asc' => T_('Year ascending'),
@@ -109,8 +109,6 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
             'webplayer_removeplayed' => $this->getRemovePlayedCounts(),
             default => null,
         };
-
-        return $choices;
     }
 
     /**

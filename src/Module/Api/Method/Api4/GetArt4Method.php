@@ -30,7 +30,6 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Art\Art;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Playlist;
@@ -110,7 +109,7 @@ final class GetArt4Method implements MethodInterface
             $art       = new Art($song->album, 'album');
         }
 
-        Session::extend($input['auth'], AccessTypeEnum::API->value);
+        Session::extend($input['auth'], 'api');
 
         $art->show($size, false);
 

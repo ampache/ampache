@@ -143,7 +143,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      */
-    public function save_mediaplay(Song $song): bool
+    public function save_mediaplay(Song $song, ?int $date = null): bool
     {
         // Only support songs
         if ($song::class !== Song::class) {
@@ -167,7 +167,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->get_parent_fullname(), $song->get_album_fullname(), (string) $song->title, time(), $song->time, (int) $song->track)) {
+        if (!$scrobbler->queue_track($song->get_parent_fullname(), $song->get_album_fullname(), (string) $song->title, $date ?? time(), $song->time, (int) $song->track)) {
             return false;
         }
 

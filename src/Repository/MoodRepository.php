@@ -368,8 +368,12 @@ final readonly class MoodRepository implements MoodRepositoryInterface
     public function migrateMaps(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'UPDATE IGNORE `mood_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            'INSERT IGNORE INTO `mood_map` (`mood_id`, `object_id`, `object_type`, `user`) SELECT `old_map`.`mood_id`, ?, `old_map`.`object_type`, `old_map`.`user` FROM `mood_map` AS `old_map` WHERE `old_map`.`object_type` = ? AND `old_map`.`object_id` = ?',
             [$newObjectId, $objectType, $oldObjectId]
+        );
+        $this->connection->query(
+            'DELETE FROM `mood_map` WHERE `object_type` = ? AND `object_id` = ?',
+            [$objectType, $oldObjectId]
         );
     }
 

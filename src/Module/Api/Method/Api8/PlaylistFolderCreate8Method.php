@@ -30,6 +30,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -64,11 +65,13 @@ final class PlaylistFolderCreate8Method implements MethodInterface
      * name       = (string) folder name; may not contain a / and must be unique among its siblings
      * parent     = (string) parent folder as an id or a name path //optional, root when omitted
      * sort_order = (integer) position among its siblings //optional, appended when omitted
+     * type       = (string) 'private', 'public' //optional, private when omitted; public requires Content Manager
      *
      * @param array{
      *     name?: string,
      *     parent?: string,
      *     sort_order?: int,
+     *     type?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -89,10 +92,19 @@ final class PlaylistFolderCreate8Method implements MethodInterface
             );
         }
 
+        $type = ((string) ($input['type'] ?? 'private') === 'public') ? 'public' : 'private';
+        if ($type === 'public' && $user->access < AccessLevelEnum::CONTENT_MANAGER->value) {
+            $response->getBody()->write(
+                $output->error($apiVersion, ErrorCodeEnum::ACCESS_DENIED, 'Access Denied', self::ACTION, 'type')
+            );
+
+            return $response;
+        }
+
         $parentId  = $this->resolveParentId($input, $user);
         $sortOrder = (isset($input['sort_order'])) ? (int) $input['sort_order'] : null;
 
-        $folderId = $this->playlistFolderRepository->create($user, (string) $input['name'], $parentId, $sortOrder);
+        $folderId = $this->playlistFolderRepository->create($user, (string) $input['name'], $parentId, $sortOrder, $type);
         if ($folderId === null) {
             $response->getBody()->write(
                 $output->error(

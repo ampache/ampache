@@ -70,6 +70,22 @@ textarea {
     border-color: #d8d8d8;
 }
 
+select option {
+    background-color: #fff;
+    color: #000;
+}
+
+select option:hover {
+    background-color: #eee;
+    color: #000;
+}
+
+select option:checked,
+select:focus option:checked {
+    background-color: #1990db;
+    color: #fff;
+}
+
 input[type=button],
 input[type=submit],
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {

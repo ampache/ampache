@@ -139,6 +139,8 @@ class Search extends playlist_object
         'days' => [
             ['name' => 'lt', 'description' => 'before (x) days ago', 'sql' => '<'],
             ['name' => 'gt', 'description' => 'after (x) days ago', 'sql' => '>'],
+            ['name' => 'notlt', 'description' => 'is not before (x) days ago', 'sql' => '!<'],
+            ['name' => 'notgt', 'description' => 'is not after (x) days ago', 'sql' => '!>'],
         ],
 
         'recent_played' => [
@@ -170,7 +172,10 @@ class Search extends playlist_object
     public string $objectType; // the type of object you want to return (self::VALID_TYPES)
     public ?int $random = 0;
 
-    /** @var array<int, array<int, mixed>> $rules */
+    /**
+     * A top-level element is a plain rule tuple, or a 2-level group wrapper -- see `RuleGroupCombiner`.
+     * @var list<array<int, mixed>|array{group_id?: int, group_operator: string, rules: list<array<int, mixed>>}> $rules
+     */
     public array $rules = []; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public User $search_user; // user running the search
@@ -269,11 +274,7 @@ class Search extends playlist_object
             }
 
             // make sure saved rules match the correct names
-            $rule_count = 0;
-            foreach ($this->rules as $rule) {
-                $this->rules[$rule_count][0] = $this->_set_rule_name($rule[0]);
-                ++$rule_count;
-            }
+            $this->_normalizeRuleNames();
 
             // When loading a search use the owner ID for the search
             if ($this->user > 0) {
@@ -340,6 +341,70 @@ class Search extends playlist_object
                 $this->order_by   = '`video`.`file`';
                 break;
         }
+    }
+
+    /**
+     * applyDurationAndSizeLimits
+     *
+     * Pure budget-trimming pass, factored out of truncateByLimits() so it is testable without a database.
+     * Walks the given rows in the order they were handed in and keeps only as many as fit within an
+     * optional total duration (minutes) and/or total size (MB) cap, fuzzily skipping a row that would
+     * blow the budget rather than reordering to fit a smaller one in its place.
+     * @param array<int, array{size: int, time: int}> $rows keyed by object id, in the order to keep them
+     * @return int[]
+     */
+    public static function applyDurationAndSizeLimits(array $rows, int $length, int $sizeLimit): array
+    {
+        if ($rows === [] || ($length <= 0 && $sizeLimit <= 0)) {
+            return array_keys($rows);
+        }
+
+        $results    = [];
+        $size_total = 0.0;
+        $fuzzy_size = 0;
+        $time_total = 0;
+        $fuzzy_time = 0;
+        foreach ($rows as $object_id => $row) {
+            if ($sizeLimit > 0) {
+                $new_size = ($row['size'] / 1024) / 1024;
+                if ($fuzzy_size > 100) {
+                    break;
+                }
+
+                if (($size_total + $new_size) > $sizeLimit) {
+                    ++$fuzzy_size;
+                    continue;
+                }
+
+                $size_total += $new_size;
+            }
+
+            if ($length > 0) {
+                $new_time = (int) floor($row['time'] / 60);
+                if ($fuzzy_time > 100) {
+                    break;
+                }
+
+                if (($time_total + $new_time) > $length) {
+                    ++$fuzzy_time;
+                    continue;
+                }
+
+                $time_total += $new_time;
+            }
+
+            $results[] = $object_id;
+
+            if ($sizeLimit > 0 && ($sizeLimit - floor($size_total)) < 4) {
+                break;
+            }
+
+            if ($length > 0 && ($length - $time_total) < 2) {
+                break;
+            }
+        }
+
+        return $results;
     }
 
     /**
@@ -591,6 +656,42 @@ class Search extends playlist_object
         }
 
         return $results;
+    }
+
+    /**
+     * truncateByLimits
+     *
+     * Trims an ordered song/video id list down to a total duration and/or file-size budget, preserving
+     * the order the search already produced rather than re-sorting to pack it in tighter.
+     * @param int[] $objectIds
+     * @return int[]
+     */
+    public static function truncateByLimits(array $objectIds, string $type, int $length, int $sizeLimit): array
+    {
+        if ($objectIds === [] || ($length <= 0 && $sizeLimit <= 0) || !in_array($type, ['song', 'video'], true)) {
+            return $objectIds;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($objectIds), '?'));
+        $db_results   = Dba::read(
+            sprintf('SELECT `id`, `size`, `time` FROM `%s` WHERE `id` IN (%s)', $type, $placeholders),
+            $objectIds
+        );
+
+        $rowsById = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $rowsById[(int) $row['id']] = ['size' => (int) $row['size'], 'time' => (int) $row['time']];
+        }
+
+        // keep the caller's order; an id dropped from the result set (deleted between search and here) is skipped
+        $rows = [];
+        foreach ($objectIds as $object_id) {
+            if (isset($rowsById[$object_id])) {
+                $rows[$object_id] = $rowsById[$object_id];
+            }
+        }
+
+        return self::applyDurationAndSizeLimits($rows, $length, $sizeLimit);
     }
 
     /**
@@ -870,7 +971,9 @@ class Search extends playlist_object
             'enabled', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
-            'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
+            'last_play', 'last_skip', 'last_play_or_skip', 'last_play_album', 'last_skip_album', 'last_play_or_skip_album',
+            'last_play_artist', 'last_skip_artist', 'last_play_or_skip_artist', 'last_play_song', 'last_skip_song',
+            'last_play_or_skip_song', 'days_added', 'days_updated' => 'days',
             'recent_played' => 'recent_played',
             'recent_added' => 'recent_added', 'recent_updated' => 'recent_updated',
             'playlist', 'smartplaylist' => 'boolean_subsearch',
@@ -1003,6 +1106,21 @@ class Search extends playlist_object
     }
 
     /**
+     * The primary (group 0) rule section's own operator, read from a saved wrapper when one exists.
+     * A saved search predating groups never had one, so it falls back to the search's own operator.
+     */
+    public function getPrimaryGroupOperator(): string
+    {
+        foreach ($this->rules as $rule) {
+            if (array_key_exists('rules', $rule) && ($rule['group_id'] ?? null) === 0) {
+                return (string) $rule['group_operator'];
+            }
+        }
+
+        return (string) ($this->logic_operator ?? 'and');
+    }
+
+    /**
      * set_order_by
      * Allow some display flexibility
      */
@@ -1091,7 +1209,8 @@ class Search extends playlist_object
             }
         }
 
-        // get the data for each rule group the user sent
+        // get the data for each rule group the user sent, bucketing by the optional 'rule_<N>_group' id
+        $grouped = [];
         foreach ($user_rules as $ruleID) {
             $rule_name = $this->_set_rule_name($data["rule_" . $ruleID]);
             $rule_type = $this->get_rule_type_by_name($rule_name);
@@ -1109,9 +1228,11 @@ class Search extends playlist_object
                 $rule_input = str_replace("|", "\0", $rule_input);
             }
 
-            // attach the rules to the search
+            $groupID = isset($data['rule_' . $ruleID . '_group']) ? (int) $data['rule_' . $ruleID . '_group'] : null;
+
+            // attach the rules to the search, or to their group's bucket if one was sent
             foreach (explode('|', $rule_input) as $input) {
-                $this->rules[] = [
+                $tuple = [
                     $rule_name,
                     // name
                     $rule_operator,
@@ -1120,21 +1241,55 @@ class Search extends playlist_object
                     // input
                     $data['rule_' . $ruleID . '_subtype'] ?? null,
                 ];
+
+                if ($groupID === null) {
+                    $this->rules[] = $tuple;
+                } else {
+                    $grouped[$groupID][] = $tuple;
+                }
             }
+        }
+
+        // append each non-empty group as one wrapper, stamping its own id so to_js() can tell the
+        // always-present primary group (id 0) apart from an explicit one without relying on position
+        foreach ($grouped as $groupID => $groupRules) {
+            $this->rules[] = [
+                'group_id' => $groupID,
+                'group_operator' => self::normalizeLogicOperator($data['group_' . $groupID . '_operator'] ?? 'and'),
+                'rules' => $groupRules,
+            ];
         }
     }
 
     /**
      * to_js
      *
-     * Outputs the javascript necessary to re-show the current set of rules.
+     * Outputs the javascript necessary to re-show the current set of rules, groups included.
      */
     public function to_js(): string
     {
         $javascript = "";
+        $groupID    = 0;
         foreach ($this->rules as $rule) {
-            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out(T_($rule[1])) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
+            $isGroup    = array_key_exists('rules', $rule);
+            $groupRules = $isGroup ? $rule['rules'] : [$rule];
+            // an ungrouped rule belongs to the always-present primary group (id 0), which
+            // rules.phtml renders statically rather than via a SearchRow.addGroup() call
+            $thisGroup = 0;
+
+            if ($isGroup) {
+                // a stamped id (new data) wins; a legacy wrapper with none is auto-numbered as before
+                $thisGroup = $rule['group_id'] ?? ++$groupID;
+
+                if ($thisGroup !== 0) {
+                    // @see search.js SearchRow.addGroup(groupId, groupOperator)
+                    $javascript .= '<script>SearchRow.addGroup(' . $thisGroup . ', "' . scrub_out($rule['group_operator']) . '"); </script>';
+                }
+            }
+
+            foreach ($groupRules as $innerRule) {
+                $javascript .= $this->_rule_to_js($innerRule, $thisGroup);
+            }
         }
 
         return $javascript;
@@ -1176,7 +1331,8 @@ class Search extends playlist_object
             $prefix = substr($key, 0, 4);
             $value  = (string) $value;
 
-            if ($prefix === 'rule' && strlen($value)) {
+            // 'rule_<N>_group' keeps the 'rule' prefix; 'group_<G>_operator' needs its own, or it's dropped silently
+            if (($prefix === 'rule' || $prefix === 'grou') && strlen($value)) {
                 $request[$key] = Dba::escape($value);
             }
         }
@@ -1442,6 +1598,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_song', T_('My Last Play (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_song', T_('My Last Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_song', T_('My Last Play or Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_artist', T_('My Last Play (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_artist', T_('My Last Skip (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_artist', T_('My Last Play or Skip (Artist)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
@@ -1485,6 +1647,7 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
         $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $rule_type[] = $this->_get_rule_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
@@ -1566,6 +1729,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_song', T_('My Last Play (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_song', T_('My Last Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_song', T_('My Last Play or Skip (Song)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_album', T_('My Last Play (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_album', T_('My Last Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_album', T_('My Last Play or Skip (Album)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
@@ -1900,6 +2069,12 @@ class Search extends playlist_object
         $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_album', T_('My Last Play (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_album', T_('My Last Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_album', T_('My Last Play or Skip (Album)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_artist', T_('My Last Play (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip_artist', T_('My Last Skip (Artist)'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip_artist', T_('My Last Play or Skip (Artist)'), 'days', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $rule_type[] = $this->_get_rule_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
@@ -2084,6 +2259,32 @@ class Search extends playlist_object
     private function _get_types_video(): array
     {
         return [$this->_get_rule_text('file', T_('Filename'))];
+    }
+
+    /**
+     * Renames every rule to its canonical alias, recursing into a group wrapper's own rules so a saved
+     * grouped search doesn't crash on the group wrapper's missing integer key `0`.
+     */
+    private function _normalizeRuleNames(): void
+    {
+        foreach ($this->rules as $index => $rule) {
+            if (array_key_exists('rules', $rule)) {
+                foreach ($rule['rules'] as $innerIndex => $innerRule) {
+                    $this->rules[$index]['rules'][$innerIndex][0] = $this->_set_rule_name($innerRule[0]);
+                }
+            } else {
+                $this->rules[$index][0] = $this->_set_rule_name($rule[0]);
+            }
+        }
+    }
+
+    /**
+     * @see search.js SearchRow.add(ruleType, operator, input, subtype, groupId)
+     * @param array<int, mixed> $rule
+     */
+    private function _rule_to_js(array $rule, int $groupID): string
+    {
+        return '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out(T_($rule[1])) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '", ' . $groupID . '); </script>';
     }
 
     /**

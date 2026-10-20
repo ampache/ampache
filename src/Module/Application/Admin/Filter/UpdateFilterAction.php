@@ -53,7 +53,10 @@ final class UpdateFilterAction extends AbstractFilterAction
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_FILTER) === false
+        ) {
             return null;
         }
 

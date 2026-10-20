@@ -112,7 +112,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      */
-    public function save_mediaplay(Song $song): bool
+    public function save_mediaplay(Song $song, ?int $date = null): bool
     {
         // Only support songs
         if ($song::class !== Song::class) {
@@ -163,7 +163,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
                 'listen_type' => 'single',
                 'payload' => [
                     [
-                        'listened_at' => time(),
+                        'listened_at' => $date ?? time(),
                         'track_metadata' => $track_metadata
                     ]
                 ]

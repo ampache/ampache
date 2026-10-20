@@ -188,8 +188,9 @@ final class StatsMethod implements MethodInterface
         // else's stats that must stay the caller's own token, or the response hands back a credential
         // that streams as the browsed user
         if ($user->getId() !== $viewer->getId()) {
-            $user              = clone $user;
-            $user->streamtoken = $viewer->streamtoken;
+            $user              = clone($user, [
+                "streamtoken" => $viewer->streamtoken
+            ]);
         }
 
         if ($user->isNew()) {
@@ -272,6 +273,12 @@ final class StatsMethod implements MethodInterface
             }
 
             $results = $outputBrowse->get_objects();
+        }
+
+        // a named filter already returns its own exact, bounded list, so total_count must reflect it
+        // rather than the catalog-wide shortcut; 'random' is a sample of the whole catalog and keeps that shortcut
+        if (in_array($filter, ['newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'], true)) {
+            $output->setCount($apiVersion, count($results));
         }
 
         $output->setOffset($apiVersion, $offset);

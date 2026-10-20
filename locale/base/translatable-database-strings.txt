@@ -35,10 +35,6 @@ msgid "Allow Localplay Play"
 msgstr ""
 
 #: Ampache preference description
-msgid "Share Recently Played information - Allow access to streaming agent"
-msgstr ""
-
-#: Ampache preference description
 msgid "Share Now Playing information"
 msgstr ""
 
@@ -271,6 +267,10 @@ msgid "Allow Downloads"
 msgstr ""
 
 #: Ampache preference description
+msgid "Allow an embedded player when a link to this server is posted on another site"
+msgstr ""
+
+#: Ampache preference description
 msgid "Transcode output format - Audio Default"
 msgstr ""
 
@@ -467,6 +467,10 @@ msgid "Download Rate Limit"
 msgstr ""
 
 #: Ampache preference description
+msgid "Always show the rightbar"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 
@@ -588,10 +592,6 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Search"
-msgstr ""
-
-#: Ampache preference description
-msgid "Custom CSS Order - Video"
 msgstr ""
 
 #: Ampache preference description

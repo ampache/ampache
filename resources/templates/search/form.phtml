@@ -64,6 +64,28 @@ Ui::show_box_top(T_('Search Ampache') . '...', 'box box_advanced_search'); ?>
             <?php // the hidden zero posts first so unchecking is a value rather than a missing key?>
             <td><input type="hidden" name="random" value="0" /><input type="checkbox" name="random" value="1" <?php echo ($this->isRandom()) ? 'checked' : ''; ?> /></td>
         </tr>
+        <?php if ($this->showLengthLimit()) { ?>
+        <tr id="search_length">
+            <td><?php echo T_('Length'); ?></td>
+            <td>
+                <select name="length">
+                    <?php foreach ($this->getLengths() as $option) { ?>
+                    <option value="<?php echo $option['value']; ?>"<?php echo ($option['value'] === $this->getSelectedLength()) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <tr id="search_size_limit">
+            <td><?php echo T_('Size Limit'); ?></td>
+            <td>
+                <select name="size_limit">
+                    <?php foreach ($this->getSizes() as $option) { ?>
+                    <option value="<?php echo $option['value']; ?>"<?php echo ($option['value'] === $this->getSelectedSize()) ? ' selected="selected"' : ''; ?>><?php echo $this->e($option['label']); ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <?php } ?>
     </table>
     <?php echo $this->raw((new SearchRulesView($this->getPlaylist(), $currentType, $webPath))->render()); ?>
     <div class="formValidation">

@@ -84,12 +84,13 @@ class PlaylistFolderRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?);',
+                'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?);',
                 self::callback(
                     static fn(array $params): bool => $params[0] === self::USER_ID
                         && $params[1] === PlaylistFolder::ROOT
                         && $params[2] === 'Rock'
                         && $params[3] === 5
+                        && $params[4] === 'private'
                 )
             );
 
@@ -98,6 +99,24 @@ class PlaylistFolderRepositoryTest extends TestCase
             ->willReturn(7);
 
         self::assertSame(7, $this->subject->create($this->user, 'Rock'));
+    }
+
+    public function testCreateDefaultsAnInvalidTypeToPrivate(): void
+    {
+        $this->connection->method('fetchOne')
+            ->willReturn('0');
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `playlist_folder` (`user`, `parent`, `name`, `sort_order`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?);',
+                self::callback(static fn(array $params): bool => $params[4] === 'private')
+            );
+
+        $this->connection->method('getLastInsertedId')
+            ->willReturn(7);
+
+        self::assertSame(7, $this->subject->create($this->user, 'Rock', type: 'bogus'));
     }
 
     public function testCreateRefusesANameThatCannotBeAddressedByPath(): void
@@ -254,6 +273,22 @@ class PlaylistFolderRepositoryTest extends TestCase
         self::assertSame(['Rock', 'Jazz'], array_map(static fn(PlaylistFolder $folder): string => $folder->getName(), $children));
     }
 
+    public function testGetHiddenFoldersJoinsBackToTheirOwnRows(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `playlist_folder`.* FROM `playlist_folder` INNER JOIN `playlist_folder_hide` ON `playlist_folder_hide`.`folder` = `playlist_folder`.`id` WHERE `playlist_folder_hide`.`user` = ? ORDER BY `playlist_folder`.`user`, `playlist_folder`.`sort_order`, `playlist_folder`.`name`;',
+                [self::USER_ID]
+            )
+            ->willReturn($this->rowStatement(['id' => '11', 'user' => '20', 'parent' => '0', 'name' => 'Metal', 'type' => 'public']));
+
+        $hidden = $this->subject->getHiddenFolders(self::USER_ID);
+
+        self::assertCount(1, $hidden);
+        self::assertSame('Metal', $hidden[0]->getName());
+    }
+
     public function testGetPlacedObjectIdsSkipsTheRoot(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -300,6 +335,106 @@ class PlaylistFolderRepositoryTest extends TestCase
     /**
      * Filing at the root with no position is the absence of a row, which is what keeps an unfiled list free
      */
+    public function testGetPublicChildrenFiltersToPublicRows(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "SELECT * FROM `playlist_folder` WHERE `user` = ? AND `parent` = ? AND `type` = 'public' ORDER BY `sort_order`, `name`;",
+                [9, PlaylistFolder::ROOT]
+            )
+            ->willReturn($this->rowStatement(['id' => '3', 'user' => '9', 'parent' => '0', 'name' => 'Rock', 'type' => 'public']));
+
+        $children = $this->subject->getPublicChildren(9, PlaylistFolder::ROOT);
+
+        self::assertCount(1, $children);
+        self::assertSame('Rock', $children[0]->getName());
+    }
+
+    public function testGetPublicRootFoldersIncludesFoldersTheViewerHasHidden(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::callback(static fn(string $sql): bool => !str_contains($sql, 'playlist_folder_hide')),
+                [self::USER_ID]
+            )
+            ->willReturn($this->rowStatement(['id' => '5', 'user' => '9', 'parent' => '0', 'name' => 'Jazz', 'type' => 'public']));
+
+        $shared = $this->subject->getPublicRootFolders(self::USER_ID);
+
+        self::assertCount(1, $shared);
+        self::assertSame(9, $shared[0]->getUserId());
+    }
+
+    public function testHideUpsertsSoHidingTwiceStaysOneRow(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `playlist_folder_hide` (`user`, `folder`, `date`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `date` = VALUES(`date`);',
+                self::callback(static fn(array $params): bool => $params[0] === self::USER_ID && $params[1] === 11)
+            );
+
+        $this->subject->hide(self::USER_ID, 11);
+    }
+
+    public function testIsReadableByAllowsTheViewersOwnFolderRegardlessOfItsType(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;', [3])
+            ->willReturn($this->rowStatement(['user' => '9', 'type' => 'private', 'parent' => '0']));
+
+        self::assertTrue($this->subject->isReadableBy(3, 9));
+    }
+
+    public function testIsReadableByFollowsAPublicChainToTheRoot(): void
+    {
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;', [7]],
+                    ['SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;', [3]]
+                )
+            )
+            ->willReturn(
+                $this->rowStatement(['user' => '9', 'type' => 'public', 'parent' => '3']),
+                $this->rowStatement(['user' => '9', 'type' => 'public', 'parent' => '0'])
+            );
+
+        self::assertTrue($this->subject->isReadableBy(7, 2));
+    }
+
+    public function testIsReadableByRefusesADanglingId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;', [7])
+            ->willReturn($this->rowStatement());
+
+        self::assertFalse($this->subject->isReadableBy(7, 2));
+    }
+
+    public function testIsReadableByStopsAtAPrivateLink(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `user`, `type`, `parent` FROM `playlist_folder` WHERE `id` = ?;', [7])
+            ->willReturn($this->rowStatement(['user' => '9', 'type' => 'private', 'parent' => '3']));
+
+        self::assertFalse($this->subject->isReadableBy(7, 2));
+    }
+
+    public function testIsReadableByTreatsTheRootAsAlwaysReadable(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertTrue($this->subject->isReadableBy(PlaylistFolder::ROOT, 2));
+    }
+
     public function testPlaceAtTheRootWithoutAPositionRemovesTheRow(): void
     {
         $this->connection->expects(static::once())
@@ -350,6 +485,31 @@ class PlaylistFolderRepositoryTest extends TestCase
             );
 
         self::assertTrue($this->subject->place($this->user, 12, 'smartlist', 3, 5));
+    }
+
+    public function testUnhideRemovesTheDismissal(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `playlist_folder_hide` WHERE `user` = ? AND `folder` = ?;',
+                [self::USER_ID, 11]
+            );
+
+        $this->subject->unhide(self::USER_ID, 11);
+    }
+
+    public function testUpdateIgnoresAnInvalidType(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `user` FROM `playlist_folder` WHERE `id` = ?;', [3])
+            ->willReturn((string) self::USER_ID);
+
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertFalse($this->subject->update(3, type: 'bogus'));
     }
 
     public function testUpdateRefusesAMoveIntoItsOwnDescendant(): void
@@ -413,6 +573,23 @@ class PlaylistFolderRepositoryTest extends TestCase
             );
 
         self::assertTrue($this->subject->update(3, 'Rock'));
+    }
+
+    public function testUpdateWritesTheTypeWhenValid(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT `user` FROM `playlist_folder` WHERE `id` = ?;', [3])
+            ->willReturn((string) self::USER_ID);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `playlist_folder` SET `type` = ?, `last_update` = ? WHERE `id` = ?;',
+                self::callback(static fn(array $params): bool => $params[0] === 'public' && $params[2] === 3)
+            );
+
+        self::assertTrue($this->subject->update(3, type: 'public'));
     }
 
     public function testWouldCycleAcceptsAnUnrelatedParent(): void

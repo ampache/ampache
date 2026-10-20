@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Song;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Partial\PageMeta;
+use Ampache\Gui\Playback\MediaEmbedTrait;
 use Ampache\Gui\Playback\MediaEmbedView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,6 +43,8 @@ use Psr\Log\LoggerInterface;
 
 final readonly class ShowSongAction implements ApplicationActionInterface
 {
+    use MediaEmbedTrait;
+
     public const string REQUEST_KEY = 'show_song';
 
     public function __construct(
@@ -63,15 +66,18 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
-        if ($shown && AmpConfig::get('embed_player') && MediaEmbedView::isAvailable() && !empty($query['embed'])) {
+        if (!empty($query['embed'])) {
             $webPath = AmpConfig::get_web_path();
-            echo (new MediaEmbedView(
-                (string) $song->get_fullname(),
-                $this->embedSubtitle($song),
-                $webPath . '/image.php?object_id=' . $song->album . '&object_type=album&size=128x128',
-                $webPath . '/song.php?action=show_song&song_id=' . $song->getId(),
-                [$song]
-            ))->render();
+            $pageUrl = $webPath . '/song.php?action=show_song&song_id=' . $song->getId();
+            echo ($shown && MediaEmbedView::isOffered())
+                ? (new MediaEmbedView(
+                    (string) $song->get_fullname(),
+                    $this->embedSubtitle($song),
+                    $webPath . '/image.php?object_id=' . $song->album . '&object_type=album&size=128x128',
+                    $pageUrl,
+                    [$song]
+                ))->render()
+                : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
         }

@@ -41,19 +41,23 @@ use Ampache\Repository\Model\Video;
 class WebPlayer
 {
     /**
-     * Get add_media javascript.
+     * Get add_media javascript. $autoPlay plays the first item immediately instead of only previewing it,
+     * so a random/democratic placeholder resolves its stream once rather than once per trigger.
      */
-    public static function add_media_js(Stream_Playlist $playlist, string $callback_container = ''): string
+    public static function add_media_js(Stream_Playlist $playlist, string $callback_container = '', bool $autoPlay = false): string
     {
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $addjs         = "";
+        $first         = true;
         foreach ($playlist->urls as $item) {
             if ($item->type == 'broadcast') {
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             }
 
-            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string) $transcode_cfg) . ");";
+            $playNow = ($first && $autoPlay) ? ', true' : '';
+            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string) $transcode_cfg) . $playNow . ");";
+            $first = false;
         }
 
         return $addjs;
@@ -119,6 +123,10 @@ class WebPlayer
         $types    = self::get_types($item, $url_data, $transcode_cfg, $force_type);
         $url      = $url_data['base_url'];
         $media    = self::get_media_object($url_data);
+        // marks the stream as the web player's own, which holds back the scrobble until the skip timer has passed
+        if (str_contains($url, '/play/') && !array_key_exists('player', $url_data)) {
+            $url .= '&player=webplayer';
+        }
         // stream urls that don't send a type (democratic playlists)
         $item->type = (empty($item->type) && !empty($url_data['type']))
             ? $url_data['type']

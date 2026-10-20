@@ -101,6 +101,11 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             return '';
         }
 
+        // @todo remove after 8.3.0. The default option never applied and should be removed after this release has settled
+        if ((int) ($current['config_version'] ?? 0) < 101 && ($current['send_full_stream'] ?? '') === 'webplayer') {
+            unset($current['send_full_stream']);
+        }
+
         $data  = explode("\n", $dist);
         $final = "";
         foreach ($data as $line) {
@@ -417,14 +422,6 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        // Give a new install a home page with something on it instead of an empty one
-        foreach (self::DEFAULT_PLUGINS as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
-                $plugin->install();
-            }
-        }
-
         // Fix the system user preferences
         Preference::fix_user_preferences(-1);
 
@@ -666,6 +663,15 @@ final readonly class InstallationHelper implements InstallationHelperInterface
             Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
             $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = 'lang';";
             Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
+        }
+
+        // Give a new install a home page with something on it instead of an empty one. Here rather than
+        // install_create_account() because the CLI installer never calls that, only the web one does.
+        foreach (self::DEFAULT_PLUGINS as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
+                $plugin->install();
+            }
         }
 
         return true;

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -250,7 +251,7 @@ class Preference extends database_object
         'allow_video' => ['0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'boolean', 'options', 'feature'],
         'album_release_type' => ['1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library'],
         'direct_play_limit' => ['500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player'],
-        'home_moment_albums' => ['1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
+        'home_moment_albums' => ['0', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_moment_videos' => ['0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_recently_played' => ['1', 'Show Recently Played', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'home_now_playing' => ['1', 'Show Now Playing', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
@@ -322,6 +323,7 @@ class Preference extends database_object
         'sidebar_hide_search' => ['0', 'Hide the Search menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'sidebar_hide_playlist' => ['0', 'Hide the Playlist menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'sidebar_hide_information' => ['0', 'Hide the Information menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
+        'rightbar_always_show' => ['0', 'Always show the rightbar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar'],
         'custom_logo_user' => ['0', 'Custom URL - Use your avatar for header logo', AccessLevelEnum::USER->value, 'boolean', 'interface', 'custom'],
         'index_dashboard_form' => ['0', 'Use Dashboard links for the index page header', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home'],
         'sidebar_order_browse' => ['10', 'Custom CSS Order - Browse', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar'],
@@ -656,6 +658,7 @@ class Preference extends database_object
         'popular_threshold',
         'quickconnect_enable',
         'rate_limit',
+        'rightbar_always_show',
         'share_expire',
         'share',
         'show_album_artist',
@@ -1023,13 +1026,7 @@ class Preference extends database_object
             ],
             'lang' => array_keys(get_languages()),
             'localplay_controller' => array_keys(LocalPlayTypeEnum::TYPE_MAPPING),
-            'api_force_version' => [
-                0,
-                3,
-                4,
-                5,
-                6
-            ],
+            'api_force_version' => [0, ...Api::API_VERSIONS],
             'ratingmatch_stars' => [
                 '0',
                 '1',
@@ -1619,6 +1616,7 @@ class Preference extends database_object
             'ratingmatch_star4_rule' => 'Match rule for 4 Stars',
             'ratingmatch_star5_rule' => 'Match rule for 5 Stars',
             'ratingmatch_stars' => 'Minimum star rating to match',
+            'rightbar_always_show' => 'Always show the rightbar',
             'rssview_feed_url' => 'RSS Feed URL',
             'rssview_max_items' => 'RSS Feed max items',
             'rssview_order' => 'Plugin CSS order',
