@@ -77,6 +77,7 @@
 * Material-symbol icons could render blank on a page's first load, correcting themselves only after a refresh
 * A failed or partially loaded track left the web player's seek bar showing a partial fill instead of its full track background
 * Reloading the page while a random stream was playing could replay the same song instead of picking a new one
+* Pausing then resuming a random/democratic web player stream could leave the display stuck on the placeholder
 
 ## Ampache 8.2.2
 
