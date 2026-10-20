@@ -108,7 +108,9 @@ final class ApiHandler implements ApiHandlerInterface
             $this->logger
         );
         // block html and visual output
-        define('API', true);
+        if (!defined('API')) {
+            define('API', true);
+        }
 
         $input  = $request->getQueryParams();
         $action = (string) ($input['action'] ?? '');
