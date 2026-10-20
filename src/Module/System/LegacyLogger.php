@@ -184,6 +184,7 @@ final readonly class LegacyLogger implements LoggerInterface
             && !defined('SSE_OUTPUT')
             && !defined('CLI')
             && !defined('API')
+            && !defined('AJAX_INCLUDE')
         ) {
             echo sprintf('Warning: Unable to write to log (%s) Please check your log_path variable in ampache.cfg.php', $log_filename);
         }
