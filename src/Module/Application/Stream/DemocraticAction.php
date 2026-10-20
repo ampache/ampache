@@ -64,7 +64,8 @@ final class DemocraticAction extends AbstractStreamAction
         return $this->stream(
             [],
             $urls,
-            $stream_type
+            $stream_type,
+            preventCaching: true,
         );
     }
 }

@@ -689,7 +689,7 @@ class Stream_Playlist
         echo $ret;
     }
 
-    public function generate_playlist(string $type, bool $redirect = false, ?string $name = ''): bool
+    public function generate_playlist(string $type, bool $redirect = false, ?string $name = '', bool $preventCaching = false): bool
     {
         if ($this->urls === []) {
             debug_event(self::class, 'Error: Empty URL array for ' . $this->id, 2);
@@ -797,6 +797,11 @@ class Stream_Playlist
             header('Cache-control: public');
             header('Content-Disposition: attachment; filename=' . $filename . '.' . $ext);
             header('Content-Type: ' . $ctype . ';');
+        }
+
+        // overrides the 'public' cache-control above: this content resolves differently on every request
+        if ($preventCaching) {
+            header('Cache-Control: no-store');
         }
 
         $callable();
