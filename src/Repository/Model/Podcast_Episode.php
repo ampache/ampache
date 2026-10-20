@@ -644,11 +644,9 @@ class Podcast_Episode extends database_object implements
         $website = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
-        $category = $data['category'] ?? null;
-        /** @var string $description */
+        $category    = $data['category'] ?? null;
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string) $data['description'], 4096)) : null;
-        /** @var string $author */
-        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string) $data['author'], 64)) : null;
+        $author      = (isset($data['author'])) ? scrub_in(Dba::check_length((string) $data['author'], 64)) : null;
 
         $this->title       = $title;
         $this->website     = $website;

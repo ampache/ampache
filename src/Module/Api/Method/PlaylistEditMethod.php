@@ -189,8 +189,8 @@ final class PlaylistEditMethod implements MethodInterface
             )
         ) {
             $playlist->update([
-                'name' => $name,
-                'playlist_type' => $type,
+                'name' => (string) $name,
+                'playlist_type' => (string) $type,
                 'playlist_user' => (int) $owner,
             ]);
             $changeMade = true;

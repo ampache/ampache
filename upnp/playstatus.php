@@ -30,6 +30,8 @@ use Psr\Container\ContainerInterface;
 header('Connection: Close');
 set_time_limit(0);
 
+define('API', true);
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 

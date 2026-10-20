@@ -856,6 +856,10 @@ final readonly class PlayAction implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
+        // a stream is per-session/per-token, and the ETag below is only the song id, so the browser must
+        // never reuse a cached copy after a catalog update replaces the file behind the same id
+        header('Cache-Control: no-store');
+
         $sessionkey = ($session_id === '')
             ? Stream::get_session()
             : $session_id;

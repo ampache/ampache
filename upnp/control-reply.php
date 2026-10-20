@@ -26,6 +26,7 @@ declare(strict_types=1);
 use Ampache\Module\Api\Upnp\ControlReplyApplication;
 use Psr\Container\ContainerInterface;
 
+define('API', true);
 define('NO_SESSION', '1');
 
 /** @var ContainerInterface $dic */

@@ -989,6 +989,11 @@ class Ui implements UiInterface
             header('HTTP/1.1 403 ' . $error);
         }
 
+        // ajax calls, media streams and api clients would receive the markup as their payload
+        if (defined('SSE_OUTPUT') || defined('CLI') || defined('API') || defined('AJAX_INCLUDE')) {
+            return;
+        }
+
         echo $this->_createStandaloneErrorView(StandaloneErrorTypeEnum::ACCESS_DENIED)->render();
     }
 

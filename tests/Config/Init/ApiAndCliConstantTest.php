@@ -38,20 +38,41 @@ class ApiAndCliConstantTest extends TestCase
     private const string API_HANDLER_FILE = __DIR__ . '/../../../src/Module/Api/ApiHandler.php';
 
     /**
-     * Only Jellyfin and Subsonic/OpenSubsonic define `API` at the entry point -- they never touch
-     * `ApiHandlerInterface`. The legacy XML/JSON RPC and REST entry points get it from
-     * `ApiHandler::handle()` instead (see testApiHandlerStillDefinesApiAtRuntime below), not from
-     * themselves, so they correctly do NOT appear in this list.
+     * Every non-HTML entry point defines `API` at the top of the file, before `Config/Init.php` runs --
+     * relying on `ApiHandler::handle()` alone left a gap, because `Init.php`'s own bootstrap chain runs
+     * before `handle()` is ever reached, so a log-write failure during bootstrap leaked the warning into
+     * otherwise strict XML/JSON/binary output (see testApiHandlerStillDefinesApiAtRuntime below for why
+     * `ApiHandler::handle()` still defines it too, as a fallback for any entry point that forgets).
      *
      * @var list<string>
      */
     private const array EXPECTED_ENTRY_POINT_API_FILES = [
+        'public/daap/index.php',
+        'public/graph.php',
+        'public/image.php',
         'public/jellyfin/index.php',
+        'public/opensearch.php',
+        'public/play/index.php',
         'public/rest/index.php',
+        'public/server/json.rest.php',
+        'public/server/json.server.php',
+        'public/server/xml.rest.php',
+        'public/server/xml.server.php',
+        'public/stream.php',
+        'public/upnp/MediaServerServiceDesc.php',
+        'public/upnp/cm-control-reply.php',
+        'public/upnp/cm-event-reply.php',
+        'public/upnp/control-reply.php',
+        'public/upnp/event-reply.php',
+        'public/upnp/index.php',
+        'public/upnp/playstatus.php',
+        'public/waveform.php',
+        'public/webdav/index.php',
     ];
 
     /**
-     * The legacy RPC/REST API entry points rely on this define, not one of their own, to suppress GUI output.
+     * A fallback for any entry point that forgets its own define -- the entry points above no longer
+     * depend on this alone (see EXPECTED_ENTRY_POINT_API_FILES above for why).
      */
     public function testApiHandlerStillDefinesApiAtRuntime(): void
     {
@@ -60,8 +81,8 @@ class ApiAndCliConstantTest extends TestCase
         self::assertStringContainsString(
             "define('API', true);",
             $contents,
-            'ApiHandler::handle() no longer defines API, so the legacy xml/json server+rest entry points would '
-            . 'start leaking catalog-update HTML/ticker output into their XML/JSON responses.'
+            'ApiHandler::handle() no longer defines API, so an entry point that forgot its own define would '
+            . 'start leaking catalog-update HTML/ticker output into its response.'
         );
     }
 
@@ -77,7 +98,7 @@ class ApiAndCliConstantTest extends TestCase
         );
     }
 
-    public function testOnlyJellyfinAndSubsonicDefineApiAtTheEntryPoint(): void
+    public function testOnlyTheKnownNonHtmlEntryPointsDefineApi(): void
     {
         $expected = self::EXPECTED_ENTRY_POINT_API_FILES;
         sort($expected);
@@ -85,9 +106,10 @@ class ApiAndCliConstantTest extends TestCase
         self::assertSame(
             $expected,
             $this->getEntryPointFilesDefining('API'),
-            'A file started or stopped defining API at the entry point. If this is one of the legacy RPC/REST '
-            . 'files (xml.server.php, json.server.php, xml.rest.php, json.rest.php), it should rely on '
-            . 'ApiHandler::handle() instead -- check that define is still there rather than adding this one back.'
+            'A file started or stopped defining API at the entry point. If deliberate (the file only ever '
+            . 'serves XML/JSON/binary output, never an HTML page), update EXPECTED_ENTRY_POINT_API_FILES; '
+            . 'otherwise this reopens the bootstrap-phase gap that let log-write warnings leak into non-HTML '
+            . 'responses (see EXPECTED_ENTRY_POINT_API_FILES above).'
         );
     }
 }
