@@ -342,8 +342,8 @@ class Stream
         }
 
         $placeholders = implode(', ', array_fill(0, count($session_ids), '?'));
-        $sql          = "SELECT `object_id`, `object_type`, `insertion` FROM `now_playing` WHERE `id` IN ($placeholders) AND `object_type` IN ('song', 'video') ORDER BY `insertion` DESC LIMIT 1";
-        $db_results   = Dba::read($sql, $session_ids);
+        $sql          = "SELECT `object_id`, `object_type`, `insertion` FROM `now_playing` WHERE `id` IN ($placeholders) AND `object_type` IN ('song', 'video') AND `expire` > ? ORDER BY `insertion` DESC LIMIT 1";
+        $db_results   = Dba::read($sql, [...$session_ids, time()]);
         $row          = Dba::fetch_assoc($db_results);
         if ($row === []) {
             return null;

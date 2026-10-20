@@ -53,8 +53,6 @@ $labels = $this->getLabels(); ?>
     // has to be asked for. It can only change when the track does, so it is resolved once per track and held
     // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
-    var nowPlayingSeenId = null;
-    var nowPlayingSeenData = null;
     var nowPlayingPending = false;
     var nowPlayingActive = false;
     var nowPlayingRetry = null;
@@ -64,6 +62,7 @@ $labels = $this->getLabels(); ?>
     var nowPlayingRetryMs = 500;
     var nowPlayingDuration = 0;
     var nowPlayingTriggerTime = 0;
+    var nowPlayingExpiryTimer = null;
 
     function pollNowPlaying()
     {
@@ -78,10 +77,6 @@ $labels = $this->getLabels(); ?>
             }
             var stale = data && data.found && typeof data.insertion === 'number' && data.insertion < nowPlayingTriggerTime;
             if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId || stale) {
-                if (data && data.object_id) {
-                    nowPlayingSeenId = data.object_id;
-                    nowPlayingSeenData = data;
-                }
                 scheduleNowPlayingRetry();
 
                 return;
@@ -99,6 +94,7 @@ $labels = $this->getLabels(); ?>
     {
         nowPlayingObjectId = data.object_id;
         nowPlayingDuration = data.duration || 0;
+        scheduleNowPlayingExpiryCheck();
         <?php if (!$this->isShare()) { ?>
         // a play/pause sent before this resolved had no id to act on yet; send it now that one is known
         var jp = $("#jquery_jplayer_1").data('jPlayer');
@@ -127,6 +123,41 @@ $labels = $this->getLabels(); ?>
         $('.playing_art').removeAttr('src').hide();
     }
 
+    // A resolved row is only valid for its own duration (now_playing excludes it server-side after that
+    // too), so once that time is up the display falls back to the placeholder and waits for the next one.
+    function resetNowPlayingDisplay()
+    {
+        nowPlayingObjectId = null;
+        var item = (jplaylist && jplaylist.playlist) ? jplaylist.playlist[jplaylist.current] : null;
+        $('.playing_title').html(item ? item.title : '');
+        $('.playing_artist').html(item ? item.artist : '');
+        clearNowPlayingArt();
+        $('.playing_actions').html('');
+        $('.playing_lyrics').html('');
+    }
+
+    function scheduleNowPlayingExpiryCheck()
+    {
+        cancelNowPlayingExpiryCheck();
+        if (nowPlayingDuration <= 0) {
+            return;
+        }
+        nowPlayingExpiryTimer = setTimeout(function () {
+            nowPlayingPending = true;
+            nowPlayingAttempts = 0;
+            resetNowPlayingDisplay();
+            pollNowPlaying();
+        }, nowPlayingDuration * 1000);
+    }
+
+    function cancelNowPlayingExpiryCheck()
+    {
+        if (nowPlayingExpiryTimer !== null) {
+            clearTimeout(nowPlayingExpiryTimer);
+            nowPlayingExpiryTimer = null;
+        }
+    }
+
     // jPlayer builds the playlist markup by concatenation, so a value the item doesn't carry lands in the dom as
     // the text "undefined" and reads back as a non-empty string that the browser then fetches as a relative url.
     function jpItemAttr(item, name)
@@ -140,14 +171,9 @@ $labels = $this->getLabels(); ?>
     {
         cancelNowPlayingRetry();
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
-            nowPlayingPending = false;
-            // Out of retries: show the closest guess rather than leaving the display stuck on the
-            // placeholder forever, and stop the next track settling permanently one song behind.
-            if (nowPlayingSeenData !== null) {
-                applyNowPlaying(nowPlayingSeenData);
-            } else if (nowPlayingSeenId !== null) {
-                nowPlayingObjectId = nowPlayingSeenId;
-            }
+            // Out of retries: default to the placeholder rather than guess, and stay pending so the next
+            // successful poll (e.g. once the real track actually starts) is still accepted as new.
+            resetNowPlayingDisplay();
 
             return;
         }
@@ -277,14 +303,19 @@ $labels = $this->getLabels(); ?>
     {
         var placeholder = isPlaceholderTrack();
         cancelNowPlayingRetry();
-        nowPlayingSeenId = null;
-        nowPlayingSeenData = null;
+        cancelNowPlayingExpiryCheck();
         nowPlayingDuration = 0;
         nowPlayingPending = placeholder;
         nowPlayingAttempts = 0;
         // marks when this track started, so pollNowPlaying can tell a fresh row from a stale leftover one
         nowPlayingTriggerTime = Math.floor(Date.now() / 1000);
-        clearNowPlayingArt();
+        if (placeholder) {
+            // show the placeholder immediately; the play handler below leaves title/artist alone for
+            // these so the resolved song survives a later play event instead of being overwritten back
+            resetNowPlayingDisplay();
+        } else {
+            clearNowPlayingArt();
+        }
         <?php if (!$this->isVideo() && !$this->isShare()) { ?>
         $('#jquery_jplayer_1').css('visibility', placeholder ? 'hidden' : '');
         <?php } ?>
@@ -398,10 +429,8 @@ $labels = $this->getLabels(); ?>
         }
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
-            if (isPlaceholderTrack()) {
-                // resuming a random/democratic stream can serve a different song than the one that was paused
-                nowPlayingPending = true;
-            }
+            // a plain resume never fetches anything new, so it can't serve a different song; only a genuine
+            // reload goes through loadstart/nowPlayingTrackChanged, which is the only place pending belongs
             refreshNowPlaying();
             <?php if (!$this->isShare()) { ?>
             sendPlayerState('play', event.jPlayer.status.currentTime);
@@ -532,8 +561,12 @@ $labels = $this->getLabels(); ?>
                             echo "var titleobj = obj.title;";
                             echo "var artistobj = obj.artist;";
                         } ?>
-                    $('.playing_title').html(titleobj);
-                    $('.playing_artist').html(artistobj);
+                    // a placeholder's own title/artist are just "Random"/"Democratic"; leave the resolved
+                    // song's details alone here rather than overwrite them on every subsequent play event
+                    if (!isPlaceholderTrack()) {
+                        $('.playing_title').html(titleobj);
+                        $('.playing_artist').html(artistobj);
+                    }
                     <?php // random/democratic still play regular songs, so the per-song actions (album, shout, rating) apply
                     if ($this->isIframed()) { ?>
                     $('.playing_actions').html(actionsobj);
@@ -654,6 +687,7 @@ if ($this->showSongPageTitle()) {
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
             cancelNowPlayingRetry();
+            cancelNowPlayingExpiryCheck();
             <?php if (!$this->isShare()) { ?>
             sendPlayerState('pause', event.jPlayer.status.currentTime);
             <?php } ?>
@@ -668,6 +702,7 @@ if ($this->showSongPageTitle()) {
         $("#jquery_jplayer_1").bind($.jPlayer.event.stop, function (event) {
             // a live stream never reaches its own end, so jPlayer's reset leaves the last position on screen
             cancelNowPlayingRetry();
+            cancelNowPlayingExpiryCheck();
             <?php if (!$this->isShare()) { ?>
             sendPlayerState('stop', 0);
             <?php } ?>

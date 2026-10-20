@@ -160,7 +160,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     $media = new $className($objectId);
 
                     if (!$media->isNew()) {
-                        $sid      = (string) session_id();
+                        $sid      = (string) ($user->streamtoken ?: session_id());
                         $time     = time();
                         $position = max(0, (int) $this->requestParser->getFromRequest('time'));
 
@@ -178,10 +178,11 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                                 }
                             }
 
+                            // resume is a fresh now_playing row, same as a first play: no partial-length math to get wrong
                             Stream::garbage_collection();
-                            Stream::insert_now_playing($objectId, $user->getId(), ($media->time - $position), $sid, $type, ($time - $position), null, null, 'playing');
+                            Stream::insert_now_playing($objectId, $user->getId(), $media->time, $sid, $type, null, null, null, 'playing');
                         } else {
-                            // paused or stopped: neither is playing, so there is nothing to show as now_playing until play resumes
+                            // pause and stop are both "not playing": clear now_playing until play resumes
                             Stream::delete_now_playing($sid, $objectId, $type, $user->getId());
                         }
 
