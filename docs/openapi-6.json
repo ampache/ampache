@@ -7517,9 +7517,26 @@
             }
           },
           {
+            "description": "One of `object_type` or `type` is required",
+            "in": "query",
+            "name": "object_type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "deprecated": true,
+            "description": "DEPRECATED, use `object_type` instead. One of `object_type` or `type` is required",
             "in": "query",
             "name": "type",
-            "required": true,
+            "required": false,
             "schema": {
               "enum": [
                 "song",
@@ -8769,6 +8786,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"
@@ -12104,6 +12122,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"
@@ -14033,6 +14052,7 @@
             "schema": {
               "enum": [
                 "play",
+                "pause",
                 "stop"
               ],
               "type": "string"

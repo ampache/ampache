@@ -28,6 +28,7 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
+use Ampache\Gui\Browse\ListRenderer\SortableBrowseListRendererInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
@@ -286,6 +287,30 @@ class Browse extends Query
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    /**
+     * The sort keys grid view offers through a select, since it has no clickable column headers to carry them.
+     *
+     * @return list<array{label: string, sort: string}>
+     */
+    public function getSortableColumns(): array
+    {
+        $renderer = $this->browseListRendererLocator->find($this->get_type());
+        if (!$renderer instanceof SortableBrowseListRendererInterface) {
+            return [];
+        }
+
+        $columns = [];
+        $seen    = [];
+        foreach ($renderer->getColumns() as $column) {
+            if ($column['sort'] !== null && !in_array($column['sort'], $seen, true)) {
+                $seen[]    = $column['sort'];
+                $columns[] = ['label' => $column['label'], 'sort' => $column['sort']];
+            }
+        }
+
+        return $columns;
     }
 
     /**

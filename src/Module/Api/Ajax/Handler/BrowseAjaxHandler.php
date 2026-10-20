@@ -170,7 +170,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_sort':
                 if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
-                    $browse->set_sort($_REQUEST['sort']);
+                    $browse->set_sort((string) $_REQUEST['sort'], (string) ($_REQUEST['order'] ?? ''));
                 }
 
                 if (!$browse->is_use_pages()) {

@@ -2426,6 +2426,11 @@ ul,
     margin-right: 5px;
 }
 
+.browse-options > span,
+.browse-options > a {
+    margin-left: 3px;
+}
+
 .jscroll-next {
     width: 50%;
     display: block;
