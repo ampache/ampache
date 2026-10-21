@@ -40,7 +40,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>', "\n"; ?>
         <itunes:image href="<?php echo $this->e($item->getImageUrl()); ?>"/>
         <description><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $plainSummary)); ?>]]></description>
         <content:encoded><![CDATA[<?php echo nl2br(str_replace(']]>', ']]]]><![CDATA[>', $plainSummary)); ?>]]></content:encoded>
-        <itunes:summary><?php echo $this->raw($summary); ?></itunes:summary>
+        <itunes:summary><?php echo $this->e($summary); ?></itunes:summary>
         <language><?php echo $this->e($item->getLanguage()); ?></language>
         <generator>ampache</generator>
         <podcast:guid><?php echo $this->e($item->getPodcastGuid()); ?></podcast:guid>
@@ -69,7 +69,7 @@ foreach ($item->getMedias() as $media) { ?>
             <link><?php echo $this->e($media['link']); ?></link>
 <?php   }
     if (!empty($media['description'])) { ?>
-            <description><?php echo $this->raw($media['description']); ?></description>
+            <description><?php echo $this->e($media['description']); ?></description>
 <?php   }
     if (!empty($media['author'])) { ?>
             <itunes:author><?php echo $this->e($media['author']); ?></itunes:author>
