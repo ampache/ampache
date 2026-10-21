@@ -143,7 +143,7 @@ final class Stats4Method implements MethodInterface
         $results = [];
         switch ($input['filter'] ?? 'random') {
             case 'newest':
-                $results = Stats::get_newest($type, $limit, $offset);
+                $results = Stats::get_newest($type, $limit, $offset, 0, $user);
                 break;
             case 'highest':
                 $results = Rating::get_highest($type, $limit, $offset);
