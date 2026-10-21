@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Database\Search\WithdrawnFilter;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\User;
@@ -327,6 +328,11 @@ final readonly class RatingRepository implements RatingRepositoryInterface
 
         if ($inputType === 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
+        }
+
+        $withdrawn = WithdrawnFilter::conditionFor($type, '`rating`.`object_id`', $userId);
+        if ($withdrawn !== '') {
+            $sql .= " AND " . $withdrawn;
         }
 
         return $sql . " GROUP BY `rating`.`object_id` ORDER BY ROUND(AVG(`rating`.`rating`), 2) DESC, MAX(`rating`.`date`) DESC, COUNT(`rating`.`user`) DESC, MAX(`rating`.`id`) DESC ";
