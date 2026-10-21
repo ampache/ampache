@@ -302,15 +302,27 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
+     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
+     */
+    private static function xmlText(?string $value): string
+    {
+        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
+    }
+
+    /**
      * Returns the items summary/description text
      */
     public function getSummary(): string
     {
         $summary = $this->playable->get_description();
+        if ($summary === '') {
+            $summary = sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
+        }
 
-        return ($summary !== '')
-            ? $summary
-            : sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
+        return self::xmlText($summary);
     }
 
     /**
@@ -335,9 +347,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     private function buildMediaDescription(Song|Podcast_Episode $media): string
     {
-        return ($media instanceof Song)
-            ? scrub_out($media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname())
+        $description = ($media instanceof Song)
+            ? $media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname()
             : $media->get_description();
+
+        return self::xmlText($description);
     }
 
     /**
