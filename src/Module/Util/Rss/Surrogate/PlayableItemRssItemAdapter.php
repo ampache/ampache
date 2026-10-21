@@ -94,6 +94,17 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
+     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
+     */
+    private static function xmlText(?string $value): string
+    {
+        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
+    }
+
+    /**
      * Returns the itunes author of the item
      */
     public function getAuthor(): string
@@ -299,17 +310,6 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getSubCategory(): string
     {
         return (string) AmpConfig::get('rss_subcategory', '');
-    }
-
-    /**
-     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
-     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
-     */
-    private static function xmlText(?string $value): string
-    {
-        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
     }
 
     /**
