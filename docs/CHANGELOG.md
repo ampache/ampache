@@ -13,6 +13,15 @@
 * Catalog completion notifications show for 10 seconds instead of 5, and can be dismissed early with a click
 * A fast-arriving notification could silently erase one still queued behind it before it was ever shown
 * `SseApiApplication` clears every output buffer and sends `X-Accel-Buffering: no`, so a proxy can't swallow progress notifications
+* The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
+* The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
+* The sidebar's random playlist link could choose another user's private playlist
+* OpenSubsonic's `getAlbum`/`getArtist`/`getMusicDirectory` and their info/topSongs variants could return an item the caller can't see
+* A withdrawn song stayed playable by id (`action=play`), unlike the random and democratic play paths
+* The Now Playing widget could show a play from a catalog excluded by the viewer's own `catalog_filter`
+* A `smartplaylist` search rule could pull results from another user's private smart playlist
+* Highest rated albums and artists could include withdrawn items
+* `stats` action's `newest`/`highest`/`frequent` filters didn't apply the caller's `catalog_filter` on every API version
 
 ## Ampache 8.3.0
 
