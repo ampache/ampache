@@ -221,7 +221,7 @@ var SearchRow = {
                     // index value or string id of the object
                     option.value = realValue;
                     // text to show in the dropdown
-                    option.innerHTML = widget["1"][key];
+                    option.textContent = widget["1"][key];
                     inputNode.appendChild(option);
                     optioncount++;
                 });
@@ -257,7 +257,7 @@ var SearchRow = {
             jQuery.each(types, function (i) {
                 if (groups[g] === types[i].title) {
                     var option = document.createElement("option");
-                    option.innerHTML = types[i].label;
+                    option.textContent = types[i].label;
                     option.value = types[i].name;
                     if (i == ruleType) {
                         option.selected = true;
