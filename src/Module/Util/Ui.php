@@ -731,7 +731,8 @@ class Ui implements UiInterface
 
         if (defined('SSE_OUTPUT')) {
             // the field targets a DOM id in the legacy non-SSE box markup, so here it is the notification's label instead
-            $message = ($field !== '' && $field !== '0') ? $field . ': ' . $value : (string) $value;
+            $plainValue = is_string($value) ? unhtmlentities($value) : $value;
+            $message    = ($field !== '' && $field !== '0') ? $field . ': ' . $plainValue : (string) $plainValue;
             echo "id: " . $update_id . "\n";
             echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$message, $timeout]]) . "\n\n";
         } elseif ($field !== '' && $field !== '0') {
