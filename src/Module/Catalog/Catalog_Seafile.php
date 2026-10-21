@@ -177,6 +177,8 @@ class Catalog_Seafile extends Catalog
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Seafile Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Seafile Remote Update'));
         }
 
         $success = 0;

@@ -183,6 +183,8 @@ class Catalog_remote extends Catalog
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Remote Update'));
         }
 
         $songsadded = $this->_update_remote_catalog();
@@ -676,6 +678,8 @@ class Catalog_remote extends Catalog
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Remote Update'));
         }
 
         $songsupdated = $this->_update_remote_catalog('verify');

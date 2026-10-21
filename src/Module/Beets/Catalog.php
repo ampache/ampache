@@ -105,6 +105,8 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
         set_time_limit(0);
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Beets Update'));
         }
 
         $parser = $this->getParser();
