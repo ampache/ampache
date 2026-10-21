@@ -2,6 +2,8 @@
 
 ## Ampache 8.3.1
 
+**NOTE**: Apache + php-fpm buffers catalog progress by default; see `docs/examples/apache-site.conf` for the fix.
+
 ### Fixed (8.3.1)
 
 * Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
@@ -9,6 +11,8 @@
 * A failed remote catalog connection or unreadable catalog root produced no notification during a web-triggered scan
 * A catalog already locked by another run (cron, another tab/user) was silently skipped with no notification
 * Catalog completion notifications show for 10 seconds instead of 5, and can be dismissed early with a click
+* A fast-arriving notification could silently erase one still queued behind it before it was ever shown
+* `SseApiApplication` clears every output buffer and sends `X-Accel-Buffering: no`, so a proxy can't swallow progress notifications
 
 ## Ampache 8.3.0
 
