@@ -427,11 +427,11 @@ class Random
      * This returns a random Playlist with songs little bit of extra
      * logic require
      */
-    public static function playlist(): int
+    public static function playlist(int $user_id): int
     {
-        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
+        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE (`playlist`.`type` = 'public' OR `playlist`.`user` = ? OR FIND_IN_SET(?, `playlist`.`collaborate`) > 0) AND EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, [$user_id, $user_id]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int) ($results['id'] ?? 0);

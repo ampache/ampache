@@ -101,7 +101,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = $this->ui->showRightbar();
                 break;
             case 'playlist':
-                $playlist_id = Random::playlist();
+                $playlist_id = Random::playlist($user->getId());
 
                 if ($playlist_id === 0) {
                     break;
