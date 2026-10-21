@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Ampache 8.3.1
+
+### Fixed (8.3.1)
+
+* Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
+* The catalog add/update completion notification never appeared in the browser; clean/verify's showed with no label
+* A failed remote catalog connection or unreadable catalog root produced no notification during a web-triggered scan
+* A catalog already locked by another run (cron, another tab/user) was silently skipped with no notification
+* Catalog completion notifications show for 10 seconds instead of 5, and can be dismissed early with a click
+
 ## Ampache 8.3.0
 
 ### Added (8.3.0)
