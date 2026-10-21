@@ -501,10 +501,6 @@ $labels = $this->getLabels(); ?>
                         if (typeof ApplyReplayGain === 'function') {
                             ApplyReplayGain();
                         }
-                    }
-                    if (brkey != '') {
-                        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
-                    }
                     if (playlist[index]['media_type'] === "song") {
                         var currenttype = 'song'
                         var currentobject = 'song_id'
@@ -583,6 +579,10 @@ if ($this->showSongPageTitle()) {
     echo "titleOwner.AmpacheNowPlayingTitle = mediaTitle + ' | " . $this->raw($this->jsText($this->getSiteTitle())) . "';\n";
     echo "titleOwner.document.title = titleOwner.AmpacheNowPlayingTitle;";
 } ?>
+                    }
+                    if (brkey != '') {
+                        sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
+                    }
                 }
             });
 
