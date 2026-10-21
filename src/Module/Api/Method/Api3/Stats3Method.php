@@ -101,7 +101,7 @@ final class Stats3Method implements MethodInterface
 
         $results = [];
         if ($type == "newest") {
-            $results = Stats::get_newest("album", $limit, $offset);
+            $results = Stats::get_newest("album", $limit, $offset, 0, $user);
         } elseif ($type == "highest") {
             $results = Rating::get_highest("album", $limit, $offset, $user->getId());
         } elseif ($type == "frequent") {

@@ -458,6 +458,7 @@ class Stream
 
         $db_results = Dba::read($sql, $params);
         $results    = [];
+        $viewerId   = Core::get_global('user')?->getId() ?? -1;
         while ($row = Dba::fetch_assoc($db_results)) {
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
             /** @var Song|Video $media */
@@ -466,7 +467,7 @@ class Stream
                 continue;
             }
 
-            if (($user_id === 0 || (int) $row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int) $row['user'])) {
+            if (($user_id === 0 || (int) $row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int) $row['user']) && Catalog::has_access($media->getCatalogId(), $viewerId)) {
                 $client = new User($row['user']);
                 if ($client->isNew()) {
                     continue;

@@ -58,6 +58,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\WithdrawableInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -641,6 +642,12 @@ final readonly class PlayAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
+
+            return null;
+        }
+
+        if ($media instanceof WithdrawableInterface && !$media->isEnabled()) {
+            header('HTTP/1.1 404 File disabled');
 
             return null;
         }

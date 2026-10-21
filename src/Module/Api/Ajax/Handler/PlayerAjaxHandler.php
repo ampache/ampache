@@ -118,6 +118,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 
                 return;
             case 'scrobble':
+                if (check_http_referer() === false) {
+                    return;
+                }
+
                 // the web player calls this once a song passes the skip timer; only this client's latest unscrobbled play is sent
                 $scrobbled = false;
                 $current   = ($user->getId() > 0)
@@ -149,6 +153,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'pause':
             case 'play':
             case 'stop':
+                if (check_http_referer() === false) {
+                    return;
+                }
+
                 // trusted the same way PlayerMethod trusts filter/type: only ever touches the caller's own state
                 $objectId = (int) $this->requestParser->getFromRequest('oid');
                 $type     = strtolower($this->requestParser->getFromRequest('type') ?: 'song');

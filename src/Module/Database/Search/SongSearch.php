@@ -819,12 +819,15 @@ final class SongSearch implements SearchInterface
                     $join['playlist'] = true;
                     break;
                 case 'playlist':
-                    $where[]      = sprintf("`song`.`id` %s IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song')", $operator_sql);
+                    $where[]      = sprintf("`song`.`id` %s IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song' AND `playlist_data`.`playlist` IN (SELECT `id` FROM `playlist` WHERE `type` = 'public' OR `user` = " . $search_user_id . " OR FIND_IN_SET(" . $search_user_id . ", `collaborate`) > 0))", $operator_sql);
                     $parameters[] = $input;
                     break;
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
                     $subsearch = new Search((int) $input, 'song', $search->search_user);
+                    if (!$subsearch->isVisible($search->search_user)) {
+                        break;
+                    }
                     $results   = $subsearch->get_subsearch('song');
                     $subsearch_count++;
                     $where[] = sprintf('`song`.`id` %s IN (SELECT * FROM (', $operator_sql) . $results['sql'] . ") AS sp_" . $subsearch_count . ")";
