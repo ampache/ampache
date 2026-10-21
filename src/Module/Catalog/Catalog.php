@@ -980,7 +980,7 @@ abstract class Catalog extends database_object
         }
 
         if (Ui::check_ticker() && !$api) {
-            Ui::update_text('read_art_' . $object_id, (string) $libitem->get_fullname());
+            Ui::update_text(T_('Reading'), (string) $libitem->get_fullname());
         }
 
         return ($inserted === true);
@@ -3676,6 +3676,10 @@ abstract class Catalog extends database_object
         $catalogRepository = self::getCatalogRepository();
         if (!$catalogRepository->tryAcquireProcessingLock($catalog_id)) {
             debug_event(self::class, sprintf('Catalog %d is already being processed, skipping', $catalog_id), 3);
+            if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                $name = $catalogRepository->findName($catalog_id) ?: (string) $catalog_id;
+                Ui::update_text($name, T_('Skipping catalog, already being processed'), 10000);
+            }
 
             return;
         }
@@ -3768,7 +3772,8 @@ abstract class Catalog extends database_object
 
         Ui::update_text(
             T_("Catalog Cleaned"),
-            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total)
+            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total),
+            10000
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -3862,13 +3867,13 @@ abstract class Catalog extends database_object
                 // Stupid little cutesie thing
                 ++$search_count;
                 if (Ui::check_ticker()) {
-                    Ui::update_text('count_art_' . $this->id, $search_count);
+                    Ui::update_text(T_('Searched'), $search_count);
                 }
             }
         }
 
         // One last time for good measure
-        Ui::update_text('count_art_' . $this->id, $search_count);
+        Ui::update_text(T_('Searched'), $search_count, 10000);
 
         return true;
     }
@@ -3901,12 +3906,12 @@ abstract class Catalog extends database_object
             // Stupid little cutesie thing
             ++$search_count;
             if (Ui::check_ticker()) {
-                Ui::update_text('count_artist_' . $object_id, $search_count);
+                Ui::update_text(T_('Updated'), $search_count);
             }
         }
 
         // One last time for good measure
-        Ui::update_text('count_artist_complete', $search_count);
+        Ui::update_text(T_('Updated'), $search_count, 10000);
     }
 
     /**
@@ -4521,7 +4526,8 @@ abstract class Catalog extends database_object
 
         Ui::update_text(
             T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified)
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified),
+            10000
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();

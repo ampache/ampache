@@ -326,6 +326,7 @@ a.tag_size4 { text-decoration: none; }
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     transition: all 0.5s;
     transform: translate(-50%, 0);
+    cursor: pointer;
 }
 
 #notification.notification-out {

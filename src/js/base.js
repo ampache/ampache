@@ -131,6 +131,7 @@ export function clearNotification() {
     $("#notification").addClass("notification-out");
 }
 
+// timeout <= 0 leaves the notification up until the user dismisses it by clicking it
 export function displayNotification(message, timeout) {
     if (notificationTimeout !== null || !message) {
         clearNotification();
@@ -144,9 +145,11 @@ export function displayNotification(message, timeout) {
         }
         $("#notification-content").text(message);
         $("#notification").removeClass("notification-out");
-        notificationTimeout = setTimeout(function() {
-            clearNotification();
-        }, timeout);
+        if (timeout > 0) {
+            notificationTimeout = setTimeout(function() {
+                clearNotification();
+            }, timeout);
+        }
     }
 }
 

@@ -376,8 +376,7 @@ class Catalog_local extends Catalog
                 $this->count++;
                 $file = str_replace(['(', ')', "'"], '', $full_file);
                 if (Ui::check_ticker()) {
-                    Ui::update_text('add_count_' . $this->getId(), $this->count);
-                    Ui::update_text('add_dir_' . $this->getId(), scrub_out($file));
+                    Ui::update_text(T_('Found'), sprintf('%d - %s', $this->count, scrub_out($file)));
                 } // update our current state
             } // if it's not an m3u
 
@@ -481,7 +480,7 @@ class Catalog_local extends Catalog
 
         // This should only happen on the last run
         if ($path === $this->path) {
-            Ui::update_text('add_count_' . $this->getId(), $this->count);
+            Ui::update_text(T_('Found'), $this->count);
         }
 
         /* Close the dir handle */
@@ -633,10 +632,14 @@ class Catalog_local extends Catalog
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
-            Ui::update_text(
-                T_('Catalog Updated'),
-                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate)
-            );
+        }
+
+        Ui::update_text(
+            T_('Catalog Updated'),
+            sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate),
+            10000
+        );
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -855,6 +858,8 @@ class Catalog_local extends Catalog
             if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Catalog root unreadable, stopping check'));
                 echo AmpError::display('general');
+            } elseif (defined('SSE_OUTPUT')) {
+                Ui::update_text(T_('There Was a Problem'), T_('Catalog root unreadable, stopping check'), 10000);
             }
 
             return [];
@@ -905,6 +910,8 @@ class Catalog_local extends Catalog
             if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
                 echo AmpError::display('general');
+            } elseif (defined('SSE_OUTPUT')) {
+                Ui::update_text(T_('There Was a Problem'), T_('Catalog root unreadable, stopping clean'), 10000);
             }
 
             return 0;
@@ -1329,7 +1336,7 @@ class Catalog_local extends Catalog
 
         $this->scan_catalog($interactor);
 
-        Ui::update_text('scan_count_' . $this->getId(), $this->count);
+        Ui::update_text(T_('Updated'), $this->count);
 
         if (!$skipCounts) {
             $this->count_scan_folders($interactor);
@@ -1555,8 +1562,7 @@ class Catalog_local extends Catalog
             $count++;
             if (Ui::check_ticker()) {
                 $file_display = str_replace(['(', ')', "'"], '', $file);
-                Ui::update_text('clean_count_' . $this->getId(), $count);
-                Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file_display));
+                Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, scrub_out($file_display)));
             }
 
             $file_info = @filesize(Core::conv_lc_file($file));
@@ -1972,8 +1978,7 @@ class Catalog_local extends Catalog
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $row['file']);
-                Ui::update_text('verify_count_' . $this->getId(), $count);
-                Ui::update_text('verify_dir_' . $this->getId(), scrub_out($file));
+                Ui::update_text(T_('Verified'), sprintf('%d - %s', $count, scrub_out($file)));
             }
 
             if ($tableName !== 'album') {
@@ -2044,7 +2049,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        Ui::update_text('verify_count_' . $this->getId(), $count);
+        Ui::update_text(T_('Verified'), $count);
 
         return $changed;
     }

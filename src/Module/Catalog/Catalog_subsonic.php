@@ -790,7 +790,8 @@ class Catalog_subsonic extends Catalog
                 '%s Song added',
                 '%s Songs added',
                 $songsadded
-            ), $songsadded)
+            ), $songsadded),
+            10000
         );
 
         debug_event('subsonic.catalog', 'Catalog updated.', 4);

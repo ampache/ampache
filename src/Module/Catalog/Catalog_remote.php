@@ -709,8 +709,7 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Failed to connect to the remote server'));
-                echo AmpError::display('general');
-                flush();
+                Ui::update_text(T_('There Was a Problem'), T_('Failed to connect to the remote server'), 10000);
             }
 
             $this->remote_handle = null;
@@ -741,8 +740,7 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', $exception->getMessage());
-                echo AmpError::display('general');
-                flush();
+                Ui::update_text(T_('There Was a Problem'), $exception->getMessage(), 10000);
             }
 
             $this->remote_handle = null;
@@ -759,7 +757,7 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Failed to connect to the remote server'));
-                echo AmpError::display('general');
+                Ui::update_text(T_('There Was a Problem'), T_('Failed to connect to the remote server'), 10000);
             }
 
             $this->remote_handle = null;
@@ -1238,7 +1236,7 @@ class Catalog_remote extends Catalog
             }
         }
 
-        Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
+        Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."), 10000);
 
         // Update the last update value based on the action
         if ($action === 'verify') {

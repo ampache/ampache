@@ -398,10 +398,18 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
         }
 
         if ($ignoreTicker || Ui::check_ticker()) {
-            Ui::update_text($prefix . '_count_' . $this->id, $count);
-            if (isset($song)) {
-                Ui::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
-            }
+            $label = match ($prefix) {
+                'add' => T_('Found'),
+                'clean' => T_('Checking'),
+                'verify' => T_('Verified'),
+                default => T_('Updated'),
+            };
+            $value = isset($song)
+                ? sprintf('%d - %s', $count, scrub_out($this->getVirtualSongPath($song)))
+                : $count;
+
+            // ignoreTicker also marks the final, run-closing update, so give that one more time on screen
+            Ui::update_text($label, $value, $ignoreTicker ? 10000 : 5000);
         }
     }
 
