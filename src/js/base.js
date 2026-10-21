@@ -99,6 +99,11 @@ $(document).ready(function(){
 });
 
 var notificationTimeout = null;
+var notificationShownAt = 0;
+var pendingNotificationTimer = null;
+// a message gets at least this long on screen before the next one can replace it, so a fast-arriving
+// follow-up (e.g. a scan that finishes within a second of its first progress tick) can't erase one before it's read
+var MIN_NOTIFICATION_DISPLAY_MS = 1000;
 // Applies a callback to every matching scope inside (or equal to) a node, now and for any node that
 // arrives later: a browse or a preferences tab swapped in by ajax never saw the ready handler.
 export function onScopeAdded(selector, apply) {
@@ -128,29 +133,44 @@ export function onScopeAdded(selector, apply) {
 export function clearNotification() {
     clearTimeout(notificationTimeout);
     notificationTimeout = null;
+    notificationShownAt = 0;
     $("#notification").addClass("notification-out");
+}
+
+function showNotification(message, timeout) {
+    clearTimeout(notificationTimeout);
+    if ($("#webplayer").css("display") !== "block") {
+        $("#notification").css("bottom", "20px");
+    } else {
+        $("#notification").css("bottom", "120px");
+    }
+    $("#notification-content").text(message);
+    $("#notification").removeClass("notification-out");
+    notificationShownAt = Date.now();
+    notificationTimeout = (timeout > 0) ? setTimeout(clearNotification, timeout) : null;
 }
 
 // timeout <= 0 leaves the notification up until the user dismisses it by clicking it
 export function displayNotification(message, timeout) {
-    if (notificationTimeout !== null || !message) {
+    clearTimeout(pendingNotificationTimer);
+    pendingNotificationTimer = null;
+
+    if (!message) {
         clearNotification();
+        return;
     }
 
-    if (message) {
-        if ($("#webplayer").css("display") !== "block") {
-            $("#notification").css("bottom", "20px");
-        } else {
-            $("#notification").css("bottom", "120px");
-        }
-        $("#notification-content").text(message);
-        $("#notification").removeClass("notification-out");
-        if (timeout > 0) {
-            notificationTimeout = setTimeout(function() {
-                clearNotification();
-            }, timeout);
-        }
+    var remaining = MIN_NOTIFICATION_DISPLAY_MS - (Date.now() - notificationShownAt);
+    if (notificationShownAt && remaining > 0) {
+        pendingNotificationTimer = setTimeout(function () {
+            pendingNotificationTimer = null;
+            showNotification(message, timeout);
+        }, remaining);
+
+        return;
     }
+
+    showNotification(message, timeout);
 }
 
 // Filtering from the genre cloud swaps the listing further down the page, where the reader is not

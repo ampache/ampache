@@ -540,6 +540,9 @@ class Catalog_local extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Starting New Media Search on "%s" Catalog'), $this->name));
         }
 
         /* Set the Start time */
@@ -599,6 +602,8 @@ class Catalog_local extends Catalog
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                     echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
                     flush();
+                } elseif (defined('SSE_OUTPUT')) {
+                    Ui::update_text('', T_('Starting Art Search') . '. . .');
                 }
 
                 if ($this->songs_to_gather !== [] || $this->videos_to_gather !== []) {
@@ -1332,6 +1337,10 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
+        if (defined('SSE_OUTPUT')) {
+            Ui::update_text('', $this->name . ': ' . T_('Start scanning folders'));
+        }
+
         sleep(1);
 
         $this->scan_catalog($interactor);

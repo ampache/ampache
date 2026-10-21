@@ -1947,8 +1947,13 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
-                        flush();
+                        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                            echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
+                            flush();
+                        } elseif (defined('SSE_OUTPUT')) {
+                            Ui::update_text('', T_('Starting Art Search') . '. . .');
+                        }
+
                         $catalog->gather_art();
                     }
                 }
@@ -3752,6 +3757,9 @@ abstract class Catalog extends database_object
             echo new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, $this->getId(), $this->name)->render();
             ob_flush();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Cleaning the "%s" Catalog'), $this->name) . '...');
         }
 
         $dead_total = $this->clean_catalog_proc($interactor);
@@ -4514,6 +4522,9 @@ abstract class Catalog extends database_object
             echo new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, $this->getId(), $this->name)->render();
             ob_flush();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Updating the %s Catalog'), $this->name));
         }
 
         $verified = $this->verify_catalog_proc();

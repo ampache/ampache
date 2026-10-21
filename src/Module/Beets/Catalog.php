@@ -97,6 +97,9 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Starting New Media Search on "%s" Catalog'), $this->name));
         }
 
         set_time_limit(0);
