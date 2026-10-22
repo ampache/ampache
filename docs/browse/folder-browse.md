@@ -16,23 +16,24 @@ This page lists the filters and sorts the `folder` browse accepts. Refer to the 
 
 Send filters in the `cond` parameter as `filter,value` pairs, separated by `;`
 
-e.g. `cond=starts_with,a`
+e.g. `cond=starts_with,a;catalog,2`
 
-| Filter            | Value   | Description                                                                                      |
-|-------------------|---------|--------------------------------------------------------------------------------------------------|
-| `alpha_match`     | string  | Alias of `like`.                                                                                 |
-| `equal`           | string  | The folder name or its full path is exactly this value.                                          |
-| `exact_match`     | string  | Alias of `equal`.                                                                                |
-| `id`              | string  | Only the row with this `type-id` id, e.g. `folder-12`.                                           |
-| `int_id`          | integer | Only the row for this numeric object id. Send `-1` to match nothing.                             |
-| `like`            | string  | The folder name or its full path contains this value.                                            |
-| `not_like`        | string  | Neither the folder name nor its full path contains this value.                                   |
-| `not_starts_with` | string  | Neither the folder name nor its full path starts with this value.                                |
-| `regex_match`     | regex   | The folder name or its full path matches this MySQL regular expression.                          |
-| `regex_not_match` | regex   | Neither the folder name nor its full path matches this MySQL regular expression.                 |
-| `starts_with`     | string  | The folder name or its full path starts with this value.                                         |
-| `user_flag`       | 0 or 1  | Send `1` for folders the current user has favorited, `0` for the ones they have not.             |
-| `user_rating`     | 0 to 5  | Only folders the current user rated this value. Send `0` for folders they have not rated at all. |
+| Filter            | Value      | Description                                                                                                |
+|-------------------|------------|------------------------------------------------------------------------------------------------------------|
+| `alpha_match`     | string     | Alias of `like`.                                                                                           |
+| `catalog`         | catalog id | Only folders in this catalog. `0` is ignored rather than matching catalog zero, so it means every catalog. |
+| `equal`           | string     | The folder name or its full path is exactly this value.                                                    |
+| `exact_match`     | string     | Alias of `equal`.                                                                                          |
+| `id`              | string     | Only the row with this `type-id` id, e.g. `folder-12`.                                                     |
+| `int_id`          | integer    | Only the row for this numeric object id. Send `-1` to match nothing.                                       |
+| `like`            | string     | The folder name or its full path contains this value.                                                      |
+| `not_like`        | string     | Neither the folder name nor its full path contains this value.                                             |
+| `not_starts_with` | string     | Neither the folder name nor its full path starts with this value.                                          |
+| `regex_match`     | regex      | The folder name or its full path matches this MySQL regular expression.                                    |
+| `regex_not_match` | regex      | Neither the folder name nor its full path matches this MySQL regular expression.                           |
+| `starts_with`     | string     | The folder name or its full path starts with this value.                                                   |
+| `user_flag`       | 0 or 1     | Send `1` for folders the current user has favorited, `0` for the ones they have not.                       |
+| `user_rating`     | 0 to 5     | Only folders the current user rated this value. Send `0` for folders they have not rated at all.           |
 
 ## Available browse sorts
 
