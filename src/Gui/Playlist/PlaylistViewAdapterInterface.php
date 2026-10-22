@@ -65,6 +65,8 @@ interface PlaylistViewAdapterInterface
 
     public function getFullname(): string;
 
+    public function getGlobalRating(): string;
+
     public function getId(): int;
 
     public function getLastUpdate(): string;

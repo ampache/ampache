@@ -133,8 +133,9 @@ final class ArtistPageView extends AbstractView
                 ($artist->time > 0) ? new HeaderChip($artist->get_f_time(), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath() . '/browse.php?action=tag&type=artist&show_tag='),
-            rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist', true) : '',
+            rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist') : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getArtistId(), 'artist') : '',
+            globalRating: ($this->showRatings()) ? Rating::show_global_rating($this->getArtistId(), 'artist') : '',
             ratingKey: $this->getArtistId() . '_artist',
             note: ($this->showPlayedTimes())
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
