@@ -276,7 +276,7 @@ a.tag_size4 { text-decoration: none; }
 .topmenu_item span {
     width: 100px;
     font-size: 14px;
-    color: #fff;
+    color: var(--amp-accent);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
