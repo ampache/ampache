@@ -1245,7 +1245,8 @@ function get_theme(string $name): ?array
                         ? $results['base'][$count]
                         : explode('|', $results['base'][$count]);
             }
-            $results['colors'] = explode(',', (string) $results['colors']);
+            $results['colors']      = explode(',', (string) $results['colors']);
+            $results['color_bases'] = explode(',', (string) ($results['color_bases'] ?? ''));
         } else {
             $results = null;
         }

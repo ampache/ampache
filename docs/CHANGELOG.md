@@ -1,10 +1,21 @@
 # CHANGELOG
 
-## Ampache 8.3.1
+## Ampache 8.4.0
 
 **NOTE**: Apache + php-fpm buffers catalog progress by default; see `docs/examples/apache-site.conf` for the fix.
 
-### Fixed (8.3.1)
+### Added (8.4.0)
+
+* Theme
+  * reborn gains four new colours: Dusk, Dawn, Sepia and High-Contrast
+  * reborn gains nine colours modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
+
+### Changed (8.4.0)
+
+* Theme
+  * `theme.cfg.php` gained an optional `color_bases` key; a colour with none is treated as dark, same as before
+
+### Fixed (8.4.0)
 
 * Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
 * The catalog add/update completion notification never appeared in the browser; clean/verify's showed with no label

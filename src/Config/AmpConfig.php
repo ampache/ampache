@@ -140,6 +140,28 @@ class AmpConfig
     }
 
     /**
+     * get_theme_color_base
+     *
+     * Whether the active theme_color is a "light" or "dark" colour, per the theme's own
+     * theme.cfg.php color_bases list, so code that picks an asset or highlight by light/dark
+     * (rather than by the colour's exact name) keeps working for a colour it has never heard of.
+     */
+    public static function get_theme_color_base(): string
+    {
+        $colorName = strtolower((string) self::get('theme_color', 'dark'));
+        $theme     = get_theme((string) self::get('theme_name', 'reborn'));
+        $colors    = $theme['colors'] ?? [];
+        $bases     = $theme['color_bases'] ?? [];
+
+        $index = array_search($colorName, array_map('strtolower', $colors), true);
+        if ($index !== false && isset($bases[$index]) && $bases[$index] !== '') {
+            return $bases[$index];
+        }
+
+        return ($colorName === 'light') ? 'light' : 'dark';
+    }
+
+    /**
      * get_web_path
      *
      * This return web_path for the site. This is used to allow creating custom configs and web locations

@@ -59,7 +59,7 @@ final class MiniPlayerView extends AbstractView
      */
     public function getAjaxLoaderUrl(): string
     {
-        $suffix = (AmpConfig::get('theme_color', 'dark') === 'light') ? '-light' : '';
+        $suffix = (AmpConfig::get_theme_color_base() === 'light') ? '-light' : '';
 
         return $this->webPath . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ajax-loader' . $suffix . '.gif';
     }
