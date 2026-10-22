@@ -557,17 +557,21 @@ $labels = $this->getLabels(); ?>
                             echo "var titleobj = titleText;";
                             echo "var artistobj = artistText;";
                         } ?>
-                    // a placeholder's own title/artist/actions/lyrics are not its own; leave the AJAX-resolved
+                    // a placeholder's own title/artist are just "Random"/"Democratic"; leave the resolved
                     // song's details alone here rather than overwrite them on every subsequent play event
                     if (!isPlaceholderTrack()) {
                         $('.playing_title').html(titleobj);
                         $('.playing_artist').html(artistobj);
-                    <?php if ($this->isIframed()) { ?>
+                    }
+                    <?php // random/democratic placeholders carry no actiontype, so actionsobj/lyricsobj build empty; skip the overwrite
+                    if ($this->isIframed()) { ?>
+                    if (!isPlaceholderTrack()) {
                         $('.playing_actions').html(actionsobj);
-                    <?php if ($this->showLyrics()) { ?>
+                        <?php if ($this->showLyrics()) { ?>
                         $('.playing_lyrics').html(lyricsobj);
-                    <?php }
-                    } ?>
+                        <?php } ?>
+                    }
+                    <?php
                     }
                     }
 if ($this->showSongPageTitle()) {
