@@ -31,7 +31,7 @@ use Ampache\Plugin\PluginSonicAnalysisInterface;
 use Ampache\Repository\Model\User;
 
 /**
- * Sonic similarity comes from analysing the audio, which Ampache cannot do itself, so with no plugin the
+ * Sonic similarity comes from analyzing the audio, which Ampache cannot do itself, so with no plugin the
  * endpoints report the feature as unsupported rather than answering with metadata similarity instead.
  */
 final class SonicAnalysisPluginResolver implements SonicAnalysisPluginResolverInterface

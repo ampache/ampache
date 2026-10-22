@@ -1252,7 +1252,7 @@ final class Xml8_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects License id's assigned to songs and artists
      */
     public function licenses(array $objects, User $user): string
     {

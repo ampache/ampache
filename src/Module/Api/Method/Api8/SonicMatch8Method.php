@@ -92,7 +92,7 @@ final class SonicMatch8Method implements MethodInterface
             );
         }
 
-        // Similarity here is derived from analysing the audio, which Ampache does not do itself. With no plugin to
+        // Similarity here is derived from analyzing the audio, which Ampache does not do itself. With no plugin to
         // ask, the feature is unavailable rather than empty — an empty list would claim nothing sounds alike.
         $plugin = $this->getSonicAnalysisPlugin($user);
         if (!$plugin instanceof PluginSonicAnalysisInterface) {

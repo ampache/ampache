@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-10-22 12:47+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -444,9 +444,6 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-msgid "View"
-msgstr ""
-
 msgid "Pages"
 msgstr ""
 
@@ -457,6 +454,15 @@ msgid "Grid View"
 msgstr ""
 
 msgid "Alphabet"
+msgstr ""
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
 msgstr ""
 
 msgid "Item Count"
@@ -1099,9 +1105,6 @@ msgid "Description:"
 msgstr ""
 
 msgid "External Link"
-msgstr ""
-
-msgid "Order"
 msgstr ""
 
 msgid "Top Rated"
@@ -3826,7 +3829,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3849,7 +3852,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -5044,6 +5047,9 @@ msgstr ""
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr ""
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 
@@ -5186,6 +5192,9 @@ msgstr ""
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5231,10 +5240,10 @@ msgid ""
 "processed."
 msgstr ""
 
-msgid "Updated"
+msgid "No Update Needed"
 msgstr ""
 
-msgid "No Update Needed"
+msgid "Skipping catalog, already being processed"
 msgstr ""
 
 msgid "Catalog Cleaned"
@@ -5415,9 +5424,6 @@ msgstr ""
 msgid "Reading Catalog: \"%s\""
 msgstr ""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5433,9 +5439,6 @@ msgid "Start adding new media"
 msgstr ""
 
 msgid "Start verifying media related to Catalog entries"
-msgstr ""
-
-msgid "Start scanning folders"
 msgstr ""
 
 msgid "Start searching new media art"

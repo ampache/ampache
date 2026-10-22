@@ -251,7 +251,7 @@ class Random
             return [];
         }
 
-        // the song's own flag; a flagged album or artist does not make its songs favourites
+        // the song's own flag; a flagged album or artist does not make its songs favorites
         return self::_get_filtered(
             $limit,
             $user,
