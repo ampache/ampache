@@ -37,7 +37,7 @@ interface BulkMailerInterface
 
     /**
      * Send a message to a user group from the configured system sender.
-     * Recognised groups: `all`, `users`, `admins`, `inactive` (anything else is treated as `all`).
+     * Recognized groups: `all`, `users`, `admins`, `inactive` (anything else is treated as `all`).
      * Returns false when mail is disabled or the send failed.
      */
     public function sendToGroup(string $group, string $subject, string $message): bool;

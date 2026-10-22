@@ -32,7 +32,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
  * played counters are read from the cache and only refreshed by the cron task,
  * so they lag behind until the next run (see issue #2587). Enabling this adds
  * the plays recorded since the last cache run to the cached value, keeping the
- * count accurate. It is disabled by default to preserve the existing behaviour
+ * count accurate. It is disabled by default to preserve the existing behavior
  * on large instances where the extra per-count query is not wanted.
  */
 final class Migration800024 extends AbstractMigration

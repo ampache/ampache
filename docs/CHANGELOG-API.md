@@ -79,7 +79,7 @@
   * New `time` field on the browsed folder, the summed duration of everything below it, subfolders included
   * New `time` field on each item in the folder's contents, from the underlying object's own row; `null` for an object type that carries no duration
 * `player` (API6, API8)
-  * Resuming a track already recorded as the caller's last play now shifts that play's history back to when it actually started (now - position), matching the existing Subsonic `saveplayqueue` behaviour
+  * Resuming a track already recorded as the caller's last play now shifts that play's history back to when it actually started (now - position), matching the existing Subsonic `saveplayqueue` behavior
 
 ### Fixed (810000)
 
@@ -89,12 +89,12 @@
   * Returned the caller's own activity instead of the activity of the users they follow, calling `getActivities()` instead of `getFriendsActivities()`
 * ALL
   * `handshake`: A disabled user account could still complete the handshake and receive a valid session
-  * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honoured it
+  * `stats`: Naming another user's `username`/`user_id` with `filter=recent` ignored their `allow_personal_info_recent` opt-out on API3, API4 and API5; only API6/API8 honored it
   * `stats`: The `user_id`/`username` override handed back another user's `streamtoken` embedded in each item's play url; the response now carries the caller's own token
   * `rate`: An out-of-range value (e.g. `127`) was stored as-is instead of being clamped to 0-5, and repeatedly rating `0` could drain an object's popularity weight below `0`
   * Setting `api_force_version` reopened an API version the admin had disabled, bypassing the `api_enable_3`..`api_enable_8` check
 * `flag` (API4, API5, API6, API8)
-  * A future `date` parameter pinned a favourite to the top of every newest list until real time caught up
+  * A future `date` parameter pinned a favorite to the top of every newest list until real time caught up
 * API3
   * `playlist`, `playlist_songs`: A private playlist or smartlist you neither own nor collaborate on was readable by anyone who guessed its id
 * API5
@@ -161,7 +161,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Both name the member's type `object_type` rather than `type`, because the REST path already spends `type` on the resource name and the two would collide in the same query string
   * REST paths `collections`, `collections/{collection_id}` and `collections/{collection_id}/items`
 * `playlist_folder` (API8 only)
-  * New actions `playlist_folders`, `playlist_folder`, `playlist_folder_items`, `playlist_folder_create`, `playlist_folder_edit`, `playlist_folder_delete`, `playlist_folder_add` and `playlist_folder_remove`. A playlist folder organises playlists, smartlists and collections into a tree of arbitrary depth
+  * New actions `playlist_folders`, `playlist_folder`, `playlist_folder_items`, `playlist_folder_create`, `playlist_folder_edit`, `playlist_folder_delete`, `playlist_folder_add` and `playlist_folder_remove`. A playlist folder organizes playlists, smartlists and collections into a tree of arbitrary depth
   * The tree is **private to each user**, and where a list sits belongs to the pair of you and that list rather than to the list itself. So you may file another user's public playlist into your own folder without changing anything for them, and two users can file the same playlist in different places
   * A list is in exactly one of your folders at a time: filing one that is already filed moves it rather than copying it
   * **The root is implicit and holds every list you can see that has not been filed elsewhere.** Nothing is stored when a playlist is created, so it appears at your root immediately, and it reappears there when it is taken out of a folder. Address the root as `0` or `/`
@@ -173,12 +173,12 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `playlist_folder_items` returns the members as one flat list under `contents`, each entry carrying its `sort_order` and its `object_type` (`playlist`, `smartlist` or `collection`) with that type's own object nested under a property of the same name
   * REST paths `playlist-folders`, `playlist-folders/{playlist_folder_id}`, `playlist-folders{path}` and `playlist-folders/{playlist_folder_id}/items`
 * `sonic_match` (API8 only)
-  * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
+  * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analyzing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
   * New action (`Random8Method`) that picks a random object and redirects (302) to its stream url — mirrors `stream`'s params (`bitrate`/`format`/`offset`/`stats`, song only). API8 only: API6 is shared with Ampache7, which does not serve it
   * `type` takes `album`, `album_artist`, `album_disk`, `artist`, `catalog`, `favorite`, `genre`, `label`, `playlist`, `podcast_episode`, `rating`, `search`, `song`, `song_artist` or `video`; a container type resolves to a random song from within it
   * `genre` matches the song's own tag, as a song browse does — an album or artist tag is not inherited. `label` accepts either the artist or the album association recorded in `label_asso`
-  * `favorite` picks from the songs you have flagged, and `rating` from the songs you have rated. Both read the song's own flag or rating; a flagged album does not make its songs favourites
+  * `favorite` picks from the songs you have flagged, and `rating` from the songs you have rated. Both read the song's own flag or rating; a flagged album does not make its songs favorites
   * **NOTE** `favorite` and `rating` read `filter` as a flag or star value rather than an object id — `favorite`: `1` or omitted for flagged, `0` for not flagged; `rating`: `1`-`5` for that many stars or more, `0` for unrated, omitted for any rated song
   * `filter` names that container. `artist` accepts either artist credit, where `song_artist` and `album_artist` narrow it to one
   * **NOTE** `filter` is read against the table named by `type`, and those id spaces overlap — an album id and an album_disk id of the same number are different objects
@@ -359,7 +359,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * democratic: `vote` returns the real vote count for each song. It was counted from the item's position in the response instead of its `track_id`, so the number was meaningless
   * friends_timeline: An empty result returned a `total_count`/`md5` envelope that neither the populated response nor `timeline` uses. It now returns `activity: []`
 * API5, API6 and API8
-  * labels, label: XML serialised each item as `<license>` instead of `<label>`
+  * labels, label: XML serialized each item as `<license>` instead of `<label>`
   * search_rules: XML emitted an empty `<widget/>` for every rule that isn't a select, dropping the control type the JSON response carries
 * REST
   * `preferences/{preference_name}` returned the whole preference list and ignored the name
@@ -685,7 +685,7 @@ This version is being released for Ampache7 **only**
 ### Changed (672000)
 
 * Header auth using a bearer token will return valid sessions on handshake and ping
-* Header auth for other methods will hide the session behind an MD5 hash of the username (previous behaviour)
+* Header auth for other methods will hide the session behind an MD5 hash of the username (previous behavior)
 
 ## API 6.7.1
 

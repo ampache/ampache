@@ -29,18 +29,19 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Gui\Partial\ObjectHeaderView $this */
 
-$chips     = $this->getChips();
-$actions   = $this->getActions();
-$primary   = $this->getPrimaryAction();
-$art       = $this->getArt();
-$crumb     = $this->getBreadcrumb();
-$rating    = $this->getRating();
-$userflag  = $this->getUserflag();
-$ratingKey = $this->getRatingKey();
-$note      = $this->getNote();
-$links     = $this->getLinks();
-$tags      = $this->getTags();
-$notice    = $this->getNotice(); ?>
+$chips        = $this->getChips();
+$actions      = $this->getActions();
+$primary      = $this->getPrimaryAction();
+$art          = $this->getArt();
+$crumb        = $this->getBreadcrumb();
+$rating       = $this->getRating();
+$userflag     = $this->getUserflag();
+$globalRating = $this->getGlobalRating();
+$ratingKey    = $this->getRatingKey();
+$note         = $this->getNote();
+$links        = $this->getLinks();
+$tags         = $this->getTags();
+$notice       = $this->getNotice(); ?>
 <?php if ($notice !== '') { ?>
 <div class="object-header-notice"><?php echo $this->raw(Ui::get_material_symbol('unpublished', $notice)); ?><strong><?php echo $this->e($notice); ?></strong></div>
 <?php } ?>
@@ -84,13 +85,16 @@ $notice    = $this->getNotice(); ?>
 <?php } ?>
         </ul>
 <?php } ?>
-<?php if ($rating !== '' || $userflag !== '' || $note !== '') { ?>
+<?php if ($rating !== '' || $userflag !== '' || $globalRating !== '' || $note !== '') { ?>
         <div class="object-header-meta">
 <?php if ($rating !== '') { ?>
             <div id="rating_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($rating); ?></div>
 <?php } ?>
 <?php if ($userflag !== '') { ?>
             <div id="userflag_<?php echo $this->e($ratingKey); ?>"><?php echo $this->raw($userflag); ?></div>
+<?php } ?>
+<?php if ($globalRating !== '') { ?>
+            <div class="global-rating-wrap"><?php echo $this->raw($globalRating); ?></div>
 <?php } ?>
 <?php if ($note !== '') { ?>
             <span class="object-header-note"><?php echo $this->e($note); ?></span>

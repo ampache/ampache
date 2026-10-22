@@ -116,7 +116,7 @@ Also implemented, outside the named extensions:
 
 #### Sonic similarity
 
-`getSonicSimilarTracks` and `findSonicPath` need similarity derived from analysing the audio, which Ampache does not
+`getSonicSimilarTracks` and `findSonicPath` need similarity derived from analyzing the audio, which Ampache does not
 do itself. They are served by a plugin implementing `PluginSonicAnalysisInterface`, and the `sonicSimilarity`
 extension is advertised only while such a plugin is installed and enabled for the user — with none installed both
 endpoints report the feature as unsupported rather than answering with metadata similarity, which is a different
@@ -124,9 +124,9 @@ thing entirely.
 
 [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI) is supported out of the box: install the **AudioMuse**
 plugin and set its server URL. It indexes by the music server's own item id, so Ampache song ids pass straight
-through; its distance scores are inverted into the normalised `[0,1]` similarity the spec asks for.
+through; its distance scores are inverted into the normalized `[0,1]` similarity the spec asks for.
 
-A backend that has not analysed the requested track answers with a message of its own; it is written to the Ampache
+A backend that has not analyzed the requested track answers with a message of its own; it is written to the Ampache
 log and both endpoints answer with an empty list.
 
 #### Api Key authentication

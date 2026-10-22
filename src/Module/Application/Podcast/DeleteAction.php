@@ -38,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders confirmation-dialogue for podcast-deletion
+ * Renders confirmation-dialog for podcast-deletion
  */
 final readonly class DeleteAction implements ApplicationActionInterface
 {

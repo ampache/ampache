@@ -126,7 +126,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
                 sprintf(
                     'Refused song %d: %s',
                     $songId,
-                    ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogues this user may see'
+                    ($song->isNew()) ? 'no such song' : 'disabled, or outside the catalogs this user may see'
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );

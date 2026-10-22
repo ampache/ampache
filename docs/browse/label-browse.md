@@ -31,18 +31,18 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `active`           | Whether the label is still active.                                                                                       |
-| `category`         | Episode category.                                                                                                        |
-| `country`          | Label country.                                                                                                           |
-| `creation_date`    | When it was created.                                                                                                     |
-| `id`               | The label id, which is the order they were created in.                                                                   |
-| `mbid`             | MusicBrainz id.                                                                                                          |
-| `name`             | Label name.                                                                                                              |
-| `rating`           | Your own rating, then when you set it. Labels you have not rated group together.                                         |
-| `title`            | Alias of `name`.                                                                                                         |
-| `user`             | The id of the user who added the label.                                                                                  |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `active`           | Whether the label is still active.                                                                                     |
+| `category`         | Episode category.                                                                                                      |
+| `country`          | Label country.                                                                                                         |
+| `creation_date`    | When it was created.                                                                                                   |
+| `id`               | The label id, which is the order they were created in.                                                                 |
+| `mbid`             | MusicBrainz id.                                                                                                        |
+| `name`             | Label name.                                                                                                            |
+| `rating`           | Your own rating, then when you set it. Labels you have not rated group together.                                       |
+| `title`            | Alias of `name`.                                                                                                       |
+| `user`             | The id of the user who added the label.                                                                                |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |

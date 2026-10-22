@@ -251,7 +251,7 @@ class Random
             return [];
         }
 
-        // the song's own flag; a flagged album or artist does not make its songs favourites
+        // the song's own flag; a flagged album or artist does not make its songs favorites
         return self::_get_filtered(
             $limit,
             $user,
@@ -427,18 +427,18 @@ class Random
      * This returns a random Playlist with songs little bit of extra
      * logic require
      */
-    public static function playlist(): int
+    public static function playlist(int $user_id): int
     {
-        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
+        $sql = "SELECT `playlist`.`id` FROM `playlist` WHERE (`playlist`.`type` = 'public' OR `playlist`.`user` = ? OR FIND_IN_SET(?, `playlist`.`collaborate`) > 0) AND EXISTS (SELECT 1 FROM `playlist_data` WHERE `playlist_data`.`playlist` = `playlist`.`id`) ORDER BY RAND() LIMIT 1;";
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, [$user_id, $user_id]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int) ($results['id'] ?? 0);
     }
 
     /**
-     * Picks random songs subject to the catalog and rating rules every random query honours, plus one extra clause.
+     * Picks random songs subject to the catalog and rating rules every random query honors, plus one extra clause.
      *
      * @return int[]
      */

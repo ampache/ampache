@@ -173,7 +173,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
-     * Folders the viewer has hidden from their own root; hiding only de-emphasises a folder, so this never
+     * Folders the viewer has hidden from their own root; hiding only de-emphasizes a folder, so this never
      * removes it from the listing -- it is used to mark the row and to decide which toggle action to show.
      *
      * @return list<PlaylistFolder>

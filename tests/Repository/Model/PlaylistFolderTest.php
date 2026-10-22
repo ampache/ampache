@@ -91,7 +91,7 @@ class PlaylistFolderTest extends TestCase
         self::assertTrue(PlaylistFolder::isValidType('search'));
         self::assertTrue(PlaylistFolder::isValidType('collection'));
 
-        // the API spelling has to be normalised first, so it is not valid on its own
+        // the API spelling has to be normalized first, so it is not valid on its own
         self::assertFalse(PlaylistFolder::isValidType('smartlist'));
         self::assertFalse(PlaylistFolder::isValidType('song'));
     }

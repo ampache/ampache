@@ -2731,7 +2731,7 @@ Return Database lyrics or search with plugins by Song id
 * return object
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialised as an empty array, not an empty object.
+`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialized as an empty array, not an empty object.
 
 | Field       | Type         | Nullable | Optional | Notes                   |
 |-------------|--------------|:--------:|:--------:|-------------------------|
@@ -4050,7 +4050,7 @@ Each `song` entry ([SongObject](#song)):
 
 ### playlist_folders
 
-A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
+A playlist folder organizes playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
 
 This returns the whole tree as a flat list; rebuild the hierarchy from each folder's `parent`, where 0 is the root.
 
@@ -5730,7 +5730,7 @@ Returns a single object.
 
 Songs that sound like the given song, most similar first.
 
-Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
+Similarity is derived from analyzing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
 
 Each entry carries the full song plus `similarity`, a `0.0`-`1.0` score where `1.0` is the same recording. A backend that gives no comparable score reports `-1`.
 

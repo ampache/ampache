@@ -25,12 +25,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -42,6 +45,69 @@ class PlayableItemRssItemAdapterTest extends TestCase
     private library_item&MockObject $playable;
     private PlayableItemRssItemAdapter $subject;
     private User&MockObject $user;
+
+    /**
+     * Source text, raw or already escaped and flavored with the Discworld, to the normalized raw it must become.
+     *
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function summaryProvider(): array
+    {
+        return [
+            'Granny, raw accent' => ['Mémé Ciredutemps', 'Mémé Ciredutemps'],
+            'Granny, escaped accent' => ['M&eacute;m&eacute; Ciredutemps', 'Mémé Ciredutemps'],
+            'Rincewind, raw amp' => ['Rincewind & the Luggage', 'Rincewind & the Luggage'],
+            'Rincewind, escaped amp' => ['Rincewind &amp; the Luggage', 'Rincewind & the Luggage'],
+            'octarine, raw tag' => ['</itunes:summary><octarine>', '</itunes:summary><octarine>'],
+            'octarine, escaped tag' => ['&lt;/itunes:summary&gt;', '</itunes:summary>'],
+            'the Patrician, cdata' => ['Vetinari ]]> dismissed', 'Vetinari ]]> dismissed'],
+            'Death, control stripped' => ["DEATH\x08 SPEAKS\x0B here", 'DEATH SPEAKS here'],
+            "A'Tuin, tab and newline" => ["A'Tuin\tswims\non", "A'Tuin\tswims\non"],
+            'the turtle, emoji' => ['🐢 café', '🐢 café'],
+        ];
+    }
+
+    public function testAnAlbumAnswersWithItsReleaseAndFallsBackToTheGroup(): void
+    {
+        $album       = $this->createMock(Album::class);
+        $album->mbid = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+        $this->assertSame(
+            'https://musicbrainz.org/release/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+            $this->musicBrainzUrl($album)
+        );
+
+        $album->mbid       = null;
+        $album->mbid_group = '11111111-2222-3333-4444-555555555555';
+        $this->assertSame(
+            'https://musicbrainz.org/release-group/11111111-2222-3333-4444-555555555555',
+            $this->musicBrainzUrl($album)
+        );
+    }
+
+    public function testAnArtistAnswersWithItsMusicBrainzUrl(): void
+    {
+        $artist       = $this->createMock(Artist::class);
+        $artist->mbid = 'cf157aed-60a1-4442-bc6f-490f418f496b';
+
+        $this->assertSame(
+            'https://musicbrainz.org/artist/cf157aed-60a1-4442-bc6f-490f418f496b',
+            $this->musicBrainzUrl($artist)
+        );
+    }
+
+    public function testAnItemWithNoIdentifierPublishesNoUrlRatherThanAnEmptyOne(): void
+    {
+        $artist       = $this->createMock(Artist::class);
+        $artist->mbid = null;
+        $this->assertNull($this->musicBrainzUrl($artist));
+
+        $album             = $this->createMock(Album::class);
+        $album->mbid       = null;
+        $album->mbid_group = null;
+        $this->assertNull($this->musicBrainzUrl($album));
+
+        $this->assertNull($this->musicBrainzUrl($this->createMock(library_item::class)));
+    }
 
     public function testArtSourcesDropsAnAlbumlessSong(): void
     {
@@ -92,27 +158,27 @@ class PlayableItemRssItemAdapterTest extends TestCase
     /**
      * A podcast episode's own get_description() already scrub_out()'s its text; a song has no description of
      * its own, so one is built from plain, unescaped name getters and must be scrubbed the same way, or the
-     * rss template (which raw()s both branches alike) emits unescaped markup for a song but not an episode.
+     * rss template, which now e()s both branches, so buildMediaDescription returns raw normalized text.
      */
-    public function testBuildMediaDescriptionScrubsASongsBuiltDescriptionLikeAnEpisodesOwnOne(): void
+    public function testBuildMediaDescriptionReturnsRawNormalisedTextForBothBranches(): void
     {
         $song        = $this->createMock(Song::class);
         $song->album = 0;
-        $song->method('get_fullname')->willReturn('Rock & Roll');
-        $song->method('get_album_fullname')->willReturn('Greatest Hits');
-        $song->method('get_parent_fullname')->willReturn('AC/DC');
+        $song->method('get_fullname')->willReturn('Good Times & Bad Times');
+        $song->method('get_album_fullname')->willReturn('Soul Music');
+        $song->method('get_parent_fullname')->willReturn('The Band With Rocks In');
 
         $episode = $this->createMock(Podcast_Episode::class);
-        $episode->method('get_description')->willReturn('Rock &amp; Roll Hour');
+        $episode->method('get_description')->willReturn('Music With Rocks In &amp; more');
 
         $method = new ReflectionMethod($this->subject, 'buildMediaDescription');
 
         self::assertSame(
-            'Rock &amp; Roll - Greatest Hits - AC/DC',
+            'Good Times & Bad Times - Soul Music - The Band With Rocks In',
             $method->invoke($this->subject, $song),
         );
         self::assertSame(
-            'Rock &amp; Roll Hour',
+            'Music With Rocks In & more',
             $method->invoke($this->subject, $episode),
         );
     }
@@ -141,6 +207,19 @@ class PlayableItemRssItemAdapterTest extends TestCase
             $name,
             $this->subject->getOwnerName()
         );
+    }
+
+    #[DataProvider('summaryProvider')]
+    public function testGetSummaryReturnsNormalisedRawText(string $source, string $expected): void
+    {
+        $this->playable->method('get_description')->willReturn($source);
+
+        $summary = $this->subject->getSummary();
+        $this->assertSame($expected, $summary);
+
+        // that normalized raw, escaped by the template via e(), always yields well-formed XML
+        $dom = new \DOMDocument();
+        $this->assertTrue(@$dom->loadXML('<r>' . htmlspecialchars($summary, ENT_QUOTES, 'UTF-8') . '</r>'));
     }
 
     public function testGetSummaryReturnsValue(): void
@@ -206,5 +285,10 @@ class PlayableItemRssItemAdapterTest extends TestCase
             $this->playable,
             $this->user,
         );
+    }
+
+    private function musicBrainzUrl(library_item $item): ?string
+    {
+        return new ReflectionMethod(PlayableItemRssItemAdapter::class, 'musicBrainzUrl')->invoke(null, $item);
     }
 }

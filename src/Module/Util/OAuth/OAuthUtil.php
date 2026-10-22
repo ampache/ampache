@@ -161,7 +161,7 @@ class OAuthUtil
 
     /**
      * Utility function for turning the Authorization: header into parameters.
-     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
+     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behavior)
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
      * @return array<string, string>

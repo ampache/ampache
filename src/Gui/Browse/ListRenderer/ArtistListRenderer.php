@@ -40,7 +40,7 @@ use Override;
  *
  * Its empty state started its column count at eight and never counted the played column.
  */
-final class ArtistListRenderer extends AbstractBrowseListRenderer
+final class ArtistListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

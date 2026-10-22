@@ -99,6 +99,14 @@ $(document).ready(function(){
 });
 
 var notificationTimeout = null;
+var notificationShownAt = 0;
+var notificationQueue = [];
+// a message gets at least this long on screen before the next one can replace it, so a fast-arriving
+// follow-up (e.g. a scan that finishes within a second of its first progress tick) can't erase one before it's read
+var MIN_NOTIFICATION_DISPLAY_MS = 1000;
+// backstop for a tab backgrounded through a long scan, where throttled timers let messages pile up faster
+// than they can be shown; keeps the oldest (first) and newest (current status) and thins out the middle
+var MAX_NOTIFICATION_QUEUE = 5;
 // Applies a callback to every matching scope inside (or equal to) a node, now and for any node that
 // arrives later: a browse or a preferences tab swapped in by ajax never saw the ready handler.
 export function onScopeAdded(selector, apply) {
@@ -126,27 +134,62 @@ export function onScopeAdded(selector, apply) {
 }
 
 export function clearNotification() {
+    notificationQueue = [];
     clearTimeout(notificationTimeout);
     notificationTimeout = null;
+    notificationShownAt = 0;
     $("#notification").addClass("notification-out");
 }
 
-export function displayNotification(message, timeout) {
-    if (notificationTimeout !== null || !message) {
-        clearNotification();
+// Shows the next queued message, if any. Every message gets its turn in order -- a fast burst delays
+// the ones behind it rather than letting a later arrival erase an earlier one that was never shown.
+function advanceNotificationQueue() {
+    clearTimeout(notificationTimeout);
+    notificationTimeout = null;
+
+    var next = notificationQueue.shift();
+    if (!next) {
+        notificationShownAt = 0;
+        $("#notification").addClass("notification-out");
+        return;
     }
 
-    if (message) {
-        if ($("#webplayer").css("display") !== "block") {
-            $("#notification").css("bottom", "20px");
-        } else {
-            $("#notification").css("bottom", "120px");
-        }
-        $("#notification-content").text(message);
-        $("#notification").removeClass("notification-out");
-        notificationTimeout = setTimeout(function() {
-            clearNotification();
-        }, timeout);
+    if ($("#webplayer").css("display") !== "block") {
+        $("#notification").css("bottom", "20px");
+    } else {
+        $("#notification").css("bottom", "120px");
+    }
+    $("#notification-content").text(next.message);
+    $("#notification").removeClass("notification-out");
+    notificationShownAt = Date.now();
+
+    if (next.timeout > 0) {
+        notificationTimeout = setTimeout(advanceNotificationQueue, next.timeout);
+    }
+    // next.timeout <= 0: no timer here -- displayNotification() schedules one itself, at the minimum
+    // display time, the moment something else is queued behind this message
+}
+
+// timeout <= 0 leaves the notification up until the user dismisses it by clicking it, unless another
+// notification arrives behind it, in which case it still steps aside after its minimum display time
+export function displayNotification(message, timeout) {
+    if (!message) {
+        clearNotification();
+        return;
+    }
+
+    if (notificationQueue.length >= MAX_NOTIFICATION_QUEUE) {
+        // drop from just behind the head so the first (already-queued) message is never the one sacrificed
+        notificationQueue.splice(1, 1);
+    }
+
+    notificationQueue.push({message: message, timeout: timeout});
+
+    var elapsed = Date.now() - notificationShownAt;
+    if (!notificationShownAt || elapsed >= MIN_NOTIFICATION_DISPLAY_MS) {
+        advanceNotificationQueue();
+    } else if (notificationTimeout === null) {
+        notificationTimeout = setTimeout(advanceNotificationQueue, MIN_NOTIFICATION_DISPLAY_MS - elapsed);
     }
 }
 

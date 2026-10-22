@@ -40,7 +40,7 @@ use Override;
  *
  * The podcast repository is injected here rather than lent by `Browse`.
  */
-final class PodcastListRenderer extends AbstractBrowseListRenderer
+final class PodcastListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

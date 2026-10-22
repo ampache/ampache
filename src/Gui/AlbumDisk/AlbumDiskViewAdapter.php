@@ -263,6 +263,11 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
         return $this->albumDisk->get_f_tags();
     }
 
+    public function getGlobalRating(): string
+    {
+        return Rating::show_global_rating($this->albumDisk->getId(), 'album_disk');
+    }
+
     public function getId(): int
     {
         return $this->albumDisk->getId();
@@ -306,7 +311,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function getRating(): string
     {
-        return Rating::show($this->albumDisk->getId(), 'album_disk', true);
+        return Rating::show($this->albumDisk->getId(), 'album_disk');
     }
 
     public function getShareUi(): string

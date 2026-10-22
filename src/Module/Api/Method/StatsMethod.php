@@ -226,7 +226,7 @@ final class StatsMethod implements MethodInterface
                 break;
             case 'frequent':
                 $threshold = $this->configContainer->getInt(ConfigurationKeyEnum::STATS_THRESHOLD);
-                $results   = Stats::get_top($type, $limit, $threshold, $offset);
+                $results   = Stats::get_top($type, $limit, $threshold, $offset, $user);
                 $offset    = 0;
                 $limit     = 0;
                 break;

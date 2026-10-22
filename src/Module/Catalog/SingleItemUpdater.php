@@ -46,7 +46,7 @@ final readonly class SingleItemUpdater implements SingleItemUpdaterInterface
             $targetUrl = sprintf('%s/%ss.php?action=show&%s=%d', $this->configContainer->getWebPath('/client'), $type, $type, $objectId);
         }
 
-        // Behaviour kept from the template this replaced, where `!AmpConfig::get('art_order') == 'db'` parsed
+        // Behavior kept from the template this replaced, where `!AmpConfig::get('art_order') == 'db'` parsed
         // as `(!art_order) == true`, so art is only gathered when `art_order` is empty -- never on a normal install
         $art = new Art($objectId, $type);
         if (

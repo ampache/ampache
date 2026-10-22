@@ -172,7 +172,7 @@ class FolderRepositoryTest extends TestCase
     }
 
     /**
-     * folder_map rows carry their own `catalog` column, so a folder listing must honour the opt-in
+     * folder_map rows carry their own `catalog` column, so a folder listing must honor the opt-in
      * `catalog_filter` feature the same way every other browse type does -- folders were the one type
      * this filter never reached
      */

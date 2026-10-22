@@ -211,10 +211,10 @@ class Rating extends database_object
 
     /**
      * show
-     * This takes an id and a type and displays the rating if ratings are enabled.
-     * If $show_global_rating is true, also show the average from all users.
+     * This takes an id and a type and displays the star rating if ratings are enabled.
+     * The average from all users is a separate element; see show_global_rating().
      */
-    public static function show(int $object_id, string $type, bool $show_global_rating = false): string
+    public static function show(int $object_id, string $type): string
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES, true)) {
@@ -252,20 +252,6 @@ class Rating extends database_object
             );
         }
 
-        if ($show_global_rating) {
-            $global_rating_value = $rating->get_average_rating();
-            if ($global_rating_value > 0) {
-                $voters  = $rating->get_rating_count();
-                $counted = sprintf(nT_('%d vote', '%d votes', $voters), $voters);
-                $ratings .= sprintf(
-                    '<li><span class="global-rating" title="%s">%s<span class="global-rating-count"> &middot; %s</span></span></li>',
-                    T_('Average from all users') . ' &middot; ' . $counted,
-                    $global_rating_value,
-                    $counted
-                );
-            }
-        }
-
         $ratedText = ($rate < 1)
             ? T_('not rated yet')
             : sprintf(T_('%s of 5'), $rate);
@@ -280,6 +266,34 @@ class Rating extends database_object
             T_('Current rating'),
             $ratedText,
             $ratings
+        );
+    }
+
+    /**
+     * show_global_rating
+     * The average rating from all users, standalone so callers can place it wherever the star-rating,
+     * userflag, global-rating order calls for it rather than having it embedded in the star list.
+     */
+    public static function show_global_rating(int $object_id, string $type): string
+    {
+        if (!AmpConfig::get('ratings') || !in_array($type, self::RATING_TYPES, true)) {
+            return '';
+        }
+
+        $rating              = new Rating($object_id, $type);
+        $global_rating_value = $rating->get_average_rating();
+        if ($global_rating_value === null || $global_rating_value <= 0) {
+            return '';
+        }
+
+        $voters  = $rating->get_rating_count();
+        $counted = sprintf(nT_('%d vote', '%d votes', $voters), $voters);
+
+        return sprintf(
+            '<span class="global-rating" title="%s">%s<span class="global-rating-count"> &middot; %s</span></span>',
+            T_('Average from all users') . ' &middot; ' . $counted,
+            $global_rating_value,
+            $counted
         );
     }
 

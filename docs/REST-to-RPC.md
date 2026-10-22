@@ -4,7 +4,7 @@ Key characteristics:
 
 * Resource-oriented URL design
 * Plural resource naming
-* Hierarchical relationship modelling
+* Hierarchical relationship modeling
 * Proper HTTP verb usage
 * OpenAPI-compliant specification
 * Clear separation between transport and intent

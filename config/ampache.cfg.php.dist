@@ -1638,10 +1638,10 @@ encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
 
 ; ReplayGain / "car" output profiles (gonic-compatible).
-; These apply loudness normalisation from ReplayGain tags, so the SOURCE files
+; These apply loudness normalization from ReplayGain tags, so the SOURCE files
 ; MUST be tagged with ReplayGain (use loudgain or rsgain) or the gain clauses are
 ; a no-op. The `_car` variants additionally resample (heavier CPU) for in-car use.
-; These formats are intentionally NEVER cached (the normalisation is per-source),
+; These formats are intentionally NEVER cached (the normalization is per-source),
 ; so keep `cache_target` set to a plain format such as `mp3` or `opus`.
 ; `opus_rg`/`opus_car` cannot play on iOS (Opus-in-Ogg); `mp3_rg`/`mp3_car` are cross-platform.
 encode_args_mp3_rg = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libmp3lame -af \"volume=replaygain=track:replaygain_preamp=6dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -ar 48000 -v 0 -f mp3 pipe:1"

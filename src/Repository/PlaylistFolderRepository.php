@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Reads and writes the per-user playlist folder tree and the placements filed into it
  *
- * Depth is walked one segment at a time rather than stored as a materialised path, so re-parenting a subtree
+ * Depth is walked one segment at a time rather than stored as a materialized path, so re-parenting a subtree
  * is a single-row update and no path can go stale.
  */
 final readonly class PlaylistFolderRepository implements PlaylistFolderRepositoryInterface

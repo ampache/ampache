@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for avatar deletion
+ * Renders the confirmation dialog for avatar deletion
  */
 final class ShowDeleteAvatarAction extends AbstractUserAction
 {

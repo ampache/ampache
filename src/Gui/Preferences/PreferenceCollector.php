@@ -174,16 +174,16 @@ final readonly class PreferenceCollector
             level: $row['level'],
             // a secret is write-only: it must not reach a template that could echo it
             value: $isSecret ? '' : $value,
-            // a plugin's own preference has no entry in the static catalogue, so it falls back to what the
+            // a plugin's own preference has no entry in the static catalog, so it falls back to what the
             // `preference` row itself was created with, which core preferences never need since they are
-            // always in the catalogue
+            // always in the catalog
             shippedDefault: Preference::DEFAULTS[$name][0] ?? ($row['default_value'] ?? null),
             systemValue: $isSecret ? null : $systemValue,
             choices: $choices,
             editable: $editable,
             isSecret: $isSecret,
             secretIsSet: $isSecret && $value !== '',
-            // a plugin knows its own settings better than the shipped catalogue does
+            // a plugin knows its own settings better than the shipped catalog does
             help: $pluginHelp ?? $this->helpCatalog->find($name),
             warning: $warning,
             numberFallback: ($fallbackName === null) ? null : ((($held[$fallbackName] ?? '') === '') ? null : $held[$fallbackName]),

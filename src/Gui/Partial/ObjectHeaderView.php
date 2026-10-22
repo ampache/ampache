@@ -48,6 +48,7 @@ final class ObjectHeaderView extends AbstractView
         private readonly array $tags = [],
         private readonly string $rating = '',
         private readonly string $userflag = '',
+        private readonly string $globalRating = '',
         private readonly string $ratingKey = '',
         private readonly string $note = '',
         private readonly string $links = '',
@@ -90,6 +91,11 @@ final class ObjectHeaderView extends AbstractView
     public function getChips(): array
     {
         return $this->chips;
+    }
+
+    public function getGlobalRating(): string
+    {
+        return $this->globalRating;
     }
 
     public function getKind(): string

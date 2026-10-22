@@ -61,7 +61,7 @@ final readonly class PowService implements PowServiceInterface
     private const string ACK_COOKIE = '_pow_ack';
 
     /**
-     * Scopes whose endpoint can echo the acknowledgement.
+     * Scopes whose endpoint can echo the acknowledgment.
      *
      * Only an endpoint that returns a response object can carry the cookie. Single downloads stream
      * from the legacy playlist code and hand back nothing to decorate, so they stay on the timer
@@ -119,7 +119,7 @@ final readonly class PowService implements PowServiceInterface
             self::ACK_TTL
         );
 
-        // Readable by script on purpose: the page polls for it. Nothing is authorised by holding it.
+        // Readable by script on purpose: the page polls for it. Nothing is authorized by holding it.
         if (strtolower($request->getUri()->getScheme()) === 'https') {
             $cookie .= '; Secure';
         }
@@ -220,10 +220,10 @@ final readonly class PowService implements PowServiceInterface
     }
 
     /**
-     * The query parameter and cookie name the acknowledgement token travels under.
+     * The query parameter and cookie name the acknowledgment token travels under.
      *
      * Scoped by the session name so two Ampache installs sharing a domain do not stomp on each
-     * other's acknowledgement cookie.
+     * other's acknowledgment cookie.
      */
     private function ackParamName(): string
     {

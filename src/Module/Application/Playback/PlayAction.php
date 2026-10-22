@@ -58,6 +58,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\WithdrawableInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -645,6 +646,12 @@ final readonly class PlayAction implements ApplicationActionInterface
             return null;
         }
 
+        if ($media instanceof WithdrawableInterface && !$media->isEnabled()) {
+            header('HTTP/1.1 404 File disabled');
+
+            return null;
+        }
+
         if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]])) {
             throw new AccessDeniedException(
                 sprintf(
@@ -694,7 +701,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             $catalog      = Catalog::create_from_id($mediaCatalogId);
             $cache_path   = (string) AmpConfig::get('cache_path', '');
             $cache_target = AmpConfig::get('cache_target', '');
-            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            // ReplayGain (_rg/_car) output is normalized per-source and must never be cached
             $file_target  = (!empty($cache_target) && $cache_target === $transcode_to && !in_array($transcode_to, Stream::NON_CACHEABLE_FORMATS, true))
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
@@ -903,7 +910,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            // A rate limited download runs long enough to be worth resuming, so honour a byte range instead of
+            // A rate limited download runs long enough to be worth resuming, so honor a byte range instead of
             // restarting from zero and re-sending everything the client already holds.
             $file_size    = Core::get_filesize($stream_file);
             $start        = 0;

@@ -48,7 +48,7 @@ final class PowChallengeView extends AbstractView
     ) {}
 
     /**
-     * Whether this endpoint echoes the acknowledgement cookie, and so whether the page should wait
+     * Whether this endpoint echoes the acknowledgment cookie, and so whether the page should wait
      * for it rather than fall back to a timer.
      */
     public function confirmsDelivery(): bool
@@ -57,7 +57,7 @@ final class PowChallengeView extends AbstractView
     }
 
     /**
-     * The query parameter and cookie name the acknowledgement token travels under.
+     * The query parameter and cookie name the acknowledgment token travels under.
      */
     public function getAckName(): string
     {

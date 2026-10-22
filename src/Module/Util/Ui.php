@@ -137,7 +137,7 @@ class Ui implements UiInterface
      */
     public static function check_ticker(): bool
     {
-        if (defined('SSE_OUTPUT') || defined('CLI') || defined('API')) {
+        if (defined('CLI') || defined('API')) {
             return false;
         }
 
@@ -713,8 +713,9 @@ class Ui implements UiInterface
      *
      * Convenience function that, if the output is going to a browser,
      * blarfs JS to do a fancy update. Otherwise it just outputs the text.
+     * $timeout is the browser notification's display time in ms; 0 leaves it on screen until clicked away.
      */
-    public static function update_text(string $field, int|string $value): void
+    public static function update_text(string $field, int|string $value, int $timeout = 5000): void
     {
         if (defined('API')) {
             return;
@@ -729,8 +730,11 @@ class Ui implements UiInterface
         static $update_id = 1;
 
         if (defined('SSE_OUTPUT')) {
+            // the field targets a DOM id in the legacy non-SSE box markup, so here it is the notification's label instead
+            $plainValue = is_string($value) ? unhtmlentities($value) : $value;
+            $message    = ($field !== '' && $field !== '0') ? $field . ': ' . $plainValue : (string) $plainValue;
             echo "id: " . $update_id . "\n";
-            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$value, 5000]]) . "\n\n";
+            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$message, $timeout]]) . "\n\n";
         } elseif ($field !== '' && $field !== '0') {
             echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
@@ -909,7 +913,7 @@ class Ui implements UiInterface
     /**
      * The icon and link-preview tags, from whatever the administrator supplied
      *
-     * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
+     * The shipped artwork is all-or-nothing: an instance that customizes its icon never gets
      * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
      * works; where a raster is required and only a vector was given, the tag is left out rather
      * than filled with somebody else's logo.

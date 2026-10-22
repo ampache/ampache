@@ -147,7 +147,7 @@ interface PlaylistFolderRepositoryInterface
      * File a list for this user, moving it when it is already filed
      *
      * A null folder means the root. A list at the root with no explicit order is stored as the absence of a
-     * row, so that root membership costs nothing for the lists nobody has organised.
+     * row, so that root membership costs nothing for the lists nobody has organized.
      */
     public function place(User $user, int $objectId, string $objectType, ?int $folderId, ?int $sortOrder = null): bool;
 

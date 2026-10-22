@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 #[RequiresPhpExtension('gd')]
 class PlaylistArtBuilderTest extends TestCase
 {
-    /** @var list<array{int, int, int}> nine visually distinct colours, one per tile */
+    /** @var list<array{int, int, int}> nine visually distinct colors, one per tile */
     private const array COLORS = [
         [255, 0, 0],
         [0, 255, 0],
@@ -56,7 +56,7 @@ class PlaylistArtBuilderTest extends TestCase
 
     public function testBuildCentreCropsToASquare(): void
     {
-        // red banner with a green square dead centre; a centre crop keeps only the green
+        // red banner with a green square dead center; a center crop keeps only the green
         $image = imagecreatetruecolor(600, 200);
         self::assertNotFalse($image);
         imagefill($image, 0, 0, (int) imagecolorallocate($image, 255, 0, 0));
@@ -187,7 +187,7 @@ class PlaylistArtBuilderTest extends TestCase
     }
 
     /**
-     * Colour at the centre of every cell, in layout order.
+     * Color at the center of every cell, in layout order.
      *
      * @return list<array{int, int, int}>
      */

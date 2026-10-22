@@ -43,7 +43,7 @@ use Override;
  *
  * Its footer declared a rating column whether or not the header and rows had one.
  */
-final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer
+final class SmartPlaylistListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

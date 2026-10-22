@@ -28,7 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\Song;
 
 /**
- * Similarity derived from analysing the audio itself — embeddings or fingerprints — rather than from metadata.
+ * Similarity derived from analyzing the audio itself — embeddings or fingerprints — rather than from metadata.
  *
  * This is what the OpenSubsonic `sonicSimilarity` extension means by similar, and it is deliberately a separate
  * capability from the metadata similarity `Recommendation` provides through last.fm: the two answer different
@@ -55,7 +55,7 @@ interface PluginSonicAnalysisInterface extends AmpachePluginInterface
     /**
      * get_sonic_similar_songs
      *
-     * Songs that sound like the given one, most similar first. `similarity` is normalised to [0,1] where 1.0 is the
+     * Songs that sound like the given one, most similar first. `similarity` is normalized to [0,1] where 1.0 is the
      * same recording; a plugin whose backend scores on another scale must map it before returning. Return -1.0 when
      * the backend gives no comparable score, which is the value the spec reserves for exactly that.
      *

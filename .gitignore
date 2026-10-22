@@ -6,7 +6,7 @@
 .php-cs-fixer.cache
 .phpunit.*
 .project
-.claude/
+.claude
 .fleet/
 .idea/
 .settings/

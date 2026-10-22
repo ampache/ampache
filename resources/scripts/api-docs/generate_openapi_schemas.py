@@ -1051,7 +1051,7 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "type": "object",
         "description": (
             "`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that "
-            "answered). When nothing answered it is serialised as an empty array, not an empty object."
+            "answered). When nothing answered it is serialized as an empty array, not an empty object."
         ),
         "properties": {
             "object_id": {"type": "string"},

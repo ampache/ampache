@@ -137,6 +137,8 @@ class Catalog_subsonic extends Catalog
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Subsonic Remote Update'));
         }
 
         $songsadded = $this->_update_remote_catalog();
@@ -584,6 +586,8 @@ class Catalog_subsonic extends Catalog
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Remote Update'));
         }
 
         $songsupdated = $this->_update_remote_catalog('verify');
@@ -790,7 +794,8 @@ class Catalog_subsonic extends Catalog
                 '%s Song added',
                 '%s Songs added',
                 $songsadded
-            ), $songsadded)
+            ), $songsadded),
+            10000
         );
 
         debug_event('subsonic.catalog', 'Catalog updated.', 4);

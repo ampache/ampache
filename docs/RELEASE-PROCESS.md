@@ -67,7 +67,7 @@ read -p "Enter Ampache Version: " a_version
   The exclude list is long and is maintained in one place only: the `ZIPEXCLUDE` variables in
   `build_release8.sh`. Read it there rather than copying a list out of here — a stale copy is how a
   development file reaches every install. Six zips are produced per release, one per structure
-  (`public`, `squashed`, `client`) in both a code-only and an `_all_php8.5` flavour:
+  (`public`, `squashed`, `client`) in both a code-only and an `_all_php8.5` flavor:
 
 ```text
 ampache-${a_version}_public.zip             ampache-${a_version}_all_php8.5.zip

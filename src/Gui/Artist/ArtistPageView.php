@@ -133,8 +133,9 @@ final class ArtistPageView extends AbstractView
                 ($artist->time > 0) ? new HeaderChip($artist->get_f_time(), true, title: T_('Time')) : null,
             ),
             tags: HeaderChip::genres($artist->get_tags(), $this->getWebPath('/client') . '/browse.php?action=tag&type=artist&show_tag='),
-            rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist', true) : '',
+            rating: ($this->showRatings()) ? Rating::show($this->getArtistId(), 'artist') : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getArtistId(), 'artist') : '',
+            globalRating: ($this->showRatings()) ? Rating::show_global_rating($this->getArtistId(), 'artist') : '',
             ratingKey: $this->getArtistId() . '_artist',
             note: ($this->showPlayedTimes())
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
@@ -170,7 +171,7 @@ final class ArtistPageView extends AbstractView
     }
 
     /**
-     * The album list honours the user's album sort preference; anything else keeps its own order.
+     * The album list honors the user's album sort preference; anything else keeps its own order.
      *
      * @return array{0: string, 1: string}
      */

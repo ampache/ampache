@@ -124,13 +124,14 @@
     },
     "scripts": {
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
-        "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests",
+        "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests && composer run-script spelling:check",
         "stan": "vendor/bin/phpstan analyse",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
         "spec": "vendor/bin/phpunit --filter SpecConformanceTest",
         "spec:refresh": "@php resources/scripts/tests/spec_refresh.php",
         "syntax": "@php resources/scripts/tests/syntax.php",
+        "spelling:check": "@php resources/scripts/tests/us_english.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
         "api:docs": [
@@ -160,6 +161,7 @@
         "spec": "Validates the captured Ampache REST, Subsonic and OpenSubsonic responses against the published specifications",
         "spec:refresh": "Re-pins the audited OpenSubsonic spec hash and stamps the compliance date, after a re-audit",
         "syntax": "Performs php syntax checks",
+        "spelling:check": "Flags UK/AU English spellings in php, phtml and markdown files; Ampache is written in US English",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",
         "api:docs": "Regenerates docs/openapi.json and the API method reference documents (needs Python 3)",

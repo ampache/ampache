@@ -34,7 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Returns the video catalogue.
+ * Returns the video catalog.
  */
 final class Videos4Method implements MethodInterface
 {

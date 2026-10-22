@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Two msgids that differ only by case are two translation jobs for one piece of text: every language
- * catalogue ends up with duplicate work, and a translator has no way to know the strings are related.
+ * catalog ends up with duplicate work, and a translator has no way to know the strings are related.
  * This walks `locale/base/messages.pot` (the source string extraction every T_()/nT_() call feeds) and
  * fails on any such pair that isn't in `KNOWN_CASE_VARIANTS` below.
  *

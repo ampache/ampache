@@ -52,7 +52,7 @@ class FolderTest extends TestCase
 
     /**
      * folder_map rows carry their own `catalog` column, so a folder listing needs the requesting user's
-     * id to honour the opt-in `catalog_filter` feature the same way every other browse type does
+     * id to honor the opt-in `catalog_filter` feature the same way every other browse type does
      */
     public function testGetChildrenPassesTheCurrentUserId(): void
     {

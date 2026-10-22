@@ -30,7 +30,7 @@ use Ampache\Module\Util\Rss\Surrogate\RssItemInterface;
 use Override;
 
 /**
- * Renders the itunes-flavoured RSS channel a playable item is published as.
+ * Renders the itunes-flavored RSS channel a playable item is published as.
  */
 final class PodcastRssFeedView extends AbstractView
 {

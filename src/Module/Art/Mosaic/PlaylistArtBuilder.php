@@ -110,7 +110,7 @@ final readonly class PlaylistArtBuilder implements PlaylistArtBuilderInterface
     }
 
     /**
-     * Decode one cover into a square tile, centre cropped and no bigger than a tile ever needs to be.
+     * Decode one cover into a square tile, center cropped and no bigger than a tile ever needs to be.
      */
     private function toTile(string $raw): ?GdImage
     {
