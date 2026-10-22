@@ -896,7 +896,7 @@ class Preference extends database_object
     }
 
     /**
-     * Title-cases a preference subcategory for display, honouring SUBCATEGORY_LABELS.
+     * Title-cases a preference subcategory for display, honoring SUBCATEGORY_LABELS.
      */
     public static function format_subcategory(string $subcategory): string
     {

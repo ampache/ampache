@@ -131,7 +131,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                 sprintf(
                     'Refused album_disk %d: %s',
                     $albumDiskId,
-                    ($albumDisk->isNew()) ? 'no such disk' : 'withdrawn, or outside the catalogues this user may see'
+                    ($albumDisk->isNew()) ? 'no such disk' : 'withdrawn, or outside the catalogs this user may see'
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );

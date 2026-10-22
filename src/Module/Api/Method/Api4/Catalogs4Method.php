@@ -33,7 +33,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Returns the catalogues the user can see.
+ * Returns the catalogs the user can see.
  */
 final class Catalogs4Method implements MethodInterface
 {

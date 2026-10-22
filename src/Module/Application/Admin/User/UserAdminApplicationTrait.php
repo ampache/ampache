@@ -13,9 +13,9 @@ use Psr\Http\Message\ServerRequestInterface;
 trait UserAdminApplicationTrait
 {
     /**
-     * Renders a simple confirmation dialogue
+     * Renders a simple confirmation dialog
      *
-     * @param callable(int): void $dialogCallback The custom dialogue renderer callback
+     * @param callable(int): void $dialogCallback The custom dialog renderer callback
      */
     public function showGenericUserConfirmation(
         ServerRequestInterface $request,

@@ -39,7 +39,7 @@ use Throwable;
 use WpOrg\Requests\Requests;
 
 /**
- * Sonic similarity from an AudioMuse-AI instance, which analyses the audio itself and indexes each track as a
+ * Sonic similarity from an AudioMuse-AI instance, which analyzes the audio itself and indexes each track as a
  * vector. This is what backs the OpenSubsonic `sonicSimilarity` extension; without a plugin of this type installed
  * the extension is not advertised at all.
  *
@@ -47,7 +47,7 @@ use WpOrg\Requests\Requests;
  * Subsonic API client. That means AudioMuse indexes every track under the id Ampache hands Subsonic clients — the
  * prefixed `so-<id>` form, not the bare row id — so ids are translated in both directions here.
  *
- * It scores results as a **distance** (0 = identical, larger = less alike) while OpenSubsonic wants a normalised
+ * It scores results as a **distance** (0 = identical, larger = less alike) while OpenSubsonic wants a normalized
  * similarity, so every score is inverted and clamped on the way out.
  *
  * https://github.com/NeptuneHub/AudioMuse-AI
@@ -313,7 +313,7 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
     /**
      * _toMatches
      *
-     * Turn AudioMuse rows into the normalised shape the sonic endpoints expect. A row whose item_id is not an
+     * Turn AudioMuse rows into the normalized shape the sonic endpoints expect. A row whose item_id is not an
      * Ampache song id is dropped rather than guessed at, which is what happens when the index was built against a
      * different server.
      *

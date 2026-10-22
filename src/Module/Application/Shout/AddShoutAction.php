@@ -73,7 +73,7 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';
-        // sticky is a content-manager control; the checkbox is only rendered for them, so honour that on write too
+        // sticky is a content-manager control; the checkbox is only rendered for them, so honor that on write too
         $isSticky   = array_key_exists('sticky', $body) && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 
         // `data` is only used to mark a song offset (by clicking on the waveform)

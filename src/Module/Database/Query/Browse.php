@@ -870,7 +870,7 @@ class Browse extends Query
 
     /**
      * Cut the id list down to the page being rendered. An un-paged list too large to hold in memory renders an
-     * error instead of failing silently, which is signalled back by a null return.
+     * error instead of failing silently, which is signaled back by a null return.
      *
      * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
      * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null

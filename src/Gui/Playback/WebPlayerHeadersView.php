@@ -116,7 +116,7 @@ final class WebPlayerHeadersView extends AbstractView
     }
 
     /**
-     * The colour the player highlights an engaged toggle with, which the light theme flips.
+     * The color the player highlights an engaged toggle with, which the light theme flips.
      */
     public function getHighlightColour(): string
     {

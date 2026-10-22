@@ -135,7 +135,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 sprintf(
                     'Refused album %d: %s',
                     $albumId,
-                    ($album->isNew()) ? 'no such album' : 'withdrawn, or outside the catalogues this user may see'
+                    ($album->isNew()) ? 'no such album' : 'withdrawn, or outside the catalogs this user may see'
                 ),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );

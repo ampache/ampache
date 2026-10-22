@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * A play count ranking on a deep catalogue is won by whichever record someone listened through, so the top of
+ * A play count ranking on a deep catalog is won by whichever record someone listened through, so the top of
  * the list is the same album over and over. This one keeps the ranking and shows the first track of each album
  * and of each artist, which turns a wall of one cover into a wall of the library.
  */

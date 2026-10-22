@@ -154,7 +154,7 @@ class SubsonicSpecConformanceTest extends TestCase
     }
 
     /**
-     * Assert a fixture conforms, honouring the documented deviation list in both directions.
+     * Assert a fixture conforms, honoring the documented deviation list in both directions.
      *
      * @param string[] $errors
      */

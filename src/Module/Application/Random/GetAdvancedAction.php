@@ -59,7 +59,7 @@ final readonly class GetAdvancedAction implements ApplicationActionInterface
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
-            // reloading this url carries no form data, and no limit used to mean the whole catalogue
+            // reloading this url carries no form data, and no limit used to mean the whole catalog
             $rules = $_POST;
             if (!array_key_exists('limit', $rules)) {
                 $rules['limit'] = AmpConfig::get_int('popular_threshold', 10);

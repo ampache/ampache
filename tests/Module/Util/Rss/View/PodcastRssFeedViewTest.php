@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 class PodcastRssFeedViewTest extends TestCase
 {
     /**
-     * Nasty summaries, each flavoured with the Discworld so the next reader stays awake.
+     * Nasty summaries, each flavored with the Discworld so the next reader stays awake.
      *
      * @return array<string, array{0: string}>
      */

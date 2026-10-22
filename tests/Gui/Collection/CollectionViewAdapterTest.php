@@ -206,7 +206,7 @@ class CollectionViewAdapterTest extends MockeryTestCase
     }
 
     /**
-     * A collection stores `genre`, which normalises to `tag` -- the tag cloud browse, which cannot take ids.
+     * A collection stores `genre`, which normalizes to `tag` -- the tag cloud browse, which cannot take ids.
      */
     public function testGetPinnedBrowseTypeMapsGenreOntoTheGenreBrowse(): void
     {

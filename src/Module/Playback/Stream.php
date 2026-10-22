@@ -66,7 +66,7 @@ class Stream
 
     /**
      * Output formats that must never be served from or written to the transcode cache.
-     * Their loudness normalisation is applied per-source at stream time, so a cached copy
+     * Their loudness normalization is applied per-source at stream time, so a cached copy
      * (keyed only by object + target extension) would be wrong for every other request.
      *
      * @var list<string>
@@ -448,7 +448,7 @@ class Stream
         // We need to check only for users which have allowed view of personal info
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && Core::get_global('user') instanceof User) {
             $current_user = Core::get_global('user')->getId();
-            // same lookup through `preference`.`id`; the optimizer materialises the old form into a full table scan once now_playing grows
+            // same lookup through `preference`.`id`; the optimizer materializes the old form into a full table scan once now_playing grows
             $sql .= "AND (`np`.`user` IN (SELECT `user_preference`.`user` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `preference`.`name` = 'allow_personal_info_now' AND `user_preference`.`value` = '1') OR `np`.`user` = ?) ";
             $params[] = $current_user;
         }
@@ -982,7 +982,7 @@ class Stream
         // Both %BITRATE% and %MAXBITRATE% are substituted as plain bps values
         $max_bit_rate = (int) ($options['maxbitrate'] ?? 8000000);
 
-        // Finalise the command line
+        // Finalize the command line
         $command    = $transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,

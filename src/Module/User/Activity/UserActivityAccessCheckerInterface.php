@@ -33,7 +33,7 @@ interface UserActivityAccessCheckerInterface
      * Whether the viewer's own catalogs cover the object an activity was recorded against.
      *
      * An activity whose object carries no catalog of its own (a `follow`'s target user, a playlist, a
-     * type the loader doesn't recognise) is always visible; only a `CatalogItemInterface` object with a
+     * type the loader doesn't recognize) is always visible; only a `CatalogItemInterface` object with a
      * real catalog id is checked against the viewer's catalog list.
      */
     public function isVisibleTo(Useractivity $useractivity, User $viewer): bool;

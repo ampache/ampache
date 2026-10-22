@@ -47,7 +47,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
     private User&MockObject $user;
 
     /**
-     * Source text, raw or already escaped and flavoured with the Discworld, to the normalised raw it must become.
+     * Source text, raw or already escaped and flavored with the Discworld, to the normalized raw it must become.
      *
      * @return array<string, array{0: string, 1: string}>
      */
@@ -158,7 +158,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
     /**
      * A podcast episode's own get_description() already scrub_out()'s its text; a song has no description of
      * its own, so one is built from plain, unescaped name getters and must be scrubbed the same way, or the
-     * rss template, which now e()s both branches, so buildMediaDescription returns raw normalised text.
+     * rss template, which now e()s both branches, so buildMediaDescription returns raw normalized text.
      */
     public function testBuildMediaDescriptionReturnsRawNormalisedTextForBothBranches(): void
     {
@@ -217,7 +217,7 @@ class PlayableItemRssItemAdapterTest extends TestCase
         $summary = $this->subject->getSummary();
         $this->assertSame($expected, $summary);
 
-        // that normalised raw, escaped by the template via e(), always yields well-formed XML
+        // that normalized raw, escaped by the template via e(), always yields well-formed XML
         $dom = new \DOMDocument();
         $this->assertTrue(@$dom->loadXML('<r>' . htmlspecialchars($summary, ENT_QUOTES, 'UTF-8') . '</r>'));
     }

@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation-dialogue for api-key deletion
+ * Renders the confirmation-dialog for api-key deletion
  */
 final class ShowDeleteApiKeyAction extends AbstractUserAction
 {

@@ -312,7 +312,7 @@ class AlbumRepositoryTest extends TestCase
 
     public function testFindByPropertiesFallsBackToAllColumnsWhenConfigIsEmpty(): void
     {
-        // an empty configured value keeps today's full-field behaviour rather than matching nothing
+        // an empty configured value keeps today's full-field behavior rather than matching nothing
         AmpConfig::set('album_grouping_fields', '', true);
 
         try {

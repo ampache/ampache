@@ -211,7 +211,7 @@ abstract class Catalog extends database_object
                 }
             }
 
-            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            // ReplayGain (_rg/_car) output is normalized per-source and must never be cached
             if ($cache_target && in_array($cache_target, Stream::NON_CACHEABLE_FORMATS, true)) {
                 debug_event(self::class, 'cache_catalogs: refusing to cache non-cacheable target ' . $cache_target, 3);
                 $interactor?->warn(
@@ -762,9 +762,9 @@ abstract class Catalog extends database_object
                     $licenseId === 0
                     || $licenseId === null
                 ) {
-                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a licence
+                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a license
                     // of its own. The file that raised ampache#4497 carried a rights registry link in its LICENSE
-                    // field, which is not a licence at all, and nothing here can tell the two apart.
+                    // field, which is not a license at all, and nothing here can tell the two apart.
                     $license = $licenseRepository->prototype();
 
                     // the field is allowed to carry a url instead of a name, and external_link is where a url
@@ -2104,7 +2104,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Neutralises path traversal in a sort/rename pattern once the tag values have been substituted in.
+     * Neutralizes path traversal in a sort/rename pattern once the tag values have been substituted in.
      *
      * A tag value can be exactly `..` (or `.`), which with the pattern's own `/` separators would climb out
      * of the catalog. Any segment made only of dots becomes `_`; every other character, unicode included, is

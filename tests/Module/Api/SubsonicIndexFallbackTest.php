@@ -149,7 +149,7 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
 
     /**
      * Runs `getindexes` against a library whose folder tree holds `$children`, and reports which
-     * serialiser the handler reached for.
+     * serializer the handler reached for.
      *
      * @param array<int, array<string, mixed>> $children
      */

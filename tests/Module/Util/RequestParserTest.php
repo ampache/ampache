@@ -52,7 +52,7 @@ class RequestParserTest extends TestCase
     }
 
     /**
-     * A third-party authorisation brings the visitor back with a GET, so the token has to be readable
+     * A third-party authorization brings the visitor back with a GET, so the token has to be readable
      * there -- and consumed just the same.
      */
     public function testATokenCarriedInTheQueryStringIsAcceptedAndConsumed(): void

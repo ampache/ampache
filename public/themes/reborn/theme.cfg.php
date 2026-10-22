@@ -36,7 +36,7 @@ colors = "Dark,Light,Dusk,Dawn,Sepia,High-Contrast,Nord,Dracula,Gruvbox,Catppucc
 
 ; Theme CSS Color Bases
 ; One of "dark" or "light" per entry in colors, same order, telling code that picks an asset or
-; highlight by light/dark which family a colour belongs to instead of matching its name
+; highlight by light/dark which family a color belongs to instead of matching its name
 ; Example: "dark,light,light"
 color_bases = "dark,light,dark,light,light,dark,dark,dark,dark,dark,dark,dark,dark,dark,light"
 

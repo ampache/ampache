@@ -58,7 +58,7 @@ $user             = Core::get_global('user'); ?>
         <?php $iframed = true;
 echo $this->raw($this->renderPlayerHeaders()); ?>
 <style>
-    /* The mini player is theme independent; it borrows the theme colours but none of the shell
+    /* The mini player is theme independent; it borrows the theme colors but none of the shell
        geometry, so it never inherits the desktop only min-width that forces mobile browsers to zoom. */
     body#mini-page {
         min-width: 0;
@@ -77,7 +77,7 @@ echo $this->raw($this->renderPlayerHeaders()); ?>
         padding: 8px 12px;
         box-sizing: border-box;
         /* Opaque so content scrolls behind it instead of showing through. Themes set their own
-           background on body, so inherit picks up the right colour in light and dark. */
+           background on body, so inherit picks up the right color in light and dark. */
         background-color: inherit;
         border-bottom: 1px solid rgba(128, 128, 128, 0.35);
     }
@@ -138,7 +138,7 @@ echo $this->raw($this->renderPlayerHeaders()); ?>
     }
 
     /* This page is a dead end, so plain links do nothing. Render them as text in both states, no
-       hover colour and no pointer, or they advertise themselves as clickable. The play, rating and
+       hover color and no pointer, or they advertise themselves as clickable. The play, rating and
        flag buttons are javascript: hrefs and keep their normal styling. */
     #mini-content a:not([href^="javascript"]),
     #mini-content a:not([href^="javascript"]):hover,
@@ -161,7 +161,7 @@ echo $this->raw($this->renderPlayerHeaders()); ?>
     /* The loading indicator is a header item rather than an overlay, so it cannot land on the play
        type select or the action buttons whatever width they take. Only the title shrinks to make
        room for it, and it is display:none until an ajax call runs, so the controls never move.
-       Position only, so the width, centring, colour and spinner still come from the theme. */
+       Position only, so the width, centering, color and spinner still come from the theme. */
     #mini-page #ajax-loading {
         position: static;
         flex: 0 0 auto;
@@ -174,7 +174,7 @@ echo $this->raw($this->renderPlayerHeaders()); ?>
     /* The temporary playlist drops out of the header button. The theme pins it under the main
        interface header (top:66px, and 116px on mobile), which this page doesn't have, so tie it
        to the mini header instead. .fixedrightbar is the scroll-pinned variant base.js adds; it
-       only engages on .rightbar-float, but neutralise it here so it can never ride up to -20px. */
+       only engages on .rightbar-float, but neutralize it here so it can never ride up to -20px. */
     #mini-page #rightbar,
     #mini-page #rightbar.fixedrightbar {
         top: 60px !important;
@@ -223,7 +223,7 @@ echo $this->raw($this->renderPlayerHeaders()); ?>
             padding: 5px;
         }
 
-        /* The theme restyles the loading indicator into a padded grey pill without a spinner below
+        /* The theme restyles the loading indicator into a padded gray pill without a spinner below
            768px; put the desktop spinner back so it reads the same at every width, the theme kills
            that one outright so it needs !important. The header has no room for the label at these
            widths, so the spinner carries it alone and the text stays for screen readers. */

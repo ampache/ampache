@@ -109,7 +109,7 @@ class DisabledSearchTest extends TestCase
 
     /**
      * Being offered is not the same as working: `album_disk` was served the rule and had no case to answer it,
-     * so a smartlist of disks asking for withdrawn releases quietly returned the whole catalogue.
+     * so a smartlist of disks asking for withdrawn releases quietly returned the whole catalog.
      */
     #[DataProvider(methodName: 'ruleProvider')]
     public function testTheRuleProducesItsConditionOnEveryType(string $type, string $expected): void

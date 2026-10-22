@@ -913,7 +913,7 @@ class Ui implements UiInterface
     /**
      * The icon and link-preview tags, from whatever the administrator supplied
      *
-     * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
+     * The shipped artwork is all-or-nothing: an instance that customizes its icon never gets
      * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
      * works; where a raster is required and only a vector was given, the tag is left out rather
      * than filled with somebody else's logo.

@@ -438,7 +438,7 @@ class Random
     }
 
     /**
-     * Picks random songs subject to the catalog and rating rules every random query honours, plus one extra clause.
+     * Picks random songs subject to the catalog and rating rules every random query honors, plus one extra clause.
      *
      * @return int[]
      */

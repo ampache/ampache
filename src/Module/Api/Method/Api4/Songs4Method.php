@@ -34,7 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Returns the song catalogue, filtered by name, add date or update date.
+ * Returns the song catalog, filtered by name, add date or update date.
  */
 final class Songs4Method implements MethodInterface
 {

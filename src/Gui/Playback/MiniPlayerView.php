@@ -55,7 +55,7 @@ final class MiniPlayerView extends AbstractView
     ) {}
 
     /**
-     * The theme swaps the loading spinner per colour, the same test the player headers make.
+     * The theme swaps the loading spinner per color, the same test the player headers make.
      */
     public function getAjaxLoaderUrl(): string
     {

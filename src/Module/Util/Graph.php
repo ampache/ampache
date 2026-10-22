@@ -705,8 +705,8 @@ class Graph
             $height = 260;
         }
 
-        // Each point is a time bucket the SQL already grouped, so the x axis is a list of labelled
-        // buckets rather than a continuous scale. Labelling the keys here instead of using a datetime
+        // Each point is a time bucket the SQL already grouped, so the x axis is a list of labeled
+        // buckets rather than a continuous scale. Labeling the keys here instead of using a datetime
         // axis keeps one bucket and fifty behaving the same way, and sidesteps the empty range a
         // datetime axis produces when everything falls in the same bucket.
         $series = array_map(
@@ -833,11 +833,11 @@ class Graph
             default => 'Y-m-d',
         };
 
-        $labelled = [];
+        $labeled = [];
         foreach ($set as $date => $value) {
-            $labelled[date($format, $date)] = $value;
+            $labeled[date($format, $date)] = $value;
         }
 
-        return $labelled;
+        return $labeled;
     }
 }

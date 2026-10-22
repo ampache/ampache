@@ -170,7 +170,7 @@ final class ArtistPageView extends AbstractView
     }
 
     /**
-     * The album list honours the user's album sort preference; anything else keeps its own order.
+     * The album list honors the user's album sort preference; anything else keeps its own order.
      *
      * @return array{0: string, 1: string}
      */

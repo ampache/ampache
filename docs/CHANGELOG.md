@@ -7,14 +7,14 @@
 ### Added (8.4.0)
 
 * Theme
-  * reborn gains four new colours: Dusk, Dawn, Sepia and High-Contrast
-  * reborn gains nine colours modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
+  * reborn gains four new colors: Dusk, Dawn, Sepia and High-Contrast
+  * reborn gains nine colors modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
 
 ### Changed (8.4.0)
 
 * Updated Composer and NPM dependencies
 * Theme
-  * `theme.cfg.php` gained an optional `color_bases` key; a colour with none is treated as dark, same as before
+  * `theme.cfg.php` gained an optional `color_bases` key; a color with none is treated as dark, same as before
 
 ### Fixed (8.4.0)
 
@@ -210,7 +210,7 @@
   * Supports login, browsing, artwork, streaming, lyrics, recommendations, favorites, ratings, playback resume/reporting and playlist management
   * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
-  * Added Shuffle button for queue randomisation
+  * Added Shuffle button for queue randomization
   * Added Play Next and Play Last buttons to enqueue the current queue in web player and Localplay sessions
   * Added drag-and-drop reordering of the queue
 * Playlist Folders
@@ -732,7 +732,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Values the channel does not supply are left alone rather than blanked, and the art is only replaced when the channel advertises one
   * Requires content manager access, and asks for confirmation first because it overwrites details you may have edited by hand
 * A podcast `Sync` shows a `Started` notification
-  * The sync fetches the feed and downloads episodes, which can run for minutes, and the request renders nothing back. With no acknowledgement the click looked like it had done nothing, so people pressed it again
+  * The sync fetches the feed and downloads episodes, which can run for minutes, and the request renders nothing back. With no acknowledgment the click looked like it had done nothing, so people pressed it again
   * The notification appears as the request goes out, on the `Sync` button of the podcast page and of a podcast row, and on the episode `Sync` that downloads a single episode
   * `Ajax::button()` and `Ajax::button_with_text()` take an optional `notice` for this, so any other long running ajax action can say the same
 * A `PHP Modules` table on `Admin -> Server Config -> Ampache Debug` listing every php extension Ampache requires or suggests, whether this server has it, and what an optional one is needed for
@@ -800,7 +800,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
     * New `object_type_date_IDX` index on `user_flag`.`object_type`, `date`, so the newest flagged lists stop at the rows they show
   * The recently played list picks the users whose history it may show before it reads the play rows, so a user with nothing recent to show no longer walks the whole play history to find that out
   * The users who share their play history are looked up through `preference`.`id` instead of `user_preference`.`name`; no key starts with that column, so the list read the whole `user_preference` table on every home page. On a server with 8400 users that is 1.2M rows, and 1 second when they are not already cached
-  * The now playing list uses the same lookup. Its subquery is a per-row test while `now_playing` holds few rows, but the optimizer materialises it into the same full scan once the table grows, which is when the server is busiest
+  * The now playing list uses the same lookup. Its subquery is a per-row test while `now_playing` holds few rows, but the optimizer materializes it into the same full scan once the table grows, which is when the server is busiest
   * A user with no `user_preference` rows can see their own now playing entry again; the own-user test sat inside the subquery that lists the sharers, so it only held for a user who already had rows there
   * The recent lists read the newest plays in date order and group those, instead of grouping every play ever recorded to sort them
   * Play counts for a page of songs or artists are read in one query instead of one per row, when a stats threshold applies

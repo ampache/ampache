@@ -606,7 +606,7 @@ class Artist extends database_object implements
     /**
      * Take the artist off the shelves, or put it back, taking its albums and their songs along.
      *
-     * The whole catalogue below the artist follows either way, so the word promises here what it promises
+     * The whole catalog below the artist follows either way, so the word promises here what it promises
      * on a song. A single album or song can still be flipped on its own afterwards; only the next change
      * of the artist's own state writes over it again.
      */

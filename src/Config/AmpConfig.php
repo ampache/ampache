@@ -142,9 +142,9 @@ class AmpConfig
     /**
      * get_theme_color_base
      *
-     * Whether the active theme_color is a "light" or "dark" colour, per the theme's own
+     * Whether the active theme_color is a "light" or "dark" color, per the theme's own
      * theme.cfg.php color_bases list, so code that picks an asset or highlight by light/dark
-     * (rather than by the colour's exact name) keeps working for a colour it has never heard of.
+     * (rather than by the color's exact name) keeps working for a color it has never heard of.
      */
     public static function get_theme_color_base(): string
     {

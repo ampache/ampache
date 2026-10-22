@@ -76,7 +76,7 @@ final readonly class AddObjectAction implements ApplicationActionInterface
         }
 
         // Curating an id that is not in its own table would leave the collection holding a dangling member.
-        // `add_item()` rather than the repository directly, so the interface honours `unique_playlist` too.
+        // `add_item()` rather than the repository directly, so the interface honors `unique_playlist` too.
         if ($this->collectionRepository->objectExists($objectType, $objectId)) {
             $collection->add_item($objectId, $objectType);
         }

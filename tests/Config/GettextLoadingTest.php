@@ -55,7 +55,7 @@ class GettextLoadingTest extends TestCase
     #[RunInSeparateProcess]
     public function testAnUnreadableCatalogueCompilesToNothing(): void
     {
-        // every failure has to put the caller back on the binary catalogue rather than break the page
+        // every failure has to put the caller back on the binary catalog rather than break the page
         self::assertNull(compiled_gettext_catalogue('/nonexistent/LC_MESSAGES/messages.mo'));
     }
 
@@ -68,7 +68,7 @@ class GettextLoadingTest extends TestCase
 
         self::assertIsString($first);
         self::assertFileExists($first);
-        self::assertSame($first, compiled_gettext_catalogue($mo), 'the same catalogue asks for the same name');
+        self::assertSame($first, compiled_gettext_catalogue($mo), 'the same catalog asks for the same name');
 
         $entries = include $first;
 
@@ -127,19 +127,19 @@ class GettextLoadingTest extends TestCase
     {
         AmpConfig::set('lang', 'fr_FR', true);
 
-        self::assertFalse(function_exists('__'), 'the fixture starts with no catalogue registered');
+        self::assertFalse(function_exists('__'), 'the fixture starts with no catalog registered');
         self::assertSame('Inconnu (orphelin)', T_('Unknown (Orphaned)'));
         self::assertTrue(function_exists('__'));
     }
 
     /**
-     * Reading the catalogue costs about nine milliseconds, so a request that renders no text must
+     * Reading the catalog costs about nine milliseconds, so a request that renders no text must
      * not pay for it. The handler is left holding only the check that gettext is installed at all.
      */
     #[RunInSeparateProcess]
     public function testInitialisationLeavesTheCatalogueUnread(): void
     {
-        self::assertFalse(function_exists('__'), 'the fixture starts with no catalogue registered');
+        self::assertFalse(function_exists('__'), 'the fixture starts with no catalog registered');
 
         new InitializationHandlerGetText()->init();
 
@@ -168,10 +168,10 @@ class GettextLoadingTest extends TestCase
     #[RunInSeparateProcess]
     public function testUncataloguedLanguageKeepsWhateverIsAlreadyLoaded(): void
     {
-        // load_gettext() has never unregistered a catalogue, so switching to a language with no
+        // load_gettext() has never unregistered a catalog, so switching to a language with no
         // .mo behind it leaves the previous one translating. That predates lazy loading and is
         // kept as it was: the language list Ampache offers is built from the locale directory,
-        // so every language a listener can actually pick has a catalogue.
+        // so every language a listener can actually pick has a catalog.
         AmpConfig::set('lang', 'fr_FR', true);
         load_gettext();
 
