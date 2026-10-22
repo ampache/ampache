@@ -34,8 +34,8 @@ jobs:
       - name: Run test suite
         run: composer run-script qa
 
-      - name: Run NPM audit (production)
-        run: npm audit --production
+      - name: Run NPM audit (omit dev)
+        run: npm audit --omit=dev
 
   api-docs:
     # docs/openapi.json and the API method references are generated; this fails if they drift from
