@@ -45,7 +45,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `update_gt`       | UNIX timestamp | Only albums with a song whose tags were updated at or after this time.                                                               |
 | `update_lt`       | UNIX timestamp | Only albums with a song whose tags were updated at or before this time.                                                              |
 | `user_catalog`    | none           | Only albums in a catalog the current user is allowed to see. Needs no value.                                                         |
-| `user_flag`       | 0 or 1         | Send `1` for albums the current user has favourited, `0` for the ones they have not.                                                 |
+| `user_flag`       | 0 or 1         | Send `1` for albums the current user has favorited, `0` for the ones they have not.                                                  |
 | `user_rating`     | 0 to 5         | Only albums the current user rated this value. Send `0` for albums they have not rated at all.                                       |
 
 ## Available browse sorts
@@ -54,35 +54,35 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort                      | Description                                                                                                              |
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `addition_time`           | When it was added to the catalog.                                                                                        |
-| `album_artist`            | Album artist name.                                                                                                       |
-| `album_artist_album_sort` | Album artist name, then whatever the server's `album_sort` setting says, which is album name and year by default.        |
-| `album_artist_title`      | Album artist name, then album name.                                                                                      |
-| `artist`                  | Artist name.                                                                                                             |
-| `barcode`                 | Album barcode.                                                                                                           |
-| `catalog`                 | The catalog id it belongs to.                                                                                            |
-| `catalog_number`          | Album catalog number.                                                                                                    |
-| `disk_count`              | How many disks the album has.                                                                                            |
-| `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.                 |
-| `id`                      | The album id, which is the order they were created in.                                                                   |
-| `last_played`             | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
-| `name`                    | Album name.                                                                                                              |
-| `name_original_year`      | Album name, then original release year, falling back to the release year.                                                |
-| `name_year`               | Album name, then release year.                                                                                           |
-| `original_year`           | Original release year, falling back to the release year, then when it was added.                                         |
-| `rand`                    | Random order, applied per request. Paging through it repeats and skips albums, so ask for everything in one call.        |
-| `rating`                  | Your own rating, then when you set it. Albums you have not rated group together.                                         |
-| `release_status`          | Album release status, e.g. `official` or `bootleg`.                                                                      |
-| `release_type`            | Album release type, e.g. `album`, `ep` or `single`.                                                                      |
-| `song_count`              | How many songs it has.                                                                                                   |
-| `subtitle`                | Album subtitle.                                                                                                          |
-| `time`                    | Total running time of the album in seconds.                                                                              |
-| `title`                   | Alias of `name`.                                                                                                         |
-| `total_count`             | How many times it has been played.                                                                                       |
-| `user_flag`               | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating`        | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`                | Alias of `user_flag`.                                                                                                    |
-| `version`                 | Album version.                                                                                                           |
-| `year`                    | Release year, then when it was added to the catalog.                                                                     |
+| Sort                      | Description                                                                                                            |
+|---------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `addition_time`           | When it was added to the catalog.                                                                                      |
+| `album_artist`            | Album artist name.                                                                                                     |
+| `album_artist_album_sort` | Album artist name, then whatever the server's `album_sort` setting says, which is album name and year by default.      |
+| `album_artist_title`      | Album artist name, then album name.                                                                                    |
+| `artist`                  | Artist name.                                                                                                           |
+| `barcode`                 | Album barcode.                                                                                                         |
+| `catalog`                 | The catalog id it belongs to.                                                                                          |
+| `catalog_number`          | Album catalog number.                                                                                                  |
+| `disk_count`              | How many disks the album has.                                                                                          |
+| `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.               |
+| `id`                      | The album id, which is the order they were created in.                                                                 |
+| `last_played`             | When it was last played. Anything never played has no value, so it groups first ascending and last descending.         |
+| `name`                    | Album name.                                                                                                            |
+| `name_original_year`      | Album name, then original release year, falling back to the release year.                                              |
+| `name_year`               | Album name, then release year.                                                                                         |
+| `original_year`           | Original release year, falling back to the release year, then when it was added.                                       |
+| `rand`                    | Random order, applied per request. Paging through it repeats and skips albums, so ask for everything in one call.      |
+| `rating`                  | Your own rating, then when you set it. Albums you have not rated group together.                                       |
+| `release_status`          | Album release status, e.g. `official` or `bootleg`.                                                                    |
+| `release_type`            | Album release type, e.g. `album`, `ep` or `single`.                                                                    |
+| `song_count`              | How many songs it has.                                                                                                 |
+| `subtitle`                | Album subtitle.                                                                                                        |
+| `time`                    | Total running time of the album in seconds.                                                                            |
+| `title`                   | Alias of `name`.                                                                                                       |
+| `total_count`             | How many times it has been played.                                                                                     |
+| `user_flag`               | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating`        | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`                | Alias of `user_flag`.                                                                                                  |
+| `version`                 | Album version.                                                                                                         |
+| `year`                    | Release year, then when it was added to the catalog.                                                                   |

@@ -31,7 +31,7 @@ e.g. `cond=starts_with,a`
 | `regex_match`     | regex   | The smartlist name matches this MySQL regular expression. Setting it clears any `regex_not_match` filter.                                |
 | `regex_not_match` | regex   | The smartlist name does not match this MySQL regular expression. Setting it clears any `regex_match` filter.                             |
 | `starts_with`     | string  | The smartlist name starts with this value.                                                                                               |
-| `user_flag`       | 0 or 1  | Send `1` for smartlists the current user has favourited, `0` for the ones they have not.                                                 |
+| `user_flag`       | 0 or 1  | Send `1` for smartlists the current user has favorited, `0` for the ones they have not.                                                  |
 | `user_rating`     | 0 to 5  | Only smartlists the current user rated this value. Send `0` for smartlists they have not rated at all.                                   |
 
 ## Available browse sorts
@@ -40,21 +40,21 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `date`             | When the smartlist was created.                                                                                          |
-| `id`               | The smartlist id, which is the order they were created in.                                                               |
-| `last_count`       | How many items the smartlist returned when it was last counted.                                                          |
-| `last_update`      | When it was last updated.                                                                                                |
-| `limit`            | The row limit saved on the smartlist.                                                                                    |
-| `name`             | Smartlist name, then id, so smartlists with the same name keep a stable order.                                           |
-| `rand`             | Random order, applied per request. Paging through it repeats and skips smartlists, so ask for everything in one call.    |
-| `random`           | Whether the smartlist returns its rows randomly.                                                                         |
-| `rating`           | Your own rating, then when you set it. Smartlists you have not rated group together.                                     |
-| `title`            | Alias of `name`.                                                                                                         |
-| `type`             | Visibility: `public` or `private`.                                                                                       |
-| `user`             | The id of the user who owns it.                                                                                          |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
-| `username`         | The owner's username.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `date`             | When the smartlist was created.                                                                                        |
+| `id`               | The smartlist id, which is the order they were created in.                                                             |
+| `last_count`       | How many items the smartlist returned when it was last counted.                                                        |
+| `last_update`      | When it was last updated.                                                                                              |
+| `limit`            | The row limit saved on the smartlist.                                                                                  |
+| `name`             | Smartlist name, then id, so smartlists with the same name keep a stable order.                                         |
+| `rand`             | Random order, applied per request. Paging through it repeats and skips smartlists, so ask for everything in one call.  |
+| `random`           | Whether the smartlist returns its rows randomly.                                                                       |
+| `rating`           | Your own rating, then when you set it. Smartlists you have not rated group together.                                   |
+| `title`            | Alias of `name`.                                                                                                       |
+| `type`             | Visibility: `public` or `private`.                                                                                     |
+| `user`             | The id of the user who owns it.                                                                                        |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |
+| `username`         | The owner's username.                                                                                                  |

@@ -49,7 +49,7 @@
   * `days_updated` rule on Album and Album Disk searches, matching the last time a song's tags were updated
 * ID3v2 `SYLT` frames are read for lyrics, preferred over plain `USLT` text when a file carries both
 * The web player and API `player` can report a pause, clearing `now_playing` until play resumes
-* New "Popular Variety" plugin shows one popular song per album/artist on the dashboard, not a ranking one deep catalogue can dominate
+* New "Popular Variety" plugin shows one popular song per album/artist on the dashboard, not a ranking one deep catalog can dominate
 * The web player shows a notification when a track fails to play, such as a random pick that matched nothing
 
 ### Changed (8.3.0)
@@ -160,9 +160,9 @@
   * The account tab could never be saved, every submit answering 403
   * `api_force_version` did not offer version 8, so a resubmit silently reset it to 0
   * `localplay_level` and `upload_access_level` did not offer the Guest level
-  * The Last.fm and Libre.fm authorisation callback accepted a forged link
+  * The Last.fm and Libre.fm authorization callback accepted a forged link
   * Last.fm and Libre.fm session keys were shown in plain text and carried into exports
-  * Last.fm and Libre.fm could never be authorised a first time: the link was hidden, and the callback refused
+  * Last.fm and Libre.fm could never be authorized a first time: the link was hidden, and the callback refused
 * `login.php` redirected straight back to `update.php` with a pending database update, looping forever (`ERR_TOO_MANY_REDIRECTS`) instead of showing the login form
 
 ## Ampache 8.2.1
@@ -195,7 +195,7 @@
   * Added Jellyfin-compatible API support for Finamp, Symfonium and Gelly
   * Disabled by default. Enable with `jellyfin_backend_enable`
   * Supports audio streaming, direct play and transcoding
-  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favourites, ratings, playback resume/reporting and playlist management
+  * Supports login, browsing, artwork, streaming, lyrics, recommendations, favorites, ratings, playback resume/reporting and playlist management
   * Added QuickConnect device pairing with a dedicated approval page. Disabled by default via `quickconnect_enable`
 * Rightbar
   * Added Shuffle button for queue randomisation
@@ -203,7 +203,7 @@
   * Added drag-and-drop reordering of the queue
 * Playlist Folders
   * Added a web UI to browse, create, rename, move and delete playlist folders, and to file playlists/smart playlists into them
-* The `Personal Favorites` home plugin now shows ratings and favourite status for playlists and smart playlists
+* The `Personal Favorites` home plugin now shows ratings and favorite status for playlists and smart playlists
 * Smart playlists and random searches now show generated mosaic cover art on their own page, like playlists already do
 * Config version 100
   * Added `stream_proxy` option (default `true`) to control live stream proxying
@@ -221,7 +221,7 @@
 
 ### Fixed (8.2.0)
 
-* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behaviour
+* Subsonic `search3` rejected an empty `query` (regression since 7.10.0/8.1.0); restored `search2`'s "browse everything" behavior
 * Last.fm and Libre.fm session keys were shown in plain text
 * Notifications displayed their own quotes, and were inserted as markup rather than as text
 * A `site_title` holding a closing script tag broke the page scripts
@@ -235,7 +235,7 @@
 * Improved support for databases with autocommit disabled
 * Fixed false PDO error detection when error code was `00000`
 * Fixed raw `LICENSE` tag handling for Vorbis metadata
-* Sanitised licence external links and blocked non-HTTP(S) URLs
+* Sanitised license external links and blocked non-HTTP(S) URLs
 * Fixed folder handling in the Subsonic API
 * Fixed missing song lyrics
 * Database exceptions now include query and driver error details
@@ -259,8 +259,8 @@
 * Fixed `run:updateCatalog -ca` reimporting unchanged files
 * Fixed `deleted_songs` API always returning an empty result
 * Subsonic
-  * Optimised genre lookups in `getMusicDirectory`
-  * Optimised video and podcast tag loading
+  * Optimized genre lookups in `getMusicDirectory`
+  * Optimized video and podcast tag loading
   * Unexpected API errors now return proper error responses
   * Reduced memory usage when browsing large folders
 * Fixed catalog scans leaving progress streams open after errors
@@ -320,7 +320,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * Server-wide, not a user preference; defaults to today's full field set (`name,year,prefix,mbid,mbid_group,album_artist,release_type,release_status,original_year,barcode,catalog_number,version`)
 * Drawn cover art for items that have none: an album gets a record, an artist a medallion, an orphaned song a waveform, a playlist a tracklist. Built as SVG so one response serves every size, seeded from the item's name so a tile is stable. Off by default, per-user opt-in; a configured `custom_blankalbum` always takes precedence when present
 * Dynamic page titles carrying the artist or album in context, with a user preference to show a page-type icon in the tab title
-* A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customises them
+* A SVG favicon, an apple-touch-icon for phone home screens, and a link-preview image, each replaced on their own when an admin customizes them
 * A `branding` section under the server settings gathering the favicon, logos, login artwork and the two new icons in one place, plus a site description for link previews
 * An `Uploaded` column on the upload browses, sortable
 * A browser-measured HTTP compression check on the test page
@@ -340,7 +340,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Serving a cover no longer opens a full session: no `last_seen` write, no serialized-session rewrite, and a cookie-less request (a crawler, a link preview) no longer leaves a session row behind
 * `Session::extend` no longer rewrites the expire column on every request
 * Visitors who never queue anything no longer get a `tmp_playlist` row, dashboard and mashup boxes no longer write a `tmp_browse` row they never store, and a page view no longer creates a broadcast stream session
-* Gettext loads the catalogue only when something is translated, and reads a prebuilt PHP array the opcache holds rather than parsing the `.mo` each request
+* Gettext loads the catalog only when something is translated, and reads a prebuilt PHP array the opcache holds rather than parsing the `.mo` each request
 * The Subsonic artist and playlist lists, the genre and artist-name lookups, the smartlist name lists and reverse-geocoding all warm their caches once per page instead of once per row
 * Server-wide user counters are batched into one statement per key
 * The set of generated art sizes is bounded, and a missing cover is served the placeholder that fits rather than the full-size original
@@ -387,7 +387,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * The RSS feed url kept html entities in its slug and had no length limit
 * The recently played lists showed outdated dates instead of reading the maintained `last_played` column database 800029 added
 * `stats.php?action=show` now say "access denied" when access is denied
-* Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalogue
+* Reloading the advanced random page queued the whole library one insert at a time, and never answered on a large catalog
 * A client could send any play date, so one wrong clock pinned itself to the top of every recently played list until real time caught up. The play row, `last_played` on album disks and the `savePlayQueue` shift are all clamped. Devices whose clock is not exact get one minute of slack.
 * A username was used raw as an upload folder name, so ../.. escaped the catalog. Path segments are no longer allowed in username
 * Hardened the upload file browser sandbox (prefix containment is anchored on a separator, better check of the ownership)
@@ -400,7 +400,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Rating an object 0 repeatedly drained its weight
 * An uploader could reassign their own uploaded song to another account through the edit form. The ownership field is now stripped from an owner's edit
 * Any user could pin their shoutbox message by posting the sticky field. It now requires content manager
-* On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalised to AND or OR before the query is built
+* On specific database setup, the smart playlist logic operator could have reached the SQL WHERE clause unvalidated. It is now normalized to AND or OR before the query is built
 * Missing close box on a few template phtml files
 * A disabled user account could still authenticate through Subsonic and an RSS feed token
 * Password/token comparisons in the API handshake, the `session_remember` cookie MAC, and API key/stream token lookups used `===`/`!=` instead of `hash_equals()`
@@ -496,7 +496,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
   * A handful of filters (`rating`, `folder`'s `id`, `song`'s `top50` artist match, `playlist`'s smartlist id list) built their `WHERE`/`IN` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
 * The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
 * Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
-* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honored as a same-site redirect after a successful login; the referrer's host is now compared exactly
 * A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
 * The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
 * A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
@@ -504,7 +504,7 @@ Name and Year are recorded but all other dropped columns are not kept. Year will
 * Browse
   * The `regex_match`/`regex_not_match` filter value reaches SQL `REGEXP` as-is with no length limit; it's now capped at 100 characters against a catastrophic-backtracking pattern
 * A share's secret was compared with `!=` instead of a constant-time comparison, so two "magic hash" values (`0e` followed only by digits) could match each other regardless of their actual digits; it now uses `hash_equals()`
-* Folders (browse, WebDAV) never honoured the opt-in `catalog_filter` restriction that every other object type already respects; a user's `catalog_filter_group` is now applied to a folder's children, media count and media list the same way it is everywhere else
+* Folders (browse, WebDAV) never honored the opt-in `catalog_filter` restriction that every other object type already respects; a user's `catalog_filter_group` is now applied to a folder's children, media count and media list the same way it is everywhere else
 * A zip/batch download's `id` list had no length limit, so a single request could drive an unbounded number of item loads and file reads; it's now capped at 500 ids
 * Database 800038
   * The podcast play-count backfill could loop forever, inserting duplicate rows, for a podcast episode play with no recorded streaming agent
@@ -600,7 +600,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
   * New `user`.`subsonic_secret` column holding the per-user Subsonic password
   * New database tables `collection` and `collection_map`
-  * New database tables `playlist_folder` and `playlist_folder_map`, holding a private per-user tree that organises playlists, smartlists and collections
+  * New database tables `playlist_folder` and `playlist_folder_map`, holding a private per-user tree that organizes playlists, smartlists and collections
   * New maintained `last_played` column on `album`, `album_disk`, `artist`, `podcast`, `podcast_episode`, `song` and `video`, written on the same statement that increments the play counter and backfilled from the existing play history (live counts, archived detail and consolidated summaries)
   * `collection` added to the `object_type` enum on `image`, `object_count`, `cache_object_count`, `cache_object_count_run`, `object_count_summary` and `object_count_archive`, so a collection carries its own art and play statistics
   * `collection` added to the `object_type` enum on `rating` and `user_flag`, so a collection can be rated and flagged
@@ -666,7 +666,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The user browse takes `username`, `fullname` and `email` filters for one column at a time, beside the existing text filters that match all three at once
   * The share browse takes the text filters and sorts by the title of the shared object (`name`, with `title` as an alias), plus `object_type` and `user` filters. It accepted no filters at all before, and its `object` sort named a column that does not exist
   * Sorts a browse listed but never answered to now work: `total_skip` on podcast_episode and `userflag` on video
-  * The video browse honours `DESC`. Every video sort was built without its direction, so the order never changed, and `user_flag_rating` built SQL that could not run
+  * The video browse honors `DESC`. Every video sort was built without its direction, so the order never changed, and `user_flag_rating` built SQL that could not run
 * Search
   * User searches gain `Name`, `Full Name` and `E-mail` rules. `Name` matches the username, full name or email at once, the same three columns the user browse searches
 * CLI
@@ -682,7 +682,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
 * Playlist art mosaic
   * Automatically generated playlist cover art can now be a mosaic of up to nine covers from the playlist instead of a single random cover
-  * Playlists with fewer than four distinct covers keep the single-cover behaviour
+  * Playlists with fewer than four distinct covers keep the single-cover behavior
 * Transcoding
   * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
   * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
@@ -746,15 +746,15 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The artist and album fields of an edit dialog become a search once the list is long
   * Both were a select holding every artist or album you could see, built and sent in full every time a dialog opened; past 1000 of them the field is a search box that lists what matches as you type, and under that it is the same select as before
   * Picking a suggestion files the item under it; typing a name that is not in the list creates it, which is what the `Add New` option always did
-  * Both lists now honour the catalog filter, so a user restricted to a filter group is no longer handed every artist and album in the database
+  * Both lists now honor the catalog filter, so a user restricted to a filter group is no longer handed every artist and album in the database
   * `SELECT_LIST_LIMIT` in `src/Config/functions.php` decides where the search takes over
 * Podcast feed text is stored as plain text
   * Feeds routinely put markup in their titles and descriptions, and some escape that markup a second time on the way into the xml. Both used to be stored as-is, so the podcast and episode pages showed `&lt;p&gt;` and `<br />` as words
   * Paragraphs and lists are kept as line breaks, the remaining tags are dropped and the entities are decoded; the podcast and episode pages render those breaks
   * An episode description is cleaned before its length is capped, so the 4096 character limit is spent on text rather than on tags
 * A sync refreshes the descriptions of the episodes you already have
-  * An item the feed still carries used to be recognised and then dropped, so a description was only ever written the once. A feed correcting a typo, expanding its show notes or fixing its own markup never reached the episodes you subscribed to first
-  * The description is read by the same lookup that recognises the episode and only written when it actually differs, so a sync over an unchanged feed costs nothing extra
+  * An item the feed still carries used to be recognized and then dropped, so a description was only ever written the once. A feed correcting a typo, expanding its show notes or fixing its own markup never reached the episodes you subscribed to first
+  * The description is read by the same lookup that recognizes the episode and only written when it actually differs, so a sync over an unchanged feed costs nothing extra
   * An item that supplies no description leaves the stored one alone, and nothing else about an existing episode is touched: its state, downloaded file, play counts and any edits you made to its other fields stay as they are
   * This is also what carries the plain-text conversion above to episodes already in the database
   * A feed item with no guid no longer matches the first episode that has none, which silently skipped a genuinely new episode
@@ -825,7 +825,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `Catalog`, the query engines (`Search`, `Smartlist`, `Query`, `Random`, `Browse`), the persistence base classes (`database_object`, `BaseModel`) and the service classes (`Art`, `Preference`, `Plugin`, `Rating`, `Userflag`, `Useractivity`, `Democratic`, `Tmp_Playlist`, `User_Playlist`) have left `Ampache\Repository\Model` for their own domains, which now holds only entities, their contracts and their enums
   * The API version 5, 6 and 8 output formatters, `Upnp_Api` and `Stats` are container services rather than static classes
   * The per-type search rule builders followed the query engine into `Ampache\Module\Database\Search`
-  * `Query` and `Browse` swapped the parts each held that belonged to the other: `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()`, and `Query::set_is_simple()` is gone in favour of `set_simple_browse()`
+  * `Query` and `Browse` swapped the parts each held that belonged to the other: `Query::sql_sort_video()` is now `VideoQuery::get_sql_sort()`, and `Query::set_is_simple()` is gone in favor of `set_simple_browse()`
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
 * Theme
@@ -846,7 +846,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Statistical Graphs
   * Charts are drawn by `goat1000/svggraph` (LGPL-3.0) instead of `szymach/c-pchart`, which is a normal requirement rather than a dev one, so graphs work in a release download with nothing extra to install
   * Graphs are SVG instead of PNG and no longer need `ext-gd`; they scale to the page and stay sharp on a high-dpi screen
-  * Charts are grouped bars rather than lines, and each bar is a time bucket labelled at the zoom level you asked for
+  * Charts are grouped bars rather than lines, and each bar is a time bucket labeled at the zoom level you asked for
 * Labels
   * Label pages gain an **Albums** tab listing the releases associated with the label, alongside the existing artists and songs
   * Placeholder publishers read from tags are no longer imported, and the catalog clean up removes the ones earlier scans created; a label a user entered by hand is never removed
@@ -856,7 +856,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `playlist_art_mosaic` option; set it to `false` to keep a single random cover for playlist art
   * New `playlist_art_mosaic_fallback` option (default `false`); when on, a playlist with no art of its own gets a generated mosaic instead of the blank placeholder, stored as that playlist's art so it is only built once
 * Config version 93
-  * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart licence. Set it to `"false"` to skip the graph queries entirely on a large catalog
+  * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart license. Set it to `"false"` to skip the graph queries entirely on a large catalog
 
 ### Removed (8.0.0)
 
@@ -906,7 +906,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Retagging a song to drop one of its artists left that artist holding the plays it had gained from that song
 * The broadcast button took two clicks to show its menu on a scrolled page, and the menu opened below the fold. The popup dialogs no longer navigate, and the broadcast one is placed against the window so it tracks the button in the fixed player
 * The websocket server logged a dozen PHP 8.5 deprecation errors on every connection, drowning the broadcast log; `cboden/ratchet` moves to the `0.4.x` branch, which supports PHP 8.5, and `ratchet/rfc6455` to v0.4.1
-* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`. Long running processes suffered worst: the websocket server could not register a broadcast or authorise a listener once its connection had timed out
+* A database connection dropped by the server (idle timeout, restart, killed thread) was kept and reused, so every following query failed with `MySQL server has gone away`. Long running processes suffered worst: the websocket server could not register a broadcast or authorize a listener once its connection had timed out
 * Turning on `album_art_store_disk` without setting `local_metadata_dir` hid every cover; the art was still written to the database but only ever read back from disk
   * Thumbnails took the same route and were rebuilt from the original on every request instead, so a browse page resized every cover it showed, every time it was drawn
 * Art stored for something that is not a library item, such as a wanted album, returned an empty image
@@ -967,8 +967,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `bin/cli admin:updateDatabase` reports it instead of ending in a `QueryFailedException` stack trace
 * Right click (`libitem_contextmenu`) actions on a browse row
   * A row states its identity with `data-object-type` and `data-object-id`; the menu used to cut the row id at the first underscore, reading `podcast_episode_5` as podcast #episode
-  * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
-  * Favorite Lists on the home page labelled a smartlist as a playlist, so the menu played whichever playlist shared its id
+  * Album disk rows, in both the browse and "Albums of the Moment", were labeled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
+  * Favorite Lists on the home page labeled a smartlist as a playlist, so the menu played whichever playlist shared its id
   * Podcast and podcast episode rows had no menu at all
   * Stray empty menu wrappers in the album, album disk and folder browse headers opened a menu that could do nothing (and were invalid HTML inside a `<tr>`)
 * Collections
@@ -1055,7 +1055,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Album disk searches ignored the `Added`, `Updated`, `Duplicate Tracks` and `Smart Playlist` rules
   * Podcast and podcast episode searches ignored the `Recently Played` rule
   * Artist searches on `Image Width` and `Image Height` returned nothing
-  * The genre search offered two rules both labelled `Album Count`; the second is the artist count and now says `Artist Count`
+  * The genre search offered two rules both labeled `Album Count`; the second is the artist count and now says `Artist Count`
   * The genre rules counting a genre's own contents shared their labels with the object's own counts, so an artist search offered two `Song Count` rules. They are now `Song Count (Genre)`, `Album Count (Genre)` and `Artist Count (Genre)`
 * A stream that could not be opened answered `200` with an empty body, which a player reports as a corrupt or unsupported stream instead of a server error; it now answers `500`
 * A transcode requested while no `transcode_cmd` is configured is logged as an error instead of at the most verbose debug level, where the reason nothing played was effectively invisible
@@ -1088,7 +1088,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A handful of filters (`rating`, `song`'s `top50` artist match) built their `WHERE` value without the surrounding quotes `Dba::escape()` expects; the value is quoted like every other escaped filter now
 * The `upload_script` post-processing hook (opt-in, off by default) substituted the uploaded file's own client-supplied name into `%FILE%` and ran the result as a shell command; a filename carrying shell metacharacters could run arbitrary commands as the web server user. The filename is shell-escaped before substitution now
 * Login compared the stored password hash to the submitted one with `==`/`in_array()` instead of a constant-time comparison; both now use `hash_equals()`
-* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honoured as a same-site redirect after a successful login; the referrer's host is now compared exactly
+* Logging in with a `referrer` pointing at a host that merely starts with the site's own url (e.g. `yoursite.com.attacker.net`) was honored as a same-site redirect after a successful login; the referrer's host is now compared exactly
 * A song or video title containing a `"` broke out of the quoted `Content-Disposition` filename on download, letting extra parameters be appended; the character is stripped like the linebreak/comma/semicolon it already strips
 * The `theme_name`/`theme_color` preferences were only checked for existing on disk, not for staying inside the themes directory; both are now rejected outright if they contain a path separator
 * A profile self-update could smuggle in `catalog_filter_group` alongside the fields the form actually offers, silently reassigning the user's own catalog visibility group; it's stripped from the request like `access` already was
@@ -4423,7 +4423,7 @@ If you want to keep utf8 make sure you set it before running updates.
 * Added %R (Release Status) to catalog pattern matching
 * Add ability to hide the Song Artist column for Albums with one Artist
 * Add ability to browse albums by Original Year
-* Add ability to hide the licence column on song pages
+* Add ability to hide the license column on song pages
 * A helper index.php has been added to the old project root with directions to help
 * Show the country and Active status (Generated tags are assumed active) on label rows
 * Podcast_Episode show episode art for podcast mashup allow sort by date
@@ -4486,7 +4486,7 @@ If you want to keep utf8 make sure you set it before running updates.
 * Display userflag with star ratings
 * Always put year in Spotify art search if available
 * Imported playslists don't add the extension to the title
-* Visually crop images from the centre instead of resizing into a square
+* Visually crop images from the center instead of resizing into a square
 * Display release year if it doesn't macth original_year. e.g. 'Back in Black (2010)'
 * Don't round the average rating to an integer
 * Replace mt_rand with random_bytes for random token generation
@@ -5884,7 +5884,7 @@ Notes about this release that can't be summed up in a log line
 * Fixed character set detection for ID3v1 tags
 * Added matroska to the list of known tag types
 * Made the getID3 metadata source work better with tag types that Ampache
-  doesn't recognise
+  doesn't recognize
 * Switched from the deprecated mysql extension to PDO
 * stderr from the transcode command is now logged for debugging
 * Made database updates more robust and verified that a fresh ## 3.## 3.## 3.5 import
@@ -5916,7 +5916,7 @@ Notes about this release that can't be summed up in a log line
 * Removed lyric support, which was broken and ugly
 * Removed tight coupling to the PHP mysql extension
 * Fixed an issue with adding catalogs on Windows caused by inconsistent
-  behaviour of is_readable() (reported by Lockzi)
+  behavior of is_readable() (reported by Lockzi)
 
 ## 3.6-Alpha3 *2012-10-15*
 
