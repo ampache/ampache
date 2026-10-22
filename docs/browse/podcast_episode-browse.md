@@ -31,7 +31,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `starts_with`     | string         | The episode title starts with this value.                                                                                              |
 | `unplayed`        | 1              | Only episodes that have never been played. The value must be `1`; anything else, including an empty value, is ignored.                 |
 | `user_catalog`    | none           | Only episodes in a catalog the current user is allowed to see. Needs no value.                                                         |
-| `user_flag`       | 0 or 1         | Send `1` for episodes the current user has favourited, `0` for the ones they have not.                                                 |
+| `user_flag`       | 0 or 1         | Send `1` for episodes the current user has favorited, `0` for the ones they have not.                                                  |
 | `user_rating`     | 0 to 5         | Only episodes the current user rated this value. Send `0` for episodes they have not rated at all.                                     |
 
 ## Available browse sorts
@@ -40,25 +40,25 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `addition_time`    | When it was added to the catalog.                                                                                        |
-| `author`           | Episode author.                                                                                                          |
-| `catalog`          | The catalog id it belongs to.                                                                                            |
-| `category`         | Episode category.                                                                                                        |
-| `id`               | The episode id, which is the order they were created in.                                                                 |
-| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
-| `name`             | Episode title.                                                                                                           |
-| `podcast`          | The podcast id, then publication date.                                                                                   |
-| `pubdate`          | When the episode was published.                                                                                          |
-| `rand`             | Random order, applied per request. Paging through it repeats and skips episodes, so ask for everything in one call.      |
-| `rating`           | Your own rating, then when you set it. Episodes you have not rated group together.                                       |
-| `state`            | Processing state of the episode.                                                                                         |
-| `time`             | Episode running time in seconds.                                                                                         |
-| `title`            | Alias of `name`.                                                                                                         |
-| `total_count`      | How many times it has been played.                                                                                       |
-| `total_skip`       | How many times it has been skipped.                                                                                      |
-| `update_time`      | When its tags were last updated.                                                                                         |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `addition_time`    | When it was added to the catalog.                                                                                      |
+| `author`           | Episode author.                                                                                                        |
+| `catalog`          | The catalog id it belongs to.                                                                                          |
+| `category`         | Episode category.                                                                                                      |
+| `id`               | The episode id, which is the order they were created in.                                                               |
+| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.         |
+| `name`             | Episode title.                                                                                                         |
+| `podcast`          | The podcast id, then publication date.                                                                                 |
+| `pubdate`          | When the episode was published.                                                                                        |
+| `rand`             | Random order, applied per request. Paging through it repeats and skips episodes, so ask for everything in one call.    |
+| `rating`           | Your own rating, then when you set it. Episodes you have not rated group together.                                     |
+| `state`            | Processing state of the episode.                                                                                       |
+| `time`             | Episode running time in seconds.                                                                                       |
+| `title`            | Alias of `name`.                                                                                                       |
+| `total_count`      | How many times it has been played.                                                                                     |
+| `total_skip`       | How many times it has been skipped.                                                                                    |
+| `update_time`      | When its tags were last updated.                                                                                       |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |

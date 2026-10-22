@@ -122,7 +122,7 @@ final readonly class GeneratedArtService implements GeneratedArtServiceInterface
 
         if ($wanted === 'auto' || $wanted === '') {
             // follow the interface the listener is already looking at
-            $wanted = (AmpConfig::get('theme_color', 'dark') === 'light') ? 'light' : 'dark';
+            $wanted = AmpConfig::get_theme_color_base();
         }
 
         foreach ($available as $template) {

@@ -43,7 +43,7 @@ use Override;
  * The column list is what the row actually emits: the header used to leave out the art column the rows
  * and the footer both had, so every cell after it sat under the wrong heading.
  */
-final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer
+final class PodcastEpisodeListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

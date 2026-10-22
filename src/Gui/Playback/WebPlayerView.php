@@ -147,7 +147,7 @@ final class WebPlayerView extends AbstractView
 
     public function getReplaygainIcon(): string
     {
-        return (AmpConfig::get('theme_color', 'dark') === 'light') ? 'replaygain_dark' : 'replaygain';
+        return (AmpConfig::get_theme_color_base() === 'light') ? 'replaygain_dark' : 'replaygain';
     }
 
     /**

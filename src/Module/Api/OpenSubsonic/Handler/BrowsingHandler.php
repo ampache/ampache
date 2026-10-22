@@ -126,14 +126,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getalbum(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $album = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$album instanceof Album || $album->isNew()) {
+        if (!$album instanceof Album || $album->isNew() || !$album->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -159,14 +158,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getalbuminfo(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $album = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$album instanceof Album || $album->isNew()) {
+        if (!$album instanceof Album || $album->isNew() || !$album->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -277,14 +275,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartist(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = new Artist(OpenSubsonic_Api::getAmpacheId($sub_id));
-        if ($artist->isNew()) {
+        if ($artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -310,14 +307,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        if (!$artist instanceof Artist || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -348,14 +344,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo2(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $artist = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        if (!$artist instanceof Artist || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -520,6 +515,12 @@ final class BrowsingHandler implements BrowsingHandlerInterface
 
         $object = OpenSubsonic_Api::getAmpacheObject($sub_id);
         if (!$object) {
+            $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        if (($object instanceof Album || $object instanceof Artist) && !$object->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -864,7 +865,6 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function gettopsongs(array $input, User $user): void
     {
-        unset($user);
         // [OPENSUBSONIC] `topSongsByArtistId`: an id may stand in for the name and wins when both are given.
         $sub_id = $input['id'] ?? null;
         $name   = $input['artist'] ?? null;
@@ -876,7 +876,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
 
         if ($sub_id !== null) {
             $artist = OpenSubsonic_Api::getAmpacheObject((string) $sub_id);
-            if (!$artist instanceof Artist || $artist->isNew()) {
+            if (!$artist instanceof Artist || $artist->isNew() || !$artist->isVisible($user)) {
                 $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
                 return;

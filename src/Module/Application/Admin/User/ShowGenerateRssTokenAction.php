@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for rss-token generation
+ * Renders the confirmation dialog for rss-token generation
  */
 final class ShowGenerateRssTokenAction extends AbstractUserAction
 {

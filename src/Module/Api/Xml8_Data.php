@@ -288,7 +288,7 @@ final class Xml8_Data
                 $string .= "\t<songartist id=\"" . $song_artist['id'] . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</songartist>\n";
             }
 
-            // Handle includes (get_songs() is already scoped to the disk and honours catalog_disable)
+            // Handle includes (get_songs() is already scoped to the disk and honors catalog_disable)
             $songs = (in_array("songs", $include)) ? $this->songs($album_disk->get_songs(), $user, $auth, false) : '';
 
             // Build the Art URL, include session
@@ -1252,7 +1252,7 @@ final class Xml8_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects License id's assigned to songs and artists
      */
     public function licenses(array $objects, User $user): string
     {
@@ -2031,7 +2031,7 @@ final class Xml8_Data
         }
 
         // songs() skips its own windowing when asked for a fragment, so the window is applied to the id list here
-        // instead; without it the xml form would ignore an offset the json form honours.
+        // instead; without it the xml form would ignore an offset the json form honors.
         $this->count = $this->count ?: count($similarity);
         $windowed    = Api::filter_objects(array_keys($similarity), $this->count, $this->offset, $this->limit);
 

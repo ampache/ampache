@@ -29,7 +29,7 @@ use Ampache\Gui\View\AbstractView;
 use Override;
 
 /**
- * The web audio analyser overlay and its equaliser bands.
+ * The web audio analyzer overlay and its equaliser bands.
  */
 final class VisualizerView extends AbstractView
 {

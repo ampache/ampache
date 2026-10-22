@@ -39,7 +39,7 @@ final class Migration810026 extends AbstractMigration
 
     public function migrate(): void
     {
-        // Recommendation::get_items() filters on `recommendation` with no key, so the optimiser walked the
+        // Recommendation::get_items() filters on `recommendation` with no key, so the optimizer walked the
         // whole table per lookup. Reported on GitHub (#4528) as a full scan of 2.6M rows taking ~1.3s; the
         // key drops that to ~100 rows read and well under 1ms
         if (!Dba::has_index('recommendation_item', 'recommendation_item_recommendation_IDX')) {

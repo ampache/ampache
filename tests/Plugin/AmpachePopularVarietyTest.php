@@ -31,7 +31,7 @@ use ReflectionMethod;
 /**
  * The rule that turns a play count ranking into a panel worth looking at.
  *
- * A ranking on a deep catalogue is won by whichever record someone listened through, so the top of the list
+ * A ranking on a deep catalog is won by whichever record someone listened through, so the top of the list
  * is the same cover over and over. Keeping only the first track of each album and of each artist is the whole
  * plugin: get it wrong and the panel is either repetitive again or silently short.
  */

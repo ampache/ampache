@@ -29,7 +29,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 
 /**
- * A node in a user's private tree for organising playlists, smartlists and collections
+ * A node in a user's private tree for organizing playlists, smartlists and collections
  *
  * The tree belongs to one user and is never shared. Placement of a list is recorded per (user, list), so
  * filing another user's public playlist changes nothing for them. A folder holds no playable media itself and
@@ -117,7 +117,7 @@ final class PlaylistFolder extends database_object implements ModelInterface
     }
 
     /**
-     * Normalise the API spelling of a type onto the one used for loading and storage.
+     * Normalize the API spelling of a type onto the one used for loading and storage.
      */
     public static function normalizeType(string $objectType): string
     {

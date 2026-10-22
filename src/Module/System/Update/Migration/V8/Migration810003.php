@@ -40,7 +40,7 @@ final class Migration810003 extends AbstractMigration
     public function migrate(): void
     {
         // `Catalog::get_uploads_sql('song', $user_id)` filters on `user_upload`, which carried no key. With a
-        // sort on the title the optimiser walked `title_enabled_IDX` end to end and checked the column per row:
+        // sort on the title the optimizer walked `title_enabled_IDX` end to end and checked the column per row:
         // on one instance, 61744 rows read to return the 2 a user had uploaded. The key makes it 2
         if (!Dba::has_index('song', 'user_upload')) {
             $this->updateDatabase('ALTER TABLE `song` ADD KEY `user_upload` (`user_upload`);');

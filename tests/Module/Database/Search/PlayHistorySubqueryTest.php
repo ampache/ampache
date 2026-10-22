@@ -33,7 +33,7 @@ class PlayHistorySubqueryTest extends MockeryTestCase
     public function testCountWithConsolidationOffMatchesLegacySingleTableQuery(): void
     {
         $this->off();
-        // must be byte-identical to the pre-consolidation subquery so behaviour is unchanged
+        // must be byte-identical to the pre-consolidation subquery so behavior is unchanged
         $expected = "(SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = 5 GROUP BY `object_id`, `object_type`, `user`)";
         $this->assertSame($expected, PlayHistorySubquery::count('song', ['stream'], 5));
     }

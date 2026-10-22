@@ -77,7 +77,6 @@ $('#browse_<?php echo $id; ?>_scroll').jscroll({
     <?php } ?>
     <span class="browse-options">
         <?php if ($this->showView()) { ?>
-        <a href="javascript:showFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-link" id="browse-options-link_<?php echo $id; ?>"><?php echo T_('View'); ?></a>
         <span class="browse-options-content" id="browse-options-content_<?php echo $id; ?>">
             <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_pages_<?php echo $suffix; ?>" value="true" <?php echo ($usePages) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_pages&value=' + $('#browse_" . $id . '_use_pages_' . $suffix . "').is(':checked') + '" . $param, 'browse_' . $id . '_use_pages_' . $suffix)); ?>"><?php echo T_('Pages'); ?></span>
             <span><input type="checkbox" id="browse_<?php echo $id; ?>_use_scroll_<?php echo $suffix; ?>" value="true" <?php echo (!$usePages) ? 'checked' : ''; ?> onClick="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=options&browse_id=' . $id . "&option=use_pages&value=' + !($('#browse_" . $id . '_use_scroll_' . $suffix . "').is(':checked')) + '" . $param, 'browse_' . $id . '_use_scroll_' . $suffix)); ?>"><?php echo T_('Infinite Scroll'); ?></span>
@@ -106,8 +105,22 @@ $('#browse_<?php echo $id; ?>_scroll').jscroll({
                 </form>
             </span>
             <?php } ?>
-            <a href="javascript:hideFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
         </span>
+        <?php if ($this->showSort()) { ?>
+        <span>
+            <label for="browse_<?php echo $id; ?>_sort_<?php echo $suffix; ?>"><?php echo T_('Sort By'); ?>:</label>
+            <select id="browse_<?php echo $id; ?>_sort_<?php echo $suffix; ?>" onChange="javascript:<?php echo $this->raw(Ajax::action('?page=browse&action=set_sort&browse_id=' . $id . "&sort=' + $('#browse_" . $id . '_sort_' . $suffix . "').val() + '" . $param, 'browse_' . $id . '_sort_' . $suffix)); ?>">
+                <?php foreach ($this->getSortableColumns() as $column) { ?>
+                <option value="<?php echo $this->e($column['sort']); ?>" <?php echo ($column['sort'] === $this->getCurrentSort()) ? 'selected' : ''; ?>><?php echo $this->e($column['label']); ?></option>
+                <?php } ?>
+            </select>
+            <?php if ($this->showSortToggle()) {
+                echo $this->raw(Ajax::button('?page=browse&action=set_sort&browse_id=' . $id . '&sort=' . $this->getCurrentSort() . '&order=' . $this->getNextOrder() . $param, $this->getSortDirectionIcon(), T_('Order'), 'browse_' . $id . '_sort_toggle_' . $suffix));
+            } ?>
+        </span>
+        <?php } ?>
+        <a href="javascript:showFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-link" id="browse-options-link_<?php echo $id; ?>"><?php echo T_('View'); ?></a>
+        <a href="javascript:hideFilters(this, '_<?php echo $id; ?>', <?php echo ($this->isGroupRelease()) ? 'true' : 'false'; ?>);" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
         <?php } ?>
     </span>
 </div>

@@ -47,7 +47,7 @@ use Override;
  * not see opened a row and emitted no cells at all. The footer also sorted the album column by `album`
  * where the header used the grouping-aware name.
  */
-final class SongListRenderer extends AbstractBrowseListRenderer
+final class SongListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

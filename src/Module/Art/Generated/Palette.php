@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Generated;
 
 /**
- * Colour pairs for generated art.
+ * Color pairs for generated art.
  *
  * The pairs are picked by hand rather than derived from the name: computing a hue straight from a hash
  * gives muddy ochres, because nothing keeps saturation and lightness in a range that reads well.
@@ -46,7 +46,7 @@ final class Palette
     ];
 
     /**
-     * The accent alone, used when one tile shows colours borrowed from several artists.
+     * The accent alone, used when one tile shows colors borrowed from several artists.
      */
     public static function accentForSeed(string $seed): string
     {

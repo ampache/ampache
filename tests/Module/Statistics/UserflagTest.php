@@ -44,7 +44,7 @@ class UserflagTest extends MockeryTestCase
 
     public function testSetFlagClampsAFutureDateToNow(): void
     {
-        // a client-supplied date in 2106 used to pin the favourite to the top of every newest list forever
+        // a client-supplied date in 2106 used to pin the favorite to the top of every newest list forever
         $this->primeFlag('album', 42, 7, false);
 
         $isNow = Mockery::on(static fn(int $date): bool => $date <= time() && $date > time() - 5);

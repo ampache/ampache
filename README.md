@@ -24,8 +24,8 @@ using almost any internet enabled device.
 
 Ampache's usefulness is heavily dependent on being able to extract
 correct metadata from embedded tags in your files and/or the file name.
-Ampache is not a media organiser; it is meant to be a tool which
-presents an already organised collection in a useful way. It assumes
+Ampache is not a media organizer; it is meant to be a tool which
+presents an already organized collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 

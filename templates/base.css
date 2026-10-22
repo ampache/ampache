@@ -92,12 +92,12 @@ a.tag_size4 { text-decoration: none; }
 }
 
 #tabs li a {
-    color: #ff9d00;
+    color: var(--amp-accent);
     text-decoration: none;
 }
 
 #tabs li a:hover {
-    color: #ffc466;
+    color: var(--amp-accent-hover);
     outline: 0;
 }
 
@@ -276,7 +276,7 @@ a.tag_size4 { text-decoration: none; }
 .topmenu_item span {
     width: 100px;
     font-size: 14px;
-    color: #fff;
+    color: var(--amp-accent);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -326,6 +326,7 @@ a.tag_size4 { text-decoration: none; }
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     transition: all 0.5s;
     transform: translate(-50%, 0);
+    cursor: pointer;
 }
 
 #notification.notification-out {

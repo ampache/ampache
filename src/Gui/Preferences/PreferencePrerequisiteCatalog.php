@@ -172,12 +172,12 @@ final class PreferencePrerequisiteCatalog
             new PreferencePrerequisite(
                 'personalfav_playlist',
                 [['personalfav_display', PreferencePrerequisite::IS_OFF]],
-                T_('The favourites widget is off, so this list is never shown.')
+                T_('The favorites widget is off, so this list is never shown.')
             ),
             new PreferencePrerequisite(
                 'personalfav_smartlist',
                 [['personalfav_display', PreferencePrerequisite::IS_OFF]],
-                T_('The favourites widget is off, so this list is never shown.')
+                T_('The favorites widget is off, so this list is never shown.')
             ),
             // the arrows collapse the sidebar whatever `sidebar_light` says, so only a missing switcher settles it
             new PreferencePrerequisite(
@@ -217,7 +217,7 @@ final class PreferencePrerequisiteCatalog
             new PreferencePrerequisite(
                 'show_license',
                 [['show_license', PreferencePrerequisite::IS_ON], ['config:licensing', PreferencePrerequisite::IS_OFF]],
-                T_('Licensing is off in the server configuration file, so no licence is ever shown.')
+                T_('Licensing is off in the server configuration file, so no license is ever shown.')
             ),
             // MediaEmbedView.php refuses to publish a session-bound stream url into someone else's page
             new PreferencePrerequisite(

@@ -30,8 +30,11 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Util\Rss\EnclosureResolver;
 use Ampache\Module\Util\Rss\PodcastGuid;
 use Ampache\Module\Util\Rss\RssUrl;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -66,6 +69,39 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             : [['podcast_episode', $media->getId()], ['podcast', $media->podcast ?? 0]];
 
         return array_values(array_filter($sources, static fn(array $source): bool => $source[1] > 0));
+    }
+
+    /**
+     * An album answers with its release when it has one, and falls back to the release group it belongs to.
+     */
+    private static function musicBrainzUrl(library_item $item): ?string
+    {
+        if ($item instanceof Artist && !empty($item->mbid)) {
+            return 'https://musicbrainz.org/artist/' . $item->mbid;
+        }
+
+        if ($item instanceof Album) {
+            if (!empty($item->mbid)) {
+                return 'https://musicbrainz.org/release/' . $item->mbid;
+            }
+
+            if (!empty($item->mbid_group)) {
+                return 'https://musicbrainz.org/release-group/' . $item->mbid_group;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
+     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
+     */
+    private static function xmlText(?string $value): string
+    {
+        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
     }
 
     /**
@@ -151,6 +187,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      *     url: null|string,
      *     season: null|string,
      *     season_name: null|string,
+     *     release_url: null|string,
      *     episode: null|string,
      *     image: string,
      *     explicit: string
@@ -193,6 +230,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 'season' => null,
                 'season_name' => null,
                 'episode' => null,
+                'release_url' => null,
             ];
 
             // Group songs by their album (podcast namespace season/episode)
@@ -201,6 +239,13 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 $data['season_name'] = $media->get_album_fullname();
                 if (($media->track ?? 0) > 0) {
                     $data['episode'] = (string) $media->track;
+                }
+
+                // the season number names the album on this server only, so the release it belongs to is
+                // published beside it: without that, two servers cannot tell they hold the same record
+                $album = $this->libraryItemLoader->load(LibraryItemEnum::ALBUM, $media->album, [Album::class]);
+                if ($album instanceof Album) {
+                    $data['release_url'] = self::musicBrainzUrl($album);
                 }
             }
 
@@ -215,6 +260,16 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 
             yield $data;
         }
+    }
+
+    /**
+     * The MusicBrainz url naming what this feed is about, when the library knows its identifier.
+     *
+     * An artist feed otherwise travels as a name, which no other server can match against its own.
+     */
+    public function getMusicBrainzUrl(): ?string
+    {
+        return self::musicBrainzUrl($this->playable);
     }
 
     /**
@@ -263,10 +318,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function getSummary(): string
     {
         $summary = $this->playable->get_description();
+        if ($summary === '') {
+            $summary = sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
+        }
 
-        return ($summary !== '')
-            ? $summary
-            : sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
+        return self::xmlText($summary);
     }
 
     /**
@@ -291,9 +347,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     private function buildMediaDescription(Song|Podcast_Episode $media): string
     {
-        return ($media instanceof Song)
-            ? scrub_out($media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname())
+        $description = ($media instanceof Song)
+            ? $media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname()
             : $media->get_description();
+
+        return self::xmlText($description);
     }
 
     /**

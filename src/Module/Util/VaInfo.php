@@ -345,7 +345,7 @@ final class VaInfo implements VaInfoInterface
             $info['time']     = (!$info['time'] && array_key_exists('time', $tags)) ? (int) $tags['time'] : $info['time'];
             $info['channels'] = (!$info['channels'] && array_key_exists('channels', $tags)) ? $tags['channels'] : $info['channels'];
 
-            // getID3 normalises id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
+            // getID3 normalizes id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
             $info['bpm'] = (!$info['bpm'] && array_key_exists('bpm', $tags)) ? (float) $tags['bpm'] : $info['bpm'];
 
             // This because video title are almost always bad...

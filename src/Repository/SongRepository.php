@@ -1431,7 +1431,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * The songs an artist is credited on, as a song artist or through one of its albums.
      *
      * `$enabledOnly` is what separates the two callers: a listener is handed what can be played, while a
-     * catalogue re-reading tags has to reach a withdrawn file as much as any other.
+     * catalog re-reading tags has to reach a withdrawn file as much as any other.
      *
      * @return list<int>
      */

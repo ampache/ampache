@@ -28,6 +28,7 @@ namespace Ampache\Module\Database\Query;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
+use Ampache\Gui\Browse\ListRenderer\SortableBrowseListRendererInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
@@ -286,6 +287,30 @@ class Browse extends Query
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    /**
+     * The sort keys grid view offers through a select, since it has no clickable column headers to carry them.
+     *
+     * @return list<array{label: string, sort: string}>
+     */
+    public function getSortableColumns(): array
+    {
+        $renderer = $this->browseListRendererLocator->find($this->get_type());
+        if (!$renderer instanceof SortableBrowseListRendererInterface) {
+            return [];
+        }
+
+        $columns = [];
+        $seen    = [];
+        foreach ($renderer->getColumns() as $column) {
+            if ($column['sort'] !== null && !in_array($column['sort'], $seen, true)) {
+                $seen[]    = $column['sort'];
+                $columns[] = ['label' => $column['label'], 'sort' => $column['sort']];
+            }
+        }
+
+        return $columns;
     }
 
     /**
@@ -845,7 +870,7 @@ class Browse extends Query
 
     /**
      * Cut the id list down to the page being rendered. An un-paged list too large to hold in memory renders an
-     * error instead of failing silently, which is signalled back by a null return.
+     * error instead of failing silently, which is signaled back by a null return.
      *
      * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
      * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null

@@ -1439,6 +1439,17 @@ table.gridview td.cel_drag {
     display: none !important;
 }
 
+/* A long name filled four lines inside a cell 25px tall, so three of them were cut off
+   mid-word with nothing to say so. The link already carries the whole name as a tooltip,
+   so one line ending in an ellipsis hides no more than the silent clipping did. */
+table.gridview td.grid_album,
+table.gridview td.grid_artist,
+table.gridview td.grid_song {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 table.gridview tbody tr {
     display: flex;
     flex-flow: row wrap;
@@ -2267,22 +2278,18 @@ span.fatalerror {
     padding: 0;
 }
 
-.star-rating .global-rating {
-    bottom: 2px;
+.global-rating {
     font-size: 0.95em;
-    margin-left: 0.45em;
-    position: relative;
-    top: 0.9px;
     white-space: nowrap;
 }
 
 .cel_rating {
-    max-width: 125px;
-    width: 125px;
+    max-width: 95px;
+    width: 95px;
 }
 
 /* a table cell has no room for the wording, and its title carries the count instead */
-.cel_rating .global-rating-count {
+.cel_ratings .global-rating-count {
     display: none;
 }
 
@@ -2413,6 +2420,11 @@ ul,
 
 .browse-options-content span {
     margin-right: 5px;
+}
+
+.browse-options > span,
+.browse-options > a {
+    margin-left: 3px;
 }
 
 .jscroll-next {
@@ -4444,4 +4456,510 @@ button.rowlist-toggle[aria-expanded="true"]::before {
     button.rowlist-toggle::before {
         transition: none;
     }
+}
+
+/* --------------------------
+   Theme colour rules (shared structure)
+   -------------------------- */
+/* Rules below read only --amp-* variables, so they render identically for every colour and live
+   here once instead of being repeated in each colour's own stylesheet (dark.css, light.css, ...).
+   A colour-specific selector (different literals per colour, or one colour only) stays in that
+   colour's own file instead. */
+
+body {
+    color: var(--amp-text);
+    background-color: var(--amp-bg);
+    height: 90%;
+}
+
+.error {
+    color: #c33;
+}
+
+a {
+    color: var(--amp-accent);
+}
+
+a:hover {
+    color: var(--amp-accent-hover);
+}
+
+hr {
+    border-top-color: #eee;
+}
+
+input[type=password],
+input[type=text],
+input[type=checkbox],
+input[type=radio],
+input[type=url],
+input[type=year],
+select,
+textarea {
+    background-color: var(--amp-surface);
+    background-image: linear-gradient(to top, var(--amp-field-grad-top), var(--amp-field-grad-bottom));
+    border-color: var(--amp-border);
+}
+
+button,
+input[type=button],
+input[type=submit],
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    background-image: linear-gradient(to top, var(--amp-accent), var(--amp-accent-dark));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+button:hover,
+button:focus,
+input[type=button]:hover,
+input[type=button]:focus,
+input[type=submit]:hover,
+input[type=submit]:focus,
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
+    background-color: var(--amp-accent-dark);
+}
+
+button:focus:active,
+input[type=button]:focus:active,
+input[type=submit]:focus:active {
+    box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.edit_dialog_content input[type=text],
+.edit_dialog_content select {
+    color: var(--amp-text);
+}
+
+.edit_dialog_content input:focus,
+.edit_dialog_content select:focus {
+    color: #555;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--amp-accent);
+}
+
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover {
+    background-color: unset;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover,
+.playlistdialogstyle.ui-widget-content a:hover,
+.broadcastsdialogstyle.ui-widget-content a:hover,
+.sharedialogstyle.ui-widget-content a:hover {
+    color: var(--amp-accent);
+}
+
+.ui-icon-close {
+    background-color: #f0f0f0;
+}
+
+#header {
+    background-color: var(--amp-header-bg);
+    border-bottom: 2px solid var(--amp-border);
+    box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
+}
+
+#sb_Subsearch input[type=text]:focus {
+    border-color: var(--amp-accent);
+}
+
+#loginPage {
+    background-color: var(--amp-header-bg);
+}
+
+#loginPage #loginbox {
+    color: var(--amp-panel-text);
+}
+
+#loginPage #loginbox div,
+#registerPage #registerbox div {
+    text-shadow: 0 1px 0 var(--amp-header-bg);
+    color: var(--amp-panel-text);
+}
+
+#loginPage #loginbox #usernamefield input:focus,
+#loginPage #loginbox #emailfield input:focus,
+#loginPage #loginbox #passwordfield input:focus {
+    border-color: var(--amp-login-focus-border);
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+#loginPage #loginbox #remembermefield {
+    color: var(--amp-text);
+}
+
+/* the openid link is presented as a button, so it gets the same gradient as the other action buttons */
+#loginPage #oidcbutton {
+    border-color: var(--amp-accent-dark);
+}
+
+#loginPage #oidcbutton:hover,
+#loginPage #oidcbutton:focus {
+    background-color: var(--amp-accent-dark);
+    color: #fff;
+}
+
+.formValidation input {
+    color: #fff;
+}
+
+#loginPage span.error {
+    background: #f99;
+    border-color: #c33;
+    color: #900;
+}
+
+#loginPage #footer {
+    color: var(--amp-panel-text);
+}
+
+#loginPage #footer #donate {
+    color: var(--amp-accent);
+}
+
+#sidebar {
+    color: var(--amp-panel-text);
+}
+
+#sidebar-header:hover {
+    color: var(--amp-accent-hover);
+}
+
+#sidebar_home,
+#sidebar_localplay,
+#sidebar_preferences,
+#sidebar_admin,
+#sidebar_logout {
+    color: var(--amp-text);
+}
+
+#sidebar_home:hover,
+#sidebar_localplay:hover,
+#sidebar_preferences:hover,
+#sidebar_admin:hover,
+#sidebar_logout:hover {
+    color: var(--amp-accent-hover);
+}
+
+#sidebar-tabs .active > a {
+    color: var(--amp-accent);
+}
+
+#sidebar-tabs .sb2 li h4 {
+    color: var(--amp-text);
+    background-color: var(--amp-raised);
+    border-bottom-color: #0f0f0f;
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li ul li a {
+    color: var(--amp-sidebar-link);
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
+    border-color: #bbb;
+}
+
+.topmenu_item span {
+    color: var(--amp-accent);
+}
+
+.topmenu_item:hover {
+    border: 2px solid var(--amp-accent);
+}
+
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-home,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  fill: var(--amp-accent);
+}
+
+.image-topmenu-album:hover,
+.image-topmenu-artist:hover,
+.image-topmenu-favorite:hover,
+.image-topmenu-home:hover,
+.image-topmenu-logout:hover,
+.image-topmenu-playlist:hover,
+.image-topmenu-radio:hover,
+.image-topmenu-smartlist:hover,
+.image-topmenu-tagcloud:hover,
+.image-topmenu-upload:hover {
+  fill: var(--amp-accent-hover);
+}
+
+.active_instance {
+    border-color: var(--amp-text);
+}
+
+#rightbar #rb_action {
+    color: var(--amp-accent);
+}
+
+#rightbar #rb_current_playlist li {
+    color: var(--amp-text);
+}
+
+#rightbar #rb_current_playlist li a {
+    color: var(--amp-text);
+}
+
+#rightbar #rb_current_playlist li a:hover,
+#rightbar #rb_current_playlist li a:focus {
+    color: var(--amp-text);
+    background-color: var(--amp-row-hover-start);
+    background-image: linear-gradient(to top, var(--amp-row-hover-start), var(--amp-row-hover-end));
+}
+
+#rightbar .submenu a:hover {
+    color: var(--amp-accent);
+}
+
+.list-header,
+.list-header a {
+    color: var(--amp-panel-text);
+}
+
+span.page-nb {
+    color: var(--amp-accent);
+}
+
+#catalog_type_fields table.tabledata a {
+    color: var(--amp-accent);
+}
+
+table.tabledata a:hover,
+table.tabledata a:focus {
+    color: var(--amp-accent-hover);
+}
+
+table.tabledata thead .th-top,
+table.tabledata tfoot .th-bottom {
+    background-color: var(--amp-raised);
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+}
+
+table.tabledata thead .th-top {
+    border-bottom-color: #0f0f0f;
+}
+
+table.tabledata tfoot .th-bottom {
+    border-top-color: #0f0f0f;
+}
+
+table.tabledata tr:hover,
+table.tabledata tr:focus {
+    background-color: var(--amp-row-hover-start);
+    background-image: linear-gradient(to top, var(--amp-row-hover-start), var(--amp-row-hover-end));
+}
+
+table.striped-rows tbody tr:nth-child(odd),
+ul.striped-rows > li:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+table.tabledata tbody .cel_cover img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+table.tabledata tbody .cel_cover img:hover {
+    border-color: var(--amp-accent);
+}
+
+input:invalid {
+    border: 4px solid red;
+}
+
+.random_selection .random_album .art_album img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.random_selection .random_video .art_album img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.random_selection .random_album .art_album img:hover {
+    border-color: var(--amp-accent);
+}
+
+#content .missing_art {
+    background-image: url('../images/missing.png');
+}
+
+#now_playing .cel_albumart img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+#now_playing .cel_lyrics a:hover {
+    color: #09c;
+}
+
+span.fatalerror {
+    color: #c60;
+}
+
+.box-content #tag_filter .tag_button,
+.box-content #mood_filter .tag_button {
+    color: #fff;
+}
+
+.box-content #tag_filter .tag_button span:hover,
+.box-content #mood_filter .tag_button span:hover {
+    background-color: var(--amp-row-hover-start);
+    background-image: linear-gradient(to top, var(--amp-row-hover-start), var(--amp-row-hover-end));
+}
+
+.item_properties {
+    color: #999;
+}
+
+.item_art .item_art_play .item_art_play_icon,
+.item_art .item_art_play_150 .item_art_play_icon {
+    background-image: url('../images/videoplay.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.item_art img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.item_art:hover {
+    color: var(--amp-accent);
+}
+
+#information_actions ul li {
+    color: #999;
+}
+
+#information_actions a:hover,
+#information_actions li:hover {
+    color: var(--amp-text);
+}
+
+.multiselect-actions {
+    background-color: var(--amp-raised);
+    color: var(--amp-muted);
+}
+
+.multiselect-actions a:hover {
+    color: var(--amp-text);
+}
+
+.global-rating {
+    color: var(--amp-panel-text);
+}
+
+dl.media_details dt {
+    color: #c60;
+}
+
+#footer a:hover {
+    color: #09c;
+}
+
+div.jp-video div.jp-interface {
+    border-top: 1px solid var(--amp-webplayer-bg);
+}
+
+.jp-no-solution {
+    background: linear-gradient(to bottom, #3b3b3b, #111212);
+    border-top: 1px solid var(--amp-webplayer-bg);
+}
+
+#webplayer {
+    background-color: var(--amp-webplayer-bg) !important;
+}
+
+.jp-type-playlist {
+    background-color: var(--amp-webplayer-bg);
+}
+
+#equalizer .eq-band {
+    color: var(--amp-muted);
+}
+
+.playing_info,
+div.playing_title a,
+div.playing_artist a,
+div.playing_album a {
+    color: var(--amp-text);
+}
+
+div.playing_lyrics a {
+    color: var(--amp-accent);
+}
+
+div.jp-interface {
+    background-color: var(--amp-webplayer-bg);
+}
+
+.jp-type-playlist .jp-playlist a {
+    color: var(--amp-text);
+}
+
+.jp-type-playlist .jp-playlist a:hover,
+.jp-type-playlist .jp-playlist a:active,
+.jp-type-playlist .jp-playlist a:focus {
+    color: var(--amp-accent);
+}
+
+.jp-type-playlist .jp-playlist a.jp-playlist-current {
+    color: var(--amp-accent);
+}
+
+.jscroll-next {
+    border-color: #ccc;
+    background-color: #eee;
+    color: var(--amp-panel-text);
+}
+
+.missing_album {
+    color: #bbb !important;
+}
+
+.user_online {
+    background: #0f0;
+}
+
+.user_offline {
+    background: #7f0000;
+}
+
+.user_disabled {
+    background: #ccc;
+}
+
+span.item-count,
+span.item-duration,
+span.query-count {
+    color: var(--amp-panel-text);
+}
+
+#tabs li a {
+    color: var(--amp-accent);
+}
+
+#tabs li a:hover {
+    color: var(--amp-accent-hover);
+}
+
+#tabs li.tab_active a {
+    color: var(--amp-text);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:hover,
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:focus {
+    background-image: linear-gradient(to top, var(--amp-accent-hover), var(--amp-accent));
+    border-color: var(--amp-accent);
 }

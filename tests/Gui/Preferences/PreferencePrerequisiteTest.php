@@ -65,7 +65,7 @@ class PreferencePrerequisiteTest extends TestCase
 
         $this->assertTrue($rule->holds(['a' => '']));
         $this->assertTrue($rule->holds(['a' => '0']));
-        $this->assertTrue($rule->holds(['a' => '-1']), 'no catalogue chosen is stored as -1');
+        $this->assertTrue($rule->holds(['a' => '-1']), 'no catalog chosen is stored as -1');
         $this->assertFalse($rule->holds(['a' => '7']));
     }
 

@@ -59,7 +59,7 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -123,7 +123,7 @@ No authentication. Starts a QuickConnect pairing request: a device with no sessi
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -162,7 +162,7 @@ No authentication. Polls a QuickConnect pairing request started by [quickconnect
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -254,7 +254,7 @@ accounts.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -285,7 +285,7 @@ This can be called without being authenticated, it is useful for determining if 
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -382,7 +382,7 @@ Check Ampache for updates and run the update if there is one.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -417,7 +417,7 @@ Get your server preferences
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -460,7 +460,7 @@ Get ids and usernames for your site
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -586,7 +586,7 @@ This returns albums based on the provided search filters
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -648,7 +648,7 @@ This returns a single album based on the UID provided
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -707,7 +707,7 @@ This returns the songs of a specified album
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -806,7 +806,7 @@ API 8 only; `albums` and `album` never change shape based on that preference.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -868,7 +868,7 @@ This returns a single album disk based on the UID provided
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -927,7 +927,7 @@ This returns the songs of a specified album disk
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1025,7 +1025,7 @@ This takes a collection of inputs and returns artist objects.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1084,7 +1084,7 @@ This returns a single artist based on the UID of said artist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1141,7 +1141,7 @@ This returns the albums of an artist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1209,7 +1209,7 @@ This returns the songs of the specified artist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1299,7 +1299,7 @@ Get information about bookmarked media this user is allowed to manage.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1351,7 +1351,7 @@ Get a single bookmark by bookmark_id
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1399,7 +1399,7 @@ Create a placeholder for the current media that you can return to later.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1472,7 +1472,7 @@ Edit a placeholder for the current media that you can return to later.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1528,7 +1528,7 @@ catalog you can see. API version 6 still requires it on those types.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1593,7 +1593,7 @@ This searches the catalogs and returns... catalogs
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1643,7 +1643,7 @@ Return catalog by UID
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1818,7 +1818,7 @@ Make sure you remember to urlencode those folder names!
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1854,7 +1854,7 @@ This returns every collection you own, plus every public collection on the serve
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1898,7 +1898,7 @@ Return a collection by UID, without its contents.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1961,7 +1961,7 @@ Positions are dense and 1-based. They are renumbered whenever a member is added,
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -1995,7 +1995,7 @@ Leave `object_type` out for a mixed collection, or set it to pin the collection 
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2060,7 +2060,7 @@ The two lists must name the same number of entries or the call is refused. Pairs
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2188,7 +2188,7 @@ This returns the episodes for a podcast that have been deleted
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2237,7 +2237,7 @@ Returns songs that have been deleted from the server
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2288,7 +2288,7 @@ This returns video objects that have been deleted
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2377,7 +2377,7 @@ Return children of a parent object in a folder traversal style **Ampache 8.0.0+*
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2415,7 +2415,7 @@ This gets the followers for the requested username
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2454,7 +2454,7 @@ Get a list of people that this user follows
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2494,7 +2494,7 @@ This get current user friends timeline
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2544,7 +2544,7 @@ This returns the genres (Tags) based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2595,7 +2595,7 @@ Each genre element has an attribute "count" that indicates the number of people 
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2642,7 +2642,7 @@ This returns the albums associated with the genre in question
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2709,7 +2709,7 @@ This returns the artists associated with the genre in question as defined by the
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2773,7 +2773,7 @@ returns the songs for this genre
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2892,7 +2892,7 @@ Return External plugin metadata searching by object id and type
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -2990,13 +2990,13 @@ Return Database lyrics or search with plugins by Song id
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
 > model below, but element nesting/repetition differs from the JSON representation.
 
-`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialised as an empty array, not an empty object.
+`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialized as an empty array, not an empty object.
 
 | Field       | Type         | Nullable | Optional | Notes                   |
 |-------------|--------------|:--------:|:--------:|-------------------------|
@@ -3027,7 +3027,7 @@ Return similar artist id's or similar song ids compared to the input filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3129,7 +3129,7 @@ This takes a collection of inputs and returns ID + name for the object type
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3182,7 +3182,7 @@ This returns labels based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3231,7 +3231,7 @@ This returns a single label
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3278,7 +3278,7 @@ This returns the artists for a label
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3339,7 +3339,7 @@ This gets the latest posted shouts
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3382,7 +3382,7 @@ This returns a single license
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3423,7 +3423,7 @@ This returns the songs for a license
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3519,7 +3519,7 @@ This returns licenses based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3574,7 +3574,7 @@ This takes a named array of objects and returning `id`, `name`, `prefix` and `ba
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3624,7 +3624,7 @@ This returns live_streams based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3669,7 +3669,7 @@ This returns a single live_stream
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3712,7 +3712,7 @@ Create a live_stream (radio station) object.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3803,7 +3803,7 @@ Get what is currently being played by all users.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3851,7 +3851,7 @@ Return the `now_playing` state when completed
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3904,7 +3904,7 @@ This returns playlists based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -3961,7 +3961,7 @@ This returns a single playlist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4073,7 +4073,7 @@ This create a new playlist and return it
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4190,7 +4190,7 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4291,7 +4291,7 @@ This returns the md5 hash for the songs in a playlist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4363,7 +4363,7 @@ This returns the songs for a playlist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4443,7 +4443,7 @@ Each `song` entry ([SongObject](#song)):
 
 ### playlist_folders
 
-A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
+A playlist folder organizes playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
 
 This returns the whole tree as a flat list; rebuild the hierarchy from each folder's `parent`, where 0 is the root.
 
@@ -4455,7 +4455,7 @@ This returns the whole tree as a flat list; rebuild the hierarchy from each fold
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4499,7 +4499,7 @@ One folder's own details, without its contents. A folder belonging to another us
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4548,7 +4548,7 @@ Create a folder in the calling user's tree. The name may not contain a `/`, beca
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4596,7 +4596,7 @@ Change a folder's name, parent, position or visibility. Anything not sent is lef
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4662,7 +4662,7 @@ The playlists, smartlists and collections filed in one folder. The root is not a
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4739,7 +4739,7 @@ Get the podcast from it's id.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4795,7 +4795,7 @@ Get information about podcasts
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4856,7 +4856,7 @@ Takes the url and catalog parameters.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -4970,7 +4970,7 @@ This returns the episodes for a podcast
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5042,7 +5042,7 @@ Get the podcast_episode from it's id.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5321,7 +5321,7 @@ Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5442,7 +5442,7 @@ Each type is a grouping of object types so allow single search calls to be made
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5480,7 +5480,7 @@ Print a list of valid search rules for your search type
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5562,7 +5562,7 @@ This searches the shares and returns... shares
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5616,7 +5616,7 @@ Return shares by UID
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5666,7 +5666,7 @@ Takes the file id with optional description and expires parameters.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5774,7 +5774,7 @@ This returns smartlists based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5831,7 +5831,7 @@ This returns a single smartlist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -5883,7 +5883,7 @@ This returns the songs for a smartlist
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6005,7 +6005,7 @@ Returns songs based on the specified filter
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6094,7 +6094,7 @@ returns a single song
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6201,7 +6201,7 @@ This is used to get tags for remote catalogs to allow maximum data to be returne
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6284,7 +6284,7 @@ Returns a single object.
 
 Songs that sound like the given song, most similar first.
 
-Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
+Similarity is derived from analyzing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
 
 Each entry carries the full song plus `similarity`, a `0.0`-`1.0` score where `1.0` is the same recording. A backend that gives no comparable score reports `-1`.
 
@@ -6297,7 +6297,7 @@ Each entry carries the full song plus `similarity`, a `0.0`-`1.0` score where `1
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6339,7 +6339,7 @@ Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` v
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6400,7 +6400,7 @@ Get your server preference by name
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6445,7 +6445,7 @@ This gets a user's timeline
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6668,7 +6668,7 @@ This takes a url and returns the song object in question
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6759,7 +6759,7 @@ If the username is omitted, this will return the current api user's public infor
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6926,7 +6926,7 @@ This returns playlists based on the specified filter for your user
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -6983,7 +6983,7 @@ Get your user preference by name
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7036,7 +7036,7 @@ This returns smartlists based on the specified filter for your user
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7096,7 +7096,7 @@ This returns video objects!
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7151,7 +7151,7 @@ This returns a single video
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7315,7 +7315,7 @@ This is for controlling localplay
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7347,7 +7347,7 @@ This method takes no additional parameters.
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
@@ -7398,7 +7398,7 @@ This is for controlling democratic play (Songs only)
 * return
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> **XML structure:** serialized inside a `<root>` element. Each object is an element
 > (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
 > carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
 > booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON

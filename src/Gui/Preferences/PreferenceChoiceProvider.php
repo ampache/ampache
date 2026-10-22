@@ -226,7 +226,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
      */
     private function getThemeColors(array $held): array
     {
-        // the colours on offer are those of the theme the subject uses, not the one the operator sees
+        // the colors on offer are those of the theme the subject uses, not the one the operator sees
         $theme = get_theme($held['theme_name'] ?? (string) AmpConfig::get('theme_name', 'reborn'));
 
         $choices = [];

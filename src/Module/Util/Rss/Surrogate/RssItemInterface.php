@@ -77,12 +77,18 @@ interface RssItemInterface
      *   url: ?string,
      *   season: ?string,
      *   season_name: ?string,
+     *   release_url: ?string,
      *   episode: ?string,
      *   image: string,
      *   explicit: string
      * }>
      */
     public function getMedias(): Traversable;
+
+    /**
+     * The MusicBrainz url naming what this feed is about, when the library knows its identifier
+     */
+    public function getMusicBrainzUrl(): ?string;
 
     /**
      * Returns the name of the owner

@@ -323,7 +323,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     /**
      * Finds the episode this feed item was already stored as, null when it is new to us
      *
-     * The stored description comes back with it, so an unchanged feed is recognised without a second query.
+     * The stored description comes back with it, so an unchanged feed is recognized without a second query.
      *
      * @return null|array{id: int, description: string}
      */

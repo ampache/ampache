@@ -37,7 +37,7 @@ class PreferenceBoxViewTest extends TestCase
 
     public function testAPreferenceWithNoShippedDefaultOffersNoRestoreButton(): void
     {
-        // a plugin preference absent from the catalogue has no default to go back to, and the button
+        // a plugin preference absent from the catalog has no default to go back to, and the button
         // would simply blank the field
         $html = $this->view([$this->item('download', 'feature'), $this->plugin()])->render();
 

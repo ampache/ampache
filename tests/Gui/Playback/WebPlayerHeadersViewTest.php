@@ -63,7 +63,7 @@ class WebPlayerHeadersViewTest extends MockeryTestCase
     {
         $this->assertTrue($this->subject(embedded: true)->isEmbedded());
         $this->assertFalse($this->subject(embedded: false)->isEmbedded());
-        $this->assertFalse($this->subject()->isEmbedded(), 'callers that never pass it keep the pre-existing behaviour');
+        $this->assertFalse($this->subject()->isEmbedded(), 'callers that never pass it keep the pre-existing behavior');
     }
 
     public function testNotEmbeddedKeepsJqueryUiAndTheStylesheetBundle(): void

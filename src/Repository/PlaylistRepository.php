@@ -453,7 +453,7 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
-     * Counts the entries of a playlist, honouring the catalog filter the user browses under
+     * Counts the entries of a playlist, honoring the catalog filter the user browses under
      */
     public function getMediaCount(int $playlistId, string $type, int $userId, bool $catalogFilter): int
     {

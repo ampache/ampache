@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 
 /**
- * Loading and authorising the collection named by `filter`, shared by every collection method.
+ * Loading and authorizing the collection named by `filter`, shared by every collection method.
  */
 trait CollectionLoaderTrait
 {

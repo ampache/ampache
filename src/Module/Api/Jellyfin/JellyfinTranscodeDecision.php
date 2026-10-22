@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Song;
  * clients) sends `MaxStreamingBitrate` on every request by default — usually a huge, effectively "no cap"
  * value. Treating any configured `encode_target` as reason enough to transcode, the way an earlier version
  * of this class did, meant every such request got force-transcoded on a server that has `encode_target` set
- * for an unrelated reason (e.g. normalising the web player), even though the client never asked for a
+ * for an unrelated reason (e.g. normalizing the web player), even though the client never asked for a
  * specific format and its bitrate cap was nowhere near the source rate. Whether to transcode at all is
  * decided independently of what format to transcode to, mirroring `PlayAction`'s own two-step shape.
  */

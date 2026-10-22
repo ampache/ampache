@@ -56,7 +56,7 @@ class PreferenceSecretNameTest extends TestCase
         foreach (Preference::SECRET_SUFFIXES as $suffix) {
             $this->assertTrue(
                 Preference::isSecretName('something' . $suffix),
-                sprintf('`%s` is on the list but not recognised', $suffix)
+                sprintf('`%s` is on the list but not recognized', $suffix)
             );
         }
     }
