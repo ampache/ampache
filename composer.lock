@@ -81,20 +81,21 @@
         },
         {
             "name": "ampache/ampacheapi-php",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ampache/ampacheapi-php",
-                "reference": "b0c02a5b7f127cc8b67a3649143f97880c79e49e"
+                "url": "https://github.com/ampache/ampacheapi-php.git",
+                "reference": "16af0f3649b7969cce45840f63ac5c4206cc7e2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/b0c02a5b7f127cc8b67a3649143f97880c79e49e",
-                "reference": "b0c02a5b7f127cc8b67a3649143f97880c79e49e",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/16af0f3649b7969cce45840f63ac5c4206cc7e2c",
+                "reference": "16af0f3649b7969cce45840f63ac5c4206cc7e2c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "ext-simplexml": "*",
                 "ext-xml": "*",
                 "php": ">=7.4.0"
             },
@@ -120,7 +121,11 @@
                 "api",
                 "library"
             ],
-            "time": "2026-09-10T06:59:23+00:00"
+            "support": {
+                "issues": "https://github.com/ampache/ampacheapi-php/issues",
+                "source": "https://github.com/ampache/ampacheapi-php/tree/2.2.0"
+            },
+            "time": "2026-10-21T01:19:42+00:00"
         },
         {
             "name": "ampache/php-discogs-api",
