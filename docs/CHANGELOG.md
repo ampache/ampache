@@ -12,6 +12,7 @@
 
 ### Changed (8.4.0)
 
+* Updated Composer and NPM dependencies
 * Theme
   * `theme.cfg.php` gained an optional `color_bases` key; a colour with none is treated as dark, same as before
 
