@@ -4892,9 +4892,12 @@ div.jp-video div.jp-interface {
 .playing_info,
 div.playing_title a,
 div.playing_artist a,
-div.playing_album a,
-div.playing_lyrics a {
+div.playing_album a {
     color: var(--amp-text);
+}
+
+div.playing_lyrics a {
+    color: var(--amp-accent);
 }
 
 div.jp-interface {
