@@ -92,12 +92,12 @@ a.tag_size4 { text-decoration: none; }
 }
 
 #tabs li a {
-    color: #ff9d00;
+    color: var(--amp-accent);
     text-decoration: none;
 }
 
 #tabs li a:hover {
-    color: #ffc466;
+    color: var(--amp-accent-hover);
     outline: 0;
 }
 
