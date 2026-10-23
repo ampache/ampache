@@ -449,13 +449,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function isHiddenForViewer(PlaylistFolder $folder): bool
     {
-        foreach ($this->getHiddenFolders() as $hidden) {
-            if ($hidden->getId() === $folder->getId()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->getHiddenFolders(), fn($hidden) => $hidden->getId() === $folder->getId());
     }
 
     /**
@@ -523,7 +517,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         if ($playlist->isEditable()) {
             // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
-            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . '\', \'edit_playlist_' . $playlistId . '\', \'' . $this->e($playlist->getEditButtonTitle()) . '\', \'\')">' . $playlist->getEditIcon() . '</a>';
+            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . "', 'edit_playlist_" . $playlistId . "', '" . $this->e($playlist->getEditButtonTitle()) . '\', \'\')">' . $playlist->getEditIcon() . '</a>';
         }
 
         if ($playlist->canBeDeleted()) {
@@ -566,7 +560,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         if ($item->mayOpenEditDialog()) {
             $title = addslashes(T_('Smart Playlist Edit'));
             // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
-            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
+            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . "', 'edit_playlist_" . $searchId . "', '" . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
         }
 
         // Deletion stays owner/admin only -- mayOpenEditDialog() above also admits a public list's viewer, who may not delete it

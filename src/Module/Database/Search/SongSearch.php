@@ -828,6 +828,7 @@ final class SongSearch implements SearchInterface
                     if (!$subsearch->isVisible($search->search_user)) {
                         break;
                     }
+
                     $results   = $subsearch->get_subsearch('song');
                     $subsearch_count++;
                     $where[] = sprintf('`song`.`id` %s IN (SELECT * FROM (', $operator_sql) . $results['sql'] . ") AS sp_" . $subsearch_count . ")";

@@ -272,11 +272,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             // Record the IP of this person!
             $this->userTracker->trackIpAddress($user, 'Login');
 
-            if (isset($username)) {
-                Session::create_user_cookie($username);
-                if (isset($_POST['rememberme'])) {
-                    Session::create_remember_cookie($username);
-                }
+            Session::create_user_cookie($username);
+            if (isset($_POST['rememberme'])) {
+                Session::create_remember_cookie($username);
             }
 
             // Update data from this auth if ours are empty or if config asks us to

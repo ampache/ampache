@@ -202,6 +202,7 @@ class Catalog_local extends Catalog
 
     /**
      * add_file
+     * @param array<string, bool|int|string> $options
      * @throws Exception
      */
     public function add_file(string $full_file, array $options, ?Interactor $interactor = null): bool
@@ -393,7 +394,7 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param array<string, mixed> $options
+     * @param array<string, bool|int|string> $options
      * @phpstan-impure
      */
     public function add_files(string $path, array $options, ?Interactor $interactor = null): int
@@ -1601,7 +1602,7 @@ class Catalog_local extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param array<string, mixed> $options
+     * @param array<string, bool|int|string> $options
      * @throws Exception
      * @throws Exception
      */
@@ -1631,17 +1632,19 @@ class Catalog_local extends Catalog
         }
 
         if (array_key_exists('artist_id', $options) && (int) $options['artist_id'] > 0) {
-            $results['artist_id']      = $options['artist_id'];
-            $results['albumartist_id'] = $options['artist_id'];
-            $artist                    = new Artist($results['artist_id']);
+            $artist_id                 = (int) $options['artist_id'];
+            $results['artist_id']      = $artist_id;
+            $results['albumartist_id'] = $artist_id;
+            $artist                    = new Artist($artist_id);
             if ($artist->isNew() === false) {
                 $results['artist'] = $artist->name;
             }
         }
 
         if (array_key_exists('album_id', $options) && (int) $options['album_id'] > 0) {
-            $results['album_id'] = $options['album_id'];
-            $album               = new Album($results['album_id']);
+            $album_id            = (int) $options['album_id'];
+            $results['album_id'] = $album_id;
+            $album               = new Album($album_id);
             if ($album->isNew() === false) {
                 $results['album'] = $album->name;
             }
@@ -1718,7 +1721,7 @@ class Catalog_local extends Catalog
             }
 
             // If song rating tag exists and is well formed (array user=>rating), add it
-            if (array_key_exists('rating', $results) && is_array($results['rating'])) {
+            if (is_array($results['rating'])) {
                 // For each user's ratings, call the function
                 foreach ($results['rating'] as $user => $rating) {
                     debug_event('local.catalog', sprintf('Setting rating for Song %s to %s for user %s', $song_id, $rating, $user), 5);
