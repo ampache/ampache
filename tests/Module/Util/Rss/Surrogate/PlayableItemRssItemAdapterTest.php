@@ -289,6 +289,6 @@ class PlayableItemRssItemAdapterTest extends TestCase
 
     private function musicBrainzUrl(library_item $item): ?string
     {
-        return new ReflectionMethod(PlayableItemRssItemAdapter::class, 'musicBrainzUrl')->invoke(null, $item);
+        return new ReflectionMethod($this->subject, 'musicBrainzUrl')->invoke($this->subject, $item);
     }
 }

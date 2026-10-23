@@ -103,8 +103,9 @@ class AmpachePopularVarietyTest extends TestCase
      */
     private function isFirstOfBoth(int $album, ?int $artist, array $albums, array $artists): bool
     {
-        $method = new ReflectionMethod(AmpachePopularVariety::class, 'isFirstOfBoth');
+        $plugin = new AmpachePopularVariety();
+        $method = new ReflectionMethod($plugin, 'isFirstOfBoth');
 
-        return $method->invoke(null, $album, $artist, $albums, $artists);
+        return $method->invoke($plugin, $album, $artist, $albums, $artists);
     }
 }
