@@ -230,6 +230,27 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return new Folder((int) $rowId);
     }
 
+    public function getCatalogIdsWithFolderMap(array $catalogIds): array
+    {
+        if ($catalogIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($catalogIds), '?'));
+
+        $result = $this->connection->query(
+            "SELECT DISTINCT `folder`.`catalog` FROM `folder` INNER JOIN `folder_map` ON `folder_map`.`folder_id` = `folder`.`id` WHERE `folder`.`parent` IS NULL AND `folder`.`catalog` IN ({$placeholders});",
+            array_values(array_map(intval(...), $catalogIds))
+        );
+
+        $catalogIdsWithFolderMap = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $catalogIdsWithFolderMap[] = (int) $row['catalog'];
+        }
+
+        return $catalogIdsWithFolderMap;
+    }
+
     /**
      * Returns the direct children of the given catalogs' own top-level folders, merged into one list
      *
