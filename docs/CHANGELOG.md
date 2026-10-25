@@ -19,7 +19,7 @@
 ### Fixed (8.4.0)
 
 * Subsonic
-  * `getIndexes` dropped a catalog's artists entirely once any other requested catalog had a folder tree
+  * `getIndexes` could drop artists from a catalog whose folder data was incomplete, not just when it was empty
   * `getArtist` returned the wrong artist, or failed, when given a folder id from `getIndexes`
 * Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
 * The catalog add/update completion notification never appeared in the browser; clean/verify's showed with no label

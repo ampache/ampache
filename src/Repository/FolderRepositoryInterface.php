@@ -63,9 +63,10 @@ interface FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
-     * Returns the subset of the given catalogs that have a root-level `folder_map` entry of their own.
-     * A catalog never scanned for folders, or that cannot be (e.g. songs added outside a directory scan),
-     * is absent from the result rather than contributing an empty folder tree.
+     * Returns the subset of the given catalogs whose song/video/podcast_episode rows are all mapped
+     * into `folder_map`. A catalog never scanned for folders, one scanned but added to since (a plain
+     * "Add" never touches `folder_map`), or one that cannot be mapped at all, is absent from the result
+     * rather than contributing a folder tree with gaps in it.
      *
      * @param int[] $catalogIds
      * @return int[]
