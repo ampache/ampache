@@ -134,6 +134,7 @@
         "spelling:check": "@php resources/scripts/tests/us_english.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
+        "fix": "composer run-script cs:fix && composer run-script rector:fix",
         "api:docs": [
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_openapi_schemas.py",
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/generate_api_methods_md.py",
@@ -164,6 +165,7 @@
         "spelling:check": "Flags UK/AU English spellings in php, phtml and markdown files; Ampache is written in US English",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",
+        "fix": "Applies cs:fix and rector:fix together; run before composer qa to clear style/rector failures",
         "api:docs": "Regenerates docs/openapi.json and the API method reference documents (needs Python 3)",
         "api:docs:check": "Fails if the generated API documents are out of date with the code (needs Python 3)",
         "rector:dry": "Performs rector code-migrations dry-run",
