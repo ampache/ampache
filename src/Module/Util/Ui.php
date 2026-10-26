@@ -739,7 +739,9 @@ class Ui implements UiInterface
             echo "<br />" . $value . "<br /><br />\n";
         }
 
-        ob_flush();
+        if (ob_get_level() > 0) {
+            ob_flush();
+        }
         flush();
         $update_id++;
     }
