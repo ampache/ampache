@@ -162,6 +162,14 @@ interface FolderRepositoryInterface
     public function persist(Folder $folder): ?int;
 
     /**
+     * Returns the one artist every song below a folder belongs to, null when there is none or more than one
+     *
+     * A client that treats every `getIndexes` entry as artist-openable (calling `getArtist` instead of
+     * `getMusicDirectory`) needs this to resolve a folder back to the artist it represents.
+     */
+    public function resolveSingleArtistId(Folder $folder, int $userId = -1): ?int;
+
+    /**
      * Update folder counts columns after large actions
      */
     public function update_folder_counts(): void;

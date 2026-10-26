@@ -560,6 +560,52 @@ class FolderRepositoryTest extends TestCase
         self::assertNull($this->subject->persist($folder));
     }
 
+    public function testResolveSingleArtistIdReturnsNullWhenNoSongIsMapped(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($result);
+
+        self::assertNull($this->subject->resolveSingleArtistId($this->folderAt(666, '/some/path')));
+    }
+
+    public function testResolveSingleArtistIdReturnsNullWhenSongsBelongToDifferentArtists(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+        $result->expects(static::exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['artist' => '7'], ['artist' => '9'], false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturn($result);
+
+        self::assertNull($this->subject->resolveSingleArtistId($this->folderAt(666, '/some/path')));
+    }
+
+    public function testResolveSingleArtistIdReturnsTheArtistEverySongBelongsTo(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['artist' => '7'], false);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::stringContains('`folder_map`.`path_name` LIKE ?'),
+                [666, '/some/path/%']
+            )
+            ->willReturn($result);
+
+        self::assertSame(7, $this->subject->resolveSingleArtistId($this->folderAt(666, '/some/path')));
+    }
+
     public function testUpdateFolderCountsGivesEveryAncestorTheTotalOfItsSubtree(): void
     {
         $direct = $this->createMock(PDOStatement::class);
@@ -636,5 +682,15 @@ class FolderRepositoryTest extends TestCase
         $this->logger     = $this->createMock(LoggerInterface::class);
 
         $this->subject = new FolderRepository($this->connection, $this->logger);
+    }
+
+    private function folderAt(int $id, string $pathName): Folder
+    {
+        $folder = new Folder();
+
+        $folder->id        = $id;
+        $folder->path_name = $pathName;
+
+        return $folder;
     }
 }

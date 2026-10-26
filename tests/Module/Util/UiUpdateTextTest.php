@@ -55,4 +55,39 @@ class UiUpdateTextTest extends MockeryTestCase
         $this->assertSame('displayNotification', $payload['fn']);
         $this->assertSame('Found: 1 - Rock & Roll.mp3', $payload['args'][0]);
     }
+
+    /**
+     * SseApiApplication drains every output buffer level before streaming, so update_text() must not assume
+     * one is still open; calling ob_flush() with none active raises "No buffer to flush" on every notification.
+     */
+    #[RunInSeparateProcess]
+    public function testSseOutputWithNoOpenBufferDoesNotWarn(): void
+    {
+        define('SSE_OUTPUT', true);
+
+        // drain every level, including the one PHPUnit's own output capture opened for this test
+        $levelsDrained = 0;
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+            $levelsDrained++;
+        }
+
+        set_error_handler(
+            function (int $errno, string $errstr): bool {
+                self::fail('Unexpected warning: ' . $errstr);
+            }
+        );
+
+        try {
+            Ui::update_text('Found', 'test value');
+        } finally {
+            restore_error_handler();
+            // PHPUnit's teardown expects to close the buffer level it opened; put it back as found
+            for ($i = 0; $i < $levelsDrained; $i++) {
+                ob_start();
+            }
+        }
+
+        $this->addToAssertionCount(1);
+    }
 }

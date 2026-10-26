@@ -625,6 +625,25 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $this->connection->getLastInsertedId() ?: null;
     }
 
+    public function resolveSingleArtistId(Folder $folder, int $userId = -1): ?int
+    {
+        $filterSql = $this->catalogFilterSql('folder_map', $userId);
+
+        $result = $this->connection->query(
+            "SELECT DISTINCT `song`.`artist` FROM `song` INNER JOIN `folder_map` ON `folder_map`.`object_id` = `song`.`id` AND `folder_map`.`object_type` = 'song' WHERE (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} LIMIT 2;",
+            [$folder->getId(), $folder->path_name . '/%']
+        );
+
+        $artistIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $artistIds[] = (int) $row['artist'];
+        }
+
+        return (count($artistIds) === 1)
+            ? $artistIds[0]
+            : null;
+    }
+
     /**
      * Update folder counts columns after large actions
      */
