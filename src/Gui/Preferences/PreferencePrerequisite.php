@@ -106,7 +106,7 @@ final readonly class PreferencePrerequisite
             // Ampache stores booleans as '1' and '0', and an unset one reads as empty
             self::IS_ON => $value === '1',
             self::IS_OFF => $value !== '1',
-            self::IS_EMPTY => $value === '' || $value === '0' || $value === '-1',
+            self::IS_EMPTY => in_array($value, ['', '0', '-1'], true),
             default => false,
         };
     }

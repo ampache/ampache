@@ -78,17 +78,6 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
         $this->description = T_('Popular songs on homepage, one per album and artist');
     }
 
-    /**
-     * Whether this record and this performer are both new to the panel, which is what keeps it varied.
-     *
-     * @param array<int, true> $albums records already shown
-     * @param array<int, true> $artists performers already shown
-     */
-    private static function isFirstOfBoth(int $album, ?int $artist, array $albums, array $artists): bool
-    {
-        return !isset($albums[$album]) && ($artist === null || !isset($artists[$artist]));
-    }
-
     #[Override]
     public function display_home(): void
     {
@@ -182,6 +171,17 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
     }
 
     /**
+     * Whether this record and this performer are both new to the panel, which is what keeps it varied.
+     *
+     * @param array<int, true> $albums records already shown
+     * @param array<int, true> $artists performers already shown
+     */
+    private function isFirstOfBoth(int $album, ?int $artist, array $albums, array $artists): bool
+    {
+        return !isset($albums[$album]) && ($artist === null || !isset($artists[$artist]));
+    }
+
+    /**
      * The ranking is read in order and an album or an artist already shown is skipped, so the panel keeps the
      * most played track of each rather than the most played tracks overall.
      *
@@ -201,7 +201,7 @@ class AmpachePopularVariety extends AmpachePlugin implements PluginDisplayHomeIn
         $artists = [];
         foreach ($ids as $id) {
             $song = new Song((int) $id);
-            if ($song->isNew() || !self::isFirstOfBoth($song->album, $song->artist, $albums, $artists)) {
+            if ($song->isNew() || !$this->isFirstOfBoth($song->album, $song->artist, $albums, $artists)) {
                 continue;
             }
 

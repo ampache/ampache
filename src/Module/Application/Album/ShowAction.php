@@ -81,13 +81,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             $webPath = AmpConfig::get_web_path('/client');
             $pageUrl = $webPath . '/albums.php?action=show&album=' . $albumId;
             echo ($shown && MediaEmbedView::isOffered())
-                ? (new MediaEmbedView(
-                    (string) $album->get_fullname(),
-                    (string) $album->get_parent_fullname(),
+                ? new MediaEmbedView(
+                    $album->get_fullname(),
+                    $album->get_parent_fullname(),
                     $webPath . '/image.php?object_id=' . $albumId . '&object_type=album&size=128x128',
                     $pageUrl,
                     $this->embeddedSongs($this->albumRepository->getSongs($albumId))
-                ))->render()
+                )->render()
                 : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
@@ -123,7 +123,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 PageMeta::setPlayer(
                     $url . '&embed=1',
                     MediaEmbedView::WIDTH,
-                    MediaEmbedView::heightFor((int) $album->song_count)
+                    MediaEmbedView::heightFor($album->song_count)
                 );
             }
         }

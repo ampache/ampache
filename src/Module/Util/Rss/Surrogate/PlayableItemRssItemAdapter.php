@@ -72,39 +72,6 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * An album answers with its release when it has one, and falls back to the release group it belongs to.
-     */
-    private static function musicBrainzUrl(library_item $item): ?string
-    {
-        if ($item instanceof Artist && !empty($item->mbid)) {
-            return 'https://musicbrainz.org/artist/' . $item->mbid;
-        }
-
-        if ($item instanceof Album) {
-            if (!empty($item->mbid)) {
-                return 'https://musicbrainz.org/release/' . $item->mbid;
-            }
-
-            if (!empty($item->mbid_group)) {
-                return 'https://musicbrainz.org/release-group/' . $item->mbid_group;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
-     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
-     */
-    private static function xmlText(?string $value): string
-    {
-        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
-    }
-
-    /**
      * Returns the itunes author of the item
      */
     public function getAuthor(): string
@@ -245,7 +212,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 // published beside it: without that, two servers cannot tell they hold the same record
                 $album = $this->libraryItemLoader->load(LibraryItemEnum::ALBUM, $media->album, [Album::class]);
                 if ($album instanceof Album) {
-                    $data['release_url'] = self::musicBrainzUrl($album);
+                    $data['release_url'] = $this->musicBrainzUrl($album);
                 }
             }
 
@@ -269,7 +236,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getMusicBrainzUrl(): ?string
     {
-        return self::musicBrainzUrl($this->playable);
+        return $this->musicBrainzUrl($this->playable);
     }
 
     /**
@@ -322,7 +289,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             $summary = sprintf(T_('%1$s on %2$s'), $this->getTitle(), (string) AmpConfig::get('site_title'));
         }
 
-        return self::xmlText($summary);
+        return $this->xmlText($summary);
     }
 
     /**
@@ -351,7 +318,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             ? $media->get_fullname() . ' - ' . $media->get_album_fullname($media->album, true) . ' - ' . $media->get_parent_fullname()
             : $media->get_description();
 
-        return self::xmlText($description);
+        return $this->xmlText($description);
     }
 
     /**
@@ -366,5 +333,38 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         }
 
         return $this->getImageUrl();
+    }
+
+    /**
+     * An album answers with its release when it has one, and falls back to the release group it belongs to.
+     */
+    private function musicBrainzUrl(library_item $item): ?string
+    {
+        if ($item instanceof Artist && !empty($item->mbid)) {
+            return 'https://musicbrainz.org/artist/' . $item->mbid;
+        }
+
+        if ($item instanceof Album) {
+            if (!empty($item->mbid)) {
+                return 'https://musicbrainz.org/release/' . $item->mbid;
+            }
+
+            if (!empty($item->mbid_group)) {
+                return 'https://musicbrainz.org/release-group/' . $item->mbid_group;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Raw text safe to print into the feed: entities are decoded so a pre-escaped source is not escaped
+     * twice, and the control characters XML 1.0 forbids are dropped so one bad byte cannot break the feed.
+     */
+    private function xmlText(?string $value): string
+    {
+        $decoded = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return (string) preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/u', '', $decoded);
     }
 }

@@ -127,6 +127,7 @@ class WebPlayer
         if (str_contains($url, '/play/') && !array_key_exists('player', $url_data)) {
             $url .= '&player=webplayer';
         }
+
         // stream urls that don't send a type (democratic playlists)
         $item->type = (empty($item->type) && !empty($url_data['type']))
             ? $url_data['type']

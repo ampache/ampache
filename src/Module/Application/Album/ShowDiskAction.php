@@ -79,13 +79,13 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
             $webPath = AmpConfig::get_web_path('/client');
             $pageUrl = $webPath . '/albums.php?action=show_disk&album_disk=' . $albumDiskId;
             echo ($shown && MediaEmbedView::isOffered())
-                ? (new MediaEmbedView(
-                    (string) $albumDisk->get_fullname(),
-                    (string) $albumDisk->get_parent_fullname(),
+                ? new MediaEmbedView(
+                    $albumDisk->get_fullname(),
+                    $albumDisk->get_parent_fullname(),
                     $webPath . '/image.php?object_id=' . $albumDisk->album_id . '&object_type=album&size=128x128',
                     $pageUrl,
                     $this->embeddedSongs($this->albumRepository->getSongsByAlbumDisk($albumDiskId))
-                ))->render()
+                )->render()
                 : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
@@ -119,7 +119,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
                 PageMeta::setPlayer(
                     $url . '&embed=1',
                     MediaEmbedView::WIDTH,
-                    MediaEmbedView::heightFor((int) $albumDisk->song_count)
+                    MediaEmbedView::heightFor($albumDisk->song_count)
                 );
             }
         }

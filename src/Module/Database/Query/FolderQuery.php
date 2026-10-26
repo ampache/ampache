@@ -31,6 +31,7 @@ final class FolderQuery implements QueryInterface
 {
     public const array FILTERS = [
         'alpha_match',
+        'catalog',
         'equal',
         'exact_match',
         'id',
@@ -113,6 +114,12 @@ final class FolderQuery implements QueryInterface
         switch ($filter) {
             case 'id':
                 $filter_sql = " `folder`.`id` = '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " `folder`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                }
+
                 break;
             case 'int_id':
                 $filter_sql = ($value === -1)

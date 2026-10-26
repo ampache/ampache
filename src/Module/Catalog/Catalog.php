@@ -3283,7 +3283,7 @@ abstract class Catalog extends database_object
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param array<string, scalar|scalar[]> $metadata
+     * @param array<string, scalar|scalar[]|null> $metadata
      * @return array<string, scalar|scalar[]>
      */
     private static function _filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
@@ -3703,7 +3703,7 @@ abstract class Catalog extends database_object
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
 
     /**
-     * @param array<string, scalar> $metadata
+     * @param array<string, scalar|scalar[]|null> $metadata
      */
     public function addMetadata(MetadataEnabledInterface $libraryItem, array $metadata): void
     {

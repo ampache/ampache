@@ -58,7 +58,7 @@ final class FeedText
         // feeds are full of non-breaking spaces, and \s does not match those
         $value = str_replace("\xc2\xa0", ' ', $value);
 
-        $value = (string) preg_replace('#[ \t]*\R[ \t]*#', "\n", $value);
+        $value = (string) preg_replace('#[ \t]*\R[ \t]*#u', "\n", $value);
         // `<br><br>` and `</p><p>` are two breaks in a row; one is enough
         $value = (string) preg_replace('#\n{2,}#', "\n", $value);
         $value = (string) preg_replace('#[ \t]{2,}#', ' ', $value);

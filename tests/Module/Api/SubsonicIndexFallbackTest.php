@@ -48,6 +48,9 @@ use Psr\Log\LoggerInterface;
 /**
  * `getIndexes` answers with the folder tree, which only exists once a catalog scan has filled `folder_map`.
  * A library that has not been rescanned answered an empty index, and a client showed an empty library.
+ *
+ * The resolver always hands back catalogs `[3, 0]`; `catalogsWithFolders` controls which of those two
+ * `getCatalogIdsWithFolderMap()` reports as having a folder tree of their own.
  */
 class SubsonicIndexFallbackTest extends MockeryTestCase
 {
@@ -56,28 +59,46 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
         ['id' => 7, 'name' => 'Alpha', 'f_name' => 'Alpha'],
     ];
 
+    /**
+     * Catalog 3 has a folder tree, catalog 0 does not: the request as a whole must not collapse to
+     * "no folders anywhere" and drop catalog 0's artists, which is exactly what PR #4519 did.
+     */
+    public function testACatalogWithoutFoldersFallsBackWhileItsSiblingKeepsItsFolderTree(): void
+    {
+        $called = $this->serialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']], catalogsWithFolders: [3]);
+
+        $this->assertSame('addMixedIndexes', $called, 'catalog 0 must fall back to artists instead of vanishing');
+    }
+
     public function testAFolderTreeIsStillServedAsFolders(): void
     {
-        $called = $this->serialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']]);
+        $called = $this->serialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']], catalogsWithFolders: [3, 0]);
 
         $this->assertSame('addFolderIndexes', $called);
     }
 
     public function testAnEmptyFolderTreeFallsBackToTheArtists(): void
     {
-        $called = $this->serialiserFor(children: []);
+        $called = $this->serialiserFor(children: [], catalogsWithFolders: []);
 
         $this->assertSame('addIndexes', $called, 'without this the client is handed an empty library');
     }
 
     public function testOpenSubsonicFallsBackTheSameWay(): void
     {
-        $this->assertSame('addIndexes', $this->openSubsonicSerialiserFor(children: []));
+        $this->assertSame('addIndexes', $this->openSubsonicSerialiserFor(children: [], catalogsWithFolders: []));
+    }
+
+    public function testOpenSubsonicMixesAFolderTreeWithTheFallback(): void
+    {
+        $called = $this->openSubsonicSerialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']], catalogsWithFolders: [3]);
+
+        $this->assertSame('addMixedIndexes', $called, 'catalog 0 must fall back to artists instead of vanishing');
     }
 
     public function testOpenSubsonicStillServesAFolderTree(): void
     {
-        $this->assertSame('addFolderIndexes', $this->openSubsonicSerialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']]));
+        $this->assertSame('addFolderIndexes', $this->openSubsonicSerialiserFor(children: [['object_id' => 1, 'object_type' => 'folder']], catalogsWithFolders: [3, 0]));
     }
 
     private function fields(): OpenSubsonic_Fields
@@ -93,12 +114,14 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
      * The same question asked of the OpenSubsonic handler, which carries the same code
      *
      * @param array<int, array<string, mixed>> $children
+     * @param int[] $catalogsWithFolders
      */
-    private function openSubsonicSerialiserFor(array $children): string
+    private function openSubsonicSerialiserFor(array $children, array $catalogsWithFolders): string
     {
         $this->stubContainer();
 
         $folderRepository = $this->mock(FolderRepositoryInterface::class);
+        $folderRepository->shouldReceive('getCatalogIdsWithFolderMap')->andReturn($catalogsWithFolders);
         $folderRepository->shouldReceive('getCatalogRootChildren')->andReturn($children);
 
         $resolver = $this->mock(OpenSubsonicMusicFolderResolverInterface::class);
@@ -121,6 +144,13 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
             public function addFolderIndexes(array $response, array $children, int $lastModified = 0): array
             {
                 $this->called = 'addFolderIndexes';
+
+                return $response;
+            }
+
+            public function addMixedIndexes(array $response, array $children, array $artists, int $lastModified = 0): array
+            {
+                $this->called = 'addMixedIndexes';
 
                 return $response;
             }
@@ -152,12 +182,14 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
      * serializer the handler reached for.
      *
      * @param array<int, array<string, mixed>> $children
+     * @param int[] $catalogsWithFolders
      */
-    private function serialiserFor(array $children): string
+    private function serialiserFor(array $children, array $catalogsWithFolders): string
     {
         $this->stubContainer();
 
         $folderRepository = $this->mock(FolderRepositoryInterface::class);
+        $folderRepository->shouldReceive('getCatalogIdsWithFolderMap')->andReturn($catalogsWithFolders);
         $folderRepository->shouldReceive('getCatalogRootChildren')->andReturn($children);
 
         $resolver = $this->mock(MusicFolderResolverInterface::class);
@@ -180,6 +212,13 @@ class SubsonicIndexFallbackTest extends MockeryTestCase
             public function addFolderIndexes(array $response, array $children, int $lastModified = 0): array
             {
                 $this->called = 'addFolderIndexes';
+
+                return $response;
+            }
+
+            public function addMixedIndexes(array $response, array $children, array $artists, int $lastModified = 0): array
+            {
+                $this->called = 'addMixedIndexes';
 
                 return $response;
             }

@@ -1117,7 +1117,7 @@ class Search extends playlist_object
             }
         }
 
-        return (string) ($this->logic_operator ?? 'and');
+        return $this->logic_operator ?? 'and';
     }
 
     /**

@@ -166,6 +166,8 @@ use Ampache\Module\Application\Playlist\ImportPlaylistAction;
 use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
 use Ampache\Module\Application\Playlist\ShowImportPlaylistAction;
 use Ampache\Module\Application\Playlist\SortTrackAction;
+use Ampache\Module\Application\PlaylistFolder\HideAction;
+use Ampache\Module\Application\PlaylistFolder\UnhideAction;
 use Ampache\Module\Application\Podcast\ExportPodcastsAction;
 use Ampache\Module\Application\Podcast\UpdateFromFeedAction;
 use Ampache\Module\Application\Preferences\AdminAction;
@@ -470,8 +472,8 @@ return [
     PlaylistFolder\ShowEditAction::class => autowire(PlaylistFolder\ShowEditAction::class),
     PlaylistFolder\EditAction::class => autowire(PlaylistFolder\EditAction::class),
     PlaylistFolder\DeleteAction::class => autowire(PlaylistFolder\DeleteAction::class),
-    PlaylistFolder\HideAction::class => autowire(PlaylistFolder\HideAction::class),
-    PlaylistFolder\UnhideAction::class => autowire(PlaylistFolder\UnhideAction::class),
+    HideAction::class => autowire(HideAction::class),
+    UnhideAction::class => autowire(UnhideAction::class),
     SmartPlaylistAction::class => autowire(SmartPlaylistAction::class),
     CollectionAction::class => autowire(CollectionAction::class),
     PodcastEpisodeAction::class => autowire(PodcastEpisodeAction::class),

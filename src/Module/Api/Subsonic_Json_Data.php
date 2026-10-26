@@ -770,6 +770,63 @@ class Subsonic_Json_Data
     }
 
     /**
+     * addMixedIndexes
+     *
+     * One catalog's folder tree and another's artist fallback, interleaved into a single index -
+     * a catalog without a folder tree of its own must not disappear just because a sibling has one.
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public function addMixedIndexes(array $response, array $children, array $artists, int $lastModified = 0): array
+    {
+        $this->_warmChildObjectCaches($children);
+
+        $folders = [];
+        $media   = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $entry = $this->_getChildObject($child);
+            if ($entry !== null) {
+                $media[] = $entry;
+            }
+        }
+
+        $json = [
+            'index' => $this->_getMixedIndex($folders, $artists),
+            'lastModified' => $lastModified * 1000,
+        ];
+        if (!empty($media)) {
+            $json['child'] = $media;
+        }
+
+        $ignored = $this->_getIgnoredArticles();
+        if (!empty($ignored)) {
+            $json['ignoredArticles'] = $ignored;
+        }
+
+        $response['subsonic-response']['indexes'] = $json;
+
+        return $response;
+    }
+
+    /**
      * addMusicFolder
      *
      * MusicFolder.Subsonic
@@ -3106,6 +3163,79 @@ class Subsonic_Json_Data
         $json['playing']      = ($status['state'] == 'play');
         $json['gain']         = (float) $status['volume'];
         $json['position']     = 0; // TODO Not supported
+
+        return $json;
+    }
+
+    /**
+     * Buckets folders and fallback artists together by the first letter of their name, so a catalog
+     * with no folder tree of its own still appears under the right letter instead of being left out
+     *
+     * @param Folder[] $folders
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     * @return array<int, mixed>
+     */
+    private function _getMixedIndex(array $folders, array $artists): array
+    {
+        $items = array_merge(
+            array_map(static fn(Folder $folder): array => ['name' => (string) $folder->name, 'folder' => $folder], $folders),
+            array_map(static fn(array $artist): array => ['name' => (string) $artist['name'], 'artist' => $artist], $artists),
+        );
+        usort($items, static fn(array $a, array $b): int => strcasecmp($a['name'], $b['name']));
+
+        $sharpitems = [];
+        $json       = [];
+        $index      = [];
+        foreach ($items as $item) {
+            if (strlen($item['name']) > 0) {
+                $letter = strtoupper($item['name'][0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpitems[] = $item;
+                    continue;
+                }
+
+                if (!isset($index[$letter])) {
+                    $index[$letter] = [];
+                }
+
+                $index[$letter] = isset($item['folder'])
+                    ? $this->_getFolderArray($index[$letter], $item['folder'])
+                    : $this->_getArtistArray($index[$letter], $item['artist'], false);
+            }
+        }
+
+        foreach ($index as $letter => $item) {
+            $json[] = [
+                'name' => $letter,
+                'artist' => $item,
+            ];
+        }
+
+        // Always add # index at the end
+        if (count($sharpitems) > 0) {
+            $index = [];
+            foreach ($sharpitems as $item) {
+                $index = isset($item['folder'])
+                    ? $this->_getFolderArray($index, $item['folder'])
+                    : $this->_getArtistArray($index, $item['artist'], false);
+            }
+
+            if (!empty($index)) {
+                $json[] = [
+                    'name' => '#',
+                    'artist' => $index,
+                ];
+            }
+        }
 
         return $json;
     }
