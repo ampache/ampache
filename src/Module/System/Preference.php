@@ -1265,13 +1265,7 @@ class Preference extends database_object
      */
     public static function isSecretName(string $name): bool
     {
-        foreach (self::SECRET_SUFFIXES as $suffix) {
-            if (str_ends_with($name, $suffix)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(self::SECRET_SUFFIXES, fn($suffix) => str_ends_with($name, $suffix));
     }
 
     /**

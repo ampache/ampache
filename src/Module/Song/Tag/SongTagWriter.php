@@ -479,9 +479,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
     {
         foreach ($id3v2Data as $key => $value) {
             if (is_array($value) && isset($value[0])) {
-                if (!isset($ndata[$key])) {
-                    $ndata[$key] = [];
-                }
+                $ndata[$key] ??= [];
 
                 $ndata[$key][] = $value[0];
             }

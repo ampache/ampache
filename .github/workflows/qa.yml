@@ -24,27 +24,119 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Cache Composer packages
+      - name: Get composer cache directory
         id: composer-cache
-        uses: actions/cache@v2
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer packages
+        uses: actions/cache@v4
         with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            composer-${{ runner.os }}-${{ matrix.php }}-
 
       - name: Install dependencies
+        # Installs the exact versions pinned in composer.lock. `composer update` would resolve fresh
+        # versions on every run, so an unrelated upstream release could make this job pass or fail for
+        # reasons that have nothing to do with the change being tested.
         uses: nick-fields/retry@v4
         with:
           timeout_minutes: 5
           max_attempts: 3
-          command: composer update --no-interaction --no-progress
+          command: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run test suite
         run: composer run-script qa
 
       - name: Run NPM audit (omit dev)
         run: npm audit --omit=dev
+
+  stan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-8.5-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-8.5-
+
+      - name: Install dependencies
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Cache PHPStan result cache
+        # Keyed on the run id so it always misses and saves a fresh copy, falling back to the most
+        # recent entry via restore-keys. PHPStan's result cache is incremental (keyed per-file
+        # internally), so restoring a slightly stale cache still speeds up re-analysis of files that
+        # didn't change.
+        uses: actions/cache@v4
+        with:
+          path: build/phpstan
+          key: phpstan-${{ github.run_id }}
+          restore-keys: |
+            phpstan-
+
+      - name: Run PHPStan
+        run: composer run-script stan -- --error-format=github
+
+  rector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-8.5-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-8.5-
+
+      - name: Install dependencies
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Cache Rector result cache
+        # Same run-id/restore-keys pattern as the PHPStan cache above: rector.php already points
+        # `withCache()` at build/rector, this just keeps that directory warm between CI runs.
+        uses: actions/cache@v4
+        with:
+          path: build/rector
+          key: rector-${{ github.run_id }}
+          restore-keys: |
+            rector-
+
+      - name: Run Rector (dry-run)
+        run: composer run-script rector:dry
 
   api-docs:
     # docs/openapi.json and the API method references are generated; this fails if they drift from

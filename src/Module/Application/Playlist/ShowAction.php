@@ -67,13 +67,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             $webPath = AmpConfig::get_web_path();
             $pageUrl = $webPath . '/playlist.php?action=show_playlist&playlist_id=' . $playlist->id;
             echo ($public && MediaEmbedView::isOffered())
-                ? (new MediaEmbedView(
+                ? new MediaEmbedView(
                     (string) $playlist->name,
                     (string) $playlist->username,
                     $webPath . '/image.php?object_id=' . $playlist->id . '&object_type=playlist&size=128x128',
                     $pageUrl,
                     $this->embeddedSongs($playlist->get_songs())
-                ))->render()
+                )->render()
                 : $this->embedUnavailable($public, $pageUrl);
 
             return null;

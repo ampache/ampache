@@ -776,6 +776,52 @@ class Subsonic_Xml_Data
     }
 
     /**
+     * addMixedIndexes
+     *
+     * One catalog's folder tree and another's artist fallback, interleaved into a single index -
+     * a catalog without a folder tree of its own must not disappear just because a sibling has one.
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $children
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     */
+    public function addMixedIndexes(SimpleXMLElement $xml, array $children, array $artists, ?int $lastModified = 0): SimpleXMLElement
+    {
+        $xindexes = $this->_addChildToResultXml($xml, 'indexes');
+        $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
+        $this->_addIgnoredArticles($xindexes);
+
+        $this->_warmChildObjectCaches($children);
+
+        $folders = [];
+        $media   = [];
+        foreach ($children as $child) {
+            if ($child['object_type'] === LibraryItemEnum::FOLDER) {
+                $folder = new Folder($child['object_id']);
+                if (!$folder->isNew()) {
+                    $folders[] = $folder;
+                }
+
+                continue;
+            }
+
+            $media[] = $child;
+        }
+
+        $this->_addMixedIndex($xindexes, $folders, $artists);
+        foreach ($media as $child) {
+            $this->_addChildObject($xindexes, $child);
+        }
+
+        return $xml;
+    }
+
+    /**
      * addMusicFolders
      * @param int[] $catalogs
      */
@@ -1897,6 +1943,87 @@ class Subsonic_Xml_Data
         }
         $xbookmark->addAttribute('time', (string) ($message->getCreationDate() * 1000));
         $xbookmark->addAttribute('message', $message->getMessage());
+    }
+
+    /**
+     * Buckets folders and fallback artists together by the first letter of their name, so a catalog
+     * with no folder tree of its own still appears under the right letter instead of being left out
+     *
+     * @param Folder[] $folders
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     */
+    private function _addMixedIndex(SimpleXMLElement $xml, array $folders, array $artists): void
+    {
+        $items = array_merge(
+            array_map(static fn(Folder $folder): array => ['name' => (string) $folder->name, 'folder' => $folder], $folders),
+            array_map(static fn(array $artist): array => ['name' => (string) $artist['name'], 'artist' => $artist], $artists),
+        );
+        usort($items, static fn(array $a, array $b): int => strcasecmp($a['name'], $b['name']));
+
+        $xlastcat    = null;
+        $sharpitems  = [];
+        $xlastletter = '';
+        foreach ($items as $item) {
+            if (strlen($item['name']) > 0) {
+                $letter = strtoupper($item['name'][0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpitems[] = $item;
+                    continue;
+                }
+
+                if ($letter != $xlastletter) {
+                    $xlastletter = $letter;
+                    $xlastcat    = $this->_addChildToResultXml($xml, 'index');
+                    $xlastcat->addAttribute('name', $xlastletter);
+                }
+            }
+
+            if ($xlastcat != null) {
+                $this->_addMixedIndexItem($xlastcat, $item);
+            }
+        }
+
+        // Always add # index at the end
+        if (count($sharpitems) > 0) {
+            $xsharpcat = $this->_addChildToResultXml($xml, 'index');
+            $xsharpcat->addAttribute('name', '#');
+
+            foreach ($sharpitems as $item) {
+                $this->_addMixedIndexItem($xsharpcat, $item);
+            }
+        }
+    }
+
+    /**
+     * @param array{name: string, folder?: Folder, artist?: array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }} $item
+     */
+    private function _addMixedIndexItem(SimpleXMLElement $xml, array $item): void
+    {
+        if (isset($item['folder'])) {
+            $this->_addFolderArray($xml, $item['folder']);
+
+            return;
+        }
+
+        if (isset($item['artist'])) {
+            $this->_addArtistArray($xml, $item['artist'], false);
+        }
     }
 
     /**

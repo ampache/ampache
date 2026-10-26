@@ -18,6 +18,9 @@
 
 ### Fixed (8.4.0)
 
+* Subsonic
+  * `getIndexes` could drop artists from a catalog whose folder data was incomplete, not just when it was empty
+  * `getArtist` returned the wrong artist, or failed, when given a folder id from `getIndexes`
 * Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
 * The catalog add/update completion notification never appeared in the browser; clean/verify's showed with no label
 * A failed remote catalog connection or unreadable catalog root produced no notification during a web-triggered scan
@@ -34,6 +37,7 @@
 * A `smartplaylist` search rule could pull results from another user's private smart playlist
 * Highest rated albums and artists could include withdrawn items
 * `stats` action's `newest`/`highest`/`frequent` filters didn't apply the caller's `catalog_filter` on every API version
+* Podcast sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
 
 ## Ampache 8.3.0
 

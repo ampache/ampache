@@ -104,6 +104,7 @@ final class UpdateDbCommand extends Command
                 true
             );
         }
+
         $interactor->eol();
 
         if ($dryRun) {

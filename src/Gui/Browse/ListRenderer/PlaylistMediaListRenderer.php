@@ -148,7 +148,7 @@ final class PlaylistMediaListRenderer extends AbstractBrowseListRenderer
     {
         $playlist = $this->getSupplementalObject('playlist');
 
-        return ($playlist === null) ? 0 : $playlist->getId();
+        return $playlist?->getId() ?? 0;
     }
 
     /**

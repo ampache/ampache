@@ -230,6 +230,37 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return new Folder((int) $rowId);
     }
 
+    public function getCatalogIdsWithFolderMap(array $catalogIds): array
+    {
+        if ($catalogIds === []) {
+            return [];
+        }
+
+        $ids          = array_values(array_map(intval(...), $catalogIds));
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        // a catalog scanned for folders once but added to since (a plain catalog "Add" never touches
+        // folder_map) still has folder rows, so completeness - not mere presence - decides the fallback
+        $clauses = [];
+        $params  = [];
+        foreach (['song', 'video', 'podcast_episode'] as $objectType) {
+            $clauses[] = "SELECT `{$objectType}`.`catalog` FROM `{$objectType}` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `{$objectType}`.`id` AND `folder_map`.`object_type` = '{$objectType}' WHERE `{$objectType}`.`catalog` IN ({$placeholders}) AND `folder_map`.`object_id` IS NULL AND `{$objectType}`.`file` NOT LIKE 'http://%' AND `{$objectType}`.`file` NOT LIKE 'https://%'";
+            array_push($params, ...$ids);
+        }
+
+        $result = $this->connection->query(
+            'SELECT DISTINCT `catalog` FROM (' . implode(' UNION ALL ', $clauses) . ') AS `incomplete`;',
+            $params
+        );
+
+        $incompleteCatalogIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $incompleteCatalogIds[] = (int) $row['catalog'];
+        }
+
+        return array_values(array_diff($ids, $incompleteCatalogIds));
+    }
+
     /**
      * Returns the direct children of the given catalogs' own top-level folders, merged into one list
      *

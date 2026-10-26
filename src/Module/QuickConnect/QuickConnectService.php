@@ -39,7 +39,7 @@ use Ampache\Repository\UserRepositoryInterface;
  * Not protocol-specific: the Jellyfin-compatible API and the native Ampache API both pair a device through
  * this same service, each minting its own kind of session once `consume()` hands back the approving user.
  */
-final class QuickConnectService
+final readonly class QuickConnectService
 {
     /**
      * Real Jellyfin's own QuickConnect code is plain digits, and clients build their entry UI on that
@@ -58,9 +58,9 @@ final class QuickConnectService
     private const int TTL_SECONDS = 300;
 
     public function __construct(
-        private readonly ConfigContainerInterface $configContainer,
-        private readonly QuickConnectRepositoryInterface $repository,
-        private readonly UserRepositoryInterface $userRepository,
+        private ConfigContainerInterface $configContainer,
+        private QuickConnectRepositoryInterface $repository,
+        private UserRepositoryInterface $userRepository,
     ) {}
 
     /**

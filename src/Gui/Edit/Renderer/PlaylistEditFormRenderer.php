@@ -73,7 +73,7 @@ final class PlaylistEditFormRenderer extends AbstractEditFormRenderer
             return T_('None');
         }
 
-        return implode(', ', array_map(static fn(int $id): string => User::get_username($id), $ids));
+        return implode(', ', array_map(User::get_username(...), $ids));
     }
 
     /**

@@ -172,6 +172,40 @@ class FolderRepositoryTest extends TestCase
     }
 
     /**
+     * A catalog scanned for folders once but added to since (a plain "Add" never touches `folder_map`)
+     * still has folder rows of its own, so a catalog with any unmapped song is excluded rather than
+     * contributing a folder tree with gaps in it
+     */
+    public function testGetCatalogIdsWithFolderMapExcludesACatalogWithUnmappedMedia(): void
+    {
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                self::logicalAnd(
+                    self::stringContains("`file` NOT LIKE 'http://%'"),
+                    self::stringContains("`file` NOT LIKE 'https://%'"),
+                ),
+                [3, 5, 3, 5, 3, 5]
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['catalog' => '5'], false);
+
+        self::assertSame([3], $this->subject->getCatalogIdsWithFolderMap([3, 5]));
+    }
+
+    public function testGetCatalogIdsWithFolderMapReturnsEmptyArrayForEmptyInput(): void
+    {
+        $this->connection->expects(static::never())->method('query');
+
+        self::assertSame([], $this->subject->getCatalogIdsWithFolderMap([]));
+    }
+
+    /**
      * folder_map rows carry their own `catalog` column, so a folder listing must honor the opt-in
      * `catalog_filter` feature the same way every other browse type does -- folders were the one type
      * this filter never reached

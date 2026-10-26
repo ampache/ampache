@@ -321,7 +321,7 @@ class Rating extends database_object
      */
     public function get_rating_count(): int
     {
-        return (int) ($this->average($this->type, $this->id)[1] ?? 0);
+        return $this->average($this->type, $this->id)[1] ?? 0;
     }
 
     /**

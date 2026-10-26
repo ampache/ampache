@@ -1047,8 +1047,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             $player
         );
 
-        // If custom play action or already cached, do not try to transcode
-        if (!$cpaction && !$original && !$cache_file) {
+        // A custom play action skips transcoding outright; requesting the original file also covers the
+        // pre-cached case, since that branch always sets $original alongside $cache_file.
+        if (!$cpaction && !$original) {
             $valid_types = $media->get_stream_types($player);
             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
                 if ($transcode_to) {

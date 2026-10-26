@@ -70,13 +70,13 @@ final readonly class ShowSongAction implements ApplicationActionInterface
             $webPath = AmpConfig::get_web_path();
             $pageUrl = $webPath . '/song.php?action=show_song&song_id=' . $song->getId();
             echo ($shown && MediaEmbedView::isOffered())
-                ? (new MediaEmbedView(
+                ? new MediaEmbedView(
                     (string) $song->get_fullname(),
                     $this->embedSubtitle($song),
                     $webPath . '/image.php?object_id=' . $song->album . '&object_type=album&size=128x128',
                     $pageUrl,
                     [$song]
-                ))->render()
+                )->render()
                 : $this->embedUnavailable($shown, $pageUrl);
 
             return null;
@@ -155,8 +155,8 @@ final readonly class ShowSongAction implements ApplicationActionInterface
      */
     private function embedSubtitle(Song $song): string
     {
-        $artist = (string) $song->get_parent_fullname();
-        $album  = (string) $song->get_album_fullname();
+        $artist = $song->get_parent_fullname();
+        $album  = $song->get_album_fullname();
 
         if ($artist === '') {
             return $album;

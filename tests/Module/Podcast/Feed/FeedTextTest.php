@@ -59,6 +59,8 @@ class FeedTextTest extends TestCase
             // whitespace is tidied up
             ["  padded  \n\n\n\n  text  ", "padded\ntext"],
             ['<p></p><p>only one</p>', 'only one'],
+            // U+0105 ("ą") ends in the byte 0x85, which \R treats as a newline unless the pattern is UTF-8 aware
+            ['Odcinek ą', 'Odcinek ą'],
         ];
     }
 
@@ -71,6 +73,8 @@ class FeedTextTest extends TestCase
             ['<p>a title</p>', 'a title'],
             ["broken<br />over<br />lines", 'broken over lines'],
             ['Episode 1: &quot;The Start&quot;', 'Episode 1: "The Start"'],
+            // the byte-corruption left the title empty rather than just mangled, so this is a title case too
+            ['Odcinek ą', 'Odcinek ą'],
         ];
     }
 

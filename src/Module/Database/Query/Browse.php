@@ -648,10 +648,6 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $name => $extra) {
-            ${$name} = $extra;
-        }
-
         $match = $this->_getMatchName();
 
         // Update the session value only if it's allowed on the current browser
@@ -993,7 +989,7 @@ class Browse extends Query
         };
 
         // 'folder'/'collection_items'/'playlist_folder' already warmed their own split-by-type groups above
-        if ($type !== 'folder' && $type !== 'collection_items' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+        if (!in_array($type, ['folder', 'collection_items', 'playlist_folder', 'playlist_folder_hidden'], true) && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
             $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
         }
     }
