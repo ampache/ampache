@@ -38,6 +38,7 @@
 * Highest rated albums and artists could include withdrawn items
 * `stats` action's `newest`/`highest`/`frequent` filters didn't apply the caller's `catalog_filter` on every API version
 * Podcast sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
+* The native API's `folders` action returned nothing for every catalog and every user
 
 ## Ampache 8.3.0
 
