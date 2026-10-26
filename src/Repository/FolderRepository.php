@@ -684,10 +684,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $pathName  = ($lastSlash === false) ? $file : substr($file, 0, $lastSlash);
                 $name      = ($lastSlash === false) ? $file : substr($file, $lastSlash + 1);
 
-                $folderId = (int) $this->connection->fetchOne(
-                    'SELECT `id` FROM `folder` WHERE `catalog` = ? AND `path_name` = ?;',
-                    [$row['catalog'], $pathName]
-                );
+                // a song older than `mapObject()` itself has no folder chain yet, so this has to create it too
+                $folderId = $this->findOrCreateByPathName($pathName, (int) $row['catalog']);
                 if ($folderId <= 0) {
                     continue;
                 }

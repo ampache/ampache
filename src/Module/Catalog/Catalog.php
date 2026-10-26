@@ -1785,6 +1785,9 @@ abstract class Catalog extends database_object
                             $catalog?->verify_catalog();
                         });
                     }
+
+                    self::getFolderRepository()->update_folder_map();
+                    self::getFolderRepository()->update_folder_counts();
                 }
 
                 break;
@@ -2199,6 +2202,10 @@ abstract class Catalog extends database_object
 
             $counter->count(CountableTableEnum::VIDEO);
         }
+
+        // every add and clean ends here too, so a song orphaned from the folder tree catches up without a separate Scan Folder
+        self::getFolderRepository()->update_folder_map();
+        self::getFolderRepository()->update_folder_counts();
     }
 
     /**
