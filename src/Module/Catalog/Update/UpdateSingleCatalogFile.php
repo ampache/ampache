@@ -99,8 +99,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
             }
 
-            // file not an existing catalog file
-            if ($media->isNew()) {
+            $file_test = is_file($filePath);
+            // not a catalog file yet, and there's nothing on disk to add either
+            if ($media->isNew() && !($addMode == 1 && $file_test)) {
                 $interactor->error(
                     T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
                     true
@@ -174,7 +175,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 return;
             }
 
-            $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
             if (
                 !$file_test
@@ -186,8 +186,12 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     true
                 );
                 // update counts after cleaning a missing file
-                Album::update_table_counts();
-                Artist::update_table_counts();
+                if ($media instanceof Song) {
+                    Album::update_album_count($media->album);
+                    if ($media->artist) {
+                        Artist::update_artist_count($media->artist);
+                    }
+                }
 
                 return;
             }
@@ -207,12 +211,16 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 if (!$file_id && $addMode == 1) {
                     // Look for new files
                     $catalog->add_file($filePath, []);
-                    Catalog::get_id_from_file($filePath, $type);
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);
-                    // update counts after adding/verifying
-                    Album::update_table_counts();
-                    Artist::update_table_counts();
+                    // update counts after adding
+                    if ($type === 'song' && $file_id) {
+                        $new_song = new Song($file_id);
+                        Album::update_album_count($new_song->album);
+                        if ($new_song->artist) {
+                            Artist::update_artist_count($new_song->artist);
+                        }
+                    }
                 }
 
                 if ($searchArtMode == 1 && $file_id) {
