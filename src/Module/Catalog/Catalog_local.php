@@ -1029,6 +1029,11 @@ class Catalog_local extends Catalog
 
     public function count_scan_folders(?Interactor $interactor = null): void
     {
+        // a scan that found no new folders has nothing for any of this to do
+        if ($this->count === 0) {
+            return;
+        }
+
         // insert object mapping after scanning new folders
         $interactor?->info(
             'local.catalog: update_folder_map',
@@ -1045,14 +1050,12 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        if ($this->count > 0) {
-            $interactor?->info(
-                'local.catalog: collectGarbage',
-                true
-            );
-            debug_event('local.catalog', 'collectGarbage', 5);
-            self::getFolderRepository()->collectGarbage();
-        }
+        $interactor?->info(
+            'local.catalog: collectGarbage',
+            true
+        );
+        debug_event('local.catalog', 'collectGarbage', 5);
+        self::getFolderRepository()->collectGarbage();
     }
 
     /**
