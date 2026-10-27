@@ -148,7 +148,8 @@
             "@php resources/scripts/composer/python.php resources/scripts/api-docs/lint_openapi.py"
         ],
         "post-autoload-dump": [
-            "@php resources/scripts/composer/check_tag_tools.php"
+            "@php resources/scripts/composer/check_tag_tools.php",
+            "@php resources/scripts/composer/install_git_hooks.php"
         ],
         "rector:dry": "rector process -n",
         "rector:fix": "rector process"
