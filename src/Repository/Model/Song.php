@@ -823,17 +823,12 @@ class Song extends database_object implements
         foreach (array_unique($artists) as $mapped_artist_id) {
             if ($mapped_artist_id > 0) {
                 Artist::update_artist_count($mapped_artist_id);
+                // an existing artist's own catalog_map row is only added when it is first created, so every song maps it again
+                Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
             }
         }
 
         if ($user_upload) {
-            // A scan maps artists to their catalog when it finishes; an upload has no such pass
-            foreach (array_unique($artists) as $mapped_artist_id) {
-                if ($mapped_artist_id > 0) {
-                    Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
-                }
-            }
-
             self::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
         }
 

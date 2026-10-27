@@ -103,13 +103,10 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         }
 
         if ($change > 0) {
-            // cleanup old episodes (if available)
+            // cleanup old episodes (if available); add_episode() already maps each new one onto its catalog
             $this->podcastDeleter->deleteEpisode(
                 $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
             );
-
-            Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_episode');
         }
 
         // the rows are inserted whether or not anything downloaded, so the count is refreshed either way

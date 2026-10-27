@@ -385,13 +385,8 @@ class Playlist extends playlist_object
             ];
         }
 
-        if ($this->add_medias($medias)) {
-            Catalog::update_mapping('playlist');
-
-            return true;
-        }
-
-        return false;
+        // add_medias() already maps this playlist onto every catalog its newly added songs live in
+        return $this->add_medias($medias);
     }
 
     /**

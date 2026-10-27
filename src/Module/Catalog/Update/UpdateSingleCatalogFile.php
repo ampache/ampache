@@ -180,18 +180,12 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 !$file_test
                 && $cleanupMode == 1
             ) {
+                // clean_file() refreshes the counts of whatever album/artist it just removed a song from
                 $catalog->clean_file($filePath, $type);
                 $interactor->info(
                     sprintf(T_('Removing File: "%s"'), $filePath),
                     true
                 );
-                // update counts after cleaning a missing file
-                if ($media instanceof Song) {
-                    Album::update_album_count($media->album);
-                    if ($media->artist) {
-                        Artist::update_artist_count($media->artist);
-                    }
-                }
 
                 return;
             }

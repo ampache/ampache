@@ -26,12 +26,14 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CatalogMapTableEnum;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
+use Ampache\Repository\CatalogMapRepositoryInterface;
 use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -63,6 +65,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
     private BroadcastRepositoryInterface&MockObject $broadcastRepository;
     private CatalogCounterInterface&MockObject $catalogCounter;
+    private CatalogMapRepositoryInterface&MockObject $catalogMapRepository;
     private ConfigContainerInterface&MockObject $configContainer;
     private DeletedPodcastEpisodeRepositoryInterface&MockObject $deletedPodcastEpisodeRepository;
     private ContainerInterface&MockObject $dic;
@@ -96,6 +99,26 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->deletedPodcastEpisodeRepository->expects(static::once())->method('pruneDeletedHistory')->with(30);
 
         $this->subject->collect();
+    }
+
+    public function testCollectRebuildsAndSweepsCatalogMapForEveryTable(): void
+    {
+        $cases    = CatalogMapTableEnum::cases();
+        $rebuilt  = [];
+
+        $this->catalogMapRepository->expects(static::exactly(count($cases)))
+            ->method('rebuild')
+            ->willReturnCallback(function (CatalogMapTableEnum $table) use (&$rebuilt): void {
+                $rebuilt[] = $table;
+            });
+
+        $this->catalogMapRepository->expects(static::once())
+            ->method('collectGarbage')
+            ->with($cases);
+
+        $this->subject->collect();
+
+        self::assertSame($cases, $rebuilt);
     }
 
     public function testCollectRunsGarbageCollectionOnEveryInjectedRepository(): void
@@ -165,6 +188,7 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->tagRepository                   = $this->createMock(TagRepositoryInterface::class);
         $this->dic                             = $this->createMock(ContainerInterface::class);
         $this->deletedPodcastEpisodeRepository = $this->createMock(DeletedPodcastEpisodeRepositoryInterface::class);
+        $this->catalogMapRepository            = $this->createMock(CatalogMapRepositoryInterface::class);
 
         // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
@@ -206,6 +230,7 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->catalogCounter,
             $this->configContainer,
             $this->deletedPodcastEpisodeRepository,
+            $this->catalogMapRepository,
         );
     }
 }

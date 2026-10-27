@@ -43,6 +43,7 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
+        private CatalogMapRepositoryInterface $catalogMapRepository,
     ) {}
 
     /**
@@ -191,6 +192,12 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
             'UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `id` = ?;',
             [$albumDiskId]
         );
+
+        // an orphaned album forces catalog back to 0 in the insert above, so the real value is read back rather than assumed
+        $actualCatalog = (int) $this->connection->fetchOne('SELECT `catalog` FROM `album_disk` WHERE `id` = ?;', [$albumDiskId]);
+        if ($actualCatalog > 0) {
+            $this->catalogMapRepository->add($actualCatalog, 'album_disk', $albumDiskId);
+        }
 
         if (!empty($disksubtitle)) {
             // set the subtitle on insert too

@@ -201,6 +201,23 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * Deletes songs and refreshes the counts of just the albums/artists that lost one, instead of a full table sweep
+     *
+     * @param list<int> $songIds
+     */
+    private static function deleteSongsAndRefreshCounts(array $songIds): void
+    {
+        $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
+        foreach ($affected['albums'] as $album_id) {
+            Album::update_album_count($album_id);
+        }
+
+        foreach ($affected['artists'] as $artist_id) {
+            Artist::update_artist_count($artist_id);
+        }
+    }
+
+    /**
      * add_file
      * @param array<string, bool|int|string> $options
      * @throws Exception
@@ -614,12 +631,6 @@ class Catalog_local extends Catalog
         }
 
         if ($this->count > 0) {
-            // update the counts too
-            if ($this->gather_types == 'music') {
-                Album::update_table_counts();
-                Artist::update_table_counts();
-            }
-
             /* Update the Catalog last_update */
             $this->update_last_add();
         }
@@ -990,7 +1001,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive($dead),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
-                default => self::getSongRepository()->deleteByIdsWithArchive($dead),
+                default => self::deleteSongsAndRefreshCounts($dead),
             };
         }
 
@@ -1020,7 +1031,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive([$object_id]),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive([$object_id]),
-                default => self::getSongRepository()->deleteByIdsWithArchive([$object_id]),
+                default => self::deleteSongsAndRefreshCounts([$object_id]),
             };
 
             return true;
@@ -1503,9 +1514,6 @@ class Catalog_local extends Catalog
         );
         debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
         if ($interactor == null && $gather_type == 'music') {
-            Album::update_table_counts();
-            Artist::update_table_counts();
-
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }

@@ -1770,11 +1770,6 @@ abstract class Catalog extends database_object
                     }
                 }
 
-                if (in_array('music', $catalog_media_types)) {
-                    Artist::update_table_counts();
-                    Album::update_table_counts();
-                }
-
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -1858,11 +1853,6 @@ abstract class Catalog extends database_object
                     }
 
                     self::getFolderRepository()->pruneEmptyFolders();
-
-                    if (in_array('music', $catalog_media_types)) {
-                        Artist::update_table_counts();
-                        Album::update_table_counts();
-                    }
                 }
 
                 break;
@@ -1910,8 +1900,6 @@ abstract class Catalog extends database_object
                                     if ($catalog->gather_types === 'music') {
                                         self::clean_empty_albums();
                                         Album::update_album_artist();
-                                        Album::update_table_counts();
-                                        Artist::update_table_counts();
                                     }
 
                                     self::update_catalog_map($catalog->gather_types, true);
@@ -2187,7 +2175,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Update the catalog_map table depending on table type
+     * Refreshes a catalog's stored totals after a scan; every insert path already maps its own row onto its catalog
      *
      * $mayHaveDeleted skips the costly folder_map orphan check on a plain add, which can't have removed anything
      */
@@ -2196,11 +2184,6 @@ abstract class Catalog extends database_object
         $counter          = self::getCatalogCounter();
         $folderRepository = self::getFolderRepository();
         if ($media_type == 'music') {
-            self::update_mapping('album');
-            self::update_mapping('album_disk');
-            self::update_mapping('artist');
-
-            // every add and clean ends here, so this is where a catalog's stored totals catch up
             $counter->count(CountableTableEnum::SONG);
             $counter->count(CountableTableEnum::ALBUM);
             $counter->count(CountableTableEnum::ALBUM_DISK);
@@ -2210,9 +2193,6 @@ abstract class Catalog extends database_object
                 $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::SONG);
             }
         } elseif ($media_type == 'podcast') {
-            self::update_mapping('podcast');
-            self::update_mapping('podcast_episode');
-
             $counter->count(CountableTableEnum::PODCAST);
             $counter->count(CountableTableEnum::PODCAST_EPISODE);
 
@@ -2220,8 +2200,6 @@ abstract class Catalog extends database_object
                 $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::PODCAST_EPISODE);
             }
         } elseif ($media_type == 'video') {
-            self::update_mapping('video');
-
             $counter->count(CountableTableEnum::VIDEO);
 
             if ($mayHaveDeleted) {

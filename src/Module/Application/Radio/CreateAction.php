@@ -33,7 +33,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Live_Stream;
@@ -74,7 +73,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 (int) $this->requestParser->getFromRequest('catalog')
             )->render();
         } else {
-            Catalog::update_mapping('live_stream');
+            // Live_Stream::create() already maps the new row onto its catalog
             $body  = T_('Radio Station created');
             $title = '';
             $this->ui->showConfirmation(
