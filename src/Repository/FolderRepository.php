@@ -649,13 +649,18 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
             $emptyIds = [];
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $pathName = $row['path_name'];
-                if ($removeFromDisk && is_string($pathName) && $pathName !== '' && is_dir($pathName)) {
+                $pathName     = $row['path_name'];
+                $existsOnDisk = is_string($pathName) && $pathName !== '' && is_dir($pathName);
+
+                if ($existsOnDisk && $removeFromDisk) {
                     // mtime updates on every add/remove, so a recently-touched dir may just be mid-upload
                     $recentlyTouched = (time() - (@filemtime($pathName) ?: 0)) < self::EMPTY_DIR_MIN_AGE;
                     if ($recentlyTouched || !@rmdir($pathName)) {
                         continue;
                     }
+                } elseif ($existsOnDisk) {
+                    // a folder still on disk is deliberately empty (e.g. an upload target), not garbage
+                    continue;
                 }
 
                 $emptyIds[] = (int) $row['id'];

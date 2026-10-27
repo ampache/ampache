@@ -27,6 +27,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
+use org\bovigo\vfs\vfsStream;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -558,6 +559,75 @@ class FolderRepositoryTest extends TestCase
             ->method('getLastInsertedId');
 
         self::assertNull($this->subject->persist($folder));
+    }
+
+    /**
+     * `catalog_clean_empty_dirs` off only used to skip removing the directory, not the db row behind it: an
+     * upload catalog's pre-created, still-empty target folders were deleted by the very scan that made them
+     */
+    public function testPruneEmptyFoldersKeepsAFolderStillOnDiskWhenRemovalIsDisabled(): void
+    {
+        $root = vfsStream::setup('catalog');
+        vfsStream::newDirectory('upload-target')->at($root);
+        $path = vfsStream::url('catalog/upload-target');
+
+        AmpConfig::set('catalog_clean_empty_dirs', false, true);
+
+        try {
+            $result = $this->createMock(PDOStatement::class);
+            $result->method('fetch')->willReturnOnConsecutiveCalls(
+                ['id' => '42', 'path_name' => $path],
+                false
+            );
+
+            $this->connection->expects(static::once())
+                ->method('query')
+                ->with(self::stringContains('SELECT `id`, `path_name` FROM `folder`'))
+                ->willReturn($result);
+
+            $this->subject->pruneEmptyFolders();
+        } finally {
+            AmpConfig::set('catalog_clean_empty_dirs', false, true);
+        }
+    }
+
+    /**
+     * A folder row tracking a path that is actually gone from disk is a real orphan, pruned regardless of
+     * `catalog_clean_empty_dirs` -- that setting only ever decided whether the directory itself is removed
+     */
+    public function testPruneEmptyFoldersRemovesARowForAPathGoneFromDisk(): void
+    {
+        AmpConfig::set('catalog_clean_empty_dirs', false, true);
+
+        try {
+            $calls = [];
+
+            $this->connection->method('query')
+                ->willReturnCallback(function (string $sql, array $params = []) use (&$calls): PDOStatement {
+                    $calls[] = [$sql, $params];
+                    $result  = $this->createMock(PDOStatement::class);
+
+                    if (str_starts_with($sql, 'SELECT `id`, `path_name` FROM `folder`') && count($calls) === 1) {
+                        $result->method('fetch')->willReturnOnConsecutiveCalls(
+                            ['id' => '42', 'path_name' => '/does/not/exist'],
+                            false
+                        );
+                    } else {
+                        $result->method('fetch')->willReturn(false);
+                    }
+
+                    return $result;
+                });
+
+            $this->subject->pruneEmptyFolders();
+
+            $deletes = array_filter($calls, static fn(array $call): bool => str_starts_with($call[0], 'DELETE FROM `folder` WHERE `id`'));
+
+            self::assertNotEmpty($deletes, 'a folder whose directory is gone from disk must still be pruned');
+            self::assertSame([42], current($deletes)[1]);
+        } finally {
+            AmpConfig::set('catalog_clean_empty_dirs', false, true);
+        }
     }
 
     public function testResolveSingleArtistIdReturnsNullWhenNoSongIsMapped(): void
