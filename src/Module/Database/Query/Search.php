@@ -35,6 +35,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Search\AlbumDiskSearch;
 use Ampache\Module\Database\Search\AlbumSearch;
 use Ampache\Module\Database\Search\ArtistSearch;
+use Ampache\Module\Database\Search\FolderSearch;
 use Ampache\Module\Database\Search\LabelSearch;
 use Ampache\Module\Database\Search\PlaylistSearch;
 use Ampache\Module\Database\Search\PodcastEpisodeSearch;
@@ -67,6 +68,7 @@ class Search extends playlist_object
         'album_disk',
         'album',
         'artist',
+        'folder',
         'genre',
         'label',
         'playlist',
@@ -306,6 +308,10 @@ class Search extends playlist_object
                 $this->searchType = new ArtistSearch($this->objectType);
                 $this->order_by   = '`artist`.`name`';
                 $this->objectType = 'artist';
+                break;
+            case 'folder':
+                $this->searchType = new FolderSearch();
+                $this->order_by   = '`folder`.`name`';
                 break;
             case 'label':
                 $this->searchType = new LabelSearch();
@@ -954,20 +960,20 @@ class Search extends playlist_object
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
         $ruleType = match ($name) {
             'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics',
-            'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre',
+            'label', 'file', 'path', 'parent_name', 'parent_path', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre',
             'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'name', 'username', 'fullname',
             'email', 'summary',
             'placeformed', 'release_type', 'release_status', 'version', 'barcode', 'catalog_number', 'favorite',
             'favorite_album', 'favorite_artist' => 'text',
             'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count',
-            'episode_count', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times',
+            'episode_count', 'object_count', 'parent_id', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times',
             'myskipped_times', 'myplayed_or_skipped_times', 'play_skip_ratio', 'myrating', 'rating', 'albumrating',
             'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating', 'yearformed', 'bitrate',
             'image_width', 'image_height', 'video_count', 'genre_count_song', 'genre_count_album',
             'genre_count_artist', 'weight_song', 'weight_album', 'weight_artist', 'weight_podcast',
             'weight_podcast_episode' => 'numeric',
             'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
-            'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'has_image',
+            'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode', 'my_flagged_folder', 'playable', 'has_image',
             'enabled', 'waveform' => 'boolean',
             'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
             'orphaned_album', 'duplicate_mbid_group' => 'is_true',
@@ -1011,6 +1017,7 @@ class Search extends playlist_object
         return match ($this->objectType) {
             'album', 'album_disk' => $this->_get_types_album(),
             'artist', 'album_artist', 'song_artist' => $this->_get_types_artist(),
+            'folder' => $this->_get_types_folder(),
             'label' => $this->_get_types_label(),
             'playlist' => $this->_get_types_playlist(),
             'podcast' => $this->_get_types_podcast(),
@@ -1363,6 +1370,7 @@ class Search extends playlist_object
             case 'album_disk':
             case 'album':
             case 'artist':
+            case 'folder':
             case 'label':
             case 'playlist':
             case 'podcast_episode':
@@ -1790,6 +1798,73 @@ class Search extends playlist_object
         $rule_type[]   = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
+
+        return $rule_type;
+    }
+
+    /**
+     * _get_types_folder
+     *
+     * this is where all the available rules for folders are defined
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
+     */
+    private function _get_types_folder(): array
+    {
+        $rule_type = [];
+
+        $t_folder    = T_('Folder');
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_folder);
+        $rule_type[] = $this->_get_rule_text('path', T_('Path'), $t_folder);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_folder);
+        $rule_type[] = $this->_get_rule_numeric('object_count', T_('# Items'), 'numeric', $t_folder);
+        $rule_type[] = $this->_get_rule_boolean('playable', T_('Playable'), 'boolean', $t_folder);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_folder);
+
+        $catalogs = [];
+        foreach (Catalog::get_catalogs('', $this->user) as $catid) {
+            $catalog = Catalog::create_from_id($catid);
+            if ($catalog === null || !$catalog->name) {
+                break;
+            }
+
+            $catalogs[$catid] = $catalog->name;
+        }
+
+        if ($catalogs !== []) {
+            $rule_type[] = $this->_get_rule_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_folder);
+        }
+
+        if (AmpConfig::get('ratings')) {
+            $t_ratings   = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_folder', T_('My Favorite Folders'), 'boolean', $t_ratings);
+            $users       = $this->getUserRepository()->getValidArray();
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+        }
+
+        $t_play_data = T_('Play History');
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+
+        $t_file_data = T_('File Data');
+        $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+
+        $t_parent    = T_('Parent Folder');
+        $rule_type[] = $this->_get_rule_text('parent_name', T_('Name'), $t_parent);
+        $rule_type[] = $this->_get_rule_text('parent_path', T_('Path'), $t_parent);
+        $rule_type[] = $this->_get_rule_numeric('parent_id', T_('Database ID'), 'numeric', $t_parent);
 
         return $rule_type;
     }

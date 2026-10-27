@@ -11,6 +11,8 @@
   * reborn gains nine colors modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
 * Config version 102
   * New `catalog_clean_empty_dirs` key; Clean/Garbage Collection/Scan Folder can now also remove an empty directory from disk, not just its row
+* Search
+  * New `folder` search type (name, path, parent folder, catalog, ratings, play counts, dates), web Search page and API8 `advanced_search`
 
 ### Changed (8.4.0)
 

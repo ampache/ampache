@@ -6858,6 +6858,24 @@ The folder that was browsed, and its children. `parent` is the id of the folder 
 | time    | integer                                            |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
+### FolderObject
+
+| Field         | Type    | Nullable | Optional | Notes |
+|---------------|---------|:--------:|:--------:|-------|
+| id            | string  |    NO    |    NO    |       |
+| name          | string  |   YES    |    NO    |       |
+| parent        | string  |   YES    |    NO    |       |
+| path          | string  |   YES    |    NO    |       |
+| catalog       | string  |    NO    |    NO    |       |
+| time          | integer |    NO    |    NO    |       |
+| items         | integer |    NO    |    NO    |       |
+| playable      | boolean |    NO    |    NO    |       |
+| art           | string  |   YES    |    NO    |       |
+| has_art       | boolean |    NO    |    NO    |       |
+| flag          | boolean |    NO    |    NO    |       |
+| rating        | integer |   YES    |    NO    |       |
+| averagerating | number  |   YES    |    NO    |       |
+
 ### GenreReference
 
 | Field | Type   | Nullable | Optional | Notes |
