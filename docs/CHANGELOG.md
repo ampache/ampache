@@ -40,6 +40,7 @@
 * Podcast sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
 * The native API's `folders` action returned nothing for every catalog and every user
 * A song whose directory a scan never walked stayed invisible to the folder tree forever, even after rescanning; any scan now repairs it
+* Clean/Verify only checked that a song's file existed, so a path that drifted outside its own catalog's root stayed forever
 
 ## Ampache 8.3.0
 

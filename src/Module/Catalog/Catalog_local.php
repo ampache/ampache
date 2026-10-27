@@ -1010,7 +1010,8 @@ class Catalog_local extends Catalog
      */
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
-        $file_info = (is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
+        $root      = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
+        $file_info = (str_starts_with($file, $root) && is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
         if (!$file_info) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
@@ -1534,9 +1535,10 @@ class Catalog_local extends Catalog
             default => self::getSongRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
         };
 
+        $root = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         foreach ($files as $mediaId => $mediaFile) {
             $results   = ['id' => $mediaId, 'file' => $mediaFile];
-            $file_info = @filesize(Core::conv_lc_file($results['file']));
+            $file_info = (str_starts_with((string) $results['file'], $root)) ? @filesize(Core::conv_lc_file($results['file'])) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File not found or empty: ' . $results['file'],
@@ -1567,6 +1569,7 @@ class Catalog_local extends Catalog
         $offset = $chunk * $chunk_size;
         $count  = $offset;
 
+        $root            = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
         foreach ($filecache_chunk as $file => $oid) {
             $count++;
@@ -1575,7 +1578,7 @@ class Catalog_local extends Catalog
                 Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, scrub_out($file_display)));
             }
 
-            $file_info = @filesize(Core::conv_lc_file($file));
+            $file_info = (str_starts_with($file, $root)) ? @filesize(Core::conv_lc_file($file)) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File removed: ' . $file,
