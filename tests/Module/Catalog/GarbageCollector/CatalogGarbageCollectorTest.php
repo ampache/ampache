@@ -160,6 +160,37 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->subject->collect();
     }
 
+    /**
+     * recount() is the cheap half of collect() an "add"/"clean" run can afford every time, even when
+     * nothing changed — it must refresh the counts without touching any of collect()'s heavier sweeps.
+     */
+    public function testRecountRefreshesCountsWithoutTheRestOfCollect(): void
+    {
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::CATALOG_DISABLE)
+            ->willReturn(false);
+        $this->userRepository->method('getAllIds')->willReturn([]);
+        $this->catalogCounter->method('getStoredCounts')->willReturn([]);
+
+        $this->songRepository->expects(static::once())->method('resetCountsWithoutHistory');
+        $this->songRepository->expects(static::once())->method('updateAllCounts');
+        $this->videoRepository->expects(static::once())->method('updateAllCounts');
+        $this->podcastEpisodeRepository->expects(static::once())->method('updateAllCounts');
+        $this->podcastRepository->expects(static::once())->method('updateAllCounts');
+        $this->albumRepository->expects(static::once())->method('updateAllCounts');
+        $this->albumRepository->expects(static::once())->method('updateAllSkipCounts');
+        $this->artistRepository->expects(static::once())->method('updateAllCounts');
+        $this->artistRepository->expects(static::once())->method('updateAllSkipCounts');
+        $this->folderRepository->expects(static::once())->method('update_folder_counts');
+        $this->catalogCounter->expects(static::once())->method('refreshServerCounts')->with(false);
+
+        $this->albumRepository->expects(static::never())->method('collectGarbage');
+        $this->playlistRepository->expects(static::never())->method('collectGarbage');
+        $this->catalogMapRepository->expects(static::never())->method('rebuild');
+
+        $this->subject->recount();
+    }
+
     protected function setUp(): void
     {
         $this->albumRepository                 = $this->createMock(AlbumRepositoryInterface::class);

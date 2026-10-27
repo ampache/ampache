@@ -342,7 +342,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
         // Shares its lock key with Catalog::process_action()'s 'garbage_collect' case, so a cron run here and a web-triggered sweep can't race each other.
         if (
-            ($collectGarbage || (($cleanup || $verification || $scanFolders) && $changed > 0) || ($changed > 0 && !$missing))
+            ($collectGarbage || $addNew || $cleanup || (($verification || $scanFolders) && $changed > 0) || ($changed > 0 && !$missing))
             && $this->catalogRepository->tryAcquireActionLock('garbage_collect')
         ) {
             try {
@@ -359,6 +359,17 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         $catalog?->count_scan_folders($interactor);
                     }
 
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
+                } elseif ($addNew || $cleanup) {
+                    // a run with nothing to show for it still keeps the cached counts proven correct, cheaply
+                    $interactor->info(
+                        T_('Updating counts'),
+                        true
+                    );
+                    $this->catalogGarbageCollector->recount();
                     $interactor->info(
                         '------------------',
                         true

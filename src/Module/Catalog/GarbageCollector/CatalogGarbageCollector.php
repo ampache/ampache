@@ -151,7 +151,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
      * The live paths keep these right as things are played and deleted; this is the repair for a database
      * that drifted, which is why it belongs to garbage collection rather than to a periodic sweep.
      */
-    private function recount(): void
+    public function recount(): void
     {
         // a rebuild is a join, so rows that lost their last play are zeroed first or they keep the old total
         $this->songRepository->resetCountsWithoutHistory();
