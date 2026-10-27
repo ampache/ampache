@@ -296,6 +296,11 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             time(),
             $podcast->getCatalogId(),
         ]);
+
+        $episode_id = Dba::insert_id();
+        if ($episode_id !== false) {
+            Catalog::update_map($podcast->getCatalogId(), 'podcast_episode', (int) $episode_id);
+        }
     }
 
     /**

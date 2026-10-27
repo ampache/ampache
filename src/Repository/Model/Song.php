@@ -820,6 +820,11 @@ class Song extends database_object implements
 
         // update the all the counts for the album right away
         Album::update_album_count($album_id);
+        foreach (array_unique($artists) as $mapped_artist_id) {
+            if ($mapped_artist_id > 0) {
+                Artist::update_artist_count($mapped_artist_id);
+            }
+        }
 
         if ($user_upload) {
             // A scan maps artists to their catalog when it finishes; an upload has no such pass

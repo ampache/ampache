@@ -101,7 +101,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
             $file_test = is_file($filePath);
             // not a catalog file yet, and there's nothing on disk to add either
-            if ($media->isNew() && !($addMode == 1 && $file_test)) {
+            if ($media->isNew() && ($addMode != 1 || !$file_test)) {
                 $interactor->error(
                     T_('Error') . ': ' . $catname . ' ' . T_('File not found') . ' ' . $filePath,
                     true
