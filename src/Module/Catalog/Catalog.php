@@ -1167,12 +1167,24 @@ abstract class Catalog extends database_object
 
     /**
      * Get Folder for browsing (Used for WebDav)
+     *
+     * A child outside the current user's catalog_filter is answered as not found, same as a name that
+     * never existed, so a guessed or bookmarked WebDAV path cannot confirm a restricted catalog exists.
      */
     public static function get_child(string $name, ?int $catalog_id = 0, ?int $parent_id = null): Folder|Podcast_Episode|Song|Video|null
     {
-        return ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return new Folder(-1);
+        }
+
+        $child = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($child === null) {
+            return null;
+        }
+
+        return (self::has_access($child->getCatalogId(), Core::get_global('user')?->getId() ?? -1))
+            ? $child
+            : null;
     }
 
     /**
@@ -1644,11 +1656,17 @@ abstract class Catalog extends database_object
 
     public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
-        $folder = ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return (new Folder(-1))->has_children($name);
+        }
 
-        return $folder instanceof Folder && $folder->isNew() === false && $folder->has_children($name);
+        $folder = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if (!$folder instanceof Folder || $folder->isNew()) {
+            return false;
+        }
+
+        return self::has_access($folder->getCatalogId(), Core::get_global('user')?->getId() ?? -1)
+            && $folder->has_children($name);
     }
 
     /**

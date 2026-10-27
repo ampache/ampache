@@ -38,11 +38,20 @@ Ui::show_box_top($this->raw($this->getTitle()), 'info-box'); ?>
 <div class="item_right_info">
 </div>
 <?php // the root listing is a virtual folder with nothing to act on, so the panel is omitted rather than drawn empty
-if ($this->isPlayShown() || $this->isQueueShown()) { ?>
+if ($this->isPlayShown() || $this->isQueueShown() || $this->canOpenWebdav()) { ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?></h3>
     <ul>
-    <?php if ($this->isPlayShown()) { ?>
+    <?php if ($this->canOpenWebdav()) { ?>
+        <li>
+            <a href="<?php echo $this->e($this->getWebdavUrl()); ?>" target="_blank" rel="noopener">
+                <?php echo $this->raw(Ui::get_material_symbol('folder_open', T_('Open in WebDAV'))); ?>
+                <?php echo $this->e(T_('Open in WebDAV')); ?>
+            </a>
+        </li>
+    <?php }
+
+    if ($this->isPlayShown()) { ?>
         <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=folder&object_id=' . $folderId, 'play_circle', T_('Play'), 'directplay_full_' . $folderId)); ?></li>
         <?php if ($this->isAutoplayNextEnabled()) { ?>
         <li><?php echo $this->raw(Ajax::button_with_text('?page=stream&action=directplay&object_type=folder&object_id=' . $folderId . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_folder_' . $folderId)); ?></li>
