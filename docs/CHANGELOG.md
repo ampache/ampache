@@ -15,6 +15,9 @@
 ### Changed (8.4.0)
 
 * Updated Composer and NPM dependencies
+* Catalog
+  * Add, Clean and Verify maintain `catalog_map` and album/artist counts per row, instead of a full resync after every scan
+  * Garbage Collection now performs the full `catalog_map` resync; routine scans no longer repair catalog-wide drift
 * Theme
   * `theme.cfg.php` gained an optional `color_bases` key; a color with none is treated as dark, same as before
 
@@ -43,6 +46,10 @@
 * The native API's `folders` action returned nothing for every catalog and every user
 * A song whose directory a scan never walked stayed invisible to the folder tree forever, even after rescanning; any scan now repairs it
 * Clean/Verify only checked that a song's file existed, so a path that drifted outside its own catalog's root stayed forever
+* `album_disk` rows were never mapped into `catalog_map`, hiding them from catalog-scoped browsing until a full Garbage Collection ran
+* An artist added to a second catalog outside an upload stayed unmapped in `catalog_map` until a full Garbage Collection ran
+* A playlist populated outside the "add songs" action (API, Jellyfin, search-to-playlist) was never mapped into `catalog_map`
+* Clean's bulk file removal didn't refresh album/artist song counts until the next full scan or Garbage Collection
 
 ## Ampache 8.3.0
 

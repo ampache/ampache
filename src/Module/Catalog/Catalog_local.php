@@ -205,7 +205,7 @@ class Catalog_local extends Catalog
      *
      * @param list<int> $songIds
      */
-    private static function deleteSongsAndRefreshCounts(array $songIds): void
+    private function deleteSongsAndRefreshCounts(array $songIds): void
     {
         $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
         foreach ($affected['albums'] as $album_id) {
@@ -1001,7 +1001,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive($dead),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
-                default => self::deleteSongsAndRefreshCounts($dead),
+                default => $this->deleteSongsAndRefreshCounts($dead),
             };
         }
 
@@ -1031,7 +1031,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive([$object_id]),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive([$object_id]),
-                default => self::deleteSongsAndRefreshCounts([$object_id]),
+                default => $this->deleteSongsAndRefreshCounts([$object_id]),
             };
 
             return true;
