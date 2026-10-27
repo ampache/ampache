@@ -99,6 +99,40 @@ class CatalogMapRepositoryTest extends TestCase
         self::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[1]);
     }
 
+    public function testCollectGarbageForObjectChecksOnlyTheGivenIdForANonArtistType(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `podcast_episode` WHERE `id` = ?);',
+                ['podcast_episode', 666, 666]
+            );
+
+        $this->subject->collectGarbageForObject(CatalogMapTableEnum::PODCAST_EPISODE, 666);
+    }
+
+    public function testCollectGarbageForObjectSweepsTheThreeArtistRolesScopedToOneId(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$calls): PDOStatement {
+                $calls[] = [$sql, $params];
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbageForObject(CatalogMapTableEnum::ARTIST, 42);
+
+        self::assertStringContainsString("`object_type` = 'album_artist'", $calls[0][0]);
+        self::assertSame([42, 42], $calls[0][1]);
+        self::assertStringContainsString("`object_type` = 'song_artist'", $calls[1][0]);
+        self::assertSame([42, 42], $calls[1][1]);
+        self::assertStringContainsString("`object_type` = 'artist'", $calls[2][0]);
+        self::assertSame([42, 42], $calls[2][1]);
+    }
+
     public function testCollectGarbageSweepsTheThreeArtistRolesBeforeCatalogZero(): void
     {
         $calls = [];

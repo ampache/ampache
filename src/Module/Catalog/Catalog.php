@@ -3441,7 +3441,8 @@ abstract class Catalog extends database_object
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
                 self::update_map($catalog_id, 'artist', $new_object_id);
-                self::garbage_collect_mapping(['artist']);
+                // the old artist is the only one that could have become orphaned by this move
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ARTIST, $old_object_id);
             }
 
             if ($object_type === 'album') {
@@ -3449,8 +3450,12 @@ abstract class Catalog extends database_object
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
                 self::update_map($catalog_id, 'album', $new_object_id);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM, $old_object_id);
+            }
+
+            if ($object_type === 'album_disk') {
                 self::update_map($catalog_id, 'album_disk', $new_object_id);
-                self::garbage_collect_mapping(['album', 'album_disk']);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM_DISK, $old_object_id);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
