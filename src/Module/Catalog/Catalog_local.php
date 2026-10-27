@@ -201,23 +201,6 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * Deletes songs and refreshes the counts of just the albums/artists that lost one, instead of a full table sweep
-     *
-     * @param list<int> $songIds
-     */
-    private function deleteSongsAndRefreshCounts(array $songIds): void
-    {
-        $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
-        foreach ($affected['albums'] as $album_id) {
-            Album::update_album_count($album_id);
-        }
-
-        foreach ($affected['artists'] as $artist_id) {
-            Artist::update_artist_count($artist_id);
-        }
-    }
-
-    /**
      * add_file
      * @param array<string, bool|int|string> $options
      * @throws Exception
@@ -2075,6 +2058,23 @@ class Catalog_local extends Catalog
         Ui::update_text(T_('Verified'), $count);
 
         return $changed;
+    }
+
+    /**
+     * Deletes songs and refreshes the counts of just the albums/artists that lost one, instead of a full table sweep
+     *
+     * @param list<int> $songIds
+     */
+    private function deleteSongsAndRefreshCounts(array $songIds): void
+    {
+        $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
+        foreach ($affected['albums'] as $album_id) {
+            Album::update_album_count($album_id);
+        }
+
+        foreach ($affected['artists'] as $artist_id) {
+            Artist::update_artist_count($artist_id);
+        }
     }
 
     private function getArtistRepository(): ArtistRepositoryInterface
