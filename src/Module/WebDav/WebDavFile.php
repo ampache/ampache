@@ -47,7 +47,7 @@ class WebDavFile extends File
         // Only media associated to a local catalog is supported
         if (property_exists($this->libitem, 'catalog') && $this->libitem->catalog !== null) {
             if (!Catalog::has_access($this->libitem->catalog, Core::get_global('user')?->getId() ?? -1)) {
-                debug_event(self::class, 'Catalog associated to the media is outside the user\'s catalog_filter.', 3);
+                debug_event(self::class, "Catalog associated to the media is outside the user's catalog_filter.", 3);
 
                 return null;
             }

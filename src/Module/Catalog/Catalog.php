@@ -1657,7 +1657,7 @@ abstract class Catalog extends database_object
     public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
         if ($name === '/') {
-            return (new Folder(-1))->has_children($name);
+            return new Folder(-1)->has_children($name);
         }
 
         $folder = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
