@@ -41,6 +41,9 @@ use Psr\Log\LoggerInterface;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
+    /** Minimum time since a directory's own mtime changed before `catalog_clean_empty_dirs` may remove it */
+    private const int EMPTY_DIR_MIN_AGE = 3600;
+
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private LoggerInterface $logger,
@@ -812,15 +815,26 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     private function pruneEmptyFolders(): void
     {
+        $removeFromDisk = AmpConfig::get_bool('catalog_clean_empty_dirs');
+
         for ($i = 0; $i < 10; $i++) {
             // a folder holding nothing but other folders holds something: without the second clause the sweep
             // deletes every intermediate level of a normal library and orphans everything below it
             $result = $this->connection->query(
-                'SELECT `id` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL) AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL);'
+                'SELECT `id`, `path_name` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL) AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL);'
             );
 
             $emptyIds = [];
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $pathName = $row['path_name'];
+                if ($removeFromDisk && is_string($pathName) && $pathName !== '' && is_dir($pathName)) {
+                    // mtime updates on every add/remove, so a recently-touched dir may just be mid-upload
+                    $recentlyTouched = (time() - (@filemtime($pathName) ?: 0)) < self::EMPTY_DIR_MIN_AGE;
+                    if ($recentlyTouched || !@rmdir($pathName)) {
+                        continue;
+                    }
+                }
+
                 $emptyIds[] = (int) $row['id'];
             }
 

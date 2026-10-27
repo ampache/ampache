@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 101
+config_version = 102
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -441,6 +441,11 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; We will update each album instead of just the individual songs.
 ; DEFAULT: "false"
 ;catalog_verify_by_album = "true"
+
+; Catalog clean empty directories
+; When enabled, Clean also removes an empty directory from disk, not just its database row.
+; DEFAULT: "false"
+;catalog_clean_empty_dirs = "true"
 
 ;#########################################################
 ; Program Settings                                       #

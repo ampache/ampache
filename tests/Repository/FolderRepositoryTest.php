@@ -58,7 +58,7 @@ class FolderRepositoryTest extends TestCase
 
         $this->subject->collectGarbage();
 
-        $prune = array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'SELECT `id` FROM `folder` WHERE `user` IS NULL'));
+        $prune = array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'SELECT `id`, `path_name` FROM `folder` WHERE `user` IS NULL'));
 
         self::assertCount(1, $prune);
         self::assertStringContainsString(

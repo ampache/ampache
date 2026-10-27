@@ -1744,11 +1744,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if (
-                                $catalog !== null
-                                && $catalog->add_to_catalog($options)
-                                && !in_array($catalog->gather_types, $catalog_media_types, true)
-                            ) {
+                            if ($catalog === null) {
+                                return;
+                            }
+
+                            // tracked even when nothing new is found, so the folder map and counts still catch up
+                            $catalog->add_to_catalog($options);
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1801,15 +1803,16 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        if ($catalog === null) {
+                            return;
+                        }
 
-                            $catalog->verify_catalog();
-                            if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+
+                        if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
+                            $catalog_media_types[] = $catalog->gather_types;
                         }
                     });
                 }
@@ -1833,7 +1836,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true))) {
+                            if ($catalog === null) {
+                                return;
+                            }
+
+                            // tracked even when nothing was removed, so the folder map and counts still catch up
+                            $catalog->clean_catalog();
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1847,6 +1856,8 @@ abstract class Catalog extends database_object
 
                         self::update_catalog_map($catalog_media_type);
                     }
+
+                    self::getFolderRepository()->collectGarbage();
 
                     if (in_array('music', $catalog_media_types)) {
                         Artist::update_table_counts();
