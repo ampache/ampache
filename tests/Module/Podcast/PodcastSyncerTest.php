@@ -27,6 +27,8 @@ namespace Ampache\Module\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\CatalogMapRepositoryInterface;
@@ -35,6 +37,7 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use ArrayIterator;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -131,6 +134,42 @@ class PodcastSyncerTest extends TestCase
             ->with(504);
         $podcast->expects(static::once())
             ->method('save');
+
+        $this->subject->addEpisodes($podcast, $episodes);
+    }
+
+    /**
+     * Adding episodes must refresh the server-wide podcast_episode count, or it goes stale until an
+     * unrelated full catalog scan happens to recount it.
+     */
+    public function testAddEpisodesRefreshesTheServerWideEpisodeCount(): void
+    {
+        $podcast  = $this->createMock(Podcast::class);
+        $episodes = new SimpleXMLElement('<items></items>');
+
+        $this->configContainer->method('getInt')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $this->podcastEpisodeRepository->method('getEpisodeCount')->willReturn(0);
+
+        $catalogCounter = $this->createMock(CatalogCounterInterface::class);
+        $catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::PODCAST_EPISODE);
+        $catalogCounter->method('getStoredCounts')->willReturn([]);
+
+        $userRepository = $this->createMock(UserRepositoryInterface::class);
+        $userRepository->method('getAllIds')->willReturn([]);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogMapRepositoryInterface::class => $this->catalogMapRepository,
+            CatalogCounterInterface::class => $catalogCounter,
+            UserRepositoryInterface::class => $userRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $dic;
 
         $this->subject->addEpisodes($podcast, $episodes);
     }
@@ -257,6 +296,44 @@ class PodcastSyncerTest extends TestCase
         self::assertTrue($this->subject->sync($podcast));
     }
 
+    /**
+     * A full sync must refresh every user's cached totals too, not just the server-wide ones
+     * addEpisodes() already touches.
+     */
+    public function testSyncRefreshesEveryUsersCachedCounts(): void
+    {
+        $feedUrl = 'https://feed.example/rss';
+
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getFeedUrl')->willReturn($feedUrl);
+        $podcast->method('getLastSyncDate')->willReturn(new DateTimeImmutable());
+
+        $this->webFetcher->method('fetch')
+            ->with($feedUrl)
+            ->willReturn('<rss><channel></channel></rss>');
+        $this->configContainer->method('getInt')
+            ->with(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD)
+            ->willReturn(-1);
+
+        $catalogCounter = $this->createMock(CatalogCounterInterface::class);
+        $catalogCounter->method('count')->willReturn(0);
+        $catalogCounter->method('getStoredCounts')->willReturn([]);
+
+        $userRepository = $this->createMock(UserRepositoryInterface::class);
+        $userRepository->expects(static::once())->method('getAllIds')->willReturn([]);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogMapRepositoryInterface::class => $this->catalogMapRepository,
+            CatalogCounterInterface::class => $catalogCounter,
+            UserRepositoryInterface::class => $userRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $dic;
+
+        self::assertTrue($this->subject->sync($podcast));
+    }
+
     public function testSyncReturnsFalseForEmptyFeedUrl(): void
     {
         $podcast = $this->createMock(Podcast::class);
@@ -299,10 +376,20 @@ class PodcastSyncerTest extends TestCase
         $this->catalogMapRepository     = $this->createMock(CatalogMapRepositoryInterface::class);
         $this->webFetcher               = $this->createMock(WebFetcherInterface::class);
 
+        // a full add/sync now also refreshes the server-wide and per-user media counts, both reached via the container
+        $catalogCounter = $this->createMock(CatalogCounterInterface::class);
+        $catalogCounter->method('count')->willReturn(0);
+        $catalogCounter->method('getStoredCounts')->willReturn([]);
+
+        $userRepository = $this->createMock(UserRepositoryInterface::class);
+        $userRepository->method('getAllIds')->willReturn([]);
+
         // Catalog::update_mapping() reaches the container, and debug_event() pulls the logger off the same one
         $dic = $this->createMock(ContainerInterface::class);
         $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             CatalogMapRepositoryInterface::class => $this->catalogMapRepository,
+            CatalogCounterInterface::class => $catalogCounter,
+            UserRepositoryInterface::class => $userRepository,
             default => $this->createMock(LoggerInterface::class),
         });
         $GLOBALS['dic'] = $dic;

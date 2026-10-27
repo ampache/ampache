@@ -28,6 +28,7 @@ namespace Ampache\Module\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Feed\FeedDuration;
 use Ampache\Module\Podcast\Feed\FeedNamespaceEnum;
 use Ampache\Module\Podcast\Feed\FeedText;
@@ -37,6 +38,7 @@ use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use DateTime;
@@ -72,6 +74,9 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
                 $this->add_episode($podcast, $episode, $lastSync);
             }
         }
+
+        // the server-wide podcast_episode total needs the same refresh the per-podcast count gets below
+        Catalog::count_table(CountableTableEnum::PODCAST_EPISODE);
 
         $change   = 0;
         $syncDate = new DateTime();
@@ -152,6 +157,9 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         }
 
         $this->addEpisodes($podcast, $xml->channel->item, $podcast->getLastSyncDate(), $gather);
+
+        // a full sync touches every user's cached totals, not just the server-wide ones addEpisodes() refreshed
+        User::update_counts();
 
         return true;
     }
