@@ -1823,7 +1823,7 @@ abstract class Catalog extends database_object
                         Album::update_album_artist();
                     }
 
-                    self::update_catalog_map($catalog_media_type);
+                    self::update_catalog_map($catalog_media_type, true);
                 }
 
                 break;
@@ -1854,10 +1854,10 @@ abstract class Catalog extends database_object
                             Album::update_album_artist();
                         }
 
-                        self::update_catalog_map($catalog_media_type);
+                        self::update_catalog_map($catalog_media_type, true);
                     }
 
-                    self::getFolderRepository()->collectGarbage();
+                    self::getFolderRepository()->pruneEmptyFolders();
 
                     if (in_array('music', $catalog_media_types)) {
                         Artist::update_table_counts();
@@ -1914,7 +1914,7 @@ abstract class Catalog extends database_object
                                         Artist::update_table_counts();
                                     }
 
-                                    self::update_catalog_map($catalog->gather_types);
+                                    self::update_catalog_map($catalog->gather_types, true);
                                 }
                             }
                         });
@@ -2188,10 +2188,13 @@ abstract class Catalog extends database_object
 
     /**
      * Update the catalog_map table depending on table type
+     *
+     * $mayHaveDeleted skips the costly folder_map orphan check on a plain add, which can't have removed anything
      */
-    public static function update_catalog_map(?string $media_type): void
+    public static function update_catalog_map(?string $media_type, bool $mayHaveDeleted = false): void
     {
-        $counter = self::getCatalogCounter();
+        $counter          = self::getCatalogCounter();
+        $folderRepository = self::getFolderRepository();
         if ($media_type == 'music') {
             self::update_mapping('album');
             self::update_mapping('album_disk');
@@ -2202,21 +2205,33 @@ abstract class Catalog extends database_object
             $counter->count(CountableTableEnum::ALBUM);
             $counter->count(CountableTableEnum::ALBUM_DISK);
             $counter->count(CountableTableEnum::ARTIST);
+
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::SONG);
+            }
         } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
 
             $counter->count(CountableTableEnum::PODCAST);
             $counter->count(CountableTableEnum::PODCAST_EPISODE);
+
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::PODCAST_EPISODE);
+            }
         } elseif ($media_type == 'video') {
             self::update_mapping('video');
 
             $counter->count(CountableTableEnum::VIDEO);
+
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::VIDEO);
+            }
         }
 
         // every add and clean ends here too, so a song orphaned from the folder tree catches up without a separate Scan Folder
-        self::getFolderRepository()->update_folder_map();
-        self::getFolderRepository()->update_folder_counts();
+        $folderRepository->update_folder_map();
+        $folderRepository->update_folder_counts();
     }
 
     /**
