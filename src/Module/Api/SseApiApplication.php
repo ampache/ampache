@@ -103,7 +103,6 @@ final class SseApiApplication implements ApiApplicationInterface
         if ($worker == 'catalog') {
             if (defined('SSE_OUTPUT')) {
                 echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
-                ob_flush();
                 flush();
             }
 
@@ -125,7 +124,6 @@ final class SseApiApplication implements ApiApplicationInterface
                     AmpError::add('general', $error->getMessage());
                     if (defined('SSE_OUTPUT')) {
                         echo "data: " . json_encode(['fn' => 'display_sse_error', 'args' => [$error->getMessage()]]) . "\n\n";
-                        ob_flush();
                         flush();
                     }
                 } finally {
@@ -135,11 +133,9 @@ final class SseApiApplication implements ApiApplicationInterface
 
             if (defined('SSE_OUTPUT')) {
                 echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
-                ob_flush();
                 flush();
 
                 echo "data: " . json_encode(['fn' => 'stop_sse_worker', 'args' => []]) . "\n\n";
-                ob_flush();
                 flush();
             } else {
                 echo AmpError::display('general');
@@ -168,7 +164,6 @@ final class SseApiApplication implements ApiApplicationInterface
         while ($this->catalogRepository->isActionProcessing($lockKey) && $waited < self::MAX_WAIT_SECONDS) {
             if (defined('SSE_OUTPUT')) {
                 echo ": still processing\n\n";
-                ob_flush();
                 flush();
             }
 
