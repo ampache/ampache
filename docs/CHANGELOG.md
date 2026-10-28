@@ -52,6 +52,7 @@
 * An artist added to a second catalog outside an upload stayed unmapped in `catalog_map` until a full Garbage Collection ran
 * A playlist populated outside the "add songs" action (API, Jellyfin, search-to-playlist) was never mapped into `catalog_map`
 * Clean's bulk file removal didn't refresh album/artist song counts until the next full scan or Garbage Collection
+* The OIDC provider's callback (`/oidc/`) could be redirected to `update.php` by a pending database update, losing the login
 
 ## Ampache 8.3.0
 
