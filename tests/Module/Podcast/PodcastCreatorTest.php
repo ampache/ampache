@@ -26,13 +26,20 @@ declare(strict_types=1);
 namespace Ampache\Module\Podcast;
 
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
 use Ampache\Module\Podcast\Exception\InvalidFeedUrlException;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
+use Ampache\Repository\CatalogMapRepositoryInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 
 class PodcastCreatorTest extends TestCase
 {
@@ -43,6 +50,70 @@ class PodcastCreatorTest extends TestCase
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private PodcastSyncerInterface&MockObject $podcastSyncer;
     private PodcastCreator $subject;
+
+    /**
+     * Creating a new podcast must bump the server-wide podcast count and refresh every user's cached
+     * totals — count_table() used to recount CountableTableEnum::USER by mistake instead.
+     */
+    public function testCreateCountsTheNewPodcastAndRefreshesUserCounts(): void
+    {
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getId')->willReturn(42);
+        $podcast->method('setCatalog')->willReturnSelf();
+        $podcast->method('setFeedUrl')->willReturnSelf();
+        $podcast->method('setTitle')->willReturnSelf();
+        $podcast->method('setWebsite')->willReturnSelf();
+        $podcast->method('setDescription')->willReturnSelf();
+        $podcast->method('setLanguage')->willReturnSelf();
+        $podcast->method('setCopyright')->willReturnSelf();
+        $podcast->method('setGenerator')->willReturnSelf();
+        $podcast->method('setLastBuildDate')->willReturnSelf();
+
+        $this->podcastRepository->method('findByFeedUrl')->willReturn(null);
+        $this->podcastRepository->method('prototype')->willReturn($podcast);
+
+        $this->podcastFolderProvider->method('getBaseFolder')->willReturn('/tmp/podcasts');
+
+        $this->catalog->method('supportsType')->with('podcast')->willReturn(true);
+        $this->catalog->method('getId')->willReturn(7);
+
+        $this->feedLoader->method('load')->willReturn([
+            'title' => 'A Podcast',
+            'website' => 'https://example.test',
+            'description' => '',
+            'language' => 'en',
+            'copyright' => '',
+            'generator' => '',
+            'episodes' => new SimpleXMLElement('<items></items>'),
+            'artUrl' => null,
+            'lastBuildDate' => null,
+        ]);
+
+        $catalogMapRepository = $this->createMock(CatalogMapRepositoryInterface::class);
+
+        $catalogCounter = $this->createMock(CatalogCounterInterface::class);
+        $catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::PODCAST);
+        $catalogCounter->method('getStoredCounts')->willReturn([]);
+
+        $userRepository = $this->createMock(UserRepositoryInterface::class);
+        $userRepository->expects(static::once())->method('getAllIds')->willReturn([]);
+
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            CatalogMapRepositoryInterface::class => $catalogMapRepository,
+            CatalogCounterInterface::class => $catalogCounter,
+            UserRepositoryInterface::class => $userRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+        $GLOBALS['dic'] = $dic;
+
+        self::assertSame(
+            $podcast,
+            $this->subject->create('https://feed.example/rss', $this->catalog)
+        );
+    }
 
     public function testCreateFailsIfCatalogDoesNotSupportPodcasts(): void
     {

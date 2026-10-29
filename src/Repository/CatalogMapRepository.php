@@ -91,6 +91,35 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
         }
     }
 
+    public function collectGarbageForObject(CatalogMapTableEnum $table, int $objectId): void
+    {
+        if ($table === CatalogMapTableEnum::ARTIST) {
+            // mirrors collectGarbage()'s role-then-artist order, each check scoped to this one artist id
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `album` ON `album`.`id` = `artist_map`.`object_id` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ?);",
+                [$objectId, $objectId]
+            );
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`id` = `artist_map`.`object_id` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ?);",
+                [$objectId, $objectId]
+            );
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `catalog_map` WHERE `object_type` IN ('song_artist', 'album_artist') AND `object_id` = ?);",
+                [$objectId, $objectId]
+            );
+
+            return;
+        }
+
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `%s` WHERE `id` = ?);',
+                $table->value
+            ),
+            [$table->value, $objectId, $objectId]
+        );
+    }
+
     public function deleteForObject(string $objectType, int $objectId): void
     {
         $this->connection->query(

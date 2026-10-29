@@ -91,6 +91,10 @@ final class SearchFormView extends AbstractView
             $categories[] = ['type' => 'video', 'label' => T_('Videos'), 'current' => $current === 'video'];
         }
 
+        if (AmpConfig::get('show_folder')) {
+            $categories[] = ['type' => 'folder', 'label' => T_('Folders'), 'current' => $current === 'folder'];
+        }
+
         return $categories;
     }
 

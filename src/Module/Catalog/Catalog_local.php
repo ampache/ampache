@@ -614,12 +614,6 @@ class Catalog_local extends Catalog
         }
 
         if ($this->count > 0) {
-            // update the counts too
-            if ($this->gather_types == 'music') {
-                Album::update_table_counts();
-                Artist::update_table_counts();
-            }
-
             /* Update the Catalog last_update */
             $this->update_last_add();
         }
@@ -990,7 +984,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive($dead),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
-                default => self::getSongRepository()->deleteByIdsWithArchive($dead),
+                default => $this->deleteSongsAndRefreshCounts($dead),
             };
         }
 
@@ -1010,7 +1004,8 @@ class Catalog_local extends Catalog
      */
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
-        $file_info = (is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
+        $root      = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
+        $file_info = (str_starts_with($file, $root) && is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
         if (!$file_info) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
@@ -1019,7 +1014,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive([$object_id]),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive([$object_id]),
-                default => self::getSongRepository()->deleteByIdsWithArchive([$object_id]),
+                default => $this->deleteSongsAndRefreshCounts([$object_id]),
             };
 
             return true;
@@ -1034,6 +1029,11 @@ class Catalog_local extends Catalog
 
     public function count_scan_folders(?Interactor $interactor = null): void
     {
+        // a scan that found no new folders has nothing for any of this to do
+        if ($this->count === 0) {
+            return;
+        }
+
         // insert object mapping after scanning new folders
         $interactor?->info(
             'local.catalog: update_folder_map',
@@ -1050,14 +1050,12 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        if ($this->count > 0) {
-            $interactor?->info(
-                'local.catalog: collectGarbage',
-                true
-            );
-            debug_event('local.catalog', 'collectGarbage', 5);
-            self::getFolderRepository()->collectGarbage();
-        }
+        $interactor?->info(
+            'local.catalog: collectGarbage',
+            true
+        );
+        debug_event('local.catalog', 'collectGarbage', 5);
+        self::getFolderRepository()->collectGarbage();
     }
 
     /**
@@ -1502,9 +1500,6 @@ class Catalog_local extends Catalog
         );
         debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
         if ($interactor == null && $gather_type == 'music') {
-            Album::update_table_counts();
-            Artist::update_table_counts();
-
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
@@ -1534,9 +1529,10 @@ class Catalog_local extends Catalog
             default => self::getSongRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
         };
 
+        $root = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         foreach ($files as $mediaId => $mediaFile) {
             $results   = ['id' => $mediaId, 'file' => $mediaFile];
-            $file_info = @filesize(Core::conv_lc_file($results['file']));
+            $file_info = (str_starts_with((string) $results['file'], $root)) ? @filesize(Core::conv_lc_file($results['file'])) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File not found or empty: ' . $results['file'],
@@ -1567,6 +1563,7 @@ class Catalog_local extends Catalog
         $offset = $chunk * $chunk_size;
         $count  = $offset;
 
+        $root            = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
         foreach ($filecache_chunk as $file => $oid) {
             $count++;
@@ -1575,7 +1572,7 @@ class Catalog_local extends Catalog
                 Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, scrub_out($file_display)));
             }
 
-            $file_info = @filesize(Core::conv_lc_file($file));
+            $file_info = (str_starts_with($file, $root)) ? @filesize(Core::conv_lc_file($file)) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File removed: ' . $file,
@@ -2064,6 +2061,23 @@ class Catalog_local extends Catalog
         Ui::update_text(T_('Verified'), $count);
 
         return $changed;
+    }
+
+    /**
+     * Deletes songs and refreshes the counts of just the albums/artists that lost one, instead of a full table sweep
+     *
+     * @param list<int> $songIds
+     */
+    private function deleteSongsAndRefreshCounts(array $songIds): void
+    {
+        $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
+        foreach ($affected['albums'] as $album_id) {
+            Album::update_album_count($album_id);
+        }
+
+        foreach ($affected['artists'] as $artist_id) {
+            Artist::update_artist_count($artist_id);
+        }
     }
 
     private function getArtistRepository(): ArtistRepositoryInterface

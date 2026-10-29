@@ -229,17 +229,9 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             return;
         }
 
-        // a non-numeric id names its own type in its prefix (e.g. a folder id from `getIndexes`'s folder
-        // tree); only an `artist` id, or a numeric legacy one, may resolve here
-        if (!is_numeric($sub_id) && Subsonic_Api::getAmpacheType($sub_id) !== 'artist') {
-            $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
-
-            return;
-        }
-
-        $artist = new Artist(Subsonic_Api::getAmpacheId($sub_id));
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
         // a withdrawn artist is refused like an id that was never there, so nothing says it exists
-        if ($artist->isNew() || !$artist->isVisible($user)) {
+        if ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -265,14 +257,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $artist = Subsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
+        if ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -303,14 +294,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo2(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $artist = Subsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
+        if ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -963,5 +953,26 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         return $albums;
+    }
+
+    /**
+     * Resolves a `getArtist`-style sub_id to the artist it names. A folder sub_id (e.g. from `getIndexes`'s
+     * folder tree) resolves too, when every song below it belongs to the same artist; a client that treats
+     * every `getIndexes` entry as artist-openable sends one of those here instead of using `getMusicDirectory`.
+     */
+    private function resolveArtistFromSubId(string $sub_id, int $userId): ?Artist
+    {
+        if (is_numeric($sub_id) || Subsonic_Api::getAmpacheType($sub_id) === 'artist') {
+            return new Artist(Subsonic_Api::getAmpacheId($sub_id));
+        }
+
+        $folder = Subsonic_Api::getAmpacheObject($sub_id);
+        if (!$folder instanceof Folder) {
+            return null;
+        }
+
+        $artistId = $this->folderRepository->resolveSingleArtistId($folder, $userId);
+
+        return ($artistId === null) ? null : new Artist($artistId);
     }
 }

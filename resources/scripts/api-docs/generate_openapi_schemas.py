@@ -71,6 +71,8 @@ TYPES: dict[str, dict[str, str]] = {
     "podcast": {"builder": "podcasts_array", "object": "PodcastObject", "list": "PodcastsResponse", "key": "podcast"},
     "video": {"builder": "videos_array", "object": "VideoObject", "list": "VideosResponse", "key": "video"},
     "catalog": {"builder": "catalogs_array", "object": "CatalogObject", "list": "CatalogsResponse", "key": "catalog"},
+    # a folder as a standalone object, for a caller listing folders rather than walking into one
+    "folder": {"builder": "folders_array", "object": "FolderObject", "list": "FoldersResponse", "key": "folder"},
     # collections answer with a bare {collection: [...]} envelope; the contents live on a separate endpoint
     "collection": {"builder": "collections_array", "object": "CollectionObject", "list": "CollectionsResponse", "key": "collection", "envelope": "bare"},
     # a playlist folder is a node of the per-user tree; its contents live on a separate endpoint
@@ -460,6 +462,7 @@ WIRING_BY_PARAM: dict[tuple[str, str, str], str] = {
     ("search", "type", "artist"): "ArtistsResponse",
     ("search", "type", "album_artist"): "ArtistsResponse",
     ("search", "type", "song_artist"): "ArtistsResponse",
+    ("search", "type", "folder"): "FoldersResponse",
     ("search", "type", "genre"): "GenresResponse",
     ("search", "type", "tag"): "GenresResponse",
     ("search", "type", "label"): "LabelsResponse",

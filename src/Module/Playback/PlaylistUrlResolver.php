@@ -153,7 +153,7 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
      */
     private function firstStreamUrl(string $body): ?string
     {
-        foreach (preg_split('/\R/', $body) ?: [] as $line) {
+        foreach (preg_split('/\R/u', $body) ?: [] as $line) {
             $line = trim($line);
             if ($line === '' || str_starts_with($line, '#')) {
                 continue;

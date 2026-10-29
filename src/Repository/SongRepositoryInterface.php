@@ -72,8 +72,9 @@ interface SongRepositoryInterface
      * Records a set of songs in the `deleted_song` archive and removes them
      *
      * @param list<int> $songIds
+     * @return array{albums: list<int>, artists: list<int>} the albums/artists that lost a song, for a scoped count refresh
      */
-    public function deleteByIdsWithArchive(array $songIds): void;
+    public function deleteByIdsWithArchive(array $songIds): array;
 
     /**
      * Reads the id of the song holding this file

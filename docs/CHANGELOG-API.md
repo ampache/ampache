@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 8.4.0
+
+### Added (840000)
+
+* `advanced_search`, `search_rules` (API8)
+  * New `folder` search type (name, path, parent folder, catalog, ratings, play counts, dates)
+* REST
+  * `folders/search` as the REST path for `advanced_search` with `type=folder`
+
 ## API 8.3.0
 
 ### Added (830000)

@@ -126,7 +126,8 @@ final readonly class ShowAction implements ApplicationActionInterface
                 (bool) AmpConfig::get('directplay'),
                 $mayInteract,
                 Stream_Playlist::check_autoplay_next(),
-                Stream_Playlist::check_autoplay_append()
+                Stream_Playlist::check_autoplay_append(),
+                $this->configContainer->isWebDavBackendEnabled()
             )->render();
             $this->ui->showFooter();
 

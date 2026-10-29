@@ -36,6 +36,9 @@ use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
+// the identity provider redirects here mid-login, so a pending database update must not strand the callback on update.php
+define('OUTDATED_DATABASE_OK', 1);
+
 /**
  * The second step of DefaultAction reads these through RequestParser, which reads $_REQUEST.
  * They have to be set before Init.php runs, because Bootstrap.php builds $_REQUEST from $_GET and $_POST.

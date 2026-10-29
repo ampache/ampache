@@ -60,7 +60,7 @@ use Ampache\Module\Util\Ui;
                     <input id="password" type="password" name="password" maxlength="64" value="" />
                 </div>
                 <?php echo $this->raw($this->getError('general')); ?>
-                <div class="loginfield">
+                <div class="loginfield" id="completeloginfield">
                     <div id="remembermefield">
                         <label for="rememberme"><?php echo T_('Remember Me'); ?></label>
                         <input type="checkbox" id="rememberme" name="rememberme" <?php echo ($this->isRememberDisabled()) ? 'disabled="disabled"' : ''; ?> />
@@ -72,7 +72,7 @@ use Ampache\Module\Util\Ui;
                     </div>
                 </div>
                 <div class="loginmessage"><?php echo $this->raw($this->getLoginMessage()); ?></div>
-                <div class="loginoptions">
+                <div class="loginoptions" id="loginoptions">
                 <?php if ($this->isRegistrationEnabled()) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $this->e($this->getWebPath()); ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>

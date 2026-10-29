@@ -294,6 +294,16 @@ class Playlist extends playlist_object
     /**
      * @deprecated inject dependency
      */
+    private static function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getPlaylistRepository(): PlaylistRepositoryInterface
     {
         global $dic;
@@ -319,6 +329,7 @@ class Playlist extends playlist_object
         $base_track = self::getPlaylistRepository()->getLastTrackNumber($this);
         $count      = 0;
         $rows       = [];
+        $added      = [];
         foreach ($medias as $data) {
             $object_type = (is_string($data['object_type']))
                 ? LibraryItemEnum::tryFrom((string) $data['object_type'])
@@ -327,7 +338,8 @@ class Playlist extends playlist_object
                 debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 ++$count;
-                $rows[] = [(int) $data['object_id'], $object_type?->value, $base_track + $count];
+                $rows[]  = [(int) $data['object_id'], $object_type?->value, $base_track + $count];
+                $added[] = ['object_type' => $object_type, 'object_id' => (int) $data['object_id']];
             } // if valid id
         }
 
@@ -335,6 +347,23 @@ class Playlist extends playlist_object
             self::getPlaylistRepository()->addTracks($this, $rows);
             debug_event(self::class, sprintf('Added %d tracks to playlist: ', $count) . $this->id, 5);
             $this->_update_last();
+
+            // a playlist carries no catalog of its own, it maps onto every catalog its media actually lives in
+            $catalog_ids = [];
+            foreach ($added as $media) {
+                if ($media['object_type'] === null) {
+                    continue;
+                }
+
+                $item = self::getLibraryItemLoader()->load($media['object_type'], $media['object_id'], [Media::class]);
+                if ($item instanceof CatalogItemInterface) {
+                    $catalog_ids[$item->getCatalogId()] = true;
+                }
+            }
+
+            foreach (array_keys($catalog_ids) as $catalog_id) {
+                Catalog::update_map($catalog_id, 'playlist', $this->id);
+            }
 
             return true;
         }
@@ -356,13 +385,8 @@ class Playlist extends playlist_object
             ];
         }
 
-        if ($this->add_medias($medias)) {
-            Catalog::update_mapping('playlist');
-
-            return true;
-        }
-
-        return false;
+        // add_medias() already maps this playlist onto every catalog its newly added songs live in
+        return $this->add_medias($medias);
     }
 
     /**

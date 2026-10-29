@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CatalogMapTableEnum;
 use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Statistics\Rating;
@@ -40,6 +41,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\BroadcastRepositoryInterface;
+use Ampache\Repository\CatalogMapRepositoryInterface;
 use Ampache\Repository\DeletedPodcastEpisodeRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -89,6 +91,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private CatalogCounterInterface $catalogCounter,
         private ConfigContainerInterface $configContainer,
         private DeletedPodcastEpisodeRepositoryInterface $deletedPodcastEpisodeRepository,
+        private CatalogMapRepositoryInterface $catalogMapRepository,
     ) {}
 
     public function collect(): void
@@ -125,6 +128,13 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         $this->metadataManager->collectGarbage();
         $this->podcastEpisodeRepository->collectGarbage();
 
+        // the deliberate full resync for a drifted catalog_map; live inserts already map each new row as it's created
+        foreach (CatalogMapTableEnum::cases() as $table) {
+            $this->catalogMapRepository->rebuild($table);
+        }
+
+        $this->catalogMapRepository->collectGarbage(CatalogMapTableEnum::cases());
+
         $deletedHistoryDays = $this->configContainer->getInt(ConfigurationKeyEnum::DELETED_HISTORY_DAYS);
         if ($deletedHistoryDays > 0) {
             $this->songRepository->pruneDeletedHistory($deletedHistoryDays);
@@ -141,7 +151,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
      * The live paths keep these right as things are played and deleted; this is the repair for a database
      * that drifted, which is why it belongs to garbage collection rather than to a periodic sweep.
      */
-    private function recount(): void
+    public function recount(): void
     {
         // a rebuild is a join, so rows that lost their last play are zeroed first or they keep the old total
         $this->songRepository->resetCountsWithoutHistory();

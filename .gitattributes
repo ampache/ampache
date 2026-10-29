@@ -8,6 +8,7 @@
 *.php eol=lf
 *.phtml eol=lf
 *.xhtml eol=lf
+resources/git-hooks/* eol=lf
 
 ###############################################################################
 # Set default behavior for command prompt diff.

@@ -120,6 +120,15 @@ final class SearchRulesMethod implements MethodInterface
             );
         }
 
+        if (
+            $type === 'folder'
+            && !$this->configContainer->get(ConfigurationKeyEnum::SHOW_FOLDER)
+        ) {
+            throw new AccessDeniedException(
+                'Enable: folder'
+            );
+        }
+
         $search  = $this->modelFactory->createSearch(0, $type, $user);
         $results = $search->get_rule_types();
 

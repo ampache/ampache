@@ -9,10 +9,17 @@
 * Theme
   * reborn gains four new colors: Dusk, Dawn, Sepia and High-Contrast
   * reborn gains nine colors modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
+* Config version 102
+  * New `catalog_clean_empty_dirs` key; Clean/Garbage Collection/Scan Folder can now also remove an empty directory from disk, not just its row
+* Search
+  * New `folder` search type (name, path, parent folder, catalog, ratings, play counts, dates), web Search page and API8 `advanced_search`
 
 ### Changed (8.4.0)
 
 * Updated Composer and NPM dependencies
+* Catalog
+  * Add, Clean and Verify maintain `catalog_map` and album/artist counts per row, instead of a full resync after every scan
+  * Garbage Collection now performs the full `catalog_map` resync; routine scans no longer repair catalog-wide drift
 * Theme
   * `theme.cfg.php` gained an optional `color_bases` key; a color with none is treated as dark, same as before
 
@@ -20,7 +27,7 @@
 
 * Subsonic
   * `getIndexes` could drop artists from a catalog whose folder data was incomplete, not just when it was empty
-  * `getArtist` returned the wrong artist, or failed, when given a folder id from `getIndexes`
+  * `getArtist`/`getArtistInfo`/`getArtistInfo2` failed, or returned the wrong artist, for a folder id from `getIndexes`
 * Catalog scan/add/clean/verify progress notifications showed a bare number instead of what was happening
 * The catalog add/update completion notification never appeared in the browser; clean/verify's showed with no label
 * A failed remote catalog connection or unreadable catalog root produced no notification during a web-triggered scan
@@ -38,6 +45,14 @@
 * Highest rated albums and artists could include withdrawn items
 * `stats` action's `newest`/`highest`/`frequent` filters didn't apply the caller's `catalog_filter` on every API version
 * Podcast sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
+* The native API's `folders` action returned nothing for every catalog and every user
+* A song whose directory a scan never walked stayed invisible to the folder tree forever, even after rescanning; any scan now repairs it
+* Clean/Verify only checked that a song's file existed, so a path that drifted outside its own catalog's root stayed forever
+* `album_disk` rows were never mapped into `catalog_map`, hiding them from catalog-scoped browsing until a full Garbage Collection ran
+* An artist added to a second catalog outside an upload stayed unmapped in `catalog_map` until a full Garbage Collection ran
+* A playlist populated outside the "add songs" action (API, Jellyfin, search-to-playlist) was never mapped into `catalog_map`
+* Clean's bulk file removal didn't refresh album/artist song counts until the next full scan or Garbage Collection
+* The OIDC provider's callback (`/oidc/`) could be redirected to `update.php` by a pending database update, losing the login
 
 ## Ampache 8.3.0
 
