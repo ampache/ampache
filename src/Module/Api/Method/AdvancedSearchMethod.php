@@ -143,6 +143,16 @@ final class AdvancedSearchMethod implements MethodInterface
             return $response;
         }
 
+        // older versions have no folder formatter, so they get an empty result rather than
+        // folders rendered as songs
+        if ($apiVersion < 8 && strtolower($type) === 'folder') {
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, $type)
+            );
+
+            return $response;
+        }
+
         // older versions have no album_disk formatter, so they get an empty result rather than
         // album disks rendered as songs
         if ($apiVersion < 8 && strtolower($type) === 'album_disk') {
@@ -213,6 +223,15 @@ final class AdvancedSearchMethod implements MethodInterface
         ) {
             throw new AccessDeniedException(
                 'Enable: label'
+            );
+        }
+
+        if (
+            $type === 'folder'
+            && !$this->configContainer->get(ConfigurationKeyEnum::SHOW_FOLDER)
+        ) {
+            throw new AccessDeniedException(
+                'Enable: folder'
             );
         }
 

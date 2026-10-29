@@ -1167,12 +1167,24 @@ abstract class Catalog extends database_object
 
     /**
      * Get Folder for browsing (Used for WebDav)
+     *
+     * A child outside the current user's catalog_filter is answered as not found, same as a name that
+     * never existed, so a guessed or bookmarked WebDAV path cannot confirm a restricted catalog exists.
      */
     public static function get_child(string $name, ?int $catalog_id = 0, ?int $parent_id = null): Folder|Podcast_Episode|Song|Video|null
     {
-        return ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return new Folder(-1);
+        }
+
+        $child = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($child === null) {
+            return null;
+        }
+
+        return (self::has_access($child->getCatalogId(), Core::get_global('user')?->getId() ?? -1))
+            ? $child
+            : null;
     }
 
     /**
@@ -1644,11 +1656,17 @@ abstract class Catalog extends database_object
 
     public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
-        $folder = ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return new Folder(-1)->has_children($name);
+        }
 
-        return $folder instanceof Folder && $folder->isNew() === false && $folder->has_children($name);
+        $folder = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if (!$folder instanceof Folder || $folder->isNew()) {
+            return false;
+        }
+
+        return self::has_access($folder->getCatalogId(), Core::get_global('user')?->getId() ?? -1)
+            && $folder->has_children($name);
     }
 
     /**
@@ -1744,11 +1762,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if (
-                                $catalog !== null
-                                && $catalog->add_to_catalog($options)
-                                && !in_array($catalog->gather_types, $catalog_media_types, true)
-                            ) {
+                            if ($catalog === null) {
+                                return;
+                            }
+
+                            // tracked even when nothing new is found, so the folder map and counts still catch up
+                            $catalog->add_to_catalog($options);
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1768,11 +1788,6 @@ abstract class Catalog extends database_object
                     }
                 }
 
-                if (in_array('music', $catalog_media_types)) {
-                    Artist::update_table_counts();
-                    Album::update_table_counts();
-                }
-
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -1785,6 +1800,9 @@ abstract class Catalog extends database_object
                             $catalog?->verify_catalog();
                         });
                     }
+
+                    self::getFolderRepository()->update_folder_map();
+                    self::getFolderRepository()->update_folder_counts();
                 }
 
                 break;
@@ -1798,15 +1816,16 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        if ($catalog === null) {
+                            return;
+                        }
 
-                            $catalog->verify_catalog();
-                            if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+
+                        if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
+                            $catalog_media_types[] = $catalog->gather_types;
                         }
                     });
                 }
@@ -1817,7 +1836,7 @@ abstract class Catalog extends database_object
                         Album::update_album_artist();
                     }
 
-                    self::update_catalog_map($catalog_media_type);
+                    self::update_catalog_map($catalog_media_type, true);
                 }
 
                 break;
@@ -1830,7 +1849,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true))) {
+                            if ($catalog === null) {
+                                return;
+                            }
+
+                            // tracked even when nothing was removed, so the folder map and counts still catch up
+                            $catalog->clean_catalog();
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1842,13 +1867,10 @@ abstract class Catalog extends database_object
                             Album::update_album_artist();
                         }
 
-                        self::update_catalog_map($catalog_media_type);
+                        self::update_catalog_map($catalog_media_type, true);
                     }
 
-                    if (in_array('music', $catalog_media_types)) {
-                        Artist::update_table_counts();
-                        Album::update_table_counts();
-                    }
+                    self::getFolderRepository()->pruneEmptyFolders();
                 }
 
                 break;
@@ -1896,11 +1918,9 @@ abstract class Catalog extends database_object
                                     if ($catalog->gather_types === 'music') {
                                         self::clean_empty_albums();
                                         Album::update_album_artist();
-                                        Album::update_table_counts();
-                                        Artist::update_table_counts();
                                     }
 
-                                    self::update_catalog_map($catalog->gather_types);
+                                    self::update_catalog_map($catalog->gather_types, true);
                                 }
                             }
                         });
@@ -2173,32 +2193,41 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Update the catalog_map table depending on table type
+     * Refreshes a catalog's stored totals after a scan; every insert path already maps its own row onto its catalog
+     *
+     * $mayHaveDeleted skips the costly folder_map orphan check on a plain add, which can't have removed anything
      */
-    public static function update_catalog_map(?string $media_type): void
+    public static function update_catalog_map(?string $media_type, bool $mayHaveDeleted = false): void
     {
-        $counter = self::getCatalogCounter();
+        $counter          = self::getCatalogCounter();
+        $folderRepository = self::getFolderRepository();
         if ($media_type == 'music') {
-            self::update_mapping('album');
-            self::update_mapping('album_disk');
-            self::update_mapping('artist');
-
-            // every add and clean ends here, so this is where a catalog's stored totals catch up
             $counter->count(CountableTableEnum::SONG);
             $counter->count(CountableTableEnum::ALBUM);
             $counter->count(CountableTableEnum::ALBUM_DISK);
             $counter->count(CountableTableEnum::ARTIST);
-        } elseif ($media_type == 'podcast') {
-            self::update_mapping('podcast');
-            self::update_mapping('podcast_episode');
 
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::SONG);
+            }
+        } elseif ($media_type == 'podcast') {
             $counter->count(CountableTableEnum::PODCAST);
             $counter->count(CountableTableEnum::PODCAST_EPISODE);
-        } elseif ($media_type == 'video') {
-            self::update_mapping('video');
 
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::PODCAST_EPISODE);
+            }
+        } elseif ($media_type == 'video') {
             $counter->count(CountableTableEnum::VIDEO);
+
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::VIDEO);
+            }
         }
+
+        // every add and clean ends here too, so a song orphaned from the folder tree catches up without a separate Scan Folder
+        $folderRepository->update_folder_map();
+        $folderRepository->update_folder_counts();
     }
 
     /**
@@ -3408,7 +3437,8 @@ abstract class Catalog extends database_object
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
                 self::update_map($catalog_id, 'artist', $new_object_id);
-                self::garbage_collect_mapping(['artist']);
+                // the old artist is the only one that could have become orphaned by this move
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ARTIST, $old_object_id);
             }
 
             if ($object_type === 'album') {
@@ -3416,8 +3446,12 @@ abstract class Catalog extends database_object
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
                 self::update_map($catalog_id, 'album', $new_object_id);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM, $old_object_id);
+            }
+
+            if ($object_type === 'album_disk') {
                 self::update_map($catalog_id, 'album_disk', $new_object_id);
-                self::garbage_collect_mapping(['album', 'album_disk']);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM_DISK, $old_object_id);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);

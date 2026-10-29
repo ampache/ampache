@@ -162,6 +162,25 @@ interface FolderRepositoryInterface
     public function persist(Folder $folder): ?int;
 
     /**
+     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
+     */
+    public function pruneEmptyFolders(): void;
+
+    /**
+     * Removes folder_map rows for one object type whose underlying rows were deleted elsewhere (e.g. by
+     * Clean), so a folder they emptied is recognized as empty right away rather than at the next full sweep
+     */
+    public function removeDeletedObjectMappings(LibraryItemEnum $objectType): void;
+
+    /**
+     * Returns the one artist every song below a folder belongs to, null when there is none or more than one
+     *
+     * A client that treats every `getIndexes` entry as artist-openable (calling `getArtist` instead of
+     * `getMusicDirectory`) needs this to resolve a folder back to the artist it represents.
+     */
+    public function resolveSingleArtistId(Folder $folder, int $userId = -1): ?int;
+
+    /**
      * Update folder counts columns after large actions
      */
     public function update_folder_counts(): void;

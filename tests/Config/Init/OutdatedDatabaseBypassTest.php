@@ -50,6 +50,8 @@ class OutdatedDatabaseBypassTest extends TestCase
         'public/image.php',
         // the update redirect targets login.php when auth is required, so login must stay reachable too
         'public/login.php',
+        // oidc login must stay reachable as it may be the primary auth method method
+        'public/oidc/index.php',
         // stream/download only (see the file's own `action` guard); create/delete stay fully gated
         'public/share.php',
         // play URLs rely on an already-issued session/token, not a fresh login

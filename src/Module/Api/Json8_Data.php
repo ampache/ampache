@@ -1555,6 +1555,28 @@ final class Json8_Data
     }
 
     /**
+     * folder_list
+     *
+     * Folders as standalone objects, for a caller listing folders rather than walking into one.
+     *
+     * @param array<int|string> $objects Folder id's to include
+     */
+    public function folder_list(array $objects, User $user, string $auth): string
+    {
+        $this->count = $this->count ?: count($objects);
+        $md5         = md5(serialize($objects));
+        $JSON        = $this->folders_array($objects, $user, $auth);
+
+        $output = [
+            "total_count" => $this->count,
+            "md5" => $md5,
+            "folder" => $JSON
+        ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
      * folders
      *
      * This returns an array of folders and their contents.

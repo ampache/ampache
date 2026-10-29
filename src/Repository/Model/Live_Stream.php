@@ -169,6 +169,8 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             return null;
         }
 
+        Catalog::update_map($liveStream->catalog, 'live_stream', $insert_id);
+
         return (string) $insert_id;
     }
 

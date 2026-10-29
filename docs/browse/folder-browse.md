@@ -32,6 +32,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `regex_match`     | regex      | The folder name or its full path matches this MySQL regular expression.                                    |
 | `regex_not_match` | regex      | Neither the folder name nor its full path matches this MySQL regular expression.                           |
 | `starts_with`     | string     | The folder name or its full path starts with this value.                                                   |
+| `user_catalog`    | none       | Only folders in a catalog the current user is allowed to see. Needs no value.                              |
 | `user_flag`       | 0 or 1     | Send `1` for folders the current user has favorited, `0` for the ones they have not.                       |
 | `user_rating`     | 0 to 5     | Only folders the current user rated this value. Send `0` for folders they have not rated at all.           |
 

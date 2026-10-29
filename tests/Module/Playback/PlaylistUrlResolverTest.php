@@ -80,6 +80,21 @@ class PlaylistUrlResolverTest extends TestCase
                 "[playlist]\nnumberofentries=0\n",
                 null,
             ],
+            // a stream url whose utf-8 carries the byte 0x85 must not be truncated: \R without /u
+            // treats 0x85 as a unicode newline and splits the character. 'ą' is C4 85, 'Å' is C3 85,
+            // '▅' is E2 96 85, so this covers both the 2-byte and 3-byte cases (issue #4557 class).
+            'm3u url with a 2-byte char ending in 0x85' => [
+                "#EXTM3U\nhttps://example.com/pl\xc4\x85ylist.mp3\n",
+                "https://example.com/pl\xc4\x85ylist.mp3",
+            ],
+            'pls url with a 2-byte char ending in 0x85' => [
+                "File1=https://example.com/\xc3\x85land.mp3\n",
+                "https://example.com/\xc3\x85land.mp3",
+            ],
+            'm3u url with a 3-byte char ending in 0x85' => [
+                "https://example.com/bar\xe2\x96\x85.mp3\n",
+                "https://example.com/bar\xe2\x96\x85.mp3",
+            ],
         ];
     }
 

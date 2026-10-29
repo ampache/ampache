@@ -30,6 +30,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
+use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -80,6 +81,44 @@ class SongRepositoryTest extends TestCase
 
         $this->subject->deleteByIds([1, 'x', 3]);
         $this->subject->deleteByIds([]);
+    }
+
+    public function testDeleteByIdsWithArchiveReturnsNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        self::assertSame(['albums' => [], 'artists' => []], $this->subject->deleteByIdsWithArchive([]));
+    }
+
+    public function testDeleteByIdsWithArchiveReturnsTheDistinctAlbumsAndArtistsThatLostASong(): void
+    {
+        $selectResult = $this->createMock(PDOStatement::class);
+        $selectResult->expects(static::exactly(4))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(
+                ['album' => '1', 'artist' => '10'],
+                ['album' => '1', 'artist' => '10'],
+                ['album' => '2', 'artist' => '0'],
+                false
+            );
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['SELECT DISTINCT `album`, `artist` FROM `song` WHERE `id` IN (1,2);'],
+                    ['REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` IN (1,2);'],
+                    ['DELETE FROM `song` WHERE `id` IN (1,2);']
+                )
+            )
+            ->willReturn($selectResult);
+
+        self::assertSame(
+            ['albums' => [1, 2], 'artists' => [10]],
+            $this->subject->deleteByIdsWithArchive([1, 2])
+        );
     }
 
     public function testDeleteRecordsTheDeletionAndRemovesTheSong(): void

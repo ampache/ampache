@@ -5703,6 +5703,95 @@
           "secret"
         ],
         "additionalProperties": true
+      },
+      "FolderObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent": {
+            "type": "string",
+            "nullable": true
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "integer"
+          },
+          "playable": {
+            "type": "boolean"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "parent",
+          "path",
+          "catalog",
+          "time",
+          "items",
+          "playable",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating"
+        ],
+        "additionalProperties": true
+      },
+      "FoldersResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "folder": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "folder"
+        ],
+        "additionalProperties": true
       }
     },
     "responses": {
@@ -6388,6 +6477,7 @@
     "GET /collections/{collection_id}": "action=collection&filter={collection_id}",
     "GET /collections/{collection_id}/items": "action=collection_items&filter={collection_id}",
     "GET /folders": "action=folders",
+    "GET /folders/search": "action=search&type=folder",
     "GET /folders/{folder_id}": "action=folders&filter={folder_id}",
     "GET /genres": "action=genres",
     "GET /genres/search": "action=search&type=genre",
@@ -14386,6 +14476,101 @@
         ],
         "operationId": "foldersFoldersGet",
         "description": "Return children of a parent object in a folder traversal style **Ampache 8.0.0+**"
+      }
+    },
+    "/folders/search": {
+      "get": {
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
+        "operationId": "searchFolders",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Operator"
+          },
+          {
+            "description": "0, 1 (random order of results; default to 0)",
+            "in": "query",
+            "name": "random",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoldersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Advanced search for folders",
+        "tags": [
+          "Browsing, Indexes and Lists",
+          "Search"
+        ]
       }
     },
     "/folders/{folder_id}": {

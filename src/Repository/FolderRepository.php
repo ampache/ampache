@@ -41,6 +41,9 @@ use Psr\Log\LoggerInterface;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
+    /** Minimum time since a directory's own mtime changed before `catalog_clean_empty_dirs` may remove it */
+    private const int EMPTY_DIR_MIN_AGE = 3600;
+
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private LoggerInterface $logger,
@@ -626,6 +629,88 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
+     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
+     *
+     * One pass only catches a leaf with no children; a folder whose only content was subfolders that
+     * just got pruned is caught by the next pass, hence the loop. Root folders are included: a remote
+     * or subsonic catalog re-anchored under its own name (see mapObjectsUnderCatalogRoot()) leaves its
+     * old root folder (e.g. a bare `/mnt`) with nothing under it, and that has to go too. User folders
+     * are left alone regardless.
+     */
+    public function pruneEmptyFolders(): void
+    {
+        $removeFromDisk = AmpConfig::get_bool('catalog_clean_empty_dirs');
+
+        for ($i = 0; $i < 10; $i++) {
+            // a folder holding only folders holds something; the second clause stops the sweep eating a whole tree
+            $result = $this->connection->query(
+                'SELECT `id`, `path_name` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL) AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL);'
+            );
+
+            $emptyIds = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $pathName     = $row['path_name'];
+                $existsOnDisk = is_string($pathName) && $pathName !== '' && is_dir($pathName);
+
+                if ($existsOnDisk && $removeFromDisk) {
+                    // mtime updates on every add/remove, so a recently-touched dir may just be mid-upload
+                    $recentlyTouched = (time() - (@filemtime($pathName) ?: 0)) < self::EMPTY_DIR_MIN_AGE;
+                    if ($recentlyTouched || !@rmdir($pathName)) {
+                        continue;
+                    }
+                } elseif ($existsOnDisk) {
+                    // a folder still on disk is deliberately empty (e.g. an upload target), not garbage
+                    continue;
+                }
+
+                $emptyIds[] = (int) $row['id'];
+            }
+
+            if ($emptyIds === []) {
+                return;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($emptyIds), '?'));
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN ($placeholders);", $emptyIds);
+            $this->connection->query("DELETE FROM `folder` WHERE `id` IN ($placeholders);", $emptyIds);
+        }
+    }
+
+    /**
+     * Removes folder_map rows for one object type whose underlying rows were deleted elsewhere (e.g. by
+     * Clean), so a folder they emptied is recognized as empty right away rather than at the next full sweep
+     */
+    public function removeDeletedObjectMappings(LibraryItemEnum $objectType): void
+    {
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `folder_map` WHERE `object_type` = ? AND `object_id` NOT IN (SELECT `id` FROM `%s`);',
+                $objectType->value
+            ),
+            [$objectType->value]
+        );
+    }
+
+    public function resolveSingleArtistId(Folder $folder, int $userId = -1): ?int
+    {
+        $filterSql = $this->catalogFilterSql('folder_map', $userId);
+
+        $result = $this->connection->query(
+            "SELECT DISTINCT `song`.`artist` FROM `song` INNER JOIN `folder_map` ON `folder_map`.`object_id` = `song`.`id` AND `folder_map`.`object_type` = 'song' WHERE (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} LIMIT 2;",
+            [$folder->getId(), $folder->path_name . '/%']
+        );
+
+        $artistIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $artistIds[] = (int) $row['artist'];
+        }
+
+        return (count($artistIds) === 1)
+            ? $artistIds[0]
+            : null;
+    }
+
+    /**
      * Update folder counts columns after large actions
      */
     public function update_folder_counts(): void
@@ -665,10 +750,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $pathName  = ($lastSlash === false) ? $file : substr($file, 0, $lastSlash);
                 $name      = ($lastSlash === false) ? $file : substr($file, $lastSlash + 1);
 
-                $folderId = (int) $this->connection->fetchOne(
-                    'SELECT `id` FROM `folder` WHERE `catalog` = ? AND `path_name` = ?;',
-                    [$row['catalog'], $pathName]
-                );
+                // a song older than `mapObject()` itself has no folder chain yet, so this has to create it too
+                $folderId = $this->findOrCreateByPathName($pathName, (int) $row['catalog']);
                 if ($folderId <= 0) {
                     continue;
                 }
@@ -782,39 +865,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $results;
-    }
-
-    /**
-     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
-     *
-     * One pass only catches a leaf with no children; a folder whose only content was subfolders that
-     * just got pruned is caught by the next pass, hence the loop. Root folders are included: a remote
-     * or subsonic catalog re-anchored under its own name (see mapObjectsUnderCatalogRoot()) leaves its
-     * old root folder (e.g. a bare `/mnt`) with nothing under it, and that has to go too. User folders
-     * are left alone regardless.
-     */
-    private function pruneEmptyFolders(): void
-    {
-        for ($i = 0; $i < 10; $i++) {
-            // a folder holding nothing but other folders holds something: without the second clause the sweep
-            // deletes every intermediate level of a normal library and orphans everything below it
-            $result = $this->connection->query(
-                'SELECT `id` FROM `folder` WHERE `user` IS NULL AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `folder_id` IS NOT NULL) AND `id` NOT IN (SELECT `parent` FROM `folder` WHERE `parent` IS NOT NULL);'
-            );
-
-            $emptyIds = [];
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $emptyIds[] = (int) $row['id'];
-            }
-
-            if ($emptyIds === []) {
-                return;
-            }
-
-            $placeholders = implode(',', array_fill(0, count($emptyIds), '?'));
-            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = 'folder' AND `object_id` IN ($placeholders);", $emptyIds);
-            $this->connection->query("DELETE FROM `folder` WHERE `id` IN ($placeholders);", $emptyIds);
-        }
     }
 
     /**

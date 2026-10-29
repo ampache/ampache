@@ -37,6 +37,7 @@ use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -120,11 +121,14 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
         }
 
         Catalog::update_map($catalog->getId(), 'podcast', $podcast->getId());
-        Catalog::count_table(CountableTableEnum::USER);
+        Catalog::count_table(CountableTableEnum::PODCAST);
 
         if ($feed['episodes']) {
             $this->podcastSyncer->addEpisodes($podcast, $feed['episodes']);
         }
+
+        // a full add touches every user's cached totals, not just the server-wide count just refreshed above
+        User::update_counts();
 
         return $podcast;
     }

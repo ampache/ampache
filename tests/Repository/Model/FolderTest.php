@@ -168,6 +168,71 @@ class FolderTest extends TestCase
         self::assertSame('', Folder::get_name_by_id(0));
     }
 
+    /**
+     * WebDAV has no id-based route, so the url is assembled from the ancestor name chain; `path`
+     * holds ancestor ids root-first, and getRowsByIds() does not promise to return them in that
+     * order, so the result has to be re-sorted against the id list rather than trusted as given.
+     */
+    public function testGetWebdavLinkAssemblesTheAncestorNameChain(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 666;
+        $subject->name = 'My Album';
+        $subject->path = '1,2';
+
+        $this->folderRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([1, 2])
+            ->willReturn([
+                ['id' => '2', 'name' => 'Some Artist'],
+                ['id' => '1', 'name' => 'Music'],
+            ]);
+
+        self::assertSame(
+            'https://music.example/webdav/index.php/Music/Some%20Artist/My%20Album',
+            $subject->get_webdav_link()
+        );
+    }
+
+    public function testGetWebdavLinkIsMemoized(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 1;
+        $subject->name = 'Music';
+
+        $this->folderRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        self::assertSame($subject->get_webdav_link(), $subject->get_webdav_link());
+    }
+
+    /**
+     * A catalog-root folder has no ancestors, so `path` is empty and no lookup is needed at all.
+     */
+    public function testGetWebdavLinkSkipsTheRepositoryForACatalogRootFolder(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 1;
+        $subject->name = 'Music';
+
+        $this->folderRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        self::assertSame(
+            'https://music.example/webdav/index.php/Music',
+            $subject->get_webdav_link()
+        );
+    }
+
     public function testHasChildrenDelegatesToTheRepository(): void
     {
         $subject = new Folder();

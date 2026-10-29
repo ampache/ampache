@@ -622,8 +622,8 @@ class Browse extends Query
 
         // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
         $prefetchable = ($type !== 'song_preview');
-        // a folder/playlist_folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
-        $persistable = ($prefetchable && $type !== 'folder' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden');
+        // a simple folder browse hands over encoded ids already handled by is_simple() below, not here
+        $persistable = ($prefetchable && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden');
         if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
         } elseif ($persistable) {

@@ -129,6 +129,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `democratic/{object_id}/localplay`                   | `?action=localplay&command=add&filter={object_id}&type=democratic`               |                    |
 | POST   | `democratic/{object_id}`                             | `?action=democratic&filter={object_id}`                                          |                    |
 | GET    | `folders`                                            | `?action=folders`                                                                |                    |
+| GET    | `folders/search`                                     | `?action=search&type=folder`                                                     | `advanced_search`  |
 | GET    | `folders/{folder_id}`                                | `?action=folders&filter={folder_id}`                                             |                    |
 | GET    | `folders{path}`                                      | `?action=folders&filter={path}`                                                  |                    |
 | GET    | `genres/{genre_id}/albums`                           | `?action=genre_albums&filter={genre_id}`                                         |                    |

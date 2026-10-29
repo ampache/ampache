@@ -35,6 +35,7 @@ use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use RuntimeException;
 use Throwable;
@@ -133,8 +134,14 @@ class Upload
                 return false;
             }
 
-            Album::update_table_counts();
-            Artist::update_table_counts();
+            $file_id = Catalog::get_id_from_file($targetfile, 'song');
+            if ($file_id) {
+                $new_song = new Song($file_id);
+                Album::update_album_count($new_song->album);
+                if ($new_song->artist) {
+                    Artist::update_artist_count($new_song->artist);
+                }
+            }
         } catch (Throwable $throwable) {
             debug_event(self::class, 'Upload failed: ' . $throwable->getMessage(), 1);
 
