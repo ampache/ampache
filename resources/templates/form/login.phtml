@@ -72,7 +72,7 @@ use Ampache\Module\Util\Ui;
                     </div>
                 </div>
                 <div class="loginmessage"><?php echo $this->raw($this->getLoginMessage()); ?></div>
-                <div class="loginoptions">
+                <div class="loginoptions" id="loginoptions">
                 <?php if ($this->isRegistrationEnabled()) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $this->e($this->getWebPath()); ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
