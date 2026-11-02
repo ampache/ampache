@@ -271,7 +271,7 @@ final class DefaultAction implements ApplicationActionInterface
                 isset($password) &&
                 $user instanceof User
             ) {
-                $user->update_password($password);
+                $user->update_password($password, null, false);
             }
         }
 
