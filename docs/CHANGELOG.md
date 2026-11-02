@@ -53,6 +53,7 @@
 * A playlist populated outside the "add songs" action (API, Jellyfin, search-to-playlist) was never mapped into `catalog_map`
 * Clean's bulk file removal didn't refresh album/artist song counts until the next full scan or Garbage Collection
 * The OIDC provider's callback (`/oidc/`) could be redirected to `update.php` by a pending database update, losing the login
+* Deleting multiple playlist tracks could 400 due to overly broad `.htaccess.dist` injection-guard rules
 
 ## Ampache 8.3.0
 
