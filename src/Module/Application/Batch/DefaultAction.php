@@ -82,6 +82,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
             $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
         }
+
         $batchUser = $this->userRepository->findById($userId);
 
         if (!$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, $batchUser)) {
