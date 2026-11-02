@@ -98,6 +98,13 @@ final class PlaylistSearch implements SearchInterface
             }
         }
 
+        // Visibility guards every row, so apply it once at the top level; emitting it per rule let an
+        // OR group cancel it and expose other users' private playlists.
+        $visibility = "`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search_user_id . " OR FIND_IN_SET(" . $search_user_id . ", `playlist`.`collaborate`) > 0";
+        $where_sql  = ($where_sql !== '' && $where_sql !== '0')
+            ? "(" . $where_sql . ") AND (" . $visibility . ")"
+            : "(" . $visibility . ")";
+
         ksort($table);
         $table_sql = implode(' ', $table);
         $group_sql = implode(',', $group);
@@ -118,15 +125,14 @@ final class PlaylistSearch implements SearchInterface
     /**
      * Evaluates one group's worth of plain rule tuples (or the whole rule list, ungrouped).
      *
-     * Every rule carries its own copy of the playlist-visibility clause, matching today's query.
+     * Visibility is not emitted here; getSql() applies it once at the top level.
      * @param list<array<int, mixed>> $rules
      * @param array<int, mixed> $parameters
      * @return array{where: string[], having: string[]}
      */
     private function evaluateRules(array $rules, Search $search, array &$parameters): array
     {
-        $search_user_id = $search->search_user->getId();
-        $where          = [];
+        $where = [];
 
         foreach ($rules as $rule) {
             $type     = $search->get_rule_type_by_name($rule[0]);
@@ -144,8 +150,6 @@ final class PlaylistSearch implements SearchInterface
 
             $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
-
-            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search_user_id . " OR FIND_IN_SET(" . $search_user_id . ", `playlist`.`collaborate`) > 0)";
 
             switch ($rule[0]) {
                 case 'title':
