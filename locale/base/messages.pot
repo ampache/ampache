@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-22 12:47+1000\n"
+"POT-Creation-Date: 2026-11-02 17:18+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -825,6 +825,9 @@ msgid "Release Date"
 msgstr ""
 
 msgid "Actions"
+msgstr ""
+
+msgid "Open in WebDAV"
 msgstr ""
 
 msgid "Add Current Host"
@@ -4180,7 +4183,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -5450,6 +5453,9 @@ msgstr ""
 msgid "Update Label information and fetch details using the MusicBrainz plugin"
 msgstr ""
 
+msgid "Updating counts"
+msgstr ""
+
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
 
@@ -6065,9 +6071,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6379,6 +6382,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr ""
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6561,15 +6573,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr ""
 
@@ -6578,6 +6581,15 @@ msgid "%s of 5"
 msgstr ""
 
 msgid "Current rating"
+msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
 msgstr ""
 
 msgid "Unfavorite"

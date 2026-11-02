@@ -1,18 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Manuel <psyvirusx@gmail.com>, 2015-2016
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-10-22 12:47+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>, 2015-2016\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: English (United Kingdom) (https://app.transifex.com/ampache/teams/40984/en_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -447,9 +448,6 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-msgid "View"
-msgstr ""
-
 msgid "Pages"
 msgstr ""
 
@@ -460,6 +458,15 @@ msgid "Grid View"
 msgstr ""
 
 msgid "Alphabet"
+msgstr ""
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
 msgstr ""
 
 msgid "Item Count"
@@ -1106,9 +1113,6 @@ msgid "Description:"
 msgstr ""
 
 msgid "External Link"
-msgstr ""
-
-msgid "Order"
 msgstr ""
 
 msgid "Top Rated"
@@ -3201,6 +3205,9 @@ msgid ""
 "Which drawing style the placeholder tiles use. Auto follows the theme color,"
 " and a template that no longer exists falls back to the first one available."
 msgstr ""
+"Which drawing style the placeholder tiles use. Auto follows the theme "
+"colour, and a template that no longer exists falls back to the first one "
+"available."
 
 msgid ""
 "Drops the per-song artist column on an album whose songs all share one "
@@ -3846,7 +3853,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3869,7 +3876,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -5067,6 +5074,9 @@ msgstr ""
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr ""
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "Beets Catalogue was selected, but no Beets DB file was provided"
 
@@ -5210,6 +5220,9 @@ msgstr ""
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5257,10 +5270,10 @@ msgstr ""
 "This subdirectory is not inside an existing Catalogue. The update can not be"
 " processed."
 
-msgid "Updated"
+msgid "No Update Needed"
 msgstr ""
 
-msgid "No Update Needed"
+msgid "Skipping catalog, already being processed"
 msgstr ""
 
 msgid "Catalog Cleaned"
@@ -5443,9 +5456,6 @@ msgstr ""
 msgid "Reading Catalog: \"%s\""
 msgstr "Reading Catalogue: \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5462,9 +5472,6 @@ msgstr ""
 
 msgid "Start verifying media related to Catalog entries"
 msgstr "Start verifying media related to Catalogue entries"
-
-msgid "Start scanning folders"
-msgstr ""
 
 msgid "Start searching new media art"
 msgstr ""
@@ -8614,7 +8621,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Theme color"
-msgstr ""
+msgstr "Theme colour"
 
 #: Ampache preference description
 msgid "Theme"

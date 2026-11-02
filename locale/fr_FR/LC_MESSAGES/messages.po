@@ -1,46 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Maxime C., 2015-2016
-# Aisyk <aisyko@gmail.com>, 2015-2016
-# Arnaud Bey <arnaud.bey@gmail.com>, 2015
-# UncleBone <arnothebig@yahoo.fr>, 2016-2017
-# Axel S, 2022
-# Axel S, 2022
-# Bastien Paroisse <silaor@yahoo.fr>, 2020
-# Benoit Begue <benoit.begue@gmail.com>, 2019
-# Casper Rilaun <casper@rilaun.fr>, 2019
-# Cyril <cyril.novel@gmail.com>, 2023
-# e4d7a2f8e75bf319f2abf49dd8547841_b6a85e7, 2020
-# Epierre p, 2020-2021
-# flow gunso <flow.gunso@gmail.com>, 2019
-# François CHAUSSIN, 2021
-# François CHAUSSIN, 2021
-# Fufroma, 2023
-# Fufroma, 2024-2025
-# Fufroma, 2023
-# e4d7a2f8e75bf319f2abf49dd8547841_b6a85e7, 2020
-# Hugo Robert <hugo.robert@protonmail.ch>, 2020-2021
-# iambluedev <iambluedev@gmx.fr>, 2018
-# Jean Fontaine <balayop@yahoo.fr>, 2018
-# Jean-Philippe F <douglas.riper@free.fr>, 2019
-# Lanxor, 2020
-# marcpaulchand <paul@u129.fr>, 2024
-# Morgan <mfouillat+github@gmail.com>, 2016
-# Morgan <mfouillat+github@gmail.com>, 2016
-# Nicolas Chartoire <nicolas.chartoire@gmail.com>, 2015
-# Nicolas Jeannerod <niols@niols.fr>, 2016
-# Lanxor, 2020
-# Paul rousselet, 2024
-# Paul rousselet, 2024
-# marcpaulchand <paul@u129.fr>, 2024
-# Peter Parker <transifex@govn.eu>, 2021
-# simon511000 <simonledoux012345@gmail.com>, 2019
-# tap3 tap3 <bs-flip@gmx.com>, 2016
-# Lanxor, 2020
-# tsointsoin <mike.gelabs@gmail.com>, 2021
+# lachlan <lachlan.00@gmail.com>, 2026
 # Fufroma, 2026
 # 
 #, fuzzy
@@ -48,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-10-22 12:47+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fufroma, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/ampache/teams/40984/fr_FR/)\n"
@@ -487,9 +451,6 @@ msgstr "de"
 msgid "Next"
 msgstr "Suivant"
 
-msgid "View"
-msgstr "Voir"
-
 msgid "Pages"
 msgstr "Pages"
 
@@ -501,6 +462,15 @@ msgstr "Vue en grille"
 
 msgid "Alphabet"
 msgstr "Alphabet"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr "Ordre"
+
+msgid "View"
+msgstr "Voir"
 
 msgid "Item Count"
 msgstr "Nombre d'éléments"
@@ -1163,9 +1133,6 @@ msgstr "Description :"
 
 msgid "External Link"
 msgstr "Lien externe"
-
-msgid "Order"
-msgstr "Ordre"
 
 msgid "Top Rated"
 msgstr "Mieux notés"
@@ -4422,10 +4389,8 @@ msgstr ""
 "La note minimale est de 0, ce qui désactive toute la synchronisation : rien "
 "n'est écrit dans vos fichiers."
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
-"Le panneau des favoris est désactivé, cette liste n'est donc jamais "
-"affichée."
 
 msgid ""
 "The sidebar can no longer be collapsed, and this only applies to its "
@@ -4456,11 +4421,9 @@ msgstr ""
 "La vidéo est désactivée sur ce serveur, ce panneau n'apparaît donc jamais."
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
-"Les licences sont désactivées dans le fichier de configuration du serveur, "
-"aucune licence n'est donc jamais affichée."
 
 msgid ""
 "Every stream on this server needs a session, so no embedded player is ever "
@@ -5745,6 +5708,9 @@ msgstr "Mise à jour de beets"
 msgid "Unable to add %s"
 msgstr "Impossible d'ajouter %s"
 
+msgid "Updated"
+msgstr "Mis à jour"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "Catalogue Beets sélectionné, mais aucun fichier de DB Beets n'a été fourni"
@@ -5894,6 +5860,9 @@ msgstr "Tous les fichiers seront supprimés. Ne rien faire"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Le fichier n'a pas été trouvé ou est de 0 Octet : %s"
 
+msgid "Start scanning folders"
+msgstr "Démarrer l'analyse des dossiers"
+
 #, php-format
 msgid "File count: %d"
 msgstr "Nombre de fichiers : %d"
@@ -5945,11 +5914,11 @@ msgstr ""
 "Ce sous-répertoire ne fait pas partie d'un catalogue existant. La mise à "
 "jour ne peut pas être traitée."
 
-msgid "Updated"
-msgstr "Mis à jour"
-
 msgid "No Update Needed"
 msgstr "Aucune mise à jour nécessaire"
+
+msgid "Skipping catalog, already being processed"
+msgstr "Catalogue ignoré, il est déjà en cours de traitement"
 
 msgid "Catalog Cleaned"
 msgstr "Catalogue Nettoyé"
@@ -6147,9 +6116,6 @@ msgstr "Limite de mémoire PHP désactivée"
 msgid "Reading Catalog: \"%s\""
 msgstr "Lecture du catalogue : \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr "Catalogue ignoré, il est déjà en cours de traitement"
-
 msgid "Look for missing file media entries"
 msgstr "Rechercher les entrées de médias dont le fichier est manquant"
 
@@ -6166,9 +6132,6 @@ msgstr "Commencer à ajouter les nouveaux médias"
 
 msgid "Start verifying media related to Catalog entries"
 msgstr "Commencez à vérifier les médias liés aux entrées du catalogue"
-
-msgid "Start scanning folders"
-msgstr "Démarrer l'analyse des dossiers"
 
 msgid "Start searching new media art"
 msgstr "Démarrer la recherche des nouvelles jaquettes"
