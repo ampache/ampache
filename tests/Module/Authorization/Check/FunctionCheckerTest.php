@@ -54,6 +54,28 @@ class FunctionCheckerTest extends TestCase
         self::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD));
     }
 
+    /**
+     * A stream-session caller (e.g. batch.php?ssid=...) has no global session user at all, so the
+     * check must accept the acting user explicitly rather than silently falling through to denied
+     */
+    public function testCheckBatchDownloadReturnsDownloadFlagWhenAllowedUsingExplicitUser(): void
+    {
+        unset($GLOBALS['user']);
+
+        $user = $this->createMock(User::class);
+        $user->method('has_access')
+            ->with(AccessLevelEnum::GUEST)
+            ->willReturn(true);
+
+        $this->configContainer->method('isFeatureEnabled')
+            ->willReturnMap([
+                [ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD, true],
+                [ConfigurationKeyEnum::DOWNLOAD, true],
+            ]);
+
+        self::assertTrue($this->subject->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, $user));
+    }
+
     public function testCheckBatchDownloadReturnsFalseWhenNoGlobalUser(): void
     {
         unset($GLOBALS['user']);
