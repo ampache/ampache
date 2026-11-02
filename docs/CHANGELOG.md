@@ -5,6 +5,10 @@
 ### Fixed (7.10.6)
 
 * Subsonic/OpenSubsonic `scrobble` without a `submission` parameter is a finished stream, not a now playing notification; it was never scrobbled to Last.fm/ListenBrainz (#4544)
+* A song's `title`/`artist` tag could inject HTML into the jPlayer playlist, running script for anyone who viewed it
+* A stream session (`ssid`) bypassed `allow_zip_download` and per-stream access control on `/batch.php`
+* The `playlist_random`/`search_random` basket and stream actions could reveal another user's private playlist contents
+* Changing a password or rotating an API key left existing sessions and remember-me cookies valid instead of ending them
 
 ## Ampache 7.10.5
 

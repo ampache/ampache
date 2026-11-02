@@ -51,7 +51,7 @@ final class FunctionChecker implements FunctionCheckerInterface
     /**
      * This checks if specific functionality is enabled.
      */
-    public function check(AccessFunctionEnum $function): bool
+    public function check(AccessFunctionEnum $function, ?User $user = null): bool
     {
         switch ($function) {
             case AccessFunctionEnum::FUNCTION_DOWNLOAD:
@@ -66,8 +66,7 @@ final class FunctionChecker implements FunctionCheckerInterface
                     return false;
                 }
 
-                /** @var User $user */
-                $user = Core::get_global('user');
+                $user ??= Core::get_global('user');
 
                 if (
                     $user instanceof User &&
