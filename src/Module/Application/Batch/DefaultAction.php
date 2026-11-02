@@ -76,10 +76,15 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
-        if (
-            !defined('NO_SESSION')
-            && !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-        ) {
+        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
+        $userId = $gatekeeper->getUserId();
+        if ($userId === 0) {
+            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
+            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
+        }
+        $batchUser = $this->userRepository->findById($userId);
+
+        if (!$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, $batchUser)) {
             throw new AccessDeniedException();
         }
 
@@ -122,11 +127,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
         // Requests carrying a stream session are exempt: Ampache has already authenticated them and
         // they come from players that cannot run the challenge.
         if (!defined('NO_SESSION')) {
-            $user = $gatekeeper->getUser();
-
             if (
-                $this->powService->isRequired('batch', $user)
-                && !$this->powService->verifyRequest($request, 'batch', $user)
+                $this->powService->isRequired('batch', $batchUser)
+                && !$this->powService->verifyRequest($request, 'batch', $batchUser)
             ) {
                 return $this->powService->createChallengeResponse($request, 'batch');
             }
@@ -136,13 +139,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             'Requested item ' . implode(', ', $object_ids),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
-
-        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
-        $userId = $gatekeeper->getUserId();
-        if ($userId === 0) {
-            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
-            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
-        }
 
         $itemType = LibraryItemEnum::tryFrom($object_type);
         $libItems = [];
@@ -248,9 +244,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
+        if (!User::stream_control($media_ids, $batchUser)) {
             $this->logger->notice(
-                'Access denied: Stream control failed for user ' . Core::get_global('user')?->username,
+                'Access denied: Stream control failed for user ' . $batchUser?->username,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();

@@ -84,8 +84,17 @@ class DefaultActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $gatekeeper->shouldReceive('getUserId')
+            ->once()
+            ->andReturn(5);
+
+        $this->userRepository->shouldReceive('findById')
+            ->with(5)
+            ->once()
+            ->andReturnNull();
+
         $this->functionChecker->shouldReceive('check')
-            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, null)
             ->once()
             ->andReturnTrue();
 

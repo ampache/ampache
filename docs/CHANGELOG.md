@@ -54,6 +54,9 @@
 * Clean's bulk file removal didn't refresh album/artist song counts until the next full scan or Garbage Collection
 * The OIDC provider's callback (`/oidc/`) could be redirected to `update.php` by a pending database update, losing the login
 * Deleting multiple playlist tracks could 400 due to overly broad `.htaccess.dist` injection-guard rules
+* A song's `title`/`artist` tag could inject HTML into the jPlayer playlist, running script for anyone who viewed it
+* A stream session (`ssid`) bypassed `allow_zip_download` and per-stream access control on `/batch.php`
+* The `playlist_random`/`search_random` basket and stream actions could reveal another user's private playlist contents
 
 ## Ampache 8.3.0
 
