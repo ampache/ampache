@@ -58,6 +58,20 @@ export function hideFilters(element, string, group_release) {
 /* Dialog selection to add song to an existing/new playlist */
 /************************************************************/
 
+// A session that expired since the page loaded makes this fetch land on the full login page instead of
+// the dialog fragment; reload the whole window rather than embed a login form inside the small popup.
+function loadDialogContent(target, url, onLoaded) {
+    $(target).load(url, function(responseText, textStatus) {
+        if (textStatus !== "error" && typeof responseText === "string" && responseText.indexOf("id=\"loginPage\"") !== -1) {
+            window.location.reload();
+
+            return;
+        }
+        if (onLoaded) {
+            onLoaded();
+        }
+    });
+}
 
 var closeplaylist;
 export function overlayclickclose() {
@@ -90,7 +104,7 @@ export function showPlaylistDialog(e, item_type, item_ids) {
         open() {
             closeplaylist = 1;
             $(document).bind("click", overlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 $("#playlistdialog").focus();
             });
         },
@@ -156,7 +170,7 @@ export function showBroadcastsDialog(e) {
         open() {
             closebroadcasts = 1;
             $(document).bind("click", broverlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 $("#broadcastsdialog").focus();
             });
         },
@@ -212,7 +226,7 @@ export function showShareDialog(e, object_type, object_id) {
         open() {
             closeshare = 1;
             $(document).bind("click", shoverlayclickclose);
-            $(this).load(parent.contentUrl, function() {
+            loadDialogContent(this, parent.contentUrl, function() {
                 $("#sharedialog").focus();
             });
         },
@@ -277,6 +291,15 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
                 type: "POST",
                 data: $(parent.editFormId).serializeArray(),
                 success(resp) {
+                    // an expired session redirects the save itself to the login page, so resp arrives
+                    // as its HTML string instead of the expected XML document -- reload rather than
+                    // read .lastChild off it and silently fail to save with the dialog already closed
+                    if (typeof resp === "string" && resp.indexOf("id=\"loginPage\"") !== -1) {
+                        window.location.reload();
+
+                        return;
+                    }
+
                     $("#editdialog").dialog("close");
 
                     if (parent.refreshRowPrefix !== "") {
@@ -289,7 +312,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
 
                         var url = jsAjaxServer + "/edit.server.php?action=refresh_updated&type=" + parent.editType + "&id=" + new_id + argument_string;
                         // Reload only table
-                        $("#" + parent.refreshRowPrefix + parent.editId).load(url, function() {
+                        loadDialogContent("#" + parent.refreshRowPrefix + parent.editId, url, function() {
                             // Update the current row identifier with new id
                             $("#" + parent.refreshRowPrefix + parent.editId).attr("id", parent.refreshRowPrefix + new_id);
                         });
@@ -320,7 +343,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             autoOpen: false,
             show: { effect: "fade", duration: 400 },
             open() {
-                $(this).load(parent.contentUrl, function() {
+                loadDialogContent(this, parent.contentUrl, function() {
                     if ($("#edit_tags").length > 0) {
                         $("#edit_tags").tagit({
                             allowSpaces: true,
@@ -419,7 +442,7 @@ export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refre
             success(resp) {
                 var url = jsAjaxServer + "/refresh_reordered.server.php?action=" + parent.refreshAction + "&id=" + parent.itemId;
                 // Reload only table
-                $("#reordered_list_" + parent.itemId).load(url, function () {
+                loadDialogContent("#reordered_list_" + parent.itemId, url, function () {
                     $("#sortableplaylist_" + parent.itemId).sortable({
                         axis: "y",
                         delay: 200

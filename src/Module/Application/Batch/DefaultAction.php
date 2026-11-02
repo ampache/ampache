@@ -71,10 +71,15 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (
-            !defined('NO_SESSION') &&
-            !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-        ) {
+        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
+        $userId = $gatekeeper->getUserId();
+        if ($userId === 0) {
+            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
+            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
+        }
+        $batchUser = $this->userRepository->findById($userId);
+
+        if (!$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, $batchUser)) {
             throw new AccessDeniedException();
         }
 
@@ -100,13 +105,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             'Requested item ' . $object_id,
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
-
-        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
-        $userId = $gatekeeper->getUserId();
-        if ($userId === 0) {
-            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
-            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
-        }
 
         $libItem = $this->libraryItemLoader->load(
             LibraryItemEnum::from($object_type),
@@ -180,9 +178,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
+        if (!User::stream_control($media_ids, $batchUser)) {
             $this->logger->notice(
-                'Access denied: Stream control failed for user ' . Core::get_global('user')?->username,
+                'Access denied: Stream control failed for user ' . $batchUser?->username,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();

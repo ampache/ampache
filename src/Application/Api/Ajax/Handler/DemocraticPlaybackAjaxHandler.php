@@ -51,13 +51,27 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         $results     = [];
         $action      = $this->requestParser->getFromRequest('action');
 
+        // Votes are gated by webplayer_level so a lowered level also opens voting, not just playback
+        $mayVote = Access::check(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::fromTextual(AmpConfig::get('webplayer_level') ?? 'user')
+        );
+
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
+                if (!$mayVote) {
+                    return;
+                }
+
                 $democratic->remove_vote((int)$_REQUEST['row_id']);
                 $show_browse = true;
                 break;
             case 'add_vote':
+                if (!$mayVote) {
+                    return;
+                }
+
                 $democratic->add_vote(
                     [
                         [

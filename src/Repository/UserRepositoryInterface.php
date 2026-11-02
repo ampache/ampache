@@ -143,6 +143,16 @@ interface UserRepositoryInterface
     public function retrievePasswordFromUser(int $userId): string;
 
     /**
+     * Drops every session and remember-me token this username holds
+     */
+    public function deleteSessions(string $username): void;
+
+    /**
+     * Drops every api session this username holds
+     */
+    public function deleteApiSessions(string $username): void;
+
+    /**
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)

@@ -939,7 +939,7 @@ class User extends database_object
         return $insert_id;
     }
 
-    public function update_password(string $new_password, ?string $hashed_password = null): void
+    public function update_password(string $new_password, ?string $hashed_password = null, bool $revokeSessions = true): void
     {
         debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
@@ -953,6 +953,11 @@ class User extends database_object
         // Clear this (temp fix)
         if ($db_results) {
             unset($_SESSION['userdata']['password']);
+        }
+
+        // nothing the old password opened may outlive it; a login-time rehash stores the same secret and keeps them
+        if ($revokeSessions) {
+            self::getUserRepository()->deleteSessions((string) $this->username);
         }
     }
 
