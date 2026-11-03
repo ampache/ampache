@@ -799,12 +799,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_beetsremote.php
 
 		-
-			message: '#^Method Ampache\\Module\\Catalog\\Catalog_local\:\:add_file\(\) has parameter \$options with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:for_all_files\(\) has parameter \$func with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -885,7 +879,7 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Database\\Query\\Search\:\:filter_data\(\) has parameter \$operator with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 2
+			count: 1
 			path: src/Module/Database/Query/Search.php
 
 		-
@@ -1947,19 +1941,19 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var for variable \$group has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 3
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
 			message: '#^PHPDoc tag @var for variable \$martist has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 3
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
 			message: '#^PHPDoc tag @var for variable \$release has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 2
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
