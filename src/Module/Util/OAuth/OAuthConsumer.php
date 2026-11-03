@@ -33,7 +33,7 @@
  * Code origin from http://oauth.googlecode.com/svn/code/php/OAuth.php
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Util\OAuth;
 

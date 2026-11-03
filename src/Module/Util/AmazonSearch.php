@@ -201,7 +201,7 @@ class AmazonSearch
     /**
      * Lookup the selected item by the 'Amazon Standard Identification Number'
      *
-     * @param string|array $asin The 'Amazon standard Identification Number'
+     * @param string|array<string, mixed> $asin The 'Amazon standard Identification Number'
      * @param string $type The category of results desired from the web service.
      */
     public function lookup(string|array $asin, string $type = 'Music'): array
@@ -296,7 +296,7 @@ class AmazonSearch
     /**
      * Create an XML search string.
      *
-     * @param array $terms The search terms to include within the query.
+     * @param array{artist: string, album: string, keywords: string} $terms The search terms to include within the query.
      * @param string $type The type of result desired.
      */
     public function search(array $terms, string $type = 'Music'): array

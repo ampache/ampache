@@ -87,6 +87,7 @@ class OAuthRequest implements Stringable
     /**
      * from_request
      * attempt to build up a request from what was passed to the server
+     * @param array<string, string|string[]>|null $parameters
      */
     public static function from_request(?string $http_method = null, ?string $http_url = null, ?array $parameters = null): OAuthRequest
     {
