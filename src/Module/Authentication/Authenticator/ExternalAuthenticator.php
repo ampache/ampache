@@ -84,6 +84,9 @@ final class ExternalAuthenticator implements AuthenticatorInterface
         ];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function postAuth(): ?array
     {
         return null;
