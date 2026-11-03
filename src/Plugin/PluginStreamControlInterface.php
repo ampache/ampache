@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use Ampache\Repository\Model\LibraryItemEnum;
+
 interface PluginStreamControlInterface extends AmpachePluginInterface
 {
     /**
      * Check stream control
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
      */
     public function stream_control(array $media_ids): bool;
 }

@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\User;
 use Override;
@@ -108,6 +109,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
 
     /**
      * Check stream control
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
      */
     public function stream_control(array $media_ids): bool
     {
@@ -121,7 +123,8 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
             // Calculate all media size
             $next_total = 0;
             foreach ($media_ids as $media_id) {
-                $className = ObjectTypeToClassNameMapper::map($media_id['object_type']);
+                $objectType = $media_id['object_type'];
+                $className  = ObjectTypeToClassNameMapper::map($objectType instanceof LibraryItemEnum ? $objectType->value : $objectType);
                 /** @var Media $media */
                 $media = new $className($media_id['object_id']);
                 $next_total += $media->size ?? 0;

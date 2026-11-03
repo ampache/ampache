@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Graph;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -103,6 +104,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
 
     /**
      * Check stream control
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
      */
     public function stream_control(array $media_ids): bool
     {
