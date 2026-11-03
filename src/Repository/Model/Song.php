@@ -2262,6 +2262,12 @@ class Song extends database_object implements
 
     /**
      * Run custom play action.
+     * @return array{}|array{
+     *     process: resource|false,
+     *     handle: resource,
+     *     stderr: resource|null,
+     *     format: string
+     * }
      */
     public function run_custom_play_action(int $action_index, string $codec = ''): array
     {
