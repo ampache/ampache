@@ -50,7 +50,7 @@ class AmpacheHttpq extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'httpq_active';
 
-    private $_httpq;
+    private HttpQPlayer $_httpq;
     private string $description = "Controls an httpQ instance, requires Ampache's httpQ version";
     private string $version     = '000002';
 
@@ -79,7 +79,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
-        if ($this->_httpq->add($url->title, $url->url) === null) {
+        if (!$this->_httpq->add($url->title, $url->url)) {
             debug_event(self::class, 'add_url failed to add ' . $url->url, 1);
 
             return false;
@@ -93,7 +93,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function clear_playlist(): bool
     {
-        if ($this->_httpq->clear() === null) {
+        if (!$this->_httpq->clear()) {
             return false;
         }
 
@@ -138,7 +138,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function delete_track(int $object_id): bool
     {
-        if ($this->_httpq->delete_pos($object_id) === null) {
+        if (!$this->_httpq->delete_pos($object_id)) {
             debug_event(self::class, 'Unable to delete ' . $object_id . ' from httpQ', 1);
 
             return false;
@@ -170,7 +170,7 @@ class AmpacheHttpq extends localplay_controller
             return [];
         }
 
-        $songs   = explode("::", (string) $list);
+        $songs   = explode("::", $list);
         $results = [];
 
         foreach ($songs as $key => $entry) {
@@ -392,7 +392,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function next(): bool
     {
-        return ($this->_httpq->next() !== null);
+        return $this->_httpq->next();
     }
 
     /**
@@ -401,7 +401,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function pause(): bool
     {
-        return ($this->_httpq->pause() !== null);
+        return $this->_httpq->pause();
     }
 
     /**
@@ -412,11 +412,11 @@ class AmpacheHttpq extends localplay_controller
     public function play(): bool
     {
         // A play when it's already playing causes a track restart, so double check its state
-        if ($this->_httpq->state() == 'play') {
+        if ($this->_httpq->state() === 'play') {
             return true;
         }
 
-        return ($this->_httpq->play() !== null);
+        return $this->_httpq->play();
     }
 
     /**
@@ -425,7 +425,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function prev(): bool
     {
-        return ($this->_httpq->prev() !== null);
+        return $this->_httpq->prev();
     }
 
     /**
@@ -435,7 +435,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        return ($this->_httpq->random($state) !== null);
+        return $this->_httpq->random($state);
     }
 
     /**
@@ -445,7 +445,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        return ($this->_httpq->repeat($state) !== null);
+        return $this->_httpq->repeat($state);
     }
 
     /**
@@ -472,7 +472,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        return ($this->_httpq->skip($track_id) !== null);
+        return $this->_httpq->skip($track_id);
     }
 
     /**
@@ -489,7 +489,9 @@ class AmpacheHttpq extends localplay_controller
         $array['volume'] = $this->_httpq->get_volume();
         $array['repeat'] = $this->_httpq->get_repeat();
         $array['random'] = $this->_httpq->get_random();
-        $array['track']  = $this->_httpq->get_now_playing();
+
+        $track           = $this->_httpq->get_now_playing();
+        $array['track']  = is_string($track) ? $track : '';
 
         $array['track_title'] = '';
 
@@ -510,7 +512,7 @@ class AmpacheHttpq extends localplay_controller
 
         // an unresolved entry falls back to the name the player reported
         if ($array['track_title'] === '') {
-            $array['track_title'] = basename($array['track'] ?? '');
+            $array['track_title'] = basename($array['track']);
         }
 
         return $array;
@@ -523,7 +525,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function stop(): bool
     {
-        return ($this->_httpq->stop() !== null);
+        return $this->_httpq->stop();
     }
 
     /**

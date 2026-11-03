@@ -255,16 +255,23 @@ class mpd
     public string $mpd_version = "(unknown)";
 
     // MPD Status variables
-    public $playlist;
-    public $stats;
-    public $status;
-    private $_command_queue; // The list of commands for bulk command sending
+    /** @var array<int, array<string, string>> */
+    public array $playlist = [];
 
-    /** @property callable|null $_debug_callback */
-    private $_debug_callback; // Optional callback to be run on debug
+    /** @var array<string, string> */
+    public array $stats = [];
 
+    /** @var array<string, string> */
+    public array $status = [];
+
+    /** @var string|null The list of commands for bulk command sending */
+    private $_command_queue;
+
+    /** @var callable|null Optional callback to be run on debug */
+    private $_debug_callback;
+
+    /** @var resource|closed-resource|false|null */
     private $_mpd_sock;
-    private $current_track_id;
 
     /**
      * TCP/Connection variables
@@ -344,7 +351,7 @@ class mpd
             return false;
         }
 
-        $value    = $this->status['volume'] + $value;
+        $value    = (float) $this->status['volume'] + $value;
         $response = $this->SetVolume($value);
 
         $this->_debug('AdjustVolume', 'return ' . $response, 5);
@@ -814,12 +821,12 @@ class mpd
         $stats  = $this->_parseResponse($stats);
         $status = $this->_parseResponse($status);
 
-        $this->stats  = $stats;
+        $this->stats  = $stats ?: [];
         $this->status = $status ?: [];
 
         // Get the Playlist
         $playlist       = $this->SendCommand(self::COMMAND_PLINFO, null, false);
-        $this->playlist = $this->_parseFileListResponse($playlist);
+        $this->playlist = $this->_parseFileListResponse($playlist) ?: [];
 
         return true;
     }
@@ -876,7 +883,7 @@ class mpd
         }
 
         if ($track === -1) {
-            $track = $this->current_track_id;
+            $track = (int) ($this->status['song'] ?? 0);
         }
 
         $this->SendCommand(self::COMMAND_SEEK, [$track, $pos]);
@@ -1040,7 +1047,7 @@ class mpd
             }
 
             $command = self::COMMAND_VOLUME;
-            $value -= $this->status['volume'];
+            $value -= (float) $this->status['volume'];
         }
 
         $response = $this->SendCommand($command, $value);
@@ -1186,9 +1193,9 @@ class mpd
      * _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     * @return array<int, array<string, string>>|bool
+     * @return array<int, array<string, string>>|false
      */
-    private function _parseFileListResponse(bool|string $response): array|bool
+    private function _parseFileListResponse(bool|string $response): array|false
     {
         if (is_bool($response)) {
             return false;
@@ -1213,9 +1220,9 @@ class mpd
     /**
      * _parseResponse
      * Turns a response into an array
-     * @return array<string, string>|bool
+     * @return array<string, string>|false
      */
-    private function _parseResponse(bool|string $response): array|bool
+    private function _parseResponse(bool|string $response): array|false
     {
         if (!$response) {
             return false;

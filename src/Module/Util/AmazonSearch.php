@@ -46,20 +46,15 @@ class AmazonSearch
     public int $_currentPage = 0;
 
     // Stupid hack to make things come our right
-    public $_currentTag;
-
-    // Stupid hack to make things come out right
-    public $_currentTagContents;
+    public string $_currentTag         = '';
     public int $_default_results_pages = 1;
 
     // The XML parser
     /** @var string[] $_grabtags */
     public array $_grabtags;
 
-    public int $_maxPage = 1;
-
-    // Array of results
-    public $_parser;
+    public int $_maxPage       = 1;
+    public ?XMLParser $_parser = null;
     public string $_proxy_host = "";
 
     // Proxy user
@@ -72,10 +67,10 @@ class AmazonSearch
     public string $_proxy_user = "";
 
     // Tags to grab the contents of
-    public $_sourceTag;
+    public string $_sourceTag = '';
 
     // source tag don't ask
-    public $_subTag;
+    public string $_subTag = '';
     public mixed $base_url;
     public string $base_url_default = 'webservices.amazon.com';
 
@@ -83,7 +78,6 @@ class AmazonSearch
     /** @var array<string, array<string, mixed>> */
     public array $results = [];
 
-    public $search;
     public string $url_suffix = '/onca/xml';
 
     /**
@@ -146,7 +140,7 @@ class AmazonSearch
                 $this->_maxPage = (int) trim($cdata);
                 break;
             default:
-                if (strlen((string) $tag) !== 0) {
+                if (strlen($tag) !== 0) {
                     $this->results[$source][$tag] = trim($cdata);
                 }
 
@@ -240,6 +234,10 @@ class AmazonSearch
         $request  = Requests::get($url, [], $options);
         $contents = $request->body;
 
+        if (!$this->_parser instanceof XMLParser) {
+            return;
+        }
+
         //debug_event(self::class, $contents, 5);
         if (xml_parse($this->_parser, $contents) === 0) {
             debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
@@ -289,6 +287,10 @@ class AmazonSearch
         // make the request
         $request  = Requests::get($url, [], $options);
         $contents = $request->body;
+
+        if (!$this->_parser instanceof XMLParser) {
+            return;
+        }
 
         if (xml_parse($this->_parser, $contents) === 0) {
             debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
@@ -397,7 +399,7 @@ class AmazonSearch
         }
 
         // If it's in the tag list, don't grab our search results
-        if (strlen((string) $this->_sourceTag) !== 0) {
+        if (strlen($this->_sourceTag) !== 0) {
             $this->_currentTag = $tag;
         } elseif ($tag !== "TotalPages") {
             $this->_currentTag = '';

@@ -47,7 +47,10 @@ class OAuthToken implements Stringable
      */
     public function to_string(): string
     {
-        return "oauth_token=" . OAuthUtil::urlencode_rfc3986($this->key) . "&oauth_token_secret=" . OAuthUtil::urlencode_rfc3986($this->secret);
+        $encodedKey    = OAuthUtil::urlencode_rfc3986($this->key);
+        $encodedSecret = OAuthUtil::urlencode_rfc3986($this->secret);
+
+        return "oauth_token=" . (is_string($encodedKey) ? $encodedKey : '') . "&oauth_token_secret=" . (is_string($encodedSecret) ? $encodedSecret : '');
     }
 
     /**

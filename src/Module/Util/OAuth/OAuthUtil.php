@@ -196,7 +196,7 @@ class OAuthUtil
     }
 
     /**
-     * @return array<string, string|string[]>|string|string[]
+     * @return array<mixed>|string
      */
     public static function urlencode_rfc3986(mixed $input): array|string
     {

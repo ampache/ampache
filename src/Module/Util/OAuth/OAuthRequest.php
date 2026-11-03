@@ -261,8 +261,9 @@ class OAuthRequest implements Stringable
     {
         $first = true;
         if ($realm) {
-            $out   = 'Authorization: OAuth realm="' . OAuthUtil::urlencode_rfc3986($realm) . '"';
-            $first = false;
+            $encodedRealm = OAuthUtil::urlencode_rfc3986($realm);
+            $out          = 'Authorization: OAuth realm="' . (is_string($encodedRealm) ? $encodedRealm : '') . '"';
+            $first        = false;
         } else {
             $out = 'Authorization: OAuth';
         }
@@ -276,8 +277,11 @@ class OAuthRequest implements Stringable
                 throw new OAuthException('Arrays not supported in headers');
             }
 
+            $encodedKey   = OAuthUtil::urlencode_rfc3986($key);
+            $encodedValue = OAuthUtil::urlencode_rfc3986($value);
+
             $out .= ($first) ? ' ' : ', ';
-            $out .= OAuthUtil::urlencode_rfc3986($key) . '="' . OAuthUtil::urlencode_rfc3986($value) . '"';
+            $out .= (is_string($encodedKey) ? $encodedKey : '') . '="' . (is_string($encodedValue) ? $encodedValue : '') . '"';
             $first = false;
         }
 
