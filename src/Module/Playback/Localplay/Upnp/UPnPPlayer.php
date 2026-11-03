@@ -80,6 +80,7 @@ class UPnPPlayer
      * GetPlayListItems
      * This returns a delimited string of all of the filenames
      * current in your playlist, only urls at the moment
+     * @return array<int, array{name: string, link: string}>
      */
     public function GetPlaylistItems(): array
     {

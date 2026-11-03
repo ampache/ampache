@@ -512,6 +512,7 @@ class AmpacheVlc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features That this Localplay method supports.
      * This works as in requesting the status.xml file from VLC.
      * required function
+     * @return array<string, mixed>
      */
     public function status(): array
     {

@@ -319,6 +319,7 @@ class Democratic extends Tmp_Playlist
      * get_cool_songs
      * This returns all of the song_ids for songs that have happened within
      * the last 'cooldown' for this user.
+     * @return int[]
      */
     public function get_cool_songs(): array
     {

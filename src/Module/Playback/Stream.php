@@ -803,7 +803,7 @@ class Stream
      * kill_process
      * @param array{
      *     handle?: resource|null,
-     *     process?: resource|null,
+     *     process?: resource|false|null,
      *     stderr?: resource|null,
      *     format?: string|null
      * } $transcoder

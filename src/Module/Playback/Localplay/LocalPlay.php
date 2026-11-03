@@ -205,12 +205,12 @@ class LocalPlay
      * an empty array is passed on failure
      * @return array<int, array{
      *     id: int,
-     *     raw: string,
+     *     track: int,
+     *     raw?: string,
      *     vlid?: int,
      *     oid?: int,
      *     name?: string|null,
      *     link?: string|null,
-     *     track: int,
      * }>
      */
     public function get(): array
@@ -519,6 +519,7 @@ class LocalPlay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
+     * @return array<string, mixed>|null
      */
     public function status(): ?array
     {
