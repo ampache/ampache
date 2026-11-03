@@ -614,7 +614,7 @@ class Browse extends Query
      * Pass null (the default) to reload whatever this browse last saved/cached. Pass an array -- including an
      * empty one -- to render exactly those ids; an empty array means "the caller already searched and found
      * nothing", not "go look up something else instead."
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      * @param bool|array<string, mixed>|string $argument
      */
     public function show_objects(?array $object_ids = null, bool|array|string $argument = false, ?bool $skip_cookies = false): void
@@ -870,8 +870,8 @@ class Browse extends Query
      * Cut the id list down to the page being rendered. An un-paged list too large to hold in memory renders an
      * error instead of failing silently, which is signaled back by a null return.
      *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
-     * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null
      */
     private function _pageObjectIds(array $object_ids, string $type): ?array
     {
@@ -962,7 +962,7 @@ class Browse extends Query
     /**
      * Warm the object cache for the rows this page shows, so the row templates read them without a query each.
      *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
      */
     private function _prefetchPage(string $type, array $object_ids, string $limit_threshold): void
     {

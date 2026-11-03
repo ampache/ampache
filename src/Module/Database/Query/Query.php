@@ -70,7 +70,7 @@ class Query
     public int|string $id = 0;
     public ?int $user_id  = null;
 
-    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
+    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
     /**
@@ -174,6 +174,7 @@ class Query
      * This returns an array of the allowed filters based on the type of
      * object we are working with, this is used to display the 'filter'
      * sidebar stuff.
+     * @return string[]
      */
     public static function get_allowed_filters(string $type): array
     {
@@ -305,7 +306,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>
+     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>
      */
     public function get_saved(): array
     {
@@ -443,7 +444,7 @@ class Query
     /**
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
-     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $object_ids
+     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}> $object_ids
      */
     public function save_objects(array $object_ids): bool
     {

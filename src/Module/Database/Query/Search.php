@@ -555,7 +555,7 @@ class Search extends playlist_object
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return array{
      *     sql: string,
-     *     parameters: array
+     *     parameters: array<int, mixed>
      * }
      */
     public static function prepare(array $data, ?User $user = null, bool $require_rules = false): array
@@ -704,6 +704,7 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year album searches for subsonic.
+     * @return array<string, mixed>
      */
     public static function year_search(int $fromYear, int $toYear, int $size, int $offset): array
     {
@@ -907,6 +908,7 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
+     * @return array<int, array{object_id: int, object_type: LibraryItemEnum}>
      */
     public function get_random_items(?string $limit = ''): array
     {
@@ -942,7 +944,7 @@ class Search extends playlist_object
         //debug_event(self::class, 'SQL get_random_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['object_id' => $row['id'], 'object_type' => $this->objectType];
+            $results[] = ['object_id' => (int) $row['id'], 'object_type' => LibraryItemEnum::from($this->objectType)];
         }
 
         return $results;

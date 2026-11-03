@@ -239,6 +239,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array<string, mixed>
      */
     public static function fetch_assoc(?PDOStatement $resource, bool $finish = true): array
     {
@@ -266,6 +267,7 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array<int, mixed>
      */
     public static function fetch_row(?PDOStatement $resource, bool $finish = true): array
     {
@@ -440,6 +442,7 @@ class Dba
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
+     * @return array{charset: string, collation: string}
      */
     public static function translate_to_mysqlcharset(?string $charset): array
     {

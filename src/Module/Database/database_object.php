@@ -72,6 +72,7 @@ abstract class database_object
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
+     * @return array<array-key, mixed>
      */
     public static function get_from_cache(string $index, int|string $object_id): array
     {
@@ -139,6 +140,7 @@ abstract class database_object
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
+     * @return array<array-key, mixed>
      */
     protected function get_info(int $object_id, ?string $table_name = null): array
     {
