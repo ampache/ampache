@@ -30,6 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\User;
 use Override;
+use SimpleXMLElement;
 use WpOrg\Requests\Requests;
 
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
@@ -100,6 +101,9 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
         return $results;
     }
 
+    /**
+     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     */
     public function get_photos(string $search, string $category = 'concert'): array
     {
         $photos = [];
