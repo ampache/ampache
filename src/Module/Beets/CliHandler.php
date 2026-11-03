@@ -183,6 +183,7 @@ class CliHandler extends Handler
 
     /**
      * Parse the output string from beets into a song
+     * @return array<string, mixed>
      */
     protected function parse(string $item): array
     {

@@ -287,6 +287,7 @@ class Ldap
 
     /**
      * Search for a DN in the LDAP
+     * @return array<array-key, mixed>
      * @throws LdapException
      */
     private static function _search($link, $base_dn, string $filter, bool $only_one_result = true): array

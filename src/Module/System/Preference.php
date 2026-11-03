@@ -809,6 +809,7 @@ class Preference extends database_object
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything. Nothing to do with fix_user_preferences(), which repairs rows.
      * @param array<string, mixed> $results
+     * @return array<string, mixed>
      */
     public static function fix_preferences(array $results): array
     {

@@ -638,6 +638,9 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         return $meta;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getVorbisMetadata(
         Song $song,
     ): array {

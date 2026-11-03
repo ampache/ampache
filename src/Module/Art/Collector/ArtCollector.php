@@ -68,7 +68,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
      * } $options
      * @return array<int, array{
      *     'raw'?: string,
-     *     'db'?: int,
+     *     'db'?: ?int,
      *     'url'?: string,
      *     'mosaic'?: array{object_id: int, limit: int},
      *     'title'?: string,

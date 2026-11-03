@@ -75,6 +75,9 @@ final class Upnp_Api
         private SongRepositoryInterface $songRepository,
     ) {}
 
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>>}
+     */
     public static function callSearch($criteria, $filter, $start, $count): array
     {
         $type = self::_parse_upnp_filter($filter);
@@ -384,6 +387,9 @@ final class Upnp_Api
      * @param string $data The raw data string containing the headers to process.
      * @return array An associative array of headers where keys are header names and values are their corresponding values.
      */
+    /**
+     * @return array<string, string>
+     */
     public static function get_headers(string $data): array
     {
         $lines  = explode(PHP_EOL, $data); // split into lines
@@ -443,6 +449,9 @@ final class Upnp_Api
         return in_array($testKey, $filt, true); // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function itemLiveStream(Live_Stream $radio, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -462,17 +471,20 @@ final class Upnp_Api
             'upnp:albumArtURI' => $art_url,
 
             'res' => $radio->url,
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function itemSong(Song $song, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$song->type];
+        $arrFileType    = $fileTypesByExt[$song->type] ?? null;
 
         /**
          * Properties observed for MS media player include
@@ -501,7 +513,7 @@ final class Upnp_Api
             'upnp:genre' => Tag::get_display($song->get_tags(), false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
             'size' => $song->size,
             'duration' => $song->get_f_time(true) . '.0',
             'bitrate' => $song->bitrate,
@@ -521,6 +533,9 @@ final class Upnp_Api
 
     /* ================================== End SSDP functions ================================== */
 
+    /**
+     * @return array<string, int|string>
+     */
     public static function parseUPnPRequest($prmRequest): array
     {
         $retArr = [];
@@ -672,6 +687,9 @@ final class Upnp_Api
         //debug_event(self::class, '(Sent)', 5);
     }
 
+    /**
+     * @return array{0: int, 1: array<int, mixed>}
+     */
     public static function slice($items, $start, $count): array
     {
         $maxCount = count($items);
@@ -683,6 +701,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>|null>}
+     */
     public static function videoChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = [];
@@ -722,6 +743,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public static function videoMetadata(string $prmPath): ?array
     {
         $root    = 'amp://video';
@@ -770,6 +794,9 @@ final class Upnp_Api
         return $meta;
     }
 
+    /**
+     * @return array<string, array{class: string, mime: string}>
+     */
     private static function _getFileTypes(): array
     {
         return [
@@ -891,6 +918,9 @@ final class Upnp_Api
         return $tokens;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemAlbum(Album $album, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -909,6 +939,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemArtist(Artist $artist, string $parent): array
     {
         return [
@@ -922,6 +955,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemPlaylist($playlist, string $parent): array
     {
         return [
@@ -934,6 +970,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemPodcast($podcast, string $parent): array
     {
         return [
@@ -946,6 +985,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemPodcastEpisode(Podcast_Episode $episode, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -973,6 +1015,9 @@ final class Upnp_Api
         return $ret;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemSmartPlaylist(Search $playlist, string $parent): array
     {
         return [
@@ -985,6 +1030,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemTag(Tag $tag): array
     {
         return [
@@ -998,13 +1046,16 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemVideo(Video $video, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$video->type];
+        $arrFileType    = $fileTypesByExt[$video->type] ?? null;
 
         return [
             'id' => $parent . '/' . $video->id,
@@ -1016,7 +1067,7 @@ final class Upnp_Api
             'upnp:genre' => Tag::get_display($video->get_tags(), false, 'video'),
 
             'res' => $video->play_url('', 'api'),
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
             'size' => $video->size,
             'duration' => $video->get_f_time(true) . '.0',
         ];
@@ -1037,6 +1088,9 @@ final class Upnp_Api
         return 'song';
     }
 
+    /**
+     * @return array{}|array{ruletype: string|null, operator: int, input: string|null}
+     */
     private static function _parse_upnp_search_term(string $query, string $context): array
     {
         //echo "Search term ", $query, "\n";
@@ -1094,6 +1148,9 @@ final class Upnp_Api
         return $term;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _parse_upnp_searchcriteria($query, $type): array
     {
         // Transforms a upnp search query into an Ampache search query
@@ -1248,6 +1305,9 @@ final class Upnp_Api
         }
     }
 
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>|null>}
+     */
     public function musicChilds($prmPath, $prmQuery, $start, $count): array
     {
         $mediaItems = [];
@@ -1464,6 +1524,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function musicMetadata(string $prmPath): ?array
     {
         $root    = 'amp://music';

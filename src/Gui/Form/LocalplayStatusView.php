@@ -39,7 +39,7 @@ final class LocalplayStatusView extends AbstractView
     /**
      * @param array<int, array{
      *     id: int,
-     *     raw: string,
+     *     raw?: string,
      *     vlid?: int,
      *     oid?: int,
      *     name?: string|null,
@@ -71,7 +71,7 @@ final class LocalplayStatusView extends AbstractView
     /**
      * @return array<int, array{
      *     id: int,
-     *     raw: string,
+     *     raw?: string,
      *     vlid?: int,
      *     oid?: int,
      *     name?: string|null,

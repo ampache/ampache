@@ -126,6 +126,7 @@ class JsonHandler extends Handler
 
     /**
      * convert the json string into a song array
+     * @return array<string, mixed>
      */
     public function parse(string $item): array
     {

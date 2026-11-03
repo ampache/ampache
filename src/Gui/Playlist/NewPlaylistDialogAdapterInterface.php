@@ -27,6 +27,7 @@ namespace Ampache\Gui\Playlist;
 
 use Ampache\Gui\View\TemplateInterface;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Playlist;
 
 interface NewPlaylistDialogAdapterInterface extends TemplateInterface
 {
@@ -58,6 +59,9 @@ interface NewPlaylistDialogAdapterInterface extends TemplateInterface
 
     public function getPlaylistHeading(): string;
 
+    /**
+     * @return Playlist[]
+     */
     public function getPlaylists(): array;
 
     /**

@@ -59,6 +59,9 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return null;
     }
 
+    /**
+     * @return array<array-key, mixed>|null
+     */
     protected function getCatalogIds(): ?array
     {
         $catalogs = (isset($_REQUEST['catalogs']))

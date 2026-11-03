@@ -842,6 +842,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
     /**
      * splits up a standard SQL dump file into distinct sql queries
+     * @return string[]
      */
     private function split_sql(string $sql): array
     {
