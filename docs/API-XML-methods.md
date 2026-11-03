@@ -7364,12 +7364,12 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 | Field | Type    | Nullable | Optional | Notes |
 |-------|---------|:--------:|:--------:|-------|
 | id    | integer |    NO    |    NO    |       |
-| raw   | string  |    NO    |    NO    |       |
+| track | integer |    NO    |    NO    |       |
+| raw   | string  |    NO    |   YES    |       |
 | vlid  | integer |    NO    |   YES    |       |
 | oid   | integer |    NO    |   YES    |       |
 | name  | string  |   YES    |   YES    |       |
 | link  | string  |   YES    |   YES    |       |
-| track | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws

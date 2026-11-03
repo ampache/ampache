@@ -3947,6 +3947,9 @@
           "id": {
             "type": "integer"
           },
+          "track": {
+            "type": "integer"
+          },
           "raw": {
             "type": "string"
           },
@@ -3963,14 +3966,10 @@
           "link": {
             "type": "string",
             "nullable": true
-          },
-          "track": {
-            "type": "integer"
           }
         },
         "required": [
           "id",
-          "raw",
           "track"
         ],
         "additionalProperties": true
