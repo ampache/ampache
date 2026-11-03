@@ -37,8 +37,8 @@ class OAuthToken implements Stringable
      * secret = the token secret
      */
     public function __construct(
-        public $key,
-        public $secret,
+        public string $key,
+        public string $secret,
     ) {}
 
     /**

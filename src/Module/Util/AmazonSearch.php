@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use WpOrg\Requests\Requests;
+use XMLParser;
 
 /**
  * AmazonSearch Class
@@ -89,9 +90,9 @@ class AmazonSearch
      * Class Constructor
      */
     public function __construct(
-        public $public_key,
-        public $private_key,
-        public $associate_tag,
+        public string $public_key,
+        public string $private_key,
+        public string $associate_tag,
         string $base_url_param = '',
     ) {
         // If we have a base url then use it
@@ -127,7 +128,7 @@ class AmazonSearch
     /**
      * CDATA handler.
      */
-    public function cdata($parser, $cdata): void
+    public function cdata(XMLParser $parser, string $cdata): void
     {
         $tag    = $this->_currentTag;
         $subtag = $this->_subTag;
@@ -135,18 +136,18 @@ class AmazonSearch
 
         switch ($tag) {
             case 'URL':
-                $this->results[$source][$subtag] = trim((string) $cdata);
+                $this->results[$source][$subtag] = trim($cdata);
                 break;
             case 'ASIN':
-                $this->_sourceTag = trim((string) $cdata);
+                $this->_sourceTag = trim($cdata);
                 break;
             case 'TotalPages':
-                debug_event(self::class, "TotalPages= " . trim((string) $cdata), 5);
-                $this->_maxPage = (int) trim((string) $cdata);
+                debug_event(self::class, "TotalPages= " . trim($cdata), 5);
+                $this->_maxPage = (int) trim($cdata);
                 break;
             default:
                 if (strlen((string) $tag) !== 0) {
-                    $this->results[$source][$tag] = trim((string) $cdata);
+                    $this->results[$source][$tag] = trim($cdata);
                 }
 
                 break;
@@ -170,7 +171,7 @@ class AmazonSearch
     /**
      * End XML Element
      */
-    public function endElement($parser, $tag): void
+    public function endElement(XMLParser $parser, string $tag): void
     {
         // zero the tag
         $this->_currentTag = '';
@@ -274,7 +275,7 @@ class AmazonSearch
         $canonicalized_query = [];
         foreach ($params as $param => $value) {
             $param = str_replace("%7E", "~", rawurlencode($param));
-            $value = str_replace("%7E", "~", rawurlencode((string) $value));
+            $value = str_replace("%7E", "~", rawurlencode($value));
 
             $canonicalized_query[] = $param . "=" . $value;
         }
@@ -373,7 +374,7 @@ class AmazonSearch
     public function signString(string $string_to_sign): string
     {
         // hash and encode the query string
-        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, (string) $this->private_key, true));
+        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
         // urlencode the signed string, replace illegal char
         return str_replace("%7E", "~", rawurlencode($signature));
@@ -382,20 +383,23 @@ class AmazonSearch
     /**
      * Start XML Element.
      */
-    public function startElement($parser, $tag, $attributes): void
+    /**
+     * @param array<string, string> $attributes
+     */
+    public function startElement(XMLParser $parser, string $tag, array $attributes): void
     {
-        if ($tag == "ASIN") {
+        if ($tag === "ASIN") {
             $this->_sourceTag = $tag;
         }
 
-        if (in_array($tag, ["SmallImage", "MediumImage", "LargeImage"])) {
+        if (in_array($tag, ["SmallImage", "MediumImage", "LargeImage"], true)) {
             $this->_subTag = $tag;
         }
 
         // If it's in the tag list, don't grab our search results
         if (strlen((string) $this->_sourceTag) !== 0) {
             $this->_currentTag = $tag;
-        } elseif ($tag != "TotalPages") {
+        } elseif ($tag !== "TotalPages") {
             $this->_currentTag = '';
         } else {
             $this->_currentTag = $tag;

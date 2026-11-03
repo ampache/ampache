@@ -46,11 +46,12 @@ class OAuthRequest implements Stringable
 
     /**
      * OAuthRequest constructor.
+     * @param array<string, mixed>|null $parameters
      */
     public function __construct(
-        protected $http_method,
-        $http_url,
-        $parameters = null,
+        protected string $http_method,
+        ?string $http_url,
+        ?array $parameters = null,
     ) {
         $parameters = $parameters ?: [];
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url(
@@ -141,7 +142,7 @@ class OAuthRequest implements Stringable
         return time();
     }
 
-    public function build_signature($signature_method, $consumer, $token): string
+    public function build_signature(OAuthSignatureMethod $signature_method, OAuthConsumer $consumer, OAuthToken $token): string
     {
         return $signature_method->build_signature($this, $consumer, $token);
     }
@@ -151,7 +152,7 @@ class OAuthRequest implements Stringable
      */
     public function get_normalized_http_method(): string
     {
-        return strtoupper((string) $this->http_method);
+        return strtoupper($this->http_method);
     }
 
     /**
@@ -245,7 +246,7 @@ class OAuthRequest implements Stringable
         }
     }
 
-    public function sign_request($signature_method, $consumer, $token): void
+    public function sign_request(OAuthSignatureMethod $signature_method, OAuthConsumer $consumer, OAuthToken $token): void
     {
         $this->set_parameter("oauth_signature_method", $signature_method->get_name(), false);
         $signature = $this->build_signature($signature_method, $consumer, $token);
@@ -256,7 +257,7 @@ class OAuthRequest implements Stringable
      * builds the Authorization: header
      * @throws Exception\OAuthException
      */
-    public function to_header($realm = null): string
+    public function to_header(?string $realm = null): string
     {
         $first = true;
         if ($realm) {

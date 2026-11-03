@@ -124,7 +124,7 @@ class OAuthUtil
      * array('a' => array('b', 'c'), 'd' => 'e')
      * @return array<string, string|string[]>
      */
-    public static function parse_parameters($input = null): array
+    public static function parse_parameters(mixed $input = null): array
     {
         if (!isset($input) || !$input) {
             return [];
@@ -198,7 +198,7 @@ class OAuthUtil
     /**
      * @return array<string, string|string[]>|string|string[]
      */
-    public static function urlencode_rfc3986($input): array|string
+    public static function urlencode_rfc3986(mixed $input): array|string
     {
         if (is_array($input)) {
             return array_map(

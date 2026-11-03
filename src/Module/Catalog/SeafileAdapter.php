@@ -109,8 +109,9 @@ class SeafileAdapter
      * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
      * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
      * Returns number added, or -1 on failure
+     * @param callable(DirectoryItem): int $func
      */
-    public function for_all_files($func, string $path = '/'): int
+    public function for_all_files(callable $func, string $path = '/'): int
     {
         if ($this->client != null) {
             $directoryItems = $this->get_cached_directory($path);

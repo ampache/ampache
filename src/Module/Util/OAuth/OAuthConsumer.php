@@ -48,9 +48,9 @@ class OAuthConsumer implements Stringable
      * OAuthConsumer constructor.
      */
     public function __construct(
-        public $key,
-        public $secret,
-        public $callback_url = null,
+        public ?string $key,
+        public ?string $secret,
+        public ?string $callback_url = null,
     ) {}
 
     /**

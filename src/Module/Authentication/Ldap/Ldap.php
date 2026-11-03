@@ -183,7 +183,7 @@ class Ldap
      * Binds to the LDAP
      * @throws LdapException
      */
-    private static function _bind($link, ?string $username = null, ?string $password = null): void
+    private static function _bind(Connection $link, ?string $username = null, ?string $password = null): void
     {
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -263,7 +263,7 @@ class Ldap
      * @return array<array-key, mixed>
      * @throws LdapException
      */
-    private static function _read($link, string $base_dn, array $attrs = [], string $filter = 'objectClass=*'): array
+    private static function _read(Connection $link, string $base_dn, array $attrs = [], string $filter = 'objectClass=*'): array
     {
         $attrs_json = json_encode($attrs);
         debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
@@ -290,7 +290,7 @@ class Ldap
      * @return array<array-key, mixed>
      * @throws LdapException
      */
-    private static function _search($link, $base_dn, string $filter, bool $only_one_result = true): array
+    private static function _search(Connection $link, string $base_dn, string $filter, bool $only_one_result = true): array
     {
         debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
 
@@ -321,7 +321,7 @@ class Ldap
     /**
      * Unbinds from the LDAP
      */
-    private static function _unbind($link): void
+    private static function _unbind(Connection $link): void
     {
         ldap_unbind($link);
     }
