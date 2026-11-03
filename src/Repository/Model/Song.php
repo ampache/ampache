@@ -2346,7 +2346,7 @@ class Song extends database_object implements
             }
 
             // running total of the user stream data
-            $play_size = User::get_user_data($user_id, 'play_size', 0)['play_size'];
+            $play_size = (float) User::get_user_data($user_id, 'play_size', 0)['play_size'];
             User::set_user_data($user_id, 'play_size', ($play_size + ($this->size / 1024 / 1024)));
         }
 

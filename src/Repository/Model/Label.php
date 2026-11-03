@@ -127,6 +127,7 @@ class Label extends database_object implements
 
     /**
      * create
+     * @param array<string, mixed> $data
      */
     public static function create(array $data): ?int
     {
