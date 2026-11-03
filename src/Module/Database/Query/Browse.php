@@ -480,6 +480,7 @@ class Browse extends Query
 
     /**
      * This sets the type of object that we want to browse by
+     * @param array<int|string, mixed>|null $parameters
      */
     #[Override]
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
@@ -614,6 +615,7 @@ class Browse extends Query
      * empty one -- to render exactly those ids; an empty array means "the caller already searched and found
      * nothing", not "go look up something else instead."
      * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param bool|array<string, mixed>|string $argument
      */
     public function show_objects(?array $object_ids = null, bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {

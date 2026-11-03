@@ -621,7 +621,7 @@ class Search extends playlist_object
      * This function is used to simplify api searches and return valuable data for responses
      * @param array{
      *     sql: string,
-     *     parameters: array
+     *     parameters: array<int, mixed>
      * } $search_sql
      * @return array{
      *     results: int[],
@@ -788,8 +788,8 @@ class Search extends playlist_object
      *     name?: string,
      *     description?: string,
      *     sql?: string,
-     *     preg_match?: string|array,
-     *     preg_replace?: string|array,
+     *     preg_match?: string|array{string, string},
+     *     preg_replace?: string|array{string, string},
      * } $operator
      */
     public function filter_data(string $data, string $type, array $operator): bool|int|string|null

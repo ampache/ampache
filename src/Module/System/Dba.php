@@ -382,6 +382,7 @@ class Dba
 
     /**
      * query
+     * @param array<int|string, mixed> $params
      */
     public static function query(string $sql, array $params = [], bool $silent = false, ?Interactor $interactor = null): ?PDOStatement
     {
@@ -409,6 +410,7 @@ class Dba
 
     /**
      * read
+     * @param array<int|string, mixed> $params
      */
     public static function read(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
@@ -490,6 +492,7 @@ class Dba
 
     /**
      * write
+     * @param array<int|string, mixed> $params
      */
     public static function write(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
@@ -588,6 +591,7 @@ class Dba
 
     /**
      * _query
+     * @param array<int|string, mixed> $params
      */
     private static function _query(string $sql, array $params, bool $silent = false): ?PDOStatement
     {

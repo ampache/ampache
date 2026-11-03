@@ -361,6 +361,7 @@ class Query
      * get_total
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use that.
+     * @param array<array-key, mixed>|null $object_ids
      */
     public function get_total(?array $object_ids = null): int
     {
@@ -893,6 +894,7 @@ class Query
      * This sets the type of object that we want to browse by
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
+     * @param array<int|string, mixed>|null $parameters
      */
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
@@ -1304,7 +1306,8 @@ class Query
      * _post_process
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
-     * @return array<array{id: int}>
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
      */
     private function _post_process(array $data): array
     {
@@ -1428,6 +1431,7 @@ class Query
      *
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
+     * @param array<array-key, mixed> $data
      */
     private function _serialize(array $data): string
     {
@@ -1437,6 +1441,7 @@ class Query
     /**
      * _set_base_sql
      * This saves the base sql statement we are going to use.
+     * @param array<int|string, mixed>|null $parameters
      */
     private function _set_base_sql(?bool $force = false, ?string $custom_base = '', ?array $parameters = []): void
     {

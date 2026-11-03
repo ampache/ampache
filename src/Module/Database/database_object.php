@@ -47,6 +47,7 @@ abstract class database_object
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
+     * @param array<array-key, mixed> $data
      */
     public static function add_to_cache(string $index, int|string $object_id, array $data): bool
     {
