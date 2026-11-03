@@ -1155,7 +1155,7 @@ class Catalog_remote extends Catalog
                                 $current_song->fill_ext_info();
 
                                 $info = ($current_song->id !== 0) ? self::update_song_from_tags($data, $current_song) : [];
-                                if ($info['change']) {
+                                if ($info['change'] ?? false) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $song_id, 5);
                                     $songsadded++;
                                 }

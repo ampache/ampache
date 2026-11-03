@@ -1065,6 +1065,7 @@ abstract class Catalog extends database_object
      * get_artists
      *
      * This returns an array of artists that have songs in the catalogs parameter
+     * @param int[]|null $catalogs
      * @return Artist[]
      */
     public static function get_artists(?array $catalogs = null, int $size = 0, int $offset = 0): array
@@ -2523,6 +2524,15 @@ abstract class Catalog extends database_object
         ];
     }
 
+    /**
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
+     */
     public static function update_video_from_tags(array $results, Video $video): array
     {
         /* Setup the vars */
@@ -2680,6 +2690,13 @@ abstract class Catalog extends database_object
      * different places and passes in a full fledged song object, so it's a
      * static function.
      * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
      */
     protected static function update_song_from_tags(array $results, Song $song): array
     {
@@ -3405,7 +3422,7 @@ abstract class Catalog extends database_object
     /**
      * Migrate an object associate images to a new object
      */
-    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
+    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): void
     {
         if ($old_object_id !== $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
@@ -3457,11 +3474,7 @@ abstract class Catalog extends database_object
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
-
-            return true;
         }
-
-        return false;
     }
 
     /**
@@ -3839,6 +3852,8 @@ abstract class Catalog extends database_object
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
+     * @param int[]|null $songs
+     * @param int[]|null $videos
      */
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
