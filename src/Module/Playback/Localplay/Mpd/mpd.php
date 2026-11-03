@@ -477,7 +477,7 @@ class mpd
      * particular artist.
      * @return string[]|bool
      */
-    public function GetAlbums($artist = null): array|bool
+    public function GetAlbums(?string $artist = null): array|bool
     {
         $this->_debug('GetAlbums', 'start', 5);
 
@@ -607,7 +607,10 @@ class mpd
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
      */
-    public function PLAddBulk($trackArray): bool|string
+    /**
+     * @param array<int, string> $trackArray
+     */
+    public function PLAddBulk(array $trackArray): bool|string
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
@@ -655,7 +658,7 @@ class mpd
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
      */
-    public function PLLoad($file): bool|string
+    public function PLLoad(string $file): bool|string
     {
         $this->_debug('PLLoad', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLLOAD, $file);
@@ -670,7 +673,7 @@ class mpd
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
      */
-    public function PLMoveTrack($current_position, $new_position): bool|string
+    public function PLMoveTrack(int|string $current_position, int|string $new_position): bool|string
     {
         $this->_debug('PLMoveTrack', 'start', 5);
         if (!is_numeric($current_position)) {
@@ -716,7 +719,7 @@ class mpd
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
      */
-    public function PLSave($file): bool|string
+    public function PLSave(string $file): bool|string
     {
         $this->_debug('PLSave', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSAVE, $file, false);
@@ -979,7 +982,7 @@ class mpd
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
      */
-    public function SetRandom($value): bool|string
+    public function SetRandom(bool $value): bool|string
     {
         $this->_debug('SetRandom', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -995,7 +998,7 @@ class mpd
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
      */
-    public function SetRepeat($value): bool|string
+    public function SetRepeat(bool $value): bool|string
     {
         $this->_debug('SetRepeat', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -1212,7 +1215,7 @@ class mpd
      * Turns a response into an array
      * @return array<string, string>|bool
      */
-    private function _parseResponse($response): array|bool
+    private function _parseResponse(bool|string $response): array|bool
     {
         if (!$response) {
             return false;

@@ -67,7 +67,7 @@ class LocalPlay
     /**
      * add
      */
-    public function add($object): bool
+    public function add(mixed $object): bool
     {
         debug_event(self::class, 'Deprecated add method called: ' . json_encode($object), 5);
 
