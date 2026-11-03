@@ -229,6 +229,7 @@ class mpd
     public const string TABLE_ARTIST = 'artist';
 
     // Table holding version compatibility information
+    /** @var array<string, array{min: string|false, max: string|false}> */
     private static array $_COMPATIBILITY_TABLE = [
         self::COMMAND_CONSUME => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_IDLE => ['min' => '0.14.0', 'max' => false],
@@ -242,6 +243,7 @@ class mpd
         self::COMMAND_STICKER => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
     ];
+
     public bool $connected = false;
     public bool $debugging = false;
     public string $err_str = '';
@@ -759,6 +761,7 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
+     * @param array<string|int, scalar>|string|null $arguments
      */
     public function QueueCommand(string $command, array|string|null $arguments = null): bool
     {

@@ -42,6 +42,7 @@ class JsonHandler extends Handler
 
     /**
      * Defines the differences between beets and ampache fields
+     * @var array<string, array{string, string}>
      */
     #[Override]
     protected array $fieldMapping = [
@@ -80,6 +81,7 @@ class JsonHandler extends Handler
     /**
      * Create the Url to access the file
      * Have to do some magic with the file ending so ampache can detect the type
+     * @param array<string, mixed> $song
      */
     public function createFileUrl(array $song): string
     {

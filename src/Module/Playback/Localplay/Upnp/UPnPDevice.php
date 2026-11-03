@@ -66,7 +66,7 @@ class UPnPDevice
      * Sending HTTP-Request and returns parsed response
      *
      * @param string $method Method name
-     * @param array $arguments Key-Value array
+     * @param array<string, scalar> $arguments Key-Value array
      */
     public function sendRequestToDevice(string $method, array $arguments, string $type = 'RenderingControl'): string
     {

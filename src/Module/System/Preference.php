@@ -1703,6 +1703,7 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
+     * @param array<int, scalar>|int|float|string|bool|null $value
      */
     public static function update(
         int|string $preference,

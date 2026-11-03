@@ -88,6 +88,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
     /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
+     * @param array<string, mixed> $current
      * @throws Exception
      */
     public function generate_config(array $current): string

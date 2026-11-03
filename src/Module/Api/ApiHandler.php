@@ -771,6 +771,7 @@ final class ApiHandler implements ApiHandlerInterface
      * Run the default API handler with exception handling
      *
      * @param 3|4|5|6|8 $api_version resolved and validated against Api::API_VERSIONS by the caller
+     * @param array<string, mixed> $input
      */
     private function _executeHandler(
         Gatekeeper $gatekeeper,

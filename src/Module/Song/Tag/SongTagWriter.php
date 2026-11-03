@@ -716,6 +716,9 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         return $meta;
     }
 
+    /**
+     * @param array<int, array{description: mixed}> $ndata
+     */
     private function search_txxx(int|string $description, array $ndata): ?int
     {
         $cnt = count($ndata);

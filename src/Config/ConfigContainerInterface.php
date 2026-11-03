@@ -130,6 +130,7 @@ interface ConfigContainerInterface
 
     /**
      * Replaces the internal config container
+     * @param array<string, mixed> $configuration
      */
     public function updateConfig(array $configuration): ConfigContainerInterface;
 }

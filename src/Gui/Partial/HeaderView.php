@@ -157,7 +157,7 @@ final class HeaderView extends AbstractView
     public function getLogoUrl(): string
     {
         return ($this->currentUser instanceof User && $this->currentUser->getId() > 0 && $this->hasCustomLogo())
-            ? $this->currentUser->get_avatar()['url_medium'] ?? Ui::get_logo_url()
+            ? $this->currentUser->get_avatar()['url_medium']
             : Ui::get_logo_url();
     }
 

@@ -236,7 +236,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param array|array<int, array{raw: string, mime: string, title: string}> $data
+     * @param array<int, array{raw: string, mime: string, title: string}> $data
      * @return array<int, array{raw: string, mime: string, title: string}>
      */
     private function gatherMediaTags(Song|Video $media, array $data): array
@@ -313,6 +313,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Calculate the priority for the given art type.
+     * @param string[] $priorities
      */
     private function getArtTypePriority(string $type, array $priorities): int
     {

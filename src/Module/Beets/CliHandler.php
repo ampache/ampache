@@ -53,6 +53,7 @@ class CliHandler extends Handler
 
     /**
      * Defines the differences between beets and ampache fields
+     * @var array<string, array{string, string}>
      */
     #[Override]
     protected array $fieldMapping = [
@@ -65,6 +66,7 @@ class CliHandler extends Handler
 
     /**
      * All stored beets fields
+     * @var string[]
      */
     protected array $fields = [];
 

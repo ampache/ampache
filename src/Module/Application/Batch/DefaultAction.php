@@ -245,7 +245,15 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        if (!User::stream_control($media_ids, $batchUser)) {
+        // $media_ids also carries bare song ids (see getMediaFiles() below), which stream_control() cannot read directly
+        $streamControlMediaIds = array_map(
+            static fn(int|array $media): array => is_array($media)
+                ? ['object_type' => $media['object_type'], 'object_id' => $media['object_id']]
+                : ['object_type' => LibraryItemEnum::SONG, 'object_id' => $media],
+            $media_ids
+        );
+
+        if (!User::stream_control($streamControlMediaIds, $batchUser)) {
             $this->logger->notice(
                 'Access denied: Stream control failed for user ' . $batchUser?->username,
                 [LegacyLogger::CONTEXT_TYPE => self::class]

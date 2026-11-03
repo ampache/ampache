@@ -170,7 +170,9 @@ class Ldap
     /**
      * array_filter_key
      *
+     * @param array<array-key, mixed> $array
      * @param callable-string $callback
+     * @return array<array-key, mixed>
      */
     private static function _array_filter_key(array $array, string $callback): array
     {
@@ -200,6 +202,8 @@ class Ldap
      *
      * This function is here to return a real array {number} => {field} => {value array}
      * instead of the custom LDAP search results provided by the ldap_* library.
+     * @param array<array-key, mixed> $searchresult
+     * @return array<array-key, mixed>
      */
     private static function _clean_search_results(array $searchresult): array
     {
@@ -255,6 +259,7 @@ class Ldap
 
     /**
      * Read attributes for a DN from the LDAP
+     * @param string[] $attrs
      * @return array<array-key, mixed>
      * @throws LdapException
      */

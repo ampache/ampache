@@ -83,6 +83,9 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return $catalogs;
     }
 
+    /**
+     * @param array<array-key, mixed> $catalogIds
+     */
     abstract protected function handle(
         ServerRequestInterface $request,
         array $catalogIds,
