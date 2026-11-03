@@ -180,6 +180,7 @@ class AmazonSearch
      * getProxyConfig
      * Build the proxy options array.
      * Returning the array of proxy config options.
+     * @return array{proxy?: list<string>}
      */
     public function getProxyConfig(): array
     {

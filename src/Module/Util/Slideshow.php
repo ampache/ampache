@@ -32,6 +32,7 @@ use Ampache\Plugin\Ampacheflickr;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use SimpleXMLElement;
 
 final readonly class Slideshow implements SlideshowInterface
 {
@@ -40,6 +41,9 @@ final readonly class Slideshow implements SlideshowInterface
         private PluginRetrieverInterface $pluginRetriever,
     ) {}
 
+    /**
+     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     */
     public function getCurrentSlideshow(User $user): array
     {
         $songs  = Stats::get_recently_played($user->getId(), 'stream', 'song');
@@ -52,6 +56,9 @@ final readonly class Slideshow implements SlideshowInterface
         return $images;
     }
 
+    /**
+     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     */
     private function getImages(Song $song, User $user): array
     {
         $images = [];
