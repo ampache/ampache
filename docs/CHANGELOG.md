@@ -30,11 +30,16 @@
 ### Changed (8.4.0)
 
 * Updated Composer and NPM dependencies
+* Deleting an `album_disk` row now removes just that disk; the album itself goes once its last disk is gone
 * Catalog
   * Add, Clean and Verify maintain `catalog_map` and album/artist counts per row, instead of a full resync after every scan
   * Garbage Collection now performs the full `catalog_map` resync; routine scans no longer repair catalog-wide drift
 * Theme
   * `theme.cfg.php` gained an optional `color_bases` key; a color with none is treated as dark, same as before
+
+### Removed (8.4.0)
+
+* Removed the `Amazon` art search plugin; Amazon shut down the API it used years ago
 
 ### Fixed (8.4.0)
 
