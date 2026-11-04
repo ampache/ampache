@@ -1066,7 +1066,7 @@ class Ui implements UiInterface
             // return_referer() already went through scrub_in(), so its & is html-escaped; decode before use or e() escapes it twice.
             $referer = htmlspecialchars_decode(return_referer(), ENT_NOQUOTES);
             // explicit '' survives the client-structure build unchanged, unlike $webPath; the referer already has its own "admin/" prefix when needed.
-            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath() : $webPath;
+            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath('/client') : $webPath;
             $cancelUrl   = sprintf('%s/%s', $refererBase, $referer);
         }
 
