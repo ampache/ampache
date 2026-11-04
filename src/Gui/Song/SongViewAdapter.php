@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
-use Ampache\Repository\Model\License;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Partial\HeaderChip;
@@ -47,6 +46,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Waveform;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;

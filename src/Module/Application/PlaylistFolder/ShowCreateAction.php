@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PlaylistFolder;
 
-use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Form\PlaylistFolderFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,6 +36,7 @@ use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

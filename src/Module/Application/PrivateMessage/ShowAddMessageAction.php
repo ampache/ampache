@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
-use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\AddPrivateMessageFormView;
@@ -37,6 +36,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

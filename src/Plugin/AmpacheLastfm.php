@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
-use SimpleXMLElement;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
@@ -34,6 +33,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
+use SimpleXMLElement;
 
 class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {

@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label;
 
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Label;
 use DateTime;
 
 final readonly class LabelListUpdater implements LabelListUpdaterInterface

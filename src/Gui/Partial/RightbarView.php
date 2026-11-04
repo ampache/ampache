@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
-use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Playback\LocalplayControlView;
 use Ampache\Gui\View\AbstractView;
@@ -34,6 +33,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ZipHandlerInterface;

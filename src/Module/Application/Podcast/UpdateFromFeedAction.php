@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
-use Ampache\Repository\Model\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\Podcast\PodcastUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

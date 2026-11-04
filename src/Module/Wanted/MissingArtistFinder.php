@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
-use MusicBrainz\Filters\FilterInterface;
 use MusicBrainz\Exception;
+use MusicBrainz\Filters\FilterInterface;
 use MusicBrainz\MusicBrainz;
 
 final readonly class MissingArtistFinder implements MissingArtistFinderInterface

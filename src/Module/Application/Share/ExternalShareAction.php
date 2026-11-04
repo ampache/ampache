@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,6 +40,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Plugin\PluginExternalShareInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

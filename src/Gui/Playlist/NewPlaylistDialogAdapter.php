@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
-use Ampache\Repository\Model\User;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -36,6 +35,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Override;
 
 final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylistDialogAdapterInterface
