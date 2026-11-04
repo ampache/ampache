@@ -28,7 +28,7 @@ namespace Ampache\Gui\AlbumDisk;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Application\Album\DeleteAction;
+use Ampache\Module\Application\Album\DeleteDiskAction;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -77,7 +77,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function canBeDeleted(): bool
     {
-        return Catalog::can_remove($this->modelFactory->createAlbum($this->albumDisk->getAlbumId()));
+        return Catalog::can_remove($this->albumDisk);
     }
 
     public function canPostShout(): bool
@@ -215,10 +215,10 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/albums.php?action=%s&album_id=%d',
+            '%s/albums.php?action=%s&album_disk=%d',
             $this->configContainer->getWebPath('/client'),
-            DeleteAction::REQUEST_KEY,
-            $this->albumDisk->getAlbumId()
+            DeleteDiskAction::REQUEST_KEY,
+            $this->albumDisk->getId()
         );
     }
 

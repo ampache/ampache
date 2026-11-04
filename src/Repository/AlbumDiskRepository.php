@@ -74,6 +74,15 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
     }
 
     /**
+     * Removes the disk's own row and catalog mapping
+     */
+    public function delete(AlbumDisk $albumDisk): void
+    {
+        $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?', [$albumDisk->getId()]);
+        $this->catalogMapRepository->deleteForObject('album_disk', $albumDisk->getId());
+    }
+
+    /**
      * Loads a single album-disk, or null when the id matches nothing
      *
      * A disk whose parent album is missing also reports as new, so it is filtered out here too.

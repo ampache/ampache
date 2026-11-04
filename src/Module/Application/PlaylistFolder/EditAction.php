@@ -115,7 +115,7 @@ final readonly class EditAction implements ApplicationActionInterface
 
         $this->ui->showConfirmation(
             T_('Folder updated'),
-            $name,
+            scrub_out($name),
             sprintf(
                 '%s/browse.php?action=playlist_folder%s',
                 $this->configContainer->getWebPath('/client'),

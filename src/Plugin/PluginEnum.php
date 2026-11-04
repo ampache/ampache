@@ -33,7 +33,6 @@ use ReflectionClass;
 final class PluginEnum
 {
     public const array LIST = [
-        'amazon' => AmpacheAmazon::class,
         'audiomuse' => AmpacheAudioMuse::class,
         'bitly' => AmpacheBitly::class,
         'bluesky' => AmpacheBluesky::class,
