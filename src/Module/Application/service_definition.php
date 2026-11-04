@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
-use Ampache\Module\Application\Album\DeleteDiskAction;
-use Ampache\Module\Application\Album\ConfirmDeleteDiskAction;
 use Ampache\Module\Application\Admin\Access\AddHostAction;
 use Ampache\Module\Application\Admin\Access\DeleteRecordAction;
 use Ampache\Module\Application\Admin\Access\ShowAddAction;
@@ -110,6 +108,8 @@ use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
 use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
 use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
+use Ampache\Module\Application\Album\ConfirmDeleteDiskAction;
+use Ampache\Module\Application\Album\DeleteDiskAction;
 use Ampache\Module\Application\Album\ShowAction;
 use Ampache\Module\Application\Album\ShowMissingAction;
 use Ampache\Module\Application\Album\UpdateFromTagsAction;

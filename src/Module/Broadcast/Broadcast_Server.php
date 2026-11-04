@@ -88,14 +88,6 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     * Ratchet assigns resourceId to each connection at runtime, so it is not declared on ConnectionInterface.
-     */
-    private function getResourceId(ConnectionInterface $conn): ?int
-    {
-        return property_exists($conn, 'resourceId') ? (int) $conn->{'resourceId'} : null;
-    }
-
-    /**
      *
      */
     public function onClose(ConnectionInterface $conn): void
@@ -456,6 +448,14 @@ class Broadcast_Server implements MessageComponentInterface
         $id = $this->getResourceId($conn);
 
         return $id !== null ? ($this->broadcasters[$id] ?? null) : null;
+    }
+
+    /**
+     * Ratchet assigns resourceId to each connection at runtime, so it is not declared on ConnectionInterface.
+     */
+    private function getResourceId(ConnectionInterface $conn): ?int
+    {
+        return property_exists($conn, 'resourceId') ? (int) $conn->{'resourceId'} : null;
     }
 
     private function getSid(ConnectionInterface $conn): string
