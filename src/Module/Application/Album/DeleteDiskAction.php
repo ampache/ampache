@@ -69,7 +69,7 @@ final readonly class DeleteDiskAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            $webPath = $this->configContainer->getWebPath();
+            $webPath = $this->configContainer->getWebPath('/client');
 
             $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),

@@ -77,7 +77,7 @@ final readonly class ConfirmDeleteDiskAction implements ApplicationActionInterfa
 
         // the album and its artist have to be read while the disk row is still there; deleting the
         // last disk takes the album with it, so the page to land on afterwards has to be chosen now
-        $webPath      = $this->configContainer->getWebPath();
+        $webPath      = $this->configContainer->getWebPath('/client');
         $album        = $this->modelFactory->createAlbum($albumDisk->getAlbumId());
         $albumPageUrl = sprintf('%s/albums.php?action=show&album=%d', $webPath, $album->getId());
         $artistUrl    = ($album->album_artist !== null && $album->album_artist > 0)
