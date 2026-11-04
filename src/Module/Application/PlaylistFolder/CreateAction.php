@@ -97,7 +97,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('Folder created'),
-                $name,
+                scrub_out($name),
                 sprintf(
                     '%s/browse.php?action=playlist_folder%s',
                     $this->configContainer->getWebPath(),
