@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Application;
-use Ampache\Repository\Model\User;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Override;
 

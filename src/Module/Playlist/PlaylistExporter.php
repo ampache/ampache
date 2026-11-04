@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist;
 
-use Ampache\Module\Playback\Stream_Url;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Shout;
 
-use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Shout\AddShoutView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,6 +36,7 @@ use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;

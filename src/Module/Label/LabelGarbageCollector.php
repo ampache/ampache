@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label;
 
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Label;
 
 /**
  * Clears out placeholder labels that earlier scans imported from tags

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Repository\Model\Wanted;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Art\Art;
@@ -36,6 +35,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
