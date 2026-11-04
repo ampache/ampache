@@ -88,6 +88,7 @@
 * A playlist built from a stream-of-streams split on raw bytes instead of unicode lines, corrupting multibyte URLs
 * The web player's lyrics and action buttons didn't return after a long pause and resume
 * Global rating overlapped and misaligned with the star rating on several rows; it now renders as its own element
+* `AmpacheSessionHandler` now implements `validateId()`/`create_sid()`, avoiding a PHP 8.6 deprecation warning
 
 ## Ampache 8.3.0
 

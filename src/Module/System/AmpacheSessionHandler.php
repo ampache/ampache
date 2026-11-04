@@ -13,6 +13,13 @@ class AmpacheSessionHandler implements SessionHandlerInterface
         return true;
     }
 
+    public function create_sid(): string
+    {
+        $id = session_create_id();
+
+        return ($id === false) ? bin2hex(random_bytes(16)) : $id;
+    }
+
     public function destroy(string $id): bool
     {
         return Session::destroy($id);
@@ -33,6 +40,11 @@ class AmpacheSessionHandler implements SessionHandlerInterface
     public function read(string $id): string
     {
         return Session::read($id);
+    }
+
+    public function validateId(string $id): bool
+    {
+        return Session::read($id) !== '';
     }
 
     public function write(string $id, string $data): bool
