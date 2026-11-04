@@ -68,7 +68,12 @@ interface in `src/Plugin`; implement it so the call sites can type check the plu
 | `save_rating(Rating $rating, int $new_rating): void` | none |
 | `set_flag(Song $song, bool $flagged): void` | `PluginSaveMediaplayInterface` |
 | `shortener(string $url): ?string` | `PluginShortenerInterface` |
-| `stream_control(array $media_ids): bool` | `PluginStreamControlInterface` |
+| `stream_control(array $media_ids, ?string $ip = null, bool $isGuest = false): bool` | `PluginStreamControlInterface` |
+
+`PluginStreamControlInterface` also requires `tracksIp(): bool`, answering whether the plugin's current
+configuration would ever read the per-IP guest activity history; `User::stream_control()` skips writing to
+it when every loaded stream control plugin says no, so leaving an `_ip_max` preference at its unlimited
+default costs nothing.
 
 ## Song preview providers
 
