@@ -697,7 +697,7 @@ class Catalog_remote extends Catalog
      */
     private function _connect(): void
     {
-        if ($this->remote_handle
+        if ($this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() === 'CONNECTED'
         ) {
             return;
@@ -751,7 +751,7 @@ class Catalog_remote extends Catalog
         }
 
         if (
-            $this->remote_handle
+            $this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() !== 'CONNECTED'
         ) {
             debug_event('remote.catalog', 'API client failed to connect', 1);
@@ -1155,7 +1155,7 @@ class Catalog_remote extends Catalog
                                 $current_song->fill_ext_info();
 
                                 $info = ($current_song->id !== 0) ? self::update_song_from_tags($data, $current_song) : [];
-                                if ($info['change']) {
+                                if ($info['change'] ?? false) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $song_id, 5);
                                     $songsadded++;
                                 }

@@ -34,7 +34,10 @@ abstract class Handler
 {
     // Seperator between command and arguments
     protected string $commandSeperator;
+
+    /** @var array<string, array{string, string}> */
     protected array $fieldMapping = [];
+
     private Catalog $handler;
     private string $handlerCommand;
 
@@ -71,6 +74,7 @@ abstract class Handler
 
     /**
      * Call function from the dispatcher e.g. to store the new song
+     * @param array<string, mixed> $data
      */
     protected function dispatch(array $data): void
     {
@@ -81,6 +85,8 @@ abstract class Handler
 
     /**
      * Resolves the differences between Beets and Ampache properties
+     * @param array<string, mixed> $song
+     * @return array<string, mixed>
      */
     protected function mapFields(array $song): array
     {

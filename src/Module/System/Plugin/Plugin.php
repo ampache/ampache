@@ -102,7 +102,7 @@ class Plugin
         foreach (array_keys(PluginEnum::LIST) as $name) {
             if ($type !== '') {
                 $plugin = new Plugin($name);
-                if ($plugin->_plugin === null) {
+                if (!$plugin->_plugin instanceof AmpachePlugin) {
                     continue;
                 }
 
@@ -149,7 +149,7 @@ class Plugin
     {
         foreach (array_keys(PluginEnum::LIST) as $name) {
             $plugin = new Plugin($name);
-            if ($plugin->_plugin !== null) {
+            if ($plugin->_plugin instanceof AmpachePlugin) {
                 $installed_version = self::get_plugin_version($plugin->_plugin->name);
                 // if any plugin needs an update then you need to update
                 if (
@@ -297,7 +297,7 @@ class Plugin
      */
     public function load(User $user): bool
     {
-        if ($this->_plugin === null) {
+        if (!$this->_plugin instanceof AmpachePlugin) {
             return false;
         }
 
@@ -312,7 +312,7 @@ class Plugin
      */
     public function remove_plugin_version(): void
     {
-        if ($this->_plugin === null) {
+        if (!$this->_plugin instanceof AmpachePlugin) {
             return;
         }
 
@@ -326,7 +326,7 @@ class Plugin
      */
     public function set_plugin_version(string $version): void
     {
-        if ($this->_plugin === null) {
+        if (!$this->_plugin instanceof AmpachePlugin) {
             return;
         }
 

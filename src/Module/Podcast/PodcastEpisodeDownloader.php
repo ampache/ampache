@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Podcast;
 
+use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Podcast\Exception\PodcastFolderException;
 use Ampache\Module\System\Core;
@@ -97,7 +98,7 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         if ($destinationFilePath === '') {
             // new file (pending)
             $podcast = $this->podcastRepository->findById($episode->getPodcastId());
-            if ($podcast === null) {
+            if (!$podcast instanceof Podcast) {
                 return;
             }
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
+use Ampache\Repository\Model\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -90,7 +91,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
         $share = $this->shareRepository->findById($share_id);
 
-        if ($share === null) {
+        if (!$share instanceof Share) {
             throw new AccessDeniedException();
         }
 

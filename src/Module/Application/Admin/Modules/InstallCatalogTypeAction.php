@@ -63,7 +63,7 @@ final readonly class InstallCatalogTypeAction implements ApplicationActionInterf
 
         $type    = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             AmpError::add('general', T_('Failed to enable the Catalog module'));
             echo AmpError::display('general');
 

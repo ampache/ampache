@@ -249,7 +249,7 @@ class Daap_Api
         return false;
     }
 
-    public static function createError($code): bool
+    public static function createError(int $code): bool
     {
         $error = "";
         switch ($code) {
@@ -693,7 +693,7 @@ class Daap_Api
         return true;
     }
 
-    private static function _get_type_id($type): int
+    private static function _get_type_id(string $type): int
     {
         switch ($type) {
             case 'byte':
@@ -736,7 +736,7 @@ class Daap_Api
         header("Expires: -1");
     }
 
-    private static function _tlv($tag, $value): string
+    private static function _tlv(string $tag, mixed $value): string
     {
         if (array_key_exists($tag, self::$tags)) {
             $code = self::$tags[$tag]['code'];
@@ -769,27 +769,27 @@ class Daap_Api
         return '';
     }
 
-    private static function _tlv_byte($tag, $value): string
+    private static function _tlv_byte(string $tag, int $value): string
     {
         return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
 
-    private static function _tlv_date($tag, $value): string
+    private static function _tlv_date(string $tag, int $value): string
     {
         return self::_tlv_int($tag, $value);
     }
 
-    private static function _tlv_int($tag, $value): string
+    private static function _tlv_int(string $tag, int $value): string
     {
         return $tag . "\x00\x00\x00\x04" . pack("N", $value);
     }
 
-    private static function _tlv_list($tag, $value): string
+    private static function _tlv_list(string $tag, mixed $value): string
     {
         return self::_tlv_string($tag, $value);
     }
 
-    private static function _tlv_long($tag, $value): string
+    private static function _tlv_long(string $tag, int $value): string
     {
         // Really?! PHP...
         // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
@@ -801,12 +801,16 @@ class Daap_Api
         return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
     }
 
-    private static function _tlv_short($tag, $value): string
+    private static function _tlv_short(string $tag, int $value): string
     {
         return $tag . "\x00\x00\x00\x02" . pack("n", $value);
     }
 
-    private static function _tlv_songs($songs, $meta): string
+    /**
+     * @param array<int, Song> $songs
+     * @param array<int, string> $meta
+     */
+    private static function _tlv_songs(array $songs, array $meta): string
     {
         if (array_search('all', $meta) > -1) {
             $meta = self::$metas;
@@ -885,12 +889,12 @@ class Daap_Api
         return $tlv_out;
     }
 
-    private static function _tlv_string($tag, $value): string
+    private static function _tlv_string(string $tag, mixed $value): string
     {
         return $tag . pack("N", strlen((string) $value)) . $value;
     }
 
-    private static function _tlv_version($tag, $value): string
+    private static function _tlv_version(string $tag, string $value): string
     {
         $values = explode('.', $value);
         if (count($values) == 4) {

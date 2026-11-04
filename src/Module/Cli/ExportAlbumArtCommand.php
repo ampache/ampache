@@ -75,7 +75,7 @@ final class ExportAlbumArtCommand extends Command
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
 

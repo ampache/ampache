@@ -1795,6 +1795,8 @@ class OpenSubsonic_Xml_Data
             case LibraryItemEnum::PODCAST_EPISODE:
                 $this->_addPodcastEpisode($xml, new Podcast_Episode($child['object_id']), 'child');
                 break;
+            default:
+                break;
         }
     }
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Repository\Model\User;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -51,7 +52,7 @@ final readonly class AdminAction implements ApplicationActionInterface
 
         $tab  = (string) ($request->getQueryParams()['tab'] ?? '');
         $user = $gatekeeper->getUser();
-        if ($user !== null) {
+        if ($user instanceof User) {
             $this->ui->showHeader();
             echo $this->preferencesViewFactory->create(
                 $gatekeeper,

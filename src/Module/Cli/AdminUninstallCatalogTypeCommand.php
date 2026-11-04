@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Override;
@@ -44,7 +45,7 @@ final class AdminUninstallCatalogTypeCommand extends Command
     public function execute(
         string $type,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

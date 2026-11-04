@@ -41,6 +41,7 @@ interface UiInterface
 
     /**
      * Show the requested template file
+     * @param array<string, mixed> $context
      */
     public function show(string $template, array $context = []): void;
 

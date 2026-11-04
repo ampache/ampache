@@ -67,7 +67,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
     ): int {
         $toUserId = 0;
 
-        if ($recipient !== null) {
+        if ($recipient instanceof User) {
             $toUserId = $recipient->getId();
         }
 

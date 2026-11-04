@@ -229,6 +229,7 @@ class mpd
     public const string TABLE_ARTIST = 'artist';
 
     // Table holding version compatibility information
+    /** @var array<string, array{min: string|false, max: string|false}> */
     private static array $_COMPATIBILITY_TABLE = [
         self::COMMAND_CONSUME => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_IDLE => ['min' => '0.14.0', 'max' => false],
@@ -242,6 +243,7 @@ class mpd
         self::COMMAND_STICKER => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
     ];
+
     public bool $connected = false;
     public bool $debugging = false;
     public string $err_str = '';
@@ -253,16 +255,23 @@ class mpd
     public string $mpd_version = "(unknown)";
 
     // MPD Status variables
-    public $playlist;
-    public $stats;
-    public $status;
-    private $_command_queue; // The list of commands for bulk command sending
+    /** @var array<int, array<string, string>> */
+    public array $playlist = [];
 
-    /** @property callable|null $_debug_callback */
-    private $_debug_callback; // Optional callback to be run on debug
+    /** @var array<string, string> */
+    public array $stats = [];
 
+    /** @var array<string, string> */
+    public array $status = [];
+
+    /** @var string|null The list of commands for bulk command sending */
+    private $_command_queue;
+
+    /** @var callable|null Optional callback to be run on debug */
+    private $_debug_callback;
+
+    /** @var resource|closed-resource|false|null */
     private $_mpd_sock;
-    private $current_track_id;
 
     /**
      * TCP/Connection variables
@@ -342,7 +351,7 @@ class mpd
             return false;
         }
 
-        $value    = $this->status['volume'] + $value;
+        $value    = (float) $this->status['volume'] + $value;
         $response = $this->SetVolume($value);
 
         $this->_debug('AdjustVolume', 'return ' . $response, 5);
@@ -475,7 +484,7 @@ class mpd
      * particular artist.
      * @return string[]|bool
      */
-    public function GetAlbums($artist = null): array|bool
+    public function GetAlbums(?string $artist = null): array|bool
     {
         $this->_debug('GetAlbums', 'start', 5);
 
@@ -605,7 +614,10 @@ class mpd
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
      */
-    public function PLAddBulk($trackArray): bool|string
+    /**
+     * @param array<int, string> $trackArray
+     */
+    public function PLAddBulk(array $trackArray): bool|string
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
@@ -653,7 +665,7 @@ class mpd
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
      */
-    public function PLLoad($file): bool|string
+    public function PLLoad(string $file): bool|string
     {
         $this->_debug('PLLoad', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLLOAD, $file);
@@ -668,7 +680,7 @@ class mpd
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
      */
-    public function PLMoveTrack($current_position, $new_position): bool|string
+    public function PLMoveTrack(int|string $current_position, int|string $new_position): bool|string
     {
         $this->_debug('PLMoveTrack', 'start', 5);
         if (!is_numeric($current_position)) {
@@ -714,7 +726,7 @@ class mpd
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
      */
-    public function PLSave($file): bool|string
+    public function PLSave(string $file): bool|string
     {
         $this->_debug('PLSave', 'start', 5);
         $response = $this->SendCommand(self::COMMAND_PLSAVE, $file, false);
@@ -759,6 +771,7 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
+     * @param array<string|int, scalar>|string|null $arguments
      */
     public function QueueCommand(string $command, array|string|null $arguments = null): bool
     {
@@ -808,12 +821,12 @@ class mpd
         $stats  = $this->_parseResponse($stats);
         $status = $this->_parseResponse($status);
 
-        $this->stats  = $stats;
+        $this->stats  = $stats ?: [];
         $this->status = $status ?: [];
 
         // Get the Playlist
         $playlist       = $this->SendCommand(self::COMMAND_PLINFO, null, false);
-        $this->playlist = $this->_parseFileListResponse($playlist);
+        $this->playlist = $this->_parseFileListResponse($playlist) ?: [];
 
         return true;
     }
@@ -870,7 +883,7 @@ class mpd
         }
 
         if ($track === -1) {
-            $track = $this->current_track_id;
+            $track = (int) ($this->status['song'] ?? 0);
         }
 
         $this->SendCommand(self::COMMAND_SEEK, [$track, $pos]);
@@ -976,7 +989,7 @@ class mpd
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
      */
-    public function SetRandom($value): bool|string
+    public function SetRandom(bool $value): bool|string
     {
         $this->_debug('SetRandom', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -992,7 +1005,7 @@ class mpd
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
      */
-    public function SetRepeat($value): bool|string
+    public function SetRepeat(bool $value): bool|string
     {
         $this->_debug('SetRepeat', 'start', 5);
         $value    = ($value) ? 1 : 0;
@@ -1034,7 +1047,7 @@ class mpd
             }
 
             $command = self::COMMAND_VOLUME;
-            $value -= $this->status['volume'];
+            $value -= (float) $this->status['volume'];
         }
 
         $response = $this->SendCommand($command, $value);
@@ -1180,9 +1193,9 @@ class mpd
      * _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     * @return array<int, array<string, string>>|bool
+     * @return array<int, array<string, string>>|false
      */
-    private function _parseFileListResponse(bool|string $response): array|bool
+    private function _parseFileListResponse(bool|string $response): array|false
     {
         if (is_bool($response)) {
             return false;
@@ -1207,9 +1220,9 @@ class mpd
     /**
      * _parseResponse
      * Turns a response into an array
-     * @return array<string, string>|bool
+     * @return array<string, string>|false
      */
-    private function _parseResponse($response): array|bool
+    private function _parseResponse(bool|string $response): array|false
     {
         if (!$response) {
             return false;

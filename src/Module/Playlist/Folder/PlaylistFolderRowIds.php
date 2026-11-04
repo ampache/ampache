@@ -50,7 +50,7 @@ final readonly class PlaylistFolderRowIds implements PlaylistFolderRowIdsInterfa
     {
         $entries = [];
 
-        if ($folder === null) {
+        if (!$folder instanceof PlaylistFolder) {
             // A folder the viewer has hidden -- their own or one shared with them -- is split into its own
             // list rather than shown here; see `getHiddenRowIds()`
             $hiddenIds = $this->hiddenFolderIds($user);

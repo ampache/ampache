@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Cache\ObjectCacheInterface;
@@ -59,7 +60,7 @@ final class CronProcessCommand extends Command
 
     public function execute(): void
     {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

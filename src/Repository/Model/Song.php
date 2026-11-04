@@ -2262,6 +2262,12 @@ class Song extends database_object implements
 
     /**
      * Run custom play action.
+     * @return array{}|array{
+     *     process: resource|false,
+     *     handle: resource,
+     *     stderr: resource|null,
+     *     format: string
+     * }
      */
     public function run_custom_play_action(int $action_index, string $codec = ''): array
     {
@@ -2346,7 +2352,7 @@ class Song extends database_object implements
             }
 
             // running total of the user stream data
-            $play_size = User::get_user_data($user_id, 'play_size', 0)['play_size'];
+            $play_size = (float) User::get_user_data($user_id, 'play_size', 0)['play_size'];
             User::set_user_data($user_id, 'play_size', ($play_size + ($this->size / 1024 / 1024)));
         }
 

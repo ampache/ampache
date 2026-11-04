@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\library_item;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -64,7 +66,7 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || !$this->requestParser->verifyForm('add_shout')
-            || $user === null
+            || !$user instanceof User
         ) {
             throw new AccessDeniedException();
         }
@@ -80,7 +82,7 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         $songOffset = (int) ($body['data'] ?? 0);
 
         $libitem = $this->shoutObjectLoader->loadByObjectType($objectType, $objectId);
-        if ($libitem === null) {
+        if (!$libitem instanceof library_item) {
             throw new ObjectNotFoundException($objectId);
         }
 

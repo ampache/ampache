@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist;
 
+use Ampache\Module\Playback\Stream_Url;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
@@ -157,7 +158,7 @@ final readonly class PlaylistExporter implements PlaylistExporterInterface
                 : $dirname;
             foreach ($medias as $media) {
                 $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
-                if ($url !== null) {
+                if ($url instanceof Stream_Url) {
                     $playlist->urls[] = $url;
                 }
             }

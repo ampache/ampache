@@ -68,7 +68,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         $changed = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 $interactor->error(
                     sprintf(T_('Catalog `%s` not found'), $catname),
                     true

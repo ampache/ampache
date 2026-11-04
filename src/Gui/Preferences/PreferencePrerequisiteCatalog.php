@@ -280,19 +280,24 @@ final class PreferencePrerequisiteCatalog
     {
         $rules = [];
         foreach (['hits', 'time', 'bandwidth'] as $kind) {
-            // AmpacheStreamHits.php returns before the window is read when the maximum is negative
+            // AmpacheStreamHits.php returns before the window is read when both limits are negative
             $rules[] = new PreferencePrerequisite(
                 'stream_control_' . $kind . '_days',
-                [['stream_control_' . $kind . '_max', PreferencePrerequisite::IS_EMPTY]],
-                T_('The matching limit is unlimited, so this window is never used.')
+                [
+                    ['stream_control_' . $kind . '_max', PreferencePrerequisite::IS_EMPTY],
+                    ['stream_control_' . $kind . '_ip_max', PreferencePrerequisite::IS_EMPTY],
+                ],
+                T_('Every matching limit is unlimited, so this window is never used.')
             );
 
             // the three plugins return true, allowing the stream, when graphs are off
-            $rules[] = new PreferencePrerequisite(
-                'stream_control_' . $kind . '_max',
-                [['config:statistical_graphs', PreferencePrerequisite::IS_OFF]],
-                T_('Stream limits need statistical graphs, which are off in the server configuration file. Nothing is enforced.')
-            );
+            foreach (['max', 'ip_max'] as $field) {
+                $rules[] = new PreferencePrerequisite(
+                    'stream_control_' . $kind . '_' . $field,
+                    [['config:statistical_graphs', PreferencePrerequisite::IS_OFF]],
+                    T_('Stream limits need statistical graphs, which are off in the server configuration file. Nothing is enforced.')
+                );
+            }
         }
 
         return $rules;

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use SimpleXMLElement;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
@@ -90,7 +91,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
-        if ($session_key === null) {
+        if (!$session_key instanceof SimpleXMLElement) {
             debug_event('lastfm.plugin', 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;

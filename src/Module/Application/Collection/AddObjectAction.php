@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Repository\Model\Collection;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -59,7 +60,7 @@ final readonly class AddObjectAction implements ApplicationActionInterface
         $user       = Core::get_global('user');
         $collection = $this->collectionRepository->findById((int) ($params['collection'] ?? 0));
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->has_collaborate($user instanceof User ? $user : null)
         ) {
             throw new AccessDeniedException();

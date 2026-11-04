@@ -87,7 +87,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $catalog = Catalog::create_from_id($song->getCatalogId());
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return;
         }
 
@@ -331,7 +331,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $catalog = Catalog::create_from_id($song->getCatalogId());
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return;
         }
 
@@ -638,6 +638,9 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         return $meta;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getVorbisMetadata(
         Song $song,
     ): array {
@@ -716,6 +719,9 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         return $meta;
     }
 
+    /**
+     * @param array<int, array{description: mixed}> $ndata
+     */
     private function search_txxx(int|string $description, array $ndata): ?int
     {
         $cnt = count($ndata);

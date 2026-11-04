@@ -461,6 +461,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
 
     /**
      * has_info
+     * @return array<string, mixed>
      */
     private function has_info(?int $preview_id = 0): array
     {

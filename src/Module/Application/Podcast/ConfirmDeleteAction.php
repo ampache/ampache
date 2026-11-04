@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
+use Ampache\Repository\Model\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -79,7 +80,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $podcast = $this->podcastRepository->findById($podcastId);
 
-        if ($podcast === null) {
+        if (!$podcast instanceof Podcast) {
             throw new ObjectNotFoundException($podcastId);
         }
 

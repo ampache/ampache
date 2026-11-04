@@ -801,9 +801,19 @@ class Stream
 
     /**
      * kill_process
+     * @param array{
+     *     handle?: resource|null,
+     *     process?: resource|false|null,
+     *     stderr?: resource|null,
+     *     format?: string|null
+     * } $transcoder
      */
     public static function kill_process(array $transcoder): void
     {
+        if (!isset($transcoder['process']) || !is_resource($transcoder['process'])) {
+            return;
+        }
+
         $status = proc_get_status($transcoder['process']);
         if ($status['running']) {
             $pid = $status['pid'];

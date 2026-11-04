@@ -103,7 +103,7 @@ final class PodcastListRenderer extends AbstractBrowseListRenderer implements So
         $podcasts = [];
         foreach ($this->getObjectIds() as $objectId) {
             $podcast = $this->podcastRepository->findById($objectId);
-            if ($podcast !== null) {
+            if ($podcast instanceof Podcast) {
                 $podcasts[] = $podcast;
             }
         }

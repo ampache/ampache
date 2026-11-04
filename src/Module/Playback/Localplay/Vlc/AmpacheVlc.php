@@ -44,7 +44,7 @@ class AmpacheVlc extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'vlc_active';
 
-    private $_vlc;
+    private VlcPlayer $_vlc;
     private string $description = 'Controls a VLC instance';
     private string $version     = 'Beta 0.2';
 
@@ -73,7 +73,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
-        if ($this->_vlc->add($url->title, $url->url) === null) {
+        if (!$this->_vlc->add($url->title, $url->url)) {
             debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
@@ -135,7 +135,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function delete_track(int $object_id): bool
     {
-        if ($this->_vlc->delete_pos($object_id) === null) {
+        if (!$this->_vlc->delete_pos($object_id)) {
             debug_event(self::class, 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
 
             return false;
@@ -413,7 +413,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function next(): bool
     {
-        return ($this->_vlc->next() !== null);
+        return $this->_vlc->next();
     }
 
     /**
@@ -433,11 +433,11 @@ class AmpacheVlc extends localplay_controller
     public function play(): bool
     {
         // A play when it's already playing causes a track restart which we don't want
-        if ($this->_vlc->state() == 'play') {
+        if ($this->_vlc->state() === 'play') {
             return true;
         }
 
-        return ($this->_vlc->play() !== null);
+        return $this->_vlc->play();
     }
 
     /**
@@ -455,7 +455,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        return ($this->_vlc->random($state) !== null);
+        return $this->_vlc->random($state);
     }
 
     /**
@@ -464,7 +464,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        return ($this->_vlc->repeat($state) !== null);
+        return $this->_vlc->repeat($state);
     }
 
     /**
@@ -496,7 +496,7 @@ class AmpacheVlc extends localplay_controller
         $listtracks = $this->get();
         foreach ($listtracks as $track) {
             if ($track['id'] == $track_id) {
-                if ($this->_vlc->skip($track['vlid']) === null) {
+                if (!$this->_vlc->skip($track['vlid'])) {
                     return false;
                 }
 
@@ -512,6 +512,7 @@ class AmpacheVlc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features That this Localplay method supports.
      * This works as in requesting the status.xml file from VLC.
      * required function
+     * @return array<string, mixed>
      */
     public function status(): array
     {
@@ -609,7 +610,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function stop(): bool
     {
-        return ($this->_vlc->stop() !== null);
+        return $this->_vlc->stop();
     }
 
     /**

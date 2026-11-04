@@ -6,6 +6,7 @@
 
 ### Added (8.4.0)
 
+* Translations 2026-11-04
 * Theme
   * reborn gains four new colors: Dusk, Dawn, Sepia and High-Contrast
   * reborn gains nine colors modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light
@@ -13,6 +14,18 @@
   * New `catalog_clean_empty_dirs` key; Clean/Garbage Collection/Scan Folder can now also remove an empty directory from disk, not just its row
 * Search
   * New `folder` search type (name, path, parent folder, catalog, ratings, play counts, dates), web Search page and API8 `advanced_search`
+* Browse
+  * Grid view browses (album, artist, playlist, etc.) gain a Sort By control, like the list view already had
+* Catalog
+  * Garbage Collection is now available directly from a catalog's row menu, not just Clean/Verify
+* Podcast
+  * RSS feed entries include a MusicBrainz artist link, and a release link when one is known
+* WebDAV
+  * Folder browse pages gain an "Open in WebDAV" action link when the WebDAV backend is enabled
+* Plugins
+  * Stream Bandwidth/Hits/Time gain `stream_control_*_ip_max`, a per-source-IP cap for guest/share traffic
+* Database 840001
+  * Added `tmp_stream_control` table, so stream control plugins can enforce the new per-IP limits
 
 ### Changed (8.4.0)
 
@@ -25,6 +38,10 @@
 
 ### Fixed (8.4.0)
 
+* Plugins
+  * `AmpacheStreamHits` install() reported failure when its preferences were created, and success when they weren't
+  * `AmpacheStreamTime` fell back to a 1024-minute cap instead of unlimited when its preference was unset
+  * Stream control plugins logged "Access denied" when statistical graphs were off, though the stream was still allowed
 * Subsonic
   * `getIndexes` could drop artists from a catalog whose folder data was incomplete, not just when it was empty
   * `getArtist`/`getArtistInfo`/`getArtistInfo2` failed, or returned the wrong artist, for a folder id from `getIndexes`
@@ -42,11 +59,17 @@
 * A withdrawn song stayed playable by id (`action=play`), unlike the random and democratic play paths
 * The Now Playing widget could show a play from a catalog excluded by the viewer's own `catalog_filter`
 * A `smartplaylist` search rule could pull results from another user's private smart playlist
+* A search whose top-level rule group used OR could cancel the private-playlist/smart-playlist visibility guard
 * Highest rated albums and artists could include withdrawn items
 * `stats` action's `newest`/`highest`/`frequent` filters didn't apply the caller's `catalog_filter` on every API version
-* Podcast sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
+* WebDAV served media from, and could confirm catalogs existed outside, a path outside the caller's `catalog_filter`
+* Podcast
+  * Sync silently dropped every episode whose title or description held a character ending in the byte `0x85` (e.g. Polish `ą`)
+  * Adding a podcast incremented the server-wide user count instead of the podcast count, and totals went stale
+  * RSS feed text could contain raw XML control characters or double-escaped entities, breaking the feed
 * The native API's `folders` action returned nothing for every catalog and every user
 * A song whose directory a scan never walked stayed invisible to the folder tree forever, even after rescanning; any scan now repairs it
+* Folder browse pagination was wrong because real result ids weren't saved like every other browse type
 * Clean/Verify only checked that a song's file existed, so a path that drifted outside its own catalog's root stayed forever
 * `album_disk` rows were never mapped into `catalog_map`, hiding them from catalog-scoped browsing until a full Garbage Collection ran
 * An artist added to a second catalog outside an upload stayed unmapped in `catalog_map` until a full Garbage Collection ran
@@ -57,6 +80,9 @@
 * A song's `title`/`artist` tag could inject HTML into the jPlayer playlist, running script for anyone who viewed it
 * A stream session (`ssid`) bypassed `allow_zip_download` and per-stream access control on `/batch.php`
 * The `playlist_random`/`search_random` basket and stream actions could reveal another user's private playlist contents
+* A playlist built from a stream-of-streams split on raw bytes instead of unicode lines, corrupting multibyte URLs
+* The web player's lyrics and action buttons didn't return after a long pause and resume
+* Global rating overlapped and misaligned with the star rating on several rows; it now renders as its own element
 
 ## Ampache 8.3.0
 

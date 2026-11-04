@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Folder;
 
+use Ampache\Repository\Model\Folder;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -69,7 +70,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $folder = $this->folderRepository->findById($folderId);
         if (
-            $folder === null
+            !$folder instanceof Folder
             || !Catalog::can_remove($folder)
         ) {
             throw new AccessDeniedException(

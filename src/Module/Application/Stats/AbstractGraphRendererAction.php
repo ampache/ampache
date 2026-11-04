@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Stats\GraphsView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -71,7 +72,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
                 $object_id
             );
 
-            if ($libitem !== null) {
+            if ($libitem instanceof library_item) {
                 $owner_id = $libitem->get_user_owner();
             }
         }

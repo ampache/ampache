@@ -225,7 +225,7 @@ abstract class Catalog extends database_object
             if ($cache_target) {
                 foreach ($catalogs as $catalogid) {
                     $catalog = self::create_from_id($catalogid);
-                    if ($catalog === null) {
+                    if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                         break;
                     }
 
@@ -647,7 +647,7 @@ abstract class Catalog extends database_object
     public static function delete(int $catalog_id): bool
     {
         $catalog = self::create_from_id($catalog_id);
-        if ($catalog === null) {
+        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
             return false;
         }
 
@@ -845,7 +845,7 @@ abstract class Catalog extends database_object
         if (empty($results['albumartist']) && !isset($results['albumartist_id'])) {
             $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
 
-            if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
+            if ($song instanceof Song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
                 $results['albumartist_id'] = $song->get_album_artist();
             } elseif (empty($results['album'])) {
                 // nothing to group under, so an orphaned song still needs an album artist of its own.
@@ -1065,6 +1065,7 @@ abstract class Catalog extends database_object
      * get_artists
      *
      * This returns an array of artists that have songs in the catalogs parameter
+     * @param int[]|null $catalogs
      * @return Artist[]
      */
     public static function get_artists(?array $catalogs = null, int $size = 0, int $offset = 0): array
@@ -1285,7 +1286,7 @@ abstract class Catalog extends database_object
 
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1314,14 +1315,14 @@ abstract class Catalog extends database_object
         $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
             $podcast_ids = $catalog->get_podcast_ids();
             foreach ($podcast_ids as $podcast_id) {
                 $podcast = $podcastRepository->findById($podcast_id);
-                if ($podcast !== null) {
+                if ($podcast instanceof Podcast) {
                     $results[] = $podcast;
                 }
             }
@@ -1579,7 +1580,7 @@ abstract class Catalog extends database_object
         $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1611,7 +1612,7 @@ abstract class Catalog extends database_object
 
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1762,7 +1763,7 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog === null) {
+                            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                                 return;
                             }
 
@@ -1816,7 +1817,7 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog === null) {
+                        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                             return;
                         }
 
@@ -1849,7 +1850,7 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog === null) {
+                            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                                 return;
                             }
 
@@ -1883,7 +1884,7 @@ abstract class Catalog extends database_object
                     if (is_int($catalog_id)) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $clean_path): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->catalog_type == 'local') {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && $catalog->catalog_type == 'local') {
                                 switch ($catalog->gather_types) {
                                     case 'podcast':
                                         $type      = 'podcast_episode';
@@ -1943,7 +1944,7 @@ abstract class Catalog extends database_object
                     if (is_int($catalog_id)) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $add_path): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
                                 self::update_catalog_map($catalog->gather_types);
                             }
                         });
@@ -1966,7 +1967,7 @@ abstract class Catalog extends database_object
                 // Iterate throughout the catalogs and gather as needed
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
+                    if ($catalog instanceof \Ampache\Module\Catalog\Catalog) {
                         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                             echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
                             flush();
@@ -1994,7 +1995,7 @@ abstract class Catalog extends database_object
                     set_time_limit(0);
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
+                        if ($catalog instanceof \Ampache\Module\Catalog\Catalog) {
                             $song_ids = $catalog->get_song_ids();
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
@@ -2030,7 +2031,7 @@ abstract class Catalog extends database_object
                     if ($catalogs !== []) {
                         foreach ($catalogs as $catalog_id) {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types, true)) {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && !in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = (string) $catalog->gather_types;
                             }
                         }
@@ -2290,7 +2291,7 @@ abstract class Catalog extends database_object
     ): array {
         $array   = [];
         $catalog = self::create_from_id($media->catalog);
-        if ($catalog === null) {
+        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
             debug_event(self::class, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
             $array['error'] = true;
 
@@ -2523,6 +2524,15 @@ abstract class Catalog extends database_object
         ];
     }
 
+    /**
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
+     */
     public static function update_video_from_tags(array $results, Video $video): array
     {
         /* Setup the vars */
@@ -2680,6 +2690,13 @@ abstract class Catalog extends database_object
      * different places and passes in a full fledged song object, so it's a
      * static function.
      * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
      */
     protected static function update_song_from_tags(array $results, Song $song): array
     {
@@ -3086,7 +3103,7 @@ abstract class Catalog extends database_object
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label = $labelRepository->findById($label_id);
-                    if ($label !== null) {
+                    if ($label instanceof Label) {
                         // the tag is read per song but describes the release, so it is recorded against the album
                         if ($new_song->album > 0) {
                             $labelRepository->addAlbumAssoc($label->id, $new_song->album, $now);
@@ -3405,7 +3422,7 @@ abstract class Catalog extends database_object
     /**
      * Migrate an object associate images to a new object
      */
-    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
+    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): void
     {
         if ($old_object_id !== $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
@@ -3457,11 +3474,7 @@ abstract class Catalog extends database_object
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
-
-            return true;
         }
-
-        return false;
     }
 
     /**
@@ -3839,6 +3852,8 @@ abstract class Catalog extends database_object
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
+     * @param int[]|null $songs
+     * @param int[]|null $videos
      */
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
@@ -4497,7 +4512,7 @@ abstract class Catalog extends database_object
                         case 'label':
                             foreach ($object_list as $label_id) {
                                 $label = $labelRepository->findById($label_id);
-                                if ($label !== null) {
+                                if ($label instanceof Label) {
                                     $plugin->_plugin->get_external_metadata($label, 'label');
                                 }
                             }

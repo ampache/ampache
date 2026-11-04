@@ -74,12 +74,26 @@ abstract class localplay_controller
      */
     abstract public function delete_track(int $object_id): bool;
 
+    /**
+     * @return array<int, array{
+     *     id: int,
+     *     track: int,
+     *     raw?: string,
+     *     vlid?: int,
+     *     oid?: int,
+     *     name?: string|null,
+     *     link?: string|null,
+     * }>
+     */
     abstract public function get(): array;
 
     abstract public function get_active_instance(): ?int;
 
     abstract public function get_description(): string; // Returns the description
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function get_instance(?string $instance = ''): array;
 
     /**
@@ -107,6 +121,7 @@ abstract class localplay_controller
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for Localplay modules to return valid song information
+     * @return array<int|string, mixed>
      */
     public function parse_url(string $url): array
     {
@@ -177,6 +192,9 @@ abstract class localplay_controller
 
     abstract public function skip(int $track_id): bool;
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function status(): array;
 
     abstract public function stop(): bool;

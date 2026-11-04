@@ -9,6 +9,13 @@
 * REST
   * `folders/search` as the REST path for `advanced_search` with `type=folder`
 
+### Fixed (840000)
+
+* `stats` (API3, API4, API5, API6, API8)
+  * `highest` and `frequent` didn't apply the caller's `catalog_filter`, since the active user was never passed through
+* `folders` (API8)
+  * Returned nothing for every catalog and every user
+
 ## API 8.3.0
 
 ### Added (830000)

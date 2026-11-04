@@ -25,10 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use Ampache\Repository\Model\LibraryItemEnum;
+
 interface PluginStreamControlInterface extends AmpachePluginInterface
 {
     /**
      * Check stream control
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
+     * @param string|null $ip the client's source IP; only meaningful (and only meant to be enforced) when $isGuest is true, since a real account is already identified by its own id
+     * @param bool $isGuest whether the request is attributed to a surrogate account (eg. a public share) rather than its own logged-in user
      */
-    public function stream_control(array $media_ids): bool;
+    public function stream_control(array $media_ids, ?string $ip = null, bool $isGuest = false): bool;
+
+    /**
+     * Whether this plugin's current configuration reads the shared per-IP guest activity history,
+     * so `User::stream_control()` can skip writing to it when nothing would ever read the write back.
+     */
+    public function tracksIp(): bool;
 }

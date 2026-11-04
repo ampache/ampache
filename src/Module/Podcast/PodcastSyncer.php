@@ -189,7 +189,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
             foreach ($podcastIds as $podcastId) {
                 $podcast = $this->podcastRepository->findById($podcastId);
-                if ($podcast === null) {
+                if (!$podcast instanceof Podcast) {
                     continue;
                 }
 
@@ -279,7 +279,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         // by default you want to download all the episodes
         $state = PodcastEpisodeStateEnum::PENDING;
         // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
-        if ($lastSync !== null && $pubdate < $lastSync->getTimestamp()) {
+        if ($lastSync instanceof DateTimeInterface && $pubdate < $lastSync->getTimestamp()) {
             $state = PodcastEpisodeStateEnum::SKIPPED;
         }
 

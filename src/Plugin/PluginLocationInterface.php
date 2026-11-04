@@ -29,6 +29,7 @@ interface PluginLocationInterface extends AmpachePluginInterface
 {
     /**
      * display_map
+     * @param array<int, array{latitude: mixed, longitude: mixed, name: mixed, last_date: mixed, hits: mixed}> $points
      */
     public function display_map(array $points): bool;
 

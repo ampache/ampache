@@ -33,7 +33,7 @@
  * Code origin from http://oauth.googlecode.com/svn/code/php/OAuth.php
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Util\OAuth;
 
@@ -48,9 +48,9 @@ class OAuthConsumer implements Stringable
      * OAuthConsumer constructor.
      */
     public function __construct(
-        public $key,
-        public $secret,
-        public $callback_url = null,
+        public ?string $key,
+        public ?string $secret,
+        public ?string $callback_url = null,
     ) {}
 
     /**

@@ -555,7 +555,7 @@ class Search extends playlist_object
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
      * @return array{
      *     sql: string,
-     *     parameters: array
+     *     parameters: array<int, mixed>
      * }
      */
     public static function prepare(array $data, ?User $user = null, bool $require_rules = false): array
@@ -621,7 +621,7 @@ class Search extends playlist_object
      * This function is used to simplify api searches and return valuable data for responses
      * @param array{
      *     sql: string,
-     *     parameters: array
+     *     parameters: array<int, mixed>
      * } $search_sql
      * @return array{
      *     results: int[],
@@ -704,6 +704,7 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year album searches for subsonic.
+     * @return array<string, mixed>
      */
     public static function year_search(int $fromYear, int $toYear, int $size, int $offset): array
     {
@@ -788,8 +789,8 @@ class Search extends playlist_object
      *     name?: string,
      *     description?: string,
      *     sql?: string,
-     *     preg_match?: string|array,
-     *     preg_replace?: string|array,
+     *     preg_match?: string|array{string, string},
+     *     preg_replace?: string|array{string, string},
      * } $operator
      */
     public function filter_data(string $data, string $type, array $operator): bool|int|string|null
@@ -907,6 +908,7 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
+     * @return array<int, array{object_id: int, object_type: LibraryItemEnum}>
      */
     public function get_random_items(?string $limit = ''): array
     {
@@ -942,7 +944,7 @@ class Search extends playlist_object
         //debug_event(self::class, 'SQL get_random_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['object_id' => $row['id'], 'object_type' => $this->objectType];
+            $results[] = ['object_id' => (int) $row['id'], 'object_type' => LibraryItemEnum::from($this->objectType)];
         }
 
         return $results;
@@ -1663,7 +1665,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -1783,7 +1785,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -1829,7 +1831,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -2230,7 +2232,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 

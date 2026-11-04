@@ -70,7 +70,7 @@ final class EnclosureResolver
      */
     public static function url(Song|Podcast_Episode $media, ?User $user, string $params): ?string
     {
-        if ($user !== null) {
+        if ($user instanceof User) {
             return $media->play_url($params, 'api', false, $user->getId(), $user->streamtoken);
         }
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\AddPrivateMessageFormView;
@@ -66,7 +67,7 @@ final readonly class ShowAddMessageAction implements ApplicationActionInterface
         if ($replyToMessageId > 0) {
             $message = $this->pmRepository->findById($replyToMessageId);
 
-            if ($message !== null) {
+            if ($message instanceof PrivateMessageInterface) {
                 $userId       = $gatekeeper->getUserId();
                 $senderUserId = $message->getSenderUserId();
 

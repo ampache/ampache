@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PlaylistFolder;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Form\PlaylistFolderFormView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -61,7 +62,7 @@ final readonly class EditAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('edit_playlist_folder')
         ) {
             throw new AccessDeniedException();

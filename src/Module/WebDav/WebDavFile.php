@@ -54,7 +54,7 @@ class WebDavFile extends File
 
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if (
-                $catalog !== null
+                $catalog instanceof Catalog
                 && $catalog->get_type() === 'local'
                 && (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
             ) {

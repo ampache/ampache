@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stream;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -116,7 +117,7 @@ final class PlayItemAction extends AbstractStreamAction
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
-                    $user !== null
+                    $user instanceof User
                     && $mediaIds !== []
                     && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM, LibraryItemEnum::COLLECTION])
                 ) {

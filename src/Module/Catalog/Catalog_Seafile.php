@@ -313,7 +313,7 @@ class Catalog_Seafile extends Catalog
                 $file = $this->seafile->from_virtual_path($row['file']);
 
                 try {
-                    $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
+                    $exists = $this->seafile->get_file($file['path'], $file['filename']) instanceof DirectoryItem;
                 } catch (Exception $error) {
                     Ui::update_text(
                         T_('There Was a Problem'),
@@ -415,7 +415,7 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            if ($file !== null) {
+            if ($file instanceof DirectoryItem) {
                 return $this->download_metadata($file, $sort_pattern, $rename_pattern, $gather_types);
             }
         }
@@ -521,7 +521,7 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            if ($file !== null) {
+            if ($file instanceof DirectoryItem) {
                 $stream_path = $this->seafile->download($file);
                 $stream_name = $fileinfo['filename'];
             }
@@ -561,7 +561,7 @@ class Catalog_Seafile extends Catalog
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
                 $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
                 $metadata = null;
-                if ($file !== null) {
+                if ($file instanceof DirectoryItem) {
                     try {
                         $metadata = $this->download_metadata($file);
                     } catch (Exception $error) {
@@ -576,7 +576,7 @@ class Catalog_Seafile extends Catalog
                     debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
                     $info = ($song->id !== 0) ? self::update_song_from_tags($metadata, $song) : [];
-                    if ($info['change']) {
+                    if ($info['change'] ?? false) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results++;
                     } else {

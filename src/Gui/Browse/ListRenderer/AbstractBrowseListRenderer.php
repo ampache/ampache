@@ -156,7 +156,7 @@ abstract class AbstractBrowseListRenderer extends AbstractView implements Browse
 
     final protected function getContext(): BrowseListContext
     {
-        if ($this->context === null) {
+        if (!$this->context instanceof BrowseListContext) {
             throw new LogicException(static::class . ' was rendered outside renderList()');
         }
 

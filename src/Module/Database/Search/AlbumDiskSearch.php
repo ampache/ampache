@@ -554,6 +554,10 @@ final class AlbumDiskSearch implements SearchInterface
                     break;
                 case 'smartplaylist':
                     $subsearch = new Search((int) $input, 'song', $search->search_user);
+                    if (!$subsearch->isVisible($search->search_user)) {
+                        break;
+                    }
+
                     $results   = $subsearch->get_subsearch('song');
                     ++$subsearch_count;
                     $where[] = sprintf('`song`.`id` %s IN (SELECT * FROM (', $operator_sql) . $results['sql'] . ") AS sp_" . $subsearch_count . ")";

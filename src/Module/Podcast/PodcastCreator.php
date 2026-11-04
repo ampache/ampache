@@ -79,7 +79,7 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
 
         // don't allow duplicate podcasts
         $podcast = $this->podcastRepository->findByFeedUrl($feedUrl);
-        if ($podcast !== null) {
+        if ($podcast instanceof Podcast) {
             Catalog::update_map($catalog->getId(), 'podcast', $podcast->getId());
 
             return $podcast;

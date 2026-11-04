@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-22 12:47+1000\n"
+"POT-Creation-Date: 2026-11-04 10:11+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -825,6 +825,9 @@ msgid "Release Date"
 msgstr ""
 
 msgid "Actions"
+msgstr ""
+
+msgid "Open in WebDAV"
 msgstr ""
 
 msgid "Add Current Host"
@@ -3880,7 +3883,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4180,7 +4183,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -5450,6 +5453,9 @@ msgstr ""
 msgid "Update Label information and fetch details using the MusicBrainz plugin"
 msgstr ""
 
+msgid "Updating counts"
+msgstr ""
+
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
 
@@ -6065,9 +6071,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6379,6 +6382,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr ""
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6561,15 +6573,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr ""
 
@@ -6578,6 +6581,15 @@ msgid "%s of 5"
 msgstr ""
 
 msgid "Current rating"
+msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
 msgstr ""
 
 msgid "Unfavorite"
@@ -7165,6 +7177,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7174,6 +7189,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7181,6 +7199,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"

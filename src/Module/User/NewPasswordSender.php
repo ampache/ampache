@@ -49,7 +49,7 @@ final readonly class NewPasswordSender implements NewPasswordSenderInterface
         $user = $this->userRepository->findByEmail($email);
 
         // do not do anything if they aren't a user
-        if ($user === null) {
+        if (!$user instanceof User) {
             return false;
         }
 

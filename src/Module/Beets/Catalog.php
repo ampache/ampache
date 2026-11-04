@@ -125,6 +125,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Add $song to ampache if it isn't already
+     * @param array<string, mixed> $song
      */
     public function addSong(array $song): void
     {
@@ -168,6 +169,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Check if a song was added before
+     * @param array<string, mixed> $song
      */
     abstract public function checkSong(array $song): bool;
 
@@ -278,6 +280,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Remove a song from the "to be deleted"-list if it was found.
+     * @param array<string, mixed> $song
      */
     public function removeFromDeleteList(array $song): void
     {
@@ -336,6 +339,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Delete Song from DB
+     * @param array<int, string> $songs
      */
     protected function deleteSongs(array $songs): void
     {
@@ -357,6 +361,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
+     * @param array<string, mixed> $song
      */
     protected function getVirtualSongPath(array $song): string
     {
@@ -369,6 +374,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Add the song to the DB
+     * @param array<string, mixed> $song
      */
     protected function insertSong(array $song): ?int
     {
@@ -393,7 +399,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
     /**
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param int $count song count
-     * @param array|null $song Song array
+     * @param array<string, mixed>|null $song Song array
      * @param bool $ignoreTicker ignoring the ticker for the last update
      */
     protected function updateUi(string $prefix, int $count, ?array $song = null, bool $ignoreTicker = false): void

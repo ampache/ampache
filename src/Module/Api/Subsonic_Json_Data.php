@@ -2429,9 +2429,9 @@ class Subsonic_Json_Data
                 $episode = new Podcast_Episode($child['object_id']);
 
                 return ($episode->isNew()) ? null : $this->_getChildPodcastEpisode($episode);
+            default:
+                return null;
         }
-
-        return null;
     }
 
     /**
