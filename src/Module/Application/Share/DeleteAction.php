@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
-use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -34,6 +32,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

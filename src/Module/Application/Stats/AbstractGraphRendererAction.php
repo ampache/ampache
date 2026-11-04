@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Stats\GraphsView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -37,6 +36,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Repository\Model\displayable_item;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;

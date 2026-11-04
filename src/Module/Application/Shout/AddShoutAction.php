@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Shout;
 
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\library_item;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -37,7 +35,9 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutCreatorInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

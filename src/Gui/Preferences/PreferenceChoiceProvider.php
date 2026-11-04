@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Preferences;
 
-use Ampache\Repository\Model\User;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
@@ -38,6 +37,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Override;
 
 /**

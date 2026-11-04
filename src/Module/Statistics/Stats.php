@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Statistics;
 
-use PDO;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -47,6 +46,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
+use PDO;
 use PDOStatement;
 use Psr\Log\LoggerInterface;
 use RuntimeException;

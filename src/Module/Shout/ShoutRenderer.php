@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Shout;
 
-use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
@@ -35,6 +34,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
 
 /**
  * Renders a shout within the ui

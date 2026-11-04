@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Gui\Browse\ListRenderer\BrowseListRendererInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererInterface;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
 use Ampache\Gui\Browse\ListRenderer\SortableBrowseListRendererInterface;
 use Ampache\Module\Api\Ajax;

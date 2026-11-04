@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
-use Ampache\Plugin\AmpachePlugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Plugin\Plugin;
@@ -34,6 +33,7 @@ use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\System\Update\Versions;
 use Ampache\Module\Util\Horde_Browser;
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;

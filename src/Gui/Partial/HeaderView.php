@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
-use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Plugin\Plugin;

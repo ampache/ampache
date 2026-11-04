@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Plugin;
 
-use Ampache\Plugin\AmpachePlugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Preference;
+use Ampache\Plugin\AmpachePlugin;
 
 /**
  * Wraps the static plugin/catalog-type/localplay model methods behind plain parameters, carrying the

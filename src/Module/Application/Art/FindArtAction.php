@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Art;
 
-use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Art\ArtSelectionView;
 use Ampache\Gui\Art\GetArtView;
@@ -36,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Login;
 
-use Ampache\Gui\Form\LoginFormView;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormView;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;

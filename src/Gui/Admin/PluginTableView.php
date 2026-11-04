@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Admin;
 
-use Ampache\Plugin\AmpachePlugin;
 use Ampache\Module\System\Plugin\Plugin;
+use Ampache\Plugin\AmpachePlugin;
 use Override;
 
 /**

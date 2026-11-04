@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
-use Ampache\Repository\Model\Podcast;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -40,6 +39,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

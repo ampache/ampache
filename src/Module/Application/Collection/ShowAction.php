@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
-use Ampache\Repository\Model\Collection;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Partial\PageMeta;
@@ -36,6 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
