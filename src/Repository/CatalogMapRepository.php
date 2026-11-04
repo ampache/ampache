@@ -67,6 +67,12 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
                 continue;
             }
 
+            if ($table === CatalogMapTableEnum::PLAYLIST) {
+                $statements[] = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, `playlist`.`id` AS `object_id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id` = `playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song') AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = 'playlist' AND `valid_maps`.`object_id` IS NULL;";
+
+                continue;
+            }
+
             $statements[] = sprintf(
                 "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = '%s' AND `valid_maps`.`object_id` IS NULL;",
                 $table->value,

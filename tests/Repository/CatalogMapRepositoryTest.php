@@ -99,6 +99,26 @@ class CatalogMapRepositoryTest extends TestCase
         self::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[1]);
     }
 
+    public function testCollectGarbageDerivesThePlaylistCatalogFromItsSongs(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbage([CatalogMapTableEnum::PLAYLIST]);
+
+        self::assertSame(
+            "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, `playlist`.`id` AS `object_id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id` = `playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song') AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = 'playlist' AND `valid_maps`.`object_id` IS NULL;",
+            $calls[0]
+        );
+    }
+
     public function testCollectGarbageForObjectChecksOnlyTheGivenIdForANonArtistType(): void
     {
         $this->connection->expects(static::once())
