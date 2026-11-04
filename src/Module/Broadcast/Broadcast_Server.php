@@ -90,7 +90,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      * Ratchet assigns resourceId to each connection at runtime, so it is not declared on ConnectionInterface.
      */
-    private static function getResourceId(ConnectionInterface $conn): ?int
+    private function getResourceId(ConnectionInterface $conn): ?int
     {
         return property_exists($conn, 'resourceId') ? (int) $conn->{'resourceId'} : null;
     }
@@ -101,7 +101,7 @@ class Broadcast_Server implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn): void
     {
         $role = ($this->isBroadcaster($conn)) ? 'broadcaster' : 'listener';
-        $id   = self::getResourceId($conn);
+        $id   = $this->getResourceId($conn);
         debug_event(self::class, 'Connection closed (' . $role . '), resourceId ' . ($id ?? 'unknown'), 5);
 
         if ($this->isBroadcaster($conn)) {
@@ -160,7 +160,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn): void
     {
-        $id = self::getResourceId($conn);
+        $id = $this->getResourceId($conn);
         if ($id !== null) {
             $this->clients[$id] = $conn;
         }
@@ -171,7 +171,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function authSid(ConnectionInterface $conn, string $sid): void
     {
-        $id = self::getResourceId($conn);
+        $id = $this->getResourceId($conn);
         if ($id !== null && Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             $this->sids[$id] = $sid;
         } else {
@@ -187,7 +187,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {
-            $id  = self::getResourceId($client);
+            $id  = $this->getResourceId($client);
             $sid = $id !== null ? ($this->sids[$id] ?? '') : '';
             if ($sid !== '') {
                 Session::extend($sid, AccessTypeEnum::STREAM->value);
@@ -243,7 +243,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function isBroadcaster(ConnectionInterface $conn): bool
     {
-        return $this->getBroadcast($conn) !== null;
+        return $this->getBroadcast($conn) instanceof Broadcast;
     }
 
     /**
@@ -252,7 +252,7 @@ class Broadcast_Server implements MessageComponentInterface
     protected function notifyEnded(ConnectionInterface $from): void
     {
         $broadcast = $this->getBroadcast($from);
-        if ($broadcast !== null) {
+        if ($broadcast instanceof Broadcast) {
             $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage($clients, self::BROADCAST_ENDED);
 
@@ -283,7 +283,7 @@ class Broadcast_Server implements MessageComponentInterface
     protected function notifyPlayerPlay(ConnectionInterface $from, bool $play): void
     {
         $broadcast = $this->getBroadcast($from);
-        if ($broadcast !== null) {
+        if ($broadcast instanceof Broadcast) {
             $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage(
                 $clients,
@@ -303,7 +303,7 @@ class Broadcast_Server implements MessageComponentInterface
     protected function notifySong(ConnectionInterface $from, int $song_id): void
     {
         $broadcast = $this->getBroadcast($from);
-        if ($broadcast !== null) {
+        if ($broadcast instanceof Broadcast) {
             $clients   = $this->getListeners($broadcast);
 
             Session::extend(Stream::get_session(), AccessTypeEnum::STREAM->value);
@@ -326,7 +326,7 @@ class Broadcast_Server implements MessageComponentInterface
     protected function notifySongPosition(ConnectionInterface $from, int $song_position): void
     {
         $broadcast = $this->getBroadcast($from);
-        if ($broadcast !== null) {
+        if ($broadcast instanceof Broadcast) {
             $seekdiff  = $broadcast->song_position - $song_position;
             if ($seekdiff > 2 || $seekdiff < -2) {
                 $clients = $this->getListeners($broadcast);
@@ -345,7 +345,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast instanceof Broadcast) {
-            $id = self::getResourceId($from);
+            $id = $this->getResourceId($from);
             if ($id === null) {
                 return;
             }
@@ -398,9 +398,9 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function unregisterBroadcast(ConnectionInterface $conn): void
     {
-        $id        = self::getResourceId($conn);
+        $id        = $this->getResourceId($conn);
         $broadcast = $this->getBroadcast($conn);
-        if ($id === null || $broadcast === null) {
+        if ($id === null || !$broadcast instanceof Broadcast) {
             return;
         }
 
@@ -453,14 +453,14 @@ class Broadcast_Server implements MessageComponentInterface
 
     private function getBroadcast(ConnectionInterface $conn): ?Broadcast
     {
-        $id = self::getResourceId($conn);
+        $id = $this->getResourceId($conn);
 
         return $id !== null ? ($this->broadcasters[$id] ?? null) : null;
     }
 
     private function getSid(ConnectionInterface $conn): string
     {
-        $id = self::getResourceId($conn);
+        $id = $this->getResourceId($conn);
 
         return $id !== null ? ($this->sids[$id] ?? '') : '';
     }

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Application\Album\DeleteDiskAction;
+use Ampache\Module\Application\Album\ConfirmDeleteDiskAction;
 use Ampache\Module\Application\Admin\Access\AddHostAction;
 use Ampache\Module\Application\Admin\Access\DeleteRecordAction;
 use Ampache\Module\Application\Admin\Access\ShowAddAction;
@@ -271,8 +273,8 @@ return [
     ShowSongAction::class => autowire(ShowSongAction::class),
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
-    Album\DeleteDiskAction::class => autowire(Album\DeleteDiskAction::class),
-    Album\ConfirmDeleteDiskAction::class => autowire(Album\ConfirmDeleteDiskAction::class),
+    DeleteDiskAction::class => autowire(DeleteDiskAction::class),
+    ConfirmDeleteDiskAction::class => autowire(ConfirmDeleteDiskAction::class),
     UpdateFromTagsAction::class => autowire(UpdateFromTagsAction::class),
     ShowMissingAction::class => autowire(ShowMissingAction::class),
     ShowAction::class => autowire(ShowAction::class),
