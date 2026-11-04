@@ -1006,9 +1006,26 @@ CREATE TABLE IF NOT EXISTS `playlist_folder` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `date` int(11) unsigned NOT NULL DEFAULT 0,
   `last_update` int(11) unsigned NOT NULL DEFAULT 0,
+  `type` enum('private','public') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'private',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_playlist_folder` (`user`,`parent`,`name`),
   KEY `user_parent_IDX` (`user`,`parent`,`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `playlist_folder_hide`
+--
+
+DROP TABLE IF EXISTS `playlist_folder_hide`;
+CREATE TABLE IF NOT EXISTS `playlist_folder_hide` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user` int(11) unsigned NOT NULL,
+  `folder` int(11) unsigned NOT NULL,
+  `date` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_playlist_folder_hide` (`user`,`folder`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1126,9 +1143,9 @@ CREATE TABLE IF NOT EXISTS `preference` (
   `value` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `level` int(11) unsigned NOT NULL DEFAULT 100,
-  `type` varchar(128) DEFAULT NULL,
-  `category` varchar(128) DEFAULT NULL,
-  `subcategory` varchar(128) DEFAULT NULL,
+  `type` enum('boolean','integer','string','special','transcoding') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `category` enum('interface','internal','options','playlist','plugins','streaming','system') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `subcategory` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`)
@@ -1221,24 +1238,18 @@ INSERT INTO `search` (`id`, `user`, `type`, `date`, `last_update`, `rules`, `nam
 ('1', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('2', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
 ('3', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('4', '-1', 'public', '0', '0', '[[\"my_flagged_artist\",\"true\",\"\",null]]', 'Artist Favorites', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('5', '-1', 'public', '0', '0', '[[\"myplayed_times\",\"gte\",\"10\",null]]', 'Artist Most Played', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('6', '-1', 'public', '0', '0', '[[\"recent_played\",\"ply\",\"50\",null]]', 'Artist Recently Played', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('7', '-1', 'public', '0', '0', '[[\"played\",\"false\",\"\",null]]', 'Artist Never Played', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('8', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('9', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('10', '1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', '0', '0', '0', '0', 'admin', NULL),
-('11', '-1', 'public', '0', '0', '[[\"my_flagged_album\",\"true\",\"\",null]]', 'Album Favorites', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('12', '-1', 'public', '0', '0', '[[\"myplayed_times\",\"gte\",\"10\",null]]', 'Album Most Played', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('13', '-1', 'public', '0', '0', '[[\"recent_added\",\"add\",\"50\",null]]', 'Album Recently Added', 'AND', '0', '0', '0', '0', 'System', NULL),
-('14', '-1', 'public', '0', '0', '[[\"recent_played\",\"ply\",\"50\",null]]', 'Album Recently Played', 'AND', '0', '0', '0', '0', 'System', NULL),
-('15', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('16', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('17', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('18', '-1', 'public', '0', '0', '[[\"my_flagged_song\",\"true\",\"\",null]]', 'Song Favorites', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('19', '-1', 'public', '0', '0', '[[\"myplayed_times\",\"gte\",\"10\",null]]', 'Song Most Played', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('20', '-1', 'public', '0', '0', '[[\"recent_added\",\"add\",\"50\",null]]', 'Song Recently Added', 'AND', '0', '0', NULL, NULL, 'System', NULL),
-('21', '-1', 'public', '0', '0', '[[\"recent_played\",\"ply\",\"50\",null]]', 'Song Recently Played', 'AND', '0', '0', NULL, NULL, 'System', NULL);
+('4', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('5', '-1', 'public', '0', '0', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('6', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('7', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('8', '1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', '0', '0', '0', '0', 'System', NULL),
+('9', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', '0', '0', '0', '0', 'System', NULL),
+('10', '-1', 'public', '0', '0', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', '0', '0', '0', '0', 'System', NULL),
+('11', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', '0', '0', '2', '609', 'System', NULL),
+('12', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('13', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('14', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', '0', '0', NULL, NULL, 'System', NULL),
+('15', '-1', 'public', '0', '0', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', '0', '0', '0', '0', 'System', NULL);
 
 -- --------------------------------------------------------
 
@@ -1447,7 +1458,7 @@ CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `title` varchar(255) DEFAULT NULL,
   `author` varchar(255) DEFAULT NULL,
   `album` varchar(255) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `type` enum('broadcast','live_stream','podcast_episode','song','song_preview','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `time` int(11) DEFAULT NULL,
   `codec` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `track_num` smallint(5) DEFAULT 0,
@@ -1874,7 +1885,7 @@ CREATE TABLE IF NOT EXISTS `wanted` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '810025');
+('db_version', '840001');
 
 COMMIT;
 
