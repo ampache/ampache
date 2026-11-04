@@ -126,7 +126,7 @@
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
         "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests && composer run-script spelling:check",
         "stan": "vendor/bin/phpstan analyse",
-        "stan-baseline": "vendor/bin/phpstan --generate-baseline",
+        "stan-baseline": "vendor/bin/phpstan --generate-baseline --allow-empty-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
         "spec": "vendor/bin/phpunit --filter SpecConformanceTest",
         "spec:refresh": "@php resources/scripts/tests/spec_refresh.php",
