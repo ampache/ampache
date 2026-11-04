@@ -100,6 +100,6 @@ if ($album->isEditable()) { ?>
         <a id="edit_album_disk_<?php echo $albumId; ?>" onclick="showEditDialog('album_disk_row', '<?php echo $albumId; ?>', 'edit_album_disk_<?php echo $albumId; ?>', '<?php echo $this->e($album->getEditButtonTitle()); ?>', 'album_disk_')"><?php echo $this->raw($album->getEditIcon()); ?></a>
 <?php }
 if ($album->canBeDeleted()) { ?>
-        <a id="delete_album_<?php echo $album->getAlbumId(); ?>" href="<?php echo $this->e($album->getDeletionUrl()); ?>"><?php echo $this->raw($album->getDeletionIcon()); ?></a>
+        <a id="delete_album_disk_<?php echo $albumId; ?>" href="<?php echo $this->e($album->getDeletionUrl()); ?>"><?php echo $this->raw($album->getDeletionIcon()); ?></a>
 <?php } ?>
     </td>

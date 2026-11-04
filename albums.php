@@ -24,7 +24,9 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\Album\ConfirmDeleteAction;
+use Ampache\Module\Application\Album\ConfirmDeleteDiskAction;
 use Ampache\Module\Application\Album\DeleteAction;
+use Ampache\Module\Application\Album\DeleteDiskAction;
 use Ampache\Module\Application\Album\ShowAction;
 use Ampache\Module\Application\Album\ShowDiskAction;
 use Ampache\Module\Application\Album\ShowMissingAction;
@@ -42,6 +44,8 @@ $dic->get(ApplicationRunner::class)->run(
     [
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        DeleteDiskAction::REQUEST_KEY => DeleteDiskAction::class,
+        ConfirmDeleteDiskAction::REQUEST_KEY => ConfirmDeleteDiskAction::class,
         UpdateFromTagsAction::REQUEST_KEY => UpdateFromTagsAction::class,
         UpdateDiskFromTagsAction::REQUEST_KEY => UpdateDiskFromTagsAction::class,
         ShowMissingAction::REQUEST_KEY => ShowMissingAction::class,

@@ -44,6 +44,11 @@ interface AlbumDiskRepositoryInterface
     ): int;
 
     /**
+     * Removes the disk's own row and catalog mapping
+     */
+    public function delete(AlbumDisk $albumDisk): void;
+
+    /**
      * Loads a single album-disk, or null when the id matches nothing
      */
     public function findById(int $objectId): ?AlbumDisk;
