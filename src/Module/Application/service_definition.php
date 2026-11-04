@@ -271,6 +271,8 @@ return [
     ShowSongAction::class => autowire(ShowSongAction::class),
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
+    Album\DeleteDiskAction::class => autowire(Album\DeleteDiskAction::class),
+    Album\ConfirmDeleteDiskAction::class => autowire(Album\ConfirmDeleteDiskAction::class),
     UpdateFromTagsAction::class => autowire(UpdateFromTagsAction::class),
     ShowMissingAction::class => autowire(ShowMissingAction::class),
     ShowAction::class => autowire(ShowAction::class),
