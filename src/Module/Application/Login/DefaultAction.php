@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Login;
 
+use Ampache\Gui\Form\LoginFormView;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
@@ -366,7 +367,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         } // auth success
 
         $loginView = $this->loginFormViewFactory->create();
-        if ($loginView !== null) {
+        if ($loginView instanceof LoginFormView) {
             echo $loginView->render();
         }
 

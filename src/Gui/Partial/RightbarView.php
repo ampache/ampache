@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Playback\LocalplayControlView;
 use Ampache\Gui\View\AbstractView;
@@ -89,7 +90,7 @@ final class RightbarView extends AbstractView
     {
         if ($this->count === null) {
             $user        = Core::get_global('user');
-            $this->count = (!defined('NO_SONGS') && $user instanceof User && $user->playlist)
+            $this->count = (!defined('NO_SONGS') && $user instanceof User && $user->playlist instanceof Tmp_Playlist)
                 ? $user->playlist->count_items()
                 : 0;
         }
@@ -141,7 +142,7 @@ final class RightbarView extends AbstractView
         }
 
         $user = Core::get_global('user');
-        $rows = (!defined('NO_SONGS') && $user instanceof User && $user->playlist)
+        $rows = (!defined('NO_SONGS') && $user instanceof User && $user->playlist instanceof Tmp_Playlist)
             ? $user->playlist->get_items(self::DISPLAY_LIMIT)
             : [];
 

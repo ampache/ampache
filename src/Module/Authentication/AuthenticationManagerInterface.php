@@ -27,6 +27,9 @@ namespace Ampache\Module\Authentication;
 
 interface AuthenticationManagerInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function login(
         string $username,
         string $password,
@@ -40,6 +43,9 @@ interface AuthenticationManagerInterface
      */
     public function logout(string $key = '', bool $relogin = true): void;
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function postAuth(string $method): ?array;
 
     /**

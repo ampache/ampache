@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Admin;
 
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Module\System\Plugin\Plugin;
 use Override;
 
@@ -62,7 +63,7 @@ final class PluginTableView extends AbstractModuleTableView
         $rows = [];
         foreach ($this->pluginNames as $pluginName) {
             $plugin = new Plugin($pluginName);
-            if ($plugin->_plugin === null) {
+            if (!$plugin->_plugin instanceof AmpachePlugin) {
                 continue;
             }
 

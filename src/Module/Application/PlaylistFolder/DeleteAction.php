@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PlaylistFolder;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -60,7 +61,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         $user     = $gatekeeper->getUser();
         $folderId = (int) ($request->getQueryParams()['folder'] ?? 0);
         $folder   = $this->playlistFolderRepository->findById($folderId);
-        if ($user === null || !$folder instanceof PlaylistFolder || !$folder->isVisible($user)) {
+        if (!$user instanceof User || !$folder instanceof PlaylistFolder || !$folder->isVisible($user)) {
             throw new AccessDeniedException();
         }
 

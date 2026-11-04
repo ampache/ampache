@@ -37,6 +37,7 @@ use Ampache\Module\QuickConnect\QuickConnectService;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\StreamControlIpActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
 
@@ -586,6 +587,7 @@ final readonly class Session implements SessionInterface
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
         QuickConnectService::garbageCollection();
+        self::getStreamControlIpActivityRepository()->collectGarbage();
     }
 
     /**
@@ -806,6 +808,16 @@ final readonly class Session implements SessionInterface
         debug_event(self::class, 'Unable to read ' . $column . ' from key ' . $key . ' no data found', 3);
 
         return '';
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getStreamControlIpActivityRepository(): StreamControlIpActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamControlIpActivityRepositoryInterface::class);
     }
 
     public function auth(): bool

@@ -58,7 +58,9 @@ class Artist extends database_object implements
 
     protected const string DB_TABLENAME = 'artist';
 
+    /** @var array<string, array<string, array<string, int>>> */
     private static array $_mapcache = [];
+
     public ?int $addition_time      = null;
     public int $album_count         = 0;
     public int $album_disk_count    = 0;

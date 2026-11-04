@@ -323,7 +323,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
-                            'image' => $avatar['url'] ?? '',
+                            'image' => $avatar['url'],
                         ];
                     }
                 }

@@ -115,7 +115,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
 
                     break;
                 case 'custom_timezone':
-                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];
+                    $listIdentifiers = DateTimeZone::listIdentifiers();
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }

@@ -67,6 +67,7 @@ class User_Playlist extends database_object
     /**
      * add_items
      * Add an array of songs to the playlist
+     * @param array<array-key, array{object_type: string, object_id: int|string, track: int|string}> $data
      */
     public function add_items(array $data, int $time): void
     {

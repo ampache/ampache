@@ -656,6 +656,10 @@ final class AlbumSearch implements SearchInterface
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
                     $subsearch = new Search((int) $input, 'song', $search->search_user);
+                    if (!$subsearch->isVisible($search->search_user)) {
+                        break;
+                    }
+
                     $results   = $subsearch->get_subsearch('song');
                     $subsearch_count++;
                     $where[] = sprintf('`song`.`id` %s IN (SELECT * FROM (', $operator_sql) . $results['sql'] . ") AS sp_" . $subsearch_count . ")";

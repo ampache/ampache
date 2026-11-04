@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Preferences\PreferenceSubject;
 use Ampache\Gui\Preferences\PreferencesViewFactoryInterface;
@@ -76,7 +77,7 @@ final readonly class GrantAction implements ApplicationActionInterface
         ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null) {
+            if ($plugin->_plugin instanceof AmpachePlugin) {
                 $isScrobbler = $plugin->_plugin instanceof Ampachelibrefm
                     || $plugin->_plugin instanceof AmpacheLastfm;
 

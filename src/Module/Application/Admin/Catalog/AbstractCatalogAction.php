@@ -59,6 +59,9 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return null;
     }
 
+    /**
+     * @return array<array-key, mixed>|null
+     */
     protected function getCatalogIds(): ?array
     {
         $catalogs = (isset($_REQUEST['catalogs']))
@@ -69,7 +72,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         if (count($catalogs) === 1) {
             // If not ready, display the data to make it ready / stop the action.
             $catalog = Catalog::create_from_id((int) $catalogs[0]);
-            if ($catalog !== null && !$catalog->isReady()) {
+            if ($catalog instanceof Catalog && !$catalog->isReady()) {
                 if (!isset($_REQUEST['perform_ready'])) {
                     $catalog->show_ready_process();
 
@@ -83,6 +86,9 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return $catalogs;
     }
 
+    /**
+     * @param array<array-key, mixed> $catalogIds
+     */
     abstract protected function handle(
         ServerRequestInterface $request,
         array $catalogIds,

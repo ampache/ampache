@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Repository\Model\Collection;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Partial\PageMeta;
@@ -63,7 +64,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // A collection the user may not see reports as missing rather than forbidden, matching the API: telling
         // them access was denied would confirm that a private collection with that id exists.
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->isVisible($user)
         ) {
             $this->logger->warning(

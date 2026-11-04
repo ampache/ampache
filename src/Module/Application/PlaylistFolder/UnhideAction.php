@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PlaylistFolder;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -55,7 +56,7 @@ final readonly class UnhideAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new AccessDeniedException();
         }
 

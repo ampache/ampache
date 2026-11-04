@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Repository\Model\Collection;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -53,7 +54,7 @@ final readonly class DeleteCollectionAction implements ApplicationActionInterfac
                 // Deleting is the owner's call alone: a collaborator may curate the contents but not discard them.
                 $collection = $this->collectionRepository->findById((int) $collectionId);
                 if (
-                    $collection !== null
+                    $collection instanceof Collection
                     && $collection->has_access()
                 ) {
                     $this->collectionRepository->delete($collection->getId());

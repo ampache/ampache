@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Art;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -52,7 +53,7 @@ final class UploadArtAction extends AbstractArtAction
         $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
-        if ($item === null) {
+        if (!$item instanceof library_item) {
             throw new AccessDeniedException();
         }
 

@@ -437,10 +437,13 @@ class Preference extends database_object
         'shouthome_max_items',
         'shouthome_order',
         'stream_control_bandwidth_days',
+        'stream_control_bandwidth_ip_max',
         'stream_control_bandwidth_max',
         'stream_control_hits_days',
+        'stream_control_hits_ip_max',
         'stream_control_hits_max',
         'stream_control_time_days',
+        'stream_control_time_ip_max',
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
@@ -809,6 +812,7 @@ class Preference extends database_object
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything. Nothing to do with fix_user_preferences(), which repairs rows.
      * @param array<string, mixed> $results
+     * @return array<string, mixed>
      */
     public static function fix_preferences(array $results): array
     {
@@ -1413,7 +1417,7 @@ class Preference extends database_object
     public static function set_preset(string $username, string $preset): bool
     {
         $user = User::get_from_username($username);
-        if ($user === null) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -1655,10 +1659,13 @@ class Preference extends database_object
             'stats_threshold' => 'Statistics Day Threshold',
             'stream_beautiful_url' => 'Enable URL Rewriting',
             'stream_control_bandwidth_days' => 'Stream control bandwidth history (days)',
+            'stream_control_bandwidth_ip_max' => 'Stream control maximal bandwidth per IP (month)',
             'stream_control_bandwidth_max' => 'Stream control maximal bandwidth (month)',
             'stream_control_hits_days' => 'Stream control hits history (days)',
+            'stream_control_hits_ip_max' => 'Stream control maximal hits per IP',
             'stream_control_hits_max' => 'Stream control maximal hits',
             'stream_control_time_days' => 'Stream control time history (days)',
+            'stream_control_time_ip_max' => 'Stream control maximal time per IP (minutes)',
             'stream_control_time_max' => 'Stream control maximal time (minutes)',
             'subsonic_always_download' => 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)',
             'subsonic_backend' => 'Use Subsonic backend',
@@ -1703,6 +1710,7 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
+     * @param array<int, scalar>|int|float|string|bool|null $value
      */
     public static function update(
         int|string $preference,

@@ -750,7 +750,7 @@ class Catalog_dropbox extends Catalog
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
                     $info            = ($song->id !== 0) ? self::update_song_from_tags($results, $song) : [];
-                    if ($info['change']) {
+                    if ($info['change'] ?? false) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated++;
                     } else {

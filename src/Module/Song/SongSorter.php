@@ -88,7 +88,7 @@ final class SongSorter implements SongSorterInterface
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $this->catalog = Catalog::create_from_id($row['id']);
-            if ($this->catalog === null) {
+            if (!$this->catalog instanceof Catalog) {
                 continue;
             }
 
@@ -132,7 +132,7 @@ final class SongSorter implements SongSorterInterface
         Song $media,
         Interactor $interactor,
     ): void {
-        if ($this->catalog === null) {
+        if (!$this->catalog instanceof Catalog) {
             return;
         }
 
@@ -228,7 +228,7 @@ final class SongSorter implements SongSorterInterface
         string $path,
         Interactor $interactor,
     ): void {
-        if ($this->catalog === null) {
+        if (!$this->catalog instanceof Catalog) {
             return;
         }
 
@@ -255,7 +255,7 @@ final class SongSorter implements SongSorterInterface
                 'music' => $this->modelFactory->createSong($file_id),
                 default => null,
             };
-            if ($media !== null) {
+            if ($media instanceof Song) {
                 $this->processMedia($media, $interactor);
             }
         }

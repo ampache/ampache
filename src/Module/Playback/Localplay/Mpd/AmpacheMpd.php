@@ -187,7 +187,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         // If we don't have the playlist yet, pull it
-        if ($this->_mpd->playlist === null) {
+        if ($this->_mpd->playlist === []) {
             $this->_mpd->RefreshInfo();
         }
 
@@ -195,7 +195,7 @@ class AmpacheMpd extends localplay_controller
         $playlist = $this->_mpd->playlist;
         $results  = [];
         // if there isn't anything to return don't do it
-        if (empty($playlist)) {
+        if ($playlist === []) {
             return $results;
         }
 
@@ -263,7 +263,7 @@ class AmpacheMpd extends localplay_controller
             }
 
             /* Optional Elements */
-            $data['track'] = $entry['Pos'] + 1;
+            $data['track'] = (int) $entry['Pos'] + 1;
 
             $results[] = $data;
         } // foreach playlist items
@@ -423,7 +423,7 @@ class AmpacheMpd extends localplay_controller
      * move
      * This tells MPD to move a song
      */
-    public function move($source, $destination): bool|string
+    public function move(int|string $source, int|string $destination): bool|string
     {
         if (!$this->_mpd instanceof mpd) {
             return false;
@@ -550,6 +550,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
+     * @return array<string, mixed>
      */
     public function status(): array
     {
@@ -565,7 +566,7 @@ class AmpacheMpd extends localplay_controller
             return $array;
         }
 
-        $track = $this->_mpd->status['song'] ?? 0;
+        $track = (int) ($this->_mpd->status['song'] ?? 0);
 
         // mpd omits keys it has no value for (e.g. `volume` when the server has no mixer) so don't assume they exist
         $array['state']        = $this->_mpd->status['state'] ?? mpd::STATE_STOPPED;
@@ -579,7 +580,7 @@ class AmpacheMpd extends localplay_controller
 
         $playlist_item = [];
         $url_data      = [];
-        if (is_array($this->_mpd->playlist) && array_key_exists($track, $this->_mpd->playlist)) {
+        if (array_key_exists($track, $this->_mpd->playlist)) {
             $playlist_item = $this->_mpd->playlist[$track];
             $url_data      = $this->parse_url($playlist_item['file']);
         }
@@ -604,7 +605,7 @@ class AmpacheMpd extends localplay_controller
         }
 
         // an unresolved entry falls back to the tags mpd reported, then to the raw url
-        if ($array['track_title'] === '' && !empty($playlist_item)) {
+        if ($array['track_title'] === '' && $playlist_item !== []) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
             } elseif (!empty($playlist_item['Name'])) {

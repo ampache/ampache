@@ -125,7 +125,7 @@ final readonly class QuickConnectService
 
         $user = $this->userRepository->findById($userId);
         // account state is re-checked here, not trusted from when the code was approved
-        if ($user === null || $user->disabled) {
+        if (!$user instanceof User || $user->disabled) {
             return ['ok' => false, 'user' => null];
         }
 

@@ -105,7 +105,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         foreach ($ids as $albumid) {
             $canonical = AmpConfig::get_web_path('/client') . '/rss.php?type=library_item&object_type=album&object_id=' . $albumid;
             $items[]   = [
-                'feedUrl' => ($this->user !== null && AmpConfig::get('use_auth'))
+                'feedUrl' => ($this->user instanceof User && AmpConfig::get('use_auth'))
                     ? $canonical . '&rsstoken=' . $this->user->getRssToken()
                     : $canonical,
                 'feedGuid' => PodcastGuid::fromFeedUrl($canonical),

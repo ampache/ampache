@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -57,7 +58,7 @@ final readonly class WantedAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if (
-            $user !== null
+            $user instanceof User
             && $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;

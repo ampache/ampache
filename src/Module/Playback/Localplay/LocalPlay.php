@@ -57,7 +57,7 @@ class LocalPlay
         // Load the controller and then check for its preferences
         $localplay = new LocalPlay($controller);
         // If we can't even load it no sense in going on
-        if ($localplay->_player === null) {
+        if (!$localplay->_player instanceof localplay_controller) {
             return false;
         }
 
@@ -67,7 +67,7 @@ class LocalPlay
     /**
      * add
      */
-    public function add($object): bool
+    public function add(mixed $object): bool
     {
         debug_event(self::class, 'Deprecated add method called: ' . json_encode($object), 5);
 
@@ -205,12 +205,12 @@ class LocalPlay
      * an empty array is passed on failure
      * @return array<int, array{
      *     id: int,
-     *     raw: string,
+     *     track: int,
+     *     raw?: string,
      *     vlid?: int,
      *     oid?: int,
      *     name?: string|null,
      *     link?: string|null,
-     *     track: int,
      * }>
      */
     public function get(): array
@@ -492,7 +492,7 @@ class LocalPlay
      */
     public function set_block_clear(bool $bool): void
     {
-        if ($this->_player && property_exists($this->_player, 'block_clear') && $this->_player->block_clear !== null) {
+        if ($this->_player instanceof localplay_controller && property_exists($this->_player, 'block_clear') && $this->_player->block_clear !== null) {
             $this->_player->block_clear = $bool;
         }
     }
@@ -519,6 +519,7 @@ class LocalPlay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
+     * @return array<string, mixed>|null
      */
     public function status(): ?array
     {

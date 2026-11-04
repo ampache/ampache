@@ -168,7 +168,7 @@ final class InstallerCommand extends Command
     /**
      * Bring an already installed database fully up to date, the same way `admin:updateDatabase -e` would
      */
-    private function updateExistingInstallation(Interactor $interactor): bool
+    private function updateExistingInstallation(Interactor $interactor): void
     {
         if (!Dba::check_database_inserted()) {
             $interactor->error(
@@ -176,7 +176,7 @@ final class InstallerCommand extends Command
                 true
             );
 
-            return false;
+            return;
         }
 
         // Recreate any table the schema is missing before the migrations that expect them run
@@ -192,7 +192,7 @@ final class InstallerCommand extends Command
         } catch (UpdateFailedException $updateFailedException) {
             $interactor->error(sprintf(T_('Update failed! %s'), $updateFailedException->getMessage()), true);
 
-            return false;
+            return;
         }
 
         // A database left behind by a newer Ampache has to come back down before anything else makes sense
@@ -202,7 +202,7 @@ final class InstallerCommand extends Command
             } catch (UpdateException $error) {
                 $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
 
-                return false;
+                return;
             }
         }
 
@@ -214,7 +214,7 @@ final class InstallerCommand extends Command
             } catch (UpdateException $error) {
                 $interactor->error(sprintf(T_('Update failed! %s'), $error->getMessage()), true);
 
-                return false;
+                return;
             }
 
             $interactor->ok(T_('Updated'), true);
@@ -226,6 +226,6 @@ final class InstallerCommand extends Command
         Preference::set_defaults();
         Preference::translate_db();
 
-        return true;
+
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
+use Ampache\Repository\Model\Podcast;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -70,7 +71,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $catalogs  = $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id);
         $podcastId = (int) ($request->getQueryParams()['podcast'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
-        $shown     = $podcast !== null && in_array($podcast->getCatalogId(), $catalogs);
+        $shown     = $podcast instanceof Podcast && in_array($podcast->getCatalogId(), $catalogs);
 
         if ($shown) {
             $webPath = AmpConfig::get_web_path('/client');

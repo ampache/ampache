@@ -40,5 +40,8 @@ interface AuthenticatorInterface
      */
     public function auth(string $username, string $password): array;
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function postAuth(): ?array;
 }

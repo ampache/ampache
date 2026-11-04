@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Rss;
 
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\library_item;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -82,7 +84,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $rssToken = $queryParams['rsstoken'] ?? '';
 
         $user = $this->userRepository->getByRssToken($rssToken);
-        if ($user !== null && $user->disabled) {
+        if ($user instanceof User && $user->disabled) {
             // same as an unknown token: the feeds already take a null user
             $user = null;
         }
@@ -94,7 +96,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 [Album::class, AlbumDisk::class, Artist::class, Podcast::class, Song::class]
             );
 
-            if ($item === null) {
+            if (!$item instanceof library_item) {
                 return null;
             }
 

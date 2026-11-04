@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\PrivateMessage\PrivateMessageView;
@@ -64,7 +65,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $pvmsg = $this->pmRepository->findById($msgId);
 
         if (
-            $pvmsg === null
+            !$pvmsg instanceof PrivateMessageInterface
             || $pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()
         ) {
             throw new AccessDeniedException(

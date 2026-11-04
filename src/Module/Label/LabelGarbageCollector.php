@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label;
 
+use Ampache\Repository\Model\Label;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 
@@ -50,7 +51,7 @@ final readonly class LabelGarbageCollector implements LabelGarbageCollectorInter
             }
 
             $label = $this->labelRepository->findById($labelId);
-            if ($label === null) {
+            if (!$label instanceof Label) {
                 continue;
             }
 

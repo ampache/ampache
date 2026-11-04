@@ -41,11 +41,13 @@ use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginGetAvatarUrlInterface;
 use Ampache\Plugin\PluginSaveMediaplayInterface;
 use Ampache\Plugin\PluginStreamControlInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use Ampache\Repository\StreamControlIpActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 
@@ -325,6 +327,7 @@ class User extends database_object
     /**
      * get_user_data
      * This updates some background data for user specific function
+     * @return array<string, int|string>
      */
     public static function get_user_data(int $user_id, ?string $key = null, int|string|null $default = null): array
     {
@@ -402,8 +405,10 @@ class User extends database_object
     /**
      * stream_control
      * Check all stream control plugins
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
+     * @param bool $isGuest whether this request is attributed to a surrogate account (eg. a public share) rather than its own logged-in user
      */
-    public static function stream_control(array $media_ids, ?User $user = null): bool
+    public static function stream_control(array $media_ids, ?User $user = null, bool $isGuest = false): bool
     {
         if ($user === null) {
             $user = Core::get_global('user');
@@ -412,11 +417,38 @@ class User extends database_object
             }
         }
 
+        $ip       = Core::get_user_ip() ?: null;
+        $tracksIp = false;
+
         foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginStreamControlInterface && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
+            if (!$plugin->_plugin instanceof PluginStreamControlInterface || !$plugin->load($user)) {
+                continue;
+            }
+
+            if (!$plugin->_plugin->stream_control($media_ids, $ip, $isGuest)) {
                 return false;
             }
+
+            $tracksIp = $tracksIp || $plugin->_plugin->tracksIp();
+        }
+
+        // feed the per-IP history only when a loaded plugin's `*_ip_max` would actually read it back
+        if ($isGuest && $ip !== null && $tracksIp) {
+            $hits = 0;
+            $size = 0;
+            $time = 0;
+            foreach ($media_ids as $media_id) {
+                $objectType = $media_id['object_type'];
+                $className  = ObjectTypeToClassNameMapper::map($objectType instanceof LibraryItemEnum ? $objectType->value : $objectType);
+                /** @var Media $media */
+                $media = new $className($media_id['object_id']);
+                $hits++;
+                $size += $media->size ?? 0;
+                $time += $media->time ?? 0;
+            }
+
+            self::getStreamControlIpActivityRepository()->record($ip, time(), $hits, $size, $time);
         }
 
         return true;
@@ -539,6 +571,16 @@ class User extends database_object
     /**
      * @deprecated inject dependency
      */
+    private static function getStreamControlIpActivityRepository(): StreamControlIpActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamControlIpActivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getUserRepository(): UserRepositoryInterface
     {
         global $dic;
@@ -627,6 +669,7 @@ class User extends database_object
     /**
      * get_avatar
      * Get the user avatar
+     * @return array{title: string, url: string, url_mini: string, url_medium: string}
      */
     public function get_avatar(bool $local = false): array
     {
@@ -657,8 +700,9 @@ class User extends database_object
                 foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
                     $plugin = new Plugin($plugin_name);
                     if ($plugin->_plugin instanceof PluginGetAvatarUrlInterface && $plugin->load($user)) {
-                        $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
-                        if (!empty($avatar['url'])) {
+                        $url = $plugin->_plugin->get_avatar_url($this);
+                        if (!empty($url)) {
+                            $avatar['url']        = $url;
                             $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
                             $avatar['url_medium'] = $plugin->_plugin->get_avatar_url($this, 64);
                             $avatar['title'] .= ' (' . $plugin_name . ')';
@@ -796,6 +840,7 @@ class User extends database_object
     /**
      * get_playlists
      * Get your playlists and just your playlists
+     * @return list<int>
      */
     public function get_playlists(bool $show_all): array
     {
@@ -810,6 +855,11 @@ class User extends database_object
      * []['title'] = uppercase type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
+     * @return array<string, array{
+     *     title: string,
+     *     admin: bool,
+     *     prefs: array<string, array{name: string, level: int, description: string, value: ?string, subcategory: ?string, type: string}>
+     * }>
      */
     public function get_preferences(int|string $type = 0, bool $system = false): array
     {
@@ -1007,6 +1057,7 @@ class User extends database_object
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
      * good stuff
+     * @param array<string, mixed> $data
      */
     public function update(array $data): ?int
     {
@@ -1043,13 +1094,18 @@ class User extends database_object
                 case 'email':
                 case 'fullname_public':
                 case 'fullname':
-                case 'password':
                 case 'state':
                 case 'username':
                 case 'website':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
+                    }
+                    break;
+                case 'password':
+                    // there is no plaintext `$this->password` to compare against, so a non-empty submission always applies
+                    if (!empty($value)) {
+                        $this->update_password((string) $value);
                     }
                     break;
                 case 'clear_stats':

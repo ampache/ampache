@@ -46,7 +46,7 @@ final readonly class PlaylistFolderItemsLoader implements PlaylistFolderItemsLoa
 
     public function getItems(User $user, ?PlaylistFolder $folder): array
     {
-        if ($folder === null) {
+        if (!$folder instanceof PlaylistFolder) {
             return $this->rootItems($user);
         }
 
@@ -56,7 +56,7 @@ final readonly class PlaylistFolderItemsLoader implements PlaylistFolderItemsLoa
 
         // a shared folder's items are the owner's placements, filtered to what the viewer may see
         $owner = $this->userRepository->findById($folder->getUserId());
-        if ($owner === null) {
+        if (!$owner instanceof User) {
             return [];
         }
 

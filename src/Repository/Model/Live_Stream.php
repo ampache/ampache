@@ -108,6 +108,7 @@ class Live_Stream extends database_object implements Media, displayable_item, co
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
+     * @param array<string, mixed> $data
      */
     public static function create(array $data): ?string
     {

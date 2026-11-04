@@ -47,7 +47,7 @@ final class CatalogListRenderer extends AbstractBrowseListRenderer
         $catalogs = [];
         foreach ($this->getObjectIds() as $objectId) {
             $catalog = Catalog::create_from_id($objectId);
-            if ($catalog !== null) {
+            if ($catalog instanceof Catalog) {
                 $catalogs[] = $catalog;
             }
         }

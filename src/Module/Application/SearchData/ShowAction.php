@@ -82,7 +82,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
     }
 
-    private function arrayToJSON($array): string
+    /**
+     * @param array<array-key, mixed> $array
+     */
+    private function arrayToJSON(array $array): string
     {
         if (function_exists('json_encode') && is_string(json_encode($array))) {
             return json_encode($array) ?: '';

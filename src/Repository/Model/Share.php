@@ -404,6 +404,7 @@ class Share extends database_object
 
     /**
      * update
+     * @param array<string, mixed> $data
      */
     public function update(array $data, User $user): bool
     {

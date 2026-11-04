@@ -86,7 +86,7 @@ class SeafileAdapter
     public function download(DirectoryItem $file, bool $partial = false): string
     {
         $dir  = (string) $file->dir;
-        $url  = ($this->client && $this->library) ? $this->throttle_check(fn() => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
+        $url  = ($this->client && $this->library instanceof \Seafile\Client\Type\Library) ? $this->throttle_check(fn() => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
@@ -109,8 +109,9 @@ class SeafileAdapter
      * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
      * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
      * Returns number added, or -1 on failure
+     * @param callable(DirectoryItem): int $func
      */
-    public function for_all_files($func, string $path = '/'): int
+    public function for_all_files(callable $func, string $path = '/'): int
     {
         if ($this->client != null) {
             $directoryItems = $this->get_cached_directory($path);
@@ -267,7 +268,7 @@ class SeafileAdapter
             return null;
         }
 
-        if (!$this->client || !$this->library) {
+        if (!$this->client || !$this->library instanceof \Seafile\Client\Type\Library) {
             return null;
         }
 

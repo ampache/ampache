@@ -78,7 +78,7 @@ final readonly class GeneratedArtService implements GeneratedArtServiceInterface
         }
 
         $recipe = $this->recipeBuilder->build($objectType, $objectId);
-        if ($recipe === null) {
+        if (!$recipe instanceof Recipe) {
             return null;
         }
 

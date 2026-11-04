@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Art;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -56,7 +57,7 @@ final class ClearArtAction extends AbstractArtAction
 
         $item = $this->getItem($gatekeeper);
 
-        if ($item === null) {
+        if (!$item instanceof library_item) {
             throw new AccessDeniedException();
         }
 

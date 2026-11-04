@@ -42,14 +42,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     ) {}
 
     /**
-     * @return array{
-     *     success?: bool,
-     *     type?: string,
-     *     username?: string,
-     *     name?: string,
-     *     email?: string,
-     *     error?: string
-     * }
+     * @return array<string, mixed>
      */
     public function login(
         string $username,
@@ -112,6 +105,9 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         }
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function postAuth(string $method): ?array
     {
         $result = [];

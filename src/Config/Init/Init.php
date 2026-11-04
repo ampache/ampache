@@ -74,7 +74,7 @@ final readonly class Init
         }
 
         // returning from a finally block would discard an exception no catch above matched, so this stays outside one
-        if ($error === null) {
+        if (!$error instanceof Throwable) {
             return;
         }
 

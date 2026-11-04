@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Share\AddShareView;
@@ -69,7 +70,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         if (
-            $user === null
+            !$user instanceof User
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
             || !$this->requestParser->verifyForm('add_share')
         ) {

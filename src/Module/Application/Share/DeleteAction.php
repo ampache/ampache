@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -71,8 +73,8 @@ final readonly class DeleteAction implements ApplicationActionInterface
         );
 
         if (
-            $share === null
-            || $user === null
+            !$share instanceof Share
+            || !$user instanceof User
             || !$share->isAccessible($user)
         ) {
             throw new AccessDeniedException();

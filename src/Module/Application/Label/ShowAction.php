@@ -76,7 +76,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             ? $this->labelRepository->findById($label_id)
             : null;
 
-        if ($label !== null) {
+        if ($label instanceof Label) {
             $webPath = AmpConfig::get_web_path('/client');
             $url     = $webPath . '/labels.php?action=show&label=' . $label->id;
             PageMeta::set(
@@ -104,7 +104,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 : null;
         }
 
-        if ($label_id !== null && $label === null) {
+        if ($label_id !== null && !$label instanceof Label) {
             $this->logger->warning(
                 'Requested a label that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

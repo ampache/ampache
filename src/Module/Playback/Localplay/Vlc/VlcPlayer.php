@@ -102,6 +102,7 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
+     * @return array<string, mixed>
      */
     public function fullstate(): ?array
     {
@@ -119,6 +120,7 @@ class VlcPlayer
      * get_tracks
      * This returns a delimited string of all of the filenames
      * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
+     * @return array<string, mixed>|null
      */
     public function get_tracks(): ?array
     {
@@ -315,6 +317,7 @@ class VlcPlayer
      * This is the core of this library it takes care of sending the HTTP
      * request to the VLC server and getting the response
      * @param array<string, string|int> $args
+     * @return array<string, mixed>|null
      */
     private function sendCommand(string $cmd, array $args): ?array
     {

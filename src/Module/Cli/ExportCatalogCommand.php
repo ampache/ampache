@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
@@ -52,7 +53,7 @@ final class ExportCatalogCommand extends Command
         string $file,
         string $format,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

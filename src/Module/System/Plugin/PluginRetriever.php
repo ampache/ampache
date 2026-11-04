@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Plugin;
 
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Repository\Model\User;
 use Generator;
 
@@ -44,7 +45,7 @@ final class PluginRetriever implements PluginRetrieverInterface
         foreach (Plugin::get_plugins($pluginType) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if (
-                $plugin->_plugin !== null
+                $plugin->_plugin instanceof AmpachePlugin
                 && $plugin->load($user)
             ) {
                 yield $plugin;

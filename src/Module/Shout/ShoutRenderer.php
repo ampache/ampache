@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Shout;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
@@ -109,7 +110,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
         $user = $shout->getUser();
-        if ($user !== null) {
+        if ($user instanceof User) {
             if ($details) {
                 $html .= $user->get_f_link();
             } else {

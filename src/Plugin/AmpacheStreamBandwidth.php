@@ -30,8 +30,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\StreamControlIpActivityRepositoryInterface;
 use Override;
 
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
@@ -57,8 +59,9 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     #[Override]
     public string $version = '000001';
 
-    private int $bandwidth_days = 30;
-    private int $bandwidth_max  = 1024;
+    private int $bandwidth_days   = 30;
+    private int $bandwidth_ip_max = -1;
+    private int $bandwidth_max    = 1024;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id = 0;
@@ -68,6 +71,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
      */
     public function __construct(
         private readonly Graph $graph,
+        private readonly StreamControlIpActivityRepositoryInterface $streamControlIpActivityRepository,
     ) {
         $this->description = T_('Control bandwidth per user');
     }
@@ -82,7 +86,11 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
             return false;
         }
 
-        return Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
+        if (!Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('stream_control_bandwidth_ip_max', T_('Stream control maximal bandwidth per IP (month)'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -103,45 +111,67 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
             $this->bandwidth_days = 30;
         }
 
+        $this->bandwidth_ip_max = (int) ($data['stream_control_bandwidth_ip_max']) ?: -1;
+
         return true;
     }
 
     /**
      * Check stream control
+     * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
      */
-    public function stream_control(array $media_ids): bool
+    public function stream_control(array $media_ids, ?string $ip = null, bool $isGuest = false): bool
     {
-        // No check if unlimited bandwidth (= -1)
-        if ($this->bandwidth_max < 0) {
+        // Nothing is configured to check (both limits unlimited, = -1)
+        if ($this->bandwidth_max < 0 && $this->bandwidth_ip_max < 0) {
             return true;
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs')) {
-            // Calculate all media size
-            $next_total = 0;
-            foreach ($media_ids as $media_id) {
-                $className = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-                /** @var Media $media */
-                $media = new $className($media_id['object_id']);
-                $next_total += $media->size ?? 0;
-            }
+        if (!AmpConfig::get('statistical_graphs')) {
+            debug_event('streambandwidth.plugin', 'Stream control not enforced, statistical graphs disabled.', 1);
 
-            $graph         = $this->graph;
-            $end_date      = time();
-            $start_date    = $end_date - ($this->bandwidth_days * 86400);
-            $current_total = $graph->get_total_bandwidth($this->user_id, $start_date, $end_date);
-            $next_total += $current_total;
-            $max = $this->bandwidth_max * 1024 * 1024;
-
-            debug_event('streambandwidth.plugin', 'Next stream bandwidth will be ' . $next_total . ' / ' . $max, 3);
-
-            return ($next_total <= $max);
+            return true;
         }
 
-        debug_event('streambandwidth.plugin', 'Access denied, statistical graph disabled.', 1);
+        // Calculate all media size
+        $next_total = 0;
+        foreach ($media_ids as $media_id) {
+            $objectType = $media_id['object_type'];
+            $className  = ObjectTypeToClassNameMapper::map($objectType instanceof LibraryItemEnum ? $objectType->value : $objectType);
+            /** @var Media $media */
+            $media = new $className($media_id['object_id']);
+            $next_total += $media->size ?? 0;
+        }
+
+        $end_date   = time();
+        $start_date = $end_date - ($this->bandwidth_days * 86400);
+
+        if ($this->bandwidth_max >= 0) {
+            $account_total = $next_total + $this->graph->get_total_bandwidth($this->user_id, $start_date, $end_date);
+            $max           = $this->bandwidth_max * 1024 * 1024;
+            debug_event('streambandwidth.plugin', 'Next stream bandwidth will be ' . $account_total . ' / ' . $max, 3);
+            if ($account_total > $max) {
+                return false;
+            }
+        }
+
+        // a cap on the source IP, only used when the request has no identified account to cap instead (eg. a public share)
+        if ($isGuest && $ip !== null && $this->bandwidth_ip_max >= 0) {
+            $ip_total = $next_total + $this->streamControlIpActivityRepository->sumBandwidth($ip, $start_date, $end_date);
+            $max      = $this->bandwidth_ip_max * 1024 * 1024;
+            debug_event('streambandwidth.plugin', 'Next IP stream bandwidth will be ' . $ip_total . ' / ' . $max, 3);
+            if ($ip_total > $max) {
+                return false;
+            }
+        }
 
         return true;
+    }
+
+    public function tracksIp(): bool
+    {
+        return $this->bandwidth_ip_max >= 0;
     }
 
     /**
@@ -153,6 +183,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         return (
             Preference::delete('stream_control_bandwidth_max')
             && Preference::delete('stream_control_bandwidth_days')
+            && Preference::delete('stream_control_bandwidth_ip_max')
         );
     }
 

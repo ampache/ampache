@@ -57,7 +57,7 @@ final class CollectionListRenderer extends AbstractBrowseListRenderer
         $collections = [];
         foreach ($this->getObjectIds() as $objectId) {
             $collection = $this->collectionRepository->findById($objectId);
-            if ($collection === null || !$collection->isVisible($viewer)) {
+            if (!$collection instanceof Collection || !$collection->isVisible($viewer)) {
                 continue;
             }
 

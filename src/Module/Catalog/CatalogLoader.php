@@ -38,7 +38,7 @@ final class CatalogLoader implements CatalogLoaderInterface
     public function getById(int $catalogId): Catalog
     {
         $catalog = Catalog::create_from_id($catalogId);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             throw new CatalogLoadingException();
         }
 
@@ -66,7 +66,7 @@ final class CatalogLoader implements CatalogLoaderInterface
 
         foreach ($catalogIds as $catalogId) {
             $catalog = Catalog::create_from_id($catalogId);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 continue;
             }
 

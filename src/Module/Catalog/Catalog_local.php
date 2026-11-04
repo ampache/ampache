@@ -505,7 +505,7 @@ class Catalog_local extends Catalog
         }
 
         $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
-        if (!$folder || $folder->isNew()) {
+        if (!$folder instanceof Folder || $folder->isNew()) {
             throw new Error('ERROR: ' . $this->getId() . ' could not create folder ' . $folderName . ' at ' . $folderPath);
         }
 
@@ -1265,7 +1265,7 @@ class Catalog_local extends Catalog
         }
 
         $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
-        if (!$folder || $folder->isNew()) {
+        if (!$folder instanceof Folder || $folder->isNew()) {
             $folderId = Folder::create([
                 'name' => $this->get_fullname(),
                 'catalog' => $this->getId(),
@@ -1378,7 +1378,7 @@ class Catalog_local extends Catalog
                 }
 
                 $newCatalog = self::create_from_id($newCatalogId);
-                if ($newCatalog === null) {
+                if (!$newCatalog instanceof Catalog) {
                     return false;
                 }
 
@@ -1935,7 +1935,7 @@ class Catalog_local extends Catalog
                             (int) $this->_filecache[$lc_dir],
                             filemtime($full_file) ?: time()
                         );
-                    } elseif ($this->add_folder($file, $full_file, $path) !== null) {
+                    } elseif ($this->add_folder($file, $full_file, $path) instanceof Folder) {
                         $this->count++;
                         $interactor?->info(
                             sprintf('Added %s, closing handle', $full_file),

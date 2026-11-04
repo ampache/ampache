@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
+use MusicBrainz\Filters\FilterInterface;
 use MusicBrainz\Exception;
 use MusicBrainz\MusicBrainz;
 
@@ -43,7 +44,7 @@ final readonly class MissingArtistFinder implements MissingArtistFinderInterface
                 ['artist' => $artistName]
             );
             $filter = $this->musicBrainz->getFilter();
-            if ($filter === null) {
+            if (!$filter instanceof FilterInterface) {
                 return [];
             }
 

@@ -38,6 +38,8 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -75,7 +77,10 @@ final class Upnp_Api
         private SongRepositoryInterface $songRepository,
     ) {}
 
-    public static function callSearch($criteria, $filter, $start, $count): array
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>>}
+     */
+    public static function callSearch(string $criteria, mixed $filter, int $start, int $count): array
     {
         $type = self::_parse_upnp_filter($filter);
         $data = self::_parse_upnp_searchcriteria($criteria, $type);
@@ -158,7 +163,7 @@ final class Upnp_Api
         ];
     }
 
-    public static function createDIDL($prmItems, $filterValue): DOMDocument
+    public static function createDIDL(mixed $prmItems, mixed $filterValue): DOMDocument
     {
         $xmlDoc               = new DOMDocument('1.0' /*, 'utf-8'*/);
         $xmlDoc->formatOutput = true; // Note: other players don't seem to do this
@@ -296,9 +301,9 @@ final class Upnp_Api
     }
 
     public static function createSOAPEnvelope(
-        $prmDIDL,
-        $prmNumRet,
-        $prmTotMatches,
+        string $prmDIDL,
+        int $prmNumRet,
+        int $prmTotMatches,
         string $prmResponseType = 'u:BrowseResponse',
         string $prmUpdateID = '0',
     ): DOMDocument {
@@ -384,6 +389,9 @@ final class Upnp_Api
      * @param string $data The raw data string containing the headers to process.
      * @return array An associative array of headers where keys are header names and values are their corresponding values.
      */
+    /**
+     * @return array<string, string>
+     */
     public static function get_headers(string $data): array
     {
         $lines  = explode(PHP_EOL, $data); // split into lines
@@ -422,9 +430,9 @@ final class Upnp_Api
      * @param $keytoCheck
      * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
      */
-    public static function isinFilter($filterValue, $keyisRes, $keytoCheck): bool
+    public static function isinFilter(?string $filterValue, bool $keyisRes, string $keytoCheck): bool
     {
-        if ($filterValue == null || $filterValue == '') {
+        if ($filterValue == null) {
             return true;
         }
         if ($filterValue == "*") {
@@ -443,6 +451,9 @@ final class Upnp_Api
         return in_array($testKey, $filt, true); // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function itemLiveStream(Live_Stream $radio, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -462,17 +473,20 @@ final class Upnp_Api
             'upnp:albumArtURI' => $art_url,
 
             'res' => $radio->url,
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function itemSong(Song $song, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$song->type];
+        $arrFileType    = $fileTypesByExt[$song->type] ?? null;
 
         /**
          * Properties observed for MS media player include
@@ -501,7 +515,7 @@ final class Upnp_Api
             'upnp:genre' => Tag::get_display($song->get_tags(), false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
             'res' => $song->play_url('', 'api', true), // For upnp, use local
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
             'size' => $song->size,
             'duration' => $song->get_f_time(true) . '.0',
             'bitrate' => $song->bitrate,
@@ -511,7 +525,7 @@ final class Upnp_Api
         ];
     }
 
-    public static function notify_request($unpacked, $remote): void
+    public static function notify_request(string $unpacked, string $remote): void
     {
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
@@ -521,7 +535,10 @@ final class Upnp_Api
 
     /* ================================== End SSDP functions ================================== */
 
-    public static function parseUPnPRequest($prmRequest): array
+    /**
+     * @return array<string, mixed>
+     */
+    public static function parseUPnPRequest(string $prmRequest): array
     {
         $retArr = [];
         $reader = new XMLReader();
@@ -644,7 +661,7 @@ final class Upnp_Api
     /**
      * @throws Exception
      */
-    public static function sendResponse($delaytime, $actst, $address): void
+    public static function sendResponse(int $delaytime, string $actst, string $address): void
     {
         $response = 'HTTP/1.1 200 OK' . "\r\n";
         $response .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
@@ -672,7 +689,11 @@ final class Upnp_Api
         //debug_event(self::class, '(Sent)', 5);
     }
 
-    public static function slice($items, $start, $count): array
+    /**
+     * @param array<array-key, mixed> $items
+     * @return array{0: int, 1: array<int, mixed>}
+     */
+    public static function slice(array $items, int $start, int $count): array
     {
         $maxCount = count($items);
         //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
@@ -683,7 +704,10 @@ final class Upnp_Api
         ];
     }
 
-    public static function videoChilds($prmPath, $prmQuery, $start, $count): array
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>|null>}
+     */
+    public static function videoChilds(string $prmPath, string $prmQuery, int $start, int $count): array
     {
         $mediaItems = [];
         $maxCount   = 0;
@@ -722,6 +746,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public static function videoMetadata(string $prmPath): ?array
     {
         $root    = 'amp://video';
@@ -770,6 +797,9 @@ final class Upnp_Api
         return $meta;
     }
 
+    /**
+     * @return array<string, array{class: string, mime: string}>
+     */
     private static function _getFileTypes(): array
     {
         return [
@@ -891,6 +921,9 @@ final class Upnp_Api
         return $tokens;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemAlbum(Album $album, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -909,6 +942,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemArtist(Artist $artist, string $parent): array
     {
         return [
@@ -922,30 +958,39 @@ final class Upnp_Api
         ];
     }
 
-    private static function _itemPlaylist($playlist, string $parent): array
+    /**
+     * @return array<string, mixed>
+     */
+    private static function _itemPlaylist(playlist_object $playlist, string $parent): array
     {
         return [
             'id' => 'amp://music/playlists/' . $playlist->id,
             'parentID' => $parent,
             'restricted' => 'false',
-            'childCount' => $playlist->get_media_count(),
+            'childCount' => count($playlist->get_medias()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container', // object.container.playlistContainer
         ];
     }
 
-    private static function _itemPodcast($podcast, string $parent): array
+    /**
+     * @return array<string, mixed>
+     */
+    private static function _itemPodcast(Podcast $podcast, string $parent): array
     {
         return [
-            'id' => 'amp://music/podcasts/' . $podcast->id,
+            'id' => 'amp://music/podcasts/' . $podcast->getId(),
             'parentID' => $parent,
             'restricted' => '1',
-            'childCount' => count($podcast->get_episodes()),
+            'childCount' => count($podcast->getEpisodeIds()),
             'dc:title' => self::_replaceSpecialSymbols($podcast->get_fullname()),
             'upnp:class' => 'object.container',
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemPodcastEpisode(Podcast_Episode $episode, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -973,6 +1018,9 @@ final class Upnp_Api
         return $ret;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemSmartPlaylist(Search $playlist, string $parent): array
     {
         return [
@@ -985,6 +1033,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemTag(Tag $tag): array
     {
         return [
@@ -998,13 +1049,16 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function _itemVideo(Video $video, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = $fileTypesByExt[$video->type];
+        $arrFileType    = $fileTypesByExt[$video->type] ?? null;
 
         return [
             'id' => $parent . '/' . $video->id,
@@ -1016,7 +1070,7 @@ final class Upnp_Api
             'upnp:genre' => Tag::get_display($video->get_tags(), false, 'video'),
 
             'res' => $video->play_url('', 'api'),
-            'protocolInfo' => $arrFileType['mime'],
+            'protocolInfo' => (isset($arrFileType['mime'])) ? $arrFileType['mime'] : null,
             'size' => $video->size,
             'duration' => $video->get_f_time(true) . '.0',
         ];
@@ -1025,7 +1079,7 @@ final class Upnp_Api
     /**
      * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
      */
-    private static function _parse_upnp_filter($filter): string
+    private static function _parse_upnp_filter(mixed $filter): string
     {
         // TODO patched out for now: creates problems in search results
         unset($filter);
@@ -1037,6 +1091,9 @@ final class Upnp_Api
         return 'song';
     }
 
+    /**
+     * @return array{}|array{ruletype: string|null, operator: int, input: string|null}
+     */
     private static function _parse_upnp_search_term(string $query, string $context): array
     {
         //echo "Search term ", $query, "\n";
@@ -1094,7 +1151,10 @@ final class Upnp_Api
         return $term;
     }
 
-    private static function _parse_upnp_searchcriteria($query, $type): array
+    /**
+     * @return array<string, mixed>
+     */
+    private static function _parse_upnp_searchcriteria(string $query, string $type): array
     {
         // Transforms a upnp search query into an Ampache search query
         $upnp_translations = [
@@ -1189,7 +1249,7 @@ final class Upnp_Api
         for ($i = 0; $i < $size; $i++) {
             if (!empty($tokens[$i])) {
                 $rule = 'rule_' . $rule_num;
-                $term = self::_parse_upnp_search_term($tokens[$i], $data['type']);
+                $term = self::_parse_upnp_search_term($tokens[$i], (string) $data['type']);
                 if (!empty($term)) {
                     $data[$rule]               = $term['ruletype'];
                     $data[$rule . '_operator'] = $term['operator'];
@@ -1248,7 +1308,10 @@ final class Upnp_Api
         }
     }
 
-    public function musicChilds($prmPath, $prmQuery, $start, $count): array
+    /**
+     * @return array{0: int, 1: array<int, array<string, mixed>|null>}
+     */
+    public function musicChilds(string $prmPath, string $prmQuery, int $start, int $count): array
     {
         $mediaItems = [];
         $maxCount   = 0;
@@ -1464,6 +1527,9 @@ final class Upnp_Api
         ];
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function musicMetadata(string $prmPath): ?array
     {
         $root    = 'amp://music';

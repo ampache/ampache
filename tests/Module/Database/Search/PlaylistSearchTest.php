@@ -71,15 +71,15 @@ class PlaylistSearchTest extends MockeryTestCase
         ]);
 
         $this->assertSame(
-            "(" . self::VISIBILITY . " OR `playlist`.`name` LIKE ? OR " . self::VISIBILITY . " OR `playlist`.`name` LIKE ?)"
-            . " AND " . self::VISIBILITY . " AND `playlist`.`id` > ?",
+            "((`playlist`.`name` LIKE ? OR `playlist`.`name` LIKE ?) AND `playlist`.`id` > ?)"
+            . " AND " . self::VISIBILITY,
             $result['where_sql']
         );
     }
 
     /**
-     * an ungrouped rule must never get wrapped in parens, even though it internally produces more
-     * than one raw `where` fragment (its own visibility clause alongside it)
+     * an ungrouped rule must never get wrapped in parens; the rules flat-implode and the visibility
+     * guard is ANDed once at the end
      */
     public function testUngroupedRulesProduceAFlatImplode(): void
     {
@@ -89,10 +89,33 @@ class PlaylistSearchTest extends MockeryTestCase
         ]);
 
         $this->assertSame(
-            self::VISIBILITY . " AND `playlist`.`name` LIKE ? AND " . self::VISIBILITY . " AND `playlist`.`id` > ?",
+            "(`playlist`.`name` LIKE ? AND `playlist`.`id` > ?) AND " . self::VISIBILITY,
             $result['where_sql']
         );
         $this->assertSame(['%Workout%', 5], $result['parameters']);
+    }
+
+    /**
+     * the visibility guard sits once at the top level under AND; an OR group must never be able to
+     * cancel it (regression: other users' private playlists leaked through an "any rule" group)
+     */
+    public function testVisibilityCannotBeCancelledByAnOrGroup(): void
+    {
+        $result = $this->ruleSql([
+            [
+                'group_operator' => 'or',
+                'rules' => [
+                    ['title', 'contain', 'Workout'],
+                    ['title', 'contain', 'Running'],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            "(`playlist`.`name` LIKE ? OR `playlist`.`name` LIKE ?) AND " . self::VISIBILITY,
+            $result['where_sql']
+        );
+        $this->assertSame(['%Workout%', '%Running%'], $result['parameters']);
     }
 
     /**
