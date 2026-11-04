@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
@@ -48,7 +49,7 @@ final class PrintTagsCommand extends Command
     public function execute(
         string $filename,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 
@@ -67,7 +68,7 @@ final class PrintTagsCommand extends Command
         $row        = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
             $catalog = Catalog::create_from_id((int) $row['id']);
-            if ($catalog !== null) {
+            if ($catalog instanceof Catalog) {
                 $dir_pattern  = (string) $catalog->sort_pattern;
                 $file_pattern = (string) $catalog->rename_pattern;
             }

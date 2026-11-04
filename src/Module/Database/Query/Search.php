@@ -1665,7 +1665,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -1785,7 +1785,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -1831,7 +1831,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 
@@ -2232,7 +2232,7 @@ class Search extends playlist_object
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
-            if ($catalog === null || !$catalog->name) {
+            if (!$catalog instanceof Catalog || !$catalog->name) {
                 break;
             }
 

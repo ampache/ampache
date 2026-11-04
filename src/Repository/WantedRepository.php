@@ -95,7 +95,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
         $sql    = 'DELETE FROM `wanted` WHERE `mbid` = ?';
         $params = [$musicbrainzId];
 
-        if ($user !== null) {
+        if ($user instanceof User) {
             $sql .= ' AND `user` = ?';
             $params[] = $user->getId();
         }
@@ -134,7 +134,7 @@ final readonly class WantedRepository implements WantedRepositoryInterface
         $params    = [];
         $wantedIds = [];
 
-        if ($user !== null) {
+        if ($user instanceof User) {
             $sql .= ' WHERE `user` = ?';
             $params[] = $user->getId();
         }

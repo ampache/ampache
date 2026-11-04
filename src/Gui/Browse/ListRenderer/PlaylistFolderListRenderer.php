@@ -80,7 +80,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
             $parentId = $this->getCurrentFolder()?->getParentId() ?? PlaylistFolder::ROOT;
             while ($parentId > PlaylistFolder::ROOT) {
                 $parent = $this->playlistFolderRepository->findById($parentId);
-                if ($parent === null) {
+                if (!$parent instanceof PlaylistFolder) {
                     break;
                 }
 
@@ -183,7 +183,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return $this->cachePerRender('hiddenFolders', function (): array {
             $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
 
-            return ($user !== null) ? $this->playlistFolderRepository->getHiddenFolders($user->getId()) : [];
+            return ($user instanceof User) ? $this->playlistFolderRepository->getHiddenFolders($user->getId()) : [];
         });
     }
 
@@ -265,7 +265,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         $owner = $this->userRepository->findById($item->getUserId());
 
-        return ($owner !== null) ? sprintf(T_('Shared by %s'), $owner->getUsername()) : '';
+        return ($owner instanceof User) ? sprintf(T_('Shared by %s'), $owner->getUsername()) : '';
     }
 
     /**
@@ -411,7 +411,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $home = $this->e(T_('Home'));
 
         $folder = $this->getCurrentFolder();
-        if ($folder === null) {
+        if (!$folder instanceof PlaylistFolder) {
             return $home;
         }
 
@@ -473,7 +473,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $folder = $this->getCurrentFolder();
 
         return $this->gatekeeperFactory->createGuiGatekeeper()->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            && ($folder === null || $this->isOwnFolder($folder));
+            && (!$folder instanceof PlaylistFolder || $this->isOwnFolder($folder));
     }
 
     /**
@@ -592,7 +592,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         /** @var array<int, int> */
         return $this->cachePerRender('itemCounts', function (): array {
             $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
-            if ($user === null) {
+            if (!$user instanceof User) {
                 return [];
             }
 

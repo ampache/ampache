@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Preferences;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Art\Generated\GeneratedArtServiceInterface;
@@ -73,8 +74,8 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
             'lang' => get_languages(),
             'localplay_controller' => $this->getLocalplayControllers(),
             'localplay_level', 'upload_access_level' => $this->getAccessLevels(),
-            'personalfav_playlist' => ($owner === null) ? [] : Playlist::get_playlist_array($owner->getId()),
-            'personalfav_smartlist' => ($owner === null) ? [] : Search::get_search_array($owner->getId()),
+            'personalfav_playlist' => ($owner instanceof User) ? Playlist::get_playlist_array($owner->getId()) : [],
+            'personalfav_smartlist' => ($owner instanceof User) ? Search::get_search_array($owner->getId()) : [],
             'play_type' => $this->getPlayTypes($held),
             'playlist_method' => [
                 'send' => T_('Send on Add'),

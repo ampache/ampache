@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Podcast;
 
+use Ampache\Repository\Model\Podcast;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -72,7 +73,7 @@ final readonly class UpdateFromFeedAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $podcast = $this->podcastRepository->findById($podcastId);
-        if ($podcast === null) {
+        if (!$podcast instanceof Podcast) {
             echo T_('You have requested an object that does not exist');
         } else {
             $returnUrl = sprintf('%s/podcast.php?action=show&podcast=%d', $webPath, $podcastId);

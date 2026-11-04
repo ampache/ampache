@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Mashup;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -68,7 +69,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
         $userId = (int) $this->requestParser->getFromRequest('user_id');
 
         $user = $this->userRepository->findById($userId);
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new ObjectNotFoundException('user_id');
         }
 

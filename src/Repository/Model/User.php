@@ -41,11 +41,13 @@ use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\System\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Plugin\PluginGetAvatarUrlInterface;
 use Ampache\Plugin\PluginSaveMediaplayInterface;
 use Ampache\Plugin\PluginStreamControlInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use Ampache\Repository\StreamControlIpActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 
@@ -404,8 +406,9 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
+     * @param bool $isGuest whether this request is attributed to a surrogate account (eg. a public share) rather than its own logged-in user
      */
-    public static function stream_control(array $media_ids, ?User $user = null): bool
+    public static function stream_control(array $media_ids, ?User $user = null, bool $isGuest = false): bool
     {
         if ($user === null) {
             $user = Core::get_global('user');
@@ -414,11 +417,38 @@ class User extends database_object
             }
         }
 
+        $ip       = Core::get_user_ip() ?: null;
+        $tracksIp = false;
+
         foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginStreamControlInterface && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
+            if (!$plugin->_plugin instanceof PluginStreamControlInterface || !$plugin->load($user)) {
+                continue;
+            }
+
+            if (!$plugin->_plugin->stream_control($media_ids, $ip, $isGuest)) {
                 return false;
             }
+
+            $tracksIp = $tracksIp || $plugin->_plugin->tracksIp();
+        }
+
+        // feed the per-IP history only when a loaded plugin's `*_ip_max` would actually read it back
+        if ($isGuest && $ip !== null && $tracksIp) {
+            $hits = 0;
+            $size = 0;
+            $time = 0;
+            foreach ($media_ids as $media_id) {
+                $objectType = $media_id['object_type'];
+                $className  = ObjectTypeToClassNameMapper::map($objectType instanceof LibraryItemEnum ? $objectType->value : $objectType);
+                /** @var Media $media */
+                $media = new $className($media_id['object_id']);
+                $hits++;
+                $size += $media->size ?? 0;
+                $time += $media->time ?? 0;
+            }
+
+            self::getStreamControlIpActivityRepository()->record($ip, time(), $hits, $size, $time);
         }
 
         return true;
@@ -536,6 +566,16 @@ class User extends database_object
         global $dic;
 
         return $dic->get(Stats::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getStreamControlIpActivityRepository(): StreamControlIpActivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamControlIpActivityRepositoryInterface::class);
     }
 
     /**

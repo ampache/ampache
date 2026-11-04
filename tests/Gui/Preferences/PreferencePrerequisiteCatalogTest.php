@@ -38,10 +38,13 @@ class PreferencePrerequisiteCatalogTest extends TestCase
         'ratingmatch_stars',
         'ratingmatch_write_tags',
         'stream_control_bandwidth_days',
+        'stream_control_bandwidth_ip_max',
         'stream_control_bandwidth_max',
         'stream_control_hits_days',
+        'stream_control_hits_ip_max',
         'stream_control_hits_max',
         'stream_control_time_days',
+        'stream_control_time_ip_max',
         'stream_control_time_max',
     ];
 

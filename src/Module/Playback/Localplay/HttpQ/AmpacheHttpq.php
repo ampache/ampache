@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playback\Localplay\HttpQ;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Democratic;
@@ -215,7 +216,7 @@ class AmpacheHttpq extends localplay_controller
                             [Song::class, Live_Stream::class]
                         );
 
-                        if ($media !== null) {
+                        if ($media instanceof library_item) {
                             switch ($row['type']) {
                                 case 'song':
                                     /** @var Song $media */

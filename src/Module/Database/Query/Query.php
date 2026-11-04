@@ -807,7 +807,7 @@ class Query
         // Don't allow pointless sorts
         if (
             !empty($this->get_type())
-            && $this->queryType !== null
+            && $this->queryType instanceof QueryInterface
             && !in_array($sort, $this->queryType->get_sorts())
         ) {
             debug_event(self::class, 'IGNORED set_sort ' . $this->get_type() . ': ' . $sort, 5);
@@ -999,7 +999,7 @@ class Query
                 break;
         }
 
-        if ($this->queryType !== null) {
+        if ($this->queryType instanceof QueryInterface) {
             // Set it
             $this->_state['type'] = $type;
             // don't overwrite an existing browse with defaults
@@ -1072,7 +1072,7 @@ class Query
     private function _get_custom_join_sql(): string
     {
         $custom = (string) ($this->_state['custom_sql'] ?? '');
-        if ($custom === '' || $this->queryType === null) {
+        if ($custom === '' || !$this->queryType instanceof QueryInterface) {
             return '';
         }
 
@@ -1422,7 +1422,7 @@ class Query
      */
     private function _restoreQueryType(): void
     {
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             self::set_type($this->_state['type']);
         }
     }
@@ -1485,7 +1485,7 @@ class Query
     {
         $this->_restoreQueryType();
 
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             return '';
         }
 
@@ -1512,7 +1512,7 @@ class Query
 
         $this->_restoreQueryType();
 
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             return '';
         }
 

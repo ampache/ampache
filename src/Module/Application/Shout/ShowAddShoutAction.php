@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Shout\AddShoutView;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -66,7 +67,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($object === null || !$object->getId()) {
+        if (!$object instanceof library_item || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 

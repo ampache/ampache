@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Form\CreatePlaylistFormView;
@@ -59,7 +60,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('add_playlist')
         ) {
             throw new AccessDeniedException();

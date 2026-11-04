@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
@@ -678,7 +679,7 @@ class Browse extends Query
         // every browse type renders through its own renderer, which brings the services it needs with it
         $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
-        if ($renderer === null) {
+        if (!$renderer instanceof BrowseListRendererInterface) {
             if ($type === '') {
                 // An unknown browse id leaves the type empty, which is what a crawler replaying an expired
                 // url looks like. Reporting that as a missing renderer filled the log with level 1 lines
@@ -698,13 +699,13 @@ class Browse extends Query
         }
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        $hasBody = $renderer !== null;
+        $hasBody = $renderer instanceof BrowseListRendererInterface;
         if ($this->is_show_header() && $hasBody && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
         }
 
-        if ($renderer !== null) {
+        if ($renderer instanceof BrowseListRendererInterface) {
             echo $renderer->renderList(
                 new BrowseListContext(
                     $this,
@@ -858,7 +859,7 @@ class Browse extends Query
 
         if ($filter_value = $this->get_filter('catalog')) {
             $catalog = Catalog::create_from_id((int) $filter_value);
-            if ($catalog !== null) {
+            if ($catalog instanceof Catalog) {
                 return ' (' . $catalog->name . ')';
             }
         }

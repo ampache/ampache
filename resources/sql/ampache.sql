@@ -1558,6 +1558,25 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist_data` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tmp_stream_control`
+--
+
+DROP TABLE IF EXISTS `tmp_stream_control`;
+CREATE TABLE IF NOT EXISTS `tmp_stream_control` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ip` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `date` int(11) unsigned NOT NULL DEFAULT 0,
+  `hits` int(11) unsigned NOT NULL DEFAULT 0,
+  `size` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `tmp_stream_control_IDX` (`ip`,`date`),
+  KEY `tmp_stream_control_date_IDX` (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `update_info`
 --
 

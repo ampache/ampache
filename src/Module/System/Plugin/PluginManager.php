@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Plugin;
 
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -42,7 +43,7 @@ final class PluginManager implements PluginManagerInterface
         $result = [];
         foreach (array_keys(Catalog::CATALOG_TYPES) as $type) {
             $catalog = Catalog::create_catalog_type((string) $type);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 continue;
             }
 
@@ -82,7 +83,7 @@ final class PluginManager implements PluginManagerInterface
         $result = [];
         foreach (array_keys(Plugin::get_plugins()) as $name) {
             $plugin = new Plugin($name);
-            if ($plugin->_plugin === null) {
+            if (!$plugin->_plugin instanceof AmpachePlugin) {
                 continue;
             }
 
@@ -104,7 +105,7 @@ final class PluginManager implements PluginManagerInterface
     public function installCatalogType(string $type): bool
     {
         $catalog = Catalog::create_catalog_type($type);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return false;
         }
 
@@ -140,7 +141,7 @@ final class PluginManager implements PluginManagerInterface
         }
 
         $plugin = new Plugin($name);
-        if ($plugin->_plugin === null || !$plugin->install()) {
+        if (!$plugin->_plugin instanceof AmpachePlugin || !$plugin->install()) {
             return false;
         }
 
@@ -154,7 +155,7 @@ final class PluginManager implements PluginManagerInterface
     public function uninstallCatalogType(string $type): bool
     {
         $catalog = Catalog::create_catalog_type($type);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return false;
         }
 

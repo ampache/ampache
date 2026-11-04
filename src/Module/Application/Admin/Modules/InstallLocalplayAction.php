@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Modules;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -62,7 +63,7 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
         $this->ui->showHeader();
 
         $user = Core::get_global('user');
-        if ($user === null) {
+        if (!$user instanceof User) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 

@@ -334,7 +334,7 @@ class Dba
     public static function insert_id(): false|string
     {
         $dbh = self::dbh();
-        if ($dbh !== null) {
+        if ($dbh instanceof PDO) {
             return $dbh->lastInsertId();
         }
 
@@ -400,7 +400,7 @@ class Dba
             $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
 
-        if ($stmt === null) {
+        if (!$stmt instanceof PDOStatement) {
             $interactor?->error(
                 self::error(),
                 true

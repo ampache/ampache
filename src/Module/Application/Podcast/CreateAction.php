@@ -72,7 +72,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         $data = (array) $request->getParsedBody();
 
         $catalog = Catalog::create_from_id((int) ($data['catalog'] ?? 0));
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             AmpError::add('catalog', T_('Catalog not found'));
         } else {
             try {

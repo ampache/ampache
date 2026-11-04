@@ -122,7 +122,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 
         if (!empty($results['date_timezone'])) {
             $listIdentifiers = DateTimeZone::listIdentifiers();
-            if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
+            if ($listIdentifiers !== [] && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }
         }

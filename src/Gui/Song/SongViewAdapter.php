@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Song;
 
+use Ampache\Repository\Model\License;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Partial\HeaderChip;
@@ -450,16 +451,16 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     {
         $license = $this->song->getLicense();
 
-        return ($license === null)
-            ? null
-            : new HeaderChip($license->getName(), url: $license->getExternalLink(), accent: true, external: true);
+        return ($license instanceof License)
+            ? new HeaderChip($license->getName(), url: $license->getExternalLink(), accent: true, external: true)
+            : null;
     }
 
     public function getLicenseLink(): string
     {
         $license = $this->song->getLicense();
 
-        if ($license !== null) {
+        if ($license instanceof License) {
             return $license->getLinkFormatted();
         }
 
@@ -630,7 +631,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         }
 
         $license = $this->song->getLicense();
-        if ($license !== null) {
+        if ($license instanceof License) {
             $songprops[T_('Licensing')] = $license->getLinkFormatted();
         }
 

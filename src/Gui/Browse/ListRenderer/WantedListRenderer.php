@@ -60,7 +60,7 @@ final class WantedListRenderer extends AbstractBrowseListRenderer
         $albums = [];
         foreach ($this->getObjectIds() as $objectId) {
             $album = $this->wantedRepository->findById($objectId);
-            if ($album !== null) {
+            if ($album instanceof Wanted) {
                 $albums[] = $album;
             }
         }

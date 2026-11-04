@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Browse;
 
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -61,7 +62,7 @@ final readonly class PlaylistFolderAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new AccessDeniedException('Access Denied: playlist folders are only available to a logged in user.');
         }
 

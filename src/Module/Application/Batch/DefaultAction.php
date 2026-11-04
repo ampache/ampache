@@ -303,7 +303,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 }
             }
 
-            if ($media === null || $media->isNew()) {
+            if (!$media instanceof library_item || $media->isNew()) {
                 continue;
             }
 

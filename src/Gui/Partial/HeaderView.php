@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\View\AbstractView;
@@ -249,7 +250,7 @@ final class HeaderView extends AbstractView
     public function hasTempPlaylist(): bool
     {
         return $this->currentUser instanceof User
-            && !empty($this->currentUser->playlist)
+            && $this->currentUser->playlist instanceof Tmp_Playlist
             && $this->currentUser->playlist->has_items();
     }
 

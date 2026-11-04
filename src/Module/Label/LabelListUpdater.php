@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label;
 
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\LabelRepositoryInterface;
 use DateTime;
 
@@ -50,7 +51,7 @@ final readonly class LabelListUpdater implements LabelListUpdaterInterface
             if ($clid) {
                 $clabel = $this->labelRepository->findById($clid);
 
-                if ($clabel === null) {
+                if (!$clabel instanceof Label) {
                     continue;
                 }
 
@@ -88,7 +89,7 @@ final readonly class LabelListUpdater implements LabelListUpdaterInterface
                 if ($label_id > 0) {
                     $clabel = $this->labelRepository->findById($label_id);
 
-                    if ($clabel !== null) {
+                    if ($clabel instanceof Label) {
                         $this->labelRepository->addArtistAssoc($clabel->getId(), $artistId, new DateTime());
                     }
                 }

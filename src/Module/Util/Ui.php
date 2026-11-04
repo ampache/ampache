@@ -465,7 +465,7 @@ class Ui implements UiInterface
         string $slug = '',
     ): string {
         $query = ['type' => $type->value];
-        if ($user !== null && AmpConfig::get('use_auth')) {
+        if ($user instanceof User && AmpConfig::get('use_auth')) {
             // On an open instance (use_auth false) every visitor shares the same default user,
             // so a token adds nothing and would leak into publicly served pages
             $query['rsstoken'] = $user->getRssToken();

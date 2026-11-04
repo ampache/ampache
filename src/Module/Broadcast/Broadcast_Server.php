@@ -345,7 +345,7 @@ class Broadcast_Server implements MessageComponentInterface
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
         if (
-            $broadcast
+            $broadcast instanceof Broadcast
             && (
                 !$broadcast->is_private
                 || !AmpConfig::get('require_session')

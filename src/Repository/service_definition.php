@@ -81,4 +81,5 @@ return [
     TagRepositoryInterface::class => autowire(TagRepository::class),
     LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
     QuickConnectRepositoryInterface::class => autowire(QuickConnectRepository::class),
+    StreamControlIpActivityRepositoryInterface::class => autowire(StreamControlIpActivityRepository::class),
 ];

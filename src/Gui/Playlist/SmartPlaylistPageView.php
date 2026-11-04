@@ -103,7 +103,7 @@ final class SmartPlaylistPageView extends AbstractView
      */
     public function getBrowse(): Browse
     {
-        if ($this->browse === null) {
+        if (!$this->browse instanceof Browse) {
             $browse = $this->browseFactory->create();
             $browse->set_type('playlist_media');
             $browse->set_use_filters(false);

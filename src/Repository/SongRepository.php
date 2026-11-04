@@ -507,7 +507,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      */
     public function getByCatalog(?Catalog $catalog = null): Generator
     {
-        if ($catalog !== null) {
+        if ($catalog instanceof Catalog) {
             $result = $this->connection->query(
                 'SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`',
                 [$catalog->getId()]

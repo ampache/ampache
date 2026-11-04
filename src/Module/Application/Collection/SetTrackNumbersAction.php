@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Collection;
 
+use Ampache\Repository\Model\Collection;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -60,7 +61,7 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
         );
         // A collaborator curates the contents, matching who may drag a playlist about
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->has_collaborate($user instanceof User ? $user : null)
         ) {
             throw new AccessDeniedException();

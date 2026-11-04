@@ -100,7 +100,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ob_end_clean();
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id((int) $row['id']);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
 
@@ -473,7 +473,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
 
         while ($row = Dba::fetch_assoc($result)) {
             $catalog = Catalog::create_from_id((int) $row['id']);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
 

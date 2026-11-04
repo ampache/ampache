@@ -849,7 +849,7 @@ final class VaInfo implements VaInfoInterface
         if (
             in_array('getid3', $enabled_sources)
             && $this->islocal
-            && $this->_getID3
+            && $this->_getID3 instanceof getID3
         ) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));

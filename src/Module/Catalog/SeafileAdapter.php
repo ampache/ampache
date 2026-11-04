@@ -86,7 +86,7 @@ class SeafileAdapter
     public function download(DirectoryItem $file, bool $partial = false): string
     {
         $dir  = (string) $file->dir;
-        $url  = ($this->client && $this->library) ? $this->throttle_check(fn() => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
+        $url  = ($this->client && $this->library instanceof \Seafile\Client\Type\Library) ? $this->throttle_check(fn() => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
@@ -268,7 +268,7 @@ class SeafileAdapter
             return null;
         }
 
-        if (!$this->client || !$this->library) {
+        if (!$this->client || !$this->library instanceof \Seafile\Client\Type\Library) {
             return null;
         }
 

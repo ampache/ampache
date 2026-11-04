@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Label;
 
+use Ampache\Repository\Model\Label;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -75,7 +76,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $label = $this->labelRepository->findById($labelId);
         if (
-            $label === null
+            !$label instanceof Label
             || !Catalog::can_remove($label)
         ) {
             throw new AccessDeniedException(

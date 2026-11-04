@@ -87,7 +87,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $catalog = Catalog::create_from_id($song->getCatalogId());
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return;
         }
 
@@ -331,7 +331,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         $catalog = Catalog::create_from_id($song->getCatalogId());
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             return;
         }
 

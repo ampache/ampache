@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Repository\Model\Wanted;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Art\Art;
@@ -60,7 +61,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
         $mbid   = $this->requestParser->getFromRequest('mbid');
         $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
-        if ($walbum === null) {
+        if (!$walbum instanceof Wanted) {
             $walbum       = $this->wantedRepository->prototype();
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {

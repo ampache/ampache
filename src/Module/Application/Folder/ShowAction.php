@@ -95,7 +95,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        if (!$folder_id && $folder === null) {
+        if (!$folder_id && !$folder instanceof Folder) {
             $this->logger->warning(
                 'Requested a folder that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

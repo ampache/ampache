@@ -57,7 +57,7 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
         $catalogId = (int) $this->requestParser->getFromRequest('catalog_id');
 
         $catalog = Catalog::create_from_id($catalogId);
-        if ($catalog === null) {
+        if (!$catalog instanceof Catalog) {
             throw new ObjectNotFoundException($catalogId);
         }
 

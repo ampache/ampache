@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Repository\Model\User;
@@ -48,7 +49,7 @@ final class AdminEnableUserCommand extends Command
     public function execute(
         ?string $username,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

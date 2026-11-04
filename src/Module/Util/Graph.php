@@ -298,7 +298,7 @@ class Graph
             $catalogs = Catalog::get_all_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                if ($catalog === null) {
+                if (!$catalog instanceof Catalog) {
                     break;
                 }
 

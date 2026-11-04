@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -68,7 +69,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $message = $this->pmRepository->findById($messageId);
 
             if (
-                $message === null
+                !$message instanceof PrivateMessageInterface
                 || $message->getRecipientUserId() !== $gatekeeper->getUserId()
             ) {
                 throw new AccessDeniedException(

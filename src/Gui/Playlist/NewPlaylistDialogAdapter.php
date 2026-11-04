@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Playlist;
 
+use Ampache\Repository\Model\User;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -96,7 +97,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
         }
 
         $user = $this->gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             return [];
         }
 
@@ -107,7 +108,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
             $collection = $this->collectionRepository->findById($collectionId);
             // A pinned collection only appears when it accepts every type being added, so picking it cannot
             // half-work; a mixed one accepts anything valid.
-            if ($collection === null || !$collection->has_collaborate($user)) {
+            if (!$collection instanceof Collection || !$collection->has_collaborate($user)) {
                 continue;
             }
 

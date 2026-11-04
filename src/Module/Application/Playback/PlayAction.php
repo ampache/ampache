@@ -652,7 +652,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             return null;
         }
 
-        if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]])) {
+        if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]], null, $share_id > 0)) {
             throw new AccessDeniedException(
                 sprintf(
                     'Stream control failed for user %s on %s',
@@ -707,7 +707,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 : null;
 
             $has_cache = ($file_target !== null && is_file($file_target));
-            if ($catalog && !$has_cache) {
+            if ($catalog instanceof Catalog && !$has_cache) {
                 if (
                     ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)
                     && AmpConfig::get('cache_remote', false)
@@ -810,7 +810,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
-            } elseif ($catalog === null) {
+            } elseif (!$catalog instanceof Catalog) {
                 return null;
             }
 

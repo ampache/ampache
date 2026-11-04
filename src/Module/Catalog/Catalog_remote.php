@@ -697,7 +697,7 @@ class Catalog_remote extends Catalog
      */
     private function _connect(): void
     {
-        if ($this->remote_handle
+        if ($this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() === 'CONNECTED'
         ) {
             return;
@@ -751,7 +751,7 @@ class Catalog_remote extends Catalog
         }
 
         if (
-            $this->remote_handle
+            $this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() !== 'CONNECTED'
         ) {
             debug_event('remote.catalog', 'API client failed to connect', 1);

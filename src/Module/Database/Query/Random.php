@@ -88,7 +88,7 @@ class Random
     {
         $results = [];
 
-        if (empty($user)) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 
@@ -145,7 +145,7 @@ class Random
     {
         $results = [];
 
-        if (empty($user)) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 
@@ -219,7 +219,7 @@ class Random
      */
     public static function get_default(int $limit, ?User $user = null): array
     {
-        if (empty($user)) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 
@@ -444,7 +444,7 @@ class Random
      */
     private static function _get_filtered(int $limit, ?User $user, string $filter_sql): array
     {
-        if (empty($user)) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 

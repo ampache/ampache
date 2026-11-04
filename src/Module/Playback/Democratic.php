@@ -483,7 +483,7 @@ class Democratic extends Tmp_Playlist
      */
     public function play_url(?User $user = null): string
     {
-        if (empty($user)) {
+        if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
 

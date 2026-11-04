@@ -31,6 +31,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Module\Util\Graph;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\StreamControlIpActivityRepositoryInterface;
 use Override;
 
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
@@ -57,6 +58,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     public string $version = '000001';
 
     private int $hits_days;
+    private int $hits_ip_max;
     private int $hits_max;
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -67,6 +69,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
      */
     public function __construct(
         private readonly Graph $graph,
+        private readonly StreamControlIpActivityRepositoryInterface $streamControlIpActivityRepository,
     ) {
         $this->description = T_('Control hits per user');
     }
@@ -81,7 +84,11 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
             return false;
         }
 
-        return !Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
+        if (!Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('stream_control_hits_ip_max', T_('Stream control maximal hits per IP'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -99,6 +106,8 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
             ? (int) ($data['stream_control_hits_days'])
             : 30;
 
+        $this->hits_ip_max = (int) ($data['stream_control_hits_ip_max']) ?: -1;
+
         return true;
     }
 
@@ -106,30 +115,47 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
      * Check stream control
      * @param array<int, array{object_type: string|LibraryItemEnum, object_id: int}> $media_ids
      */
-    public function stream_control(array $media_ids): bool
+    public function stream_control(array $media_ids, ?string $ip = null, bool $isGuest = false): bool
     {
-        // No check if unlimited hits (= -1)
-        if ($this->hits_max < 0) {
+        // Nothing is configured to check (both limits unlimited, = -1)
+        if ($this->hits_max < 0 && $this->hits_ip_max < 0) {
             return true;
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs')) {
-            $next_total    = count($media_ids);
-            $graph         = $this->graph;
-            $end_date      = time();
-            $start_date    = $end_date - ($this->hits_days * 86400);
-            $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);
-            $next_total += $current_total;
+        if (!AmpConfig::get('statistical_graphs')) {
+            debug_event('streamhits.plugin', 'Stream control not enforced, statistical graphs disabled.', 1);
 
-            debug_event('streamhits.plugin', 'Next stream hits will be ' . $next_total . ' / ' . $this->hits_max, 3);
-
-            return ($next_total <= $this->hits_max);
+            return true;
         }
 
-        debug_event('streamhits.plugin', 'Access denied, statistical graph disabled.', 1);
+        $hit_count  = count($media_ids);
+        $end_date   = time();
+        $start_date = $end_date - ($this->hits_days * 86400);
+
+        if ($this->hits_max >= 0) {
+            $account_total = $hit_count + $this->graph->get_total_hits($this->user_id, $start_date, $end_date);
+            debug_event('streamhits.plugin', 'Next stream hits will be ' . $account_total . ' / ' . $this->hits_max, 3);
+            if ($account_total > $this->hits_max) {
+                return false;
+            }
+        }
+
+        // a cap on the source IP, only used when the request has no identified account to cap instead (eg. a public share)
+        if ($isGuest && $ip !== null && $this->hits_ip_max >= 0) {
+            $ip_total = $hit_count + $this->streamControlIpActivityRepository->sumHits($ip, $start_date, $end_date);
+            debug_event('streamhits.plugin', 'Next IP stream hits will be ' . $ip_total . ' / ' . $this->hits_ip_max, 3);
+            if ($ip_total > $this->hits_ip_max) {
+                return false;
+            }
+        }
 
         return true;
+    }
+
+    public function tracksIp(): bool
+    {
+        return $this->hits_ip_max >= 0;
     }
 
     /**
@@ -141,6 +167,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         return (
             Preference::delete('stream_control_hits_max')
             && Preference::delete('stream_control_hits_days')
+            && Preference::delete('stream_control_hits_ip_max')
         );
     }
 
