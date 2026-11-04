@@ -374,11 +374,6 @@ class Preference extends database_object
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
     public const array PLUGIN_LIST = [
-        'amazon_base_url',
-        'amazon_developer_associate_tag',
-        'amazon_developer_private_api_key',
-        'amazon_developer_public_key',
-        'amazon_max_results_pages',
         'bitly_api_key',
         'bitly_username',
         'catalogfav_gridview',
@@ -1459,11 +1454,6 @@ class Preference extends database_object
             'allow_stream_playback' => 'Allow Streaming',
             'allow_upload' => 'Allow user uploads',
             'allow_video' => 'Allow Video Features',
-            'amazon_base_url' => 'Amazon base url',
-            'amazon_developer_associate_tag' => 'Amazon associate tag',
-            'amazon_developer_private_api_key' => 'Amazon Secret Access Key',
-            'amazon_developer_public_key' => 'Amazon Access Key ID',
-            'amazon_max_results_pages' => 'Amazon max results pages',
             'api_always_download' => 'Force API streams to download. (Enable scrobble in your client to record stats)',
             'api_enable_3' => 'Allow Ampache API3 responses',
             'api_enable_4' => 'Allow Ampache API4 responses',
