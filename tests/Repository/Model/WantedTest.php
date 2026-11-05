@@ -73,6 +73,38 @@ class WantedTest extends TestCase
         );
     }
 
+    public function testGetFUserEscapesTheFullname(): void
+    {
+        AmpConfig::set('memory_cache', true, true);
+
+        // a user's own public fullname, and wanted_album_row.phtml prints this output raw
+        User::add_to_cache('user', 99, [
+            'id' => 99,
+            'username' => 'attacker',
+            'fullname' => '<img src=x onerror=alert(1)>',
+            'fullname_public' => 1,
+            'email' => '',
+            'website' => '',
+            'apikey' => '',
+            'access' => 25,
+            'disabled' => 0,
+            'last_seen' => 0,
+            'create_date' => 0,
+            'validation' => '',
+            'state' => '',
+            'city' => '',
+            'rsstoken' => '',
+            'streamtoken' => '',
+            'subsonic_secret' => '',
+            'catalog_filter_group' => 0,
+        ]);
+
+        $subject       = new Wanted();
+        $subject->user = 99;
+
+        self::assertSame('&lt;img src=x onerror=alert(1)&gt;', $subject->get_f_user());
+    }
+
     protected function setUp(): void
     {
         $this->wantedRepository  = $this->createMock(WantedRepositoryInterface::class);
