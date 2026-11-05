@@ -61,6 +61,9 @@
 * The Wanted albums browse rendered the requesting user's `fullname` unescaped
 * `AmpacheGoogleMaps` built a marker title by concatenating the handshake `geo_name` field into inline JS unescaped
 * The `directplay` ajax action's `custom_play_action` value is now scrubbed, matching `object_type` in the same handler
+* A browse's `argument` could carry a quote into the inline JS the pagination, sort and filter controls build
+* The playlist/collection "add to" dialog's `id`/`groups` values could carry a quote into its inline JS
+* A podcast's website link, taken from the feed, is only shown when it is actually an http(s) url
 * The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
 * The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
 * The sidebar's random playlist link could choose another user's private playlist

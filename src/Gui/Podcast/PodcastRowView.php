@@ -84,6 +84,16 @@ final class PodcastRowView extends AbstractView
         return $this->webPath;
     }
 
+    /**
+     * The feed supplies this, so it is only offered when it is actually an http url.
+     */
+    public function getWebsiteUrl(): ?string
+    {
+        $website = $this->podcast->getWebsite();
+
+        return (preg_match('#^https?://#i', $website) === 1) ? $website : null;
+    }
+
     public function isDirectplayEnabled(): bool
     {
         return $this->directplayEnabled;

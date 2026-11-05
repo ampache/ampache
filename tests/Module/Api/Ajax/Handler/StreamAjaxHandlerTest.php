@@ -70,4 +70,10 @@ class StreamAjaxHandlerTest extends TestCase
 
         $this->subject = new StreamAjaxHandler($this->requestParser, $this->ui);
     }
+
+    protected function tearDown(): void
+    {
+        // AmpConfig is a static store backupGlobals cannot reach, so a web_path set here outlives the test
+        AmpConfig::set('web_path', '', true);
+    }
 }
