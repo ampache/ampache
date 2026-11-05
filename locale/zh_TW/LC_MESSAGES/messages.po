@@ -1,19 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
-# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/ampache/teams/40984/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,9 +448,6 @@ msgstr "之"
 msgid "Next"
 msgstr "下一頁"
 
-msgid "View"
-msgstr "檢視"
-
 msgid "Pages"
 msgstr "頁"
 
@@ -462,6 +459,15 @@ msgstr "表格式檢視"
 
 msgid "Alphabet"
 msgstr "頭字母"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "檢視"
 
 msgid "Item Count"
 msgstr "項目數量"
@@ -825,6 +831,9 @@ msgstr "發售日期"
 msgid "Actions"
 msgstr "動作"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "新增目前主機"
 
@@ -1106,9 +1115,6 @@ msgstr "描述："
 
 msgid "External Link"
 msgstr "外部鍊結"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "最受好評"
@@ -3835,7 +3841,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3858,7 +3864,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3886,7 +3892,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4184,7 +4190,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4367,6 +4373,8 @@ msgstr "目錄已刪除"
 msgid "There Was a Problem"
 msgstr ""
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4648,8 +4656,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "此專輯已被刪除"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "此專輯與所有檔案將被刪除"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "正在從標籤更新"
@@ -5047,6 +5061,9 @@ msgstr "正在執行 Beets 遠端更新"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "已更新"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 
@@ -5189,6 +5206,9 @@ msgstr "所有檔案可被移除。無動作"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5232,11 +5252,11 @@ msgid ""
 "processed."
 msgstr ""
 
-msgid "Updated"
-msgstr "已更新"
-
 msgid "No Update Needed"
 msgstr "不需更新"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "目錄已清理"
@@ -5412,9 +5432,6 @@ msgstr "停用 PHP 的記憶體限制"
 msgid "Reading Catalog: \"%s\""
 msgstr ""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5432,9 +5449,6 @@ msgstr "開始新增媒體"
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "開始搜尋新封面圖片"
 
@@ -5443,6 +5457,9 @@ msgstr ""
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6061,9 +6078,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6374,6 +6388,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz 識別碼 (專輯)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6556,14 +6579,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr "尚未評分"
 
@@ -6573,6 +6588,14 @@ msgstr "%s 之於 5"
 
 msgid "Current rating"
 msgstr "目前的評比"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+
+msgid "Average from all users"
+msgstr ""
 
 msgid "Unfavorite"
 msgstr ""
@@ -6820,24 +6843,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "未知作者"
-
-msgid "Amazon art search"
-msgstr ""
-
-msgid "Amazon base url"
-msgstr "Amazon 網址"
-
-msgid "Amazon max results pages"
-msgstr "Amazon 回傳結果的最大頁面量"
-
-msgid "Amazon Access Key ID"
-msgstr "Amazon 存取金鑰 ID"
-
-msgid "Amazon Secret Access Key"
-msgstr "Amazon 存取金鑰密文"
-
-msgid "Amazon associate tag"
-msgstr "Amazon 關聯標記"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7153,6 +7158,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7162,6 +7170,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7169,6 +7180,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"

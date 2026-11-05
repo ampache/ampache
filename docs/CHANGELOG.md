@@ -6,7 +6,7 @@
 
 ### Added (8.4.0)
 
-* Translations 2026-11-05
+* Translations 2026-11-06
 * Theme
   * reborn gains four new colors: Dusk, Dawn, Sepia and High-Contrast
   * reborn gains nine colors modeled on Nord, Dracula, Gruvbox, Catppuccin Mocha, Tokyo Night, Monokai, Rosé Pine, Solarized Dark and Solarized Light

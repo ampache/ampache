@@ -1,18 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# whenwesober, 2021
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: whenwesober, 2021\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Indonesian (Indonesia) (https://app.transifex.com/ampache/teams/40984/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -447,9 +448,6 @@ msgstr "dari"
 msgid "Next"
 msgstr "Berikutnya"
 
-msgid "View"
-msgstr "Lihat"
-
 msgid "Pages"
 msgstr "Halaman"
 
@@ -461,6 +459,15 @@ msgstr "Tampilan Grid"
 
 msgid "Alphabet"
 msgstr "Alfabet"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "Lihat"
 
 msgid "Item Count"
 msgstr "Perhitungan Item"
@@ -824,6 +831,9 @@ msgstr "Tanggal Rilis"
 msgid "Actions"
 msgstr "Tindakan"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "Tambah Host Saat Ini"
 
@@ -1111,9 +1121,6 @@ msgstr "Deskripsi:"
 
 msgid "External Link"
 msgstr "Tautan Eksternal"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "Peringkat teratas"
@@ -3955,7 +3962,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3978,7 +3985,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -4006,7 +4013,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4313,7 +4320,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4498,6 +4505,8 @@ msgstr "Katalog telah dihapus"
 msgid "There Was a Problem"
 msgstr "Terdapat sebuah masalah"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4783,8 +4792,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "Album ini telah dihapus"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "Album dan semua berkas akan dihapus"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Mulai pembaruan dari tag"
@@ -5187,6 +5202,9 @@ msgstr "Menjalankan pembaruan bit"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "Diperbarui"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "Katalog bit dipilih, tetapi tidak ada berkas db bit yang disediakan"
 
@@ -5333,6 +5351,9 @@ msgstr "Semua berkas akan dihapus. Tidak melakukan apa-apa"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Berkas tidak ditemukan atau 0 Bytes: %s"
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5378,11 +5399,11 @@ msgstr ""
 "Subdirektori ini tidak ada di dalam katalog yang ada. Pembaruan tidak dapat "
 "diproses."
 
-msgid "Updated"
-msgstr "Diperbarui"
-
 msgid "No Update Needed"
 msgstr "Tidak diperlukan pembaruan"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "Katalog dibersihkan"
@@ -5566,9 +5587,6 @@ msgstr "Batas memori PHP yang dinonaktifkan"
 msgid "Reading Catalog: \"%s\""
 msgstr "Membaca Katalog: \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5586,9 +5604,6 @@ msgstr "Mulailah menambahkan media baru"
 msgid "Start verifying media related to Catalog entries"
 msgstr "Mulai memverifikasi media yang terkait dengan entri katalog"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "Mulai mencari seni media baru"
 
@@ -5597,6 +5612,9 @@ msgstr "Perbarui Informasi Artis dan Ambil Artis Serupa dari last.fm"
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6219,9 +6237,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6534,6 +6549,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "ID musicbrainz (album)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6716,14 +6740,6 @@ msgstr "Jangan menimpa sebuah berkas yang sudah ada: \"%s\""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr "belum dinilai"
 
@@ -6733,6 +6749,14 @@ msgstr "%s dari 5"
 
 msgid "Current rating"
 msgstr "Peringkat saat ini"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+
+msgid "Average from all users"
+msgstr ""
 
 msgid "Unfavorite"
 msgstr ""
@@ -6994,24 +7018,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "Artis Tidak Dikenal"
-
-msgid "Amazon art search"
-msgstr "Pencarian Seni Amazon"
-
-msgid "Amazon base url"
-msgstr "URL dasar Amazon"
-
-msgid "Amazon max results pages"
-msgstr "Halaman Hasil Amazon Max"
-
-msgid "Amazon Access Key ID"
-msgstr "Id kunci akses Amazon"
-
-msgid "Amazon Secret Access Key"
-msgstr "Kunci Akses Rahasia Amazon"
-
-msgid "Amazon associate tag"
-msgstr "Tag Associate Amazon"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7329,6 +7335,9 @@ msgstr "Streaming Kontrol Bandwidth Maksimal (Bulan)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Streaming Kontrol Bandwidth Sejarah (hari)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Kontrol hit per pengguna"
 
@@ -7338,6 +7347,9 @@ msgstr "Streaming Kontrol Hits Maksimal"
 msgid "Stream control hits history (days)"
 msgstr "Streaming Control hits sejarah (hari)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Waktu kontrol per pengguna"
 
@@ -7346,6 +7358,9 @@ msgstr "Streaming Kontrol Waktu Maksimal (Menit)"
 
 msgid "Stream control time history (days)"
 msgstr "STREAM Sejarah Waktu Kontrol (hari)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "Integrasi Metadata Theudodb"

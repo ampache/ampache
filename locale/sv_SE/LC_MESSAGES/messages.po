@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-04 10:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2026\n"
 "Language-Team: Swedish (Sweden) (https://app.transifex.com/ampache/teams/40984/sv_SE/)\n"
@@ -4541,6 +4541,8 @@ msgid "There Was a Problem"
 msgstr "Det fanns ett problem"
 
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
 msgstr "Det gick inte att ta bort detta %s"
@@ -4833,8 +4835,14 @@ msgstr "Du har begärt ett objekt som inte existerar"
 msgid "The Album has been deleted"
 msgstr "Albumet har tagits bort"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "Albumet och alla filer kommer att raderas"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Påbörjar uppdatering från taggar"
@@ -7098,24 +7106,6 @@ msgstr "Lägg till i spellista/samling"
 
 msgid "Unknown Artist"
 msgstr "Okänd artist"
-
-msgid "Amazon art search"
-msgstr "Amazon omslagssökning"
-
-msgid "Amazon base url"
-msgstr "Amazon bas url"
-
-msgid "Amazon max results pages"
-msgstr "Amazon max resultatsidor"
-
-msgid "Amazon Access Key ID"
-msgstr "ID för åtkomstnyckel till Amazon"
-
-msgid "Amazon Secret Access Key"
-msgstr "Amazon hemlig åtkomstnyckel"
-
-msgid "Amazon associate tag"
-msgstr "Amazon associerad tagg"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr "Ljudlikhet från en AudioMuse-AI-server"

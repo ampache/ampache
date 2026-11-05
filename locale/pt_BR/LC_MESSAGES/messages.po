@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-04 10:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/ampache/teams/40984/pt_BR/)\n"
@@ -4528,6 +4528,8 @@ msgid "There Was a Problem"
 msgstr "Houve um Problema"
 
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
 msgstr "Não pude excluir este %s"
@@ -4814,8 +4816,14 @@ msgstr "Você solicitou um objeto que não existe"
 msgid "The Album has been deleted"
 msgstr "O Álbum foi excluído"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "O Álbum e todos os arquivos serão excluídos"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Iniciando atualização de etiquetas"
@@ -7072,24 +7080,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "Artista desconhecido"
-
-msgid "Amazon art search"
-msgstr "Pesquisa de arte na Amazon"
-
-msgid "Amazon base url"
-msgstr "Url base da Amazon"
-
-msgid "Amazon max results pages"
-msgstr "Máximo de páginas de resultado da Amazon"
-
-msgid "Amazon Access Key ID"
-msgstr "ID da chave de acesso da Amazon"
-
-msgid "Amazon Secret Access Key"
-msgstr "Chave de acesso secreta da Amazon"
-
-msgid "Amazon associate tag"
-msgstr "Etiqueta de associado da Amazon"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
