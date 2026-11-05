@@ -377,7 +377,7 @@ class Catalog_local extends Catalog
                 $this->count++;
                 $file = str_replace(['(', ')', "'"], '', $full_file);
                 if (Ui::check_ticker()) {
-                    Ui::update_text(T_('Found'), sprintf('%d - %s', $this->count, scrub_out($file)));
+                    Ui::update_text(T_('Found'), sprintf('%d - %s', $this->count, $file));
                 } // update our current state
             } // if it's not an m3u
 
@@ -1569,7 +1569,7 @@ class Catalog_local extends Catalog
             $count++;
             if (Ui::check_ticker()) {
                 $file_display = str_replace(['(', ')', "'"], '', $file);
-                Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, scrub_out($file_display)));
+                Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, $file_display));
             }
 
             $file_info = (str_starts_with($file, $root)) ? @filesize(Core::conv_lc_file($file)) : false;
@@ -1987,7 +1987,7 @@ class Catalog_local extends Catalog
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $row['file']);
-                Ui::update_text(T_('Verified'), sprintf('%d - %s', $count, scrub_out($file)));
+                Ui::update_text(T_('Verified'), sprintf('%d - %s', $count, $file));
             }
 
             if ($tableName !== 'album') {

@@ -100,7 +100,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                     $_SESSION['iframe']['target'] = $web_path . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
                     if (array_key_exists('custom_play_action', $_REQUEST)) {
-                        $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
+                        $_SESSION['iframe']['target'] .= '&custom_play_action=' . Core::get_request('custom_play_action');
                     }
 
                     if (array_key_exists('append', $_REQUEST) && !empty($_REQUEST['append'])) {

@@ -215,7 +215,6 @@ class Wanted extends database_object
                             $wanted->link .= "&artist_mbid=" . $lookupMbid;
                         }
 
-                        $wanted->f_user = Core::get_global('user')?->get_fullname() ?? '';
                         $wanted->f_link = "<a href=\"" . scrub_out($wanted->link) . "\" title=\"" . scrub_out($wanted->name) . "\">" . scrub_out($wanted->name) . "</a>";
 
                         if (
@@ -364,13 +363,8 @@ class Wanted extends database_object
 
     public function get_f_user(): string
     {
-        if ($this->f_user !== null) {
-            return $this->f_user;
-        }
-
-        if ($this->user !== null) {
-            $user         = new User($this->user);
-            $this->f_user = $user->get_fullname();
+        if ($this->f_user === null && $this->user !== null) {
+            $this->f_user = scrub_out((new User($this->user))->get_fullname());
         }
 
         return $this->f_user ?? '';

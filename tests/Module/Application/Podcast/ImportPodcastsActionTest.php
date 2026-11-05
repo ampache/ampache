@@ -30,13 +30,16 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Podcast\Exchange\PodcastOpmlImporterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 class ImportPodcastsActionTest extends TestCase
@@ -51,6 +54,34 @@ class ImportPodcastsActionTest extends TestCase
     private RequestParserInterface&MockObject $requestParser;
     private ImportPodcastsAction $subject;
     private UiInterface&MockObject $ui;
+
+    /**
+     * The rejected-mime-type message carries the upload's own declared Content-Type into a sink
+     * (`AmpError::getErrorsFormatted()`) that the template prints with `raw()` on purpose.
+     */
+    #[RunInSeparateProcess]
+    public function testRunEscapesTheRejectedMimeTypeInTheErrorMessage(): void
+    {
+        $this->configContainer->method('isFeatureEnabled')->willReturn(true, false);
+        $this->gatekeeper->method('mayAccess')->willReturn(true);
+        $this->requestParser->method('verifyForm')->willReturn(true);
+
+        $this->request->method('getParsedBody')->willReturn(['catalog' => 5]);
+
+        $catalog = $this->createMock(Catalog::class);
+        $this->catalogLoader->method('getById')->with(5)->willReturn($catalog);
+
+        $uploadedFile = $this->createMock(UploadedFileInterface::class);
+        $uploadedFile->method('getClientMediaType')->willReturn('<img src=x onerror=alert(1)>');
+        $this->request->method('getUploadedFiles')->willReturn(['import_file' => $uploadedFile]);
+
+        ob_start();
+        $this->subject->run($this->request, $this->gatekeeper);
+        $output = ob_get_clean();
+
+        self::assertStringNotContainsString('<img', $output);
+        self::assertStringContainsString('&lt;img', $output);
+    }
 
     public function testRunReturnsNullIfPodcastIsDisabled(): void
     {

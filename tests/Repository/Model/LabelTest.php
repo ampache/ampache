@@ -216,4 +216,10 @@ class LabelTest extends TestCase
         // backupGlobals so the real container is restored after every test
         $GLOBALS['dic'] = $this->dic;
     }
+
+    protected function tearDown(): void
+    {
+        // AmpConfig is a static store backupGlobals cannot reach, so a web_path set here outlives the test
+        AmpConfig::set('web_path', '', true);
+    }
 }

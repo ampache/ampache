@@ -79,7 +79,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
                 && !empty($xml->Lyric)
             ) {
                 return [
-                    'text' => nl2br((string) $xml->Lyric),
+                    'text' => (string) $xml->Lyric,
                     'url' => (string) $xml->LyricUrl
                 ];
             }

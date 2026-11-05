@@ -78,13 +78,14 @@ final class ShowEditPlaylistAction extends AbstractEditAction
          * uses just one for internal checks. So we have to retrieve the object_ids here again
          * @todo FIXME Replace by some smart solution
          */
+        // a comma-separated id/type list, round-tripped straight into the dialog's inline onclick JS, so only its own safe charset survives
         $result = $this->guiFactory->createNewPlaylistDialogAdapter(
             $gatekeeper,
             $object_type,
-            $request->getQueryParams()['id'],
+            (string) preg_replace('/[^A-Za-z0-9,_-]/', '', (string) ($request->getQueryParams()['id'] ?? '')),
             // a multi-select spanning types sends every group; the access check above still runs
             // against `object_type`, which carries the first of them
-            (string) ($request->getQueryParams()['groups'] ?? '')
+            (string) preg_replace('/[^A-Za-z0-9,_-]/', '', (string) ($request->getQueryParams()['groups'] ?? ''))
         )->render();
 
         return $this->responseFactory->createResponse()
