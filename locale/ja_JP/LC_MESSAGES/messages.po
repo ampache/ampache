@@ -1,21 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# n magi <csma17068@g.nihon-u.ac.jp>, 2020
-# MechMS <sonofswin@nagasaki.email.ne.jp>, 2019-2020
-# Yuki Yamada <lz.yamada@gmail.com>, 2016
-# Nishihara Yoshirou, 2018-2019
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: n magi <csma17068@g.nihon-u.ac.jp>, 2020\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/ampache/teams/40984/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -450,9 +448,6 @@ msgstr "of"
 msgid "Next"
 msgstr "次へ"
 
-msgid "View"
-msgstr "閲覧"
-
 msgid "Pages"
 msgstr "ページ"
 
@@ -464,6 +459,15 @@ msgstr "グリッドビュー"
 
 msgid "Alphabet"
 msgstr "アルファベット"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "閲覧"
 
 msgid "Item Count"
 msgstr "アイテム数"
@@ -827,6 +831,9 @@ msgstr "リリース日"
 msgid "Actions"
 msgstr "操作"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "現在ホストの追加"
 
@@ -1107,9 +1114,6 @@ msgstr "説明:"
 
 msgid "External Link"
 msgstr "外部リンク"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "高評価"
@@ -3837,7 +3841,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3860,7 +3864,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3888,7 +3892,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4186,7 +4190,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4369,6 +4373,8 @@ msgstr "カタログが削除されました。"
 msgid "There Was a Problem"
 msgstr "問題が発生しました。"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4650,8 +4656,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "アルバムが削除された"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "アルバムとすべてのファイルは削除される"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "タグから更新を開始"
@@ -5049,6 +5061,9 @@ msgstr "Beetsの更新を実行中"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "更新しました"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "エラー: Beetsが選択されました、しかしBeetsのデータベースファイルがありません"
 
@@ -5191,6 +5206,9 @@ msgstr "おそらくすべてのファイルが削除されています。なに
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5234,11 +5252,11 @@ msgid ""
 "processed."
 msgstr ""
 
-msgid "Updated"
-msgstr "更新しました"
-
 msgid "No Update Needed"
 msgstr "必要な更新はありません"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr ""
@@ -5414,9 +5432,6 @@ msgstr "PHPのメモリ上限を無効化しました"
 msgid "Reading Catalog: \"%s\""
 msgstr "カタログを読み込み中: %s"
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5434,9 +5449,6 @@ msgstr "新しいメディアの追加を開始"
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "新しいメディアアートの検索を開始"
 
@@ -5445,6 +5457,9 @@ msgstr "last.fm からアーティストの情報の更新と取得を行いま�
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6063,9 +6078,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6376,6 +6388,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr ""
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6558,14 +6579,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr "まだ評価されていません"
 
@@ -6574,6 +6587,14 @@ msgid "%s of 5"
 msgstr "5点中%s点"
 
 msgid "Current rating"
+msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+
+msgid "Average from all users"
 msgstr ""
 
 msgid "Unfavorite"
@@ -6824,24 +6845,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
-
-msgid "Amazon art search"
-msgstr ""
-
-msgid "Amazon base url"
-msgstr "Amazonのbase url"
-
-msgid "Amazon max results pages"
-msgstr "Amazonの最大結果ページ数"
-
-msgid "Amazon Access Key ID"
-msgstr "AmazonのAccess Key ID"
-
-msgid "Amazon Secret Access Key"
-msgstr "AmazonのSecret Access Key"
-
-msgid "Amazon associate tag"
-msgstr "Amazonのassociate tag"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7157,6 +7160,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7166,6 +7172,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7173,6 +7182,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"

@@ -1,24 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Alexander Son <soneus72@snu.ac.kr>, 2019-2020
-# Donggyu Park <pdg0526@nate.com>, 2020
-# LEE Hwanyong <hwan@ajou.ac.kr>, 2022,2026
-# Soobin Hwang <rorngk22@ajou.ac.kr>, 2021
-# Sunghun Park <shpark.x1@gmail.com>, 2017
-# Sunghun Park <shpark.x1@gmail.com>, 2017
-# 유영재 <yjsoft@yjsoft.pe.kr>, 2018
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2022,2026\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Korean (Korea) (https://app.transifex.com/ampache/teams/40984/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -453,9 +448,6 @@ msgstr "의"
 msgid "Next"
 msgstr "다음"
 
-msgid "View"
-msgstr "보기"
-
 msgid "Pages"
 msgstr "쪽"
 
@@ -467,6 +459,15 @@ msgstr "그물망 보기"
 
 msgid "Alphabet"
 msgstr "알파벳"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "보기"
 
 msgid "Item Count"
 msgstr "아이템 세기"
@@ -830,6 +831,9 @@ msgstr "배포 날짜"
 msgid "Actions"
 msgstr "실행"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "현재 호스트 추가하기"
 
@@ -1112,9 +1116,6 @@ msgstr "설명"
 
 msgid "External Link"
 msgstr "외부 링크"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "최고 등급"
@@ -3856,7 +3857,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3879,7 +3880,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3907,7 +3908,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4207,7 +4208,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4390,6 +4391,8 @@ msgstr "카탈로그를 삭제함"
 msgid "There Was a Problem"
 msgstr "문제 발생"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4671,8 +4674,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "앨범을 삭제하였습니다"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "앨범과 전체 파일을 삭제합니다"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "태그에서 갱신하기 시작 중"
@@ -5070,6 +5079,9 @@ msgstr "동작중인 비츠 갱신"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "수정됨"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "비츠 카탈로그를 선택하였으나 데이타베이스 파일이 없음"
 
@@ -5212,6 +5224,9 @@ msgstr "전체 파일을 삭제합니다."
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "파일이 없거나 0입니다: %s"
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5255,11 +5270,11 @@ msgid ""
 "processed."
 msgstr "이 하위 디렉토리는 기존 카탈로그 안에 없어서 갱신을 진행할 수 없음"
 
-msgid "Updated"
-msgstr "수정됨"
-
 msgid "No Update Needed"
 msgstr "갱신 필요없음"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "카탈로그 정리됨"
@@ -5437,9 +5452,6 @@ msgstr "PHP 메모리 제한을 해제했습니다"
 msgid "Reading Catalog: \"%s\""
 msgstr "  \"%s\" 카탈로그 읽기"
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5457,9 +5469,6 @@ msgstr "새 미디어 추가 시작"
 msgid "Start verifying media related to Catalog entries"
 msgstr "카탈로그 항목과 관련한 미디어 검증 시작"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "새 미디어 아트 탐색 시작"
 
@@ -5469,6 +5478,9 @@ msgstr "아티스트 정보를 갱신하여 last.fm에서 유사 아티스트 �
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
 msgstr "MusicBrainz 플러그인을 사용하여 레이블 정보 업데이트 및 세부 정보 가져오기"
+
+msgid "Updating counts"
+msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
@@ -6086,9 +6098,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6399,6 +6408,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz 아이디 (앨범)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6581,14 +6599,6 @@ msgstr " %s 파일 위에 덮어쓰지 마세요."
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-
-msgid "Average from all users"
-msgstr "모든 사용자의 평균"
-
 msgid "not rated yet"
 msgstr "아직 평점 없음"
 
@@ -6598,6 +6608,14 @@ msgstr " 5 중 %s "
 
 msgid "Current rating"
 msgstr "현재 등급"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+
+msgid "Average from all users"
+msgstr "모든 사용자의 평균"
 
 msgid "Unfavorite"
 msgstr ""
@@ -6845,24 +6863,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "알수없는 아티스트"
-
-msgid "Amazon art search"
-msgstr "아마존 아트 검색"
-
-msgid "Amazon base url"
-msgstr "아마존 기본 url"
-
-msgid "Amazon max results pages"
-msgstr "아마존 최대 결과 쪽"
-
-msgid "Amazon Access Key ID"
-msgstr "아마존 접근 키 ID"
-
-msgid "Amazon Secret Access Key"
-msgstr "아마존 비밀 접근 키"
-
-msgid "Amazon associate tag"
-msgstr "아마존 연관 태그"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7178,6 +7178,9 @@ msgstr "(월) 최대 대역폭 스트림 제어"
 msgid "Stream control bandwidth history (days)"
 msgstr "(일) 대역폭 흔적 제어"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "사용자별 접속 빈도 제어"
 
@@ -7187,6 +7190,9 @@ msgstr "최대 접속 빈도 스트림 제어"
 msgid "Stream control hits history (days)"
 msgstr "(일) 접속빈도 흔적 스트림 제어"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "사용자당 횟수 제어"
 
@@ -7195,6 +7201,9 @@ msgstr "최대 스트림 제어 시간 (분)"
 
 msgid "Stream control time history (days)"
 msgstr "(일) 시간 흔적 스트림 제어"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "TheAudioDb 메타데이타 집적"

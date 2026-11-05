@@ -1,19 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Feralheart <gyula210@gmail.com>, 2016
-# Nite <shunite@gmail.com>, 2019-2020
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Nite <shunite@gmail.com>, 2019-2020\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Hungarian (Hungary) (https://app.transifex.com/ampache/teams/40984/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,9 +448,6 @@ msgstr "-"
 msgid "Next"
 msgstr "Következő"
 
-msgid "View"
-msgstr "Nézet"
-
 msgid "Pages"
 msgstr "Oldalak"
 
@@ -462,6 +459,15 @@ msgstr "Rács nézet"
 
 msgid "Alphabet"
 msgstr "Ábécérend"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "Nézet"
 
 msgid "Item Count"
 msgstr "Elemek száma"
@@ -825,6 +831,9 @@ msgstr "Kiadás dátuma"
 msgid "Actions"
 msgstr "Akciók"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "Jelenlegi kiszolgáló hozzáadása"
 
@@ -1113,9 +1122,6 @@ msgstr "Leírás:"
 
 msgid "External Link"
 msgstr "Külső hivatkozás"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "Legtöbbre értékelt"
@@ -3947,7 +3953,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3970,7 +3976,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3998,7 +4004,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4308,7 +4314,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4493,6 +4499,8 @@ msgstr "A Katalógus törölve"
 msgid "There Was a Problem"
 msgstr "Probléma adódott"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4777,8 +4785,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "Az Album törölve"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "Az Album és minden fájl törölve lesz"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Frissítés címkékből indul"
@@ -5184,6 +5198,9 @@ msgstr "Beets frissítés futtatása"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "Frissítve"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "Beets Katalógus került kiválasztásra, de nem lett Beets DB fájl megadva"
@@ -5330,6 +5347,9 @@ msgstr "Minden fájl el lenne távolítva. Nem történt változás"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "A fájl nem található, vagy 0 bájt hosszú: %s"
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5377,11 +5397,11 @@ msgstr ""
 "Ez a mappa nem része egyik létező Katalógusnak sem. A frissítés nem "
 "dolgozható fel."
 
-msgid "Updated"
-msgstr "Frissítve"
-
 msgid "No Update Needed"
 msgstr "Frissítés nem szükséges"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "Katalógus megtisztítva"
@@ -5570,9 +5590,6 @@ msgstr "PHP memórialimit kikapcsolva"
 msgid "Reading Catalog: \"%s\""
 msgstr "\"%s\" Katalógus olvasása"
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5590,9 +5607,6 @@ msgstr "Új média hozzáadásának indítása"
 msgid "Start verifying media related to Catalog entries"
 msgstr "A Katalógusbejegyzésekhez tartozó média ellenőrzésének indítása"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "Új médiaborító keresésének indítása"
 
@@ -5602,6 +5616,9 @@ msgstr ""
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6220,9 +6237,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6536,6 +6550,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6718,15 +6741,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr "nincs értékelve"
 
@@ -6736,6 +6750,15 @@ msgstr "%s az 5-ből"
 
 msgid "Current rating"
 msgstr "Jelenlegi értékelés"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
+msgstr ""
 
 msgid "Unfavorite"
 msgstr ""
@@ -6998,24 +7021,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "Ismeretlen Előadó"
-
-msgid "Amazon art search"
-msgstr "Amazon borítókeresés"
-
-msgid "Amazon base url"
-msgstr "Amazon kezdő url"
-
-msgid "Amazon max results pages"
-msgstr "Amazon max eredményoldalak száma"
-
-msgid "Amazon Access Key ID"
-msgstr "Amazon Access Key ID"
-
-msgid "Amazon Secret Access Key"
-msgstr "Amazon Secret Access Key"
-
-msgid "Amazon associate tag"
-msgstr "Amazon hozzárendelt címke"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7333,6 +7338,9 @@ msgstr "Stream maximális sávszélesség szabályzása (hónap)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Stream sávszélesség szabályzás története (nap)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Találatok szabályzása felhasználónként"
 
@@ -7342,6 +7350,9 @@ msgstr "Stream maximális találatok szabályzása"
 msgid "Stream control hits history (days)"
 msgstr "Stream találatok szabályzás története (nap)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Idő szabályzása felhasználónként"
 
@@ -7350,6 +7361,9 @@ msgstr "Stream maximális idő szabályzása (perc)"
 
 msgid "Stream control time history (days)"
 msgstr "Stream idő szabályzás története (nap)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "TheAudioDb metaadatok beépítése"
