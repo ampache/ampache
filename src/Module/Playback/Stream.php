@@ -1090,7 +1090,8 @@ class Stream
     private static function _scrub_arg(?string $arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return '"' . str_replace(['"', '%'], ['', ''], (string) $arg) . '"';
+            // unlike a POSIX shell, cmd.exe reads `&|^<>` as metacharacters even inside a double-quoted argument
+            return '"' . str_replace(['"', '%', '&', '|', '^', '<', '>', "\r", "\n"], '', (string) $arg) . '"';
         }
 
         return "'" . str_replace("'", "'\\''", (string) $arg) . "'";

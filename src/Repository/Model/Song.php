@@ -1245,6 +1245,15 @@ class Song extends database_object implements
     }
 
     /**
+     * Metadata has no operational need for exact spacing the way a file path does, so this also drops whitespace
+     * and a leading hyphen, closing a quoteless command template's one opening for argument injection.
+     */
+    private static function _scrub_custom_play_metadata_arg(string $value): string
+    {
+        return ltrim((string) preg_replace('/\s+/u', '', self::_scrub_custom_play_arg($value)), '-');
+    }
+
+    /**
      * A tag list is a set of names, so a repeat is not a difference; a hand-set genre maps a second time and a file can name one twice
      *
      * @param string[] $names
@@ -2290,9 +2299,9 @@ class Song extends database_object implements
 
             $run = str_replace("%f", self::_scrub_custom_play_arg($this->file ?? '%f'), (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_arg($this->get_parent_fullname()), $run);
-            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_arg($this->get_album_fullname()), $run);
-            $run = str_replace("%t", self::_scrub_custom_play_arg($this->get_fullname() ?? '%t'), $run);
+            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_metadata_arg($this->get_parent_fullname()), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_metadata_arg($this->get_album_fullname()), $run);
+            $run = str_replace("%t", self::_scrub_custom_play_metadata_arg($this->get_fullname() ?? '%t'), $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 
