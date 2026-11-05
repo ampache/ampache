@@ -1,24 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Artur Morandi <artur.morandi@gmail.com>, 2017
-# Carlos Alexandre <karuvuariyo@gmail.com>, 2015
-# Ione Souza Junior, 2015-2016
-# Manuel <psyvirusx@gmail.com>, 2017
-# Paulo Schopf, 2017-2025
-# Rodrigo Emmanuel Santana Borges <rodrigoesborges@gmail.com>, 2021
-# Wellington Oliveira dos Santos <welblade@gmail.com>, 2016
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-04 10:11+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Paulo Schopf, 2017-2025\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/ampache/teams/40984/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -455,9 +450,6 @@ msgstr "de"
 msgid "Next"
 msgstr "Próxima"
 
-msgid "View"
-msgstr "Visualizar"
-
 msgid "Pages"
 msgstr "Páginas"
 
@@ -469,6 +461,15 @@ msgstr "Vista de grade"
 
 msgid "Alphabet"
 msgstr "Alfabética"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr "Pedido"
+
+msgid "View"
+msgstr "Visualizar"
 
 msgid "Item Count"
 msgstr "Itens"
@@ -832,6 +833,9 @@ msgstr "Data de lançamento"
 msgid "Actions"
 msgstr "Ações"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "Adicionar host atual"
 
@@ -1126,9 +1130,6 @@ msgstr "Descrição:"
 
 msgid "External Link"
 msgstr "Link externo"
-
-msgid "Order"
-msgstr "Pedido"
 
 msgid "Top Rated"
 msgstr "Melhores avaliados"
@@ -3976,7 +3977,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3999,7 +4000,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -4027,7 +4028,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4341,8 +4342,8 @@ msgstr "Enviando"
 msgid "Upload complete"
 msgstr "Envio completo"
 
-msgid "Upload cancelled"
-msgstr "Envio cancelado"
+msgid "Upload canceled"
+msgstr ""
 
 msgid "Error during upload"
 msgstr "Erro no envio"
@@ -5226,6 +5227,9 @@ msgstr "Executando atualização do Beets"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "Atualizado"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "O catálogo Beets foi selecionado, mas nenhum arquivo DB Beets foi fornecido"
@@ -5373,6 +5377,9 @@ msgstr "Todos arquivos seriam excluídos. Nada foi feito"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Arquivo não encontrado ou com 0 Bytes: %s"
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr "Contagem de arquivos: %d"
@@ -5422,11 +5429,11 @@ msgstr ""
 "Esta subpasta não está dentro de um catálogo existente. A atualização não "
 "pode ser processada."
 
-msgid "Updated"
-msgstr "Atualizado"
-
 msgid "No Update Needed"
 msgstr "Nenhuma atualização é necessária"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "Catálogo limpo"
@@ -5619,9 +5626,6 @@ msgstr "Limite de memória do PHP desativado"
 msgid "Reading Catalog: \"%s\""
 msgstr "Lendo catálogo: \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr "Procurar por entradas de arquivos de mídia ausentes"
 
@@ -5639,9 +5643,6 @@ msgstr "iniciar a adição de nova mídia"
 msgid "Start verifying media related to Catalog entries"
 msgstr "Comece verificando a mídia relacionada ao catálogo"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "Iniciar a procura de arte de mídia nova"
 
@@ -5654,6 +5655,9 @@ msgid ""
 msgstr ""
 "Atualizar as informações da etiqueta e buscar detalhes usando o plug-in "
 "MusicBrainz"
+
+msgid "Updating counts"
+msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr "Atualize o mapeamento da tabela, contagens e exclua dados da lixeira"
@@ -6282,9 +6286,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6601,6 +6602,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "ID do MusicBrainz (Álbum)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr "público"
 
@@ -6783,16 +6793,6 @@ msgstr "Não sobrescrever um arquivo existente: \"%s\""
 msgid " Stars"
 msgstr "Estrelas"
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-msgid "Average from all users"
-msgstr "Média de todos os usuários"
-
 msgid "not rated yet"
 msgstr "ainda não classificado"
 
@@ -6802,6 +6802,16 @@ msgstr "%s de 5"
 
 msgid "Current rating"
 msgstr "Classificação atual"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Average from all users"
+msgstr "Média de todos os usuários"
 
 msgid "Unfavorite"
 msgstr "Desfavoritar"
@@ -7404,6 +7414,9 @@ msgstr "Controle de limite de banda máxima de Stream (mês)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Histórico do controle de limite de banda de Stream (dias)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Controle de acessos por usuário"
 
@@ -7413,6 +7426,9 @@ msgstr "Controle do máximo de acesso de Stream"
 msgid "Stream control hits history (days)"
 msgstr "Histórico do controle de acesso de Stream (dias)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Controle de tempo por usuário"
 
@@ -7421,6 +7437,9 @@ msgstr "Controle do tempo máximo de Stream (minutos)"
 
 msgid "Stream control time history (days)"
 msgstr "Histórico do controle de tempo de Stream (dias)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "Integração de metadados do AudioDb"

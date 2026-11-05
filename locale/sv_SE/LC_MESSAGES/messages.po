@@ -1,9 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Daniel Nylander <po@danielnylander.se>, 2025
+# lachlan <lachlan.00@gmail.com>, 2026
 # Daniel Nylander <po@danielnylander.se>, 2026
 # 
 #, fuzzy
@@ -11,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-04 10:11+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2026\n"
 "Language-Team: Swedish (Sweden) (https://app.transifex.com/ampache/teams/40984/sv_SE/)\n"
@@ -450,9 +451,6 @@ msgstr "av"
 msgid "Next"
 msgstr "Nästa"
 
-msgid "View"
-msgstr "Visa"
-
 msgid "Pages"
 msgstr "Sidor"
 
@@ -464,6 +462,15 @@ msgstr "Grid View"
 
 msgid "Alphabet"
 msgstr "Alfabet"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr "Order"
+
+msgid "View"
+msgstr "Visa"
 
 msgid "Item Count"
 msgstr "Antal objekt"
@@ -827,6 +834,9 @@ msgstr "Utgivningsdatum"
 msgid "Actions"
 msgstr "Åtgärder"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "Lägg till aktuell värd"
 
@@ -1120,9 +1130,6 @@ msgstr "Beskrivning:"
 
 msgid "External Link"
 msgstr "Extern länk"
-
-msgid "Order"
-msgstr "Order"
 
 msgid "Top Rated"
 msgstr "Topprankade"
@@ -3986,7 +3993,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -4009,7 +4016,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -4037,7 +4044,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4348,8 +4355,8 @@ msgstr "Laddar upp"
 msgid "Upload complete"
 msgstr "Ladda upp komplett"
 
-msgid "Upload cancelled"
-msgstr "Uppladdning avbruten"
+msgid "Upload canceled"
+msgstr ""
 
 msgid "Error during upload"
 msgstr "Fel under uppladdning"
@@ -5236,6 +5243,9 @@ msgstr "Uppdatering av Running Beets"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "Uppdaterad"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr "Beets Catalog valdes, men ingen Beets DB-fil tillhandahölls"
 
@@ -5382,6 +5392,9 @@ msgstr "Alla filer kommer att tas bort. Gör ingenting"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Filen hittades inte eller är 0 Bytes: %s"
 
+msgid "Start scanning folders"
+msgstr "Börja genomsöka mappar"
+
 #, php-format
 msgid "File count: %d"
 msgstr "Antal filer: %d"
@@ -5429,11 +5442,11 @@ msgstr ""
 "Den här underkatalogen finns inte i en befintlig katalog. Uppdateringen kan "
 "inte bearbetas."
 
-msgid "Updated"
-msgstr "Uppdaterad"
-
 msgid "No Update Needed"
 msgstr "Ingen uppdatering är nödvändig"
+
+msgid "Skipping catalog, already being processed"
+msgstr "Hoppar över katalogen eftersom den redan bearbetas"
 
 msgid "Catalog Cleaned"
 msgstr "Katalogen rensad"
@@ -5623,9 +5636,6 @@ msgstr "Inaktiverad PHP-minnesbegränsning"
 msgid "Reading Catalog: \"%s\""
 msgstr "Läskatalog: \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr "Hoppar över katalogen eftersom den redan bearbetas"
-
 msgid "Look for missing file media entries"
 msgstr "Leta efter saknade filmedieposter"
 
@@ -5643,9 +5653,6 @@ msgstr "Börja lägga till nya medier"
 msgid "Start verifying media related to Catalog entries"
 msgstr "Börja verifiera media som är relaterade till Katalogposter"
 
-msgid "Start scanning folders"
-msgstr "Börja genomsöka mappar"
-
 msgid "Start searching new media art"
 msgstr "Börja söka efter new media art"
 
@@ -5657,6 +5664,9 @@ msgid ""
 msgstr ""
 "Uppdatera etikettinformation och hämta detaljer med hjälp av MusicBrainz-"
 "tillägget"
+
+msgid "Updating counts"
+msgstr "Uppdaterar antal"
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr "Uppdatera tabellmappning, räkningar och radera skräpdata"
@@ -6292,9 +6302,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr "%d rader återställdes, %d album-/artist-/podcastrader byggdes om"
 
-msgid "Updating counts"
-msgstr "Uppdaterar antal"
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr "%d rader skulle återställas (testkörning)"
@@ -6615,6 +6622,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr "publik"
 
@@ -6797,15 +6813,6 @@ msgstr "Skriv inte över en befintlig fil: \"%s\""
 msgid " Stars"
 msgstr " Stjärnor"
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr "Genomsnitt från alla användare"
-
 msgid "not rated yet"
 msgstr "inte betygsatt än"
 
@@ -6815,6 +6822,15 @@ msgstr "%s av 5"
 
 msgid "Current rating"
 msgstr "Aktuellt betyg"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
+msgstr "Genomsnitt från alla användare"
 
 msgid "Unfavorite"
 msgstr "Avmarkera som favorit"
@@ -7417,6 +7433,9 @@ msgstr "Stream control maximal bandbredd (månad)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Historik för bandbredd för strömkontroll (dagar)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Kontrollera träffar per användare"
 
@@ -7426,6 +7445,9 @@ msgstr "Stream control maximala träffar"
 msgid "Stream control hits history (days)"
 msgstr "Stream kontroll träffar historia (dagar)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Kontrolltid per användare"
 
@@ -7434,6 +7456,9 @@ msgstr "Maximal tid för strömkontroll (minuter)"
 
 msgid "Stream control time history (days)"
 msgstr "Tidshistorik för strömkontroll (dagar)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "Integration av metadata i TheAudioDb"

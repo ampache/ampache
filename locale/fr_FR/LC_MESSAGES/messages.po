@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-22 12:47+1000\n"
+"POT-Creation-Date: 2026-11-04 10:11+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fufroma, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/ampache/teams/40984/fr_FR/)\n"
@@ -464,7 +464,7 @@ msgid "Alphabet"
 msgstr "Alphabet"
 
 msgid "Sort By"
-msgstr ""
+msgstr "Trier par"
 
 msgid "Order"
 msgstr "Ordre"
@@ -833,6 +833,9 @@ msgstr "Date de sortie"
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid "Open in WebDAV"
+msgstr "Ouvrir dans WebDAV"
 
 msgid "Add Current Host"
 msgstr "Ajouter l'hôte courant"
@@ -4391,6 +4394,7 @@ msgstr ""
 
 msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
+"Le widget des favoris est désactivé, cette liste n'est donc jamais affichée."
 
 msgid ""
 "The sidebar can no longer be collapsed, and this only applies to its "
@@ -4424,6 +4428,8 @@ msgid ""
 "Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
+"La gestion des licences est désactivée dans le fichier de configuration du "
+"serveur, aucune licence n'est donc jamais affichée."
 
 msgid ""
 "Every stream on this server needs a session, so no embedded player is ever "
@@ -4459,9 +4465,8 @@ msgstr ""
 "Ce type de lecture n'est plus autorisé sur le serveur, il n'est donc pas "
 "proposé ici : choisissez-en un autre, rien ne se lit avec celui-là."
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
-"La limite correspondante est illimitée, cette fenêtre ne sert donc jamais."
 
 msgid ""
 "Stream limits need statistical graphs, which are off in the server "
@@ -4799,8 +4804,8 @@ msgstr "Chargement en cours"
 msgid "Upload complete"
 msgstr "Chargement réussi"
 
-msgid "Upload cancelled"
-msgstr "Chargement annulé"
+msgid "Upload canceled"
+msgstr "Envoi annulé"
 
 msgid "Error during upload"
 msgstr "Erreur durant le chargement"
@@ -6147,6 +6152,9 @@ msgstr ""
 "Mettre à jour les informations des labels et récupérer les détails via le "
 "plugin MusicBrainz"
 
+msgid "Updating counts"
+msgstr "Mise à jour des compteurs"
+
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
 "Mettre à jour les correspondances et compteurs des tables, et supprimer les "
@@ -6789,9 +6797,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr "%d lignes restaurées, %d lignes album/artiste/podcast reconstruites"
 
-msgid "Updating counts"
-msgstr "Mise à jour des compteurs"
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr "%d lignes seraient restaurées (simulation)"
@@ -7128,6 +7133,15 @@ msgstr "Mon dernier joué ou ignoré (Album)"
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr "Lisible"
+
+msgid "My Favorite Folders"
+msgstr "Mes dossiers favoris"
+
+msgid "Parent Folder"
+msgstr "Dossier parent"
+
 msgid "public"
 msgstr "publique"
 
@@ -7312,16 +7326,6 @@ msgstr "Ne pas écraser un fichier existant : \"%s\""
 msgid " Stars"
 msgstr " Étoiles"
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] "%d vote"
-msgstr[1] "%d votes"
-msgstr[2] "%d votes"
-
-msgid "Average from all users"
-msgstr "Moyenne de tous les utilisateurs"
-
 msgid "not rated yet"
 msgstr "non évalué"
 
@@ -7331,6 +7335,16 @@ msgstr "%s de 5"
 
 msgid "Current rating"
 msgstr "Évaluation actuelle"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] "%d vote"
+msgstr[1] "%d votes"
+msgstr[2] "%d votes"
+
+msgid "Average from all users"
+msgstr "Moyenne de tous les utilisateurs"
 
 msgid "Unfavorite"
 msgstr "Retirer des favoris"
@@ -7969,6 +7983,9 @@ msgstr "Contrôle des flux : bande passante maximale (mois)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Contrôle des flux : historique de la bande passante (jours)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Contrôler le nombre de lectures par utilisateur"
 
@@ -7978,6 +7995,9 @@ msgstr "Contrôle des flux : nombre maximum de lectures"
 msgid "Stream control hits history (days)"
 msgstr "Contrôle des flux : historique des lectures (jours)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Contrôler la durée par utilisateur"
 
@@ -7986,6 +8006,9 @@ msgstr "Contrôle des flux : durée maximale (minutes)"
 
 msgid "Stream control time history (days)"
 msgstr "Contrôle des flux : historique de la durée (jours)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "Intégration des métadonnées TheAudioDb"
