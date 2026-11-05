@@ -25,7 +25,7 @@
             </div>
             <div class="alert alert-danger">
                 <p>This version of Ampache does not include anything in the web root to allow you to use your own client</p>
-                <p><a href="https://ampache.org/docs/information/ampache7-client-structure-install-type" target="_blank">Please check the Ampache wiki for more information</a></p>
+                <p><a href="https://ampache.org/docs/information/ampache-client-structure-install-type" target="_blank">Please check the Ampache wiki for more information</a></p>
             </div>
         </div>
     </body>
