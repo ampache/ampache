@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-04 10:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4367,6 +4367,8 @@ msgid "There Was a Problem"
 msgstr ""
 
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
 msgstr ""
@@ -4648,7 +4650,13 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr ""
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
+msgstr ""
+
+msgid "The Disk and all files will be deleted"
 msgstr ""
 
 msgid "Starting Update from Tags"
@@ -6841,24 +6849,6 @@ msgid "Add to playlist / collection"
 msgstr ""
 
 msgid "Unknown Artist"
-msgstr ""
-
-msgid "Amazon art search"
-msgstr ""
-
-msgid "Amazon base url"
-msgstr ""
-
-msgid "Amazon max results pages"
-msgstr ""
-
-msgid "Amazon Access Key ID"
-msgstr ""
-
-msgid "Amazon Secret Access Key"
-msgstr ""
-
-msgid "Amazon associate tag"
 msgstr ""
 
 msgid "Sonic similarity from an AudioMuse-AI server"

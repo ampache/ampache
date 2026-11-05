@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-22 12:47+1000\n"
+"POT-Creation-Date: 2026-11-04 10:11+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2026\n"
 "Language-Team: Dutch (Netherlands) (https://app.transifex.com/ampache/teams/40984/nl_NL/)\n"
@@ -740,7 +740,7 @@ msgid "Codec"
 msgstr "Codec"
 
 msgid "Folder"
-msgstr ""
+msgstr "Map"
 
 msgid "None"
 msgstr "Geen"
@@ -833,6 +833,9 @@ msgstr "Release datum"
 
 msgid "Actions"
 msgstr "Acties"
+
+msgid "Open in WebDAV"
+msgstr ""
 
 msgid "Add Current Host"
 msgstr "Huidige Host toevoegen"
@@ -4173,7 +4176,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4487,8 +4490,8 @@ msgstr "Uploaden"
 msgid "Upload complete"
 msgstr "Uploaden voltooid"
 
-msgid "Upload cancelled"
-msgstr "Uploaden geannuleerd"
+msgid "Upload canceled"
+msgstr ""
 
 msgid "Error during upload"
 msgstr "Fout tijdens het uploaden"
@@ -4977,121 +4980,128 @@ msgid "Art information has been removed from the database"
 msgstr "Album afbeelding informatie is verwijderd uit de database"
 
 msgid "Art has been added"
-msgstr ""
+msgstr "Afbeelding toegevoegd"
 
 msgid "Art file failed to insert, check the dimensions are correct."
 msgstr ""
+"Het is niet gelukt om de afbeelding in te voegen. Controleer of de "
+"afmetingen kloppen."
 
 msgid "The Artist has been deleted"
-msgstr ""
+msgstr "De artiest is verwijderd"
 
 msgid "The Artist and all files will be deleted"
-msgstr ""
+msgstr "De artiest en alle bestanden worden verwijderd"
 
 msgid "Overwrite Artist names that match an mbid"
-msgstr ""
+msgstr "Artiestennamen overschrijven die overeenkomen met een mbid"
 
 msgid "Artist information updated using MusicBrainz"
-msgstr ""
+msgstr "Informatie over de artiest bijgewerkt met behulp van MusicBrainz"
 
 msgid "Missing mandatory parameter"
-msgstr ""
+msgstr "Verplichte parameter ontbreekt"
 
 msgid "Art file failed size check"
-msgstr ""
+msgstr "De bestandsgrootte van het afbeeldingsbestand is niet in orde"
 
 msgid ""
 "Art could not be located at this time. This may be due to write access "
 "error, or the file was not received correctly"
 msgstr ""
+"De afbeelding kon momenteel niet worden gevonden. Dit kan te wijten zijn aan"
+" een fout bij het schrijven, of het bestand is niet correct ontvangen"
 
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
+"Het is niet gelukt om het afbeeldingsbestand in te voegen. Controleer of de "
+"grootte de limiet niet overschrijdt."
 
 msgid "Failed to update_art for "
-msgstr ""
+msgstr "Het is niet gelukt om de afbeelding bij te werken voor"
 
 #, php-format
 msgid "%s and %d more item"
 msgid_plural "%s and %d more items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s en nog %d artikel"
+msgstr[1] "%s en %d extra artikelen"
 
 msgid "Broadcast has been deleted"
-msgstr ""
+msgstr "De uitzending is verwijderd"
 
 msgid "This Broadcast will be deleted"
-msgstr ""
+msgstr "Deze uitzending wordt verwijderd"
 
 msgid "This collection does not accept items of that type"
-msgstr ""
+msgstr "Deze collectie accepteert geen items van dat type"
 
 msgid "Object added to collection"
-msgstr ""
+msgstr "Object toegevoegd aan collectie"
 
 msgid "Name is required"
-msgstr ""
+msgstr "Naam is verplicht"
 
 msgid "Not a valid item type"
-msgstr ""
+msgstr "Dit is geen geldig itemtype"
 
 msgid "Failed to create collection"
-msgstr ""
+msgstr "Het is niet gelukt om de collectie aan te maken"
 
 msgid "Collection created"
-msgstr ""
+msgstr "Collectie aangemaakt"
 
 msgid "Object removed from collection"
-msgstr ""
+msgstr "Object uit de collectie verwijderd"
 
 msgid "The Playlist has been deleted"
-msgstr ""
+msgstr "De afspeellijst is verwijderd"
 
 msgid "This Folder will be deleted"
-msgstr ""
+msgstr "Deze map wordt verwijderd"
 
 msgid "The Ampache database username or password is missing"
 msgstr ""
+"De gebruikersnaam of het wachtwoord voor de Ampache-database ontbreekt"
 
 msgid "Configuration files were either not found or unreadable"
-msgstr ""
+msgstr "De configuratiebestanden werden niet gevonden of waren onleesbaar"
 
 msgid "The Label has been added"
-msgstr ""
+msgstr "Het label is toegevoegd"
 
 msgid "The Label has been deleted"
-msgstr ""
+msgstr "Het label is verwijderd"
 
 msgid "This Label will be deleted"
-msgstr ""
+msgstr "Dit label wordt verwijderd"
 
 msgid "The Label cannot be found"
-msgstr ""
+msgstr "Het label kan niet worden gevonden"
 
 msgid "Incorrect username or password"
-msgstr ""
+msgstr "Onjuiste gebruikersnaam of wachtwoord"
 
 msgid "Account is disabled, please contact the administrator"
-msgstr ""
+msgstr "Het account is uitgeschakeld. Neem contact op met de beheerder"
 
 msgid "User is already logged in"
-msgstr ""
+msgstr "De gebruiker is al ingelogd"
 
 msgid "Unable to create a local account"
-msgstr ""
+msgstr "Kan geen lokaal account aanmaken"
 
 msgid "OpenID Connect is not configured correctly"
-msgstr ""
+msgstr "OpenID Connect is niet correct geconfigureerd"
 
 msgid "Ratings"
-msgstr ""
+msgstr "Beoordelingen"
 
 #, php-format
 msgid "%s - Now Playing"
-msgstr ""
+msgstr "%s - Nu te beluisteren"
 
 msgid "Playlist created"
-msgstr ""
+msgstr "Afspeellijst aangemaakt"
 
 msgid "Folder created"
 msgstr ""
@@ -5113,65 +5123,66 @@ msgstr[0] "Het importeren van de afspeellijst met %d liedje is gelukt."
 msgstr[1] "Het importeren van de afspeellijst met %d liedjes is gelukt."
 
 msgid "Success"
-msgstr ""
+msgstr "Gelukt"
 
 msgid "Failure"
-msgstr ""
+msgstr "Mislukt"
 
 msgid "The Playlist could not be imported"
-msgstr ""
+msgstr "De afspeellijst kon niet worden geïmporteerd"
 
 msgid "No valid songs found in playlist file"
-msgstr ""
+msgstr "Er zijn geen geldige nummers gevonden in het afspeellijstbestand"
 
 msgid "Podcast has been deleted"
-msgstr ""
+msgstr "De podcast is verwijderd"
 
 msgid "Catalog not found"
-msgstr ""
+msgstr "Catalogus niet gevonden"
 
 msgid "Feed URL is invalid"
-msgstr ""
+msgstr "De feed-URL is ongeldig"
 
 msgid "Wrong target Catalog type"
-msgstr ""
+msgstr "Verkeerd type doelcatalogus"
 
 msgid "Can not read the feed"
-msgstr ""
+msgstr "De feed kan niet worden gelezen"
 
 msgid "Subscribed to the Podcast"
-msgstr ""
+msgstr "Geabonneerd op de podcast"
 
 msgid "The Podcast will be removed from the database"
-msgstr ""
+msgstr "De podcast wordt uit de database verwijderd"
 
 msgid "Podcast Episode has been deleted"
-msgstr ""
+msgstr "De podcastaflevering is verwijderd"
 
 msgid "The Podcast Episode will be deleted"
-msgstr ""
+msgstr "De podcastaflevering wordt verwijderd"
 
 #, php-format
 msgid "Podcast-import finished. Imported %d podcasts"
 msgstr ""
+"Het importeren van podcasts is voltooid. Er zijn %d podcasts geïmporteerd"
 
 msgid "File is invalid"
-msgstr ""
+msgstr "Het bestand is ongeldig"
 
 msgid "File-type not recognized"
-msgstr ""
+msgstr "Bestandstype niet herkend"
 
 msgid "Invalid catalog type"
-msgstr ""
+msgstr "Ongeldig catalogustype"
 
 msgid "Import Podcasts"
-msgstr ""
+msgstr "Podcasts importeren"
 
 msgid "Podcast information updated from the feed"
-msgstr ""
+msgstr "Podcast-informatie bijgewerkt vanuit de feed"
 
 msgid "The feed could not be read"
-msgstr ""
+msgstr "De feed kon niet worden gelezen"
 
 msgid "Your account has been updated"
 msgstr "Je account is bijgewerkt"
@@ -5192,72 +5203,74 @@ msgid "User preferences updated successfully"
 msgstr "Gebruikersvoorkeuren zijn met succes bijgewerkt"
 
 msgid "Please fill in your full name (first name, last name)"
-msgstr ""
+msgstr "Vul hier je volledige naam in (voornaam, achternaam)"
 
 msgid "Please fill in your website"
-msgstr ""
+msgstr "Vul hier je website in"
 
 msgid "Please fill in your state"
-msgstr ""
+msgstr "Vul hier uw staat in"
 
 msgid "Please fill in your city"
-msgstr ""
+msgstr "Vul hier je woonplaats in"
 
 msgid "Update failed"
-msgstr ""
+msgstr "Bijwerken mislukt"
 
 msgid "User updated successfully"
-msgstr ""
+msgstr "Gebruiker met succes bijgewerkt"
 
 msgid "Unknown user"
-msgstr ""
+msgstr "Onbekende gebruiker"
 
 msgid "Subject is required"
-msgstr ""
+msgstr "Onderwerp is verplicht"
 
 msgid "Message has been sent"
-msgstr ""
+msgstr "Het bericht is verzonden"
 
 msgid "Messages have been deleted"
-msgstr ""
+msgstr "Berichten zijn verwijderd"
 
 msgid "The Message will be deleted"
-msgstr ""
+msgstr "Het bericht wordt verwijderd"
 
 msgid "Message's state has been changed"
-msgstr ""
+msgstr "De status van het bericht is gewijzigd"
 
 #. HINT: Shorthand for e-mail reply
 msgid "RE"
-msgstr ""
+msgstr "RE"
 
 msgid "Radio Station created"
-msgstr ""
+msgstr "Radiostation aangemaakt"
 
 msgid "Captcha failed"
-msgstr ""
+msgstr "Captcha is mislukt"
 
 msgid "Browser check failed. Please reload the page and try again"
 msgstr ""
+"De browsercontrole is mislukt. Laad de pagina opnieuw en probeer het nog "
+"eens"
 
 msgid "You must accept the user agreement"
-msgstr ""
+msgstr "Je moet de gebruikersovereenkomst accepteren"
 
 msgid "You must enter a Username"
-msgstr ""
+msgstr "Je moet een gebruikersnaam invoeren"
 
 msgid "Invalid e-mail address"
-msgstr ""
+msgstr "Ongeldig e-mailadres"
 
 msgid "You must enter a password"
 msgstr "U moet een wachtwoord opgeven"
 
 msgid "Failed to create user"
-msgstr ""
+msgstr "Het is niet gelukt om gebruiker aan te maken"
 
 #, php-format
 msgid "Your search has been saved as a Playlist with the name %s"
-msgstr ""
+msgstr "Je zoekopdracht is opgeslagen als een afspeellijst met de naam %s"
 
 msgid "Failed to create playlist"
 msgstr "Afspeellijst maken mislukt"
@@ -5265,6 +5278,7 @@ msgstr "Afspeellijst maken mislukt"
 #, php-format
 msgid "Your search has been saved as a Smart Playlist with the name %s"
 msgstr ""
+"Je zoekopdracht is opgeslagen als een slimme afspeellijst met de naam %s"
 
 msgid "View on MusicBrainz"
 msgstr "Bekijk op MusicBrainz"
@@ -5276,7 +5290,7 @@ msgid "Share created"
 msgstr "Gedeelde bron aangemaakt"
 
 msgid "You can now start sharing the following URL:"
-msgstr ""
+msgstr "Je kunt nu de volgende URL delen:"
 
 msgid ""
 "You can also embed this share as a web player into your website, with the "
@@ -5297,19 +5311,19 @@ msgstr ""
 "anderen"
 
 msgid "Invalid object selected"
-msgstr ""
+msgstr "Ongeldig object geselecteerd"
 
 msgid "Song has been deleted"
-msgstr ""
+msgstr "Het nummer is verwijderd"
 
 msgid "The Song will be deleted"
-msgstr ""
+msgstr "Het nummer wordt verwijderd"
 
 msgid "Clean Expired Shared Objects"
 msgstr "Verlopen gedeelde objecten opschonen"
 
 msgid "Update failed. Please check the logs for further information."
-msgstr ""
+msgstr "De update is mislukt. Raadpleeg de logbestanden voor meer informatie."
 
 msgid "Video has been deleted"
 msgstr "De video is verwijderd"
@@ -5318,13 +5332,13 @@ msgid "The Video will be deleted"
 msgstr "De video wordt verwijderd"
 
 msgid "Edit/Find Art"
-msgstr ""
+msgstr "Afbeelding bewerken/zoeken"
 
 msgid "Do you really want to reset art?"
-msgstr ""
+msgstr "Wilt u de afbeeldingen echt opnieuw instellen?"
 
 msgid "Reset Art"
-msgstr ""
+msgstr "Afbeeldingen opnieuw laden"
 
 #. HINT: %1$s is the item name, %2$s says what the drawing was made from
 #. the name arrives escaped, so only the translated half is escaped here
@@ -5340,15 +5354,19 @@ msgstr "Kan niet openen"
 
 msgid "Set album_art_store_disk to remove art from the database"
 msgstr ""
+"Stel `album_art_store_disk` in om afbeeldingen uit de database te "
+"verwijderen"
 
 msgid "local_metadata_dir setting is required to store art on disk"
 msgstr ""
+"De instelling `local_metadata_dir` is vereist om afbeeldingen op de schijf "
+"op te slaan"
 
 #, php-format
 msgid "%d track"
 msgid_plural "%d tracks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d nummer"
+msgstr[1] "%d nummers"
 
 msgid "Dark"
 msgstr "Donker"
@@ -5358,12 +5376,13 @@ msgstr "Licht"
 
 msgid "OpenID Connect requires an interactive browser login"
 msgstr ""
+"Voor OpenID Connect is een interactieve aanmelding via de browser vereist"
 
 msgid "OpenID Connect authentication failed"
-msgstr ""
+msgstr "De OpenID Connect-authenticatie is mislukt"
 
 msgid "The identity provider did not return a username"
-msgstr ""
+msgstr "De identiteitsprovider heeft geen gebruikersnaam teruggestuurd"
 
 msgid "Running Beets Update"
 msgstr "Bezig met bijwerken van Beets"
@@ -5378,116 +5397,121 @@ msgstr "Bijgewerkt"
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
+"De Beets catalogus is geselecteerd, maar er is geen Beets-DB-bestand "
+"opgegeven"
 
 #, php-format
 msgid "This path belongs to an existing Beets Catalog: %s"
-msgstr ""
+msgstr "Dit pad hoort bij een bestaande Beets-catalogus: %s"
 
 msgid "Beets Database File"
-msgstr ""
+msgstr "Beets database bestand"
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr ""
+"Het catalogustype 'Op afstand' is geselecteerd, maar het pad is geen URL"
 
 msgid "Beets Server URI"
 msgstr "Beets Server URI"
 
 msgid "Invalid \"dropbox-path\": "
-msgstr ""
+msgstr "Ongeldige \"dropbox-path\":"
 
 #, php-format
 msgid "Error: Catalog with %s already exists"
-msgstr ""
+msgstr "Fout: Er bestaat al een catalogus met de naam %s"
 
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr ""
+"Fout: API-sleutel, geheim en toegangstoken vereist voor Dropbox-catalogi"
 
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr ""
+msgstr "Ongeldige \"API-sleutel\", \"geheim\" of \"toegangstoken\":"
 
 msgid "Running Dropbox Remote Update"
-msgstr ""
+msgstr "Dropbox Remote Update uitvoeren"
 
 msgid "Access Token"
 msgstr "Toegangstoken"
 
 msgid "Get chunked files on analyze"
-msgstr ""
+msgstr "Bestanden in stukjes ophalen bij analyse"
 
 msgid "API Error: cannot connect to Dropbox."
-msgstr ""
+msgstr "API-fout: er kan geen verbinding worden gemaakt met Dropbox."
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
-msgstr ""
+msgstr "Ga naar https://www.dropbox.com/developers/apps/create"
 
 msgid "Select 'Dropbox API app'"
-msgstr ""
+msgstr "Kies 'Dropbox API-app'"
 
 msgid "Select 'Full Dropbox'"
-msgstr ""
+msgstr "Kies 'Volledige Dropbox'"
 
 msgid "Give a name to your application and create it"
-msgstr ""
+msgstr "Geef je applicatie een naam en maak deze aan"
 
 msgid "Click the 'Generate' button to create an Access Token"
-msgstr ""
+msgstr "Klik op de knop 'Genereren' om een toegangstoken aan te maken"
 
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
+"Kopieer je app-sleutel, app-geheim en toegangstoken naar de volgende velden."
 
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
-msgstr ""
+msgstr "Catalogusupdate voltooid. Totaal aantal media: [%s]"
 
 #, php-format
 msgid "Updated song: \"%s\""
-msgstr ""
+msgstr "Bijgewerkt nummer: \"%s\""
 
 #, php-format
 msgid "Song up to date: \"%s\""
-msgstr ""
+msgstr "Nummer up-to-date: '%s'"
 
 #. HINT: filename (File path)
 #, php-format
 msgid "Removing song: \"%s\""
-msgstr ""
+msgstr "Nummer verwijderen: \"%s\""
 
 msgid "Path was not specified"
 msgstr "Er is geen pad opgegeven"
 
 msgid "Specified path is inside an existing catalog"
-msgstr ""
+msgstr "Het opgegeven pad bevindt zich in een bestaande catalogus"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
-msgstr ""
+msgstr "De map kon niet worden gelezen. Bestaat deze wel? %s"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
-msgstr ""
+msgstr "Dit pad hoort bij een bestaande lokale catalogus: %s"
 
 #. HINT: directory (file path)
 #, php-format
 msgid "Unable to change to directory: %s"
-msgstr ""
+msgstr "Kan niet naar de map %s wisselen"
 
 #. HINT: FullFile
 #, php-format
 msgid "Unable to get the filesize for \"%s\""
-msgstr ""
+msgstr "De bestandsgrootte van \"%s\" kan niet worden bepaald"
 
 #. HINT: filename (file path)
 #, php-format
 msgid "The file couldn't be read. Does it exist? %s"
-msgstr ""
+msgstr "Het bestand kon niet worden gelezen. Bestaat het wel? %s"
 
 #. HINT: FullFile
 #, php-format
 msgid "\"%s\" does not match site charset"
-msgstr ""
+msgstr "\"%s\" komt niet overeen met de tekenset van de site"
 
 #. HINT: directory (file path)
 #, php-format
@@ -5520,37 +5544,38 @@ msgid "File was not found or is 0 Bytes: %s"
 msgstr "Het bestand is niet gevonden of is 0 bytes groot: %s"
 
 msgid "Start scanning folders"
-msgstr ""
+msgstr "Begin met het scannen van mappen"
 
 #, php-format
 msgid "File count: %d"
-msgstr ""
+msgstr "Aantal bestanden: %d"
 
 #, php-format
 msgid "Create directory \"%s\""
-msgstr ""
+msgstr "Maak de map \"%s\" aan"
 
 msgid "File already exists"
 msgstr "Bestand bestaat al"
 
 #, php-format
 msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr ""
+msgstr "\"%1$s\" wordt gekopieerd naar \"%2$s\""
 
 #, php-format
 msgid "There was an error trying to copy file to \"%s\""
-msgstr ""
+msgstr "Er is een fout opgetreden bij het kopiëren van het bestand naar \"%s\""
 
 #, php-format
 msgid "Size comparison failed. Not deleting \"%s\""
-msgstr ""
+msgstr "De groottevergelijking is mislukt. \"%s\" wordt niet verwijderd"
 
 #, php-format
 msgid "There was an error trying to delete \"%s\""
-msgstr ""
+msgstr "Er is een fout opgetreden bij het verwijderen van \"%s\""
 
 msgid "Failed to create the catalog, check the debug logs"
 msgstr ""
+"Het is niet gelukt om de catalogus aan te maken. Controleer de foutlogboeken"
 
 msgid "day"
 msgid_plural "days"
@@ -5573,7 +5598,7 @@ msgid "No Update Needed"
 msgstr "Geen update nodig"
 
 msgid "Skipping catalog, already being processed"
-msgstr ""
+msgstr "Catalogus overslaan, wordt al verwerkt"
 
 msgid "Catalog Cleaned"
 msgstr "Catalogus opgeschoond"
@@ -5649,118 +5674,131 @@ msgstr "Seafile Remote Update uitvoeren"
 #. HINT: count of songs updated
 #, php-format
 msgid "Total Media: [%s]"
-msgstr ""
+msgstr "Totaal aantal media: [%s]"
 
 msgid "No media was updated, did you respect the patterns?"
-msgstr ""
+msgstr "Er is geen media bijgewerkt. Heb je je aan de patronen gehouden?"
 
 msgid "Server URI"
-msgstr ""
+msgstr "Server-URI"
 
 msgid "Library Name"
-msgstr ""
+msgstr "Naam van de bibliotheek"
 
 msgid "API Call Delay"
-msgstr ""
+msgstr "Vertraging bij API-aanroep"
 
 msgid "Seafile Username/Email"
-msgstr ""
+msgstr "Seafile-gebruikersnaam/e-mailadres"
 
 msgid "Seafile Password"
-msgstr ""
+msgstr "Seafile-wachtwoord"
 
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
 msgstr ""
+"Er is een fout opgetreden bij het controleren van dit nummer \"%1$s\": %2$s"
 
 #. HINT: filename (File path)
 #, php-format
 msgid "Keeping song: %s"
-msgstr ""
+msgstr "Nummer behouden: %s"
 
 msgid "Install a Seafile server as described in the documentation"
-msgstr ""
+msgstr "Installeer een Seafile-server zoals beschreven in de documentatie"
 
 msgid ""
 "Enter URL to server (e.g. 'https://seafile.example.com') and library name "
 "(e.g. 'Music')."
 msgstr ""
+"Voer de URL van de server in (bijv. 'https://seafile.example.com') en de "
+"naam van de bibliotheek (bijv. 'Muziek')."
 
 msgid ""
 "API Call Delay is the delay inserted between repeated requests to Seafile "
 "(such as during an Add or Clean action) to accommodate Seafile's Rate "
 "Limiting."
 msgstr ""
+"API-aanroepvertraging is de vertraging die wordt ingelast tussen herhaalde "
+"verzoeken aan Seafile (bijvoorbeeld tijdens een ‘Toevoegen’- of "
+"‘Opschonen’-actie) om rekening te houden met de snelheidsbeperking van "
+"Seafile."
 
 msgid "The default is tuned towards Seafile's default rate limit settings."
 msgstr ""
+"De standaardinstelling is afgestemd op de standaardinstellingen voor de "
+"snelheidsbeperking van Seafile."
 
 msgid ""
 "After creating the Catalog, you must 'Make it ready' on the Catalog table."
 msgstr ""
+"Nadat u de catalogus hebt aangemaakt, moet u deze in de catalogustabel "
+"‘klaar maken’."
 
 #. HINT: filename (File path)
 #, php-format
 msgid "Could not add song: %s"
-msgstr ""
+msgstr "Het nummer kon niet worden toegevoegd: %s"
 
 #. HINT: filename (File path)
 #, php-format
 msgid "Skipping existing song: %s"
-msgstr ""
+msgstr "Bestaand nummer overslaan: %s"
 
 #. HINT: filename (File path)
 #, php-format
 msgid "Adding a new song: %s"
-msgstr ""
+msgstr "Nieuw nummer toevoegen: %s"
 
 #. HINT: subsonic catalog URI
 #, php-format
 msgid "This path belongs to an existing Subsonic Catalog: %s"
-msgstr ""
+msgstr "Dit pad hoort bij een bestaande Subsonic-catalogus: %s"
 
 msgid "Running Subsonic Remote Update"
-msgstr ""
+msgstr "Subsonic op afstand bijwerken"
 
 #. HINT: filename (file path)
 #, php-format
 msgid "Unable to insert song - %s"
-msgstr ""
+msgstr "Kan nummer niet invoegen - %s"
 
 msgid "Completed updating Subsonic Catalog(s)"
-msgstr ""
+msgstr "Het bijwerken van de Subsonic-catalogus(sen) is voltooid"
 
 #. HINT: Number of songs
 #, php-format
 msgid "%s Song added"
 msgid_plural "%s Songs added"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s nummer toegevoegd"
+msgstr[1] "%s nummers toegevoegd"
 
 msgid "Could not authenticate with Seafile"
-msgstr ""
+msgstr "Er kon geen authenticatie worden uitgevoerd bij Seafile"
 
 #, php-format
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr ""
+"De Seafile-bibliotheek met de naam \"%s\" kon niet worden gevonden; er zijn "
+"geen mediabestanden bijgewerkt"
 
 msgid "Catalog created"
-msgstr ""
+msgstr "Catalogus aangemaakt"
 
 msgid "Deactivated PHP memory limit"
 msgstr "PHP geheugen limiet uitgeschakeld"
 
 #, php-format
 msgid "Reading Catalog: \"%s\""
-msgstr ""
+msgstr "Catalogus wordt gelezen: \"%s\""
 
 msgid "Look for missing file media entries"
-msgstr ""
+msgstr "Zoeken naar ontbrekende mediabestanden"
 
 #. HINT: filename (File path) OR table name (podcast, video, etc)
 #, php-format
 msgid "Missing: %s"
-msgstr ""
+msgstr "Ontbreekt: %s"
 
 msgid "Start cleaning orphaned media entries"
 msgstr "Start opruimen ongerelateerde media items"
@@ -5770,15 +5808,23 @@ msgstr "Start toevoegen nieuwe media"
 
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
+"Begin met het controleren van media die betrekking hebben op "
+"catalogusvermeldingen"
 
 msgid "Start searching new media art"
 msgstr "Start zoeken nieuwe media afbeeldingen"
 
 msgid "Update artist information and fetch similar artists from last.fm"
 msgstr ""
+"Artiestgegevens bijwerken en vergelijkbare artiesten ophalen van last.fm"
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+"Werk de labelgegevens bij en haal details op met behulp van de MusicBrainz-"
+"plug-in"
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -5789,49 +5835,49 @@ msgid "Optimizing database tables"
 msgstr "Database tabellen optimaliseren"
 
 msgid "The new path is invalid"
-msgstr ""
+msgstr "Het nieuwe pad is ongeldig"
 
 msgid "Moving Catalog path"
-msgstr ""
+msgstr "Cataloguspad verplaatsen"
 
 msgid "The Catalog path has changed"
-msgstr ""
+msgstr "Het pad naar de catalogus is gewijzigd"
 
 msgid "There is an error with your parameters"
-msgstr ""
+msgstr "Er is een fout opgetreden met uw parameters"
 
 #, php-format
 msgid "Catalog `%s` not found"
-msgstr ""
+msgstr "Catalogus `%s` niet gevonden"
 
 msgid "File not found"
-msgstr ""
+msgstr "Bestand niet gevonden"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song
 #. title", 1298376)
 #, php-format
 msgid "Updated: %s"
-msgstr ""
+msgstr "Bijgewerkt: %s"
 
 #, php-format
 msgid "Removing File: \"%s\""
-msgstr ""
+msgstr "Bestand verwijderen: \"%s\""
 
 #, php-format
 msgid "Reading File: \"%s\""
-msgstr ""
+msgstr "Bestand lezen: \"%s\""
 
 msgid "Create a local media catalog"
-msgstr ""
+msgstr "Maak een lokale mediacatalogus aan"
 
 msgid "Catalog Media Type (optional)"
-msgstr ""
+msgstr "Catalogusmediatype (optioneel)"
 
 msgid "Filename Pattern (optional)"
-msgstr ""
+msgstr "Bestandsnaam patroon (optioneel)"
 
 msgid "Folder Pattern (optional)"
-msgstr ""
+msgstr "Map patroon (optioneel)"
 
 msgid "Create a local music catalog called `some-catalog`"
 msgstr ""
@@ -6398,9 +6444,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6712,6 +6755,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6894,15 +6946,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr "nog geen waardering"
 
@@ -6911,6 +6954,15 @@ msgid "%s of 5"
 msgstr "%s van 5"
 
 msgid "Current rating"
+msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
 msgstr ""
 
 msgid "Unfavorite"
@@ -7501,6 +7553,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7510,6 +7565,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7517,6 +7575,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"
@@ -7613,10 +7674,10 @@ msgid "Azerbaijani"
 msgstr "Azerbeidzjaanse"
 
 msgid "Bashkir"
-msgstr ""
+msgstr "Bashkir"
 
 msgid "Belarusian"
-msgstr ""
+msgstr "Wit-Russisch"
 
 msgid "Bulgarian"
 msgstr "Bulgaars"
