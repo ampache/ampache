@@ -57,6 +57,7 @@
 * Catalog completion notifications show for 10 seconds instead of 5, and can be dismissed early with a click
 * A fast-arriving notification could silently erase one still queued behind it before it was ever shown
 * `SseApiApplication` clears every output buffer and sends `X-Accel-Buffering: no`, so a proxy can't swallow progress notifications
+* The song lyrics page rendered ID3-tag or lyrics-provider text unescaped
 * The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
 * The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
 * The sidebar's random playlist link could choose another user's private playlist
