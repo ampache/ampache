@@ -733,10 +733,14 @@ class Ui implements UiInterface
             $message    = ($field !== '' && $field !== '0') ? $field . ': ' . $plainValue : (string) $plainValue;
             echo "id: " . $update_id . "\n";
             echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$message, $timeout]]) . "\n\n";
-        } elseif ($field !== '' && $field !== '0') {
-            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
-            echo "<br />" . $value . "<br /><br />\n";
+            // the legacy box renders this as markup (updateText() does `.html()`, the field-less branch echoes it raw)
+            $safeValue = is_string($value) ? scrub_out($value) : $value;
+            if ($field !== '' && $field !== '0') {
+                echo "<script>updateText('" . $field . "', '" . json_encode($safeValue) . "');</script>\n";
+            } else {
+                echo "<br />" . $safeValue . "<br /><br />\n";
+            }
         }
 
         if (ob_get_level() > 0) {

@@ -1,29 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# d j <transifex@usox.org>, 2020-2021
-# Frederik Gschaider <frederik.gschaider@gmail.com>, 2022
-# Manuel <psyvirusx@gmail.com>, 2015-2021,2025
-# Manuel Soukup <manuelsoukup@gmail.com>, 2019
-# Oliver Sprinzl <oliver@sprinzl.de>, 2019,2022
-# Ottnorml <ottnorml@gmail.com>, 2016
-# KaeTuuN <philipp.wellmann+github@mailbox.org>, 2020-2021
-# Reiner Herrmann <reiner@reiner-h.de>, 2021
-# Simon Schmid, 2022
-# Sven, 2016
-# Sven, 2016
-# Thorsten Kalka <thorsten.kalka28@gmail.com>, 2020
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Manuel <psyvirusx@gmail.com>, 2015-2021,2025\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: German (Germany) (https://app.transifex.com/ampache/teams/40984/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -458,9 +448,6 @@ msgstr "von"
 msgid "Next"
 msgstr "Weiter"
 
-msgid "View"
-msgstr "Anzeigen"
-
 msgid "Pages"
 msgstr "Seiten"
 
@@ -472,6 +459,15 @@ msgstr "Rasteransicht"
 
 msgid "Alphabet"
 msgstr "Alphabet"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "Anzeigen"
 
 msgid "Item Count"
 msgstr "Objektanzahl"
@@ -835,6 +831,9 @@ msgstr "Datum der Erstellung"
 msgid "Actions"
 msgstr "Aktionen"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "Momentanen Host hinzufügen"
 
@@ -1123,9 +1122,6 @@ msgstr "Beschreibung:"
 
 msgid "External Link"
 msgstr "Externer Link"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "Am besten bewertet"
@@ -3981,7 +3977,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -4004,7 +4000,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -4032,7 +4028,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4346,7 +4342,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4531,6 +4527,8 @@ msgstr "Der Katalog wurde gelöscht"
 msgid "There Was a Problem"
 msgstr "Es gab ein Problem"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4817,8 +4815,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "Das Album wurde gelöscht"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "Das Album und alle zugehörigen Dateien werden gelöscht"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Starte Aktualisierung von TAGs"
@@ -5234,6 +5238,9 @@ msgstr "Führe Beets-Update aus"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "Aktualisiert"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "Beets wurde ausgewählt, jedoch wurde keine Datenbankdatei für Beets angelegt"
@@ -5386,6 +5393,9 @@ msgstr "Alle Dateien würden gelöscht werden. Abgebrochen!"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Die Datei \"%s\" wurde nicht gefunden oder sie ist 0 Byte groß."
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5433,11 +5443,11 @@ msgstr ""
 "Dieses Unterverzeichnis wurde in keinem Katalog gefunden. Das Update konnte "
 "nicht durchgeführt werden."
 
-msgid "Updated"
-msgstr "Aktualisiert"
-
 msgid "No Update Needed"
 msgstr "Es wird keine Aktualisierung benötigt."
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "Katalog bereinigt"
@@ -5635,9 +5645,6 @@ msgstr "PHP-Speicherlimit deaktiviert"
 msgid "Reading Catalog: \"%s\""
 msgstr "Lese Katalog: %s"
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5656,9 +5663,6 @@ msgid "Start verifying media related to Catalog entries"
 msgstr ""
 "Starte die Überprüfung der mit den Katalogeinträgen verknüpften Medien"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "Starte Suche nach neuen Medien Covern"
 
@@ -5669,6 +5673,9 @@ msgstr ""
 
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6295,9 +6302,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6613,6 +6617,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6795,15 +6808,6 @@ msgstr "Die Datei \"%s\" existiert bereits und wird nicht überschrieben"
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr "Durchschnitt aller Benutzer"
-
 msgid "not rated yet"
 msgstr "Bisher nicht Bewertet"
 
@@ -6813,6 +6817,15 @@ msgstr "%s von 5"
 
 msgid "Current rating"
 msgstr "Momentane Bewertung"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
+msgstr "Durchschnitt aller Benutzer"
 
 msgid "Unfavorite"
 msgstr ""
@@ -7085,24 +7098,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "Unbekannter Interpret"
-
-msgid "Amazon art search"
-msgstr "Amazon Cover-Suche"
-
-msgid "Amazon base url"
-msgstr "Amazon Basis-URL"
-
-msgid "Amazon max results pages"
-msgstr "Maximale Anzahl der Amazon Suchergebnisseiten."
-
-msgid "Amazon Access Key ID"
-msgstr "Amazon Zugriffsschlüssel ID"
-
-msgid "Amazon Secret Access Key"
-msgstr "Amazon geheimer Zugriffsschlüssel"
-
-msgid "Amazon associate tag"
-msgstr "Amazon Partner-Tag"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7426,6 +7421,9 @@ msgstr "Historie der Bandbreitenkontrolle auf monatlicher Basis"
 msgid "Stream control bandwidth history (days)"
 msgstr "Historie der Bandbreitenkontrolle auf täglicher Basis"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "Aufrufe pro Benutzer kontrollieren"
 
@@ -7435,6 +7433,9 @@ msgstr "Maximale Stream-Aufrufe kontrollieren"
 msgid "Stream control hits history (days)"
 msgstr "Historie der Stream-Aufrufe auf täglicher Basis"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "Streaming-Zeit pro Benutzer kontrollieren"
 
@@ -7443,6 +7444,9 @@ msgstr "Maximale Streaming-Zeit in Minuten"
 
 msgid "Stream control time history (days)"
 msgstr "Historie der Streaming-Zeit in Tagen"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "Integration der Metadaten von TheAudioDb"

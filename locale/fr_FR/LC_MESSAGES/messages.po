@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-04 10:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fufroma, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/ampache/teams/40984/fr_FR/)\n"
@@ -4467,6 +4467,8 @@ msgstr ""
 
 msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
+"Toutes les limites correspondantes sont illimitées, ce panneau n'est donc "
+"jamais utilisé."
 
 msgid ""
 "Stream limits need statistical graphs, which are off in the server "
@@ -4990,6 +4992,8 @@ msgid "There Was a Problem"
 msgstr "Il y a eu un problème"
 
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
 msgstr "Impossible de supprimer ce %s"
@@ -5284,8 +5288,14 @@ msgstr "Vous avez demandé un objet qui n'existe plus"
 msgid "The Album has been deleted"
 msgstr "L'Album a été supprimé"
 
+msgid "The Disk has been deleted"
+msgstr "Le disque a été supprimé"
+
 msgid "The Album and all files will be deleted"
 msgstr "L'Album et tous les fichiers seront supprimés"
+
+msgid "The Disk and all files will be deleted"
+msgstr "Le disque et tous les fichiers seront supprimés"
 
 msgid "Starting Update from Tags"
 msgstr "Démarrage de la mise à jour à partir des tags"
@@ -7623,24 +7633,6 @@ msgstr "Ajouter à une playlist / collection"
 msgid "Unknown Artist"
 msgstr "Artiste inconnu"
 
-msgid "Amazon art search"
-msgstr "Recherche de jaquettes sur Amazon"
-
-msgid "Amazon base url"
-msgstr "URL de base Amazon"
-
-msgid "Amazon max results pages"
-msgstr "Nombre maximum de pages de résultats Amazon"
-
-msgid "Amazon Access Key ID"
-msgstr "ID de clef d'accès Amazon"
-
-msgid "Amazon Secret Access Key"
-msgstr "Clef d'accès secrète Amazon"
-
-msgid "Amazon associate tag"
-msgstr "Tag associé Amazon"
-
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr "Similarité sonore depuis un serveur AudioMuse-AI"
 
@@ -7984,7 +7976,7 @@ msgid "Stream control bandwidth history (days)"
 msgstr "Contrôle des flux : historique de la bande passante (jours)"
 
 msgid "Stream control maximal bandwidth per IP (month)"
-msgstr ""
+msgstr "Contrôle de flux : bande passante maximale par IP (mois)"
 
 msgid "Control hits per user"
 msgstr "Contrôler le nombre de lectures par utilisateur"
@@ -7996,7 +7988,7 @@ msgid "Stream control hits history (days)"
 msgstr "Contrôle des flux : historique des lectures (jours)"
 
 msgid "Stream control maximal hits per IP"
-msgstr ""
+msgstr "Contrôle de flux : nombre maximal de lectures par IP"
 
 msgid "Control time per user"
 msgstr "Contrôler la durée par utilisateur"
@@ -8008,7 +8000,7 @@ msgid "Stream control time history (days)"
 msgstr "Contrôle des flux : historique de la durée (jours)"
 
 msgid "Stream control maximal time per IP (minutes)"
-msgstr ""
+msgstr "Contrôle de flux : durée maximale par IP (minutes)"
 
 msgid "TheAudioDb metadata integration"
 msgstr "Intégration des métadonnées TheAudioDb"

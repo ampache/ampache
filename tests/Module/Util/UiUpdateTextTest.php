@@ -31,6 +31,39 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 class UiUpdateTextTest extends MockeryTestCase
 {
     /**
+     * The legacy non-SSE box renders this via `updateText()`'s `.html()` call, so a song/file title a user
+     * controls (an ID3 tag, a remote-catalog filename) must not reach the page as live markup.
+     */
+    #[RunInSeparateProcess]
+    public function testNonSseOutputEscapesHtmlInTheFieldBranch(): void
+    {
+        ob_start();
+        ob_start();
+        Ui::update_text('Found', '<img src=x onerror=alert(1)>');
+        ob_end_clean();
+        $output = ob_get_clean();
+
+        $this->assertStringNotContainsString('<img', $output);
+        $this->assertStringContainsString('&lt;img', $output);
+    }
+
+    /**
+     * With no field, the value is echoed straight into the page as markup, not routed through JS at all.
+     */
+    #[RunInSeparateProcess]
+    public function testNonSseOutputEscapesHtmlInTheFieldlessBranch(): void
+    {
+        ob_start();
+        ob_start();
+        Ui::update_text('', '<img src=x onerror=alert(1)>');
+        ob_end_clean();
+        $output = ob_get_clean();
+
+        $this->assertStringNotContainsString('<img', $output);
+        $this->assertStringContainsString('&lt;img', $output);
+    }
+
+    /**
      * The client renders this SSE message with jQuery .text(), which never decodes entities, so a value a
      * caller already ran through scrub_out() for the non-SSE .html() sink must be decoded back to plain text here.
      */

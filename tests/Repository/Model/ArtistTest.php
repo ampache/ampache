@@ -35,6 +35,20 @@ use Psr\Container\ContainerInterface;
 class ArtistTest extends MockeryTestCase
 {
     /**
+     * `edit/album.phtml` and `edit/song.phtml` print this with `raw()` on the claim that it already escapes each
+     * name, so an uploaded file's artist tag reaching an admin's edit dialog must not carry live markup.
+     */
+    public function testGetDisplayEscapesEachArtistName(): void
+    {
+        Artist::add_to_cache('artist_fullname_by_id', 666, ['<img src=x onerror=alert(1)>']);
+        Artist::add_to_cache('artist_fullname_by_id', 667, ['Rock & Roll']);
+
+        $result = Artist::get_display([666, 667]);
+
+        self::assertSame('&lt;img src=x onerror=alert(1)&gt;, Rock &amp; Roll', $result);
+    }
+
+    /**
      * Withdrawing an artist reaches their albums and the songs under them, and the stored counts are brought
      * back in the same breath because every page reads the count rather than counting again
      */
