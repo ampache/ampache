@@ -60,6 +60,7 @@
 * The song lyrics page rendered ID3-tag or lyrics-provider text unescaped
 * The Wanted albums browse rendered the requesting user's `fullname` unescaped
 * `AmpacheGoogleMaps` built a marker title by concatenating the handshake `geo_name` field into inline JS unescaped
+* The `directplay` ajax action's `custom_play_action` value is now scrubbed, matching `object_type` in the same handler
 * The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
 * The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
 * The sidebar's random playlist link could choose another user's private playlist
