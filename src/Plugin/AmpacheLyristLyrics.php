@@ -92,7 +92,7 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
             && !empty($json->image)
         ) {
             return [
-                'text' => nl2br((string) $json->lyrics),
+                'text' => (string) $json->lyrics,
                 'url' => (string) $json->image
             ];
         }

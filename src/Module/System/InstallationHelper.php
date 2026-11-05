@@ -768,7 +768,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
         $whereIsCommand = (PHP_OS === 'WINNT') ? 'where' : 'which';
         $process        = proc_open(
-            sprintf('%s %s', $whereIsCommand, $command),
+            sprintf('%s %s', $whereIsCommand, escapeshellarg($command)),
             [
                 0 => ["pipe", "r"], // STDIN
                 1 => ["pipe", "w"], // STDOUT

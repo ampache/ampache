@@ -57,6 +57,15 @@
 * Catalog completion notifications show for 10 seconds instead of 5, and can be dismissed early with a click
 * A fast-arriving notification could silently erase one still queued behind it before it was ever shown
 * `SseApiApplication` clears every output buffer and sends `X-Accel-Buffering: no`, so a proxy can't swallow progress notifications
+* The song lyrics page rendered ID3-tag or lyrics-provider text unescaped
+* The Wanted albums browse rendered the requesting user's `fullname` unescaped
+* `AmpacheGoogleMaps` built a marker title by concatenating the handshake `geo_name` field into inline JS unescaped
+* The `directplay` ajax action's `custom_play_action` value is now scrubbed, matching `object_type` in the same handler
+* A browse's `argument` could carry a quote into the inline JS the pagination, sort and filter controls build
+* The playlist/collection "add to" dialog's `id`/`groups` values could carry a quote into its inline JS
+* A podcast's website link, taken from the feed, is only shown when it is actually an http(s) url
+* A custom play action's `%a`/`%A`/`%t` substitutions now drop whitespace and a leading hyphen, not just shell metacharacters
+* On Windows, a transcode argument is now also stripped of `&|^<>`, which cmd.exe reads even inside a quoted argument
 * The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
 * The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
 * The sidebar's random playlist link could choose another user's private playlist
