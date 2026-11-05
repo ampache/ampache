@@ -417,7 +417,7 @@ class Artist extends database_object implements
         }
 
         foreach ($artists as $artists_id) {
-            $results .= self::get_fullname_by_id($artists_id) . ', ';
+            $results .= scrub_out(self::get_fullname_by_id($artists_id)) . ', ';
         }
 
         return rtrim($results, ', ');

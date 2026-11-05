@@ -66,6 +66,10 @@
 * A podcast's website link, taken from the feed, is only shown when it is actually an http(s) url
 * A custom play action's `%a`/`%A`/`%t` substitutions now drop whitespace and a leading hyphen, not just shell metacharacters
 * On Windows, a transcode argument is now also stripped of `&|^<>`, which cmd.exe reads even inside a quoted argument
+* A catalog scan's legacy (non-SSE) progress display rendered a song/file title unescaped
+* `Artist::get_display()` rendered each artist name unescaped, unlike the equivalent `Tag`/`Mood` helpers
+* The podcast OPML import form echoed the uploaded file's own declared Content-Type unescaped on a rejection
+* The browser tab title script could carry `</script>` from a song/artist/album/etc. name, breaking out of it
 * The web player's scrobble/play/pause/stop ajax calls had no referer check, letting another site trigger them in a visitor's browser
 * The advanced search rule builder inserted playlist and tag names as raw HTML instead of text, allowing markup injection
 * The sidebar's random playlist link could choose another user's private playlist

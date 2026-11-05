@@ -56,7 +56,7 @@ $web_path         = $this->getWebPath(); ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo $this->e($this->getSiteCharset()); ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $this->e($this->getPageTitle()); ?></title>
-        <script>window.AmpachePageTitle = <?php echo json_encode($this->getPageTitle(), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR); ?>;</script>
+        <script>window.AmpachePageTitle = <?php echo json_encode($this->getPageTitle(), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_THROW_ON_ERROR); ?>;</script>
 
         <?php echo $this->raw((new StylesheetsView($this->getWebPath()))->render());
 echo $this->raw((new ScriptsView($this->getEnvironment(), $this->getWebPath(), $ajaxUriRetriever))->render());
