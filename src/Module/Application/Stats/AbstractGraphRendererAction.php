@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Repository\Model\displayable_item;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
@@ -71,7 +72,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
                 $object_id
             );
 
-            if ($libitem !== null) {
+            if ($libitem instanceof library_item) {
                 $owner_id = $libitem->get_user_owner();
             }
         }

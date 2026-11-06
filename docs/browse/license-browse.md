@@ -2,7 +2,7 @@
 
 This page lists the filters and sorts the `license` browse accepts. Refer to the main [Api Browse methods](https://ampache.org/api/api-browse) page for how to send them.
 
-**NOTE** Licenses have no rating or favourite of their own, so this browse has none of the `rating` or `user_flag` filters and sorts the other types carry.
+**NOTE** Licenses have no rating or favorite of their own, so this browse has none of the `rating` or `user_flag` filters and sorts the other types carry.
 
 ## API methods using this browse
 

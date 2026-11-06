@@ -35,20 +35,20 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `catalog_type`     | Catalog backend: `local`, `beets`, `remote`, `seafile`, `subsonic` or `dropbox`.                                         |
-| `enabled`          | Enabled catalogs group together.                                                                                         |
-| `gather_types`     | The media type the catalog gathers: `music`, `video` or `podcast`.                                                       |
-| `id`               | The catalog id, which is the order they were created in.                                                                 |
-| `last_add`         | When something was last added to the catalog.                                                                            |
-| `last_clean`       | When the catalog was last cleaned.                                                                                       |
-| `last_update`      | When it was last updated.                                                                                                |
-| `name`             | Catalog name.                                                                                                            |
-| `rating`           | Your own rating, then when you set it. Catalogs you have not rated group together.                                       |
-| `rename_pattern`   | The catalog's rename pattern.                                                                                            |
-| `sort_pattern`     | The catalog's sort pattern.                                                                                              |
-| `title`            | Alias of `name`.                                                                                                         |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `catalog_type`     | Catalog backend: `local`, `beets`, `remote`, `seafile`, `subsonic` or `dropbox`.                                       |
+| `enabled`          | Enabled catalogs group together.                                                                                       |
+| `gather_types`     | The media type the catalog gathers: `music`, `video` or `podcast`.                                                     |
+| `id`               | The catalog id, which is the order they were created in.                                                               |
+| `last_add`         | When something was last added to the catalog.                                                                          |
+| `last_clean`       | When the catalog was last cleaned.                                                                                     |
+| `last_update`      | When it was last updated.                                                                                              |
+| `name`             | Catalog name.                                                                                                          |
+| `rating`           | Your own rating, then when you set it. Catalogs you have not rated group together.                                     |
+| `rename_pattern`   | The catalog's rename pattern.                                                                                          |
+| `sort_pattern`     | The catalog's sort pattern.                                                                                            |
+| `title`            | Alias of `name`.                                                                                                       |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |

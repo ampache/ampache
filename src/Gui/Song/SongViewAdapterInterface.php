@@ -102,6 +102,8 @@ interface SongViewAdapterInterface extends TemplateInterface
 
     public function getGenre(): string;
 
+    public function getGlobalRating(): string;
+
     public function getHeader(): ObjectHeaderView;
 
     /**

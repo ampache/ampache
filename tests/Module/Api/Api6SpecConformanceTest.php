@@ -120,7 +120,10 @@ class Api6SpecConformanceTest extends TestCase
         $unserved = [];
 
         foreach ($spec['x-rpc-mappings'] as $path => $mapping) {
-            if (!array_key_exists((string) $path, $spec['paths'])) {
+            // strip the leading verb a non-GET mapping key carries (e.g. "PUT /bookmarks") to get the bare spec path
+            $restPath = preg_replace('/^[A-Z]+ /', '', (string) $path);
+
+            if (!array_key_exists($restPath, $spec['paths'])) {
                 continue;
             }
 

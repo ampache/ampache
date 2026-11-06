@@ -38,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the podcast creation dialogue
+ * Renders the podcast creation dialog
  */
 final readonly class ShowCreateAction implements ApplicationActionInterface
 {

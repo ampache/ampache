@@ -374,11 +374,6 @@ class Preference extends database_object
      * plugin and module preferences might not be there but they need to be kept if you're using them
      */
     public const array PLUGIN_LIST = [
-        'amazon_base_url',
-        'amazon_developer_associate_tag',
-        'amazon_developer_private_api_key',
-        'amazon_developer_public_key',
-        'amazon_max_results_pages',
         'bitly_api_key',
         'bitly_username',
         'catalogfav_gridview',
@@ -437,10 +432,13 @@ class Preference extends database_object
         'shouthome_max_items',
         'shouthome_order',
         'stream_control_bandwidth_days',
+        'stream_control_bandwidth_ip_max',
         'stream_control_bandwidth_max',
         'stream_control_hits_days',
+        'stream_control_hits_ip_max',
         'stream_control_hits_max',
         'stream_control_time_days',
+        'stream_control_time_ip_max',
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
@@ -809,6 +807,7 @@ class Preference extends database_object
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything. Nothing to do with fix_user_preferences(), which repairs rows.
      * @param array<string, mixed> $results
+     * @return array<string, mixed>
      */
     public static function fix_preferences(array $results): array
     {
@@ -896,7 +895,7 @@ class Preference extends database_object
     }
 
     /**
-     * Title-cases a preference subcategory for display, honouring SUBCATEGORY_LABELS.
+     * Title-cases a preference subcategory for display, honoring SUBCATEGORY_LABELS.
      */
     public static function format_subcategory(string $subcategory): string
     {
@@ -1265,13 +1264,7 @@ class Preference extends database_object
      */
     public static function isSecretName(string $name): bool
     {
-        foreach (self::SECRET_SUFFIXES as $suffix) {
-            if (str_ends_with($name, $suffix)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(self::SECRET_SUFFIXES, fn($suffix) => str_ends_with($name, $suffix));
     }
 
     /**
@@ -1419,7 +1412,7 @@ class Preference extends database_object
     public static function set_preset(string $username, string $preset): bool
     {
         $user = User::get_from_username($username);
-        if ($user === null) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -1461,11 +1454,6 @@ class Preference extends database_object
             'allow_stream_playback' => 'Allow Streaming',
             'allow_upload' => 'Allow user uploads',
             'allow_video' => 'Allow Video Features',
-            'amazon_base_url' => 'Amazon base url',
-            'amazon_developer_associate_tag' => 'Amazon associate tag',
-            'amazon_developer_private_api_key' => 'Amazon Secret Access Key',
-            'amazon_developer_public_key' => 'Amazon Access Key ID',
-            'amazon_max_results_pages' => 'Amazon max results pages',
             'api_always_download' => 'Force API streams to download. (Enable scrobble in your client to record stats)',
             'api_enable_3' => 'Allow Ampache API3 responses',
             'api_enable_4' => 'Allow Ampache API4 responses',
@@ -1661,10 +1649,13 @@ class Preference extends database_object
             'stats_threshold' => 'Statistics Day Threshold',
             'stream_beautiful_url' => 'Enable URL Rewriting',
             'stream_control_bandwidth_days' => 'Stream control bandwidth history (days)',
+            'stream_control_bandwidth_ip_max' => 'Stream control maximal bandwidth per IP (month)',
             'stream_control_bandwidth_max' => 'Stream control maximal bandwidth (month)',
             'stream_control_hits_days' => 'Stream control hits history (days)',
+            'stream_control_hits_ip_max' => 'Stream control maximal hits per IP',
             'stream_control_hits_max' => 'Stream control maximal hits',
             'stream_control_time_days' => 'Stream control time history (days)',
+            'stream_control_time_ip_max' => 'Stream control maximal time per IP (minutes)',
             'stream_control_time_max' => 'Stream control maximal time (minutes)',
             'subsonic_always_download' => 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)',
             'subsonic_backend' => 'Use Subsonic backend',
@@ -1709,6 +1700,7 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
+     * @param array<int, scalar>|int|float|string|bool|null $value
      */
     public static function update(
         int|string $preference,

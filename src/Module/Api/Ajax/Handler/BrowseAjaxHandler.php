@@ -70,7 +70,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
         $argument = false;
         if (array_key_exists('argument', $_REQUEST)) {
-            $argument = scrub_in((string) $_REQUEST['argument']);
+            // this round-trips into inline onClick JS (list_header.phtml, browse_filters.phtml) and never legitimately needs a quote or backslash
+            $argument = str_replace(['\'', '"', '\\'], '', scrub_in((string) $_REQUEST['argument']));
         }
 
         // hide some of the useless columns in a browse
@@ -170,7 +171,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'set_sort':
                 if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
-                    $browse->set_sort($_REQUEST['sort']);
+                    $browse->set_sort((string) $_REQUEST['sort'], (string) ($_REQUEST['order'] ?? ''));
                 }
 
                 if (!$browse->is_use_pages()) {

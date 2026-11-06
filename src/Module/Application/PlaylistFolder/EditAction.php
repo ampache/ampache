@@ -37,6 +37,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,7 +62,7 @@ final readonly class EditAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('edit_playlist_folder')
         ) {
             throw new AccessDeniedException();
@@ -114,7 +115,7 @@ final readonly class EditAction implements ApplicationActionInterface
 
         $this->ui->showConfirmation(
             T_('Folder updated'),
-            $name,
+            scrub_out($name),
             sprintf(
                 '%s/browse.php?action=playlist_folder%s',
                 $this->configContainer->getWebPath(),

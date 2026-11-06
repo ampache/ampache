@@ -43,7 +43,7 @@ interface RequestParserInterface
     public function verifyForm(string $formName): bool;
 
     /**
-     * Verifies a form token carried back in the query string, as a third-party authorisation callback does
+     * Verifies a form token carried back in the query string, as a third-party authorization callback does
      */
     public function verifyFormFromQuery(string $formName): bool;
 }

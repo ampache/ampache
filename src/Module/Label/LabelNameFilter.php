@@ -29,7 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 
 /**
- * Recognises the placeholder text that tagging tools write into the publisher field
+ * Recognizes the placeholder text that tagging tools write into the publisher field
  *
  * Discogs-sourced tags carry `[no label]` and `Not On Label (Artist Self-released)` for releases that
  * never had a publisher, and rippers leave behind fragments like `/v/`. None of these name a real

@@ -1,0 +1,31 @@
+#!/bin/sh
+# Auto-fix style/dead-code issues before every commit, then re-stage whatever it touched.
+#
+# Best-effort only: a missing toolchain or a failed fix never blocks the commit, so a
+# small, one-off contribution isn't held hostage by an incomplete local dev setup.
+# `composer qa` (run in CI) remains the real gate.
+#
+# Installed automatically by `composer install`/`update` from resources/git-hooks/pre-commit
+# (see resources/scripts/composer/install_git_hooks.php) -- edit the source, not .git/hooks/.
+
+STAGED_PHP=$(git diff --cached --name-only --diff-filter=ACMR -- '*.php')
+
+if [ -z "$STAGED_PHP" ]; then
+    exit 0
+fi
+
+if ! command -v composer >/dev/null 2>&1; then
+    echo "pre-commit: composer not found on PATH, skipping auto-fix" >&2
+    exit 0
+fi
+
+if ! composer fix; then
+    echo "pre-commit: composer fix failed, committing as-is (run 'composer fix' yourself before pushing)" >&2
+    exit 0
+fi
+
+echo "$STAGED_PHP" | while IFS= read -r file; do
+    [ -f "$file" ] && git add -- "$file"
+done
+
+exit 0

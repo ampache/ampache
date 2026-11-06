@@ -63,13 +63,21 @@ final class SseApiApplication implements ApiApplicationInterface
             return;
         }
 
-        ob_end_clean();
+        // a buffering reverse proxy or php.ini default holds the whole response until it ends, so nothing
+        // streams; disable every layer rather than just the outermost one `ob_end_clean()` used to leave
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        ini_set('zlib.output_compression', '0');
+        ini_set('implicit_flush', '1');
         set_time_limit(0);
 
         if (!array_key_exists('html', $_REQUEST)) {
             define('SSE_OUTPUT', true);
             header('Content-Type: text/event-stream; charset=utf-8');
             header('Cache-Control: no-cache');
+            // tells nginx (proxy_pass or fastcgi) not to buffer this response; ignored by servers that don't use it
+            header('X-Accel-Buffering: no');
         }
 
         $worker = $_REQUEST['worker'] ?? null;
@@ -95,7 +103,6 @@ final class SseApiApplication implements ApiApplicationInterface
         if ($worker == 'catalog') {
             if (defined('SSE_OUTPUT')) {
                 echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
-                ob_flush();
                 flush();
             }
 
@@ -117,7 +124,6 @@ final class SseApiApplication implements ApiApplicationInterface
                     AmpError::add('general', $error->getMessage());
                     if (defined('SSE_OUTPUT')) {
                         echo "data: " . json_encode(['fn' => 'display_sse_error', 'args' => [$error->getMessage()]]) . "\n\n";
-                        ob_flush();
                         flush();
                     }
                 } finally {
@@ -127,11 +133,9 @@ final class SseApiApplication implements ApiApplicationInterface
 
             if (defined('SSE_OUTPUT')) {
                 echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
-                ob_flush();
                 flush();
 
                 echo "data: " . json_encode(['fn' => 'stop_sse_worker', 'args' => []]) . "\n\n";
-                ob_flush();
                 flush();
             } else {
                 echo AmpError::display('general');
@@ -160,7 +164,6 @@ final class SseApiApplication implements ApiApplicationInterface
         while ($this->catalogRepository->isActionProcessing($lockKey) && $waited < self::MAX_WAIT_SECONDS) {
             if (defined('SSE_OUTPUT')) {
                 echo ": still processing\n\n";
-                ob_flush();
                 flush();
             }
 

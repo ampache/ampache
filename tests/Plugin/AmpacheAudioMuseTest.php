@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
 /**
- * Covers the id translation and score normalisation in the AudioMuse sonic-analysis plugin.
+ * Covers the id translation and score normalization in the AudioMuse sonic-analysis plugin.
  *
  * AudioMuse has no Ampache connector — it is pointed at Ampache through its Navidrome connector, which is a plain
  * Subsonic API client. So it indexes tracks under the prefixed `so-<id>` form Ampache gives Subsonic clients, not

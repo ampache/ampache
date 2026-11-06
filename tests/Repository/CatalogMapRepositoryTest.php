@@ -99,6 +99,60 @@ class CatalogMapRepositoryTest extends TestCase
         self::assertSame('DELETE FROM `catalog_map` WHERE `catalog_id` = 0', $calls[1]);
     }
 
+    public function testCollectGarbageDerivesThePlaylistCatalogFromItsSongs(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use (&$calls): PDOStatement {
+                $calls[] = $sql;
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbage([CatalogMapTableEnum::PLAYLIST]);
+
+        self::assertSame(
+            "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, `playlist`.`id` AS `object_id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id` = `playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song') AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = 'playlist' AND `valid_maps`.`object_id` IS NULL;",
+            $calls[0]
+        );
+    }
+
+    public function testCollectGarbageForObjectChecksOnlyTheGivenIdForANonArtistType(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `podcast_episode` WHERE `id` = ?);',
+                ['podcast_episode', 666, 666]
+            );
+
+        $this->subject->collectGarbageForObject(CatalogMapTableEnum::PODCAST_EPISODE, 666);
+    }
+
+    public function testCollectGarbageForObjectSweepsTheThreeArtistRolesScopedToOneId(): void
+    {
+        $calls = [];
+
+        $this->connection->expects(static::exactly(3))
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use (&$calls): PDOStatement {
+                $calls[] = [$sql, $params];
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->collectGarbageForObject(CatalogMapTableEnum::ARTIST, 42);
+
+        self::assertStringContainsString("`object_type` = 'album_artist'", $calls[0][0]);
+        self::assertSame([42, 42], $calls[0][1]);
+        self::assertStringContainsString("`object_type` = 'song_artist'", $calls[1][0]);
+        self::assertSame([42, 42], $calls[1][1]);
+        self::assertStringContainsString("`object_type` = 'artist'", $calls[2][0]);
+        self::assertSame([42, 42], $calls[2][1]);
+    }
+
     public function testCollectGarbageSweepsTheThreeArtistRolesBeforeCatalogZero(): void
     {
         $calls = [];

@@ -40,6 +40,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Plugin\PluginExternalShareInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,7 +69,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || $user === null
+            || !$user instanceof User
         ) {
             throw new AccessDeniedException();
         }

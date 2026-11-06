@@ -53,7 +53,7 @@ class UPnPDevice
     /**
      * helper function for calls that require only an instance id
      */
-    public function instanceOnly($command, string $type = 'AVTransport', int $instance_id = 0): string
+    public function instanceOnly(string $command, string $type = 'AVTransport', int $instance_id = 0): string
     {
         $args = ['InstanceID' => $instance_id];
         //$response = \Format::forge($response, 'xml:ns')->to_[];
@@ -66,7 +66,7 @@ class UPnPDevice
      * Sending HTTP-Request and returns parsed response
      *
      * @param string $method Method name
-     * @param array $arguments Key-Value array
+     * @param array<string, scalar> $arguments Key-Value array
      */
     public function sendRequestToDevice(string $method, array $arguments, string $type = 'RenderingControl'): string
     {

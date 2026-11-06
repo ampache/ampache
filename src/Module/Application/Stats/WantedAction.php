@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,7 +58,7 @@ final readonly class WantedAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if (
-            $user !== null
+            $user instanceof User
             && $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;

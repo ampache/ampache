@@ -41,6 +41,7 @@ use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -69,7 +70,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         if (
-            $user === null
+            !$user instanceof User
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
             || !$this->requestParser->verifyForm('add_share')
         ) {

@@ -122,6 +122,7 @@ class SubsonicClient
 
     /**
      * @param array<string, int|string> $object
+     * @return array{success: bool, data: mixed}|object|bool|string
      */
     public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -165,6 +166,7 @@ class SubsonicClient
 
     /**
      * @param array<string, int|string>|null $object
+     * @return array{success: bool, data: mixed}|object|bool|string
      */
     protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
@@ -213,6 +215,9 @@ class SubsonicClient
         ];
     }
 
+    /**
+     * @return array{success: bool, data: mixed}|object
+     */
     protected function parseResponse(bool|string $response): object|array
     {
         $arr = (is_string($response))
@@ -235,7 +240,7 @@ class SubsonicClient
 
     /**
      * @param array<string, int|string>|null $object
-     * @return array|bool|object|string
+     * @return array{success: bool, data: mixed}|bool|object|string
      */
     public function __call(string $action, ?array $object = null)
     {

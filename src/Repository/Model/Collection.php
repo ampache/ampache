@@ -123,7 +123,7 @@ class Collection extends playlist_object
     }
 
     /**
-     * Normalise the API spelling of a type onto the one used for loading and storage (`genre` becomes `tag`).
+     * Normalize the API spelling of a type onto the one used for loading and storage (`genre` becomes `tag`).
      */
     public static function normalizeType(string $objectType): string
     {

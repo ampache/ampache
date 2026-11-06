@@ -139,7 +139,6 @@ final readonly class StreamProxy implements StreamProxyInterface
 
                 $success = curl_exec($curl) !== false;
                 $error   = curl_error($curl);
-                curl_close($curl);
 
                 if ($redirect->location !== null) {
                     $url = $redirect->location;

@@ -38,7 +38,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the podcast import dialogue
+ * Renders the podcast import dialog
  */
 final readonly class ShowImportPodcastsAction implements ApplicationActionInterface
 {

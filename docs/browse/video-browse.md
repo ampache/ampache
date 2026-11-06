@@ -36,7 +36,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `update_gt`       | UNIX timestamp | Only videos whose tags were last updated at or after this time.                                                                      |
 | `update_lt`       | UNIX timestamp | Only videos whose tags were last updated at or before this time.                                                                     |
 | `user_catalog`    | none           | Only videos in a catalog the current user is allowed to see. Needs no value.                                                         |
-| `user_flag`       | 0 or 1         | Send `1` for videos the current user has favourited, `0` for the ones they have not.                                                 |
+| `user_flag`       | 0 or 1         | Send `1` for videos the current user has favorited, `0` for the ones they have not.                                                  |
 | `user_rating`     | 0 to 5         | Only videos the current user rated this value. Send `0` for videos they have not rated at all.                                       |
 
 ## Available browse sorts
@@ -45,23 +45,23 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `addition_time`    | When it was added to the catalog.                                                                                        |
-| `catalog`          | The catalog id it belongs to.                                                                                            |
-| `codec`            | Video codec.                                                                                                             |
-| `id`               | The video id, which is the order they were created in.                                                                   |
-| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.           |
-| `length`           | Video length in seconds.                                                                                                 |
-| `name`             | Video title.                                                                                                             |
-| `rand`             | Random order, applied per request. Paging through it repeats and skips videos, so ask for everything in one call.        |
-| `rating`           | Your own rating, then when you set it. Videos you have not rated group together.                                         |
-| `release_date`     | Video release date.                                                                                                      |
-| `resolution`       | Video width in pixels.                                                                                                   |
-| `title`            | Alias of `name`.                                                                                                         |
-| `total_count`      | How many times it has been played.                                                                                       |
-| `total_skip`       | How many times it has been skipped.                                                                                      |
-| `update_time`      | When its tags were last updated.                                                                                         |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `addition_time`    | When it was added to the catalog.                                                                                      |
+| `catalog`          | The catalog id it belongs to.                                                                                          |
+| `codec`            | Video codec.                                                                                                           |
+| `id`               | The video id, which is the order they were created in.                                                                 |
+| `last_played`      | When it was last played. Anything never played has no value, so it groups first ascending and last descending.         |
+| `length`           | Video length in seconds.                                                                                               |
+| `name`             | Video title.                                                                                                           |
+| `rand`             | Random order, applied per request. Paging through it repeats and skips videos, so ask for everything in one call.      |
+| `rating`           | Your own rating, then when you set it. Videos you have not rated group together.                                       |
+| `release_date`     | Video release date.                                                                                                    |
+| `resolution`       | Video width in pixels.                                                                                                 |
+| `title`            | Alias of `name`.                                                                                                       |
+| `total_count`      | How many times it has been played.                                                                                     |
+| `total_skip`       | How many times it has been skipped.                                                                                    |
+| `update_time`      | When its tags were last updated.                                                                                       |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |

@@ -103,7 +103,7 @@ final class SmartPlaylistPageView extends AbstractView
      */
     public function getBrowse(): Browse
     {
-        if ($this->browse === null) {
+        if (!$this->browse instanceof Browse) {
             $browse = $this->browseFactory->create();
             $browse->set_type('playlist_media');
             $browse->set_use_filters(false);
@@ -140,8 +140,9 @@ final class SmartPlaylistPageView extends AbstractView
             chips: HeaderChip::listOf(
                 ($playlist->type === 'private') ? T_('Private') : T_('Public'),
             ),
-            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'search', true) : '',
+            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'search') : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getPlaylistId(), 'search') : '',
+            globalRating: ($this->showRatings()) ? Rating::show_global_rating($this->getPlaylistId(), 'search') : '',
             ratingKey: $this->getPlaylistId() . '_search',
         );
     }

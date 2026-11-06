@@ -46,7 +46,7 @@ class JellyfinTranscodeDecisionTest extends MockeryTestCase
     /**
      * A real client (confirmed with jellyfin_apiclient_python against the dev instance) sends
      * MaxStreamingBitrate on every request by default, usually a value far above any real source bitrate.
-     * A server with `encode_target` configured for an unrelated reason (e.g. normalising the web player)
+     * A server with `encode_target` configured for an unrelated reason (e.g. normalizing the web player)
      * must not force-transcode every request just because that cap technically differs from the source.
      */
     public function testResolveStaysDirectPlayOnABareFormatMismatchWithDefaultTranscodeMode(): void

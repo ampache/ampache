@@ -32,12 +32,12 @@ use Generator;
 /**
  * Create the `playlist_folder` and `playlist_folder_map` tables
  *
- * A private tree per user for organising playlists, smartlists and collections. Placement belongs to the
+ * A private tree per user for organizing playlists, smartlists and collections. Placement belongs to the
  * (user, list) pair rather than to the list, so filing another user's public playlist affects nobody else.
  */
 final class Migration800045 extends AbstractMigration
 {
-    protected array $changelog = ['Create `playlist_folder` and `playlist_folder_map` tables for organising lists into a per-user tree'];
+    protected array $changelog = ['Create `playlist_folder` and `playlist_folder_map` tables for organizing lists into a per-user tree'];
 
     public function getTableMigrations(
         string $collation,

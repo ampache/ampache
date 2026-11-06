@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Override;
 
@@ -53,7 +55,7 @@ final class AdminUpdateUserCommand extends Command
     public function execute(
         ?string $username,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 
@@ -67,7 +69,7 @@ final class AdminUpdateUserCommand extends Command
             ? $this->userRepository->findByUsername($username)
             : null;
 
-        if ($user === null) {
+        if (!$user instanceof User) {
             /* HINT: filename (File path) OR table name (podcast, video, etc) */
             $interactor->error(
                 sprintf(T_('Missing: %s'), $username ?? 'username'),

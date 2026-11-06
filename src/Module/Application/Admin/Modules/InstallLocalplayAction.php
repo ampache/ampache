@@ -36,6 +36,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -62,7 +63,7 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
         $this->ui->showHeader();
 
         $user = Core::get_global('user');
-        if ($user === null) {
+        if (!$user instanceof User) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 

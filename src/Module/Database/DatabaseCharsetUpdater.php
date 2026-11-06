@@ -185,6 +185,7 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             } else {
                 $default = '';
             }
+
             $extra = ($column['EXTRA'] !== '') ? ' ' . $column['EXTRA'] : '';
 
             $mismatches[] = [

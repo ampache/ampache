@@ -28,6 +28,7 @@ namespace Ampache\Gui\Partial;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Plugin\Plugin;
@@ -157,7 +158,7 @@ final class HeaderView extends AbstractView
     public function getLogoUrl(): string
     {
         return ($this->currentUser instanceof User && $this->currentUser->getId() > 0 && $this->hasCustomLogo())
-            ? $this->currentUser->get_avatar()['url_medium'] ?? Ui::get_logo_url()
+            ? $this->currentUser->get_avatar()['url_medium']
             : Ui::get_logo_url();
     }
 
@@ -249,7 +250,7 @@ final class HeaderView extends AbstractView
     public function hasTempPlaylist(): bool
     {
         return $this->currentUser instanceof User
-            && !empty($this->currentUser->playlist)
+            && $this->currentUser->playlist instanceof Tmp_Playlist
             && $this->currentUser->playlist->has_items();
     }
 

@@ -202,14 +202,24 @@ final readonly class SongRepository implements SongRepositoryInterface
      * Records a set of songs in the `deleted_song` archive and removes them
      *
      * @param list<int> $songIds
+     * @return array{albums: list<int>, artists: list<int>} the albums/artists that lost a song, for a scoped count refresh
      */
-    public function deleteByIdsWithArchive(array $songIds): void
+    public function deleteByIdsWithArchive(array $songIds): array
     {
         if ($songIds === []) {
-            return;
+            return ['albums' => [], 'artists' => []];
         }
 
         $idList = implode(',', array_map(intval(...), $songIds));
+
+        // read before the delete, so the caller can refresh the counts of just the albums/artists that lost a song
+        $albums  = [];
+        $artists = [];
+        $result  = $this->connection->query('SELECT DISTINCT `album`, `artist` FROM `song` WHERE `id` IN (' . $idList . ');');
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $albums[]  = (int) $row['album'];
+            $artists[] = (int) $row['artist'];
+        }
 
         // keep details about deletions, but losing the record must not stop the delete itself
         try {
@@ -224,6 +234,11 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         $this->connection->query('DELETE FROM `song` WHERE `id` IN (' . $idList . ');');
+
+        return [
+            'albums' => array_values(array_filter(array_unique($albums))),
+            'artists' => array_values(array_filter(array_unique($artists))),
+        ];
     }
 
     /**
@@ -492,7 +507,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      */
     public function getByCatalog(?Catalog $catalog = null): Generator
     {
-        if ($catalog !== null) {
+        if ($catalog instanceof Catalog) {
             $result = $this->connection->query(
                 'SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`',
                 [$catalog->getId()]
@@ -1431,7 +1446,7 @@ final readonly class SongRepository implements SongRepositoryInterface
      * The songs an artist is credited on, as a song artist or through one of its albums.
      *
      * `$enabledOnly` is what separates the two callers: a listener is handed what can be played, while a
-     * catalogue re-reading tags has to reach a withdrawn file as much as any other.
+     * catalog re-reading tags has to reach a withdrawn file as much as any other.
      *
      * @return list<int>
      */

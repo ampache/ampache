@@ -82,7 +82,7 @@ final class LabelListRenderer extends AbstractBrowseListRenderer
         $labels = [];
         foreach ($this->getContext()->objectIds as $objectId) {
             $label = $this->labelRepository->findById((int) $objectId);
-            if ($label !== null) {
+            if ($label instanceof Label) {
                 $labels[] = $label;
             }
         }

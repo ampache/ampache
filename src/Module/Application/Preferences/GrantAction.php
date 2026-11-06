@@ -39,6 +39,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Plugin\AmpacheLastfm;
 use Ampache\Plugin\Ampachelibrefm;
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -76,7 +77,7 @@ final readonly class GrantAction implements ApplicationActionInterface
         ) {
             // we receive a token for a valid plugin, have to call getSession and obtain a session key
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null) {
+            if ($plugin->_plugin instanceof AmpachePlugin) {
                 $isScrobbler = $plugin->_plugin instanceof Ampachelibrefm
                     || $plugin->_plugin instanceof AmpacheLastfm;
 

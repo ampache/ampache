@@ -293,6 +293,21 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
+     * @param 8 $apiVersion only api version 8 knows about folders
+     * @param array<int|string> $objects
+     */
+    public function foldersList(
+        int $apiVersion,
+        array $objects,
+        User $user,
+        string $auth,
+    ): string {
+        return $this->xml8Data->folder_list($objects, $user, $auth);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
      * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
@@ -599,6 +614,14 @@ final class XmlOutput implements ApiOutputInterface
         if ($type === 'album_disk') {
             return ($apiVersion === 8)
                 ? $this->albumDisks($apiVersion, $results, [], $user, $auth)
+                : $this->writeEmpty($apiVersion, $type);
+        }
+
+        // only api version 8 has a folder formatter; older versions are turned away by
+        // AdvancedSearchMethod before they reach this point
+        if ($type === 'folder') {
+            return ($apiVersion === 8)
+                ? $this->foldersList($apiVersion, $results, $user, $auth)
                 : $this->writeEmpty($apiVersion, $type);
         }
 

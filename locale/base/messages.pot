@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-06 08:41+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -444,9 +444,6 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-msgid "View"
-msgstr ""
-
 msgid "Pages"
 msgstr ""
 
@@ -457,6 +454,15 @@ msgid "Grid View"
 msgstr ""
 
 msgid "Alphabet"
+msgstr ""
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
 msgstr ""
 
 msgid "Item Count"
@@ -821,6 +827,9 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr ""
 
@@ -1099,9 +1108,6 @@ msgid "Description:"
 msgstr ""
 
 msgid "External Link"
-msgstr ""
-
-msgid "Order"
 msgstr ""
 
 msgid "Top Rated"
@@ -3826,7 +3832,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3849,7 +3855,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3877,7 +3883,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4177,7 +4183,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4360,6 +4366,8 @@ msgstr ""
 msgid "There Was a Problem"
 msgstr ""
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4642,7 +4650,13 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr ""
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
+msgstr ""
+
+msgid "The Disk and all files will be deleted"
 msgstr ""
 
 msgid "Starting Update from Tags"
@@ -5044,6 +5058,9 @@ msgstr ""
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr ""
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 
@@ -5186,6 +5203,9 @@ msgstr ""
 msgid "File was not found or is 0 Bytes: %s"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5231,10 +5251,10 @@ msgid ""
 "processed."
 msgstr ""
 
-msgid "Updated"
+msgid "No Update Needed"
 msgstr ""
 
-msgid "No Update Needed"
+msgid "Skipping catalog, already being processed"
 msgstr ""
 
 msgid "Catalog Cleaned"
@@ -5415,9 +5435,6 @@ msgstr ""
 msgid "Reading Catalog: \"%s\""
 msgstr ""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5435,9 +5452,6 @@ msgstr ""
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr ""
 
@@ -5445,6 +5459,9 @@ msgid "Update artist information and fetch similar artists from last.fm"
 msgstr ""
 
 msgid "Update Label information and fetch details using the MusicBrainz plugin"
+msgstr ""
+
+msgid "Updating counts"
 msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
@@ -6062,9 +6079,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6376,6 +6390,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr ""
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6558,15 +6581,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr ""
-
 msgid "not rated yet"
 msgstr ""
 
@@ -6575,6 +6589,15 @@ msgid "%s of 5"
 msgstr ""
 
 msgid "Current rating"
+msgstr ""
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
 msgstr ""
 
 msgid "Unfavorite"
@@ -6826,24 +6849,6 @@ msgid "Add to playlist / collection"
 msgstr ""
 
 msgid "Unknown Artist"
-msgstr ""
-
-msgid "Amazon art search"
-msgstr ""
-
-msgid "Amazon base url"
-msgstr ""
-
-msgid "Amazon max results pages"
-msgstr ""
-
-msgid "Amazon Access Key ID"
-msgstr ""
-
-msgid "Amazon Secret Access Key"
-msgstr ""
-
-msgid "Amazon associate tag"
 msgstr ""
 
 msgid "Sonic similarity from an AudioMuse-AI server"
@@ -7162,6 +7167,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7171,6 +7179,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7178,6 +7189,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"

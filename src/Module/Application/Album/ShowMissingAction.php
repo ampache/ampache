@@ -35,6 +35,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,7 +61,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
         $mbid   = $this->requestParser->getFromRequest('mbid');
         $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
-        if ($walbum === null) {
+        if (!$walbum instanceof Wanted) {
             $walbum       = $this->wantedRepository->prototype();
             $walbum->mbid = $mbid;
             if (array_key_exists('artist', $_REQUEST)) {

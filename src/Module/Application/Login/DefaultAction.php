@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Login;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormView;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -272,11 +273,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             // Record the IP of this person!
             $this->userTracker->trackIpAddress($user, 'Login');
 
-            if (isset($username)) {
-                Session::create_user_cookie($username);
-                if (isset($_POST['rememberme'])) {
-                    Session::create_remember_cookie($username);
-                }
+            Session::create_user_cookie($username);
+            if (isset($_POST['rememberme'])) {
+                Session::create_remember_cookie($username);
             }
 
             // Update data from this auth if ours are empty or if config asks us to
@@ -336,7 +335,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
             // a backslash ends the authority for a special scheme in every browser's URL parser, but
             // parse_url() reads it as an ordinary character and keeps going past it to the next `@` --
-            // normalising it here first is what makes this check see the same host the browser will
+            // normalizing it here first is what makes this check see the same host the browser will
             // (GHSA-9w96-6g5w-9fc9)
             $referrerParts = parse_url(str_replace('\\', '/', $referrer));
             if (
@@ -368,7 +367,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         } // auth success
 
         $loginView = $this->loginFormViewFactory->create();
-        if ($loginView !== null) {
+        if ($loginView instanceof LoginFormView) {
             echo $loginView->render();
         }
 

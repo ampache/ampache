@@ -149,7 +149,7 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Counts the rows of a table a user is allowed to see, honouring the catalog filter when one applies
+     * Counts the rows of a table a user is allowed to see, honoring the catalog filter when one applies
      */
     public function countForUser(string $table, int $userId, bool $filtered): int
     {
@@ -496,7 +496,7 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Sums the megabytes a user has streamed, across the live counts and the summarised ones
+     * Sums the megabytes a user has streamed, across the live counts and the summarized ones
      */
     public function getPlaySize(int $userId): int
     {

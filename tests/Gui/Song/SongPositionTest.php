@@ -31,7 +31,7 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * A third of a real catalogue has no track number, so the row has to disappear rather than read zero.
+ * A third of a real catalog has no track number, so the row has to disappear rather than read zero.
  */
 class SongPositionTest extends TestCase
 {

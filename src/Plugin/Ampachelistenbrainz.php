@@ -218,7 +218,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
 
     /**
      * _resolveApiUrl
-     * A configured value carrying its own scheme (e.g. an http-only mirror on the same subnet) is honoured
+     * A configured value carrying its own scheme (e.g. an http-only mirror on the same subnet) is honored
      * rather than concatenated onto the fixed 'https' scheme, which built an invalid 'https://http://...' url
      */
     private function _resolveApiUrl(string $configured): void

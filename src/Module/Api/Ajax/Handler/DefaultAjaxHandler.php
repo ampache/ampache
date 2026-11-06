@@ -203,9 +203,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             break;
                         case 'playlist_random':
                             $playlist = new Playlist($request_id);
-                            $items    = $playlist->get_random_items();
-                            foreach ($items as $item) {
-                                $user->getPlaylist()->add_object($item['object_id'], $item['object_type']);
+                            // a private list you cannot see is not yours to expand into the queue here
+                            if ($playlist->isVisible($user)) {
+                                $items = $playlist->get_random_items();
+                                foreach ($items as $item) {
+                                    $user->getPlaylist()->add_object($item['object_id'], $item['object_type']);
+                                }
                             }
 
                             break;

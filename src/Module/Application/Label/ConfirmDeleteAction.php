@@ -36,6 +36,7 @@ use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Label;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -75,7 +76,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $label = $this->labelRepository->findById($labelId);
         if (
-            $label === null
+            !$label instanceof Label
             || !Catalog::can_remove($label)
         ) {
             throw new AccessDeniedException(

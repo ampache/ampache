@@ -154,7 +154,7 @@ The **username claim** identifies the account; the others are profile data copie
 onto it (created with `auto_create`, refreshed with `external_auto_update`). A
 login fails only if the username claim is missing — the rest are optional.
 
-### Behaviour
+### Behavior
 
 | Key                  | Default                       | Description                                                                                                    |
 |----------------------|-------------------------------|----------------------------------------------------------------------------------------------------------------|
@@ -199,7 +199,7 @@ logout_redirect = "https://login.microsoftonline.com/<tenant-id>/oauth2/v2.0/log
 **Can't find where to register the app in Entra / only see SAML options.** You
 are under **Enterprise applications**. OIDC uses **App registrations** instead
 (Microsoft Entra ID → App registrations → New registration). Ignore anything
-labelled *non-gallery application*, *Single sign-on*, or *SAML* — those are a
+labeled *non-gallery application*, *Single sign-on*, or *SAML* — those are a
 different protocol Ampache does not use here.
 
 **Redirect URI mismatch at the provider.** The URI you registered must match

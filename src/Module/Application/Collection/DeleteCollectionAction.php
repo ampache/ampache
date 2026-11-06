@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,7 +54,7 @@ final readonly class DeleteCollectionAction implements ApplicationActionInterfac
                 // Deleting is the owner's call alone: a collaborator may curate the contents but not discard them.
                 $collection = $this->collectionRepository->findById((int) $collectionId);
                 if (
-                    $collection !== null
+                    $collection instanceof Collection
                     && $collection->has_access()
                 ) {
                     $this->collectionRepository->delete($collection->getId());

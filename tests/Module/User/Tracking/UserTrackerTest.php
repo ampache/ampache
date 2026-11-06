@@ -67,7 +67,7 @@ class UserTrackerTest extends TestCase
     // process). Under the PHPUnit CLI runner this means get_user_ip() always
     // returns '', so the ip-stripping branch (parse_url()/IPv6 bracket
     // handling) cannot be exercised by mutating $_SERVER in a test. This
-    // test asserts the real, observable behaviour instead: an empty ip is
+    // test asserts the real, observable behavior instead: an empty ip is
     // recorded, while the user agent -- read via Core::get_server(), which
     // does use plain $_SERVER access -- is picked up correctly.
     public function testTrackIpAddressRecordsEmptyIpAndConfiguredUserAgent(): void

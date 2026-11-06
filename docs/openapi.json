@@ -3,7 +3,7 @@
   "info": {
     "title": "Ampache REST API",
     "version": "8.0.0",
-    "description": "OpenAPI 3.0 specification for Ampache REST API, based on the official documentation and RESTful path conventions. Parameters for write operations (POST/PUT/PATCH/DELETE) may be supplied as a query string, a form-encoded body (application/x-www-form-urlencoded), or a JSON body (application/json); body values take precedence over query values on conflict.\n\nAuthentication: every method accepts a Bearer token or the `auth` header, so no `auth` query parameter is required anywhere -- including handshake and ping. The `auth` query parameter is still honoured for RPC compatibility.\n\nHTTP methods: the RPC surface answers most actions over GET, and those calls continue to work. Where a call carries a credential or changes state, please use POST -- it keeps secrets out of server logs, proxy logs, browser history and `Referer` headers, and it follows REST conventions. `GET /me/lost-password` is the clearest example: it carries a reset token and sends an email, so a prefetched link is a real hazard.\n\nSerialisation: this document describes the JSON responses. The XML surface (`format=xml`, or the `/xml/` REST path) mirrors the same data structurally; it differs in shape -- attributes and repeated elements rather than arrays -- so the schemas here are not a byte-for-byte XML contract.",
+    "description": "OpenAPI 3.0 specification for Ampache REST API, based on the official documentation and RESTful path conventions. Parameters for write operations (POST/PUT/PATCH/DELETE) may be supplied as a query string, a form-encoded body (application/x-www-form-urlencoded), or a JSON body (application/json); body values take precedence over query values on conflict.\n\nAuthentication: every method accepts a Bearer token or the `auth` header, so no `auth` query parameter is required anywhere -- including handshake and ping. The `auth` query parameter is still honored for RPC compatibility.\n\nHTTP methods: the RPC surface answers most actions over GET, and those calls continue to work. Where a call carries a credential or changes state, please use POST -- it keeps secrets out of server logs, proxy logs, browser history and `Referer` headers, and it follows REST conventions. `GET /me/lost-password` is the clearest example: it carries a reset token and sends an email, so a prefetched link is a real hazard.\n\nSerialisation: this document describes the JSON responses. The XML surface (`format=xml`, or the `/xml/` REST path) mirrors the same data structurally; it differs in shape -- attributes and repeated elements rather than arrays -- so the schemas here are not a byte-for-byte XML contract.",
     "license": {
       "name": "AGPL-3.0",
       "url": "https://www.gnu.org/licenses/agpl-3.0.html"
@@ -3551,7 +3551,7 @@
       },
       "LyricsResponse": {
         "type": "object",
-        "description": "`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialised as an empty array, not an empty object.",
+        "description": "`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialized as an empty array, not an empty object.",
         "properties": {
           "object_id": {
             "type": "string"
@@ -3947,6 +3947,9 @@
           "id": {
             "type": "integer"
           },
+          "track": {
+            "type": "integer"
+          },
           "raw": {
             "type": "string"
           },
@@ -3963,14 +3966,10 @@
           "link": {
             "type": "string",
             "nullable": true
-          },
-          "track": {
-            "type": "integer"
           }
         },
         "required": [
           "id",
-          "raw",
           "track"
         ],
         "additionalProperties": true
@@ -5703,6 +5702,95 @@
           "secret"
         ],
         "additionalProperties": true
+      },
+      "FolderObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent": {
+            "type": "string",
+            "nullable": true
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "integer"
+          },
+          "playable": {
+            "type": "boolean"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "parent",
+          "path",
+          "catalog",
+          "time",
+          "items",
+          "playable",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating"
+        ],
+        "additionalProperties": true
+      },
+      "FoldersResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "folder": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "folder"
+        ],
+        "additionalProperties": true
       }
     },
     "responses": {
@@ -6388,6 +6476,7 @@
     "GET /collections/{collection_id}": "action=collection&filter={collection_id}",
     "GET /collections/{collection_id}/items": "action=collection_items&filter={collection_id}",
     "GET /folders": "action=folders",
+    "GET /folders/search": "action=search&type=folder",
     "GET /folders/{folder_id}": "action=folders&filter={folder_id}",
     "GET /genres": "action=genres",
     "GET /genres/search": "action=search&type=genre",
@@ -8127,7 +8216,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -9894,7 +9983,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -14388,6 +14477,101 @@
         "description": "Return children of a parent object in a folder traversal style **Ampache 8.0.0+**"
       }
     },
+    "/folders/search": {
+      "get": {
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc. A rule may also carry rule_<n>_group (int) to combine it with other rules sharing that id under group_<id>_operator (and/or), instead of the top-level operator -- exactly two levels, group ids are not nested.",
+        "operationId": "searchFolders",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Operator"
+          },
+          {
+            "description": "0, 1 (random order of results; default to 0)",
+            "in": "query",
+            "name": "random",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Operator"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Input"
+          },
+          {
+            "$ref": "#/components/parameters/Rule1Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule2Group"
+          },
+          {
+            "$ref": "#/components/parameters/Rule3Group"
+          },
+          {
+            "$ref": "#/components/parameters/Group1Operator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoldersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Advanced search for folders",
+        "tags": [
+          "Browsing, Indexes and Lists",
+          "Search"
+        ]
+      }
+    },
     "/folders/{folder_id}": {
       "get": {
         "parameters": [
@@ -18454,9 +18638,9 @@
                         },
                         {
                           "id": "8",
-                          "name": "Licence Art Libre",
+                          "name": "License Art Libre",
                           "description": "",
-                          "external_link": "http://artlibre.org/licence/lal/"
+                          "external_link": "http://artlibre.org/license/lal/"
                         },
                         {
                           "id": "12",
@@ -21302,7 +21486,7 @@
         "tags": [
           "Playlist Folders"
         ],
-        "description": "A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; hidden marks the ones you have chosen to hide from your own root, without dropping them from the list. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
+        "description": "A playlist folder organizes playlists, smartlists and collections into a private tree. The tree belongs to you alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; hidden marks the ones you have chosen to hide from your own root, without dropping them from the list. The whole tree is returned as a flat list; rebuild the hierarchy from each folder's parent, where 0 is the root.",
         "operationId": "playlistFolders"
       },
       "put": {
@@ -22895,7 +23079,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -80280,7 +80464,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -81774,7 +81958,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -90435,7 +90619,7 @@
                               "5": "CC BY NC SA 3.0",
                               "6": "CC BY ND 3.0",
                               "7": "CC BY SA 3.0",
-                              "8": "Licence Art Libre",
+                              "8": "License Art Libre",
                               "9": "Yellow OpenMusic",
                               "10": "Green OpenMusic",
                               "11": "Gnu GPL Art",
@@ -91676,7 +91860,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -95446,7 +95630,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],
@@ -96126,7 +96310,7 @@
           "Song"
         ],
         "operationId": "sonicMatchSongs",
-        "description": "Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic-analysis plugin (see the AudioMuse plugin). With none enabled the request is refused with 403 rather than answered with an empty list. `similarity` runs 0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale, and is -1 when the backend gives no comparable score."
+        "description": "Similarity is derived from analyzing the audio, which Ampache does not do itself, so this needs a sonic-analysis plugin (see the AudioMuse plugin). With none enabled the request is refused with 403 rather than answered with an empty list. `similarity` runs 0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale, and is -1 when the backend gives no comparable score."
       }
     },
     "/songs/{song_id}/stream": {
@@ -100303,7 +100487,7 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Flag or unflag an item as favourite",
+        "summary": "Flag or unflag an item as favorite",
         "tags": [
           "Ratings and Flags"
         ],

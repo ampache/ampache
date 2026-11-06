@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -62,7 +63,7 @@ final readonly class ShowEditAction implements ApplicationActionInterface
         $user     = $gatekeeper->getUser();
         $folderId = (int) ($request->getQueryParams()['folder'] ?? 0);
         $folder   = $this->playlistFolderRepository->findById($folderId);
-        if ($user === null || !$folder instanceof PlaylistFolder || !$folder->isVisible($user)) {
+        if (!$user instanceof User || !$folder instanceof PlaylistFolder || !$folder->isVisible($user)) {
             throw new AccessDeniedException();
         }
 

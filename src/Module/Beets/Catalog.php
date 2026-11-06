@@ -97,11 +97,16 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Starting New Media Search on "%s" Catalog'), $this->name));
         }
 
         set_time_limit(0);
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Beets Update'));
         }
 
         $parser = $this->getParser();
@@ -120,6 +125,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Add $song to ampache if it isn't already
+     * @param array<string, mixed> $song
      */
     public function addSong(array $song): void
     {
@@ -163,6 +169,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Check if a song was added before
+     * @param array<string, mixed> $song
      */
     abstract public function checkSong(array $song): bool;
 
@@ -273,6 +280,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Remove a song from the "to be deleted"-list if it was found.
+     * @param array<string, mixed> $song
      */
     public function removeFromDeleteList(array $song): void
     {
@@ -331,6 +339,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Delete Song from DB
+     * @param array<int, string> $songs
      */
     protected function deleteSongs(array $songs): void
     {
@@ -352,6 +361,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
+     * @param array<string, mixed> $song
      */
     protected function getVirtualSongPath(array $song): string
     {
@@ -364,6 +374,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
 
     /**
      * Add the song to the DB
+     * @param array<string, mixed> $song
      */
     protected function insertSong(array $song): ?int
     {
@@ -388,7 +399,7 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
     /**
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param int $count song count
-     * @param array|null $song Song array
+     * @param array<string, mixed>|null $song Song array
      * @param bool $ignoreTicker ignoring the ticker for the last update
      */
     protected function updateUi(string $prefix, int $count, ?array $song = null, bool $ignoreTicker = false): void
@@ -398,10 +409,18 @@ abstract class Catalog extends \Ampache\Module\Catalog\Catalog
         }
 
         if ($ignoreTicker || Ui::check_ticker()) {
-            Ui::update_text($prefix . '_count_' . $this->id, $count);
-            if (isset($song)) {
-                Ui::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
-            }
+            $label = match ($prefix) {
+                'add' => T_('Found'),
+                'clean' => T_('Checking'),
+                'verify' => T_('Verified'),
+                default => T_('Updated'),
+            };
+            $value = isset($song)
+                ? sprintf('%d - %s', $count, scrub_out($this->getVirtualSongPath($song)))
+                : $count;
+
+            // ignoreTicker also marks the final, run-closing update, so give that one more time on screen
+            Ui::update_text($label, $value, $ignoreTicker ? 10000 : 5000);
         }
     }
 

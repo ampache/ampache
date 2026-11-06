@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\User;
 
 /**
  * Renders a shout within the ui
@@ -109,7 +110,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
         $user = $shout->getUser();
-        if ($user !== null) {
+        if ($user instanceof User) {
             if ($details) {
                 $html .= $user->get_f_link();
             } else {

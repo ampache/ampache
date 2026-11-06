@@ -211,7 +211,7 @@ abstract class Catalog extends database_object
                 }
             }
 
-            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            // ReplayGain (_rg/_car) output is normalized per-source and must never be cached
             if ($cache_target && in_array($cache_target, Stream::NON_CACHEABLE_FORMATS, true)) {
                 debug_event(self::class, 'cache_catalogs: refusing to cache non-cacheable target ' . $cache_target, 3);
                 $interactor?->warn(
@@ -225,7 +225,7 @@ abstract class Catalog extends database_object
             if ($cache_target) {
                 foreach ($catalogs as $catalogid) {
                     $catalog = self::create_from_id($catalogid);
-                    if ($catalog === null) {
+                    if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                         break;
                     }
 
@@ -647,7 +647,7 @@ abstract class Catalog extends database_object
     public static function delete(int $catalog_id): bool
     {
         $catalog = self::create_from_id($catalog_id);
-        if ($catalog === null) {
+        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
             return false;
         }
 
@@ -762,9 +762,9 @@ abstract class Catalog extends database_object
                     $licenseId === 0
                     || $licenseId === null
                 ) {
-                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a licence
+                    // FIXME a tag holds whatever the tagger put there, and every distinct value becomes a license
                     // of its own. The file that raised ampache#4497 carried a rights registry link in its LICENSE
-                    // field, which is not a licence at all, and nothing here can tell the two apart.
+                    // field, which is not a license at all, and nothing here can tell the two apart.
                     $license = $licenseRepository->prototype();
 
                     // the field is allowed to carry a url instead of a name, and external_link is where a url
@@ -845,7 +845,7 @@ abstract class Catalog extends database_object
         if (empty($results['albumartist']) && !isset($results['albumartist_id'])) {
             $orphan_albumartist = T_(($song?->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) === T_('Unknown (Orphaned)');
 
-            if ($song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
+            if ($song instanceof Song && $song->get_album_artist() > 0 && (!$orphan_albumartist || empty($results['album']))) {
                 $results['albumartist_id'] = $song->get_album_artist();
             } elseif (empty($results['album'])) {
                 // nothing to group under, so an orphaned song still needs an album artist of its own.
@@ -980,7 +980,7 @@ abstract class Catalog extends database_object
         }
 
         if (Ui::check_ticker() && !$api) {
-            Ui::update_text('read_art_' . $object_id, (string) $libitem->get_fullname());
+            Ui::update_text(T_('Reading'), (string) $libitem->get_fullname());
         }
 
         return ($inserted === true);
@@ -1065,6 +1065,7 @@ abstract class Catalog extends database_object
      * get_artists
      *
      * This returns an array of artists that have songs in the catalogs parameter
+     * @param int[]|null $catalogs
      * @return Artist[]
      */
     public static function get_artists(?array $catalogs = null, int $size = 0, int $offset = 0): array
@@ -1167,12 +1168,24 @@ abstract class Catalog extends database_object
 
     /**
      * Get Folder for browsing (Used for WebDav)
+     *
+     * A child outside the current user's catalog_filter is answered as not found, same as a name that
+     * never existed, so a guessed or bookmarked WebDAV path cannot confirm a restricted catalog exists.
      */
     public static function get_child(string $name, ?int $catalog_id = 0, ?int $parent_id = null): Folder|Podcast_Episode|Song|Video|null
     {
-        return ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return new Folder(-1);
+        }
+
+        $child = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($child === null) {
+            return null;
+        }
+
+        return (self::has_access($child->getCatalogId(), Core::get_global('user')?->getId() ?? -1))
+            ? $child
+            : null;
     }
 
     /**
@@ -1273,7 +1286,7 @@ abstract class Catalog extends database_object
 
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1302,14 +1315,14 @@ abstract class Catalog extends database_object
         $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
             $podcast_ids = $catalog->get_podcast_ids();
             foreach ($podcast_ids as $podcast_id) {
                 $podcast = $podcastRepository->findById($podcast_id);
-                if ($podcast !== null) {
+                if ($podcast instanceof Podcast) {
                     $results[] = $podcast;
                 }
             }
@@ -1567,7 +1580,7 @@ abstract class Catalog extends database_object
         $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1599,7 +1612,7 @@ abstract class Catalog extends database_object
 
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
-            if ($catalog === null) {
+            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
                 break;
             }
 
@@ -1644,11 +1657,17 @@ abstract class Catalog extends database_object
 
     public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
-        $folder = ($name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if ($name === '/') {
+            return new Folder(-1)->has_children($name);
+        }
 
-        return $folder instanceof Folder && $folder->isNew() === false && $folder->has_children($name);
+        $folder = self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+        if (!$folder instanceof Folder || $folder->isNew()) {
+            return false;
+        }
+
+        return self::has_access($folder->getCatalogId(), Core::get_global('user')?->getId() ?? -1)
+            && $folder->has_children($name);
     }
 
     /**
@@ -1744,11 +1763,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $options, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if (
-                                $catalog !== null
-                                && $catalog->add_to_catalog($options)
-                                && !in_array($catalog->gather_types, $catalog_media_types, true)
-                            ) {
+                            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
+                                return;
+                            }
+
+                            // tracked even when nothing new is found, so the folder map and counts still catch up
+                            $catalog->add_to_catalog($options);
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1768,11 +1789,6 @@ abstract class Catalog extends database_object
                     }
                 }
 
-                if (in_array('music', $catalog_media_types)) {
-                    Artist::update_table_counts();
-                    Album::update_table_counts();
-                }
-
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -1785,6 +1801,9 @@ abstract class Catalog extends database_object
                             $catalog?->verify_catalog();
                         });
                     }
+
+                    self::getFolderRepository()->update_folder_map();
+                    self::getFolderRepository()->update_folder_counts();
                 }
 
                 break;
@@ -1798,15 +1817,16 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
+                            return;
+                        }
 
-                            $catalog->verify_catalog();
-                            if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types, true)) {
-                                $catalog_media_types[] = $catalog->gather_types;
-                            }
+                        $catalog->clean_catalog();
+                        $catalog->verify_catalog();
+                        $catalog->add_to_catalog();
+
+                        if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
+                            $catalog_media_types[] = $catalog->gather_types;
                         }
                     });
                 }
@@ -1817,7 +1837,7 @@ abstract class Catalog extends database_object
                         Album::update_album_artist();
                     }
 
-                    self::update_catalog_map($catalog_media_type);
+                    self::update_catalog_map($catalog_media_type, true);
                 }
 
                 break;
@@ -1830,7 +1850,13 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, &$catalog_media_types): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types, true))) {
+                            if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
+                                return;
+                            }
+
+                            // tracked even when nothing was removed, so the folder map and counts still catch up
+                            $catalog->clean_catalog();
+                            if (!in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = $catalog->gather_types;
                             }
                         });
@@ -1842,13 +1868,10 @@ abstract class Catalog extends database_object
                             Album::update_album_artist();
                         }
 
-                        self::update_catalog_map($catalog_media_type);
+                        self::update_catalog_map($catalog_media_type, true);
                     }
 
-                    if (in_array('music', $catalog_media_types)) {
-                        Artist::update_table_counts();
-                        Album::update_table_counts();
-                    }
+                    self::getFolderRepository()->pruneEmptyFolders();
                 }
 
                 break;
@@ -1861,7 +1884,7 @@ abstract class Catalog extends database_object
                     if (is_int($catalog_id)) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $clean_path): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->catalog_type == 'local') {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && $catalog->catalog_type == 'local') {
                                 switch ($catalog->gather_types) {
                                     case 'podcast':
                                         $type      = 'podcast_episode';
@@ -1896,11 +1919,9 @@ abstract class Catalog extends database_object
                                     if ($catalog->gather_types === 'music') {
                                         self::clean_empty_albums();
                                         Album::update_album_artist();
-                                        Album::update_table_counts();
-                                        Artist::update_table_counts();
                                     }
 
-                                    self::update_catalog_map($catalog->gather_types);
+                                    self::update_catalog_map($catalog->gather_types, true);
                                 }
                             }
                         });
@@ -1923,7 +1944,7 @@ abstract class Catalog extends database_object
                     if (is_int($catalog_id)) {
                         self::withCatalogLock($catalog_id, function () use ($catalog_id, $add_path): void {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
                                 self::update_catalog_map($catalog->gather_types);
                             }
                         });
@@ -1946,9 +1967,14 @@ abstract class Catalog extends database_object
                 // Iterate throughout the catalogs and gather as needed
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
-                    if ($catalog !== null) {
-                        echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
-                        flush();
+                    if ($catalog instanceof \Ampache\Module\Catalog\Catalog) {
+                        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                            echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
+                            flush();
+                        } elseif (defined('SSE_OUTPUT')) {
+                            Ui::update_text('', T_('Starting Art Search') . '. . .');
+                        }
+
                         $catalog->gather_art();
                     }
                 }
@@ -1969,7 +1995,7 @@ abstract class Catalog extends database_object
                     set_time_limit(0);
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
+                        if ($catalog instanceof \Ampache\Module\Catalog\Catalog) {
                             $song_ids = $catalog->get_song_ids();
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
@@ -2005,7 +2031,7 @@ abstract class Catalog extends database_object
                     if ($catalogs !== []) {
                         foreach ($catalogs as $catalog_id) {
                             $catalog = self::create_from_id($catalog_id);
-                            if ($catalog !== null && !in_array($catalog->gather_types, $catalog_media_types, true)) {
+                            if ($catalog instanceof \Ampache\Module\Catalog\Catalog && !in_array($catalog->gather_types, $catalog_media_types, true)) {
                                 $catalog_media_types[] = (string) $catalog->gather_types;
                             }
                         }
@@ -2099,7 +2125,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Neutralises path traversal in a sort/rename pattern once the tag values have been substituted in.
+     * Neutralizes path traversal in a sort/rename pattern once the tag values have been substituted in.
      *
      * A tag value can be exactly `..` (or `.`), which with the pattern's own `/` separators would climb out
      * of the catalog. Any segment made only of dots becomes `_`; every other character, unicode included, is
@@ -2168,32 +2194,41 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Update the catalog_map table depending on table type
+     * Refreshes a catalog's stored totals after a scan; every insert path already maps its own row onto its catalog
+     *
+     * $mayHaveDeleted skips the costly folder_map orphan check on a plain add, which can't have removed anything
      */
-    public static function update_catalog_map(?string $media_type): void
+    public static function update_catalog_map(?string $media_type, bool $mayHaveDeleted = false): void
     {
-        $counter = self::getCatalogCounter();
+        $counter          = self::getCatalogCounter();
+        $folderRepository = self::getFolderRepository();
         if ($media_type == 'music') {
-            self::update_mapping('album');
-            self::update_mapping('album_disk');
-            self::update_mapping('artist');
-
-            // every add and clean ends here, so this is where a catalog's stored totals catch up
             $counter->count(CountableTableEnum::SONG);
             $counter->count(CountableTableEnum::ALBUM);
             $counter->count(CountableTableEnum::ALBUM_DISK);
             $counter->count(CountableTableEnum::ARTIST);
-        } elseif ($media_type == 'podcast') {
-            self::update_mapping('podcast');
-            self::update_mapping('podcast_episode');
 
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::SONG);
+            }
+        } elseif ($media_type == 'podcast') {
             $counter->count(CountableTableEnum::PODCAST);
             $counter->count(CountableTableEnum::PODCAST_EPISODE);
-        } elseif ($media_type == 'video') {
-            self::update_mapping('video');
 
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::PODCAST_EPISODE);
+            }
+        } elseif ($media_type == 'video') {
             $counter->count(CountableTableEnum::VIDEO);
+
+            if ($mayHaveDeleted) {
+                $folderRepository->removeDeletedObjectMappings(LibraryItemEnum::VIDEO);
+            }
         }
+
+        // every add and clean ends here too, so a song orphaned from the folder tree catches up without a separate Scan Folder
+        $folderRepository->update_folder_map();
+        $folderRepository->update_folder_counts();
     }
 
     /**
@@ -2256,7 +2291,7 @@ abstract class Catalog extends database_object
     ): array {
         $array   = [];
         $catalog = self::create_from_id($media->catalog);
-        if ($catalog === null) {
+        if (!$catalog instanceof \Ampache\Module\Catalog\Catalog) {
             debug_event(self::class, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
             $array['error'] = true;
 
@@ -2489,6 +2524,15 @@ abstract class Catalog extends database_object
         ];
     }
 
+    /**
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
+     */
     public static function update_video_from_tags(array $results, Video $video): array
     {
         /* Setup the vars */
@@ -2646,6 +2690,13 @@ abstract class Catalog extends database_object
      * different places and passes in a full fledged song object, so it's a
      * static function.
      * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
+     * @param array<string, mixed> $results
+     * @return array{
+     *     change: bool,
+     *     element: array<string, string>,
+     *     maps?: bool,
+     *     error?: bool
+     * }
      */
     protected static function update_song_from_tags(array $results, Song $song): array
     {
@@ -3052,7 +3103,7 @@ abstract class Catalog extends database_object
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label = $labelRepository->findById($label_id);
-                    if ($label !== null) {
+                    if ($label instanceof Label) {
                         // the tag is read per song but describes the release, so it is recorded against the album
                         if ($new_song->album > 0) {
                             $labelRepository->addAlbumAssoc($label->id, $new_song->album, $now);
@@ -3278,7 +3329,7 @@ abstract class Catalog extends database_object
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param array<string, scalar|scalar[]> $metadata
+     * @param array<string, scalar|scalar[]|null> $metadata
      * @return array<string, scalar|scalar[]>
      */
     private static function _filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
@@ -3371,7 +3422,7 @@ abstract class Catalog extends database_object
     /**
      * Migrate an object associate images to a new object
      */
-    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): bool
+    private static function _migrate(string $object_type, int $old_object_id, int $new_object_id, int $song_id, int $catalog_id): void
     {
         if ($old_object_id !== $new_object_id) {
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
@@ -3403,7 +3454,8 @@ abstract class Catalog extends database_object
                 Artist::update_artist_count($new_object_id);
                 Artist::update_artist_count($old_object_id);
                 self::update_map($catalog_id, 'artist', $new_object_id);
-                self::garbage_collect_mapping(['artist']);
+                // the old artist is the only one that could have become orphaned by this move
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ARTIST, $old_object_id);
             }
 
             if ($object_type === 'album') {
@@ -3411,18 +3463,18 @@ abstract class Catalog extends database_object
                 Album::update_album_count($new_object_id);
                 Album::update_album_count($old_object_id);
                 self::update_map($catalog_id, 'album', $new_object_id);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM, $old_object_id);
+            }
+
+            if ($object_type === 'album_disk') {
                 self::update_map($catalog_id, 'album_disk', $new_object_id);
-                self::garbage_collect_mapping(['album', 'album_disk']);
+                self::getCatalogMapRepository()->collectGarbageForObject(CatalogMapTableEnum::ALBUM_DISK, $old_object_id);
             }
 
             self::getMetadataRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::getBookmarkRepository()->migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
-
-            return true;
         }
-
-        return false;
     }
 
     /**
@@ -3676,6 +3728,10 @@ abstract class Catalog extends database_object
         $catalogRepository = self::getCatalogRepository();
         if (!$catalogRepository->tryAcquireProcessingLock($catalog_id)) {
             debug_event(self::class, sprintf('Catalog %d is already being processed, skipping', $catalog_id), 3);
+            if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                $name = $catalogRepository->findName($catalog_id) ?: (string) $catalog_id;
+                Ui::update_text($name, T_('Skipping catalog, already being processed'), 10000);
+            }
 
             return;
         }
@@ -3694,7 +3750,7 @@ abstract class Catalog extends database_object
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
 
     /**
-     * @param array<string, scalar> $metadata
+     * @param array<string, scalar|scalar[]|null> $metadata
      */
     public function addMetadata(MetadataEnabledInterface $libraryItem, array $metadata): void
     {
@@ -3748,6 +3804,9 @@ abstract class Catalog extends database_object
             echo new CatalogProgressView(CatalogProgressTypeEnum::CLEAN, $this->getId(), $this->name)->render();
             ob_flush();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Cleaning the "%s" Catalog'), $this->name) . '...');
         }
 
         $dead_total = $this->clean_catalog_proc($interactor);
@@ -3768,7 +3827,8 @@ abstract class Catalog extends database_object
 
         Ui::update_text(
             T_("Catalog Cleaned"),
-            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total)
+            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total),
+            10000
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
@@ -3792,6 +3852,8 @@ abstract class Catalog extends database_object
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
+     * @param int[]|null $songs
+     * @param int[]|null $videos
      */
     public function gather_art(?array $songs = null, ?array $videos = null, ?Interactor $interactor = null): bool
     {
@@ -3862,13 +3924,13 @@ abstract class Catalog extends database_object
                 // Stupid little cutesie thing
                 ++$search_count;
                 if (Ui::check_ticker()) {
-                    Ui::update_text('count_art_' . $this->id, $search_count);
+                    Ui::update_text(T_('Searched'), $search_count);
                 }
             }
         }
 
         // One last time for good measure
-        Ui::update_text('count_art_' . $this->id, $search_count);
+        Ui::update_text(T_('Searched'), $search_count, 10000);
 
         return true;
     }
@@ -3901,12 +3963,12 @@ abstract class Catalog extends database_object
             // Stupid little cutesie thing
             ++$search_count;
             if (Ui::check_ticker()) {
-                Ui::update_text('count_artist_' . $object_id, $search_count);
+                Ui::update_text(T_('Updated'), $search_count);
             }
         }
 
         // One last time for good measure
-        Ui::update_text('count_artist_complete', $search_count);
+        Ui::update_text(T_('Updated'), $search_count, 10000);
     }
 
     /**
@@ -4450,7 +4512,7 @@ abstract class Catalog extends database_object
                         case 'label':
                             foreach ($object_list as $label_id) {
                                 $label = $labelRepository->findById($label_id);
-                                if ($label !== null) {
+                                if ($label instanceof Label) {
                                     $plugin->_plugin->get_external_metadata($label, 'label');
                                 }
                             }
@@ -4509,6 +4571,9 @@ abstract class Catalog extends database_object
             echo new CatalogProgressView(CatalogProgressTypeEnum::VERIFY, $this->getId(), $this->name)->render();
             ob_flush();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Updating the %s Catalog'), $this->name));
         }
 
         $verified = $this->verify_catalog_proc();
@@ -4521,7 +4586,8 @@ abstract class Catalog extends database_object
 
         Ui::update_text(
             T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified)
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified),
+            10000
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();

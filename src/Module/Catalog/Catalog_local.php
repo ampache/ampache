@@ -202,6 +202,7 @@ class Catalog_local extends Catalog
 
     /**
      * add_file
+     * @param array<string, bool|int|string> $options
      * @throws Exception
      */
     public function add_file(string $full_file, array $options, ?Interactor $interactor = null): bool
@@ -376,8 +377,7 @@ class Catalog_local extends Catalog
                 $this->count++;
                 $file = str_replace(['(', ')', "'"], '', $full_file);
                 if (Ui::check_ticker()) {
-                    Ui::update_text('add_count_' . $this->getId(), $this->count);
-                    Ui::update_text('add_dir_' . $this->getId(), scrub_out($file));
+                    Ui::update_text(T_('Found'), sprintf('%d - %s', $this->count, $file));
                 } // update our current state
             } // if it's not an m3u
 
@@ -394,7 +394,7 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param array<string, mixed> $options
+     * @param array<string, bool|int|string> $options
      * @phpstan-impure
      */
     public function add_files(string $path, array $options, ?Interactor $interactor = null): int
@@ -481,7 +481,7 @@ class Catalog_local extends Catalog
 
         // This should only happen on the last run
         if ($path === $this->path) {
-            Ui::update_text('add_count_' . $this->getId(), $this->count);
+            Ui::update_text(T_('Found'), $this->count);
         }
 
         /* Close the dir handle */
@@ -505,7 +505,7 @@ class Catalog_local extends Catalog
         }
 
         $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
-        if (!$folder || $folder->isNew()) {
+        if (!$folder instanceof Folder || $folder->isNew()) {
             throw new Error('ERROR: ' . $this->getId() . ' could not create folder ' . $folderName . ' at ' . $folderPath);
         }
 
@@ -541,6 +541,9 @@ class Catalog_local extends Catalog
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             echo new CatalogProgressView(CatalogProgressTypeEnum::ADD, $this->getId(), $this->name)->render();
             flush();
+        } elseif (defined('SSE_OUTPUT')) {
+            /* HINT: Catalog Name */
+            Ui::update_text('', sprintf(T_('Starting New Media Search on "%s" Catalog'), $this->name));
         }
 
         /* Set the Start time */
@@ -600,6 +603,8 @@ class Catalog_local extends Catalog
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                     echo new CatalogProgressView(CatalogProgressTypeEnum::ART, $catalog_id)->render();
                     flush();
+                } elseif (defined('SSE_OUTPUT')) {
+                    Ui::update_text('', T_('Starting Art Search') . '. . .');
                 }
 
                 if ($this->songs_to_gather !== [] || $this->videos_to_gather !== []) {
@@ -609,12 +614,6 @@ class Catalog_local extends Catalog
         }
 
         if ($this->count > 0) {
-            // update the counts too
-            if ($this->gather_types == 'music') {
-                Album::update_table_counts();
-                Artist::update_table_counts();
-            }
-
             /* Update the Catalog last_update */
             $this->update_last_add();
         }
@@ -633,10 +632,14 @@ class Catalog_local extends Catalog
         );
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
-            Ui::update_text(
-                T_('Catalog Updated'),
-                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate)
-            );
+        }
+
+        Ui::update_text(
+            T_('Catalog Updated'),
+            sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate),
+            10000
+        );
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -855,6 +858,8 @@ class Catalog_local extends Catalog
             if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Catalog root unreadable, stopping check'));
                 echo AmpError::display('general');
+            } elseif (defined('SSE_OUTPUT')) {
+                Ui::update_text(T_('There Was a Problem'), T_('Catalog root unreadable, stopping check'), 10000);
             }
 
             return [];
@@ -905,6 +910,8 @@ class Catalog_local extends Catalog
             if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
                 echo AmpError::display('general');
+            } elseif (defined('SSE_OUTPUT')) {
+                Ui::update_text(T_('There Was a Problem'), T_('Catalog root unreadable, stopping clean'), 10000);
             }
 
             return 0;
@@ -977,7 +984,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive($dead),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
-                default => self::getSongRepository()->deleteByIdsWithArchive($dead),
+                default => $this->deleteSongsAndRefreshCounts($dead),
             };
         }
 
@@ -997,7 +1004,8 @@ class Catalog_local extends Catalog
      */
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
-        $file_info = (is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
+        $root      = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
+        $file_info = (str_starts_with($file, $root) && is_file($file)) ? filesize(Core::conv_lc_file($file)) : 0;
         if (!$file_info) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
@@ -1006,7 +1014,7 @@ class Catalog_local extends Catalog
             match ($media_type) {
                 'video' => self::getVideoRepository()->deleteByIdsWithArchive([$object_id]),
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive([$object_id]),
-                default => self::getSongRepository()->deleteByIdsWithArchive([$object_id]),
+                default => $this->deleteSongsAndRefreshCounts([$object_id]),
             };
 
             return true;
@@ -1021,6 +1029,11 @@ class Catalog_local extends Catalog
 
     public function count_scan_folders(?Interactor $interactor = null): void
     {
+        // a scan that found no new folders has nothing for any of this to do
+        if ($this->count === 0) {
+            return;
+        }
+
         // insert object mapping after scanning new folders
         $interactor?->info(
             'local.catalog: update_folder_map',
@@ -1037,14 +1050,12 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'update_folder_counts', 5);
         self::getFolderRepository()->update_folder_counts();
 
-        if ($this->count > 0) {
-            $interactor?->info(
-                'local.catalog: collectGarbage',
-                true
-            );
-            debug_event('local.catalog', 'collectGarbage', 5);
-            self::getFolderRepository()->collectGarbage();
-        }
+        $interactor?->info(
+            'local.catalog: collectGarbage',
+            true
+        );
+        debug_event('local.catalog', 'collectGarbage', 5);
+        self::getFolderRepository()->collectGarbage();
     }
 
     /**
@@ -1254,7 +1265,7 @@ class Catalog_local extends Catalog
         }
 
         $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
-        if (!$folder || $folder->isNew()) {
+        if (!$folder instanceof Folder || $folder->isNew()) {
             $folderId = Folder::create([
                 'name' => $this->get_fullname(),
                 'catalog' => $this->getId(),
@@ -1325,11 +1336,15 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
+        if (defined('SSE_OUTPUT')) {
+            Ui::update_text('', $this->name . ': ' . T_('Start scanning folders'));
+        }
+
         sleep(1);
 
         $this->scan_catalog($interactor);
 
-        Ui::update_text('scan_count_' . $this->getId(), $this->count);
+        Ui::update_text(T_('Updated'), $this->count);
 
         if (!$skipCounts) {
             $this->count_scan_folders($interactor);
@@ -1363,7 +1378,7 @@ class Catalog_local extends Catalog
                 }
 
                 $newCatalog = self::create_from_id($newCatalogId);
-                if ($newCatalog === null) {
+                if (!$newCatalog instanceof Catalog) {
                     return false;
                 }
 
@@ -1485,9 +1500,6 @@ class Catalog_local extends Catalog
         );
         debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
         if ($interactor == null && $gather_type == 'music') {
-            Album::update_table_counts();
-            Artist::update_table_counts();
-
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
@@ -1517,9 +1529,10 @@ class Catalog_local extends Catalog
             default => self::getSongRepository()->getFilesByCatalog($this->getId(), $chunk_size, $count),
         };
 
+        $root = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         foreach ($files as $mediaId => $mediaFile) {
             $results   = ['id' => $mediaId, 'file' => $mediaFile];
-            $file_info = @filesize(Core::conv_lc_file($results['file']));
+            $file_info = (str_starts_with((string) $results['file'], $root)) ? @filesize(Core::conv_lc_file($results['file'])) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File not found or empty: ' . $results['file'],
@@ -1550,16 +1563,16 @@ class Catalog_local extends Catalog
         $offset = $chunk * $chunk_size;
         $count  = $offset;
 
+        $root            = rtrim($this->path, '/\\') . DIRECTORY_SEPARATOR;
         $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
         foreach ($filecache_chunk as $file => $oid) {
             $count++;
             if (Ui::check_ticker()) {
                 $file_display = str_replace(['(', ')', "'"], '', $file);
-                Ui::update_text('clean_count_' . $this->getId(), $count);
-                Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file_display));
+                Ui::update_text(T_('Checking'), sprintf('%d - %s', $count, $file_display));
             }
 
-            $file_info = @filesize(Core::conv_lc_file($file));
+            $file_info = (str_starts_with($file, $root)) ? @filesize(Core::conv_lc_file($file)) : false;
             if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File removed: ' . $file,
@@ -1586,7 +1599,7 @@ class Catalog_local extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param array<string, mixed> $options
+     * @param array<string, bool|int|string> $options
      * @throws Exception
      * @throws Exception
      */
@@ -1616,17 +1629,19 @@ class Catalog_local extends Catalog
         }
 
         if (array_key_exists('artist_id', $options) && (int) $options['artist_id'] > 0) {
-            $results['artist_id']      = $options['artist_id'];
-            $results['albumartist_id'] = $options['artist_id'];
-            $artist                    = new Artist($results['artist_id']);
+            $artist_id                 = (int) $options['artist_id'];
+            $results['artist_id']      = $artist_id;
+            $results['albumartist_id'] = $artist_id;
+            $artist                    = new Artist($artist_id);
             if ($artist->isNew() === false) {
                 $results['artist'] = $artist->name;
             }
         }
 
         if (array_key_exists('album_id', $options) && (int) $options['album_id'] > 0) {
-            $results['album_id'] = $options['album_id'];
-            $album               = new Album($results['album_id']);
+            $album_id            = (int) $options['album_id'];
+            $results['album_id'] = $album_id;
+            $album               = new Album($album_id);
             if ($album->isNew() === false) {
                 $results['album'] = $album->name;
             }
@@ -1703,7 +1718,7 @@ class Catalog_local extends Catalog
             }
 
             // If song rating tag exists and is well formed (array user=>rating), add it
-            if (array_key_exists('rating', $results) && is_array($results['rating'])) {
+            if (is_array($results['rating'])) {
                 // For each user's ratings, call the function
                 foreach ($results['rating'] as $user => $rating) {
                     debug_event('local.catalog', sprintf('Setting rating for Song %s to %s for user %s', $song_id, $rating, $user), 5);
@@ -1920,7 +1935,7 @@ class Catalog_local extends Catalog
                             (int) $this->_filecache[$lc_dir],
                             filemtime($full_file) ?: time()
                         );
-                    } elseif ($this->add_folder($file, $full_file, $path) !== null) {
+                    } elseif ($this->add_folder($file, $full_file, $path) instanceof Folder) {
                         $this->count++;
                         $interactor?->info(
                             sprintf('Added %s, closing handle', $full_file),
@@ -1972,8 +1987,7 @@ class Catalog_local extends Catalog
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $row['file']);
-                Ui::update_text('verify_count_' . $this->getId(), $count);
-                Ui::update_text('verify_dir_' . $this->getId(), scrub_out($file));
+                Ui::update_text(T_('Verified'), sprintf('%d - %s', $count, $file));
             }
 
             if ($tableName !== 'album') {
@@ -2044,9 +2058,26 @@ class Catalog_local extends Catalog
             }
         }
 
-        Ui::update_text('verify_count_' . $this->getId(), $count);
+        Ui::update_text(T_('Verified'), $count);
 
         return $changed;
+    }
+
+    /**
+     * Deletes songs and refreshes the counts of just the albums/artists that lost one, instead of a full table sweep
+     *
+     * @param list<int> $songIds
+     */
+    private function deleteSongsAndRefreshCounts(array $songIds): void
+    {
+        $affected = self::getSongRepository()->deleteByIdsWithArchive($songIds);
+        foreach ($affected['albums'] as $album_id) {
+            Album::update_album_count($album_id);
+        }
+
+        foreach ($affected['artists'] as $artist_id) {
+            Artist::update_artist_count($artist_id);
+        }
     }
 
     private function getArtistRepository(): ArtistRepositoryInterface

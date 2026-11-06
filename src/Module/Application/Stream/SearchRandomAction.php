@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +55,11 @@ final class SearchRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $search   = $this->modelFactory->createSmartlist((int) $_REQUEST['search_id']);
+        $search = $this->modelFactory->createSmartlist((int) $_REQUEST['search_id']);
+        if (!$search->isVisible($gatekeeper->getUser())) {
+            throw new AccessDeniedException();
+        }
+
         $mediaIds = $search->get_random_items();
 
         return $this->stream(

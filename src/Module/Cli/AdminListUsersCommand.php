@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -47,7 +48,7 @@ final class AdminListUsersCommand extends Command
     public function execute(
         ?string $username,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

@@ -1,10 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Dotan Mazor, 2021
-# Nachum Marcus <nachum37@gmail.com>, 2017
+# lachlan <lachlan.00@gmail.com>, 2026
 # Dotan Mazor, 2026
 # 
 #, fuzzy
@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Dotan Mazor, 2026\n"
 "Language-Team: Hebrew (Israel) (https://app.transifex.com/ampache/teams/40984/he_IL/)\n"
@@ -449,9 +449,6 @@ msgstr "מתוך"
 msgid "Next"
 msgstr "הבא"
 
-msgid "View"
-msgstr "הצגה"
-
 msgid "Pages"
 msgstr "עמודים"
 
@@ -463,6 +460,15 @@ msgstr "תצוגת משבצות"
 
 msgid "Alphabet"
 msgstr "אלפביתי"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr "סדר"
+
+msgid "View"
+msgstr "הצגה"
 
 msgid "Item Count"
 msgstr "מספר פריטים"
@@ -826,6 +832,9 @@ msgstr "תאריך שחרור"
 msgid "Actions"
 msgstr "פעולות"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr ""
 
@@ -1106,9 +1115,6 @@ msgstr "תיאור:"
 
 msgid "External Link"
 msgstr "קישור חיצוני"
-
-msgid "Order"
-msgstr "סדר"
 
 msgid "Top Rated"
 msgstr "מדורגים גבוה"
@@ -3841,7 +3847,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3864,7 +3870,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3892,7 +3898,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4199,7 +4205,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4384,6 +4390,8 @@ msgstr "הקטלוג נמחק"
 msgid "There Was a Problem"
 msgstr "הייתה בעיה"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4667,8 +4675,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "האלבום נמחק"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "האלבום וכל הקבצים שבו יימחקו"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "התחלת עדכון לפי תגיות"
@@ -5074,6 +5088,9 @@ msgstr ""
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "מעודכן"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 
@@ -5216,6 +5233,9 @@ msgstr "כל הקבצים יוסרו. דבר לא נעשה"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "הקובץ לא נמצא או שהוא בגודל 0 בייט: %s"
 
+msgid "Start scanning folders"
+msgstr "התחלת סריקת תיקיות"
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5263,11 +5283,11 @@ msgid ""
 "processed."
 msgstr ""
 
-msgid "Updated"
-msgstr "מעודכן"
-
 msgid "No Update Needed"
 msgstr "אין צורך בעדכון"
+
+msgid "Skipping catalog, already being processed"
+msgstr "הקטלוג כרגע עובר עיבוד, אז לא ניגע בו במקביל"
 
 msgid "Catalog Cleaned"
 msgstr "קטלוג נוקה"
@@ -5451,9 +5471,6 @@ msgstr "בוטלה מגבלת זיכרון PHP"
 msgid "Reading Catalog: \"%s\""
 msgstr "קריאת קטלוג: \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr "הקטלוג כרגע עובר עיבוד, אז לא ניגע בו במקביל"
-
 msgid "Look for missing file media entries"
 msgstr "חיפוש רשומות קבצי מדיה חסרות"
 
@@ -5471,9 +5488,6 @@ msgstr "התחלת הוספת מדיה חדשה"
 msgid "Start verifying media related to Catalog entries"
 msgstr "התחלת אימות מדיה קשורה לרשומות בקטלוג"
 
-msgid "Start scanning folders"
-msgstr "התחלת סריקת תיקיות"
-
 msgid "Start searching new media art"
 msgstr "התחלת חיפוש עטיפות מדיה חדשות"
 
@@ -5483,6 +5497,9 @@ msgstr ""
 msgid ""
 "Update Label information and fetch details using the MusicBrainz plugin"
 msgstr "עדכון המידע בתווית ומשיכת הפרטים באמצעות הפלאגין MusicBrainz"
+
+msgid "Updating counts"
+msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
@@ -6102,9 +6119,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6417,6 +6431,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr ""
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6599,16 +6622,6 @@ msgstr ""
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-msgid "Average from all users"
-msgstr "ממוצע מכל המשתמשים"
-
 msgid "not rated yet"
 msgstr "עוד אין דירוג"
 
@@ -6618,6 +6631,16 @@ msgstr "%s מתוך 5"
 
 msgid "Current rating"
 msgstr "דירוג נוכחי"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Average from all users"
+msgstr "ממוצע מכל המשתמשים"
 
 msgid "Unfavorite"
 msgstr "הסרה מהמועדפים"
@@ -6867,24 +6890,6 @@ msgstr "הוספה לרשימת השמעה / אוסף"
 
 msgid "Unknown Artist"
 msgstr "אמן לא ידוע"
-
-msgid "Amazon art search"
-msgstr "חיפוש עטיפות אמאזון"
-
-msgid "Amazon base url"
-msgstr ""
-
-msgid "Amazon max results pages"
-msgstr ""
-
-msgid "Amazon Access Key ID"
-msgstr ""
-
-msgid "Amazon Secret Access Key"
-msgstr ""
-
-msgid "Amazon associate tag"
-msgstr ""
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7204,6 +7209,9 @@ msgstr ""
 msgid "Stream control bandwidth history (days)"
 msgstr ""
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr ""
 
@@ -7213,6 +7221,9 @@ msgstr ""
 msgid "Stream control hits history (days)"
 msgstr ""
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr ""
 
@@ -7220,6 +7231,9 @@ msgid "Stream control maximal time (minutes)"
 msgstr ""
 
 msgid "Stream control time history (days)"
+msgstr ""
+
+msgid "Stream control maximal time per IP (minutes)"
 msgstr ""
 
 msgid "TheAudioDb metadata integration"

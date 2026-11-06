@@ -46,6 +46,20 @@ class BrowseShowObjectsTest extends MockeryTestCase
         self::assertSame([], $this->savedList($browse));
     }
 
+    /**
+     * A folder search hands a non-simple browse its real result ids; those must be persisted
+     * like any other type, or get_total() falls back to recounting the whole unfiltered browse.
+     */
+    public function testANonSimpleFolderBrowsePersistsItsPassedIds(): void
+    {
+        $browse = $this->subject();
+        $browse->set_type('folder');
+
+        $this->showQuietly($browse, [5, 9, 41]);
+
+        self::assertSame([5, 9, 41], $this->savedList($browse));
+    }
+
     public function testPassingNullKeepsTheSavedList(): void
     {
         $browse = $this->subject();

@@ -83,10 +83,13 @@ if ($this->isShowRatings()) { ?>
         <td data-label="<?php echo $this->e(T_('Rating')); ?>" class="cel_ratings">
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $itemId; ?>_artist">
-                    <?php echo $this->raw(Rating::show($itemId, 'artist', true)); ?>
+                    <?php echo $this->raw(Rating::show($itemId, 'artist')); ?>
                 </span>
                 <span class="cel_userflag" id="userflag_<?php echo $itemId; ?>_artist">
                     <?php echo $this->raw(Userflag::show($itemId, 'artist')); ?>
+                </span>
+                <span class="cel_global_rating" id="global_rating_<?php echo $itemId; ?>_artist">
+                    <?php echo $this->raw(Rating::show_global_rating($itemId, 'artist')); ?>
                 </span>
             </div>
         </td>

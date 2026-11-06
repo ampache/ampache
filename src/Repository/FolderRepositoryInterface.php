@@ -63,6 +63,17 @@ interface FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
+     * Returns the subset of the given catalogs whose song/video/podcast_episode rows are all mapped
+     * into `folder_map`. A catalog never scanned for folders, one scanned but added to since (a plain
+     * "Add" never touches `folder_map`), or one that cannot be mapped at all, is absent from the result
+     * rather than contributing a folder tree with gaps in it.
+     *
+     * @param int[] $catalogIds
+     * @return int[]
+     */
+    public function getCatalogIdsWithFolderMap(array $catalogIds): array;
+
+    /**
      * Returns the direct children of the given catalogs' own top-level folders, merged into one list
      *
      * @param int[] $catalogIds
@@ -149,6 +160,25 @@ interface FolderRepositoryInterface
      * Returns the id of a newly created folder, null when an existing one was updated
      */
     public function persist(Folder $folder): ?int;
+
+    /**
+     * Repeatedly removes folders with nothing left inside them, so browsing never shows a dead end
+     */
+    public function pruneEmptyFolders(): void;
+
+    /**
+     * Removes folder_map rows for one object type whose underlying rows were deleted elsewhere (e.g. by
+     * Clean), so a folder they emptied is recognized as empty right away rather than at the next full sweep
+     */
+    public function removeDeletedObjectMappings(LibraryItemEnum $objectType): void;
+
+    /**
+     * Returns the one artist every song below a folder belongs to, null when there is none or more than one
+     *
+     * A client that treats every `getIndexes` entry as artist-openable (calling `getArtist` instead of
+     * `getMusicDirectory`) needs this to resolve a folder back to the artist it represents.
+     */
+    public function resolveSingleArtistId(Folder $folder, int $userId = -1): ?int;
 
     /**
      * Update folder counts columns after large actions

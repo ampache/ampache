@@ -85,7 +85,7 @@ use Slim\ResponseEmitter;
 final class JellyfinApiApplication implements ApiApplicationInterface
 {
     /**
-     * Spec 12.0.0 dropped these legacy `/Users/{userId}/...` paths in favour of the modern ones on the
+     * Spec 12.0.0 dropped these legacy `/Users/{userId}/...` paths in favor of the modern ones on the
      * right, but real clients still call them (confirmed against Finamp: it calls `/Users/{id}/Views`, not
      * `/UserViews`, even on a fresh install) — see the plan's §C.2. `{userId}` itself isn't validated
      * against anything: this surface only ever answers for the authenticated caller.

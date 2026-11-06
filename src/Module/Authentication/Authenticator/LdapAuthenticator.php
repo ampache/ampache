@@ -44,6 +44,9 @@ final class LdapAuthenticator implements AuthenticatorInterface
         return Ldap::auth($username, $password);
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function postAuth(): ?array
     {
         return null;

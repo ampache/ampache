@@ -37,7 +37,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
  */
 final readonly class RecipeBuilder implements RecipeBuilderInterface
 {
-    /** How many artists colour a playlist tile. Five rows is what the drawing has room for. */
+    /** How many artists color a playlist tile. Five rows is what the drawing has room for. */
     private const int VOICES = 5;
 
     public function __construct(
@@ -88,7 +88,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
             name: $name,
             subtitle: mb_strtoupper($artist),
             motif: 'record',
-            // the artist seeds the colour, so every release of theirs shares one family
+            // the artist seeds the color, so every release of theirs shares one family
             seed: $artist,
             palette: Palette::forSeed($artist),
         );
@@ -183,7 +183,7 @@ final readonly class RecipeBuilder implements RecipeBuilderInterface
     }
 
     /**
-     * The first few artists on the list. They colour one row each, so a playlist wears the colours of
+     * The first few artists on the list. They color one row each, so a playlist wears the colors of
      * what is actually inside it rather than a shade drawn from its own name.
      *
      * @return list<string>

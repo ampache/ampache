@@ -105,7 +105,7 @@ final class Folders8Method implements MethodInterface
 
         $this->narrowBrowse($browse, $folder, $input);
 
-        $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
+        $browse->set_filter('user_catalog', true);
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
         $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));

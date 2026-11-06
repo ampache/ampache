@@ -80,7 +80,7 @@ abstract class AbstractView implements TemplateInterface
      * Templates live under `resources/templates/`, outside the web root, because a `.phtml` is not matched by
      * the php handler in the nginx config Ampache ships and would be served as source from `public/`.
      *
-     * A theme copy is executable PHP, so it is honoured only when `allow_php_themes` is set -- the gate
+     * A theme copy is executable PHP, so it is honored only when `allow_php_themes` is set -- the gate
      * `Ui::find_template()` applies by extension, which a non-`.php` extension would slip past.
      */
     final protected function findTemplate(string $template): string

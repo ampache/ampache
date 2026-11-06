@@ -33,7 +33,7 @@ use Override;
 /**
  * The private message browse.
  *
- * The table this replaced was labelled `data-objecttype="label"` and spanned its empty state across five
+ * The table this replaced was labeled `data-objecttype="label"` and spanned its empty state across five
  * of six columns, both from being copied off the label browse.
  */
 final class PrivateMessageListRenderer extends AbstractBrowseListRenderer

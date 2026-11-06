@@ -58,7 +58,7 @@ class DicBuilderTest extends TestCase
             }
 
             // DicBuilder lives in src/Config, so every path but its own is written relative to that
-            // Paths are normalised to forward slashes so the literals match on Windows too
+            // Paths are normalized to forward slashes so the literals match on Windows too
             $relative = str_replace(
                 [$sourcePath, DIRECTORY_SEPARATOR],
                 ['', '/'],

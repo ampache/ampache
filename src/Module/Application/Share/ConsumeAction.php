@@ -42,6 +42,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\ShareRepositoryInterface;
 use DateTime;
 use Psr\Container\ContainerInterface;
@@ -90,7 +91,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
 
         $share = $this->shareRepository->findById($share_id);
 
-        if ($share === null) {
+        if (!$share instanceof Share) {
             throw new AccessDeniedException();
         }
 

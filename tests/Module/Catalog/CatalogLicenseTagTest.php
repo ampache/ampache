@@ -38,7 +38,7 @@ class CatalogLicenseTagTest extends MockeryTestCase
 {
     private const string BMI_LINK = 'http://repertoire.bmi.com/title.asp?blnWriter=True&blnPublisher=True&blnArtist=True&keyID=3738380&ShowNbr=0&ShowSeqNbr=0&querytype=WorkID';
 
-    /** @var array<string, mixed> what a scan hands the filter, minus the licence under test */
+    /** @var array<string, mixed> what a scan hands the filter, minus the license under test */
     private const array TAGS = [
         'catalog' => 1,
         'file' => '/music/track.flac',
@@ -106,17 +106,17 @@ class CatalogLicenseTagTest extends MockeryTestCase
 
     /**
      * A name held html escaped never equals the tag it came from, so `find()` misses and the scan creates the
-     * same licence again, every single pass
+     * same license again, every single pass
      */
     public function testTheNameIsStoredAsTheTagWroteIt(): void
     {
-        $license = $this->licenseFromTag('Rock & Roll Licence');
+        $license = $this->licenseFromTag('Rock & Roll License');
 
-        self::assertSame('Rock & Roll Licence', $license->getName());
+        self::assertSame('Rock & Roll License', $license->getName());
     }
 
     /**
-     * Runs the tag through the catalog filter and hands back the licence it built
+     * Runs the tag through the catalog filter and hands back the license it built
      */
     private function licenseFromTag(string $tagValue): License
     {

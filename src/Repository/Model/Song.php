@@ -820,15 +820,15 @@ class Song extends database_object implements
 
         // update the all the counts for the album right away
         Album::update_album_count($album_id);
+        foreach (array_unique($artists) as $mapped_artist_id) {
+            if ($mapped_artist_id > 0) {
+                Artist::update_artist_count($mapped_artist_id);
+                // an existing artist's own catalog_map row is only added when it is first created, so every song maps it again
+                Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
+            }
+        }
 
         if ($user_upload) {
-            // A scan maps artists to their catalog when it finishes; an upload has no such pass
-            foreach (array_unique($artists) as $mapped_artist_id) {
-                if ($mapped_artist_id > 0) {
-                    Catalog::update_map($catalog, 'artist', (int) $mapped_artist_id);
-                }
-            }
-
             self::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
         }
 
@@ -1242,6 +1242,15 @@ class Song extends database_object implements
     private static function _scrub_custom_play_arg(string $value): string
     {
         return (string) preg_replace('/[;|&$`\\\\"\'<>(){}*?!#~\x00-\x1F]/u', '', $value);
+    }
+
+    /**
+     * Metadata has no operational need for exact spacing the way a file path does, so this also drops whitespace
+     * and a leading hyphen, closing a quoteless command template's one opening for argument injection.
+     */
+    private static function _scrub_custom_play_metadata_arg(string $value): string
+    {
+        return ltrim((string) preg_replace('/\s+/u', '', self::_scrub_custom_play_arg($value)), '-');
     }
 
     /**
@@ -2262,6 +2271,12 @@ class Song extends database_object implements
 
     /**
      * Run custom play action.
+     * @return array{}|array{
+     *     process: resource|false,
+     *     handle: resource,
+     *     stderr: resource|null,
+     *     format: string
+     * }
      */
     public function run_custom_play_action(int $action_index, string $codec = ''): array
     {
@@ -2284,9 +2299,9 @@ class Song extends database_object implements
 
             $run = str_replace("%f", self::_scrub_custom_play_arg($this->file ?? '%f'), (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_arg($this->get_parent_fullname()), $run);
-            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_arg($this->get_album_fullname()), $run);
-            $run = str_replace("%t", self::_scrub_custom_play_arg($this->get_fullname() ?? '%t'), $run);
+            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : self::_scrub_custom_play_metadata_arg($this->get_parent_fullname()), $run);
+            $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : self::_scrub_custom_play_metadata_arg($this->get_album_fullname()), $run);
+            $run = str_replace("%t", self::_scrub_custom_play_metadata_arg($this->get_fullname() ?? '%t'), $run);
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 
@@ -2346,7 +2361,7 @@ class Song extends database_object implements
             }
 
             // running total of the user stream data
-            $play_size = User::get_user_data($user_id, 'play_size', 0)['play_size'];
+            $play_size = (float) User::get_user_data($user_id, 'play_size', 0)['play_size'];
             User::set_user_data($user_id, 'play_size', ($play_size + ($this->size / 1024 / 1024)));
         }
 

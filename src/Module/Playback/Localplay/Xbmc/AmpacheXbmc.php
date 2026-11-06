@@ -46,13 +46,9 @@ class AmpacheXbmc extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'xbmc_active';
 
-    private int $_playerId = 0;
-
-    // Always use player 0 for now
-    private int $_playlistId = 0;
-
-    // Always use playlist 0 for now
-    private $_xbmc;
+    private int $_playerId      = 0;
+    private int $_playlistId    = 0;
+    private mixed $_xbmc        = null;
     private string $description = 'Controls a XBMC instance';
     private string $version     = '000001';
 
@@ -606,6 +602,7 @@ class AmpacheXbmc extends localplay_controller
      * status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      * This works as in requesting the xbmc properties
+     * @return array<string, mixed>
      */
     public function status(): array
     {

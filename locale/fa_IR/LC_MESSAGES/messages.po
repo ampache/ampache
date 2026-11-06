@@ -1,18 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Parviz Homayun <parviz.homayun@gmail.com>, 2021
+# lachlan <lachlan.00@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
+"Last-Translator: lachlan <lachlan.00@gmail.com>, 2026\n"
 "Language-Team: Persian (Iran) (https://app.transifex.com/ampache/teams/40984/fa_IR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -447,9 +448,6 @@ msgstr "از"
 msgid "Next"
 msgstr "بعدی"
 
-msgid "View"
-msgstr "چشم انداز"
-
 msgid "Pages"
 msgstr "صفحات"
 
@@ -461,6 +459,15 @@ msgstr "نمای شبکه ای"
 
 msgid "Alphabet"
 msgstr "الفبا"
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "View"
+msgstr "چشم انداز"
 
 msgid "Item Count"
 msgstr "تعداد موارد"
@@ -824,6 +831,9 @@ msgstr "تاریخ انتشار"
 msgid "Actions"
 msgstr "اقدامات"
 
+msgid "Open in WebDAV"
+msgstr ""
+
 msgid "Add Current Host"
 msgstr "افزودن میزبان فعلی"
 
@@ -1107,9 +1117,6 @@ msgstr "توضیحات :"
 
 msgid "External Link"
 msgstr "پیوند خارجی"
-
-msgid "Order"
-msgstr ""
 
 msgid "Top Rated"
 msgstr "دارای رتبه برتر"
@@ -3942,7 +3949,7 @@ msgid ""
 "written to your files."
 msgstr ""
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
 
 msgid ""
@@ -3965,7 +3972,7 @@ msgid "Video is disabled on this server, so this panel never appears."
 msgstr ""
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
 
@@ -3993,7 +4000,7 @@ msgid ""
 "here: pick another one, nothing plays with it."
 msgstr ""
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
 
 msgid ""
@@ -4302,7 +4309,7 @@ msgstr ""
 msgid "Upload complete"
 msgstr ""
 
-msgid "Upload cancelled"
+msgid "Upload canceled"
 msgstr ""
 
 msgid "Error during upload"
@@ -4487,6 +4494,8 @@ msgstr "مجموعه و کاتالوگ پاک شد"
 msgid "There Was a Problem"
 msgstr "یک مشکل وجود داشت"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -4771,8 +4780,14 @@ msgstr ""
 msgid "The Album has been deleted"
 msgstr "آلبوم حذف شده است"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "آلبوم و همه فایل ها حذف می شوند"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "آغاز به روز رسانی برچسب ها"
@@ -5178,6 +5193,9 @@ msgstr "در حال اجرای به روز رسانی بیت ها"
 msgid "Unable to add %s"
 msgstr ""
 
+msgid "Updated"
+msgstr "به روز شد"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "مجموعه و کاتالوگ بیت ها انتخاب شده، اما هیچ فایل پایگاه داده ایی برای بیت ها"
@@ -5325,6 +5343,9 @@ msgstr "هیچ کاری نمی کند، همه فایلها حذف خواهند 
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "%s : فایل پیدا نشد یا 0 بایت است"
 
+msgid "Start scanning folders"
+msgstr ""
+
 #, php-format
 msgid "File count: %d"
 msgstr ""
@@ -5372,11 +5393,11 @@ msgstr ""
 "این زیر شاخه در داخل مجموعه و کاتالوگ موجود نیست. فرایند بروزرسانی نمی تواند"
 " انجام شود."
 
-msgid "Updated"
-msgstr "به روز شد"
-
 msgid "No Update Needed"
 msgstr "به ‌روز رسانی نیاز نیست"
+
+msgid "Skipping catalog, already being processed"
+msgstr ""
 
 msgid "Catalog Cleaned"
 msgstr "مجموعه وکاتالوگ پاکسازی شد"
@@ -5563,9 +5584,6 @@ msgstr "محدودیت حافظه PHP غیرفعال است"
 msgid "Reading Catalog: \"%s\""
 msgstr "درحال خواندن مجموعه وکاتالوگ : \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr ""
-
 msgid "Look for missing file media entries"
 msgstr ""
 
@@ -5583,9 +5601,6 @@ msgstr "شروع به افزودن رسانه های جدید"
 msgid "Start verifying media related to Catalog entries"
 msgstr "آغاز تأیید رسانه های مرتبط با مجموعه وکاتالوگ های وارد شده"
 
-msgid "Start scanning folders"
-msgstr ""
-
 msgid "Start searching new media art"
 msgstr "در حال آغاز جستجوی روی جلد رسانه ای جدید"
 
@@ -5598,6 +5613,9 @@ msgid ""
 msgstr ""
 "با استفاده از افزونه musicbrainz اطلاعات برچسب را به روز کنید و جزئیات را "
 "واکشی نمائید"
+
+msgid "Updating counts"
+msgstr ""
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
@@ -6217,9 +6235,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr ""
 
-msgid "Updating counts"
-msgstr ""
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr ""
@@ -6536,6 +6551,15 @@ msgstr ""
 msgid "MusicBrainz ID (Album)"
 msgstr "شناسه MusicBrainz (آلبوم)"
 
+msgid "Playable"
+msgstr ""
+
+msgid "My Favorite Folders"
+msgstr ""
+
+msgid "Parent Folder"
+msgstr ""
+
 msgid "public"
 msgstr ""
 
@@ -6718,15 +6742,6 @@ msgstr "فایل موجود: \"%s\" را بازنویسی نکنید"
 msgid " Stars"
 msgstr ""
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Average from all users"
-msgstr "میانگین تمام کاربران"
-
 msgid "not rated yet"
 msgstr "هنوز رتبه بندی نشده"
 
@@ -6736,6 +6751,15 @@ msgstr "%s از 5"
 
 msgid "Current rating"
 msgstr "رتبه بندی فعلی"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Average from all users"
+msgstr "میانگین تمام کاربران"
 
 msgid "Unfavorite"
 msgstr ""
@@ -6989,24 +7013,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "هنرمند ناشناخته"
-
-msgid "Amazon art search"
-msgstr "جستجوی روی جلد آثار آمازون"
-
-msgid "Amazon base url"
-msgstr "آدرس اینترنتی پایه آمازون"
-
-msgid "Amazon max results pages"
-msgstr "حداکثر صفحات نتایج آمازون"
-
-msgid "Amazon Access Key ID"
-msgstr "کلید شناسه دسترسی آمازون"
-
-msgid "Amazon Secret Access Key"
-msgstr "کلید سری دسترسی آمازون"
-
-msgid "Amazon associate tag"
-msgstr "برچسب مربوط به آمازون"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""
@@ -7324,6 +7330,9 @@ msgstr "حداکثر  پهنای باند کنترل جریان (ماه)"
 msgid "Stream control bandwidth history (days)"
 msgstr "تاریخچه کنترل پهنای باند جریان (روز)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr ""
+
 msgid "Control hits per user"
 msgstr "کنترل بازدیدهای هر کاربر"
 
@@ -7333,6 +7342,9 @@ msgstr "حداکثر بازدیدهای کنترل جریان"
 msgid "Stream control hits history (days)"
 msgstr "تاریخچه بازدید های کنترل جریان (روز)"
 
+msgid "Stream control maximal hits per IP"
+msgstr ""
+
 msgid "Control time per user"
 msgstr "کنترل زمان هر کاربر"
 
@@ -7341,6 +7353,9 @@ msgstr "حداکثر زمان کنترل جریان (دقیقه)"
 
 msgid "Stream control time history (days)"
 msgstr "تاریخچه زمان کنترل جریان (روز)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr ""
 
 msgid "TheAudioDb metadata integration"
 msgstr "ادغام متادیتای TheAudioDb"

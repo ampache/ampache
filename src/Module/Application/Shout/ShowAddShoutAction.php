@@ -36,6 +36,7 @@ use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -66,7 +67,7 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($object === null || !$object->getId()) {
+        if (!$object instanceof library_item || !$object->getId()) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
 

@@ -58,6 +58,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\WithdrawableInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -645,7 +646,13 @@ final readonly class PlayAction implements ApplicationActionInterface
             return null;
         }
 
-        if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]])) {
+        if ($media instanceof WithdrawableInterface && !$media->isEnabled()) {
+            header('HTTP/1.1 404 File disabled');
+
+            return null;
+        }
+
+        if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]], null, $share_id > 0)) {
             throw new AccessDeniedException(
                 sprintf(
                     'Stream control failed for user %s on %s',
@@ -694,13 +701,13 @@ final readonly class PlayAction implements ApplicationActionInterface
             $catalog      = Catalog::create_from_id($mediaCatalogId);
             $cache_path   = (string) AmpConfig::get('cache_path', '');
             $cache_target = AmpConfig::get('cache_target', '');
-            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            // ReplayGain (_rg/_car) output is normalized per-source and must never be cached
             $file_target  = (!empty($cache_target) && $cache_target === $transcode_to && !in_array($transcode_to, Stream::NON_CACHEABLE_FORMATS, true))
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
 
             $has_cache = ($file_target !== null && is_file($file_target));
-            if ($catalog && !$has_cache) {
+            if ($catalog instanceof Catalog && !$has_cache) {
                 if (
                     ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)
                     && AmpConfig::get('cache_remote', false)
@@ -803,7 +810,7 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
-            } elseif ($catalog === null) {
+            } elseif (!$catalog instanceof Catalog) {
                 return null;
             }
 
@@ -903,7 +910,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            // A rate limited download runs long enough to be worth resuming, so honour a byte range instead of
+            // A rate limited download runs long enough to be worth resuming, so honor a byte range instead of
             // restarting from zero and re-sending everything the client already holds.
             $file_size    = Core::get_filesize($stream_file);
             $start        = 0;
@@ -1040,8 +1047,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             $player
         );
 
-        // If custom play action or already cached, do not try to transcode
-        if (!$cpaction && !$original && !$cache_file) {
+        // A custom play action skips transcoding outright; requesting the original file also covers the
+        // pre-cached case, since that branch always sets $original alongside $cache_file.
+        if (!$cpaction && !$original) {
             $valid_types = $media->get_stream_types($player);
             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
                 if ($transcode_to) {
@@ -1327,7 +1335,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
             // We don't want to wait indefinitely for a potential error so we just ignore it.
             // https://bugs.php.net/bug.php?id=47918
-            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' && isset($transcoder['stderr']) && is_resource($transcoder['stderr'])) {
                 // This to avoid hang, see http://php.net/manual/en/function.proc-open.php#89338
                 $transcode_error = fread($transcoder['stderr'], 4096);
                 if (!in_array($transcode_error, ['', '0', false], true)) {

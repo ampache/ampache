@@ -95,7 +95,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        if (!$folder_id && $folder === null) {
+        if (!$folder_id && !$folder instanceof Folder) {
             $this->logger->warning(
                 'Requested a folder that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -126,7 +126,8 @@ final readonly class ShowAction implements ApplicationActionInterface
                 (bool) AmpConfig::get('directplay'),
                 $mayInteract,
                 Stream_Playlist::check_autoplay_next(),
-                Stream_Playlist::check_autoplay_append()
+                Stream_Playlist::check_autoplay_append(),
+                $this->configContainer->isWebDavBackendEnabled()
             )->render();
             $this->ui->showFooter();
 

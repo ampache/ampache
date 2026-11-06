@@ -172,12 +172,12 @@ final class PreferencePrerequisiteCatalog
             new PreferencePrerequisite(
                 'personalfav_playlist',
                 [['personalfav_display', PreferencePrerequisite::IS_OFF]],
-                T_('The favourites widget is off, so this list is never shown.')
+                T_('The favorites widget is off, so this list is never shown.')
             ),
             new PreferencePrerequisite(
                 'personalfav_smartlist',
                 [['personalfav_display', PreferencePrerequisite::IS_OFF]],
-                T_('The favourites widget is off, so this list is never shown.')
+                T_('The favorites widget is off, so this list is never shown.')
             ),
             // the arrows collapse the sidebar whatever `sidebar_light` says, so only a missing switcher settles it
             new PreferencePrerequisite(
@@ -217,7 +217,7 @@ final class PreferencePrerequisiteCatalog
             new PreferencePrerequisite(
                 'show_license',
                 [['show_license', PreferencePrerequisite::IS_ON], ['config:licensing', PreferencePrerequisite::IS_OFF]],
-                T_('Licensing is off in the server configuration file, so no licence is ever shown.')
+                T_('Licensing is off in the server configuration file, so no license is ever shown.')
             ),
             // MediaEmbedView.php refuses to publish a session-bound stream url into someone else's page
             new PreferencePrerequisite(
@@ -280,19 +280,24 @@ final class PreferencePrerequisiteCatalog
     {
         $rules = [];
         foreach (['hits', 'time', 'bandwidth'] as $kind) {
-            // AmpacheStreamHits.php returns before the window is read when the maximum is negative
+            // AmpacheStreamHits.php returns before the window is read when both limits are negative
             $rules[] = new PreferencePrerequisite(
                 'stream_control_' . $kind . '_days',
-                [['stream_control_' . $kind . '_max', PreferencePrerequisite::IS_EMPTY]],
-                T_('The matching limit is unlimited, so this window is never used.')
+                [
+                    ['stream_control_' . $kind . '_max', PreferencePrerequisite::IS_EMPTY],
+                    ['stream_control_' . $kind . '_ip_max', PreferencePrerequisite::IS_EMPTY],
+                ],
+                T_('Every matching limit is unlimited, so this window is never used.')
             );
 
             // the three plugins return true, allowing the stream, when graphs are off
-            $rules[] = new PreferencePrerequisite(
-                'stream_control_' . $kind . '_max',
-                [['config:statistical_graphs', PreferencePrerequisite::IS_OFF]],
-                T_('Stream limits need statistical graphs, which are off in the server configuration file. Nothing is enforced.')
-            );
+            foreach (['max', 'ip_max'] as $field) {
+                $rules[] = new PreferencePrerequisite(
+                    'stream_control_' . $kind . '_' . $field,
+                    [['config:statistical_graphs', PreferencePrerequisite::IS_OFF]],
+                    T_('Stream limits need statistical graphs, which are off in the server configuration file. Nothing is enforced.')
+                );
+            }
         }
 
         return $rules;

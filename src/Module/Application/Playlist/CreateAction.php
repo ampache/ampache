@@ -37,6 +37,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -59,7 +60,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('add_playlist')
         ) {
             throw new AccessDeniedException();

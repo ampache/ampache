@@ -197,11 +197,14 @@ final class HomeSidebarView extends AbstractSidebarView
      */
     public function getSearchItems(): array
     {
-        $items = [
-            ['id' => 'sb_home_search_song', 'url' => '/search.php?type=song', 'label' => T_('Songs')],
-            ['id' => 'sb_home_search_album', 'url' => '/search.php?type=' . $this->albumType, 'label' => T_('Albums')],
-            ['id' => 'sb_home_search_artist', 'url' => '/search.php?type=artist', 'label' => T_('Artists')],
-        ];
+        $items = [];
+        if (AmpConfig::get('show_folder') && $this->folderRepository->getItemCount()) {
+            $items[] = ['id' => 'sb_home_search_folder', 'url' => '/search.php?type=folder', 'label' => T_('Folders')];
+        }
+
+        $items[] = ['id' => 'sb_home_search_song', 'url' => '/search.php?type=song', 'label' => T_('Songs')];
+        $items[] = ['id' => 'sb_home_search_album', 'url' => '/search.php?type=' . $this->albumType, 'label' => T_('Albums')];
+        $items[] = ['id' => 'sb_home_search_artist', 'url' => '/search.php?type=artist', 'label' => T_('Artists')];
 
         if (AmpConfig::get('label')) {
             $items[] = ['id' => 'sb_home_search_label', 'url' => '/search.php?type=label', 'label' => T_('Labels')];

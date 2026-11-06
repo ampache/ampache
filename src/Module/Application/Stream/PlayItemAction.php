@@ -34,6 +34,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -116,7 +117,7 @@ final class PlayItemAction extends AbstractStreamAction
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
-                    $user !== null
+                    $user instanceof User
                     && $mediaIds !== []
                     && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM, LibraryItemEnum::COLLECTION])
                 ) {

@@ -33,7 +33,7 @@ use Ampache\Module\Art\Generated\Recipe;
  *
  * Everything is drawn in a 0..100 viewBox, so one document serves every requested size. The only thing
  * the requested size changes is whether the name is drawn at all: below TEXT_FLOOR it would be an
- * unreadable smear, and the colour alone identifies the item better than grey mush.
+ * unreadable smear, and the color alone identifies the item better than gray mush.
  */
 abstract class AbstractSvgTemplate implements TemplateInterface
 {

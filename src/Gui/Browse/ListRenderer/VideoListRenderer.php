@@ -42,7 +42,7 @@ use Override;
  *
  * Its empty-state cell used to span forty-two columns.
  */
-final class VideoListRenderer extends AbstractBrowseListRenderer
+final class VideoListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

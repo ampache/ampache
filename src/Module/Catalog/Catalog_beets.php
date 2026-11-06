@@ -97,6 +97,7 @@ class Catalog_beets extends Catalog
 
     /**
      * Check if a song was added before
+     * @param array<string, mixed> $song
      * @throws Exception
      */
     public function checkSong(array $song): bool

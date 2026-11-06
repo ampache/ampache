@@ -28,7 +28,7 @@ namespace Ampache\Module\System\Plugin;
 /**
  * Shared, headless install/uninstall/upgrade operations for the three pluggable module kinds
  * (application plugins, catalog-type backends and localplay controllers) that the web admin,
- * CLI and API surfaces all drive through one path so behaviour cannot drift.
+ * CLI and API surfaces all drive through one path so behavior cannot drift.
  */
 interface PluginManagerInterface
 {

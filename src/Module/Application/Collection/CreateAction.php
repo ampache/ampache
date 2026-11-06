@@ -38,6 +38,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,7 +66,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_COLLECTION) === false
             || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('add_collection')
         ) {
             throw new AccessDeniedException();

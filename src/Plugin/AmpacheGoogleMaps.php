@@ -69,6 +69,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 
     /**
      * display_map
+     * @param array<int, array{latitude: mixed, longitude: mixed, name: mixed, last_date: mixed, hits: mixed}> $points
      */
     public function display_map(array $points): bool
     {
@@ -94,15 +95,16 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
         echo 'mapOptions);' . "\n";
         echo 'var marker;' . "\n";
         foreach ($points as $point) {
-            $ptdescr = T_("Hits") . ": " . $point['hits'] . "\\n";
+            $ptdescr = T_("Hits") . ": " . $point['hits'] . "\n";
             $ptdescr .= T_("Last activity") . ": " . date("r", $point['last_date']);
             if (!empty($point['name'])) {
-                $ptdescr = $point['name'] . "\\n" . $ptdescr;
+                $ptdescr = $point['name'] . "\n" . $ptdescr;
             }
 
             echo 'marker = new google.maps.Marker({' . "\n";
             echo 'position: { lat: ' . $point['latitude'] . ', lng: ' . $point['longitude'] . ' }, ' . "\n";
-            echo 'title:"' . $ptdescr . '"' . "\n";
+            // geo_name is a free-text API handshake field, so this must be a proper JS string literal, not concatenation
+            echo 'title:' . (json_encode($ptdescr, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?: '""') . "\n";
             echo '});' . "\n";
             echo 'marker.setMap(map);' . "\n";
         }

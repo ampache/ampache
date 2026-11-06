@@ -209,6 +209,20 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Generate a flat folder listing, for a caller listing folders rather than walking into one
+     *
+     * Only api version 8 knows about folders.
+     *
+     * @param array<int|string> $objects
+     */
+    public function foldersList(
+        int $apiVersion,
+        array $objects,
+        User $user,
+        string $auth,
+    ): string;
+
+    /**
      * @param array<int|string> $genres
      */
     public function genres(

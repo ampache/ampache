@@ -36,11 +36,11 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 {
     public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const string CONFIG_VERSION = '101'; // AMPACHE_CONFIG_VERSION
+    private const string CONFIG_VERSION = '102'; // AMPACHE_CONFIG_VERSION
 
     private const string STRUCTURE = 'public';
 
-    private const string VERSION = '8.3.0'; // AMPACHE_VERSION
+    private const string VERSION = '8.4.0'; // AMPACHE_VERSION
 
     public function __construct(private EnvironmentInterface $environment) {}
 
@@ -122,7 +122,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 
         if (!empty($results['date_timezone'])) {
             $listIdentifiers = DateTimeZone::listIdentifiers();
-            if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
+            if ($listIdentifiers !== [] && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }
         }

@@ -171,7 +171,7 @@ class AmpacheUPnP extends localplay_controller
         foreach ($playlist as $item) {
             $data          = [];
             $data['name']  = null;
-            $data['link']  = $item['link'] ?? '';
+            $data['link']  = $item['link'];
             $data['id']    = $idx;
             $data['track'] = $idx;
 
@@ -446,6 +446,7 @@ class AmpacheUPnP extends localplay_controller
      * status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      * This works as in requesting the UPnP properties
+     * @return array<string, mixed>
      */
     public function status(): array
     {

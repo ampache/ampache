@@ -35,6 +35,7 @@ use Ampache\Module\Folder\Deletion\FolderDeleterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\Model\Folder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -69,7 +70,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $folder = $this->folderRepository->findById($folderId);
         if (
-            $folder === null
+            !$folder instanceof Folder
             || !Catalog::can_remove($folder)
         ) {
             throw new AccessDeniedException(

@@ -35,6 +35,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Override;
 
 final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylistDialogAdapterInterface
@@ -96,7 +97,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
         }
 
         $user = $this->gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             return [];
         }
 
@@ -107,7 +108,7 @@ final class NewPlaylistDialogAdapter extends AbstractView implements NewPlaylist
             $collection = $this->collectionRepository->findById($collectionId);
             // A pinned collection only appears when it accepts every type being added, so picking it cannot
             // half-work; a mixed one accepts anything valid.
-            if ($collection === null || !$collection->has_collaborate($user)) {
+            if (!$collection instanceof Collection || !$collection->has_collaborate($user)) {
                 continue;
             }
 

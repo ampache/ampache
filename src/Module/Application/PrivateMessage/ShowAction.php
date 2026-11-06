@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,7 +65,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $pvmsg = $this->pmRepository->findById($msgId);
 
         if (
-            $pvmsg === null
+            !$pvmsg instanceof PrivateMessageInterface
             || $pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()
         ) {
             throw new AccessDeniedException(

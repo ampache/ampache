@@ -37,6 +37,7 @@ use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -79,7 +80,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $podcast = $this->podcastRepository->findById($podcastId);
 
-        if ($podcast === null) {
+        if (!$podcast instanceof Podcast) {
             throw new ObjectNotFoundException($podcastId);
         }
 

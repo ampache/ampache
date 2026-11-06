@@ -75,7 +75,7 @@ def action_to_schema_ref(spec: dict) -> dict[str, str]:
     that return data from a mutation (e.g. democratic, collection_create).
 
     x-rpc-mapping keys are `VERB /path` (verb-prefixed since the key-format
-    normalisation); the verb selects the operation and the rest is the path."""
+    normalization); the verb selects the operation and the rest is the path."""
     out: dict[str, str] = {}
     for method in ("get", "post", "put", "patch"):
         for key, rpc in spec.get("x-rpc-mappings", {}).items():
@@ -203,7 +203,7 @@ def is_list_envelope(schema: dict) -> tuple[bool, str | None]:
 # so the XML field list is derived from the JSON data model. This note keeps the XML
 # docs honest about how that model maps onto XML structure.
 XML_NOTE = [
-    "> **XML structure:** serialised inside a `<root>` element. Each object is an element",
+    "> **XML structure:** serialized inside a `<root>` element. Each object is an element",
     "> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also",
     "> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,",
     "> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON",
@@ -239,7 +239,7 @@ def describe_schema(spec: dict, schema: dict) -> tuple[str, list[str]]:
 
 def render_variants(spec: dict, schema: dict) -> list[str]:
     """Render a top-level `oneOf` response: the parent description followed by one
-    labelled block per alternative shape."""
+    labeled block per alternative shape."""
     blocks: list[list[str]] = []
     if schema.get("description"):
         blocks.append([schema["description"]])

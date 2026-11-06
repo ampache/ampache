@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Song\SongSorterInterface;
 use Override;
@@ -50,7 +51,7 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 

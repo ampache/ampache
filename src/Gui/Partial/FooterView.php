@@ -27,6 +27,7 @@ namespace Ampache\Gui\Partial;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
@@ -94,6 +95,6 @@ final class FooterView extends AbstractView
 
         $user = Core::get_global('user');
 
-        return $user instanceof User && $user->playlist && $user->playlist->has_items();
+        return $user instanceof User && $user->playlist instanceof Tmp_Playlist && $user->playlist->has_items();
     }
 }

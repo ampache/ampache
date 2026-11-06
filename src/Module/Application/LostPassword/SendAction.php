@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LostPassword;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormView;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -67,7 +68,7 @@ final readonly class SendAction implements ApplicationActionInterface
 
         // Do not acknowledge a password has been sent or failed and go back to login
         $loginView = $this->loginFormViewFactory->create();
-        if ($loginView !== null) {
+        if ($loginView instanceof LoginFormView) {
             echo $loginView->render();
         }
 

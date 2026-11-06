@@ -252,7 +252,7 @@ final readonly class PreferenceRepository implements PreferenceRepositoryInterfa
         ?User $user = null,
         ?bool $api = false,
     ): array {
-        if ($user !== null) {
+        if ($user instanceof User) {
             $userLimit   = "AND `preference`.`category` != 'system'";
             $userId      = $user->getId();
             $accessLevel = $user->access;

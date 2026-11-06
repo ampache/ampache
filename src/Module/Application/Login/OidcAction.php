@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Login;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Form\LoginFormView;
 use Ampache\Gui\Form\LoginFormViewFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -92,7 +93,7 @@ final readonly class OidcAction implements ApplicationActionInterface
             AmpError::add('general', T_('OpenID Connect is not configured correctly'));
 
             $loginView = $this->loginFormViewFactory->create();
-            if ($loginView !== null) {
+            if ($loginView instanceof LoginFormView) {
                 echo $loginView->render();
             }
         }

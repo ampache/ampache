@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,7 +62,7 @@ final readonly class HideAction implements ApplicationActionInterface
         $folderId = (int) ($request->getQueryParams()['folder'] ?? 0);
         $folder   = $this->playlistFolderRepository->findById($folderId);
         if (
-            $user === null
+            !$user instanceof User
             || !$folder instanceof PlaylistFolder
             || !$this->playlistFolderRepository->isReadableBy($folderId, $user->getId())
         ) {

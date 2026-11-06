@@ -121,7 +121,7 @@ TYPES: dict[str, dict[str, object]] = {
         "items": "licenses",
         "match": "the license name",
         "notes": [
-            "Licenses have no rating or favourite of their own, so this browse has none of the `rating` or `user_flag` filters and sorts the other types carry.",
+            "Licenses have no rating or favorite of their own, so this browse has none of the `rating` or `user_flag` filters and sorts the other types carry.",
         ],
     },
     "live_stream": {
@@ -216,7 +216,7 @@ TYPES: dict[str, dict[str, object]] = {
         "items": "users",
         "match": "the full name, username or email",
         "notes": [
-            "Users have no rating or favourite of their own, so this browse has no `user_flag` or `user_rating` filters.",
+            "Users have no rating or favorite of their own, so this browse has no `user_flag` or `user_rating` filters.",
         ],
     },
     "video": {
@@ -334,7 +334,7 @@ FILTERS: dict[str, tuple[str, str]] = {
     "user_catalog": ("none", "Only {items} in a catalog the current user is allowed to see. Needs no value."),
     "user_flag": (
         "0 or 1",
-        "Send `1` for {items} the current user has favourited, `0` for the ones they have not.",
+        "Send `1` for {items} the current user has favorited, `0` for the ones they have not.",
     ),
     "user_rating": (
         "0 to 5",
@@ -539,8 +539,8 @@ SORTS: dict[str, str] = {
     "update_time": "When its tags were last updated.",
     "url": "The stream URL.",
     "user": "The id of the user who owns it.",
-    "user_flag": "When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together.",
-    "user_flag_rating": "When you added it to your favourites, then your rating.",
+    "user_flag": "When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together.",
+    "user_flag_rating": "When you added it to your favorites, then your rating.",
     "userflag": "Alias of `user_flag`.",
     "username": "The owner's username.",
     "version": "Album version.",

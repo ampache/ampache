@@ -144,7 +144,7 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function getLastTrackNumber(Playlist $playlist): int;
 
     /**
-     * Counts the entries of a playlist, honouring the catalog filter the user browses under
+     * Counts the entries of a playlist, honoring the catalog filter the user browses under
      */
     public function getMediaCount(int $playlistId, string $type, int $userId, bool $catalogFilter): int;
 

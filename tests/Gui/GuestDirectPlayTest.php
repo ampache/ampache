@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Artist;
  *
  * The two were coupled, so an instance serving anonymous visitors lost the Play action on the album,
  * album disk and artist pages while browse rows kept it (CollectionRowView carries no access check).
- * These cases pin the two apart: showDirectPlay ignores $mayUse, showAdd still honours it, and the
+ * These cases pin the two apart: showDirectPlay ignores $mayUse, showAdd still honors it, and the
  * direct_play_limit guard keeps working for both.
  */
 class GuestDirectPlayTest extends MockeryTestCase

@@ -40,12 +40,10 @@ use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
 use Ampache\Gui\System\QueryStatsView;
 use Ampache\Gui\System\StandaloneErrorTypeEnum;
 use Ampache\Gui\System\StandaloneErrorView;
-use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\database_object;
-use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -137,7 +135,7 @@ class Ui implements UiInterface
      */
     public static function check_ticker(): bool
     {
-        if (defined('SSE_OUTPUT') || defined('CLI') || defined('API')) {
+        if (defined('CLI') || defined('API')) {
             return false;
         }
 
@@ -467,7 +465,7 @@ class Ui implements UiInterface
         string $slug = '',
     ): string {
         $query = ['type' => $type->value];
-        if ($user !== null && AmpConfig::get('use_auth')) {
+        if ($user instanceof User && AmpConfig::get('use_auth')) {
             // On an open instance (use_auth false) every visitor shares the same default user,
             // so a token adds nothing and would leak into publicly served pages
             $query['rsstoken'] = $user->getRssToken();
@@ -713,8 +711,9 @@ class Ui implements UiInterface
      *
      * Convenience function that, if the output is going to a browser,
      * blarfs JS to do a fancy update. Otherwise it just outputs the text.
+     * $timeout is the browser notification's display time in ms; 0 leaves it on screen until clicked away.
      */
-    public static function update_text(string $field, int|string $value): void
+    public static function update_text(string $field, int|string $value, int $timeout = 5000): void
     {
         if (defined('API')) {
             return;
@@ -729,15 +728,25 @@ class Ui implements UiInterface
         static $update_id = 1;
 
         if (defined('SSE_OUTPUT')) {
+            // the field targets a DOM id in the legacy non-SSE box markup, so here it is the notification's label instead
+            $plainValue = is_string($value) ? unhtmlentities($value) : $value;
+            $message    = ($field !== '' && $field !== '0') ? $field . ': ' . $plainValue : (string) $plainValue;
             echo "id: " . $update_id . "\n";
-            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$value, 5000]]) . "\n\n";
-        } elseif ($field !== '' && $field !== '0') {
-            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
+            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$message, $timeout]]) . "\n\n";
         } else {
-            echo "<br />" . $value . "<br /><br />\n";
+            // the legacy box renders this as markup (updateText() does `.html()`, the field-less branch echoes it raw)
+            $safeValue = is_string($value) ? scrub_out($value) : $value;
+            if ($field !== '' && $field !== '0') {
+                echo "<script>updateText('" . $field . "', '" . json_encode($safeValue) . "');</script>\n";
+            } else {
+                echo "<br />" . $safeValue . "<br /><br />\n";
+            }
         }
 
-        ob_flush();
+        if (ob_get_level() > 0) {
+            ob_flush();
+        }
+
         flush();
         $update_id++;
     }
@@ -909,7 +918,7 @@ class Ui implements UiInterface
     /**
      * The icon and link-preview tags, from whatever the administrator supplied
      *
-     * The shipped artwork is all-or-nothing: an instance that customises its icon never gets
+     * The shipped artwork is all-or-nothing: an instance that customizes its icon never gets
      * Ampache's own next to it. A vector answers every size at once, so it is preferred where it
      * works; where a raster is required and only a vector was given, the tag is left out rather
      * than filled with somebody else's logo.
@@ -1024,6 +1033,7 @@ class Ui implements UiInterface
 
     /**
      * Show the requested template file
+     * @param array<string, mixed> $context
      */
     public function show(string $template, array $context = []): void
     {
@@ -1060,7 +1070,7 @@ class Ui implements UiInterface
             // return_referer() already went through scrub_in(), so its & is html-escaped; decode before use or e() escapes it twice.
             $referer = htmlspecialchars_decode(return_referer(), ENT_NOQUOTES);
             // explicit '' survives the client-structure build unchanged, unlike $webPath; the referer already has its own "admin/" prefix when needed.
-            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath('') : $webPath;
+            $refererBase = str_starts_with($referer, 'admin/') ? $this->configContainer->getWebPath() : $webPath;
             $cancelUrl   = sprintf('%s/%s', $refererBase, $referer);
         }
 

@@ -35,6 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -63,7 +64,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         // A collection the user may not see reports as missing rather than forbidden, matching the API: telling
         // them access was denied would confirm that a private collection with that id exists.
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->isVisible($user)
         ) {
             $this->logger->warning(

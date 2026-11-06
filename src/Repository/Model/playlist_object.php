@@ -105,6 +105,7 @@ abstract class playlist_object extends database_object implements
 
     /**
      * gather_art
+     * @return list<array{db: ?int, url: string, mime: string, title: string}|array{mosaic: array{object_id: int, limit: int}, mime: string, title: string}>
      */
     public function gather_art(int $limit): array
     {

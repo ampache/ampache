@@ -27,6 +27,7 @@ namespace Ampache\Module\Label;
 
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Label;
 
 /**
  * Clears out placeholder labels that earlier scans imported from tags
@@ -50,7 +51,7 @@ final readonly class LabelGarbageCollector implements LabelGarbageCollectorInter
             }
 
             $label = $this->labelRepository->findById($labelId);
-            if ($label === null) {
+            if (!$label instanceof Label) {
                 continue;
             }
 

@@ -31,7 +31,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
  *
  * It never was the page-load toggle its name claims: link clicks have always been intercepted
  * regardless of it, and since the History API navigation rework no JavaScript reads it at all.
- * What it actually did was disable the embedded web player in favour of a popup window that
+ * What it actually did was disable the embedded web player in favor of a popup window that
  * modern browsers block, and silently switch off play-next and append.
  *
  * Rolling back to Ampache7 restores the preference: Ampache7 still lists `ajax_load` in

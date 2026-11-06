@@ -61,8 +61,8 @@ trait MediaEmbedTrait
     {
         http_response_code(MediaEmbedUnavailableView::statusFor($visible));
 
-        return (new MediaEmbedUnavailableView(
-            ($visible) ? $pageUrl : (string) AmpConfig::get_web_path()
-        ))->render();
+        return new MediaEmbedUnavailableView(
+            ($visible) ? $pageUrl : AmpConfig::get_web_path()
+        )->render();
     }
 }

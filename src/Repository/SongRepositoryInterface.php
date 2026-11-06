@@ -72,8 +72,9 @@ interface SongRepositoryInterface
      * Records a set of songs in the `deleted_song` archive and removes them
      *
      * @param list<int> $songIds
+     * @return array{albums: list<int>, artists: list<int>} the albums/artists that lost a song, for a scoped count refresh
      */
-    public function deleteByIdsWithArchive(array $songIds): void;
+    public function deleteByIdsWithArchive(array $songIds): array;
 
     /**
      * Reads the id of the song holding this file
@@ -215,7 +216,7 @@ interface SongRepositoryInterface
      * The songs of an artist a listener may be handed: unplayable ones are left out
      *
      * `getAllByArtist()` still hands back everything, because re-reading the tags of a disabled file is
-     * still a thing a catalogue has to do
+     * still a thing a catalog has to do
      *
      * @return list<int>
      */

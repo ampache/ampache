@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for api-key generation
+ * Renders the confirmation dialog for api-key generation
  */
 final class ShowGenerateApiKeyAction extends AbstractUserAction
 {

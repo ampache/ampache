@@ -136,6 +136,7 @@ if ($this->isUsingRatings()) { ?>
             <div class="rating">
                 <span class="cel_rating" id="rating_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getRating()); ?></span>
                 <span class="cel_userflag" id="userflag_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getUserFlags()); ?></span>
+                <span class="cel_global_rating" id="global_rating_<?php echo $songId; ?>_song"><?php echo $this->raw($song->getGlobalRating()); ?></span>
             </div>
         </td>
 <?php } ?>

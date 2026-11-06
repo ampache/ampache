@@ -40,6 +40,7 @@ interface MethodInterface
      * matching per-version data formatter. Only methods whose parameters or checks actually
      * differ between versions need a version-specific implementation.
      *
+     * @param array<string, mixed> $input
      * @param 3|4|5|6|8 $apiVersion
      *
      * @throws ApiMethodException

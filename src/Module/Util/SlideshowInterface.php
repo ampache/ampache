@@ -26,8 +26,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\User;
+use SimpleXMLElement;
 
 interface SlideshowInterface
 {
+    /**
+     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     */
     public function getCurrentSlideshow(User $user): array;
 }

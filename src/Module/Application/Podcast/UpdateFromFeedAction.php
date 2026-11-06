@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Feed\Exception\FeedLoadingException;
 use Ampache\Module\Podcast\PodcastUpdaterInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -72,7 +73,7 @@ final readonly class UpdateFromFeedAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $podcast = $this->podcastRepository->findById($podcastId);
-        if ($podcast === null) {
+        if (!$podcast instanceof Podcast) {
             echo T_('You have requested an object that does not exist');
         } else {
             $returnUrl = sprintf('%s/podcast.php?action=show&podcast=%d', $webPath, $podcastId);

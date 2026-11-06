@@ -35,8 +35,9 @@ class MemoryObject
 
     /**
      * memory_object constructor.
+     * @param array<string, mixed> $data
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
             if (in_array($key, $this->properties)) {
@@ -57,7 +58,7 @@ class MemoryObject
         return $this->_data[$name] ?? null;
     }
 
-    public function __set(string $name, $value)
+    public function __set(string $name, mixed $value)
     {
         if (in_array($name, $this->properties)) {
             $this->_data[$name] = $value;

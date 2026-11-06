@@ -46,6 +46,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
+use PDO;
 use PDOStatement;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -160,15 +161,15 @@ final class Stats
         // archive, aggregate then purge inside a transaction so an interruption cannot double count rows on the
         // next run. VALUES() is deprecated on MySQL 8 but its replacement isn't in MariaDB (as in Playlist::update_map)
         $dbh            = Dba::dbh();
-        $in_transaction = ($dbh !== null && $dbh->beginTransaction());
+        $in_transaction = ($dbh instanceof PDO && $dbh->beginTransaction());
         $archive        = Dba::write("INSERT INTO `object_count_archive` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` WHERE " . $where . " AND `object_type` NOT IN (" . self::_derivedTypeList() . ");", $params);
-        $insert         = ($archive !== null)
+        $insert         = ($archive instanceof PDOStatement)
             ? Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*), MIN(`date`), MAX(`date`) FROM `object_count` WHERE " . $where . " GROUP BY `object_type`, `object_id`, `user`, `count_type` ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", $params)
             : null;
-        $delete = ($insert !== null)
+        $delete = ($insert instanceof PDOStatement)
             ? Dba::write("DELETE FROM `object_count` WHERE " . $where . ";", $params)
             : null;
-        if ($archive === null || $insert === null || $delete === null) {
+        if (!$archive instanceof PDOStatement || !$insert instanceof PDOStatement || !$delete instanceof PDOStatement) {
             if ($in_transaction && $dbh->inTransaction()) {
                 $dbh->rollBack();
             }
@@ -453,7 +454,7 @@ final class Stats
 
         // add playlists to mashup browsing
         if ($type === 'playlist') {
-            return ($catalog_filter && $user !== null)
+            return ($catalog_filter && $user instanceof User)
                 ? "SELECT `playlist`.`id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` WHERE" . Catalog::get_user_filter($type, $user->getId()) . "ORDER BY `real_atime` DESC "
                 : "SELECT `playlist`.`id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` ORDER BY `real_atime` DESC ";
         }
@@ -718,13 +719,13 @@ final class Stats
     {
         // `object_count` keeps one row per play and is pruned as it ages, so grouping it reads half a million
         // rows to rebuild a date each of these tables already stores, indexed, and keeps when the history goes
-        if ($user === null && array_key_exists($input_type, self::LAST_PLAYED_TABLES)) {
+        if (!$user instanceof User && array_key_exists($input_type, self::LAST_PLAYED_TABLES)) {
             return self::_get_last_played_sql($input_type, $newest, $catalog_id);
         }
 
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest) ? 'DESC' : 'ASC';
-        $user_sql       = ($user !== null) ? " AND `object_count`.`user` = '" . $user->getId() . "'" : '';
+        $user_sql       = ($user instanceof User) ? " AND `object_count`.`user` = '" . $user->getId() . "'" : '';
         $catalog_filter = (AmpConfig::get('catalog_filter'));
         $filter_user    = ($user ?? Core::get_global('user'));
 
@@ -743,7 +744,7 @@ final class Stats
             $body .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if ($catalog_filter && in_array($type, ['video', 'artist', 'album_artist', 'album', 'album_disk', 'song'], true) && $filter_user !== null) {
+        if ($catalog_filter && in_array($type, ['video', 'artist', 'album_artist', 'album', 'album_disk', 'song'], true) && $filter_user instanceof User) {
             $body .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
         }
 
@@ -762,7 +763,7 @@ final class Stats
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user !== null) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
             $body .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user->getId() . ")";
         }
 
@@ -777,7 +778,7 @@ final class Stats
         // playlists aren't the same as other objects so change the sql
         if ($type === 'playlist') {
             $sql = "SELECT `id`, `last_update` AS `date` FROM `playlist`";
-            if ($user !== null) {
+            if ($user instanceof User) {
                 $sql .= " WHERE `user` = '" . $user->getId() . "'";
                 if ($catalog_filter) {
                     $sql .= " AND" . Catalog::get_user_filter($type, $user->getId());
@@ -980,7 +981,7 @@ final class Stats
                 $sql .= " WHERE `last_update` >= '" . $date . "' ";
             }
 
-            if ($catalog_filter && $filter_user !== null) {
+            if ($catalog_filter && $filter_user instanceof User) {
                 $sql .= ($threshold > 0)
                     ? " AND" . Catalog::get_user_filter($type, $filter_user->getId())
                     : " WHERE" . Catalog::get_user_filter($type, $filter_user->getId());
@@ -996,7 +997,7 @@ final class Stats
                 $sql .= " AND `date` >= '" . $date . "' ";
             }
 
-            if ($catalog_filter && $filter_user !== null) {
+            if ($catalog_filter && $filter_user instanceof User) {
                 $sql .= " AND" . Catalog::get_user_filter("object_count_" . $type, $filter_user->getId());
             }
 
@@ -1006,7 +1007,7 @@ final class Stats
         }
 
         if (
-            $user === null
+            !$user instanceof User
             && $catalog_id === 0
             && AmpConfig::get('cron_cache')
             && !$addAdditionalColumns
@@ -1052,7 +1053,7 @@ final class Stats
                 $type  = 'song';
             }
 
-            if ($user !== null) {
+            if ($user instanceof User) {
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' AND `object_count`.`user` = " . $user->getId();
             } else {
                 $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' ";
@@ -1088,7 +1089,7 @@ final class Stats
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
 
-            if ($catalog_filter && in_array($type, ['artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video'], true) && $filter_user !== null) {
+            if ($catalog_filter && in_array($type, ['artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video'], true) && $filter_user instanceof User) {
                 $sql .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
             }
 
@@ -1102,7 +1103,7 @@ final class Stats
             }
 
             $rating_filter = AmpConfig::get_rating_filter();
-            if ($rating_filter > 0 && $rating_filter <= 5 && $user !== null) {
+            if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
                 $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user->getId() . ")";
             }
 
@@ -1210,15 +1211,15 @@ final class Stats
         $columns = "(`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`)";
         $dbh     = Dba::dbh();
 
-        $in_transaction = ($dbh !== null && $dbh->beginTransaction());
+        $in_transaction = ($dbh instanceof PDO && $dbh->beginTransaction());
         // INSERT IGNORE throughout: the unique key makes a repeated restore a no-op instead of a duplicate
         $restore = Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " SELECT `object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` FROM `object_count_archive`;");
         $derived = 0;
         foreach (self::_derivedSelects() as $select) {
-            $result = ($restore !== null)
+            $result = ($restore instanceof PDOStatement)
                 ? Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " " . $select . ";")
                 : null;
-            if ($result === null) {
+            if (!$result instanceof PDOStatement) {
                 $restore = null;
                 break;
             }
@@ -1227,19 +1228,19 @@ final class Stats
         }
 
         // subtract the restored detail from the summary, then drop any row that is fully accounted for
-        $subtract = ($restore !== null)
+        $subtract = ($restore instanceof PDOStatement)
             ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::_derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, CAST(`summary`.`count` AS SIGNED) - CAST(`restored`.`restored` AS SIGNED));")
             : null;
-        $cleanup = ($subtract !== null)
+        $cleanup = ($subtract instanceof PDOStatement)
             ? Dba::write("DELETE FROM `object_count_summary` WHERE `count` <= 0;")
             : null;
         // the archive only holds rows that are currently consolidated out, so empty it once they are back.
         // DELETE not TRUNCATE: TRUNCATE is DDL and would implicitly commit the transaction
-        $purge = ($cleanup !== null)
+        $purge = ($cleanup instanceof PDOStatement)
             ? Dba::write("DELETE FROM `object_count_archive`;")
             : null;
 
-        if ($purge === null) {
+        if (!$purge instanceof PDOStatement) {
             if ($in_transaction && $dbh->inTransaction()) {
                 $dbh->rollBack();
             }

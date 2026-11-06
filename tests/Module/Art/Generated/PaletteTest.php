@@ -28,7 +28,7 @@ namespace Ampache\Module\Art\Generated;
 use PHPUnit\Framework\TestCase;
 
 /**
- * The colour has to be stable: an album that changed shade between two page loads would look like a
+ * The color has to be stable: an album that changed shade between two page loads would look like a
  * different album, and the family effect only works if every release of one artist lands on one pair.
  */
 class PaletteTest extends TestCase
@@ -52,8 +52,8 @@ class PaletteTest extends TestCase
             $this->assertArrayHasKey('ground', $pair);
             $this->assertArrayHasKey('accent', $pair);
             $this->assertArrayHasKey('face', $pair);
-            foreach ($pair as $colour) {
-                $this->assertMatchesRegularExpression('/^#[0-9a-f]{6}$/', $colour);
+            foreach ($pair as $color) {
+                $this->assertMatchesRegularExpression('/^#[0-9a-f]{6}$/', $color);
             }
         }
     }

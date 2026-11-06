@@ -35,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 
 class AlbumDiskRepositoryTest extends TestCase
 {
+    private CatalogMapRepositoryInterface&MockObject $catalogMapRepository;
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
     private ModelFactoryInterface&MockObject $modelFactory;
@@ -65,9 +66,10 @@ class AlbumDiskRepositoryTest extends TestCase
     {
         $albumDiskId = 666;
 
-        $this->connection->expects(static::once())
+        // false for the findId() lookup, then the catalog read back after insert (an orphaned album can force it to 0)
+        $this->connection->expects(static::exactly(2))
             ->method('fetchOne')
-            ->willReturn(false);
+            ->willReturn(false, 7);
 
         $matcher = static::exactly(2);
 
@@ -87,7 +89,26 @@ class AlbumDiskRepositoryTest extends TestCase
             ->method('getLastInsertedId')
             ->willReturn($albumDiskId);
 
+        $this->catalogMapRepository->expects(static::once())
+            ->method('add')
+            ->with(7, 'album_disk', $albumDiskId);
+
         self::assertSame($albumDiskId, $this->subject->check(21, 2, 7));
+    }
+
+    public function testCheckDoesNotMapAnOrphanedDiskToACatalog(): void
+    {
+        $this->connection->method('fetchOne')
+            ->willReturn(false, 0);
+        $this->connection->method('query')
+            ->willReturn($this->createMock(PDOStatement::class));
+        $this->connection->method('getLastInsertedId')
+            ->willReturn(666);
+
+        $this->catalogMapRepository->expects(static::never())
+            ->method('add');
+
+        self::assertSame(666, $this->subject->check(21, 2, 0));
     }
 
     public function testCheckMatchesOnTheSubtitleWhenOneIsGiven(): void
@@ -344,14 +365,16 @@ class AlbumDiskRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->connection           = $this->createMock(DatabaseConnectionInterface::class);
+        $this->configContainer      = $this->createMock(ConfigContainerInterface::class);
+        $this->modelFactory         = $this->createMock(ModelFactoryInterface::class);
+        $this->catalogMapRepository = $this->createMock(CatalogMapRepositoryInterface::class);
 
         $this->subject = new AlbumDiskRepository(
             $this->connection,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->catalogMapRepository
         );
     }
 }

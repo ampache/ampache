@@ -39,6 +39,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,7 +69,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
         $userId = (int) $this->requestParser->getFromRequest('user_id');
 
         $user = $this->userRepository->findById($userId);
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new ObjectNotFoundException('user_id');
         }
 

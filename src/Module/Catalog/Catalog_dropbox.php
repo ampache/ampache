@@ -261,6 +261,8 @@ class Catalog_dropbox extends Catalog
 
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Dropbox Remote Update') . '. . .');
         }
 
         $songsadded = $this->update_remote_catalog();
@@ -433,14 +435,14 @@ class Catalog_dropbox extends Catalog
                     $songRepository->setField($song->id, SongFieldEnum::FILE, $song->file);
                     $search_count++;
                     if (Ui::check_ticker()) {
-                        Ui::update_text('count_art_' . $this->getId(), $search_count);
+                        Ui::update_text(T_('Searched'), $search_count);
                     }
                 }
             }
         }
 
         // One last time for good measure
-        Ui::update_text('count_art_' . $this->getId(), $search_count);
+        Ui::update_text(T_('Searched'), $search_count, 10000);
 
         return true;
     }
@@ -698,7 +700,7 @@ class Catalog_dropbox extends Catalog
         /* Update the Catalog last_add */
         $this->update_last_add();
 
-        Ui::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
+        Ui::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count), 10000);
 
         return $songsadded;
     }
@@ -748,7 +750,7 @@ class Catalog_dropbox extends Catalog
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
                     $info            = ($song->id !== 0) ? self::update_song_from_tags($results, $song) : [];
-                    if ($info['change']) {
+                    if ($info['change'] ?? false) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated++;
                     } else {

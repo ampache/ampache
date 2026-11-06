@@ -40,7 +40,7 @@ use Override;
  *
  * Its empty state declared ten columns where the header emits eight to ten.
  */
-final class PlaylistListRenderer extends AbstractBrowseListRenderer
+final class PlaylistListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

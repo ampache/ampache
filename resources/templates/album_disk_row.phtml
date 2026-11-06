@@ -78,6 +78,7 @@ if ($this->isUsingRatings()) { ?>
         <div class="rating">
             <span class="cel_rating" id="rating_<?php echo $albumId; ?>_album_disk"><?php echo $this->raw($album->getRating()); ?></span>
             <span class="cel_userflag" id="userflag_<?php echo $albumId; ?>_album_disk"><?php echo $this->raw($album->getUserFlags()); ?></span>
+            <span class="cel_global_rating" id="global_rating_<?php echo $albumId; ?>_album_disk"><?php echo $this->raw($album->getGlobalRating()); ?></span>
         </div>
     </td>
 <?php } ?>
@@ -99,6 +100,6 @@ if ($album->isEditable()) { ?>
         <a id="edit_album_disk_<?php echo $albumId; ?>" onclick="showEditDialog('album_disk_row', '<?php echo $albumId; ?>', 'edit_album_disk_<?php echo $albumId; ?>', '<?php echo $this->e($album->getEditButtonTitle()); ?>', 'album_disk_')"><?php echo $this->raw($album->getEditIcon()); ?></a>
 <?php }
 if ($album->canBeDeleted()) { ?>
-        <a id="delete_album_<?php echo $album->getAlbumId(); ?>" href="<?php echo $this->e($album->getDeletionUrl()); ?>"><?php echo $this->raw($album->getDeletionIcon()); ?></a>
+        <a id="delete_album_disk_<?php echo $albumId; ?>" href="<?php echo $this->e($album->getDeletionUrl()); ?>"><?php echo $this->raw($album->getDeletionIcon()); ?></a>
 <?php } ?>
     </td>

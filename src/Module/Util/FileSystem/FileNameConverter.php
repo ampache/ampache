@@ -52,7 +52,7 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         $result = false;
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
-            if ($catalog === null) {
+            if (!$catalog instanceof Catalog) {
                 break;
             }
 

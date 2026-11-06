@@ -187,7 +187,7 @@ abstract class AbstractHandshakeMethod implements MethodInterface
                 }
 
                 // Now we're sure there is an ACL line matching this user, pull their password
-                $realpwd = $this->userRepository->retrievePasswordFromUser($client?->getId() ?? 0);
+                $realpwd = $this->userRepository->retrievePasswordFromUser($client->getId());
                 if (!$realpwd) {
                     debug_event(static::class, 'Unable to find user with userid of ' . $userId, 1);
                     AmpError::add('api', 'Incorrect username or password');

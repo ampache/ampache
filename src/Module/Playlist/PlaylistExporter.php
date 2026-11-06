@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -157,7 +158,7 @@ final readonly class PlaylistExporter implements PlaylistExporterInterface
                 : $dirname;
             foreach ($medias as $media) {
                 $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
-                if ($url !== null) {
+                if ($url instanceof Stream_Url) {
                     $playlist->urls[] = $url;
                 }
             }

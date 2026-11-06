@@ -256,6 +256,11 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
         return $this->album->get_f_tags();
     }
 
+    public function getGlobalRating(): string
+    {
+        return Rating::show_global_rating($this->album->getId(), 'album');
+    }
+
     public function getId(): int
     {
         return $this->album->getId();
@@ -299,7 +304,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getRating(): string
     {
-        return Rating::show($this->album->getId(), 'album', true);
+        return Rating::show($this->album->getId(), 'album');
     }
 
     public function getShareUi(): string

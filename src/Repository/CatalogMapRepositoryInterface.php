@@ -50,6 +50,12 @@ interface CatalogMapRepositoryInterface
     public function collectGarbage(array $tables): void;
 
     /**
+     * The scoped sibling of collectGarbage(): checks whether one specific object_id is still valid,
+     * rather than scanning the whole table, for a caller that already knows which row might be orphaned
+     */
+    public function collectGarbageForObject(CatalogMapTableEnum $table, int $objectId): void;
+
+    /**
      * Removes every mapping of one object
      */
     public function deleteForObject(string $objectType, int $objectId): void;

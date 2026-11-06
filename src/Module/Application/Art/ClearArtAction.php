@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,7 +57,7 @@ final class ClearArtAction extends AbstractArtAction
 
         $item = $this->getItem($gatekeeper);
 
-        if ($item === null) {
+        if (!$item instanceof library_item) {
             throw new AccessDeniedException();
         }
 

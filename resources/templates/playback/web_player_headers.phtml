@@ -296,7 +296,7 @@ if ($this->isIframed()) { ?>
             var spokes = 120;
             var stride = Math.max(1, Math.floor(bins / spokes));
             vizTick += 0.004;
-            var hueShift = (vizTick * 40) % 360;   // slow global colour drift
+            var hueShift = (vizTick * 40) % 360;   // slow global color drift
             ctx.lineCap = 'round';
             // additive blending so overlapping bars, glow and sparkles bloom
             ctx.globalCompositeOperation = 'lighter';
@@ -536,7 +536,7 @@ if ($this->isIframed()) { ?>
             analyserNode = audioContext.createAnalyser();
             analyserNode.fftSize = 2048;
             buildEqualizer();
-            // mediaSource -> [EQ bands] -> replaygainNode -> destination (+ analyser tap)
+            // mediaSource -> [EQ bands] -> replaygainNode -> destination (+ analyzer tap)
             if (eqFilters.length) {
                 mediaSource.connect(eqFilters[0]);
                 for (var i = 0; i < eqFilters.length - 1; i++) {

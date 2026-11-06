@@ -1,46 +1,10 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Maxime C., 2015-2016
-# Aisyk <aisyko@gmail.com>, 2015-2016
-# Arnaud Bey <arnaud.bey@gmail.com>, 2015
-# UncleBone <arnothebig@yahoo.fr>, 2016-2017
-# Axel S, 2022
-# Axel S, 2022
-# Bastien Paroisse <silaor@yahoo.fr>, 2020
-# Benoit Begue <benoit.begue@gmail.com>, 2019
-# Casper Rilaun <casper@rilaun.fr>, 2019
-# Cyril <cyril.novel@gmail.com>, 2023
-# e4d7a2f8e75bf319f2abf49dd8547841_b6a85e7, 2020
-# Epierre p, 2020-2021
-# flow gunso <flow.gunso@gmail.com>, 2019
-# François CHAUSSIN, 2021
-# François CHAUSSIN, 2021
-# Fufroma, 2023
-# Fufroma, 2024-2025
-# Fufroma, 2023
-# e4d7a2f8e75bf319f2abf49dd8547841_b6a85e7, 2020
-# Hugo Robert <hugo.robert@protonmail.ch>, 2020-2021
-# iambluedev <iambluedev@gmx.fr>, 2018
-# Jean Fontaine <balayop@yahoo.fr>, 2018
-# Jean-Philippe F <douglas.riper@free.fr>, 2019
-# Lanxor, 2020
-# marcpaulchand <paul@u129.fr>, 2024
-# Morgan <mfouillat+github@gmail.com>, 2016
-# Morgan <mfouillat+github@gmail.com>, 2016
-# Nicolas Chartoire <nicolas.chartoire@gmail.com>, 2015
-# Nicolas Jeannerod <niols@niols.fr>, 2016
-# Lanxor, 2020
-# Paul rousselet, 2024
-# Paul rousselet, 2024
-# marcpaulchand <paul@u129.fr>, 2024
-# Peter Parker <transifex@govn.eu>, 2021
-# simon511000 <simonledoux012345@gmail.com>, 2019
-# tap3 tap3 <bs-flip@gmx.com>, 2016
-# Lanxor, 2020
-# tsointsoin <mike.gelabs@gmail.com>, 2021
+# lachlan <lachlan.00@gmail.com>, 2026
 # Fufroma, 2026
 # 
 #, fuzzy
@@ -48,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-10-20 13:11+1000\n"
+"POT-Creation-Date: 2026-11-05 14:14+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fufroma, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/ampache/teams/40984/fr_FR/)\n"
@@ -487,9 +451,6 @@ msgstr "de"
 msgid "Next"
 msgstr "Suivant"
 
-msgid "View"
-msgstr "Voir"
-
 msgid "Pages"
 msgstr "Pages"
 
@@ -501,6 +462,15 @@ msgstr "Vue en grille"
 
 msgid "Alphabet"
 msgstr "Alphabet"
+
+msgid "Sort By"
+msgstr "Trier par"
+
+msgid "Order"
+msgstr "Ordre"
+
+msgid "View"
+msgstr "Voir"
 
 msgid "Item Count"
 msgstr "Nombre d'éléments"
@@ -864,6 +834,9 @@ msgstr "Date de sortie"
 msgid "Actions"
 msgstr "Actions"
 
+msgid "Open in WebDAV"
+msgstr "Ouvrir dans WebDAV"
+
 msgid "Add Current Host"
 msgstr "Ajouter l'hôte courant"
 
@@ -1163,9 +1136,6 @@ msgstr "Description :"
 
 msgid "External Link"
 msgstr "Lien externe"
-
-msgid "Order"
-msgstr "Ordre"
 
 msgid "Top Rated"
 msgstr "Mieux notés"
@@ -4422,10 +4392,9 @@ msgstr ""
 "La note minimale est de 0, ce qui désactive toute la synchronisation : rien "
 "n'est écrit dans vos fichiers."
 
-msgid "The favourites widget is off, so this list is never shown."
+msgid "The favorites widget is off, so this list is never shown."
 msgstr ""
-"Le panneau des favoris est désactivé, cette liste n'est donc jamais "
-"affichée."
+"Le widget des favoris est désactivé, cette liste n'est donc jamais affichée."
 
 msgid ""
 "The sidebar can no longer be collapsed, and this only applies to its "
@@ -4456,11 +4425,11 @@ msgstr ""
 "La vidéo est désactivée sur ce serveur, ce panneau n'apparaît donc jamais."
 
 msgid ""
-"Licensing is off in the server configuration file, so no licence is ever "
+"Licensing is off in the server configuration file, so no license is ever "
 "shown."
 msgstr ""
-"Les licences sont désactivées dans le fichier de configuration du serveur, "
-"aucune licence n'est donc jamais affichée."
+"La gestion des licences est désactivée dans le fichier de configuration du "
+"serveur, aucune licence n'est donc jamais affichée."
 
 msgid ""
 "Every stream on this server needs a session, so no embedded player is ever "
@@ -4496,9 +4465,10 @@ msgstr ""
 "Ce type de lecture n'est plus autorisé sur le serveur, il n'est donc pas "
 "proposé ici : choisissez-en un autre, rien ne se lit avec celui-là."
 
-msgid "The matching limit is unlimited, so this window is never used."
+msgid "Every matching limit is unlimited, so this window is never used."
 msgstr ""
-"La limite correspondante est illimitée, cette fenêtre ne sert donc jamais."
+"Toutes les limites correspondantes sont illimitées, ce panneau n'est donc "
+"jamais utilisé."
 
 msgid ""
 "Stream limits need statistical graphs, which are off in the server "
@@ -4836,8 +4806,8 @@ msgstr "Chargement en cours"
 msgid "Upload complete"
 msgstr "Chargement réussi"
 
-msgid "Upload cancelled"
-msgstr "Chargement annulé"
+msgid "Upload canceled"
+msgstr "Envoi annulé"
 
 msgid "Error during upload"
 msgstr "Erreur durant le chargement"
@@ -5021,6 +4991,8 @@ msgstr "Le catalogue a été supprimé"
 msgid "There Was a Problem"
 msgstr "Il y a eu un problème"
 
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
@@ -5316,8 +5288,14 @@ msgstr "Vous avez demandé un objet qui n'existe plus"
 msgid "The Album has been deleted"
 msgstr "L'Album a été supprimé"
 
+msgid "The Disk has been deleted"
+msgstr "Le disque a été supprimé"
+
 msgid "The Album and all files will be deleted"
 msgstr "L'Album et tous les fichiers seront supprimés"
+
+msgid "The Disk and all files will be deleted"
+msgstr "Le disque et tous les fichiers seront supprimés"
 
 msgid "Starting Update from Tags"
 msgstr "Démarrage de la mise à jour à partir des tags"
@@ -5745,6 +5723,9 @@ msgstr "Mise à jour de beets"
 msgid "Unable to add %s"
 msgstr "Impossible d'ajouter %s"
 
+msgid "Updated"
+msgstr "Mis à jour"
+
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
 msgstr ""
 "Catalogue Beets sélectionné, mais aucun fichier de DB Beets n'a été fourni"
@@ -5894,6 +5875,9 @@ msgstr "Tous les fichiers seront supprimés. Ne rien faire"
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "Le fichier n'a pas été trouvé ou est de 0 Octet : %s"
 
+msgid "Start scanning folders"
+msgstr "Démarrer l'analyse des dossiers"
+
 #, php-format
 msgid "File count: %d"
 msgstr "Nombre de fichiers : %d"
@@ -5945,11 +5929,11 @@ msgstr ""
 "Ce sous-répertoire ne fait pas partie d'un catalogue existant. La mise à "
 "jour ne peut pas être traitée."
 
-msgid "Updated"
-msgstr "Mis à jour"
-
 msgid "No Update Needed"
 msgstr "Aucune mise à jour nécessaire"
+
+msgid "Skipping catalog, already being processed"
+msgstr "Catalogue ignoré, il est déjà en cours de traitement"
 
 msgid "Catalog Cleaned"
 msgstr "Catalogue Nettoyé"
@@ -6147,9 +6131,6 @@ msgstr "Limite de mémoire PHP désactivée"
 msgid "Reading Catalog: \"%s\""
 msgstr "Lecture du catalogue : \"%s\""
 
-msgid "Skipping catalog, already being processed"
-msgstr "Catalogue ignoré, il est déjà en cours de traitement"
-
 msgid "Look for missing file media entries"
 msgstr "Rechercher les entrées de médias dont le fichier est manquant"
 
@@ -6167,9 +6148,6 @@ msgstr "Commencer à ajouter les nouveaux médias"
 msgid "Start verifying media related to Catalog entries"
 msgstr "Commencez à vérifier les médias liés aux entrées du catalogue"
 
-msgid "Start scanning folders"
-msgstr "Démarrer l'analyse des dossiers"
-
 msgid "Start searching new media art"
 msgstr "Démarrer la recherche des nouvelles jaquettes"
 
@@ -6183,6 +6161,9 @@ msgid ""
 msgstr ""
 "Mettre à jour les informations des labels et récupérer les détails via le "
 "plugin MusicBrainz"
+
+msgid "Updating counts"
+msgstr "Mise à jour des compteurs"
 
 msgid "Update table mapping, counts and delete garbage data"
 msgstr ""
@@ -6826,9 +6807,6 @@ msgstr ""
 msgid "%d rows restored, %d album/artist/podcast rows rebuilt"
 msgstr "%d lignes restaurées, %d lignes album/artiste/podcast reconstruites"
 
-msgid "Updating counts"
-msgstr "Mise à jour des compteurs"
-
 #, php-format
 msgid "%d rows would be restored (dry-run)"
 msgstr "%d lignes seraient restaurées (simulation)"
@@ -7165,6 +7143,15 @@ msgstr "Mon dernier joué ou ignoré (Album)"
 msgid "MusicBrainz ID (Album)"
 msgstr "MusicBrainz ID (Album)"
 
+msgid "Playable"
+msgstr "Lisible"
+
+msgid "My Favorite Folders"
+msgstr "Mes dossiers favoris"
+
+msgid "Parent Folder"
+msgstr "Dossier parent"
+
 msgid "public"
 msgstr "publique"
 
@@ -7349,16 +7336,6 @@ msgstr "Ne pas écraser un fichier existant : \"%s\""
 msgid " Stars"
 msgstr " Étoiles"
 
-#, php-format
-msgid "%d vote"
-msgid_plural "%d votes"
-msgstr[0] "%d vote"
-msgstr[1] "%d votes"
-msgstr[2] "%d votes"
-
-msgid "Average from all users"
-msgstr "Moyenne de tous les utilisateurs"
-
 msgid "not rated yet"
 msgstr "non évalué"
 
@@ -7368,6 +7345,16 @@ msgstr "%s de 5"
 
 msgid "Current rating"
 msgstr "Évaluation actuelle"
+
+#, php-format
+msgid "%d vote"
+msgid_plural "%d votes"
+msgstr[0] "%d vote"
+msgstr[1] "%d votes"
+msgstr[2] "%d votes"
+
+msgid "Average from all users"
+msgstr "Moyenne de tous les utilisateurs"
 
 msgid "Unfavorite"
 msgstr "Retirer des favoris"
@@ -7645,24 +7632,6 @@ msgstr "Ajouter à une playlist / collection"
 
 msgid "Unknown Artist"
 msgstr "Artiste inconnu"
-
-msgid "Amazon art search"
-msgstr "Recherche de jaquettes sur Amazon"
-
-msgid "Amazon base url"
-msgstr "URL de base Amazon"
-
-msgid "Amazon max results pages"
-msgstr "Nombre maximum de pages de résultats Amazon"
-
-msgid "Amazon Access Key ID"
-msgstr "ID de clef d'accès Amazon"
-
-msgid "Amazon Secret Access Key"
-msgstr "Clef d'accès secrète Amazon"
-
-msgid "Amazon associate tag"
-msgstr "Tag associé Amazon"
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr "Similarité sonore depuis un serveur AudioMuse-AI"
@@ -8006,6 +7975,9 @@ msgstr "Contrôle des flux : bande passante maximale (mois)"
 msgid "Stream control bandwidth history (days)"
 msgstr "Contrôle des flux : historique de la bande passante (jours)"
 
+msgid "Stream control maximal bandwidth per IP (month)"
+msgstr "Contrôle de flux : bande passante maximale par IP (mois)"
+
 msgid "Control hits per user"
 msgstr "Contrôler le nombre de lectures par utilisateur"
 
@@ -8015,6 +7987,9 @@ msgstr "Contrôle des flux : nombre maximum de lectures"
 msgid "Stream control hits history (days)"
 msgstr "Contrôle des flux : historique des lectures (jours)"
 
+msgid "Stream control maximal hits per IP"
+msgstr "Contrôle de flux : nombre maximal de lectures par IP"
+
 msgid "Control time per user"
 msgstr "Contrôler la durée par utilisateur"
 
@@ -8023,6 +7998,9 @@ msgstr "Contrôle des flux : durée maximale (minutes)"
 
 msgid "Stream control time history (days)"
 msgstr "Contrôle des flux : historique de la durée (jours)"
+
+msgid "Stream control maximal time per IP (minutes)"
+msgstr "Contrôle de flux : durée maximale par IP (minutes)"
 
 msgid "TheAudioDb metadata integration"
 msgstr "Intégration des métadonnées TheAudioDb"

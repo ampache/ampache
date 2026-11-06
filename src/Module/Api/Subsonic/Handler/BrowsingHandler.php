@@ -229,9 +229,9 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             return;
         }
 
-        $artist = new Artist(Subsonic_Api::getAmpacheId($sub_id));
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
         // a withdrawn artist is refused like an id that was never there, so nothing says it exists
-        if ($artist->isNew() || !$artist->isVisible($user)) {
+        if ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -257,14 +257,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $artist = Subsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
+        if ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -295,14 +294,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getartistinfo2(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
-        $artist = Subsonic_Api::getAmpacheObject($sub_id);
-        if (!$artist instanceof Artist || $artist->isNew()) {
+        $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
+        if ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -420,26 +418,34 @@ final class BrowsingHandler implements BrowsingHandlerInterface
             $fcatalogs = $catalogs;
         }
 
-        // the folder tree only exists once a catalog scan has built `folder_map`; before that the index
-        // would come back empty, so fall back to the artists the specification actually asks for
-        $children = ($fcatalogs === [])
+        // the folder tree only exists once a catalog has been scanned for folders; a catalog without one
+        // (never scanned, or scanned outside a directory walk entirely) falls back to its own artists
+        // rather than disappearing just because a sibling catalog in the same request has a folder tree
+        $catalogsWithFolders    = ($fcatalogs === []) ? [] : $this->folderRepository->getCatalogIdsWithFolderMap($fcatalogs);
+        $catalogsWithoutFolders = array_values(array_diff($fcatalogs, $catalogsWithFolders));
+
+        $children = ($catalogsWithFolders === [])
             ? []
-            : $this->folderRepository->getCatalogRootChildren($fcatalogs, $user->getId());
-        $artists  = ($fcatalogs !== [] && $children === [])
-            ? Catalog::get_artist_arrays($fcatalogs)
-            : [];
+            : $this->folderRepository->getCatalogRootChildren($catalogsWithFolders, $user->getId());
+        $artists  = ($catalogsWithoutFolders === [])
+            ? []
+            : Catalog::get_artist_arrays($catalogsWithoutFolders);
 
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
-            $response = ($children === [])
-                ? $this->subsonicXmlData->addIndexes($response, $artists, $lastmodified)
-                : $this->subsonicXmlData->addFolderIndexes($response, $children, $lastmodified);
+            $response = match (true) {
+                $artists === [] => $this->subsonicXmlData->addFolderIndexes($response, $children, $lastmodified),
+                $children === [] => $this->subsonicXmlData->addIndexes($response, $artists, $lastmodified),
+                default => $this->subsonicXmlData->addMixedIndexes($response, $children, $artists, $lastmodified),
+            };
         } else {
             $response = $this->responseHandler->addJsonResponse(__FUNCTION__);
-            $response = ($children === [])
-                ? $this->subsonicJsonData->addIndexes($response, $artists, $lastmodified)
-                : $this->subsonicJsonData->addFolderIndexes($response, $children, $lastmodified);
+            $response = match (true) {
+                $artists === [] => $this->subsonicJsonData->addFolderIndexes($response, $children, $lastmodified),
+                $children === [] => $this->subsonicJsonData->addIndexes($response, $artists, $lastmodified),
+                default => $this->subsonicJsonData->addMixedIndexes($response, $children, $artists, $lastmodified),
+            };
         }
         $this->responseHandler->responseOutput($input, __FUNCTION__, $response);
     }
@@ -947,5 +953,26 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         return $albums;
+    }
+
+    /**
+     * Resolves a `getArtist`-style sub_id to the artist it names. A folder sub_id (e.g. from `getIndexes`'s
+     * folder tree) resolves too, when every song below it belongs to the same artist; a client that treats
+     * every `getIndexes` entry as artist-openable sends one of those here instead of using `getMusicDirectory`.
+     */
+    private function resolveArtistFromSubId(string $sub_id, int $userId): ?Artist
+    {
+        if (is_numeric($sub_id) || Subsonic_Api::getAmpacheType($sub_id) === 'artist') {
+            return new Artist(Subsonic_Api::getAmpacheId($sub_id));
+        }
+
+        $folder = Subsonic_Api::getAmpacheObject($sub_id);
+        if (!$folder instanceof Folder) {
+            return null;
+        }
+
+        $artistId = $this->folderRepository->resolveSingleArtistId($folder, $userId);
+
+        return ($artistId === null) ? null : new Artist($artistId);
     }
 }

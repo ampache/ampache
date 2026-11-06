@@ -81,6 +81,8 @@ interface AlbumDiskViewAdapterInterface
 
     public function getGenre(): string;
 
+    public function getGlobalRating(): string;
+
     public function getId(): int;
 
     public function getMoods(): string;

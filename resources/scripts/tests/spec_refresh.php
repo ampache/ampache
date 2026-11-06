@@ -64,7 +64,7 @@ foreach ([$specPath, $testPath, $docPath] as $required) {
     }
 }
 
-// The spec is `text=auto`, so a windows checkout holds CRLF while the commit holds LF. Hash the normalised
+// The spec is `text=auto`, so a windows checkout holds CRLF while the commit holds LF. Hash the normalized
 // content, exactly as OpenSubsonicSpecVersionTest does, or the two disagree on line endings alone.
 $spec = str_replace("\r\n", "\n", (string) file_get_contents($specPath));
 $hash = hash('sha256', $spec);

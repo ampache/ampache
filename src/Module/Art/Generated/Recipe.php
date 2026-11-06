@@ -37,7 +37,7 @@ final readonly class Recipe
      * @param string $label the type shown above the name, already translated
      * @param string $motif which drawing to use: record, medallion, waveform, tracklist
      * @param string $seed drives every deterministic choice, so a tile never changes on its own
-     * @param list<string> $voices names whose accents colour a tracklist, empty for the other motifs
+     * @param list<string> $voices names whose accents color a tracklist, empty for the other motifs
      * @param array{ground: string, accent: string, face: string} $palette
      */
     public function __construct(

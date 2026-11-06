@@ -72,7 +72,7 @@ final class PageMeta
     {
         $meta          = self::$current;
         self::$current = null;
-        if ($meta === null) {
+        if (!$meta instanceof \Ampache\Gui\Partial\PageMeta) {
             return '';
         }
 
@@ -148,7 +148,7 @@ final class PageMeta
      */
     public static function setPlayer(string $url, int $width, int $height): void
     {
-        if (self::$current !== null) {
+        if (self::$current instanceof \Ampache\Gui\Partial\PageMeta) {
             self::$current->player = ['url' => $url, 'width' => $width, 'height' => $height];
         }
     }

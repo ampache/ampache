@@ -106,10 +106,8 @@ final class CollectionEdit8Method implements MethodInterface
 
         // has_collaborate allows reordering, but only an owner or admin may edit the metadata below; refused
         // up front, before any reorder is applied, so a request either applies whole or not at all
-        if (
-            !$hasAccess
-            && (isset($input['name']) || isset($input['type']) || isset($input['object_type']) || isset($input['collaborate']))
-        ) {
+        $hasMetadataFields = isset($input['name']) || isset($input['type']) || isset($input['object_type']) || isset($input['collaborate']);
+        if (!$hasAccess && $hasMetadataFields) {
             throw new AccessFailedException(
                 sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );

@@ -67,6 +67,12 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
                 continue;
             }
 
+            if ($table === CatalogMapTableEnum::PLAYLIST) {
+                $statements[] = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, `playlist`.`id` AS `object_id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id` = `playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song') AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = 'playlist' AND `valid_maps`.`object_id` IS NULL;";
+
+                continue;
+            }
+
             $statements[] = sprintf(
                 "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `%s`.`catalog` AS `catalog_id`, `%s`.`id` AS `object_id` FROM `%s`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = '%s' AND `valid_maps`.`object_id` IS NULL;",
                 $table->value,
@@ -89,6 +95,35 @@ final readonly class CatalogMapRepository implements CatalogMapRepositoryInterfa
                 );
             }
         }
+    }
+
+    public function collectGarbageForObject(CatalogMapTableEnum $table, int $objectId): void
+    {
+        if ($table === CatalogMapTableEnum::ARTIST) {
+            // mirrors collectGarbage()'s role-then-artist order, each check scoped to this one artist id
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'album_artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `album` ON `album`.`id` = `artist_map`.`object_id` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`artist_id` = ?);",
+                [$objectId, $objectId]
+            );
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'song_artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `artist_map` INNER JOIN `song` ON `song`.`id` = `artist_map`.`object_id` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ?);",
+                [$objectId, $objectId]
+            );
+            $this->connection->query(
+                "DELETE FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `catalog_map` WHERE `object_type` IN ('song_artist', 'album_artist') AND `object_id` = ?);",
+                [$objectId, $objectId]
+            );
+
+            return;
+        }
+
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ? AND NOT EXISTS (SELECT 1 FROM `%s` WHERE `id` = ?);',
+                $table->value
+            ),
+            [$table->value, $objectId, $objectId]
+        );
     }
 
     public function deleteForObject(string $objectType, int $objectId): void

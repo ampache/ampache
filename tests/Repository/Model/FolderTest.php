@@ -52,7 +52,7 @@ class FolderTest extends TestCase
 
     /**
      * folder_map rows carry their own `catalog` column, so a folder listing needs the requesting user's
-     * id to honour the opt-in `catalog_filter` feature the same way every other browse type does
+     * id to honor the opt-in `catalog_filter` feature the same way every other browse type does
      */
     public function testGetChildrenPassesTheCurrentUserId(): void
     {
@@ -168,6 +168,71 @@ class FolderTest extends TestCase
         self::assertSame('', Folder::get_name_by_id(0));
     }
 
+    /**
+     * WebDAV has no id-based route, so the url is assembled from the ancestor name chain; `path`
+     * holds ancestor ids root-first, and getRowsByIds() does not promise to return them in that
+     * order, so the result has to be re-sorted against the id list rather than trusted as given.
+     */
+    public function testGetWebdavLinkAssemblesTheAncestorNameChain(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 666;
+        $subject->name = 'My Album';
+        $subject->path = '1,2';
+
+        $this->folderRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([1, 2])
+            ->willReturn([
+                ['id' => '2', 'name' => 'Some Artist'],
+                ['id' => '1', 'name' => 'Music'],
+            ]);
+
+        self::assertSame(
+            'https://music.example/webdav/index.php/Music/Some%20Artist/My%20Album',
+            $subject->get_webdav_link()
+        );
+    }
+
+    public function testGetWebdavLinkIsMemoized(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 1;
+        $subject->name = 'Music';
+
+        $this->folderRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        self::assertSame($subject->get_webdav_link(), $subject->get_webdav_link());
+    }
+
+    /**
+     * A catalog-root folder has no ancestors, so `path` is empty and no lookup is needed at all.
+     */
+    public function testGetWebdavLinkSkipsTheRepositoryForACatalogRootFolder(): void
+    {
+        AmpConfig::set('web_path', 'https://music.example', true);
+
+        $subject = new Folder();
+
+        $subject->id   = 1;
+        $subject->name = 'Music';
+
+        $this->folderRepository->expects(static::never())
+            ->method('getRowsByIds');
+
+        self::assertSame(
+            'https://music.example/webdav/index.php/Music',
+            $subject->get_webdav_link()
+        );
+    }
+
     public function testHasChildrenDelegatesToTheRepository(): void
     {
         $subject = new Folder();
@@ -208,5 +273,11 @@ class FolderTest extends TestCase
         // the model reaches its repository through the `global $dic` bridge; phpunit.xml sets
         // backupGlobals so the real container is restored after every test
         $GLOBALS['dic'] = $this->dic;
+    }
+
+    protected function tearDown(): void
+    {
+        // AmpConfig is a static store backupGlobals cannot reach, so a web_path set here outlives the test
+        AmpConfig::set('web_path', '', true);
     }
 }

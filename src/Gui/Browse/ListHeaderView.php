@@ -104,11 +104,21 @@ final class ListHeaderView extends AbstractView
         return (int) $this->browse->id;
     }
 
+    public function getCurrentOrder(): ?string
+    {
+        return $this->browse->get_sort()['order'];
+    }
+
     public function getCurrentPage(): int
     {
         $limit = $this->getLimit();
 
         return ($this->getStart() > 0 && $limit > 0) ? (int) floor($this->getStart() / $limit) : 0;
+    }
+
+    public function getCurrentSort(): ?string
+    {
+        return $this->browse->get_sort()['name'];
     }
 
     /**
@@ -131,6 +141,11 @@ final class ListHeaderView extends AbstractView
         return ($next >= $this->getTotal()) ? $this->getStart() : $next;
     }
 
+    public function getNextOrder(): string
+    {
+        return ($this->getCurrentOrder() === 'ASC') ? 'DESC' : 'ASC';
+    }
+
     public function getPages(): int
     {
         $limit = $this->getLimit();
@@ -141,6 +156,19 @@ final class ListHeaderView extends AbstractView
     public function getPrevOffset(): int
     {
         return max(0, $this->getStart() - $this->getLimit());
+    }
+
+    /**
+     * @return list<array{label: string, sort: string}>
+     */
+    public function getSortableColumns(): array
+    {
+        return $this->browse->getSortableColumns();
+    }
+
+    public function getSortDirectionIcon(): string
+    {
+        return ($this->getCurrentOrder() === 'ASC') ? 'arrow_upward' : 'arrow_downward';
     }
 
     public function getStart(): int
@@ -207,6 +235,22 @@ final class ListHeaderView extends AbstractView
     public function showSelect(): bool
     {
         return in_array($this->browse->get_type(), Browse::MULTISELECT_TYPES, true);
+    }
+
+    /**
+     * Grid view has no clickable column headers, so the sort select is the only way to change sort there.
+     */
+    public function showSort(): bool
+    {
+        return $this->browse->is_grid_view() && $this->getSortableColumns() !== [];
+    }
+
+    /**
+     * Re-picking an already-selected option fires no change event, so direction needs its own control.
+     */
+    public function showSortToggle(): bool
+    {
+        return $this->showSort() && $this->getCurrentSort() !== null;
     }
 
     public function showView(): bool

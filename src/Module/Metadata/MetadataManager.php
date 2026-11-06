@@ -99,7 +99,7 @@ final class MetadataManager implements MetadataManagerInterface
             $ids = explode(',', (string) $this->configContainer->get(ConfigurationKeyEnum::DISABLED_CUSTOM_METADATA_FIELDS));
             foreach ($ids as $fieldId) {
                 $field = $this->metadataFieldRepository->findById((int) $fieldId);
-                if ($field !== null) {
+                if ($field instanceof MetadataField) {
                     $disabledFieldNames[] = $field->getName();
                 }
             }
@@ -150,7 +150,7 @@ final class MetadataManager implements MetadataManagerInterface
         $field = $this->getOrCreateField($name);
 
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($item->getId(), $field, $item->getMetadataItemType());
-        if ($metadata !== null) {
+        if ($metadata instanceof Metadata) {
             $metadata->setData($data);
             $metadata->save();
         } else {
@@ -161,7 +161,7 @@ final class MetadataManager implements MetadataManagerInterface
     private function getOrCreateField(string $name): MetadataField
     {
         $field = $this->metadataFieldRepository->findByName($name);
-        if ($field === null) {
+        if (!$field instanceof MetadataField) {
             $field = $this->metadataFieldRepository->prototype();
             $field->setName($name);
             $field->save();

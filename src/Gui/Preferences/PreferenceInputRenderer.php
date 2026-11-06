@@ -66,12 +66,6 @@ final readonly class PreferenceInputRenderer
         ];
     }
 
-    /** @return array<array-key, string> */
-    private static function booleanChoices(): array
-    {
-        return ['1' => T_('On'), '0' => T_('Off')];
-    }
-
     /**
      * How a stored value reads, so the default and server columns speak the same language as the control.
      */
@@ -110,7 +104,7 @@ final readonly class PreferenceInputRenderer
         }
 
         if ($item->type === PreferenceType::BOOLEAN) {
-            return $this->renderChoices($item, self::booleanChoices());
+            return $this->renderChoices($item, $this->booleanChoices());
         }
 
         if ($item->choices !== null && $item->choices !== []) {
@@ -127,6 +121,12 @@ final readonly class PreferenceInputRenderer
         }
 
         return $this->renderText($item);
+    }
+
+    /** @return array<array-key, string> */
+    private function booleanChoices(): array
+    {
+        return ['1' => T_('On'), '0' => T_('Off')];
     }
 
     /**
@@ -183,7 +183,7 @@ final readonly class PreferenceInputRenderer
      */
     private function choicesFor(PreferenceItem $item): array
     {
-        return ($item->type === PreferenceType::BOOLEAN) ? self::booleanChoices() : ($item->choices ?? []);
+        return ($item->type === PreferenceType::BOOLEAN) ? $this->booleanChoices() : ($item->choices ?? []);
     }
 
     /**
@@ -289,10 +289,7 @@ final readonly class PreferenceInputRenderer
         $user       = $subject->user;
 
         if (
-            !(
-                $plugin->_plugin instanceof Ampachelibrefm
-                || $plugin->_plugin instanceof AmpacheLastfm
-            )
+            !$plugin->_plugin instanceof Ampachelibrefm && !$plugin->_plugin instanceof AmpacheLastfm
         ) {
             return '';
         }

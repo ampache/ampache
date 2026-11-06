@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -56,7 +57,7 @@ final class SelectArtAction extends AbstractArtAction
         $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $item = $this->getItem($gatekeeper);
-        if ($item === null) {
+        if (!$item instanceof library_item) {
             throw new AccessDeniedException();
         }
 

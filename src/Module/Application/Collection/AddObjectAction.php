@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -59,7 +60,7 @@ final readonly class AddObjectAction implements ApplicationActionInterface
         $user       = Core::get_global('user');
         $collection = $this->collectionRepository->findById((int) ($params['collection'] ?? 0));
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->has_collaborate($user instanceof User ? $user : null)
         ) {
             throw new AccessDeniedException();
@@ -76,7 +77,7 @@ final readonly class AddObjectAction implements ApplicationActionInterface
         }
 
         // Curating an id that is not in its own table would leave the collection holding a dangling member.
-        // `add_item()` rather than the repository directly, so the interface honours `unique_playlist` too.
+        // `add_item()` rather than the repository directly, so the interface honors `unique_playlist` too.
         if ($this->collectionRepository->objectExists($objectType, $objectId)) {
             $collection->add_item($objectId, $objectType);
         }

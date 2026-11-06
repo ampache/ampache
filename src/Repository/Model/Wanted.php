@@ -131,11 +131,17 @@ class Wanted extends database_object
              *     id: string,
              *     area: object,
              *     disambiguation: string,
-             *     isnis: array,
+             *     isnis: array<int, string>,
              *     begin-area: ?string,
              *     name: string,
-             *     ipis: array,
-             *     release-groups: array,
+             *     ipis: array<int, string>,
+             *     release-groups: array<int, object{
+             *         primary-type: string,
+             *         secondary-types: array<int, string>,
+             *         id: string,
+             *         title: string,
+             *         first-release-date: ?string
+             *     }>,
              *     end-area: ?string,
              *     type: string,
              *     end_area: ?string,
@@ -193,7 +199,7 @@ class Wanted extends database_object
                         $wanted->name = $group->title;
                         if (!empty($group->{'first-release-date'})) {
                             if (strlen((string) $group->{'first-release-date'}) == 4) {
-                                $wanted->year = $group->{'first-release-date'};
+                                $wanted->year = (int) $group->{'first-release-date'};
                             } elseif (strtotime((string) $group->{'first-release-date'})) {
                                 $wanted->year = (int) date("Y", strtotime((string) $group->{'first-release-date'}) ?: null);
                             } else {
@@ -209,7 +215,6 @@ class Wanted extends database_object
                             $wanted->link .= "&artist_mbid=" . $lookupMbid;
                         }
 
-                        $wanted->f_user = Core::get_global('user')?->get_fullname() ?? '';
                         $wanted->f_link = "<a href=\"" . scrub_out($wanted->link) . "\" title=\"" . scrub_out($wanted->name) . "\">" . scrub_out($wanted->name) . "</a>";
 
                         if (
@@ -358,13 +363,8 @@ class Wanted extends database_object
 
     public function get_f_user(): string
     {
-        if ($this->f_user !== null) {
-            return $this->f_user;
-        }
-
-        if ($this->user !== null) {
-            $user         = new User($this->user);
-            $this->f_user = $user->get_fullname();
+        if ($this->f_user === null && $this->user !== null) {
+            $this->f_user = scrub_out((new User($this->user))->get_fullname());
         }
 
         return $this->f_user ?? '';
@@ -422,11 +422,11 @@ class Wanted extends database_object
                  * https://musicbrainz.org/ws/2/release-group/3bd76d40-7f0e-36b7-9348-91a33afee20e?inc=releases&fmt=json
                  * @var object{
                  *     primary-type-id: string,
-                 *     releases: array,
+                 *     releases: array<int, object{id: string}>,
                  *     first-release-date: string,
-                 *     secondary-type-ids: array,
+                 *     secondary-type-ids: array<int, string>,
                  *     id: string,
-                 *     secondary-types: array,
+                 *     secondary-types: array<int, string>,
                  *     title: string,
                  *     disambiguation: string,
                  *     primary-type: string
@@ -451,7 +451,10 @@ class Wanted extends database_object
                          * https://musicbrainz.org/ws/2/release/d8de198d-2162-4264-9cfe-926d92c4c7ad?inc=recordings&fmt=json
                          * @var object{
                          *     id: string,
-                         *     media: array,
+                         *     media: array<int, object{
+                         *         position: int|string|null,
+                         *         tracks: array<int, object{number: string, title: string, id: string}>
+                         *     }>,
                          *     barcode: string,
                          *     date: string,
                          *     status-id: string,
@@ -459,7 +462,7 @@ class Wanted extends database_object
                          *     quality: string,
                          *     title: string,
                          *     cover-art-archive: object,
-                         *     release-events: array,
+                         *     release-events: array<int, mixed>,
                          *     packaging: string,
                          *     disambiguation: string,
                          *     text-representation: object,

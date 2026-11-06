@@ -33,6 +33,7 @@ use Ampache\Module\System\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
+use SimpleXMLElement;
 
 class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
@@ -90,7 +91,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
-        if ($session_key === null) {
+        if (!$session_key instanceof SimpleXMLElement) {
             debug_event('lastfm.plugin', 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;

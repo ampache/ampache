@@ -32,6 +32,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -97,7 +98,7 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         if ($destinationFilePath === '') {
             // new file (pending)
             $podcast = $this->podcastRepository->findById($episode->getPodcastId());
-            if ($podcast === null) {
+            if (!$podcast instanceof Podcast) {
                 return;
             }
 

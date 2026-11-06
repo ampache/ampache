@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -89,7 +90,7 @@ final class RightbarView extends AbstractView
     {
         if ($this->count === null) {
             $user        = Core::get_global('user');
-            $this->count = (!defined('NO_SONGS') && $user instanceof User && $user->playlist)
+            $this->count = (!defined('NO_SONGS') && $user instanceof User && $user->playlist instanceof Tmp_Playlist)
                 ? $user->playlist->count_items()
                 : 0;
         }
@@ -141,7 +142,7 @@ final class RightbarView extends AbstractView
         }
 
         $user = Core::get_global('user');
-        $rows = (!defined('NO_SONGS') && $user instanceof User && $user->playlist)
+        $rows = (!defined('NO_SONGS') && $user instanceof User && $user->playlist instanceof Tmp_Playlist)
             ? $user->playlist->get_items(self::DISPLAY_LIMIT)
             : [];
 

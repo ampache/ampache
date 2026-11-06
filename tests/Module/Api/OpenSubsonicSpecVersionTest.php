@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Pins the OpenSubsonic surface to the spec snapshot it was built against.
  *
- * `docs/openapi-opensubsonic.json` is upstream's build artefact, copied in verbatim and never hand-edited. Upstream
+ * `docs/openapi-opensubsonic.json` is upstream's build artifact, copied in verbatim and never hand-edited. Upstream
  * ships changes to it continuously, so this records what the committed copy contained on the compliance date in
  * `docs/API-subsonic.md`: if a refreshed copy adds an endpoint or drops one, these counts move and the failure is
  * the prompt to re-audit rather than a silent drift.
@@ -87,7 +87,7 @@ class OpenSubsonicSpecVersionTest extends TestCase
     public function testCommittedSpecIsTheAuditedBuild(): void
     {
         // the spec is `text=auto`, so a windows checkout holds CRLF while the commit holds LF; hash the
-        // normalised content or the guard fires on the line endings rather than on a changed spec
+        // normalized content or the guard fires on the line endings rather than on a changed spec
         $spec = str_replace("\r\n", "\n", (string) file_get_contents($this->specPath()));
 
         self::assertSame(

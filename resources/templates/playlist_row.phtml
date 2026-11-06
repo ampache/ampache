@@ -74,6 +74,7 @@ $playlistId = $playlist->getId(); ?>
         <div class="rating">
             <span class="cel_rating" id="rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getRating()); ?></span>
             <span class="cel_userflag" id="userflag_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getUserFlags()); ?></span>
+            <span class="cel_global_rating" id="global_rating_<?php echo $playlistId; ?>_playlist"><?php echo $this->raw($playlist->getGlobalRating()); ?></span>
         </div>
     </td>
 <?php } ?>

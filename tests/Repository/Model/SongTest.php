@@ -54,6 +54,19 @@ class SongTest extends MockeryTestCase
     }
 
     /**
+     * @return list<array{string, string}>
+     */
+    public static function customPlayMetadataArgProvider(): array
+    {
+        return [
+            ['The Beatles', 'TheBeatles'],
+            ['-oProxyCommand=evil more words', 'oProxyCommand=evilmorewords'],
+            ['---flag', 'flag'],
+            ['Grapevine"; id; #', 'Grapevineid'],
+        ];
+    }
+
+    /**
      * A genre a user set by hand maps a second time, and a file can name the same genre twice, so the two lists held the
      * same set of genres while the scan reported a difference on every pass
      *
@@ -266,6 +279,18 @@ class SongTest extends MockeryTestCase
     public function testScrubCustomPlayArgDropsShellMetacharacters(string $value, string $expected): void
     {
         $method = new ReflectionMethod(Song::class, '_scrub_custom_play_arg');
+
+        $this->assertSame($expected, $method->invoke(null, $value));
+    }
+
+    /**
+     * Title/artist/album are a tag a user sets, so a leading hyphen or embedded space must not survive into an
+     * admin's quoteless custom-play-action command, where either would be read as a new flag or argument.
+     */
+    #[DataProvider('customPlayMetadataArgProvider')]
+    public function testScrubCustomPlayMetadataArgDropsWhitespaceAndLeadingHyphens(string $value, string $expected): void
+    {
+        $method = new ReflectionMethod(Song::class, '_scrub_custom_play_metadata_arg');
 
         $this->assertSame($expected, $method->invoke(null, $value));
     }

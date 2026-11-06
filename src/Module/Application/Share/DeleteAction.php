@@ -32,6 +32,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,8 +73,8 @@ final readonly class DeleteAction implements ApplicationActionInterface
         );
 
         if (
-            $share === null
-            || $user === null
+            !$share instanceof Share
+            || !$user instanceof User
             || !$share->isAccessible($user)
         ) {
             throw new AccessDeniedException();

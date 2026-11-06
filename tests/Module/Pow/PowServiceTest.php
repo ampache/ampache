@@ -267,7 +267,7 @@ class PowServiceTest extends MockeryTestCase
                 self::assertStringContainsString('target="pow-sink"', $html);
                 // Relative, so it can only ever resolve against this origin.
                 self::assertStringContainsString('data-pow-return="/albums.php?id=42"', $html);
-                // `batch` returns a response object, so it can echo the acknowledgement cookie.
+                // `batch` returns a response object, so it can echo the acknowledgment cookie.
                 self::assertStringContainsString('data-pow-ack="' . self::ACK_NAME . '"', $html);
 
                 return $body;

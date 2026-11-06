@@ -41,7 +41,7 @@ use Override;
  * The two differed only in the model they loaded and the prefix on their sort links, and both started
  * their empty state at nine columns while never counting the played column.
  */
-final class AlbumListRenderer extends AbstractBrowseListRenderer
+final class AlbumListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

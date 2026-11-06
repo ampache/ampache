@@ -32,4 +32,9 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 interface CatalogGarbageCollectorInterface
 {
     public function collect(): void;
+
+    /**
+     * Just the counts, without the rest of collect()'s heavier sweep
+     */
+    public function recount(): void;
 }

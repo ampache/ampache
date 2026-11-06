@@ -1,0 +1,340 @@
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2024
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+/* --------------------------
+   General style rules
+   -------------------------- */
+
+:root {
+    color-scheme: dark;
+    --amp-surface: #3B4252;
+    --amp-raised: #3B4252;
+    --amp-border: #4C566A;
+    --amp-muted: #D8DEE9;
+    --amp-accent: #88C0D0;
+    --amp-accent-ink: #2E3440;
+    accent-color: #88C0D0;
+    --amp-text: #ECEFF4;
+    --amp-bg: #2E3440;
+    --amp-accent-hover: #8FBCBB;
+    --amp-accent-dark: #5E81AC;
+    --amp-header-bg: #2E3440;
+    --amp-panel-bg: #3B4252;
+    --amp-panel-text: #4C566A;
+    --amp-row-hover-start: #3B4252;
+    --amp-row-hover-end: #4C566A;
+    --amp-field-grad-top: #3B4252;
+    --amp-field-grad-bottom: #2E3440;
+    --amp-webplayer-bg: #2E3440;
+    --amp-webplayer-raised: #3B4252;
+    --amp-login-focus-border: #81A1C1;
+    --amp-sidebar-link: #ECEFF4;
+}
+
+/* :root sets color-scheme: dark, which the popup inherits and uses to pick the highlighted */
+/* row's UA text/highlight colors; opting the control back into light scheme fixes most of it, */
+/* but Firefox's focused/checked row still uses its own UA selection color at higher priority */
+/* than an unqualified author rule, so those two states are re-declared with !important below */
+select {
+    color-scheme: light;
+    /* the light scheme above is for the popup rows; without this the closed control takes that scheme's
+       black as its text color and disappears into the dark background declared above */
+    color: #fff;
+}
+
+select option {
+    background-color: #fff !important;
+    color: #000 !important;
+}
+
+select option:hover,
+select option:checked,
+select:focus option:checked {
+    background-color: #ddd !important;
+    color: #000 !important;
+}
+
+.playlistdialogstyle.ui-dialog,
+.playlistdialogstyle.ui-dialog .ui-dialog-content,
+.sharedialogstyle.ui-dialog .ui-dialog-content,
+.playlistdialogstyle.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-widget-content a,
+.sharedialogstyle.ui-widget-content a {
+    background-color: var(--amp-panel-bg);
+    color: var(--amp-panel-text);
+}
+
+/* --------------------------
+   Main
+   -------------------------- */
+#ajax-loading {
+    color: var(--amp-accent);
+    background-image: url('../images/ajax-loader.gif');
+}
+
+/* --------------------------
+   Login
+   -------------------------- */
+
+#loginPage #maincontainer {
+    background-color: rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#loginPage #footer a {
+    color: var(--amp-muted);
+}
+
+/* --------------------------
+   Sidebar
+   -------------------------- */
+
+#sidebar-header {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: var(--amp-panel-text);
+}
+
+#sidebar-content,
+#sidebar-content-light,
+#sidebar-light {
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    background-color: var(--amp-raised);
+}
+
+#sidebar-light-default {
+    border-color: var(--amp-border);
+    background: var(--amp-raised);
+}
+
+#sidebar-page {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#sidebar-tabs .sb2 li ul li a:hover {
+    color: #fff;
+}
+
+/* --------------------------
+   Rightbar
+   -------------------------- */
+#rightbar {
+    background-color: var(--amp-bg);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: var(--amp-text);
+}
+
+#rightbar .submenu {
+    background-color: var(--amp-bg);
+    border-color: var(--amp-border);
+}
+
+#rightbar .submenu a {
+    border-bottom-color: var(--amp-border);
+    color: var(--amp-text);
+}
+
+/* --------------------------
+   Content
+   -------------------------- */
+#content {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: var(--amp-text);
+}
+
+.list-header a:hover,
+.list-header a:focus {
+    color: #fff;
+}
+
+table.tabledata {
+    color: var(--amp-text);
+}
+
+span.page-text,
+table.tabledata a {
+    color: var(--amp-text);
+}
+
+table.tabledata th a {
+    color: var(--amp-accent);
+}
+
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
+    color: var(--amp-panel-text);
+    background-color: var(--amp-raised);
+}
+
+/* outranks both the striped-row background and the tr:hover gradient, so a selected row always reads as selected */
+table.tabledata tbody tr.selected,
+table.tabledata tbody tr.selected:hover {
+    background-color: color-mix(in srgb, var(--amp-accent) 28%, transparent);
+    background-image: none;
+}
+
+/* --------------------------
+   Footer
+   -------------------------- */
+
+#ampache_link {
+    color: var(--amp-muted);
+}
+
+/* --------------------------
+   Web Player
+   -------------------------- */
+div.jp-audio,
+div.jp-audio-stream,
+div.jp-video {
+    color: var(--amp-text);
+}
+
+div.jp-title,
+div.jp-playlist {
+    color: var(--amp-text);
+    background-color: var(--amp-webplayer-raised);
+    border-top: 1px solid var(--amp-webplayer-bg);
+}
+
+#equalizer {
+    background-color: color-mix(in srgb, var(--amp-webplayer-bg) 96%, transparent);
+}
+
+div.jp-playlist li {
+    border-bottom: 1px solid var(--amp-border);
+}
+
+/* ------------------------
+   Wunderbaum tree
+   ------------------------ */
+.wunderbaum {
+    --wb-node-text-color: var(--amp-text);
+    --wb-background-color: var(--amp-bg);
+    --wb-alternate-row-color: var(--amp-raised);
+    --wb-alternate-row-color-hover: var(--wb-hover-color);
+    --wb-focus-border-color: var(--wb-active-color);
+    --wb-drop-source-color: var(--wb-hover-color);
+    --wb-drop-target-color: var(--wb-active-color);
+    --wb-hover-color: color-mix(in srgb, var(--amp-accent) 30%, var(--amp-bg));
+    --wb-active-color: color-mix(in srgb, var(--amp-accent) 55%, var(--amp-bg));
+    --wb-active-hover-color: var(--wb-active-color);
+    --wb-active-color-grayscale: var(--wb-active-color);
+    --wb-active-hover-color-grayscale: var(--wb-active-color);
+}
+
+/* --------------------------
+   Other
+   -------------------------- */
+
+.followbtn {
+    background-color: var(--amp-raised);
+}
+
+.list-header-navmenu-border {
+    border-color: var(--amp-border);
+}
+
+a.option-list:hover {
+    border-color: var(--amp-border);
+}
+
+.editdialogstyle.ui-dialog {
+    background-image: url('../../../images/background.png') !important;
+}
+
+/* Mobile off-canvas drawers need a solid (opaque) panel background so the
+   dim backdrop behind them doesn't show through. See the off-canvas block in default.css.
+   @see //REBORN_MEDIA and keep in sync with default.css (portrait phones + short landscape phones). */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) and (max-width: 1024px) {
+    #sidebar,
+    #rightbar {
+        background-color: var(--amp-bg);
+    }
+
+    /* Loading toast blends into the header (matches #header bg). */
+    #ajax-loading {
+        background-color: var(--amp-header-bg);
+    }
+}
+
+/* The confirm dialog is plain text and two buttons, so it owns its whole surface here. Fully
+   variable-driven (unlike dark.css/light.css's hand-tuned ramps) so any colour gets a correct
+   confirm dialog for free. Structure lives in default.css, colours only here. */
+.confirmdialogstyle.ui-dialog {
+    background-color: var(--amp-panel-bg);
+    border-color: var(--amp-border);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-titlebar {
+    background: var(--amp-raised);
+    border-bottom-color: var(--amp-border);
+    color: var(--amp-text);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-content {
+    background-color: var(--amp-panel-bg);
+    color: var(--amp-text);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonpane {
+    background-color: var(--amp-panel-bg);
+    border-top-color: var(--amp-border);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    background: var(--amp-raised);
+    background-image: none;
+    border: 1px solid var(--amp-border);
+    color: var(--amp-text);
+    text-shadow: none;
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:hover,
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:focus {
+    background: var(--amp-surface);
+    border-color: var(--amp-accent);
+}
+
+/* accept is the primary action, so it keeps the theme's accent color; its ink stays whatever the accent needs for contrast */
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child {
+    background-image: linear-gradient(to top, var(--amp-accent), var(--amp-accent-dark));
+    border-color: var(--amp-accent-dark);
+    color: var(--amp-accent-ink);
+}
+
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:hover,
+.confirmdialogstyle.ui-dialog .ui-dialog-buttonset button:first-child:focus {
+    background-image: linear-gradient(to top, var(--amp-accent-hover), var(--amp-accent));
+    border-color: var(--amp-accent);
+}

@@ -183,6 +183,8 @@ class Catalog_remote extends Catalog
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Remote Update'));
         }
 
         $songsadded = $this->_update_remote_catalog();
@@ -676,6 +678,8 @@ class Catalog_remote extends Catalog
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
+        } elseif (defined('SSE_OUTPUT')) {
+            Ui::update_text('', T_('Running Remote Update'));
         }
 
         $songsupdated = $this->_update_remote_catalog('verify');
@@ -693,7 +697,7 @@ class Catalog_remote extends Catalog
      */
     private function _connect(): void
     {
-        if ($this->remote_handle
+        if ($this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() === 'CONNECTED'
         ) {
             return;
@@ -709,8 +713,7 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Failed to connect to the remote server'));
-                echo AmpError::display('general');
-                flush();
+                Ui::update_text(T_('There Was a Problem'), T_('Failed to connect to the remote server'), 10000);
             }
 
             $this->remote_handle = null;
@@ -741,15 +744,14 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', $exception->getMessage());
-                echo AmpError::display('general');
-                flush();
+                Ui::update_text(T_('There Was a Problem'), $exception->getMessage(), 10000);
             }
 
             $this->remote_handle = null;
         }
 
         if (
-            $this->remote_handle
+            $this->remote_handle instanceof AmpacheApi
             && $this->remote_handle->state() !== 'CONNECTED'
         ) {
             debug_event('remote.catalog', 'API client failed to connect', 1);
@@ -759,7 +761,7 @@ class Catalog_remote extends Catalog
 
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Failed to connect to the remote server'));
-                echo AmpError::display('general');
+                Ui::update_text(T_('There Was a Problem'), T_('Failed to connect to the remote server'), 10000);
             }
 
             $this->remote_handle = null;
@@ -1153,7 +1155,7 @@ class Catalog_remote extends Catalog
                                 $current_song->fill_ext_info();
 
                                 $info = ($current_song->id !== 0) ? self::update_song_from_tags($data, $current_song) : [];
-                                if ($info['change']) {
+                                if ($info['change'] ?? false) {
                                     debug_event('remote.catalog', 'Updated existing song ' . $song_id, 5);
                                     $songsadded++;
                                 }
@@ -1238,7 +1240,7 @@ class Catalog_remote extends Catalog
             }
         }
 
-        Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
+        Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."), 10000);
 
         // Update the last update value based on the action
         if ($action === 'verify') {

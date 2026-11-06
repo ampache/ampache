@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,7 +61,7 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
         );
         // A collaborator curates the contents, matching who may drag a playlist about
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->has_collaborate($user instanceof User ? $user : null)
         ) {
             throw new AccessDeniedException();

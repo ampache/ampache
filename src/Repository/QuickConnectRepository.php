@@ -27,9 +27,9 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 
-final class QuickConnectRepository implements QuickConnectRepositoryInterface
+final readonly class QuickConnectRepository implements QuickConnectRepositoryInterface
 {
-    public function __construct(private readonly DatabaseConnectionInterface $connection) {}
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     public function consume(string $secret, int $now): ?int
     {

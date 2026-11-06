@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation dialogue for stream-token deletion
+ * Renders the confirmation dialog for stream-token deletion
  */
 final class ShowDeleteStreamTokenAction extends AbstractUserAction
 {

@@ -298,7 +298,7 @@ class Graph
             $catalogs = Catalog::get_all_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
-                if ($catalog === null) {
+                if (!$catalog instanceof Catalog) {
                     break;
                 }
 
@@ -313,6 +313,9 @@ class Graph
         }
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_catalog_files_pts(
         int    $catalog_id = 0,
         string $object_type = 'song',
@@ -377,6 +380,9 @@ class Graph
         };
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_catalog_size_pts(
         int    $catalog_id = 0,
         string $object_type = 'song',
@@ -438,6 +444,9 @@ class Graph
         return "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
     }
 
+    /**
+     * @return array<int, array{latitude: mixed, longitude: mixed, name: mixed, last_date: mixed, hits: mixed}>
+     */
     protected function get_geolocation_pts(
         int    $user_id = 0,
         string $object_type = '',
@@ -549,6 +558,9 @@ class Graph
         }
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_user_bandwidth_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -560,6 +572,9 @@ class Graph
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_user_hits_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -584,6 +599,9 @@ class Graph
         return $this->get_bucketed_pts($sql, $buckets);
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_user_object_count_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -641,6 +659,9 @@ class Graph
         return $sql;
     }
 
+    /**
+     * @return array<int, int>
+     */
     protected function get_user_time_pts(
         int    $user_id = 0,
         string $object_type = 'song',
@@ -705,8 +726,8 @@ class Graph
             $height = 260;
         }
 
-        // Each point is a time bucket the SQL already grouped, so the x axis is a list of labelled
-        // buckets rather than a continuous scale. Labelling the keys here instead of using a datetime
+        // Each point is a time bucket the SQL already grouped, so the x axis is a list of labeled
+        // buckets rather than a continuous scale. Labeling the keys here instead of using a datetime
         // axis keeps one bucket and fifty behaving the same way, and sidesteps the empty range a
         // datetime axis produces when everything falls in the same bucket.
         $series = array_map(
@@ -833,11 +854,11 @@ class Graph
             default => 'Y-m-d',
         };
 
-        $labelled = [];
+        $labeled = [];
         foreach ($set as $date => $value) {
-            $labelled[date($format, $date)] = $value;
+            $labeled[date($format, $date)] = $value;
         }
 
-        return $labelled;
+        return $labeled;
     }
 }

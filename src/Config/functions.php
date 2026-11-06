@@ -1060,7 +1060,7 @@ function show_table_render(bool $render = false, bool $force = false): void
  */
 function load_gettext(): bool
 {
-    // The catalogue is read once per language and kept: parsing the .mo costs about nine
+    // The catalog is read once per language and kept: parsing the .mo costs about nine
     // milliseconds, and every T_() call comes through here now. Keying on the language rather
     // than a flag keeps the explicit reload after someone changes their language preference.
     static $loaded = null;
@@ -1090,10 +1090,10 @@ function load_gettext(): bool
 /**
  * compiled_gettext_catalogue
  *
- * The path to a php version of a .mo catalogue, or null when one cannot be had.
+ * The path to a php version of a .mo catalog, or null when one cannot be had.
  *
- * Decoding the binary catalogue costs about nine milliseconds of every request; including a php
- * array the opcache already holds costs two. The cached file is named after the catalogue it was
+ * Decoding the binary catalog costs about nine milliseconds of every request; including a php
+ * array the opcache already holds costs two. The cached file is named after the catalog it was
  * built from, so a new .mo simply asks for a name that does not exist yet and nothing has to be
  * expired. Every failure here is answered with null, which puts the caller back on the .mo.
  */
@@ -1105,7 +1105,7 @@ function compiled_gettext_catalogue(string $mopath): ?string
         return null;
     }
 
-    // one shipped beside the catalogue is taken as it is, which lets whoever builds the release
+    // one shipped beside the catalog is taken as it is, which lets whoever builds the release
     // pay this once rather than leaving it to the first listener through the door
     $sibling = substr($mopath, 0, -3) . '.php';
     if (is_readable($sibling) && (int) @filemtime($sibling) >= $stamp) {
@@ -1245,7 +1245,8 @@ function get_theme(string $name): ?array
                         ? $results['base'][$count]
                         : explode('|', $results['base'][$count]);
             }
-            $results['colors'] = explode(',', (string) $results['colors']);
+            $results['colors']      = explode(',', (string) $results['colors']);
+            $results['color_bases'] = explode(',', (string) ($results['color_bases'] ?? ''));
         } else {
             $results = null;
         }

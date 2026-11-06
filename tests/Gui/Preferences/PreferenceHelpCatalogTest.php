@@ -88,7 +88,7 @@ class PreferenceHelpCatalogTest extends TestCase
 
     public function testThereIsHelpForTheObscurePreferences(): void
     {
-        $this->assertGreaterThan(100, count($this->subject->all()), 'the catalogue is the point of the feature');
+        $this->assertGreaterThan(100, count($this->subject->all()), 'the catalog is the point of the feature');
     }
 
     protected function setUp(): void

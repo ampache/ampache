@@ -36,6 +36,7 @@ use Ampache\Module\Playlist\Folder\PlaylistFolderTreeFormatterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -60,7 +61,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new AccessDeniedException();
         }
 

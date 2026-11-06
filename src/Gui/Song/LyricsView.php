@@ -64,15 +64,21 @@ final class LyricsView extends AbstractView
     }
 
     /**
-     * The provider returns markup, so this is the one value the template may not escape.
+     * Lyrics text comes from an ID3 tag or a third-party provider, so it is never trusted markup; this builds the
+     * only HTML it may contain itself (line breaks), which is why the template prints it with raw().
      */
     public function getLyrics(): string
     {
         $text = $this->lyrics['text'] ?? null;
 
-        return ($text === null || $text === '')
-            ? T_('No lyrics found.')
-            : $text;
+        if ($text === null || $text === '') {
+            return T_('No lyrics found.');
+        }
+
+        // normalize a previously-stored literal <br> back to a newline before escaping, so old provider fetches still line-break correctly
+        $text = (string) preg_replace('/<br\s*\/?>/i', "\n", $text);
+
+        return nl2br($this->e($text));
     }
 
     public function getLyricsUrl(): ?string

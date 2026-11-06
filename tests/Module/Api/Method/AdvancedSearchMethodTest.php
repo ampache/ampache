@@ -26,8 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
@@ -111,14 +113,87 @@ class AdvancedSearchMethodTest extends MockeryTestCase
         );
     }
 
+    /**
+     * folder is searchable but only api8 can render it. Older versions used to fall through to the
+     * song formatter, so a client read folder ids as song ids.
+     */
+    #[DataProvider(methodName: 'olderApiVersionProvider')]
+    public function testHandleReturnsEmptyResultForFolderBelowApi8(int $apiVersion): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SHOW_FOLDER)
+            ->andReturn(true);
+
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result = 'empty-result';
+
+        $output->shouldReceive('writeEmpty')
+            ->with($apiVersion, 'folder')
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('getBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($stream);
+        $stream->shouldReceive('write')
+            ->with($result)
+            ->once();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'type' => 'folder',
+                    'rule_1' => 'title',
+                    'rule_1_operator' => '0',
+                    'rule_1_input' => 'some-name',
+                    'api_format' => 'json',
+                    'auth' => 'some-auth',
+                ],
+                $user,
+                $apiVersion
+            )
+        );
+    }
+
     public function testIsSearchableTypeAllowsAlbumDisk(): void
     {
         $this->assertTrue($this->subject->isSearchableType('album_disk'));
     }
 
+    public function testIsSearchableTypeAllowsFolderWhenEnabled(): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SHOW_FOLDER)
+            ->andReturn(true);
+
+        $this->assertTrue($this->subject->isSearchableType('folder'));
+    }
+
     public function testIsSearchableTypeReturnsFalseForUnknownType(): void
     {
         $this->assertFalse($this->subject->isSearchableType('not-a-type'));
+    }
+
+    public function testIsSearchableTypeThrowsForFolderWhenDisabled(): void
+    {
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SHOW_FOLDER)
+            ->andReturn(false);
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Enable: folder');
+
+        $this->subject->isSearchableType('folder');
     }
 
     #[Override]

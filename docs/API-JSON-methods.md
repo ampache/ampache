@@ -2731,7 +2731,7 @@ Return Database lyrics or search with plugins by Song id
 * return object
 
 <!-- GENERATED:RESPONSE:BEGIN -->
-`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialised as an empty array, not an empty object.
+`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that answered). When nothing answered it is serialized as an empty array, not an empty object.
 
 | Field       | Type         | Nullable | Optional | Notes                   |
 |-------------|--------------|:--------:|:--------:|-------------------------|
@@ -4050,7 +4050,7 @@ Each `song` entry ([SongObject](#song)):
 
 ### playlist_folders
 
-A playlist folder organises playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
+A playlist folder organizes playlists, smartlists and collections into a private tree. The tree belongs to the calling user alone and is never visible to another user, so filing someone else's public playlist changes nothing for them. Other users' top-level public folders are appended after it; `hidden` marks the ones this caller has chosen to hide from their own root, without dropping them from the list.
 
 This returns the whole tree as a flat list; rebuild the hierarchy from each folder's `parent`, where 0 is the root.
 
@@ -5730,7 +5730,7 @@ Returns a single object.
 
 Songs that sound like the given song, most similar first.
 
-Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
+Similarity is derived from analyzing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
 
 Each entry carries the full song plus `similarity`, a `0.0`-`1.0` score where `1.0` is the same recording. A backend that gives no comparable score reports `-1`.
 
@@ -6795,12 +6795,12 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 | Field | Type    | Nullable | Optional | Notes |
 |-------|---------|:--------:|:--------:|-------|
 | id    | integer |    NO    |    NO    |       |
-| raw   | string  |    NO    |    NO    |       |
+| track | integer |    NO    |    NO    |       |
+| raw   | string  |    NO    |   YES    |       |
 | vlid  | integer |    NO    |   YES    |       |
 | oid   | integer |    NO    |   YES    |       |
 | name  | string  |   YES    |   YES    |       |
 | link  | string  |   YES    |   YES    |       |
-| track | integer |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -6857,6 +6857,24 @@ The folder that was browsed, and its children. `parent` is the id of the folder 
 | catalog | string                                             |    NO    |    NO    |                                                  |
 | time    | integer                                            |    NO    |    NO    |                                                  |
 | items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
+
+### FolderObject
+
+| Field         | Type    | Nullable | Optional | Notes |
+|---------------|---------|:--------:|:--------:|-------|
+| id            | string  |    NO    |    NO    |       |
+| name          | string  |   YES    |    NO    |       |
+| parent        | string  |   YES    |    NO    |       |
+| path          | string  |   YES    |    NO    |       |
+| catalog       | string  |    NO    |    NO    |       |
+| time          | integer |    NO    |    NO    |       |
+| items         | integer |    NO    |    NO    |       |
+| playable      | boolean |    NO    |    NO    |       |
+| art           | string  |   YES    |    NO    |       |
+| has_art       | boolean |    NO    |    NO    |       |
+| flag          | boolean |    NO    |    NO    |       |
+| rating        | integer |   YES    |    NO    |       |
+| averagerating | number  |   YES    |    NO    |       |
 
 ### GenreReference
 

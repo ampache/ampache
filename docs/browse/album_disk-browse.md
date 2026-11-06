@@ -45,7 +45,7 @@ e.g. `cond=starts_with,a;catalog,2`
 | `update_gt`       | UNIX timestamp | Only disks with a song whose tags were updated at or after this time.                                                                     |
 | `update_lt`       | UNIX timestamp | Only disks with a song whose tags were updated at or before this time.                                                                    |
 | `user_catalog`    | none           | Only album disks in a catalog the current user is allowed to see. Needs no value.                                                         |
-| `user_flag`       | 0 or 1         | Send `1` for album disks the current user has favourited, `0` for the ones they have not.                                                 |
+| `user_flag`       | 0 or 1         | Send `1` for album disks the current user has favorited, `0` for the ones they have not.                                                  |
 | `user_rating`     | 0 to 5         | Only album disks the current user rated this value. Send `0` for album disks they have not rated at all.                                  |
 
 ## Available browse sorts
@@ -54,38 +54,38 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort                      | Description                                                                                                              |
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `addition_time`           | When the album was added to the catalog. A disk has no addition time of its own.                                         |
-| `album_artist`            | Album artist name.                                                                                                       |
-| `album_artist_album_sort` | Album artist name, then whatever the server's `album_sort` setting says, then disk number.                               |
-| `album_artist_title`      | Album artist name, then album name and disk number.                                                                      |
-| `album_id`                | The id of the album the disk belongs to.                                                                                 |
-| `artist`                  | Artist name.                                                                                                             |
-| `barcode`                 | Album barcode. Taken from the album, not the disk.                                                                       |
-| `catalog`                 | The catalog id, then album name and disk number.                                                                         |
-| `catalog_number`          | Album catalog number. Taken from the album, not the disk.                                                                |
-| `disk`                    | Disk number, then album name and disk number again.                                                                      |
-| `disk_count`              | How many disks the album has, then album name and disk number.                                                           |
-| `disksubtitle`            | Disk subtitle, then album name and disk number.                                                                          |
-| `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.                 |
-| `id`                      | The album disk id, which is the order they were created in.                                                              |
-| `last_played`             | When the disk was last played, then album name and disk number.                                                          |
-| `name`                    | Album name, then original release year and disk number.                                                                  |
-| `name_original_year`      | Album name, then original release year and disk number.                                                                  |
-| `name_year`               | Album name, then release year and disk number.                                                                           |
-| `original_year`           | Original release year, falling back to the release year, then when it was added.                                         |
-| `rand`                    | Random order, applied per request. Paging through it repeats and skips album disks, so ask for everything in one call.   |
-| `rating`                  | Your own rating, then when you set it. Album disks you have not rated group together.                                    |
-| `release_status`          | Album release status. Taken from the album, not the disk.                                                                |
-| `release_type`            | Album release type. Taken from the album, not the disk.                                                                  |
-| `song_count`              | How many songs the disk has, then album name and disk number.                                                            |
-| `subtitle`                | Album subtitle. Taken from the album, not the disk.                                                                      |
-| `time`                    | Running time of the disk in seconds, then album name and disk number.                                                    |
-| `title`                   | Alias of `name`.                                                                                                         |
-| `total_count`             | How many times the disk has been played, then album name and disk number.                                                |
-| `user_flag`               | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating`        | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`                | Alias of `user_flag`.                                                                                                    |
-| `version`                 | Album version. Taken from the album, not the disk.                                                                       |
-| `year`                    | Release year, then when the album was added to the catalog.                                                              |
+| Sort                      | Description                                                                                                            |
+|---------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `addition_time`           | When the album was added to the catalog. A disk has no addition time of its own.                                       |
+| `album_artist`            | Album artist name.                                                                                                     |
+| `album_artist_album_sort` | Album artist name, then whatever the server's `album_sort` setting says, then disk number.                             |
+| `album_artist_title`      | Album artist name, then album name and disk number.                                                                    |
+| `album_id`                | The id of the album the disk belongs to.                                                                               |
+| `artist`                  | Artist name.                                                                                                           |
+| `barcode`                 | Album barcode. Taken from the album, not the disk.                                                                     |
+| `catalog`                 | The catalog id, then album name and disk number.                                                                       |
+| `catalog_number`          | Album catalog number. Taken from the album, not the disk.                                                              |
+| `disk`                    | Disk number, then album name and disk number again.                                                                    |
+| `disk_count`              | How many disks the album has, then album name and disk number.                                                         |
+| `disksubtitle`            | Disk subtitle, then album name and disk number.                                                                        |
+| `generic_artist`          | Album artist name, falling back to the artist of a song on the album when the album has no album artist.               |
+| `id`                      | The album disk id, which is the order they were created in.                                                            |
+| `last_played`             | When the disk was last played, then album name and disk number.                                                        |
+| `name`                    | Album name, then original release year and disk number.                                                                |
+| `name_original_year`      | Album name, then original release year and disk number.                                                                |
+| `name_year`               | Album name, then release year and disk number.                                                                         |
+| `original_year`           | Original release year, falling back to the release year, then when it was added.                                       |
+| `rand`                    | Random order, applied per request. Paging through it repeats and skips album disks, so ask for everything in one call. |
+| `rating`                  | Your own rating, then when you set it. Album disks you have not rated group together.                                  |
+| `release_status`          | Album release status. Taken from the album, not the disk.                                                              |
+| `release_type`            | Album release type. Taken from the album, not the disk.                                                                |
+| `song_count`              | How many songs the disk has, then album name and disk number.                                                          |
+| `subtitle`                | Album subtitle. Taken from the album, not the disk.                                                                    |
+| `time`                    | Running time of the disk in seconds, then album name and disk number.                                                  |
+| `title`                   | Alias of `name`.                                                                                                       |
+| `total_count`             | How many times the disk has been played, then album name and disk number.                                              |
+| `user_flag`               | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating`        | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`                | Alias of `user_flag`.                                                                                                  |
+| `version`                 | Album version. Taken from the album, not the disk.                                                                     |
+| `year`                    | Release year, then when the album was added to the catalog.                                                            |

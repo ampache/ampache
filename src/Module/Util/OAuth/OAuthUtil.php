@@ -124,7 +124,7 @@ class OAuthUtil
      * array('a' => array('b', 'c'), 'd' => 'e')
      * @return array<string, string|string[]>
      */
-    public static function parse_parameters($input = null): array
+    public static function parse_parameters(mixed $input = null): array
     {
         if (!isset($input) || !$input) {
             return [];
@@ -161,7 +161,7 @@ class OAuthUtil
 
     /**
      * Utility function for turning the Authorization: header into parameters.
-     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
+     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behavior)
      * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
      * see http://code.google.com/p/oauth/issues/detail?id=163
      * @return array<string, string>
@@ -196,9 +196,9 @@ class OAuthUtil
     }
 
     /**
-     * @return array<string, string|string[]>|string|string[]
+     * @return array<mixed>|string
      */
-    public static function urlencode_rfc3986($input): array|string
+    public static function urlencode_rfc3986(mixed $input): array|string
     {
         if (is_array($input)) {
             return array_map(

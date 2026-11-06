@@ -115,8 +115,9 @@ final class PlaylistPageView extends AbstractView
                 ($duration > 0) ? new HeaderChip($playlist->get_f_time(), true, title: T_('Time')) : null,
                 ($playlist->type === 'private') ? T_('Private') : T_('Public'),
             ),
-            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'playlist', true) : '',
+            rating: ($this->showRatings()) ? Rating::show($this->getPlaylistId(), 'playlist') : '',
             userflag: ($this->showRatings()) ? Userflag::show($this->getPlaylistId(), 'playlist') : '',
+            globalRating: ($this->showRatings()) ? Rating::show_global_rating($this->getPlaylistId(), 'playlist') : '',
             ratingKey: $this->getPlaylistId() . '_playlist',
         );
     }

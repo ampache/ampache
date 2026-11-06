@@ -68,7 +68,7 @@ final class OpenApiResponseValidator
      */
     private function checkAgainstJsonSchema(string $body, string $schemaName): array
     {
-        // Only the schema subtree is registered, normalised from OpenAPI 3.0 to plain JSON Schema. Draft-04
+        // Only the schema subtree is registered, normalized from OpenAPI 3.0 to plain JSON Schema. Draft-04
         // reads a bare `id` key as a base URI, and the response examples in docs/openapi.json contain literal
         // `"id"` values that would otherwise be resolved as broken schema references.
         $document = ['components' => ['schemas' => $this->toJsonSchema($this->spec['components']['schemas'] ?? [])]];
@@ -210,7 +210,7 @@ final class OpenApiResponseValidator
     }
 
     /**
-     * Normalise an OpenAPI 3.0 schema tree into plain JSON Schema.
+     * Normalize an OpenAPI 3.0 schema tree into plain JSON Schema.
      *
      * `example`/`examples` are documentation rather than schema, and `nullable: true` is an OpenAPI keyword a
      * JSON Schema validator does not understand - it has to become a union with the `null` type or every

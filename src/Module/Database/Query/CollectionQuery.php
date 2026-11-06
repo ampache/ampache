@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 /**
  * Browse query for collections
  *
- * Modelled on `PlaylistQuery`: the `collection` table mirrors `playlist` field for field.
+ * Modeled on `PlaylistQuery`: the `collection` table mirrors `playlist` field for field.
  */
 final class CollectionQuery implements QueryInterface
 {

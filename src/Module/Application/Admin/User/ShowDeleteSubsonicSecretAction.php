@@ -31,7 +31,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Renders the confirmation-dialogue for Subsonic password deletion
+ * Renders the confirmation-dialog for Subsonic password deletion
  */
 final class ShowDeleteSubsonicSecretAction extends AbstractUserAction
 {

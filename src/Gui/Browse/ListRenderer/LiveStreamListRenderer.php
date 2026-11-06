@@ -37,7 +37,7 @@ use Override;
 /**
  * The radio station browse.
  */
-final class LiveStreamListRenderer extends AbstractBrowseListRenderer
+final class LiveStreamListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

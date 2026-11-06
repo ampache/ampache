@@ -243,7 +243,7 @@ efforts, take the wrong approach to solving a problem, or solve a problem which
 does not need solving. An up-front discussion often saves a good deal of wasted
 time in these cases.
 
-We expect you to follow up on review comments somewhat promptly, but recognise
+We expect you to follow up on review comments somewhat promptly, but recognize
 that everyone has many priorities for their time and may not be able to respond
 for several days. We will understand if you find yourself without the time to
 complete your contribution, but please let us know that you have stopped

@@ -37,6 +37,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Override;
 
 /**
@@ -73,8 +74,8 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
             'lang' => get_languages(),
             'localplay_controller' => $this->getLocalplayControllers(),
             'localplay_level', 'upload_access_level' => $this->getAccessLevels(),
-            'personalfav_playlist' => ($owner === null) ? [] : Playlist::get_playlist_array($owner->getId()),
-            'personalfav_smartlist' => ($owner === null) ? [] : Search::get_search_array($owner->getId()),
+            'personalfav_playlist' => ($owner instanceof User) ? Playlist::get_playlist_array($owner->getId()) : [],
+            'personalfav_smartlist' => ($owner instanceof User) ? Search::get_search_array($owner->getId()) : [],
             'play_type' => $this->getPlayTypes($held),
             'playlist_method' => [
                 'send' => T_('Send on Add'),
@@ -226,7 +227,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
      */
     private function getThemeColors(array $held): array
     {
-        // the colours on offer are those of the theme the subject uses, not the one the operator sees
+        // the colors on offer are those of the theme the subject uses, not the one the operator sees
         $theme = get_theme($held['theme_name'] ?? (string) AmpConfig::get('theme_name', 'reborn'));
 
         $choices = [];

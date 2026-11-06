@@ -74,7 +74,7 @@ final class UploadView extends AbstractView
             'labelFileLoadError' => T_('Error during load'),
             'labelFileProcessing' => T_('Uploading'),
             'labelFileProcessingComplete' => T_('Upload complete'),
-            'labelFileProcessingAborted' => T_('Upload cancelled'),
+            'labelFileProcessingAborted' => T_('Upload canceled'),
             'labelFileProcessingError' => T_('Error during upload'),
             'labelFileProcessingRevertError' => T_('Error during revert'),
             'labelFileRemoveError' => T_('Error during remove'),

@@ -35,7 +35,7 @@ interface PowServiceInterface
      * Tells the browser that a delivery has actually begun.
      *
      * The interstitial cannot see when a download commits: the response goes into a hidden frame and
-     * a large archive is written in full before its headers are sent. This echoes the acknowledgement
+     * a large archive is written in full before its headers are sent. This echoes the acknowledgment
      * token the interstitial sent as a cookie, which reaches the client with those headers and at no
      * other moment, so the page can return the visitor the instant leaving is safe.
      *

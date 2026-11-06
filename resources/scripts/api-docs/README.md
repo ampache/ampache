@@ -39,7 +39,7 @@ last command, which will mask a failure.
 | `docs/API-JSON-methods.md`, `docs/API-XML-methods.md` | `generate_api_methods_md.py` (response tables only) |
 | `docs/API-browse.md`, `docs/browse/*-browse.md` | `generate_browse_docs.py` (whole file, never hand-edit) |
 | `docs/openapi-6.json` | **hand-maintained**, guarded by `Api6SpecConformanceTest` |
-| `docs/openapi-opensubsonic.json` | **upstream's artefact**, copied verbatim — never hand-edit (see below) |
+| `docs/openapi-opensubsonic.json` | **upstream's artifact**, copied verbatim — never hand-edit (see below) |
 | `docs/REST-to-RPC.md` | hand-maintained; its "Alternative action" column is the source of truth for aliases |
 
 In the markdown documents only the block between `<!-- GENERATED:RESPONSE:BEGIN -->` and
@@ -198,7 +198,7 @@ tables.
 These were considered during the cleanup and rejected on purpose. Do not "fix" them without new
 information.
 
-- **XML is not documented byte-for-byte.** The spec describes the JSON serialisation; `info.description`
+- **XML is not documented byte-for-byte.** The spec describes the JSON serialization; `info.description`
   states XML mirrors it structurally (attributes/element nesting differ). `Xml8_Data` builds XML by
   string concatenation with no array intermediate to derive a schema from, so a second XML spec would be
   hand-maintained and drift. One spec, JSON, with an XML structure note.

@@ -48,7 +48,16 @@ final class FolderView extends AbstractView
         private readonly bool $mayInteract,
         private readonly bool $autoplayNext,
         private readonly bool $autoplayAppend,
+        private readonly bool $webdavEnabled,
     ) {}
+
+    /**
+     * A WebDAV link makes no sense for the virtual root folder, which is not a real catalog path
+     */
+    public function canOpenWebdav(): bool
+    {
+        return $this->webdavEnabled && $this->folder->getId() > 0;
+    }
 
     public function getBrowse(): Browse
     {
@@ -80,6 +89,11 @@ final class FolderView extends AbstractView
             : $this->folder->get_f_home_link();
 
         return $parentLink . '&nbsp;\\&nbsp;' . $name;
+    }
+
+    public function getWebdavUrl(): string
+    {
+        return $this->folder->get_webdav_link();
     }
 
     public function isAutoplayAppendEnabled(): bool

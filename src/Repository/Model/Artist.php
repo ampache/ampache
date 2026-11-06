@@ -58,7 +58,9 @@ class Artist extends database_object implements
 
     protected const string DB_TABLENAME = 'artist';
 
+    /** @var array<string, array<string, array<string, int>>> */
     private static array $_mapcache = [];
+
     public ?int $addition_time      = null;
     public int $album_count         = 0;
     public int $album_disk_count    = 0;
@@ -415,7 +417,7 @@ class Artist extends database_object implements
         }
 
         foreach ($artists as $artists_id) {
-            $results .= self::get_fullname_by_id($artists_id) . ', ';
+            $results .= scrub_out(self::get_fullname_by_id($artists_id)) . ', ';
         }
 
         return rtrim($results, ', ');
@@ -606,7 +608,7 @@ class Artist extends database_object implements
     /**
      * Take the artist off the shelves, or put it back, taking its albums and their songs along.
      *
-     * The whole catalogue below the artist follows either way, so the word promises here what it promises
+     * The whole catalog below the artist follows either way, so the word promises here what it promises
      * on a song. A single album or song can still be flipped on its own afterwards; only the next change
      * of the artist's own state writes over it again.
      */

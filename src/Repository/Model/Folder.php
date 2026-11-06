@@ -79,6 +79,7 @@ class Folder extends database_object implements
 
     private ?string $f_link        = null;
     private ?string $f_parent_link = null;
+    private ?string $webdav_link   = null;
 
     /**
      * __construct
@@ -523,6 +524,31 @@ class Folder extends database_object implements
     public function get_user_owner(): ?int
     {
         return $this->user;
+    }
+
+    /**
+     * The WebDAV url of this folder, assembled from its ancestor chain: WebDAV has no id-based route
+     */
+    public function get_webdav_link(): string
+    {
+        if ($this->webdav_link !== null) {
+            return $this->webdav_link;
+        }
+
+        $ancestor_ids = array_map(intval(...), array_filter(explode(',', (string) $this->path)));
+        $names        = ($ancestor_ids !== [])
+            ? array_column(self::getFolderRepository()->getRowsByIds($ancestor_ids), 'name', 'id')
+            : [];
+
+        $segments = [];
+        foreach ($ancestor_ids as $ancestor_id) {
+            $segments[] = rawurlencode((string) ($names[$ancestor_id] ?? ''));
+        }
+        $segments[] = rawurlencode((string) $this->name);
+
+        $this->webdav_link = AmpConfig::get_web_path() . '/webdav/index.php/' . implode('/', $segments);
+
+        return $this->webdav_link;
     }
 
     public function getCatalog(): int

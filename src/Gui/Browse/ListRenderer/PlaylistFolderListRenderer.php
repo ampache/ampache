@@ -80,7 +80,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
             $parentId = $this->getCurrentFolder()?->getParentId() ?? PlaylistFolder::ROOT;
             while ($parentId > PlaylistFolder::ROOT) {
                 $parent = $this->playlistFolderRepository->findById($parentId);
-                if ($parent === null) {
+                if (!$parent instanceof PlaylistFolder) {
                     break;
                 }
 
@@ -173,7 +173,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
     }
 
     /**
-     * Folders the viewer has hidden from their own root; hiding only de-emphasises a folder, so this never
+     * Folders the viewer has hidden from their own root; hiding only de-emphasizes a folder, so this never
      * removes it from the listing -- it is used to mark the row and to decide which toggle action to show.
      *
      * @return list<PlaylistFolder>
@@ -183,7 +183,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         return $this->cachePerRender('hiddenFolders', function (): array {
             $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
 
-            return ($user !== null) ? $this->playlistFolderRepository->getHiddenFolders($user->getId()) : [];
+            return ($user instanceof User) ? $this->playlistFolderRepository->getHiddenFolders($user->getId()) : [];
         });
     }
 
@@ -265,7 +265,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         $owner = $this->userRepository->findById($item->getUserId());
 
-        return ($owner !== null) ? sprintf(T_('Shared by %s'), $owner->getUsername()) : '';
+        return ($owner instanceof User) ? sprintf(T_('Shared by %s'), $owner->getUsername()) : '';
     }
 
     /**
@@ -411,7 +411,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $home = $this->e(T_('Home'));
 
         $folder = $this->getCurrentFolder();
-        if ($folder === null) {
+        if (!$folder instanceof PlaylistFolder) {
             return $home;
         }
 
@@ -449,13 +449,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
      */
     public function isHiddenForViewer(PlaylistFolder $folder): bool
     {
-        foreach ($this->getHiddenFolders() as $hidden) {
-            if ($hidden->getId() === $folder->getId()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->getHiddenFolders(), fn($hidden) => $hidden->getId() === $folder->getId());
     }
 
     /**
@@ -479,7 +473,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         $folder = $this->getCurrentFolder();
 
         return $this->gatekeeperFactory->createGuiGatekeeper()->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-            && ($folder === null || $this->isOwnFolder($folder));
+            && (!$folder instanceof PlaylistFolder || $this->isOwnFolder($folder));
     }
 
     /**
@@ -523,7 +517,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
 
         if ($playlist->isEditable()) {
             // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
-            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . '\', \'edit_playlist_' . $playlistId . '\', \'' . $this->e($playlist->getEditButtonTitle()) . '\', \'\')">' . $playlist->getEditIcon() . '</a>';
+            $html .= '<a id="edit_playlist_' . $playlistId . '" onclick="showEditDialog(\'playlist_row\', \'' . $playlistId . "', 'edit_playlist_" . $playlistId . "', '" . $this->e($playlist->getEditButtonTitle()) . '\', \'\')">' . $playlist->getEditIcon() . '</a>';
         }
 
         if ($playlist->canBeDeleted()) {
@@ -566,7 +560,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         if ($item->mayOpenEditDialog()) {
             $title = addslashes(T_('Smart Playlist Edit'));
             // Empty refresh prefix reloads the whole browse instead of one row -- a folder change moves the row out of view entirely
-            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . '\', \'edit_playlist_' . $searchId . '\', \'' . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
+            $html .= '<a id="edit_playlist_' . $searchId . '" onclick="showEditDialog(\'search_row\', \'' . $searchId . "', 'edit_playlist_" . $searchId . "', '" . $title . '\', \'\')">' . Ui::get_material_symbol('edit', T_('Edit')) . '</a>';
         }
 
         // Deletion stays owner/admin only -- mayOpenEditDialog() above also admits a public list's viewer, who may not delete it
@@ -598,7 +592,7 @@ final class PlaylistFolderListRenderer extends AbstractBrowseListRenderer
         /** @var array<int, int> */
         return $this->cachePerRender('itemCounts', function (): array {
             $user = $this->gatekeeperFactory->createGuiGatekeeper()->getUser();
-            if ($user === null) {
+            if (!$user instanceof User) {
                 return [];
             }
 

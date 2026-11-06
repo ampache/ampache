@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Psr\Log\LoggerInterface;
+use Stringable;
 
 /**
  * This is a legacy implementation in order to replace the global `log_event` and `debug_event` methods
@@ -59,7 +60,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
-    public function alert($message, array $context = []): void
+    public function alert(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_CRITICAL,
@@ -71,7 +72,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * debug_level = 1
      */
-    public function critical($message, array $context = []): void
+    public function critical(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_CRITICAL,
@@ -83,7 +84,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * debug_level = 5
      */
-    public function debug($message, array $context = []): void
+    public function debug(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_DEBUG,
@@ -95,7 +96,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * @see LegacyLogger::critical (Required function to implement LoggerInterface)
      */
-    public function emergency($message, array $context = []): void
+    public function emergency(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_CRITICAL,
@@ -107,7 +108,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * debug_level = 2
      */
-    public function error($message, array $context = []): void
+    public function error(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_ERROR,
@@ -119,7 +120,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * @see LegacyLogger::notice (Required function to implement LoggerInterface)
      */
-    public function info($message, array $context = []): void
+    public function info(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_NOTICE,
@@ -131,7 +132,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * Replaces debug_event()
      */
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         if (!$this->configContainer->get('debug') || $level > $this->configContainer->get('debug_level')) {
             return;
@@ -193,7 +194,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * debug_level = 4
      */
-    public function notice($message, array $context = []): void
+    public function notice(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_NOTICE,
@@ -205,7 +206,7 @@ final readonly class LegacyLogger implements LoggerInterface
     /**
      * debug_level = 3
      */
-    public function warning($message, array $context = []): void
+    public function warning(string|Stringable $message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_WARNING,

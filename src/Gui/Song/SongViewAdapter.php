@@ -46,6 +46,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Waveform;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -341,6 +342,11 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         return $this->song->get_f_tags();
     }
 
+    public function getGlobalRating(): string
+    {
+        return Rating::show_global_rating($this->song->getId(), 'song');
+    }
+
     public function getHeader(): ObjectHeaderView
     {
         $bitrate = (int) ($this->song->bitrate / 1024);
@@ -363,6 +369,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             tags: HeaderChip::genres($this->song->get_tags(), $this->configContainer->getWebPath() . '/browse.php?action=tag&type=song&show_tag='),
             rating: $this->getRating(),
             userflag: $this->getUserFlags(),
+            globalRating: $this->getGlobalRating(),
             ratingKey: $this->song->getId() . '_song',
             note: $this->getPlayNote(),
             links: $this->getExternalLinks(),
@@ -444,16 +451,16 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
     {
         $license = $this->song->getLicense();
 
-        return ($license === null)
-            ? null
-            : new HeaderChip($license->getName(), url: $license->getExternalLink(), accent: true, external: true);
+        return ($license instanceof License)
+            ? new HeaderChip($license->getName(), url: $license->getExternalLink(), accent: true, external: true)
+            : null;
     }
 
     public function getLicenseLink(): string
     {
         $license = $this->song->getLicense();
 
-        if ($license !== null) {
+        if ($license instanceof License) {
             return $license->getLinkFormatted();
         }
 
@@ -624,7 +631,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         }
 
         $license = $this->song->getLicense();
-        if ($license !== null) {
+        if ($license instanceof License) {
             $songprops[T_('Licensing')] = $license->getLinkFormatted();
         }
 
@@ -719,7 +726,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getRating(): string
     {
-        return Rating::show($this->song->getId(), 'song', true);
+        return Rating::show($this->song->getId(), 'song');
     }
 
     public function getRefreshIcon(): string

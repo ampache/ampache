@@ -27,7 +27,9 @@ namespace Ampache\Module\Database\Query;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Browse\ListRenderer\BrowseListContext;
+use Ampache\Gui\Browse\ListRenderer\BrowseListRendererInterface;
 use Ampache\Gui\Browse\ListRenderer\BrowseListRendererLocatorInterface;
+use Ampache\Gui\Browse\ListRenderer\SortableBrowseListRendererInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
@@ -289,6 +291,30 @@ class Browse extends Query
     }
 
     /**
+     * The sort keys grid view offers through a select, since it has no clickable column headers to carry them.
+     *
+     * @return list<array{label: string, sort: string}>
+     */
+    public function getSortableColumns(): array
+    {
+        $renderer = $this->browseListRendererLocator->find($this->get_type());
+        if (!$renderer instanceof SortableBrowseListRendererInterface) {
+            return [];
+        }
+
+        $columns = [];
+        $seen    = [];
+        foreach ($renderer->getColumns() as $column) {
+            if ($column['sort'] !== null && !in_array($column['sort'], $seen, true)) {
+                $seen[]    = $column['sort'];
+                $columns[] = ['label' => $column['label'], 'sort' => $column['sort']];
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
      * is_album_artist
      */
     public function is_album_artist(): bool
@@ -455,6 +481,7 @@ class Browse extends Query
 
     /**
      * This sets the type of object that we want to browse by
+     * @param array<int|string, mixed>|null $parameters
      */
     #[Override]
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
@@ -588,7 +615,8 @@ class Browse extends Query
      * Pass null (the default) to reload whatever this browse last saved/cached. Pass an array -- including an
      * empty one -- to render exactly those ids; an empty array means "the caller already searched and found
      * nothing", not "go look up something else instead."
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param bool|array<string, mixed>|string $argument
      */
     public function show_objects(?array $object_ids = null, bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -597,8 +625,8 @@ class Browse extends Query
 
         // a song_preview browse is handed rows it built itself, so it is neither saved nor prefetched
         $prefetchable = ($type !== 'song_preview');
-        // a folder/playlist_folder browse is handed encoded ids that don't go through the normal saved-browse-state flow
-        $persistable = ($prefetchable && $type !== 'folder' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden');
+        // a simple folder browse hands over encoded ids already handled by is_simple() below, not here
+        $persistable = ($prefetchable && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden');
         if ($this->is_simple() || $object_ids === null) {
             $object_ids = $this->get_saved();
         } elseif ($persistable) {
@@ -622,10 +650,6 @@ class Browse extends Query
         // Load any additional object we need for this
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
-
-        foreach ($extra_objects as $name => $extra) {
-            ${$name} = $extra;
-        }
 
         $match = $this->_getMatchName();
 
@@ -655,7 +679,7 @@ class Browse extends Query
         // every browse type renders through its own renderer, which brings the services it needs with it
         $renderer  = $this->browseListRendererLocator->find($type);
         $box_title = $this->_getBoxTitle($type, $match);
-        if ($renderer === null) {
+        if (!$renderer instanceof BrowseListRendererInterface) {
             if ($type === '') {
                 // An unknown browse id leaves the type empty, which is what a crawler replaying an expired
                 // url looks like. Reporting that as a missing renderer filled the log with level 1 lines
@@ -675,13 +699,13 @@ class Browse extends Query
         }
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        $hasBody = $renderer !== null;
+        $hasBody = $renderer instanceof BrowseListRendererInterface;
         if ($this->is_show_header() && $hasBody && $box_title !== '') {
             $this->set_title($box_title);
             Ui::show_box_top($box_title, $class);
         }
 
-        if ($renderer !== null) {
+        if ($renderer instanceof BrowseListRendererInterface) {
             echo $renderer->renderList(
                 new BrowseListContext(
                     $this,
@@ -835,7 +859,7 @@ class Browse extends Query
 
         if ($filter_value = $this->get_filter('catalog')) {
             $catalog = Catalog::create_from_id((int) $filter_value);
-            if ($catalog !== null) {
+            if ($catalog instanceof Catalog) {
                 return ' (' . $catalog->name . ')';
             }
         }
@@ -845,10 +869,10 @@ class Browse extends Query
 
     /**
      * Cut the id list down to the page being rendered. An un-paged list too large to hold in memory renders an
-     * error instead of failing silently, which is signalled back by a null return.
+     * error instead of failing silently, which is signaled back by a null return.
      *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
-     * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @return int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview>|null
      */
     private function _pageObjectIds(array $object_ids, string $type): ?array
     {
@@ -939,7 +963,7 @@ class Browse extends Query
     /**
      * Warm the object cache for the rows this page shows, so the row templates read them without a query each.
      *
-     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
+     * @param int[]|string[]|array<array{object_id: int, object_type: LibraryItemEnum|string, track_id: int, track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>|array<Song_Preview> $object_ids
      */
     private function _prefetchPage(string $type, array $object_ids, string $limit_threshold): void
     {
@@ -968,7 +992,7 @@ class Browse extends Query
         };
 
         // 'folder'/'collection_items'/'playlist_folder' already warmed their own split-by-type groups above
-        if ($type !== 'folder' && $type !== 'collection_items' && $type !== 'playlist_folder' && $type !== 'playlist_folder_hidden' && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
+        if (!in_array($type, ['folder', 'collection_items', 'playlist_folder', 'playlist_folder_hidden'], true) && in_array($type, self::INTERACTION_CACHE_TYPES, true)) {
             $this->_prefetchInteractionCaches($type, $this->_squashList($object_ids));
         }
     }

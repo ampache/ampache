@@ -61,7 +61,7 @@ flag on the row it is listing and never walks up the tree. Three consequences fo
 
 Enabling an item never re-enables what it did not disable in the same breath: the write that disabled it
 had already overwritten whatever a song had set for its own reasons, so refusing to restore would preserve
-nothing and leave a manager clicking through a catalogue.
+nothing and leave a manager clicking through a catalog.
 
 ## Where it is enforced
 
@@ -74,7 +74,7 @@ Smart lists reach their rows without a browse and carry the same condition in `A
 `ArtistRepository::getRowsByCatalogs()`, `AlbumRepository::getIdsByCatalogs()` and `getSongs()`,
 `SongRepository::getEnabledIds()`, `getEnabledIdsByCatalog()` and `getEnabledByArtist()` - filter without
 asking anyone's level. `getAllByArtist()` deliberately does not: re-reading the tags of a withdrawn file is
-still a thing a catalogue has to do, and it is also what the artist's "all songs" page reads for a manager.
+still a thing a catalog has to do, and it is also what the artist's "all songs" page reads for a manager.
 
 The home widgets and the newest, recent and popular pages build their own statements and hand the ids
 straight to a renderer, which does not filter them again, so `Stats` carries the condition itself in
@@ -103,8 +103,8 @@ refuse every one of those links.
 they are not part of that promise today.
 
 Neither column is indexed, and that is measured rather than assumed. Almost every row is enabled - 8581 of
-8584 albums on the catalogue this was built against - so an index on the column has a cardinality of two and
-the optimiser that reaches for it reads every entry and then fetches every row, where scanning the table is
+8584 albums on the catalog this was built against - so an index on the column has a cardinality of two and
+the optimizer that reaches for it reads every entry and then fetches every row, where scanning the table is
 a third faster. Adding the name to make it composite is worse again, because the browse groups by name and
 filesorts either way. The one query an index would serve, a manager listing what is withdrawn, is rare and
 pays for itself out of the same scan.

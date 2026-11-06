@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 
 final class FolderQuery implements QueryInterface
 {
     public const array FILTERS = [
         'alpha_match',
+        'catalog',
         'equal',
         'exact_match',
         'id',
@@ -41,6 +43,7 @@ final class FolderQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'user_catalog',
         'user_flag',
         'user_rating',
     ];
@@ -113,6 +116,15 @@ final class FolderQuery implements QueryInterface
         switch ($filter) {
             case 'id':
                 $filter_sql = " `folder`.`id` = '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " `folder`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                }
+
+                break;
+            case 'user_catalog':
+                $filter_sql = " `folder`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'int_id':
                 $filter_sql = ($value === -1)

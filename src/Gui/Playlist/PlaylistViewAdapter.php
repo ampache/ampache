@@ -209,6 +209,11 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return scrub_out($this->playlist->get_fullname());
     }
 
+    public function getGlobalRating(): string
+    {
+        return Rating::show_global_rating($this->playlist->getId(), 'playlist');
+    }
+
     public function getId(): int
     {
         return $this->playlist->getId();
@@ -265,7 +270,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getRating(): string
     {
-        return Rating::show($this->playlist->getId(), 'playlist', true);
+        return Rating::show($this->playlist->getId(), 'playlist');
     }
 
     public function getRefreshIcon(): string

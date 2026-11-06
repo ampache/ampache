@@ -35,7 +35,9 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutCreatorInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,7 +66,7 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || !$this->requestParser->verifyForm('add_shout')
-            || $user === null
+            || !$user instanceof User
         ) {
             throw new AccessDeniedException();
         }
@@ -73,14 +75,14 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';
-        // sticky is a content-manager control; the checkbox is only rendered for them, so honour that on write too
+        // sticky is a content-manager control; the checkbox is only rendered for them, so honor that on write too
         $isSticky   = array_key_exists('sticky', $body) && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 
         // `data` is only used to mark a song offset (by clicking on the waveform)
         $songOffset = (int) ($body['data'] ?? 0);
 
         $libitem = $this->shoutObjectLoader->loadByObjectType($objectType, $objectId);
-        if ($libitem === null) {
+        if (!$libitem instanceof library_item) {
             throw new ObjectNotFoundException($objectId);
         }
 

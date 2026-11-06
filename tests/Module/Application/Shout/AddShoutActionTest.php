@@ -58,7 +58,7 @@ class AddShoutActionTest extends MockeryTestCase
 
     public function testRunIgnoresStickyForANonContentManager(): void
     {
-        // the checkbox is only rendered for a content manager, so an ordinary user posting sticky is not honoured
+        // the checkbox is only rendered for a content manager, so an ordinary user posting sticky is not honored
         $this->runWith(false, false);
     }
 

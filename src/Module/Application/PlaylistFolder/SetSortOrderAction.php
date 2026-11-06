@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\PlaylistFolder;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PlaylistFolderRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,7 +61,7 @@ final readonly class SetSortOrderAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             throw new AccessDeniedException('Access Denied: playlist folders are only available to a logged in user.');
         }
 

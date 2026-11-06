@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -51,7 +52,7 @@ final readonly class AdminAction implements ApplicationActionInterface
 
         $tab  = (string) ($request->getQueryParams()['tab'] ?? '');
         $user = $gatekeeper->getUser();
-        if ($user !== null) {
+        if ($user instanceof User) {
             $this->ui->showHeader();
             echo $this->preferencesViewFactory->create(
                 $gatekeeper,

@@ -194,7 +194,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
 
         $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
 
-        if ($stateFilter !== null) {
+        if ($stateFilter instanceof PodcastEpisodeStateEnum) {
             $sql .= 'AND `podcast_episode`.`state` = ? ';
             $params[] = $stateFilter->value;
         }

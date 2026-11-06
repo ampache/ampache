@@ -128,7 +128,7 @@ class SearchTest extends MockeryTestCase
 
     /**
      * a size budget skips an oversized row rather than stopping the whole pass there, so a smaller row
-     * further down the ordered list can still fit -- proves the fuzzy behaviour, not just a hard cutoff
+     * further down the ordered list can still fit -- proves the fuzzy behavior, not just a hard cutoff
      */
     public function testApplyDurationAndSizeLimitsFuzzilySkipsAnOversizedRow(): void
     {
@@ -198,7 +198,7 @@ class SearchTest extends MockeryTestCase
     #[DataProvider('maliciousOperatorProvider')]
     public function testNormalizeLogicOperatorOnlyEverYieldsAndOrOr(string $operator, string $expected): void
     {
-        // the shared normaliser is what update() applies too; anything but "or" must become "and"
+        // the shared normalizer is what update() applies too; anything but "or" must become "and"
         $method = new ReflectionMethod(Search::class, 'normalizeLogicOperator');
 
         self::assertSame($expected, $method->invoke(null, $operator));

@@ -64,7 +64,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
-            || $user === null
+            || !$user instanceof User
             || !$this->requestParser->verifyForm('add_playlist_folder')
         ) {
             throw new AccessDeniedException();
@@ -97,7 +97,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('Folder created'),
-                $name,
+                scrub_out($name),
                 sprintf(
                     '%s/browse.php?action=playlist_folder%s',
                     $this->configContainer->getWebPath(),

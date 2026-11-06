@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -59,7 +60,7 @@ final readonly class RemoveObjectAction implements ApplicationActionInterface
         $user       = Core::get_global('user');
         $collection = $this->collectionRepository->findById((int) ($params['collection'] ?? 0));
         if (
-            $collection === null
+            !$collection instanceof Collection
             || !$collection->has_collaborate($user instanceof User ? $user : null)
         ) {
             throw new AccessDeniedException();

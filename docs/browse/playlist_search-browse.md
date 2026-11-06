@@ -33,7 +33,7 @@ e.g. `cond=starts_with,a`
 | `regex_not_match`     | regex   | The list name does not match this MySQL regular expression. Setting it clears any `regex_match` filter.                           |
 | `smartlist`           | none    | Only smartlists, the rows with a `smart_` prefixed id. Needs no value.                                                            |
 | `starts_with`         | string  | The list name starts with this value.                                                                                             |
-| `user_flag`           | 0 or 1  | Send `1` for lists the current user has favourited, `0` for the ones they have not.                                               |
+| `user_flag`           | 0 or 1  | Send `1` for lists the current user has favorited, `0` for the ones they have not.                                                |
 | `user_rating`         | 0 to 5  | Only lists the current user rated this value. Send `0` for lists they have not rated at all.                                      |
 
 ## Available browse sorts
@@ -42,19 +42,19 @@ Send a single sort in the `sort` parameter as `name,order`, where order is `ASC`
 
 e.g. `sort=name,DESC`
 
-| Sort               | Description                                                                                                              |
-|--------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `date`             | When the list was created.                                                                                               |
-| `id`               | The list id. Smartlist ids are prefixed with `smart_`, so they sort apart from playlists.                                |
-| `last_count`       | How many items the list held when it was last counted.                                                                   |
-| `last_update`      | When it was last updated.                                                                                                |
-| `name`             | List name, then id, so lists with the same name keep a stable order.                                                     |
-| `rand`             | Random order, applied per request. Paging through it repeats and skips lists, so ask for everything in one call.         |
-| `rating`           | Your own rating, then when you set it. Lists you have not rated group together.                                          |
-| `title`            | Alias of `name`.                                                                                                         |
-| `type`             | Visibility: `public` or `private`.                                                                                       |
-| `user`             | The id of the user who owns it.                                                                                          |
-| `user_flag`        | When you added it to your favourites. This is a date, not a flag, so everything you have not favourited groups together. |
-| `user_flag_rating` | When you added it to your favourites, then your rating.                                                                  |
-| `userflag`         | Alias of `user_flag`.                                                                                                    |
-| `username`         | The owner's username.                                                                                                    |
+| Sort               | Description                                                                                                            |
+|--------------------|------------------------------------------------------------------------------------------------------------------------|
+| `date`             | When the list was created.                                                                                             |
+| `id`               | The list id. Smartlist ids are prefixed with `smart_`, so they sort apart from playlists.                              |
+| `last_count`       | How many items the list held when it was last counted.                                                                 |
+| `last_update`      | When it was last updated.                                                                                              |
+| `name`             | List name, then id, so lists with the same name keep a stable order.                                                   |
+| `rand`             | Random order, applied per request. Paging through it repeats and skips lists, so ask for everything in one call.       |
+| `rating`           | Your own rating, then when you set it. Lists you have not rated group together.                                        |
+| `title`            | Alias of `name`.                                                                                                       |
+| `type`             | Visibility: `public` or `private`.                                                                                     |
+| `user`             | The id of the user who owns it.                                                                                        |
+| `user_flag`        | When you added it to your favorites. This is a date, not a flag, so everything you have not favorited groups together. |
+| `user_flag_rating` | When you added it to your favorites, then your rating.                                                                 |
+| `userflag`         | Alias of `user_flag`.                                                                                                  |
+| `username`         | The owner's username.                                                                                                  |

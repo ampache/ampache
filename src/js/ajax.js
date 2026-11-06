@@ -98,6 +98,11 @@ $(document).on("click", "a[data-confirm]", function (event) {
     });
 });
 
+// Dismiss a notification on click, which matters for a sticky one (timeout 0) left up until acknowledged
+$(document).on("click", "#notification", function () {
+    clearNotification();
+});
+
 // Some cutesy flashing thing while we run
 $(document).ajaxSend(function () {
     $("#ajax-loading").show();

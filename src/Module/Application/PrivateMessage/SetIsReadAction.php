@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,7 +72,7 @@ final readonly class SetIsReadAction implements ApplicationActionInterface
         foreach ($messageIds as $messageId) {
             $message = $this->pmRepository->findById($messageId);
             if (
-                $message === null
+                !$message instanceof PrivateMessageInterface
                 || $message->getRecipientUserId() !== $gatekeeper->getUserId()
             ) {
                 throw new AccessDeniedException(

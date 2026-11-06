@@ -213,7 +213,7 @@ class Dba
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
      */
-    public static function escape($var): ?string
+    public static function escape(mixed $var): ?string
     {
         $dbh = self::dbh();
         if (!$dbh instanceof PDO) {
@@ -239,6 +239,7 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array<string, mixed>
      */
     public static function fetch_assoc(?PDOStatement $resource, bool $finish = true): array
     {
@@ -266,6 +267,7 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
+     * @return array<int, mixed>
      */
     public static function fetch_row(?PDOStatement $resource, bool $finish = true): array
     {
@@ -332,7 +334,7 @@ class Dba
     public static function insert_id(): false|string
     {
         $dbh = self::dbh();
-        if ($dbh !== null) {
+        if ($dbh instanceof PDO) {
             return $dbh->lastInsertId();
         }
 
@@ -382,6 +384,7 @@ class Dba
 
     /**
      * query
+     * @param array<int|string, mixed> $params
      */
     public static function query(string $sql, array $params = [], bool $silent = false, ?Interactor $interactor = null): ?PDOStatement
     {
@@ -397,7 +400,7 @@ class Dba
             $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
 
-        if ($stmt === null) {
+        if (!$stmt instanceof PDOStatement) {
             $interactor?->error(
                 self::error(),
                 true
@@ -409,6 +412,7 @@ class Dba
 
     /**
      * read
+     * @param array<int|string, mixed> $params
      */
     public static function read(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
@@ -438,6 +442,7 @@ class Dba
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
+     * @return array{charset: string, collation: string}
      */
     public static function translate_to_mysqlcharset(?string $charset): array
     {
@@ -490,6 +495,7 @@ class Dba
 
     /**
      * write
+     * @param array<int|string, mixed> $params
      */
     public static function write(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
@@ -588,6 +594,7 @@ class Dba
 
     /**
      * _query
+     * @param array<int|string, mixed> $params
      */
     private static function _query(string $sql, array $params, bool $silent = false): ?PDOStatement
     {

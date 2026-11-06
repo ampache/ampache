@@ -70,7 +70,7 @@ class Query
     public int|string $id = 0;
     public ?int $user_id  = null;
 
-    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
+    /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
     /**
@@ -174,6 +174,7 @@ class Query
      * This returns an array of the allowed filters based on the type of
      * object we are working with, this is used to display the 'filter'
      * sidebar stuff.
+     * @return string[]
      */
     public static function get_allowed_filters(string $type): array
     {
@@ -305,7 +306,7 @@ class Query
     /**
      * get_saved
      * This looks in the session for the saved stuff and returns what it finds.
-     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>
+     * @return int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}>
      */
     public function get_saved(): array
     {
@@ -361,6 +362,7 @@ class Query
      * get_total
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use that.
+     * @param array<array-key, mixed>|null $object_ids
      */
     public function get_total(?array $object_ids = null): int
     {
@@ -442,7 +444,7 @@ class Query
     /**
      * save_objects
      * This takes the full array of object ids, often passed into show and if necessary it saves them
-     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $object_ids
+     * @param int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw?: string, link?: string|null, track: int, oid?: int, vlid?: int}> $object_ids
      */
     public function save_objects(array $object_ids): bool
     {
@@ -805,7 +807,7 @@ class Query
         // Don't allow pointless sorts
         if (
             !empty($this->get_type())
-            && $this->queryType !== null
+            && $this->queryType instanceof QueryInterface
             && !in_array($sort, $this->queryType->get_sorts())
         ) {
             debug_event(self::class, 'IGNORED set_sort ' . $this->get_type() . ': ' . $sort, 5);
@@ -893,6 +895,7 @@ class Query
      * This sets the type of object that we want to browse by
      * we do this here so we only have to maintain a single whitelist
      * and if I want to change the location I only have to do it here
+     * @param array<int|string, mixed>|null $parameters
      */
     public function set_type(string $type, ?string $custom_base = '', ?array $parameters = []): void
     {
@@ -996,7 +999,7 @@ class Query
                 break;
         }
 
-        if ($this->queryType !== null) {
+        if ($this->queryType instanceof QueryInterface) {
             // Set it
             $this->_state['type'] = $type;
             // don't overwrite an existing browse with defaults
@@ -1069,7 +1072,7 @@ class Query
     private function _get_custom_join_sql(): string
     {
         $custom = (string) ($this->_state['custom_sql'] ?? '');
-        if ($custom === '' || $this->queryType === null) {
+        if ($custom === '' || !$this->queryType instanceof QueryInterface) {
             return '';
         }
 
@@ -1304,7 +1307,8 @@ class Query
      * _post_process
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
-     * @return array<array{id: int}>
+     * @param array<int, array<string, mixed>> $data
+     * @return array<int, array<string, mixed>>
      */
     private function _post_process(array $data): array
     {
@@ -1418,7 +1422,7 @@ class Query
      */
     private function _restoreQueryType(): void
     {
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             self::set_type($this->_state['type']);
         }
     }
@@ -1428,6 +1432,7 @@ class Query
      *
      * Attempts to produce a more compact representation for large result
      * sets by collapsing ranges.
+     * @param array<array-key, mixed> $data
      */
     private function _serialize(array $data): string
     {
@@ -1437,6 +1442,7 @@ class Query
     /**
      * _set_base_sql
      * This saves the base sql statement we are going to use.
+     * @param array<int|string, mixed>|null $parameters
      */
     private function _set_base_sql(?bool $force = false, ?string $custom_base = '', ?array $parameters = []): void
     {
@@ -1479,7 +1485,7 @@ class Query
     {
         $this->_restoreQueryType();
 
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             return '';
         }
 
@@ -1506,7 +1512,7 @@ class Query
 
         $this->_restoreQueryType();
 
-        if ($this->queryType === null) {
+        if (!$this->queryType instanceof QueryInterface) {
             return '';
         }
 

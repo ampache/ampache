@@ -1,4 +1,4 @@
-# Acknowledgements
+# Acknowledgments
 
 * Scott Kveton: Original creator of Ampache
 * Robert Hopson

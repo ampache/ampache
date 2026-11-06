@@ -69,7 +69,7 @@ abstract class AbstractEditFormRenderer extends AbstractView implements EditForm
 
     final protected function getContext(): EditFormContext
     {
-        if ($this->context === null) {
+        if (!$this->context instanceof EditFormContext) {
             throw new LogicException(static::class . ' was rendered outside renderForm()');
         }
 

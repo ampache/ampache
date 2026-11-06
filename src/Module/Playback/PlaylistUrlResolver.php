@@ -153,7 +153,7 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
      */
     private function firstStreamUrl(string $body): ?string
     {
-        foreach (preg_split('/\R/', $body) ?: [] as $line) {
+        foreach (preg_split('/\R/u', $body) ?: [] as $line) {
             $line = trim($line);
             if ($line === '' || str_starts_with($line, '#')) {
                 continue;
@@ -249,7 +249,7 @@ final readonly class PlaylistUrlResolver implements PlaylistUrlResolverInterface
      */
     private function redirectLocation(CurlHandle $curl): ?string
     {
-        $status = (int) curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+        $status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
         if ($status < 300 || $status > 399) {
             return null;
         }

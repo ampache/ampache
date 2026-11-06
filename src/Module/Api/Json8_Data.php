@@ -403,7 +403,7 @@ final class Json8_Data
                 $objArray['songartists'] = $song_artists;
             }
 
-            // Handle includes (get_songs() is already scoped to the disk and honours catalog_disable)
+            // Handle includes (get_songs() is already scoped to the disk and honors catalog_disable)
             $songs = (in_array("songs", $include))
                 ? $this->songs_array($album_disk->get_songs(), $user, $auth)
                 : [];
@@ -1555,6 +1555,28 @@ final class Json8_Data
     }
 
     /**
+     * folder_list
+     *
+     * Folders as standalone objects, for a caller listing folders rather than walking into one.
+     *
+     * @param array<int|string> $objects Folder id's to include
+     */
+    public function folder_list(array $objects, User $user, string $auth): string
+    {
+        $this->count = $this->count ?: count($objects);
+        $md5         = md5(serialize($objects));
+        $JSON        = $this->folders_array($objects, $user, $auth);
+
+        $output = [
+            "total_count" => $this->count,
+            "md5" => $md5,
+            "folder" => $JSON
+        ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
      * folders
      *
      * This returns an array of folders and their contents.
@@ -2081,7 +2103,7 @@ final class Json8_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param array<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects License id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "license"
      */
@@ -2107,7 +2129,7 @@ final class Json8_Data
     /**
      * licenses_array
      *
-     * @param array<int|string> $objects Licence id's assigned to songs and artists
+     * @param array<int|string> $objects License id's assigned to songs and artists
      * @return array<int, array{
      *     id: string,
      *     name: string,

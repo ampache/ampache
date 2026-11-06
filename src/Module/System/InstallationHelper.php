@@ -33,6 +33,7 @@ use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\System\Update\Versions;
 use Ampache\Module\Util\Horde_Browser;
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
@@ -88,6 +89,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
     /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
+     * @param array<string, mixed> $current
      * @throws Exception
      */
     public function generate_config(array $current): string
@@ -669,7 +671,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
         // install_create_account() because the CLI installer never calls that, only the web one does.
         foreach (self::DEFAULT_PLUGINS as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
+            if ($plugin->_plugin instanceof AmpachePlugin && Plugin::is_installed($plugin->_plugin->name) === 0) {
                 $plugin->install();
             }
         }
@@ -766,7 +768,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
         $whereIsCommand = (PHP_OS === 'WINNT') ? 'where' : 'which';
         $process        = proc_open(
-            sprintf('%s %s', $whereIsCommand, $command),
+            sprintf('%s %s', $whereIsCommand, escapeshellarg($command)),
             [
                 0 => ["pipe", "r"], // STDIN
                 1 => ["pipe", "w"], // STDOUT
@@ -841,6 +843,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
 
     /**
      * splits up a standard SQL dump file into distinct sql queries
+     * @return string[]
      */
     private function split_sql(string $sql): array
     {

@@ -1,6 +1,6 @@
 # API Errors
 
-Ampache's API errors are modelled on the HTTP status codes. All errors are returned as an XML/JSON document with a US English message string; services should rely on the numeric code, not the message text.
+Ampache's API errors are modeled on the HTTP status codes. All errors are returned as an XML/JSON document with a US English message string; services should rely on the numeric code, not the message text.
 
 The structured error format below applies to API versions 5, 6 and 8 (8 is the current default). It expands on the information available to the user/client/application that caused the error.
 

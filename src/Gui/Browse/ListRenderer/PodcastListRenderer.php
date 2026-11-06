@@ -40,7 +40,7 @@ use Override;
  *
  * The podcast repository is injected here rather than lent by `Browse`.
  */
-final class PodcastListRenderer extends AbstractBrowseListRenderer
+final class PodcastListRenderer extends AbstractBrowseListRenderer implements SortableBrowseListRendererInterface
 {
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
@@ -103,7 +103,7 @@ final class PodcastListRenderer extends AbstractBrowseListRenderer
         $podcasts = [];
         foreach ($this->getObjectIds() as $objectId) {
             $podcast = $this->podcastRepository->findById($objectId);
-            if ($podcast !== null) {
+            if ($podcast instanceof Podcast) {
                 $podcasts[] = $podcast;
             }
         }

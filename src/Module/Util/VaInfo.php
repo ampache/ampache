@@ -132,13 +132,19 @@ final class VaInfo implements VaInfoInterface
     public string $encoding          = '';
     public string $encodingId3v1     = '';
     public string $encodingId3v2     = '';
-    public array $tags               = [];
+
+    /** @var array<string, mixed> */
+    public array $tags = [];
+
     public string $type              = '';
     protected string $_file_encoding = '';
     protected int $_forcedSize       = 0;
     protected ?getID3 $_getID3       = null;
-    protected array $_raw            = [];
-    private bool $_broken            = false;
+
+    /** @var array<string, mixed> */
+    protected array $_raw = [];
+
+    private bool $_broken = false;
 
     /** @var array{dirname?: string, basename: string, extension?: string, filename: string}  */
     private array $_pathinfo;
@@ -345,7 +351,7 @@ final class VaInfo implements VaInfoInterface
             $info['time']     = (!$info['time'] && array_key_exists('time', $tags)) ? (int) $tags['time'] : $info['time'];
             $info['channels'] = (!$info['channels'] && array_key_exists('channels', $tags)) ? $tags['channels'] : $info['channels'];
 
-            // getID3 normalises id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
+            // getID3 normalizes id3v2 TBPM, quicktime tmpo and the vorbis/APE comment to the same key, so one line covers every format
             $info['bpm'] = (!$info['bpm'] && array_key_exists('bpm', $tags)) ? (float) $tags['bpm'] : $info['bpm'];
 
             // This because video title are almost always bad...
@@ -491,6 +497,7 @@ final class VaInfo implements VaInfoInterface
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
+     * @param array<string, mixed> $results
      * @return string[]
      */
     public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
@@ -842,7 +849,7 @@ final class VaInfo implements VaInfoInterface
         if (
             in_array('getid3', $enabled_sources)
             && $this->islocal
-            && $this->_getID3
+            && $this->_getID3 instanceof getID3
         ) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
@@ -871,6 +878,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * prepare_metadata_for_writing
      * Prepares vorbiscomments/id3v2 metadata for writing tag to file
+     * @param array<string, mixed> $frames
+     * @return array<string, array<int, mixed>>
      */
     public function prepare_metadata_for_writing(array $frames): array
     {
@@ -900,6 +909,7 @@ final class VaInfo implements VaInfoInterface
      * read_id3
      *
      * This function runs the various steps to gathering the metadata
+     * @return array<string, mixed>
      */
     public function read_id3(): array
     {
@@ -978,6 +988,7 @@ final class VaInfo implements VaInfoInterface
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
+     * @param array<string, mixed> $tagData
      * @throws Exception
      */
     public function write_id3(array $tagData): void
@@ -1923,6 +1934,7 @@ final class VaInfo implements VaInfoInterface
      * _detect_encoding
      *
      * Takes an array of tags and attempts to automatically detect their encoding.
+     * @param array<string, mixed>|string $tags
      */
     private function _detect_encoding(array|string $tags, string $mb_order): string
     {
@@ -2142,6 +2154,7 @@ final class VaInfo implements VaInfoInterface
      *
      * Gather and return the general information about a file
      * (vbr/cbr, sample rate, channels, etc.)
+     * @param array<string, mixed> $tags
      * @return array<string, mixed>
      */
     private function _parse_general(array $tags): array
@@ -2239,6 +2252,8 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * parseArtists
+     * @param array<array-key, mixed>|string $data
+     * @return string[]
      */
     private function parseArtists(array|string $data): array
     {
@@ -2264,6 +2279,7 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * parseGenres
+     * @param array<array-key, mixed>|string $data
      * @return string[]
      * @throws Exception
      */

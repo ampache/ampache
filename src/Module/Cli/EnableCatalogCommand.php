@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Catalog\Catalog;
@@ -46,13 +47,13 @@ final class EnableCatalogCommand extends Command
     public function execute(
         string $catalogId,
     ): void {
-        if ($this->app() === null) {
+        if (!$this->app() instanceof Application) {
             return;
         }
 
         $interactor = $this->io();
 
-        if (Catalog::create_from_id((int) $catalogId) === null) {
+        if (!Catalog::create_from_id((int) $catalogId) instanceof Catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             $interactor->error(
                 sprintf(T_('Missing: %s'), $catalogId),
