@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Ampache 8.4.1
+
+### Fixed (8.4.1)
+
+* `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
+
 ## Ampache 8.4.0
 
 **NOTE**: Apache + php-fpm buffers catalog progress by default; see `docs/examples/apache-site.conf` for the fix.
