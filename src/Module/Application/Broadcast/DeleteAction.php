@@ -35,6 +35,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -67,9 +68,10 @@ final readonly class DeleteAction implements ApplicationActionInterface
 
         $user  = $gatekeeper->getUser();
         $level = AccessLevelEnum::CONTENT_MANAGER;
-        if ($user !== null && $broadcast->get_user_owner() === $user->getId()) {
+        if ($user instanceof User && $broadcast->get_user_owner() === $user->getId()) {
             $level = AccessLevelEnum::USER;
         }
+
         if (!$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $level)) {
             throw new AccessDeniedException();
         }
