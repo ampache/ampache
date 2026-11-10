@@ -29,6 +29,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -56,8 +58,21 @@ final readonly class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        if (!$this->requestParser->verifyForm('delete_broadcast')) {
+            throw new AccessDeniedException();
+        }
+
         $object_id = $this->requestParser->getFromRequest('id');
         $broadcast = $this->modelFactory->createBroadcast((int) $object_id);
+
+        $user  = $gatekeeper->getUser();
+        $level = AccessLevelEnum::CONTENT_MANAGER;
+        if ($user !== null && $broadcast->get_user_owner() === $user->getId()) {
+            $level = AccessLevelEnum::USER;
+        }
+        if (!$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $level)) {
+            throw new AccessDeniedException();
+        }
 
         $this->ui->showHeader();
         if ($broadcast->delete()) {

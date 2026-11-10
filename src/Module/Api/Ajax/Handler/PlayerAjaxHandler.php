@@ -30,6 +30,7 @@ use Ampache\Gui\Broadcast\BroadcastActionView;
 use Ampache\Gui\Broadcast\BroadcastListenersView;
 use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
@@ -231,7 +232,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $broadcast = new Broadcast((int) $broadcast_id);
-                if ($broadcast->isNew() === false) {
+                if (
+                    $broadcast->isNew() === false
+                    && ($broadcast->get_user_owner() === $user->getId() || $user->has_access(AccessLevelEnum::CONTENT_MANAGER))
+                ) {
                     $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
                     $results['broadcast']                = new BroadcastActionView((int) $broadcast_id)->render() . "<script>startBroadcast('" . $key . "');</script>";
@@ -242,7 +246,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
                 $broadcast    = new Broadcast((int) $broadcast_id);
-                if ($broadcast->isNew() === false) {
+                if (
+                    $broadcast->isNew() === false
+                    && ($broadcast->get_user_owner() === $user->getId() || $user->has_access(AccessLevelEnum::CONTENT_MANAGER))
+                ) {
                     $broadcast->update_state(0);
                     $results['broadcast']                = new BroadcastActionView()->render() . '<script>stopBroadcast();</script>';
                     $results['broadcast_listeners_wrap'] = '';
