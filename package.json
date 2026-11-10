@@ -56,7 +56,6 @@
   "homepage": "https://github.com/ampache/ampache#readme",
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "jshint": "^0.5.9",
     "npm-run-all": "^4.1.5",
     "uglify-js": "^3.17.4",
     "vite": "^8.3.3"
