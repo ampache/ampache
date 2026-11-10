@@ -43,6 +43,7 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
@@ -182,6 +183,10 @@ final class Download8Method implements MethodInterface
 
         if (!$libItem instanceof container_item) {
             throw new ResultEmptyException((string) $objectId);
+        }
+
+        if ($libItem instanceof playlist_object && !$libItem->isVisible($user)) {
+            throw new AccessDeniedException();
         }
 
         $mediaIds = $libItem->get_medias();
