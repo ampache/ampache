@@ -1446,6 +1446,10 @@ final class VaInfo implements VaInfoInterface
                 case 'version':
                     $parsed['version'] = $data[0];
                     break;
+                case 'copyright':
+                    // WCOP, where Picard puts a license url
+                    $parsed['license'] = $data[0];
+                    break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
@@ -1556,6 +1560,9 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'version':
                         $parsed['version'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'license':
+                        $parsed['license'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'musicbrainz release track id':
                         // Skip this tag
