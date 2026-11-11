@@ -66,8 +66,11 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
 
-        // one query for every file path and folder stat instead of hydrating a Song model per id
-        $songStats = [];
+        // one query for every file path and folder/counter stat instead of hydrating a Song model per id
+        $songStats     = [];
+        $enabledDelta  = 0;
+        $enabledTime   = 0;
+        $enabledSizeMb = 0.0;
         foreach ($this->songRepository->getRowsByIds($songIds, false) as $row) {
             $file = $row['file'];
             if (!in_array($file, [null, '', '0'], true) && file_exists($file) && !unlink($file)) {
@@ -87,6 +90,13 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
                 'total_skip' => (int) $row['total_skip'],
                 'time' => (int) $row['time'],
             ];
+
+            // a disabled song was never in the enabled-only totals, so removing it moves nothing
+            if ((bool) $row['enabled']) {
+                $enabledDelta--;
+                $enabledTime -= (int) $row['time'];
+                $enabledSizeMb -= (int) $row['size'] / 1024 / 1024;
+            }
         }
 
         $this->songRepository->deleteByIdsWithArchive($songIds);
@@ -113,9 +123,11 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             $this->shoutRepository->collectGarbage('album', $albumId);
             $this->userActivityRepository->collectGarbage('album', $albumId);
 
-            $this->catalogCounter->count(CountableTableEnum::ALBUM);
+            // every enabled song in this album held its totals; album_disk still needs a real recount since
+            // its count query carries no enabled filter to move by a known delta
+            $this->catalogCounter->adjust(CountableTableEnum::ALBUM, ($enabledDelta < 0) ? -1 : 0);
             $this->catalogCounter->count(CountableTableEnum::ALBUM_DISK);
-            $this->catalogCounter->count(CountableTableEnum::SONG);
+            $this->catalogCounter->adjust(CountableTableEnum::SONG, $enabledDelta, $enabledTime, $enabledSizeMb);
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Album\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
@@ -70,7 +71,7 @@ class AlbumDeleterTest extends TestCase
         $this->songRepository->expects(static::once())
             ->method('getRowsByIds')
             ->with([$songId], false)
-            ->willReturn([['id' => $songId, 'file' => '', 'total_count' => 5, 'total_skip' => 1, 'time' => 180]]);
+            ->willReturn([['id' => $songId, 'file' => '', 'total_count' => 5, 'total_skip' => 1, 'time' => 180, 'size' => 2097152, 'enabled' => 1]]);
 
         $this->songRepository->expects(static::once())
             ->method('deleteByIdsWithArchive')
@@ -117,10 +118,26 @@ class AlbumDeleterTest extends TestCase
                 $useractivityGarbageCalls[] = $args;
             });
 
-        $this->catalogCounter->expects(static::exactly(3))
-            ->method('count');
+        $this->catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::ALBUM_DISK);
+
+        $adjustCalls = [];
+        $this->catalogCounter->expects(static::exactly(2))
+            ->method('adjust')
+            ->willReturnCallback(static function (...$args) use (&$adjustCalls): void {
+                $adjustCalls[] = $args;
+            });
 
         $this->subject->delete($album);
+
+        self::assertSame(
+            [
+                [CountableTableEnum::ALBUM, -1, 0, 0.0],
+                [CountableTableEnum::SONG, -1, -180, -2.0],
+            ],
+            $adjustCalls,
+        );
 
         self::assertSame(
             [['song', null], ['album', $albumId]],
