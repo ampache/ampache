@@ -76,7 +76,7 @@ if ($browse->is_show_header()) {
             <td class="cel_artist"><?php echo $this->raw($media->get_f_parent_link() ?? ""); ?></td>
             <td class="cel_time"><?php echo $this->e($media->get_f_time()); ?></td>
             <?php if ($isAdmin) { ?>
-            <td class="cel_admin"><?php echo $this->raw(Ajax::button('?page=democratic&action=delete&row_id=' . $item['track_id'], 'close', T_('Delete'), 'delete_row_' . $item['track_id'])); ?></td>
+            <td class="cel_admin"><?php echo $this->raw(Ajax::button('?page=democratic&action=delete&row_id=' . $item['track_id'] . '&browse_id=' . $browse->getId(), 'close', T_('Delete'), 'delete_row_' . $item['track_id'])); ?></td>
             <?php } ?>
         </tr>
         <?php } ?>

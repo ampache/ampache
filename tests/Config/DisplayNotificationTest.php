@@ -44,7 +44,7 @@ class DisplayNotificationTest extends TestCase
 
     public function testTheMessageIsNotWrappedInQuotesTwice(): void
     {
-        $this->assertStringContainsString('displayNotification("Saved.", 5000);', $this->emit('Saved.'));
+        $this->assertStringContainsString('f("Saved.", 5000);', $this->emit('Saved.'));
     }
 
     private function emit(string $message): string
