@@ -124,9 +124,20 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 );
             }
 
+            // every album/artist a processed song belonged to, before or after; scopes the end-of-run count
+            // refresh to these instead of the whole-catalog recompute a real full catalog update needs
+            $touchedAlbumIds  = [];
+            $touchedArtistIds = [];
+
             foreach ($file_ids as $file_id) {
                 $media     = new $className($file_id);
                 $file_path = $media->file;
+
+                if ($media instanceof Song) {
+                    $touchedAlbumIds[$media->album]         = true;
+                    $touchedArtistIds[(int) $media->artist] = true;
+                }
+
                 if (in_array($file_path, [null, '', '0'], true)) {
                     break;
                 }
@@ -257,10 +268,27 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 );
                 // update counts after adding/verifying
                 if ($type === 'song') {
+                    // a scan/add doesn't hand back which songs it created, so re-read the folder now it holds them
+                    foreach (Catalog::get_ids_from_folder($folderPath, 'song') as $file_id) {
+                        $song                                   = new Song($file_id);
+                        $touchedAlbumIds[$song->album]          = true;
+                        $touchedArtistIds[(int) $song->artist]  = true;
+                    }
+
                     Catalog::clean_empty_albums();
-                    Album::update_album_artist();
-                    Album::update_table_counts();
-                    Artist::update_table_counts();
+
+                    foreach (array_keys($touchedAlbumIds) as $albumId) {
+                        if ($albumId > 0) {
+                            Album::update_album_artist($albumId);
+                            Album::update_album_count($albumId);
+                        }
+                    }
+
+                    foreach (array_keys($touchedArtistIds) as $artistId) {
+                        if ($artistId > 0) {
+                            Artist::update_artist_count($artistId);
+                        }
+                    }
                 }
 
                 // clean up after the action

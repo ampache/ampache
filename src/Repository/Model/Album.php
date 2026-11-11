@@ -455,23 +455,27 @@ class Album extends database_object implements
     /**
      * update_album_artist
      *
-     * find albums that are missing an album_artist and generate one.
+     * Finds albums missing an album_artist and generates one. Passing an id scopes the search to that one
+     * album instead of scanning every album in the catalog for the same thing.
      */
-    public static function update_album_artist(): void
+    public static function update_album_artist(?int $album_id = null): void
     {
         $albumRepository = self::getAlbumRepository();
 
-        // Find all albums that are missing an album artist
-        foreach ($albumRepository->getIdsMissingAlbumArtist() as $album_id) {
+        $album_ids = ($album_id === null)
+            ? $albumRepository->getIdsMissingAlbumArtist()
+            : ($albumRepository->isMissingAlbumArtist($album_id) ? [$album_id] : []);
+
+        foreach ($album_ids as $missing_album_id) {
             // these are albums that only have 1 artist
-            $artist_id = $albumRepository->getSoleSongArtistId($album_id) ?? 0;
+            $artist_id = $albumRepository->getSoleSongArtistId($missing_album_id) ?? 0;
 
             // Update the album
             if ($artist_id > 0) {
-                debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
-                self::_update_field(AlbumFieldEnum::ALBUM_ARTIST, $artist_id, $album_id);
-                Artist::add_artist_map($artist_id, 'album', $album_id);
-                self::add_album_map($album_id, 'album', $artist_id);
+                debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $missing_album_id, 5);
+                self::_update_field(AlbumFieldEnum::ALBUM_ARTIST, $artist_id, $missing_album_id);
+                Artist::add_artist_map($artist_id, 'album', $missing_album_id);
+                self::add_album_map($missing_album_id, 'album', $artist_id);
             }
         }
     }

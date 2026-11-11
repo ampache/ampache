@@ -1037,6 +1037,14 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return $rows;
     }
 
+    public function isMissingAlbumArtist(int $albumId): bool
+    {
+        return (bool) $this->connection->fetchOne(
+            'SELECT 1 FROM `album` WHERE `id` = ? AND `album_artist` IS NULL AND `name` != ?;',
+            [$albumId, T_('Unknown (Orphaned)')]
+        );
+    }
+
     /**
      * Whether the album is one of the placeholders the scanner parks songs on when their real album is unknown
      */
