@@ -82,13 +82,18 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $albumId    = (int) $media->album;
                         $titleText  = scrub_out((string) $media->get_fullname());
                         $artistText = scrub_out(Artist::get_fullname_by_id($artistId));
-                        $albumText  = scrub_out((string) $media->get_album_fullname());
+                        $grouped    = AmpConfig::get_bool('album_group');
+                        $diskId     = (int) $media->album_disk;
+                        $albumText  = scrub_out($grouped ? (string) $media->get_album_fullname() : $media->get_album_disk_fullname());
+                        $albumLink  = ($grouped)
+                            ? ($albumId > 0 ? $web_path . '/albums.php?action=show&album=' . $albumId : '')
+                            : ($diskId > 0 ? $web_path . '/albums.php?action=show_disk&album_disk=' . $diskId : '');
 
                         // per-song action row (album button + rating/flag placeholder) mirroring the regular
                         // playlist flow in playback/web_player.phtml, which random/democratic streams skip
                         $showAlbum = T_('Show Album');
-                        $actions   = ($albumId > 0)
-                            ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
+                        $actions   = ($albumLink !== '')
+                            ? '<a href="javascript:NavigateTo(\'' . $albumLink . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
                             : '';
                         $actions .= "<div id='action_buttons_" . $current['object_id'] . '_' . $current['object_type'] . "'></div>";
 
@@ -102,8 +107,8 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'artist' => ($artistId > 0)
                                 ? '<a href="javascript:NavigateTo(\'' . $web_path . '/artists.php?action=show&artist=' . $artistId . '\')">' . $artistText . '</a>'
                                 : $artistText,
-                            'album' => ($albumId > 0)
-                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')">' . $albumText . '</a>'
+                            'album' => ($albumLink !== '')
+                                ? '<a href="javascript:NavigateTo(\'' . $albumLink . '\')">' . $albumText . '</a>'
                                 : $albumText,
                             'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
