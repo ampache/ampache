@@ -814,7 +814,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
 
         // folder
-        $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
+        $this->connection->query("INSERT IGNORE INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
         // the old pre-path streaming URL format (e.g. https://host/rest/stream.view?...) isn't a real path to map
         // Split in PHP, not SQL's REGEXP_REPLACE()/SUBSTRING_INDEX() — MySQL 5.x predates REGEXP_REPLACE entirely.
@@ -839,8 +839,10 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                     continue;
                 }
 
+                // IGNORE: a concurrent mapObject()/scan for the same object can win the race between the
+                // IS NULL check above and this insert, since nothing here locks the row in between
                 $this->connection->query(
-                    'INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) VALUES (?, ?, ?, ?, ?, ?);',
+                    'INSERT IGNORE INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) VALUES (?, ?, ?, ?, ?, ?);',
                     [$folderId, $row['id'], $objectType, $name, $row['catalog'], $pathName]
                 );
             }
