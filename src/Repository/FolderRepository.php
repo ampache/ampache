@@ -76,23 +76,80 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
-     * Removes the folder_map rows for a known, already-deleted batch of object ids, without the full
-     * catalog-wide anti-join sweep collectGarbage() does
+     * Removes the folder_map rows for a known, already-deleted batch of objects and decrements the affected
+     * folders' own stats by exactly what those objects held, instead of the full catalog-wide recompute
+     * collectGarbage()/update_folder_counts() does
      *
-     * @param int[] $objectIds
+     * @param array<int, array{total_count: int, total_skip: int, time: int}> $objectStats keyed by object id
      */
-    public function collectGarbageForObjects(string $objectType, array $objectIds): void
+    public function collectGarbageForObjects(string $objectType, array $objectStats): void
     {
-        if ($objectIds === []) {
+        if ($objectStats === []) {
             return;
         }
 
-        $idList = implode(',', array_map(intval(...), $objectIds));
+        $idList = implode(',', array_map(intval(...), array_keys($objectStats)));
 
         try {
+            // read the mapping before it is deleted, to know which folders lose which objects
+            $result            = $this->connection->query(
+                "SELECT `object_id`, `folder_id` FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($idList);",
+                [$objectType]
+            );
+            $folderIdByObject = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $folderIdByObject[(int) $row['object_id']] = (int) $row['folder_id'];
+            }
+
             $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($idList);", [$objectType]);
-            $this->pruneEmptyFolders();
-            $this->update_folder_counts();
+
+            if ($folderIdByObject === []) {
+                return;
+            }
+
+            $folderIds         = array_values(array_unique($folderIdByObject));
+            $ancestorsByFolder = [];
+            $foldersResult     = $this->connection->query(
+                'SELECT `id`, `path` FROM `folder` WHERE `id` IN (' . implode(',', array_map(intval(...), $folderIds)) . ');'
+            );
+            while ($row = $foldersResult->fetch(PDO::FETCH_ASSOC)) {
+                $ancestorsByFolder[(int) $row['id']] = array_map(intval(...), array_filter(explode(',', (string) $row['path'])));
+            }
+
+            // object_count is a direct per-folder tally, so only the immediate folder loses one per removed mapping
+            $objectCountDelta = [];
+            // total_count/total_skip/time roll up to every ancestor too, same as rollUpFolderCounts()
+            $statsDelta = [];
+
+            foreach ($folderIdByObject as $objectId => $folderId) {
+                $objectCountDelta[$folderId] = ($objectCountDelta[$folderId] ?? 0) + 1;
+
+                $stats = $objectStats[$objectId];
+                foreach ([$folderId, ...($ancestorsByFolder[$folderId] ?? [])] as $id) {
+                    $statsDelta[$id] ??= [0, 0, 0];
+                    $statsDelta[$id][0] += $stats['total_count'];
+                    $statsDelta[$id][1] += $stats['total_skip'];
+                    $statsDelta[$id][2] += $stats['time'];
+                }
+            }
+
+            foreach ($objectCountDelta as $folderId => $delta) {
+                $this->connection->query(
+                    'UPDATE `folder` SET `object_count` = GREATEST(`object_count` - ?, 0) WHERE `id` = ?;',
+                    [$delta, $folderId]
+                );
+                $this->connection->query(
+                    "UPDATE `folder` SET `playable` = EXISTS (SELECT 1 FROM `folder_map` WHERE `folder_id` = ? AND `object_type` != 'folder') WHERE `id` = ?;",
+                    [$folderId, $folderId]
+                );
+            }
+
+            foreach ($statsDelta as $folderId => [$count, $skip, $time]) {
+                $this->connection->query(
+                    'UPDATE `folder` SET `total_count` = GREATEST(`total_count` - ?, 0), `total_skip` = GREATEST(`total_skip` - ?, 0), `time` = GREATEST(`time` - ?, 0) WHERE `id` = ?;',
+                    [$count, $skip, $time, $folderId]
+                );
+            }
         } catch (DatabaseException) {
             $this->logger->debug(
                 'collectGarbageForObjects error',

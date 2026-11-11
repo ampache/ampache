@@ -70,7 +70,7 @@ class AlbumDeleterTest extends TestCase
         $this->songRepository->expects(static::once())
             ->method('getRowsByIds')
             ->with([$songId], false)
-            ->willReturn([['id' => $songId, 'file' => '']]);
+            ->willReturn([['id' => $songId, 'file' => '', 'total_count' => 5, 'total_skip' => 1, 'time' => 180]]);
 
         $this->songRepository->expects(static::once())
             ->method('deleteByIdsWithArchive')
@@ -101,7 +101,7 @@ class AlbumDeleterTest extends TestCase
 
         $this->folderRepository->expects(static::once())
             ->method('collectGarbageForObjects')
-            ->with('song', [$songId]);
+            ->with('song', [$songId => ['total_count' => 5, 'total_skip' => 1, 'time' => 180]]);
 
         $shoutGarbageCalls = [];
         $this->shoutRepository->expects(static::exactly(2))

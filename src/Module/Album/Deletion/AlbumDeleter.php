@@ -66,7 +66,8 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
 
-        // one query for every file path instead of hydrating a Song model per id
+        // one query for every file path and folder stat instead of hydrating a Song model per id
+        $songStats = [];
         foreach ($this->songRepository->getRowsByIds($songIds, false) as $row) {
             $file = $row['file'];
             if (!in_array($file, [null, '', '0'], true) && file_exists($file) && !unlink($file)) {
@@ -80,6 +81,12 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
 
                 throw new AlbumDeletionException();
             }
+
+            $songStats[(int) $row['id']] = [
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+                'time' => (int) $row['time'],
+            ];
         }
 
         $this->songRepository->deleteByIdsWithArchive($songIds);
@@ -93,7 +100,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             // every song in this album is gone, so clean up their map table rows
             $this->songRepository->collectGarbageForSongs($songIds);
             $this->albumRepository->collectGarbageForAlbums([$albumId]);
-            $this->folderRepository->collectGarbageForObjects('song', $songIds);
+            $this->folderRepository->collectGarbageForObjects('song', $songStats);
 
             // collect song garbage once
             Userflag::garbage_collection('song');
