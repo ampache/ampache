@@ -75,6 +75,32 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
     }
 
+    /**
+     * Removes the folder_map rows for a known, already-deleted batch of object ids, without the full
+     * catalog-wide anti-join sweep collectGarbage() does
+     *
+     * @param int[] $objectIds
+     */
+    public function collectGarbageForObjects(string $objectType, array $objectIds): void
+    {
+        if ($objectIds === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map(intval(...), $objectIds));
+
+        try {
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($idList);", [$objectType]);
+            $this->pruneEmptyFolders();
+            $this->update_folder_counts();
+        } catch (DatabaseException) {
+            $this->logger->debug(
+                'collectGarbageForObjects error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
+    }
+
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
         //$this->logger->debug('CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, [LegacyLogger::CONTEXT_TYPE => self::class]);

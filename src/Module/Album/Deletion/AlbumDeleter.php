@@ -93,7 +93,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             // every song in this album is gone, so clean up their map table rows
             $this->songRepository->collectGarbageForSongs($songIds);
             $this->albumRepository->collectGarbageForAlbums([$albumId]);
-            $this->folderRepository->collectGarbage();
+            $this->folderRepository->collectGarbageForObjects('song', $songIds);
 
             // collect song garbage once
             Userflag::garbage_collection('song');

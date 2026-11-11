@@ -38,6 +38,14 @@ interface FolderRepositoryInterface
      */
     public function collectGarbage(): void;
 
+    /**
+     * Removes the folder_map rows for a known, already-deleted batch of object ids, without the full
+     * catalog-wide anti-join sweep collectGarbage() does
+     *
+     * @param int[] $objectIds
+     */
+    public function collectGarbageForObjects(string $objectType, array $objectIds): void;
+
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder;
 
     public function delete(int $folderId): void;

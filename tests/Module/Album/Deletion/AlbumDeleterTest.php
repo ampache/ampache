@@ -100,7 +100,8 @@ class AlbumDeleterTest extends TestCase
             ->with([$albumId]);
 
         $this->folderRepository->expects(static::once())
-            ->method('collectGarbage');
+            ->method('collectGarbageForObjects')
+            ->with('song', [$songId]);
 
         $shoutGarbageCalls = [];
         $this->shoutRepository->expects(static::exactly(2))
@@ -169,7 +170,7 @@ class AlbumDeleterTest extends TestCase
             ->method('collectGarbage');
 
         $this->folderRepository->expects(static::never())
-            ->method('collectGarbage');
+            ->method('collectGarbageForObjects');
 
         $this->shoutRepository->expects(static::never())
             ->method('collectGarbage');
