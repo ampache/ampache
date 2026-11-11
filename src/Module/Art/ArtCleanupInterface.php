@@ -45,6 +45,13 @@ interface ArtCleanupInterface
     public function collectGarbageForObject(string $object_type, int $object_id): void;
 
     /**
+     * Same as collectGarbageForObject(), for a batch of ids of the same type
+     *
+     * @param int[] $object_ids
+     */
+    public function collectGarbageForObjects(string $object_type, array $object_ids): void;
+
+    /**
      * This resets the art in the database
      */
     public function deleteForArt(Art $art): void;

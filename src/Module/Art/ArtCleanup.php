@@ -136,6 +136,26 @@ final readonly class ArtCleanup implements ArtCleanupInterface
     }
 
     /**
+     * Same as collectGarbageForObject(), for a batch of ids of the same type
+     */
+    public function collectGarbageForObjects(string $object_type, array $object_ids): void
+    {
+        if ($object_ids === [] || !in_array($object_type, self::TYPES, true)) {
+            return;
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
+            foreach ($object_ids as $object_id) {
+                Art::delete_from_dir($object_type, $object_id);
+            }
+        }
+
+        $idList = implode(',', array_map(intval(...), $object_ids));
+        $sql    = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` IN ($idList)";
+        Dba::write($sql, [$object_type], true);
+    }
+
+    /**
      * This resets the art in the database
      */
     public function deleteForArt(Art $art): void

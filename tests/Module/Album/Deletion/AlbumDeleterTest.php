@@ -25,15 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Deletion;
 
-use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\RatingRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -52,9 +48,7 @@ class AlbumDeleterTest extends TestCase
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LoggerInterface&MockObject $logger;
-    private ModelFactoryInterface&MockObject $modelFactory;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
-    private SongDeleterInterface&MockObject $songDeleter;
     private SongRepositoryInterface&MockObject $songRepository;
     private AlbumDeleter $subject;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
@@ -62,7 +56,6 @@ class AlbumDeleterTest extends TestCase
     public function testDeleteRemovesAlbumAndCascadesGarbageCollectionWhenNotAParent(): void
     {
         $album   = $this->createMock(Album::class);
-        $song    = $this->createMock(Song::class);
         $songId  = 42;
         $albumId = 21;
 
@@ -74,15 +67,18 @@ class AlbumDeleterTest extends TestCase
             ->with($albumId)
             ->willReturn([$songId]);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createSong')
-            ->with($songId)
-            ->willReturn($song);
+        $this->songRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([$songId], false)
+            ->willReturn([['id' => $songId, 'file' => '']]);
 
-        $this->songDeleter->expects(static::once())
-            ->method('delete')
-            ->with($song, true)
-            ->willReturn(true);
+        $this->songRepository->expects(static::once())
+            ->method('deleteByIdsWithArchive')
+            ->with([$songId]);
+
+        $this->artCleanup->expects(static::once())
+            ->method('collectGarbageForObjects')
+            ->with('song', [$songId]);
 
         $this->albumRepository->expects(static::once())
             ->method('delete')
@@ -94,6 +90,14 @@ class AlbumDeleterTest extends TestCase
 
         $this->artCleanup->expects(static::never())
             ->method('collectGarbage');
+
+        $this->songRepository->expects(static::once())
+            ->method('collectGarbageForSongs')
+            ->with([$songId]);
+
+        $this->albumRepository->expects(static::once())
+            ->method('collectGarbageForAlbums')
+            ->with([$albumId]);
 
         $this->folderRepository->expects(static::once())
             ->method('collectGarbage');
@@ -111,6 +115,9 @@ class AlbumDeleterTest extends TestCase
             ->willReturnCallback(static function (...$args) use (&$useractivityGarbageCalls): void {
                 $useractivityGarbageCalls[] = $args;
             });
+
+        $this->catalogCounter->expects(static::exactly(3))
+            ->method('count');
 
         $this->subject->delete($album);
 
@@ -137,6 +144,19 @@ class AlbumDeleterTest extends TestCase
             ->with($albumId)
             ->willReturn([]);
 
+        $this->songRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([], false)
+            ->willReturn([]);
+
+        $this->songRepository->expects(static::once())
+            ->method('deleteByIdsWithArchive')
+            ->with([]);
+
+        $this->artCleanup->expects(static::once())
+            ->method('collectGarbageForObjects')
+            ->with('song', []);
+
         $this->albumRepository->expects(static::once())
             ->method('delete')
             ->with($album);
@@ -160,11 +180,12 @@ class AlbumDeleterTest extends TestCase
         $this->subject->delete($album, true);
     }
 
-    public function testDeleteThrowsExceptionWhenSongDeletionFails(): void
+    public function testDeleteThrowsExceptionWhenSongFileCannotBeDeleted(): void
     {
         $album  = $this->createMock(Album::class);
-        $song   = $this->createMock(Song::class);
         $songId = 42;
+        // a directory exists but can never be unlink()'d as a file, forcing the failure branch
+        $file   = __DIR__;
 
         $album->method('getId')
             ->willReturn(21);
@@ -174,18 +195,16 @@ class AlbumDeleterTest extends TestCase
             ->with(21)
             ->willReturn([$songId]);
 
-        $this->modelFactory->expects(static::once())
-            ->method('createSong')
-            ->with($songId)
-            ->willReturn($song);
-
-        $this->songDeleter->expects(static::once())
-            ->method('delete')
-            ->with($song, true)
-            ->willReturn(false);
+        $this->songRepository->expects(static::once())
+            ->method('getRowsByIds')
+            ->with([$songId], false)
+            ->willReturn([['id' => $songId, 'file' => $file]]);
 
         $this->logger->expects(static::once())
             ->method('critical');
+
+        $this->songRepository->expects(static::never())
+            ->method('deleteByIdsWithArchive');
 
         $this->albumRepository->expects(static::never())
             ->method('delete');
@@ -193,9 +212,9 @@ class AlbumDeleterTest extends TestCase
         $this->folderRepository->expects(static::never())
             ->method('collectGarbage');
 
-        $this->expectException(AlbumDeletionException::class);
+        $this->expectException(\Ampache\Module\Album\Deletion\Exception\AlbumDeletionException::class);
 
-        $this->subject->delete($album);
+        @$this->subject->delete($album);
     }
 
     protected function setUp(): void
@@ -212,11 +231,9 @@ class AlbumDeleterTest extends TestCase
         $GLOBALS['dic'] = $this->dic;
 
         $this->albumRepository        = $this->createMock(AlbumRepositoryInterface::class);
-        $this->modelFactory           = $this->createMock(ModelFactoryInterface::class);
         $this->logger                 = $this->createMock(LoggerInterface::class);
         $this->songRepository         = $this->createMock(SongRepositoryInterface::class);
         $this->shoutRepository        = $this->createMock(ShoutRepositoryInterface::class);
-        $this->songDeleter            = $this->createMock(SongDeleterInterface::class);
         $this->userActivityRepository = $this->createMock(UserActivityRepositoryInterface::class);
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
@@ -225,11 +242,9 @@ class AlbumDeleterTest extends TestCase
 
         $this->subject = new AlbumDeleter(
             $this->albumRepository,
-            $this->modelFactory,
             $this->logger,
             $this->songRepository,
             $this->shoutRepository,
-            $this->songDeleter,
             $this->userActivityRepository,
             $this->artCleanup,
             $this->folderRepository,

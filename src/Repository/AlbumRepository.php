@@ -213,14 +213,20 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * Deletes the album entry
+     * Deletes the album entry, together with the album_disk rows it has no foreign key to
      */
     public function delete(
         Album $album,
     ): void {
+        $albumId = $album->getId();
+
         $this->connection->query(
             'DELETE FROM `album` WHERE `id` = ?',
-            [$album->getId()]
+            [$albumId]
+        );
+        $this->connection->query(
+            'DELETE FROM `album_disk` WHERE `album_id` = ?',
+            [$albumId]
         );
     }
 

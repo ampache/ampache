@@ -29,14 +29,12 @@ use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -49,11 +47,9 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
 {
     public function __construct(
         private AlbumRepositoryInterface $albumRepository,
-        private ModelFactoryInterface $modelFactory,
         private LoggerInterface $logger,
         private SongRepositoryInterface $songRepository,
         private ShoutRepositoryInterface $shoutRepository,
-        private SongDeleterInterface $songDeleter,
         private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
@@ -69,14 +65,15 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
     ): void {
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
-        foreach ($songIds as $songId) {
-            $song    = $this->modelFactory->createSong($songId);
-            $deleted = $this->songDeleter->delete($song, true);
-            if (!$deleted) {
+
+        // one query for every file path instead of hydrating a Song model per id
+        foreach ($this->songRepository->getRowsByIds($songIds, false) as $row) {
+            $file = $row['file'];
+            if (!in_array($file, [null, '', '0'], true) && file_exists($file) && !unlink($file)) {
                 $this->logger->critical(
                     sprintf(
-                        'Error when deleting the song `%d`.',
-                        $songId
+                        'Error when deleting the song `%d`. Please check permissions.',
+                        $row['id']
                     ),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
@@ -84,6 +81,9 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
                 throw new AlbumDeletionException();
             }
         }
+
+        $this->songRepository->deleteByIdsWithArchive($songIds);
+        $this->artCleanup->collectGarbageForObjects('song', $songIds);
 
         $this->albumRepository->delete($album);
 
