@@ -52,7 +52,8 @@ final class SearchHandler implements SearchHandlerInterface
     {
         $data = [
             'type' => 'song',
-            'operator' => 'and'
+            'operator' => 'and',
+            'weight' => true,
         ];
 
         $rule_count = 1;
@@ -188,6 +189,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $artistOffset;
             $data['type']     = 'artist';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
@@ -207,6 +209,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $albumOffset;
             $data['type']     = 'album';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
@@ -226,6 +229,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $songOffset;
             $data['type']     = 'song';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
