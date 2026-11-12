@@ -69,7 +69,7 @@ if ($browse->is_show_header()) {
             <td class="cel_action"><?php
                 echo $this->raw(($democratic->has_vote($item['object_id'], $item['object_type']->value))
                     ? Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['track_id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['track_id'])
-                    : Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . $item['object_type']->value, 'tick', T_('Add Vote'), 'add_vote_' . $item['track_id'])); ?></td>
+                    : Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . $item['object_type']->value, 'check', T_('Add Vote'), 'add_vote_' . $item['track_id'])); ?></td>
             <td class="cel_votes"><?php echo $this->e($democratic->get_vote($item['track_id'])); ?></td>
             <td class="cel_title"><?php echo $this->raw($media->get_f_link()); ?></td>
             <td class="cel_album"><?php echo $this->raw(($grouped) ? $media->get_f_album_link() : $media->get_f_album_disk_link()); ?></td>
