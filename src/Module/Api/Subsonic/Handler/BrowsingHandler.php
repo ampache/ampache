@@ -53,7 +53,7 @@ use Ampache\Repository\SongRepositoryInterface;
 final class BrowsingHandler implements BrowsingHandlerInterface
 {
     /** @var array{id: ?int, summary: ?string, placeformed: ?string, yearformed: ?int, lastfm_url: ?string, largephoto: ?string, smallphoto: ?string, mediumphoto: ?string, megaphoto: ?string} */
-    private const array NO_ARTIST_INFO = [
+    private const array DEFAULT_INFO = [
         'id' => null,
         'summary' => null,
         'placeformed' => null,
@@ -279,7 +279,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         if ($artist === null && $this->isFolderSubId($sub_id)) {
             // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
             $artist   = new Artist();
-            $info     = self::NO_ARTIST_INFO;
+            $info     = self::DEFAULT_INFO;
             $similars = [];
         } elseif ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
@@ -322,7 +322,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         if ($artist === null && $this->isFolderSubId($sub_id)) {
             // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
             $artist   = new Artist();
-            $info     = self::NO_ARTIST_INFO;
+            $info     = self::DEFAULT_INFO;
             $similars = [];
         } elseif ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
