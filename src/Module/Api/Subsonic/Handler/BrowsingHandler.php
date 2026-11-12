@@ -52,6 +52,19 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final class BrowsingHandler implements BrowsingHandlerInterface
 {
+    /** @var array{id: ?int, summary: ?string, placeformed: ?string, yearformed: ?int, lastfm_url: ?string, largephoto: ?string, smallphoto: ?string, mediumphoto: ?string, megaphoto: ?string} */
+    private const array DEFAULT_INFO = [
+        'id' => null,
+        'summary' => null,
+        'placeformed' => null,
+        'yearformed' => null,
+        'lastfm_url' => null,
+        'largephoto' => null,
+        'smallphoto' => null,
+        'mediumphoto' => null,
+        'megaphoto' => null,
+    ];
+
     public function __construct(
         private readonly AlbumRepositoryInterface $albumRepository,
         private readonly ArtistRepositoryInterface $artistRepository,
@@ -263,18 +276,24 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
-        if ($artist === null || $artist->isNew()) {
+        if ($artist === null && $this->isFolderSubId($sub_id)) {
+            // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
+            $artist   = new Artist();
+            $info     = self::DEFAULT_INFO;
+            $similars = [];
+        } elseif ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
+        } else {
+            $count             = (int) ($input['count'] ?? 20);
+            $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
+
+            $info     = Recommendation::get_artist_info($artist->getId());
+            $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         }
 
-        $count             = (int) ($input['count'] ?? 20);
-        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
-
-        $info     = Recommendation::get_artist_info($artist->getId());
-        $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
-        $format   = (string) ($input['f'] ?? 'xml');
+        $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->subsonicXmlData->addArtistInfo($response, $info, $artist, $similars);
@@ -300,18 +319,24 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
-        if ($artist === null || $artist->isNew()) {
+        if ($artist === null && $this->isFolderSubId($sub_id)) {
+            // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
+            $artist   = new Artist();
+            $info     = self::DEFAULT_INFO;
+            $similars = [];
+        } elseif ($artist === null || $artist->isNew()) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
+        } else {
+            $count             = (int) ($input['count'] ?? 20);
+            $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
+
+            $info     = Recommendation::get_artist_info($artist->getId());
+            $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         }
 
-        $count             = (int) ($input['count'] ?? 20);
-        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
-
-        $info     = Recommendation::get_artist_info($artist->getId());
-        $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
-        $format   = (string) ($input['f'] ?? 'xml');
+        $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->subsonicXmlData->addArtistInfo2($response, $info, $artist, $similars);
@@ -953,6 +978,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         return $albums;
+    }
+
+    private function isFolderSubId(string $sub_id): bool
+    {
+        $folder = Subsonic_Api::getAmpacheObject($sub_id);
+
+        return $folder instanceof Folder && !$folder->isNew();
     }
 
     /**

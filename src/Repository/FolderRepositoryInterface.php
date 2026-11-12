@@ -182,7 +182,8 @@ interface FolderRepositoryInterface
     public function removeDeletedObjectMappings(LibraryItemEnum $objectType): void;
 
     /**
-     * Returns the one artist every song below a folder belongs to, null when there is none or more than one
+     * Returns the one artist every song below a folder belongs to, or failing that the one album artist its
+     * albums share; null when there is none or more than one
      *
      * A client that treats every `getIndexes` entry as artist-openable (calling `getArtist` instead of
      * `getMusicDirectory`) needs this to resolve a folder back to the artist it represents.

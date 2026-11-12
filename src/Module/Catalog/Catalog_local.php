@@ -1264,12 +1264,14 @@ class Catalog_local extends Catalog
             return;
         }
 
-        $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
+        // a trailing separator would leave every first level folder without a parent
+        $path   = rtrim($this->path, '/\\') ?: $this->path;
+        $folder = self::getFolderRepository()->getByPathName($path, $this->getId());
         if (!$folder instanceof Folder || $folder->isNew()) {
             $folderId = Folder::create([
                 'name' => $this->get_fullname(),
                 'catalog' => $this->getId(),
-                'path_name' => $this->path,
+                'path_name' => $path,
                 'parent' => null,
             ]);
 
@@ -1288,7 +1290,7 @@ class Catalog_local extends Catalog
             return;
         }
 
-        $this->_scan_folder($this->path, $interactor);
+        $this->_scan_folder($path, $interactor);
     }
 
     /**
