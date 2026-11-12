@@ -6,7 +6,7 @@
 
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
 * Subsonic
-  * Apply search weighting to results
+  * Apply weighting to search result order
 
 ### Fixed (8.4.1)
 
