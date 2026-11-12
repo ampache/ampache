@@ -134,6 +134,25 @@ class SongTest extends MockeryTestCase
         $this->assertSame([], $result['element']);
     }
 
+    /** A genre stored in another case sorted elsewhere in the list, so every scan reported a change (#4166) */
+    public function testCompareSongInformationIgnoresTheCaseOfAGenre(): void
+    {
+        $song        = new Song();
+        $song->title = 'Grapevine';
+        $song->time  = 195;
+        $song->tags  = $this->tagRows(['Rock', 'Smooth Jazz', 'Soft Rock', 'jazz']);
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+        $new_song->time  = 195;
+        $new_song->tags  = $this->tagRows(['Jazz', 'Rock', 'Smooth Jazz', 'Soft Rock']);
+
+        $result = Song::compare_song_information($song, $new_song);
+
+        $this->assertFalse($result['change']);
+        $this->assertSame([], $result['element']);
+    }
+
     public function testCompareSongInformationIgnoresWhitespaceOnlyStringChanges(): void
     {
         $song          = new Song();
