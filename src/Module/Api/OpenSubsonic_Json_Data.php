@@ -2878,7 +2878,8 @@ class OpenSubsonic_Json_Data
             'isDir' => true,
             'title' => (string) $folder->name,
         ];
-        if ($folder->has_art()) {
+        // a folder holding tracks is an album to the client, and getCoverArt serves it that album's art
+        if ($folder->has_art() || $folder->playable) {
             $json['coverArt'] = $sub_id;
         }
 

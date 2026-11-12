@@ -35,6 +35,7 @@ use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -208,6 +209,18 @@ final class StreamingHandler implements StreamingHandlerInterface
             }
         } elseif ($object_type == 'artist' || $object_type == 'album' || $object_type == 'podcast' || $object_type == 'playlist') {
             $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'folder') {
+            if (Art::has_db($object_id, 'folder')) {
+                $art = new Art($object_id, 'folder');
+            } else {
+                // a folder browse lists albums as folders, so one without art of its own shows the album of the first track below it
+                $folder = new Folder($object_id);
+                $medias = ($folder->isNew()) ? [] : $folder->get_medias('song');
+                if ($medias !== []) {
+                    $song = new Song($medias[0]['object_id']);
+                    $art  = new Art($song->album, 'album');
+                }
+            }
         } elseif ($object_type == 'search') {
             $playlist  = new Search($object_id, 'song', $user);
             $listitems = $playlist->get_items();

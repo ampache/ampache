@@ -1909,7 +1909,8 @@ class OpenSubsonic_Xml_Data
         $xchild->addAttribute('parent', OpenSubsonic_Api::getFolderSubId($folder->parent ?? -1));
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', (string) $folder->name);
-        if ($folder->has_art()) {
+        // a folder holding tracks is an album to the client, and getCoverArt serves it that album's art
+        if ($folder->has_art() || $folder->playable) {
             $xchild->addAttribute('coverArt', $sub_id);
         }
     }
