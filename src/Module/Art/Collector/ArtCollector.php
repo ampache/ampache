@@ -59,6 +59,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
      * @param array{
      *     type?: string,
      *     mb_albumid?: string,
+     *     mb_albumid_group?: string,
      *     artist?: string,
      *     album?: string,
      *     cover?: ?string,

@@ -5,6 +5,7 @@
 ### Changed (8.4.1)
 
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
+* The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
 * Subsonic
   * Apply weighting to search result order
 

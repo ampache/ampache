@@ -26,26 +26,28 @@ declare(strict_types=1);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Module\Art\Art;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Exception;
-use MusicBrainz\MusicBrainz;
+use Ampache\Module\Util\WebFetcher\Exception\FetchFailedException;
+use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 use Psr\Log\LoggerInterface;
-use WpOrg\Requests\Requests;
 
 final readonly class MusicbrainzCollectorModule implements CollectorModuleInterface
 {
+    private const string API_URL = 'https://coverartarchive.org';
+
+    private const string MBID_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
+
     public function __construct(
-        private MusicBrainz $musicBrainz,
+        private WebFetcherInterface $webFetcher,
         private LoggerInterface $logger,
     ) {}
 
     /**
-     * This function retrieves art based on MusicBrainz' Advanced
-     * Relationships
+     * Gathers album art from the Cover Art Archive by release MBID, falling back to the release group.
      *
      * @param array{
      *     mb_albumid?: string,
+     *     mb_albumid_group?: string,
      *     artist?: string,
      *     album?: string,
      *     cover?: ?string,
@@ -60,183 +62,97 @@ final readonly class MusicbrainzCollectorModule implements CollectorModuleInterf
         int $limit = 5,
         array $data = [],
     ): array {
-        $images    = [];
-        $num_found = 0;
-
         if ($art->object_type !== 'album') {
-            return $images;
+            return [];
         }
 
-        if (!array_key_exists('mb_albumid', $data) || empty($data['mb_albumid'])) {
-            return $images;
+        $lookups = [
+            'release' => (string) ($data['mb_albumid'] ?? ''),
+            'release-group' => (string) ($data['mb_albumid_group'] ?? ''),
+        ];
+        foreach ($lookups as $entity => $mbid) {
+            if (preg_match(self::MBID_PATTERN, $mbid) !== 1) {
+                continue;
+            }
+
+            $images = $this->lookup($entity, strtolower($mbid), $limit);
+            if ($images !== []) {
+                return $images;
+            }
         }
+
+        return [];
+    }
+
+    private function getMime(string $url): string
+    {
+        return match (strtolower(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION))) {
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            default => 'image/jpeg',
+        };
+    }
+
+    /**
+     * @return array<int, array{url: string, mime: string, title: string}>
+     */
+    private function lookup(string $entity, string $mbid, int $limit): array
+    {
+        $url = sprintf('%s/%s/%s', self::API_URL, $entity, $mbid);
 
         $this->logger->debug(
-            "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
+            'gather_musicbrainz Cover Art Archive lookup: ' . $url,
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        $includes = ['url-rels'];
         try {
-            $release = $this->musicBrainz->lookup('release', $data['mb_albumid'], $includes);
-        } catch (Exception $exception) {
-            $this->logger->warning(
-                "gather_musicbrainz exception: " . $exception,
+            $response = $this->webFetcher->fetch($url);
+        } catch (FetchFailedException $exception) {
+            // the archive answers 404 for a release with no art, which is the common case
+            $this->logger->debug(
+                'gather_musicbrainz no Cover Art Archive result: ' . $exception->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            return $images;
+            return [];
         }
 
-        $asin = $release->asin ?? false;
+        $result = json_decode($response, true);
+        if (!is_array($result) || !is_array($result['images'] ?? null)) {
+            return [];
+        }
 
-        if ($asin) {
-            $this->logger->debug(
-                "gather_musicbrainz Found ASIN: " . $asin,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+        // front covers first, keeping the archive's own order within each group
+        $front = [];
+        $other = [];
+        foreach ($result['images'] as $image) {
+            if (!is_array($image)) {
+                continue;
+            }
 
-            $base_urls = [
-                "01" => "ec1.images-amazon.com",
-                "02" => "ec1.images-amazon.com",
-                "03" => "ec2.images-amazon.com",
-                "08" => "ec1.images-amazon.com",
-                "09" => "ec1.images-amazon.com",
+            $thumbnails = is_array($image['thumbnails'] ?? null) ? $image['thumbnails'] : [];
+            $imageUrl   = (string) ($thumbnails['1200'] ?? $image['image'] ?? '');
+            if ($imageUrl === '') {
+                continue;
+            }
+
+            $candidate = [
+                'url' => (string) preg_replace('/^http:/', 'https:', $imageUrl),
+                'mime' => $this->getMime($imageUrl),
+                'title' => 'Cover Art Archive',
             ];
-            foreach ($base_urls as $server_num => $base_url) {
-                // to avoid complicating things even further, we only look for large cover art
-                $url = 'http://' . $base_url . '/images/P/' . $asin . '.' . $server_num . '.LZZZZZZZ.jpg';
-
-                $this->logger->debug(
-                    "gather_musicbrainz Evaluating Amazon URL: " . $url,
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-
-                try {
-                    $request = Requests::get($url, [], Core::requests_options());
-                } catch (Exception $error) {
-                    $this->logger->warning(
-                        "gather_musicbrainz exception: " . $error->getMessage(),
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-                    continue;
-                }
-
-                if ($request->status_code == 200) {
-                    $num_found++;
-
-                    $this->logger->debug(
-                        "gather_musicbrainz Amazon URL added: " . $url,
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-                    $images[] = [
-                        'url' => $url,
-                        'mime' => 'image/jpeg',
-                        'title' => 'MusicBrainz'
-                    ];
-                    if ($num_found >= $limit) {
-                        return $images;
-                    }
-                }
+            if (($image['front'] ?? false) === true) {
+                $front[] = $candidate;
+            } else {
+                $other[] = $candidate;
             }
         }
 
-        // The next bit is based directly on the MusicBrainz server code that displays cover art.
-        // I'm leaving in the releaseuri info for the moment, though it's not going to be used.
-        $coverartsites   = [];
-        $coverartsites[] = [
-            'name' => "CD Baby",
-            'domain' => "cdbaby.com",
-            'regexp' => '@http:\/\/cdbaby\.com\/cd\/(\w)(\w)(\w*)@',
-            'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[1]$matches[2]$matches[3].jpg',
-            'releaseuri' => 'http://cdbaby.com/cd/$matches[1]$matches[2]$matches[3]/from/musicbrainz',
-        ];
-        $coverartsites[] = [
-            'name' => "CD Baby",
-            'domain' => "cdbaby.name",
-            'regexp' => "@http:\/\/cdbaby\.name\/([a-z0-9])\/([a-z0-9])\/([A-Za-z0-9]*).jpg@",
-            'imguri' => 'http://cdbaby.name/$matches[1]/$matches[2]/$matches[3].jpg',
-            'releaseuri' => 'http://cdbaby.com/cd/$matches[3]/from/musicbrainz',
-        ];
-        $coverartsites[] = [
-            'name' => 'archive.org',
-            'domain' => 'archive.org',
-            'regexp' => '/^(.*\.(jpg|jpeg|png|gif))$/',
-            'imguri' => '$matches[1]',
-            'releaseuri' => '',
-        ];
-        $coverartsites[] = [
-            'name' => "Jamendo",
-            'domain' => "www.jamendo.com",
-            'regexp' => '/http:\/\/www\.jamendo\.com\/(\w\w)?album\/(\d+)/',
-            'imguri' => 'http://img.jamendo.com/albums/$matches[2]/covers/1.200.jpg',
-            'releaseuri' => 'http://www.jamendo.com/album/$matches[2]',
-        ];
-        $coverartsites[] = [
-            'name' => '8bitpeoples.com',
-            'domain' => '8bitpeoples.com',
-            'regexp' => '/^(.*)$/',
-            'imguri' => '$matches[1]',
-            'releaseuri' => '',
-        ];
-        $coverartsites[] = [
-            'name' => 'Encyclopédisque',
-            'domain' => 'encyclopedisque.fr',
-            'regexp' => '/http:\/\/www.encyclopedisque.fr\/images\/imgdb\/(thumb250|main)\/(\d+).jpg/',
-            'imguri' => 'http://www.encyclopedisque.fr/images/imgdb/thumb250/$matches[2].jpg',
-            'releaseuri' => 'http://www.encyclopedisque.fr/',
-        ];
-        $coverartsites[] = [
-            'name' => 'Thastrom',
-            'domain' => 'www.thastrom.se',
-            'regexp' => '/^(.*)$/',
-            'imguri' => '$matches[1]',
-            'releaseuri' => '',
-        ];
-        $coverartsites[] = [
-            'name' => 'Universal Poplab',
-            'domain' => 'www.universalpoplab.com',
-            'regexp' => '/^(.*)$/',
-            'imguri' => '$matches[1]',
-            'releaseuri' => '',
-        ];
-        foreach ($release->relations ?? [] as $ar) {
-            $arurl = $ar->url->resource;
+        $images = array_merge($front, $other);
 
-            $this->logger->debug(
-                "gather_musicbrainz Found URL AR: " . $arurl,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-
-            foreach ($coverartsites as $casite) {
-                if (str_contains((string) $arurl, $casite['domain'])) {
-                    $this->logger->debug(
-                        "gather_musicbrainz Matched coverart site: " . $casite['name'],
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-
-                    if (preg_match($casite['regexp'], (string) $arurl)) {
-                        $num_found++;
-                        $url = $casite['imguri'];
-
-                        $this->logger->debug(
-                            "gather_musicbrainz Generated URL added: " . $url,
-                            [LegacyLogger::CONTEXT_TYPE => self::class]
-                        );
-
-                        $images[] = [
-                            'url' => $url,
-                            'mime' => 'image/jpeg',
-                            'title' => 'MusicBrainz'
-                        ];
-                        if ($num_found >= $limit) {
-                            return $images;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $images;
+        return ($limit > 0)
+            ? array_slice($images, 0, $limit)
+            : $images;
     }
 }
