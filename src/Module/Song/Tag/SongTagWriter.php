@@ -373,7 +373,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 if (!in_array($user->email, [null, '', '0'], true)) {
                     $ndata['Popularimeter'] = [
                         "email" => $user->email,
-                        "rating" => ($my_rating > 0) ? $my_rating * (255 / 5) : 0,
+                        "rating" => VaInfo::rating_to_popm($my_rating),
                         "data" => $song->get_totalcount()
                     ];
                     $this->logger->debug(
@@ -549,7 +549,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             if (!in_array($user->email, [null, '', '0'], true)) {
                 $meta['Popularimeter'] = [
                     "email" => $user->email,
-                    "rating" => ($my_rating > 0) ? VaInfo::parse_rating($my_rating) : 0,
+                    "rating" => VaInfo::rating_to_popm($my_rating),
                     "data" => $song->get_totalcount()
                 ];
             } else {
