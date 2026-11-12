@@ -418,12 +418,7 @@ class Recommendation
             return [];
         }
 
-        $fullname = (string) $artist->get_fullname();
-        $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
-
-        if (!in_array($song->mbid, [null, '', '0'], true)) {
-            $query = 'mbid=' . rawurlencode($song->mbid);
-        }
+        $query = self::songs_like_query((string) $artist->get_fullname(), (string) $song->title, $song->mbid);
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
         if ($cache === null || !$cache['id']) {
@@ -512,6 +507,19 @@ class Recommendation
     public static function migrate(string $object_type, int $old_object_id): void
     {
         self::delete_recommendation_cache($object_type, $old_object_id);
+    }
+
+    /**
+     * songs_like_query
+     * Last.fm needs the track as well as the artist to find similar tracks
+     */
+    public static function songs_like_query(string $artist, string $title, ?string $mbid): string
+    {
+        if (!in_array($mbid, [null, '', '0'], true)) {
+            return 'mbid=' . rawurlencode($mbid);
+        }
+
+        return 'artist=' . rawurlencode($artist) . '&track=' . rawurlencode($title);
     }
 
     /**
