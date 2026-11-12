@@ -2,8 +2,18 @@
 
 ## Ampache 8.4.1
 
+### Changed (8.4.1)
+
+* Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
+
 ### Fixed (8.4.1)
 
+* Democratic
+  * Removing a row as an admin refreshes the playlist
+  * Votes were cleared for users who were still logged in, or who had `demo_clear_sessions` off
+  * Only a voter's own `demo_clear_sessions` preference decides whether their votes are cleared
+  * Notifications showed `displayNotification is not defined` in the stream frame
+* Web player random play now works for users browsing by `album_disk` (`album_group` off)
 * `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
 
 ## Ampache 8.4.0
