@@ -95,7 +95,10 @@ final readonly class ArtCollector implements ArtCollectorInterface
             return [];
         }
 
-        $artOrder = $this->configContainer->getArray('art_order');
+        $artOrder = $this->configContainer->getArray('art_order_' . $type);
+        if ($artOrder === []) {
+            $artOrder = $this->configContainer->getArray('art_order');
+        }
 
         /* If it's not set */
         if ($artOrder === []) {

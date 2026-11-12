@@ -223,18 +223,20 @@ class Art extends database_object
 
     /**
      * check_dimensions
+     * Reads `<type>_art_(min|max)_(width|height)` when set, falling back to `art_*`, then the legacy `album_art_*`.
      * @param array{width: int, height: int} $dimensions
      */
-    public static function check_dimensions(array $dimensions): bool
+    public static function check_dimensions(array $dimensions, string $type = 'album'): bool
     {
         $width  = $dimensions['width'];
         $height = $dimensions['height'];
 
         if ($width > 0 && $height > 0) {
-            $minw = AmpConfig::get('album_art_min_width', 0);
-            $maxw = AmpConfig::get('album_art_max_width', 0);
-            $minh = AmpConfig::get('album_art_min_height', 0);
-            $maxh = AmpConfig::get('album_art_max_height', 0);
+            // @todo drop the `album_art_*` fallback in Ampache9, once `art_*` has had a full release to replace it
+            $minw = AmpConfig::get($type . '_art_min_width') ?? AmpConfig::get('art_min_width') ?? AmpConfig::get('album_art_min_width', 0);
+            $maxw = AmpConfig::get($type . '_art_max_width') ?? AmpConfig::get('art_max_width') ?? AmpConfig::get('album_art_max_width', 0);
+            $minh = AmpConfig::get($type . '_art_min_height') ?? AmpConfig::get('art_min_height') ?? AmpConfig::get('album_art_min_height', 0);
+            $maxh = AmpConfig::get($type . '_art_max_height') ?? AmpConfig::get('art_max_height') ?? AmpConfig::get('album_art_max_height', 0);
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {
@@ -1723,7 +1725,7 @@ class Art extends database_object
         $height     = $dimensions['height'];
         $sizetext   = 'original';
 
-        if (!self::check_dimensions($dimensions)) {
+        if (!self::check_dimensions($dimensions, $this->object_type)) {
             debug_event(self::class, 'Not inserting image for ' . $this->object_type . ' ' . $this->object_id . ', dimensions are wrong (' . $width . 'x' . $height . ')', 1);
 
             return 'check_dimensions';

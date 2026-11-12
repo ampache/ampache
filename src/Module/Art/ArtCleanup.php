@@ -38,7 +38,7 @@ use Ampache\Repository\Model\library_item;
  */
 final readonly class ArtCleanup implements ArtCleanupInterface
 {
-    private const array TYPES = [
+    public const array TYPES = [
         'album_disk',
         'album',
         'artist',
@@ -62,33 +62,37 @@ final readonly class ArtCleanup implements ArtCleanupInterface
      */
     public function cleanup(): void
     {
-        $minw = $this->configContainer->get('album_art_min_width') ?? null;
-        $maxw = $this->configContainer->get('album_art_max_width') ?? null;
-        $minh = $this->configContainer->get('album_art_min_height') ?? null;
-        $maxh = $this->configContainer->get('album_art_max_height') ?? null;
+        // each type falls back to `art_*`, then the legacy `album_art_*`, when it has no override of its own
+        // @todo drop the `album_art_*` fallback in Ampache9, once `art_*` has had a full release to replace it
+        foreach (self::TYPES as $type) {
+            $minw = $this->configContainer->get($type . '_art_min_width') ?? $this->configContainer->get('art_min_width') ?? $this->configContainer->get('album_art_min_width');
+            $maxw = $this->configContainer->get($type . '_art_max_width') ?? $this->configContainer->get('art_max_width') ?? $this->configContainer->get('album_art_max_width');
+            $minh = $this->configContainer->get($type . '_art_min_height') ?? $this->configContainer->get('art_min_height') ?? $this->configContainer->get('album_art_min_height');
+            $maxh = $this->configContainer->get($type . '_art_max_height') ?? $this->configContainer->get('art_max_height') ?? $this->configContainer->get('album_art_max_height');
 
-        // minimum width is set and current width is too low
-        if ($minw) {
-            $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
-            Dba::write($sql, [$minw]);
-        }
+            // minimum width is set and current width is too low
+            if ($minw) {
+                $sql = 'DELETE FROM `image` WHERE `object_type` = ? AND `width` < ? AND `width` > 0';
+                Dba::write($sql, [$type, $minw]);
+            }
 
-        // max width is set and current width is too high
-        if ($maxw) {
-            $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
-            Dba::write($sql, [$maxw]);
-        }
+            // max width is set and current width is too high
+            if ($maxw) {
+                $sql = 'DELETE FROM `image` WHERE `object_type` = ? AND `width` > ? AND `width` > 0';
+                Dba::write($sql, [$type, $maxw]);
+            }
 
-        // min height is set and current width is too low
-        if ($minh) {
-            $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
-            Dba::write($sql, [$minh]);
-        }
+            // min height is set and current width is too low
+            if ($minh) {
+                $sql = 'DELETE FROM `image` WHERE `object_type` = ? AND `height` < ? AND `height` > 0';
+                Dba::write($sql, [$type, $minh]);
+            }
 
-        // max height is set and current height is too high
-        if ($maxh) {
-            $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
-            Dba::write($sql, [$maxh]);
+            // max height is set and current height is too high
+            if ($maxh) {
+                $sql = 'DELETE FROM `image` WHERE `object_type` = ? AND `height` > ? AND `height` > 0';
+                Dba::write($sql, [$type, $maxh]);
+            }
         }
     }
 

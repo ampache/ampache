@@ -28,6 +28,7 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Art\ArtCleanup;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Override;
 
@@ -62,16 +63,20 @@ final class ArtCleanupCommand extends Command
                 true
             );
 
-            $runable = (
-                (
-                    !$this->configContainer->get('album_art_min_width')
-                    && $this->configContainer->get('album_art_min_height')
-                )
-                || (
-                    !$this->configContainer->get('album_art_max_width')
-                    && !$this->configContainer->get('album_art_max_height')
-                )
-            );
+            $runable = false;
+            // @todo drop the `album_art_*` fallback in Ampache9, once `art_*` has had a full release to replace it
+            foreach (ArtCleanup::TYPES as $type) {
+                $minw = $this->configContainer->get($type . '_art_min_width') ?? $this->configContainer->get('art_min_width') ?? $this->configContainer->get('album_art_min_width');
+                $maxw = $this->configContainer->get($type . '_art_max_width') ?? $this->configContainer->get('art_max_width') ?? $this->configContainer->get('album_art_max_width');
+                $minh = $this->configContainer->get($type . '_art_min_height') ?? $this->configContainer->get('art_min_height') ?? $this->configContainer->get('album_art_min_height');
+                $maxh = $this->configContainer->get($type . '_art_max_height') ?? $this->configContainer->get('art_max_height') ?? $this->configContainer->get('album_art_max_height');
+
+                if (($minw && $minh) || ($maxw && $maxh)) {
+                    $runable = true;
+
+                    break;
+                }
+            }
 
             if ($runable === false) {
                 $interactor->error(

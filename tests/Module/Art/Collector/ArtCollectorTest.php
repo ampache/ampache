@@ -50,8 +50,10 @@ class ArtCollectorTest extends TestCase
         $module = $this->createMock(CollectorModuleInterface::class);
 
         $this->configContainer->method('getArray')
-            ->with('art_order')
-            ->willReturn(['db']);
+            ->willReturnMap([
+                ['art_order_song', []],
+                ['art_order', ['db']],
+            ]);
         $this->configContainer->method('get')
             ->willReturnMap([
                 ['art_search_limit', 5],
@@ -94,6 +96,36 @@ class ArtCollectorTest extends TestCase
             ->method('get');
 
         self::assertSame([], $this->subject->collect($art));
+    }
+
+    public function testCollectUsesPerTypeArtOrderOverride(): void
+    {
+        $art    = $this->createMock(Art::class);
+        $module = $this->createMock(CollectorModuleInterface::class);
+
+        $this->configContainer->method('getArray')
+            ->willReturnMap([
+                ['art_order_album', ['folder']],
+                ['art_order', ['db']],
+            ]);
+        $this->configContainer->method('get')
+            ->willReturnMap([
+                ['art_search_limit', 5],
+            ]);
+
+        $this->dic->expects(static::once())
+            ->method('get')
+            ->with(FolderCollectorModule::class)
+            ->willReturn($module);
+
+        $module->expects(static::once())
+            ->method('collectArt')
+            ->with($art, 5, ['type' => 'album'])
+            ->willReturn([['url' => 'http://example.com/folder.jpg']]);
+
+        $result = $this->subject->collect($art, ['type' => 'album']);
+
+        self::assertSame([['url' => 'http://example.com/folder.jpg']], $result);
     }
 
     protected function setUp(): void

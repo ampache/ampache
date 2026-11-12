@@ -2,6 +2,13 @@
 
 ## Ampache 8.4.1
 
+### Added (8.4.1)
+
+* Config version 103
+  * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
+  * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
+  * New `art_min_width`, `art_max_width`, `art_min_height`, `art_max_height` keys, the preferred spelling of `album_art_*` now that the bounds apply to every art type; `album_art_*` still works
+
 ### Changed (8.4.1)
 
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
@@ -19,6 +26,7 @@
 * Web player random play now works for users browsing by `album_disk` (`album_group` off)
 * `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
 * Possible duplicate folder inserts
+* `cleanup:art` could refuse to run, or silently run with nothing to do, because its config check used inverted width/height logic
 
 ## Ampache 8.4.0
 

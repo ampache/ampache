@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 102
+config_version = 103
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -704,25 +704,42 @@ sociable = "true"
 ; DEFAULT: 1048576
 ;max_upload_size = 1048576
 
-; Album Art Minimum Width
-; Specify the minimum width for arts (in pixel).
+; Art Minimum Width
+; Specify the minimum width for arts (in pixel), applied to every art type.
+; The `album_art_*` settings stay as the fallback for all types unless the
+; `art_*` settings below are set.
 ; DEFAULT: 30
 album_art_min_width = 30
+;art_min_width = 30
 
-; Album Art Maximum Width
-; Specify the maximum width for arts (in pixel).
+; Art Maximum Width
+; Specify the maximum width for arts (in pixel), applied to every art type.
 ; DEFAULT: none
 ;album_art_max_width = 1024
+;art_max_width = 1024
 
-; Album Art Minimum Height
-; Specify the minimum height for arts (in pixel).
+; Art Minimum Height
+; Specify the minimum height for arts (in pixel), applied to every art type.
 ; DEFAULT: 30
 album_art_min_height = 30
+;art_min_height = 30
 
-; Album Art Maximum Height
-; Specify the maximum height for arts (in pixel).
+; Art Maximum Height
+; Specify the maximum height for arts (in pixel), applied to every art type.
 ; DEFAULT: none
 ;album_art_max_height = 1024
+;art_max_height = 1024
+
+; Override the art size bounds on a per-type basis, for example, to allow
+; larger artist art without raising the limit for albums.
+; TYPE_art_(min|max)_(width|height) = PIXELS
+; POSSIBLE VALUES for TYPE: album_disk artist catalog folder label live_stream
+; playlist podcast podcast_episode song tag user video
+; DEFAULT: none, falls back to art_* then the legacy album_art_* settings above
+;artist_art_min_width = 30
+;artist_art_max_width = 1024
+;artist_art_min_height = 30
+;artist_art_max_height = 1024
 
 ; Public Images
 ; Disable this option to require a valid user session for viewing images.
@@ -823,6 +840,14 @@ statistical_graphs = "true"
 ; POSSIBLE VALUES (plugins): TheAudioDb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz
 art_order = "db,tags,folder,spotify,musicbrainz"
+
+; Override the search order on a per-type basis, for example, to prioritize
+; Spotify for artist art while keeping local folder art first for albums.
+; art_order_TYPE = ORDER
+; POSSIBLE VALUES for TYPE: album artist song playlist podcast
+; DEFAULT: none, falls back to art_order
+;art_order_album = "db,tags,folder,musicbrainz"
+;art_order_artist = "db,spotify,musicbrainz"
 
 ; Gather song art
 ; Gather song art additionally to the album art. This will add each
