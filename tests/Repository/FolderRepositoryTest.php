@@ -630,6 +630,33 @@ class FolderRepositoryTest extends TestCase
         }
     }
 
+    /** A guest on one track made an artist's own directory unresolvable (#4556) */
+    public function testResolveSingleArtistIdFallsBackToTheAlbumArtistEveryAlbumShares(): void
+    {
+        $songArtists = $this->createMock(PDOStatement::class);
+        $songArtists->expects(static::exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['artist' => '7'], ['artist' => '9'], false);
+
+        $albumArtists = $this->createMock(PDOStatement::class);
+        $albumArtists->expects(static::exactly(2))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['album_artist' => '7'], false);
+
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(
+                self::logicalOr(
+                    self::stringContains('SELECT DISTINCT `song`.`artist`'),
+                    self::stringContains('SELECT DISTINCT `album`.`album_artist`')
+                ),
+                [666, '/some/path/%']
+            )
+            ->willReturnOnConsecutiveCalls($songArtists, $albumArtists);
+
+        self::assertSame(7, $this->subject->resolveSingleArtistId($this->folderAt(666, '/some/path')));
+    }
+
     public function testResolveSingleArtistIdReturnsNullWhenNoSongIsMapped(): void
     {
         $result = $this->createMock(PDOStatement::class);
@@ -646,14 +673,20 @@ class FolderRepositoryTest extends TestCase
 
     public function testResolveSingleArtistIdReturnsNullWhenSongsBelongToDifferentArtists(): void
     {
-        $result = $this->createMock(PDOStatement::class);
-        $result->expects(static::exactly(3))
+        $songArtists = $this->createMock(PDOStatement::class);
+        $songArtists->expects(static::exactly(3))
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(['artist' => '7'], ['artist' => '9'], false);
 
-        $this->connection->expects(static::once())
+        // a compilation: the albums don't share an album artist either
+        $albumArtists = $this->createMock(PDOStatement::class);
+        $albumArtists->expects(static::exactly(3))
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(['album_artist' => '7'], ['album_artist' => '11'], false);
+
+        $this->connection->expects(static::exactly(2))
             ->method('query')
-            ->willReturn($result);
+            ->willReturnOnConsecutiveCalls($songArtists, $albumArtists);
 
         self::assertNull($this->subject->resolveSingleArtistId($this->folderAt(666, '/some/path')));
     }

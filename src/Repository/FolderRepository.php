@@ -788,8 +788,27 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $artistIds[] = (int) $row['artist'];
         }
 
-        return (count($artistIds) === 1)
-            ? $artistIds[0]
+        if (count($artistIds) === 1) {
+            return $artistIds[0];
+        }
+
+        if ($artistIds === []) {
+            return null;
+        }
+
+        // a guest on one track must not hide the directory's own artist, so fall back to the shared album artist
+        $result = $this->connection->query(
+            "SELECT DISTINCT `album`.`album_artist` FROM `album` INNER JOIN `song` ON `song`.`album` = `album`.`id` INNER JOIN `folder_map` ON `folder_map`.`object_id` = `song`.`id` AND `folder_map`.`object_type` = 'song' WHERE `album`.`album_artist` IS NOT NULL AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} LIMIT 2;",
+            [$folder->getId(), $folder->path_name . '/%']
+        );
+
+        $albumArtistIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $albumArtistIds[] = (int) $row['album_artist'];
+        }
+
+        return (count($albumArtistIds) === 1)
+            ? $albumArtistIds[0]
             : null;
     }
 
