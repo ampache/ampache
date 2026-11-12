@@ -5,6 +5,8 @@
 ### Changed (8.4.1)
 
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
+* Subsonic
+  * Apply search weighting to results
 
 ### Fixed (8.4.1)
 
@@ -15,6 +17,7 @@
   * Notifications showed `displayNotification is not defined` in the stream frame
 * Web player random play now works for users browsing by `album_disk` (`album_group` off)
 * `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
+* Possible duplicate folder inserts
 
 ## Ampache 8.4.0
 
