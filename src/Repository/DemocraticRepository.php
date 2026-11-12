@@ -70,7 +70,9 @@ final readonly class DemocraticRepository implements DemocraticRepositoryInterfa
     public function deleteUnconnectedVotes(): void
     {
         $this->connection->query(
-            'DELETE FROM `user_vote` WHERE `user_vote`.`sid` NOT IN (SELECT `session`.`id` FROM `session`)'
+            'DELETE FROM `user_vote` WHERE `user_vote`.`sid` NOT IN (SELECT `session`.`id` FROM `session`) '
+            . 'AND `user_vote`.`user` NOT IN (SELECT `user`.`id` FROM `user` INNER JOIN `session` ON `session`.`username` = `user`.`username`) '
+            . "AND `user_vote`.`user` IN (SELECT `user_preference`.`user` FROM `user_preference` WHERE `user_preference`.`name` = 'demo_clear_sessions' AND `user_preference`.`value` IN ('1', 'true'))"
         );
     }
 
