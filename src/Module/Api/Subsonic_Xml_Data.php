@@ -1310,7 +1310,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('coverArt', $art_id);
         }
         $xsong->addAttribute('duration', (string) $song->time);
-        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1024)));
+        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1000)));
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
         if ($user_rating > 0) {
