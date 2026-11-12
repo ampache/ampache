@@ -87,9 +87,9 @@ final readonly class DatabaseAuthenticator implements AuthenticatorInterface
             }
 
             // Subsonic sends the credential as a plaintext `p=` password when the client does not do token auth, so the
-            // dedicated Subsonic secret and the legacy api key are both accepted here as well.
+            // dedicated Subsonic secret is accepted here too; the api key is not, because it must never work as a password.
             $row = $this->databaseConnection->fetchRow(
-                'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?',
+                'SELECT `subsonic_secret` FROM `user` WHERE `username` = ?',
                 [$username]
             );
             if (!is_array($row)) {
@@ -100,11 +100,7 @@ final readonly class DatabaseAuthenticator implements AuthenticatorInterface
                 ? null
                 : $this->symmetricEncrypter->decrypt((string) $row['subsonic_secret']);
 
-            $api_key = (string) ($row['apikey'] ?? '');
-            if (
-                ($secret !== null && hash_equals($secret, $password))
-                || ($api_key !== '' && hash_equals($api_key, $password))
-            ) {
+            if ($secret !== null && hash_equals($secret, $password)) {
                 return [
                     'success' => true,
                     'type' => 'mysql',

@@ -4,6 +4,8 @@
 
 ### Added (8.4.1)
 
+* Database 841001
+  * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
 * Config version 104
   * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
   * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
@@ -19,6 +21,7 @@
 
 ### Fixed (8.4.1)
 
+* A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
 * IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic
   * Removing a row as an admin refreshes the playlist

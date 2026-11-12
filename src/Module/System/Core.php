@@ -455,6 +455,7 @@ class Core
                 if ($hopIp === false) {
                     break;
                 }
+
                 if (!self::isTrustedProxy($hopIp)) {
                     return $hopIp;
                 }
@@ -505,12 +506,6 @@ class Core
      */
     private static function isTrustedProxy(string $ip): bool
     {
-        foreach (AmpConfig::get_array(ConfigurationKeyEnum::TRUSTED_PROXIES) as $proxy) {
-            if (self::ipMatchesCidr($ip, $proxy)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(AmpConfig::get_array(ConfigurationKeyEnum::TRUSTED_PROXIES), fn($proxy) => self::ipMatchesCidr($ip, $proxy));
     }
 }
