@@ -8,9 +8,9 @@
 
 ## News
 
-Ampache8 is now a work in progress and has become the mainline.
+Ampache 8 is now released and has become the mainline; the next version is developed on `develop`.
 
-The `develop` branch is Ampache8; the Ampache7 line continues on [release7](https://github.com/ampache/ampache/tree/release7).
+The `develop` branch is the active development branch for the next release; the current stable Ampache 8 line is on [release8](https://github.com/ampache/ampache/tree/release8), and the older Ampache 7 line continues on [release7](https://github.com/ampache/ampache/tree/release7).
 
 There are a lot of structural changes happening, but some visible ones too — a new, opt-in Jellyfin-compatible API lets third-party Jellyfin clients (Finamp, Symfonium, gelly and others) browse and stream your library.
 
@@ -36,11 +36,11 @@ choosing a suitable method for doing so.
 
 ## Recommended Version
 
-The recommended and most stable version is the current stable [release7 branch](https://github.com/ampache/ampache/archive/release7.tar.gz).
+The recommended and most stable version is the current stable [release8 branch](https://github.com/ampache/ampache/archive/release8.tar.gz).
 
-The [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz) is the in-progress Ampache8. It carries the newest changes and fixes but may be unstable, and it requires PHP 8.5+.
+The [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz) is the in-progress development version. It carries the newest changes and fixes but may be unstable, and it requires PHP 8.5+.
 
-If you want to run the last stable version [release6](https://github.com/ampache/ampache/archive/release6.tar.gz) is still available
+If you need an older release, the previous [release7](https://github.com/ampache/ampache/archive/release7.tar.gz) and [release6](https://github.com/ampache/ampache/archive/release6.tar.gz) branches are still available.
 
 ## Installation
 
@@ -62,7 +62,8 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * PHP 8.2 (Ampache 6.0.0 -> Ampache7)
   * PHP 8.3 (Ampache 6.2.0 -> Ampache7)
   * PHP 8.4 (Ampache 7.1.0 -> Ampache7)
-  * PHP 8.5 (Ampache 7.9.0 and higher)
+  * PHP 8.5 (Ampache 7.9.0 and higher, and required for Ampache 8.x)
+  * PHP 8.6 (Ampache 8.4.0 and higher)
 
 **NOTE** That Ampache8 supports php8.5+ only.
 
@@ -128,13 +129,13 @@ Ampache includes some [external modules](https://github.com/ampache/ampache/blob
 
 Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
-translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
+translation, simply visit us on [Transifex](https://app.transifex.com/ampache/ampache/).
 If you prefer it old school or want to work offline, take a look at [locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
 for more instructions.
 
 Translation progress so far:
 
-[![Transifex](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
+See the live [translation status on Transifex](https://explore.transifex.com/ampache/ampache/).
 
 ## Admin tools and helper scripts
 

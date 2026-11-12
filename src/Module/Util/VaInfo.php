@@ -769,6 +769,20 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
+     * rating_to_popm
+     * Convert 5 stars back to the 255 unit scale read by parse_rating
+     */
+    public static function rating_to_popm(?int $stars): int
+    {
+        $stars = max(0, min(5, (int) $stars));
+        if (AmpConfig::get('rating_file_tag_compatibility', false)) {
+            return [0, 1, 64, 128, 196, 255][$stars];
+        }
+
+        return $stars * 51;
+    }
+
+    /**
      * _translate_pattern_code
      * This just contains a keyed array which it checks against to give you the
      * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
