@@ -108,10 +108,10 @@ final readonly class MusicbrainzCollectorModule implements CollectorModuleInterf
 
         try {
             $response = $this->webFetcher->fetch($url);
-        } catch (FetchFailedException $exception) {
+        } catch (FetchFailedException $fetchFailedException) {
             // the archive answers 404 for a release with no art, which is the common case
             $this->logger->debug(
-                'gather_musicbrainz no Cover Art Archive result: ' . $exception->getMessage(),
+                'gather_musicbrainz no Cover Art Archive result: ' . $fetchFailedException->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
