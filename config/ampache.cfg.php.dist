@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 88
+config_version = 89
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -1420,6 +1420,13 @@ send_full_stream = "webplayer"
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
 ; DEFAULT: "false"
 ;force_ssl = "true"
+
+; If Ampache is behind a reverse proxy, list the proxy's own IP addresses or
+; CIDR ranges here (comma separated) so the X-Forwarded-For header it sets is
+; trusted for IP-based access control. REMOTE_ADDR is used instead of any
+; X-Forwarded-For header until the immediate peer matches one of these.
+; DEFAULT: not in use
+;trusted_proxies = "127.0.0.1, 10.0.0.0/8"
 
 ;#########################################################
 ; Mail Settings                                          #

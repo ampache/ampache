@@ -2,8 +2,14 @@
 
 ## Ampache 7.10.6
 
+### Added (7.10.6)
+
+* Config version 89
+  * New `trusted_proxies` key listing reverse proxy IPs/CIDR ranges allowed to set `X-Forwarded-For`
+
 ### Fixed (7.10.6)
 
+* IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Subsonic/OpenSubsonic `scrobble` without a `submission` parameter is a finished stream, not a now playing notification; it was never scrobbled to Last.fm/ListenBrainz (#4544)
 * A song's `title`/`artist` tag could inject HTML into the jPlayer playlist, running script for anyone who viewed it
 * A stream session (`ssid`) bypassed `allow_zip_download` and per-stream access control on `/batch.php`
