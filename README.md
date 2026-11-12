@@ -63,6 +63,7 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * PHP 8.3 (Ampache 6.2.0 -> Ampache7)
   * PHP 8.4 (Ampache 7.1.0 -> Ampache7)
   * PHP 8.5 (Ampache 7.9.0 and higher, and required for Ampache 8.x)
+  * PHP 8.6 (Ampache 8.4.0 and higher)
 
 **NOTE** That Ampache8 supports php8.5+ only.
 
