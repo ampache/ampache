@@ -1941,7 +1941,7 @@ class OpenSubsonic_Xml_Data
             $xsong->addAttribute('coverArt', $art_id);
         }
         $xsong->addAttribute('duration', (string) $song->time);
-        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1024)));
+        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1000)));
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
         if ($user_rating > 0) {
@@ -2570,7 +2570,7 @@ class OpenSubsonic_Xml_Data
         if ($episode->has_art()) {
             $xepisode->addAttribute('coverArt', $subParent);
         }
-        $xepisode->addAttribute('bitRate', (string) ((int) ($episode->bitrate / 1024)));
+        $xepisode->addAttribute('bitRate', (string) ((int) ($episode->bitrate / 1000)));
 
         // Episodes are rarely tagged, so the long standing "Podcast" genre remains the fallback when none are set.
         $tags = Tag::get_object_tags('podcast_episode', $episode->id);
@@ -2691,7 +2691,7 @@ class OpenSubsonic_Xml_Data
         $xvideo->addAttribute('isVideo', 'true');
         $xvideo->addAttribute('type', 'video');
         $xvideo->addAttribute('duration', (string) $video->time);
-        $xvideo->addAttribute('bitRate', (string) ((int) ($video->bitrate / 1024)));
+        $xvideo->addAttribute('bitRate', (string) ((int) ($video->bitrate / 1000)));
         if (isset($video->year) && $video->year > 0) {
             $xvideo->addAttribute('year', (string) $video->year);
         }

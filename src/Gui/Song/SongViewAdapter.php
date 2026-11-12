@@ -349,7 +349,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getHeader(): ObjectHeaderView
     {
-        $bitrate = (int) ($this->song->bitrate / 1024);
+        $bitrate = (int) ($this->song->bitrate / 1000);
 
         return new ObjectHeaderView(
             kind: T_('Song'),
@@ -576,7 +576,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
-        $songprops[T_('Bitrate')]        = scrub_out((int) ($this->song->bitrate / 1024) . "-" . strtoupper((string) $this->song->mode));
+        $songprops[T_('Bitrate')]        = scrub_out((int) ($this->song->bitrate / 1000) . "-" . strtoupper((string) $this->song->mode));
         $songprops[T_('Channels')]       = $this->song->channels;
         if ($this->song->bpm !== null) {
             $songprops[T_('BPM')] = $this->song->bpm;

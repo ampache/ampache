@@ -839,7 +839,7 @@ class Daap_Api
                         $output .= self::_tlv($tag, $song->composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::_tlv($tag, (int) ($song->bitrate / 1024));
+                        $output .= self::_tlv($tag, (int) ($song->bitrate / 1000));
                         break;
                     case 'daap.songcomment':
                         $output .= self::_tlv($tag, $song->comment);

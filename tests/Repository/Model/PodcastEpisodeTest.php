@@ -34,6 +34,16 @@ class PodcastEpisodeTest extends TestCase
     private ContainerInterface&MockObject $dic;
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
 
+    /** A 320 kbps file showed as 312 (#3602) */
+    public function testBitrateCountsKilobitsAsThousands(): void
+    {
+        $subject          = new Podcast_Episode();
+        $subject->bitrate = 320042;
+        $subject->mode    = 'cbr';
+
+        self::assertSame('320-CBR', $subject->getBitrateFormatted());
+    }
+
     public function testUpdateAppliesTheDataAndPersists(): void
     {
         $subject = new Podcast_Episode();

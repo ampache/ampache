@@ -215,8 +215,8 @@ final class VideoView extends AbstractView
             ['label' => T_('Codec'), 'value' => $this->e($video->video_codec . ' / ' . $video->audio_codec)],
             ['label' => T_('Resolution'), 'value' => $this->e($video->get_f_resolution())],
             ['label' => T_('Display'), 'value' => $this->e($video->get_f_display())],
-            ['label' => T_('Audio Bitrate'), 'value' => $this->e((int) ($video->bitrate / 1024) . '-' . strtoupper((string) $video->mode))],
-            ['label' => T_('Video Bitrate'), 'value' => $this->e((string) (int) ($video->video_bitrate / 1024))],
+            ['label' => T_('Audio Bitrate'), 'value' => $this->e((int) ($video->bitrate / 1000) . '-' . strtoupper((string) $video->mode))],
+            ['label' => T_('Video Bitrate'), 'value' => $this->e((string) (int) ($video->video_bitrate / 1000))],
             ['label' => T_('Frame Rate'), 'value' => $this->e($video->frame_rate ? $video->frame_rate . ' fps' : '')],
             ['label' => T_('Channels'), 'value' => $this->e($video->channels)],
         ];
