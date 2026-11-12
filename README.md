@@ -174,7 +174,7 @@ If you're a fan of [play.dogmazic.net](https://play.dogmazic.net/)? Donate to th
 <a target="_blank" href="https://www.paypal.com/paypalme/musiquelibre">
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
 
-Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGEMENTS.md).
+Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGMENTS.md).
 
 ## Powered by
 
@@ -201,4 +201,4 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 
 We hope to see you soon and that you have fun with this Project!
 
-[Team Ampache](docs/ACKNOWLEDGEMENTS.md)
+[Team Ampache](docs/ACKNOWLEDGMENTS.md)
