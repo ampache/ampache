@@ -950,13 +950,12 @@ final class SongSearch implements SearchInterface
                     if ($operator_sql === '=' && (string) $input === '') {
                         $where[] = sprintf('NOT EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = %d)', $field);
                     } else {
-                        $parsedInput = (is_numeric($input)) ? $input : '"' . $input . '"';
                         if (!array_key_exists($field, $metadata)) {
                             $metadata[$field] = [];
                         }
 
                         $metadata[$field][] = sprintf('`metadata`.`data` %s ?', $operator_sql);
-                        $parameters[]       = $parsedInput;
+                        $parameters[]       = $input;
                     }
 
                     break;
