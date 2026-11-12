@@ -363,7 +363,8 @@ class Song extends database_object implements
                 $arr = ($key === 'tags' && !empty($media->get_tags()))
                     ? self::_unique_tag_names(array_column($media->get_tags(), 'name'))
                     : $media->$key;
-                sort($arr);
+                // tags compare without case, so they must sort without it too
+                sort($arr, SORT_STRING | SORT_FLAG_CASE);
                 $mediaData = implode(" ", $arr);
             } else {
                 $mediaData = $media->$key;
@@ -383,7 +384,7 @@ class Song extends database_object implements
                 $arr = ($key === 'tags' && !empty($new_media->get_tags()))
                     ? self::_unique_tag_names(array_column($new_media->get_tags(), 'name'))
                     : $new_media->$key;
-                sort($arr);
+                sort($arr, SORT_STRING | SORT_FLAG_CASE);
                 $newMediaData = implode(" ", $arr);
             } else {
                 $newMediaData = $new_media->$key;
