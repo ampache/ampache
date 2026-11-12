@@ -4,10 +4,11 @@
 
 ### Added (8.4.1)
 
-* Config version 103
+* Config version 104
   * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
   * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
   * New `art_min_width`, `art_max_width`, `art_min_height`, `art_max_height` keys, the preferred spelling of `album_art_*` now that the bounds apply to every art type; `album_art_*` still works
+  * New `trusted_proxies` key listing reverse proxy IPs/CIDR ranges allowed to set `X-Forwarded-For`
 
 ### Changed (8.4.1)
 
@@ -18,6 +19,7 @@
 
 ### Fixed (8.4.1)
 
+* IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic
   * Removing a row as an admin refreshes the playlist
   * Votes were cleared for users who were still logged in, or who had `demo_clear_sessions` off

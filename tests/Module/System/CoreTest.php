@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 
 class CoreTest extends MockeryTestCase
@@ -94,5 +96,60 @@ class CoreTest extends MockeryTestCase
     public function testImageMimeReturnsNullForNonImageData(): void
     {
         $this->assertNull(Core::image_mime('this is not an image'));
+    }
+
+    public function testResolveClientIpFallsBackToRemoteAddrWithNoForwardedHeader(): void
+    {
+        $this->assertSame(
+            '203.0.113.9',
+            Core::resolveClientIp('203.0.113.9', null)
+        );
+    }
+
+    public function testResolveClientIpIgnoresForwardedHeaderFromUntrustedPeer(): void
+    {
+        $this->assertSame(
+            '203.0.113.9',
+            Core::resolveClientIp('203.0.113.9', '198.51.100.7')
+        );
+    }
+
+    public function testResolveClientIpMatchesTrustedProxyByCidr(): void
+    {
+        AmpConfig::set(ConfigurationKeyEnum::TRUSTED_PROXIES, '203.0.113.0/24', true);
+
+        $this->assertSame(
+            '198.51.100.7',
+            Core::resolveClientIp('203.0.113.9', '198.51.100.7')
+        );
+    }
+
+    public function testResolveClientIpSkipsTrustedHopsInForwardedChain(): void
+    {
+        AmpConfig::set(ConfigurationKeyEnum::TRUSTED_PROXIES, '203.0.113.9,198.51.100.7', true);
+
+        $this->assertSame(
+            '198.51.100.42',
+            Core::resolveClientIp('203.0.113.9', '198.51.100.42, 198.51.100.7')
+        );
+    }
+
+    public function testResolveClientIpUsesForwardedHeaderFromTrustedProxy(): void
+    {
+        AmpConfig::set(ConfigurationKeyEnum::TRUSTED_PROXIES, '203.0.113.9', true);
+
+        $this->assertSame(
+            '198.51.100.7',
+            Core::resolveClientIp('203.0.113.9', '198.51.100.7')
+        );
+    }
+
+    // NOTE: Core::get_user_ip() reads REMOTE_ADDR/HTTP_X_FORWARDED_FOR via
+    // filter_has_var(INPUT_SERVER, ...), which does not reflect runtime writes to
+    // $_SERVER under the PHPUnit CLI runner (see UserTrackerTest for the same hazard),
+    // so these tests exercise Core::resolveClientIp() directly instead.
+    protected function tearDown(): void
+    {
+        AmpConfig::set(ConfigurationKeyEnum::TRUSTED_PROXIES, '', true);
     }
 }

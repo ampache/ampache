@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\User;
 use Exception;
 
@@ -270,30 +271,21 @@ class Core
      * get_user_ip
      * check for the ip of the request
      *
+     * REMOTE_ADDR is authoritative unless the direct peer is a configured
+     * trusted_proxies entry, in which case X-Forwarded-For names the client instead.
+     *
      * @todo make dynamic and testable
      */
     public static function get_user_ip(): string
     {
-        // link-local address can have the interface at the end of an ipv6 address
-        // it's not relevant to the ip lookup so we can safely strip it
-        // ex fe80::1234:5678:abcd:ef01%enp3s0
-        $stripZoneFromIpv6 = fn($ip) => explode('%', $ip, 2)[0];
-
-        // get the x forward if it's valid
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $ip = $stripZoneFromIpv6($_SERVER['HTTP_X_FORWARDED_FOR']);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return filter_var($ip, FILTER_VALIDATE_IP);
-            }
-        }
-
         if (!filter_has_var(INPUT_SERVER, 'REMOTE_ADDR')) {
             return '';
         }
 
-        $ip = $stripZoneFromIpv6($_SERVER['REMOTE_ADDR']);
-
-        return filter_var($ip, FILTER_VALIDATE_IP) ?: '';
+        return self::resolveClientIp(
+            (string) $_SERVER['REMOTE_ADDR'],
+            filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? (string) $_SERVER['HTTP_X_FORWARDED_FOR'] : null
+        );
     }
 
     /**
@@ -439,5 +431,86 @@ class Core
         }
 
         return $options;
+    }
+
+    /**
+     * resolveClientIp
+     * REMOTE_ADDR is authoritative unless it is a configured trusted_proxies entry,
+     * in which case X-Forwarded-For (walked from the right, skipping trusted hops) names the client instead
+     */
+    public static function resolveClientIp(string $remoteAddr, ?string $forwardedFor): string
+    {
+        // link-local address can have the interface at the end of an ipv6 address
+        // it's not relevant to the ip lookup so we can safely strip it
+        // ex fe80::1234:5678:abcd:ef01%enp3s0
+        $stripZoneFromIpv6 = fn($ip) => explode('%', $ip, 2)[0];
+
+        $remoteAddr = filter_var($stripZoneFromIpv6($remoteAddr), FILTER_VALIDATE_IP) ?: '';
+
+        if ($remoteAddr !== '' && $forwardedFor !== null && self::isTrustedProxy($remoteAddr)) {
+            // walk the forwarded chain from the right, skipping trusted proxies, to find the real client
+            $hops = array_reverse(explode(',', $forwardedFor));
+            foreach ($hops as $hop) {
+                $hopIp = filter_var($stripZoneFromIpv6(trim($hop)), FILTER_VALIDATE_IP);
+                if ($hopIp === false) {
+                    break;
+                }
+                if (!self::isTrustedProxy($hopIp)) {
+                    return $hopIp;
+                }
+            }
+        }
+
+        return $remoteAddr;
+    }
+
+    /**
+     * ipMatchesCidr
+     * does the ip fall inside the given ip or ip/prefix range, ipv4 and ipv6 alike
+     */
+    private static function ipMatchesCidr(string $ip, string $cidr): bool
+    {
+        [$network, $prefix] = array_pad(explode('/', $cidr, 2), 2, null);
+
+        $ipBinary      = inet_pton($ip);
+        $networkBinary = inet_pton((string) $network);
+        if ($ipBinary === false || $networkBinary === false || strlen($ipBinary) !== strlen($networkBinary)) {
+            return false;
+        }
+
+        $bits         = strlen($ipBinary) * 8;
+        $prefixLength = ($prefix === null) ? $bits : (int) $prefix;
+        if ($prefixLength < 0 || $prefixLength > $bits) {
+            return false;
+        }
+
+        $fullBytes     = intdiv($prefixLength, 8);
+        $remainderBits = $prefixLength % 8;
+        if ($fullBytes > 0 && strncmp($ipBinary, $networkBinary, $fullBytes) !== 0) {
+            return false;
+        }
+
+        if ($remainderBits === 0) {
+            return true;
+        }
+
+        $mask = (0xFF << (8 - $remainderBits)) & 0xFF;
+
+        return (ord($ipBinary[$fullBytes]) & $mask) === (ord($networkBinary[$fullBytes]) & $mask);
+    }
+
+    /**
+     * isTrustedProxy
+     * is the ip one of the configured trusted_proxies entries (plain IP or CIDR range)
+     */
+    private static function isTrustedProxy(string $ip): bool
+    {
+        foreach (AmpConfig::get_array(ConfigurationKeyEnum::TRUSTED_PROXIES) as $proxy) {
+            if (self::ipMatchesCidr($ip, $proxy)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
