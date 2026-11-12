@@ -132,6 +132,14 @@ class SongSearchTest extends MockeryTestCase
         );
     }
 
+    /** Text metadata never matched: the bound value was wrapped in quotes the stored data doesn't have (#4258) */
+    public function testMetadataContainsBindsTheBareValue(): void
+    {
+        $result = $this->ruleSql([['metadata', 'contain', 'Bach', 5]]);
+
+        $this->assertSame(['%Bach%'], $result['parameters']);
+    }
+
     /**
      * `$metadata` is shared across every group call in one `getSql()`, so two `metadata` rules on
      * the same field split across two groups still combine into a single `EXISTS` clause
@@ -154,7 +162,7 @@ class SongSearchTest extends MockeryTestCase
             "`metadata`.`field` = 5 AND (`metadata`.`data` = ? AND `metadata`.`data` = ?)",
             $result['where_sql']
         );
-        $this->assertSame(['"Pop"', '"Rock"'], $result['parameters']);
+        $this->assertSame(['Pop', 'Rock'], $result['parameters']);
     }
 
     /**
