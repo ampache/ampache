@@ -9146,6 +9146,12 @@
             "format": "date-time",
             "description": "Date the artist was starred. [ISO 8601]"
           },
+        "userRating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "The user rating of the artist. [1-5]"
+        },
           "musicBrainzId": {
             "type": "string",
             "description": "The artist MusicBrainzID."
@@ -11276,6 +11282,10 @@
           "start": {
             "type": "number",
             "description": "The start time of the lyrics, relative to the start time of the track, in milliseconds. If this is not part of synced lyrics, start __must__ be omitted"
+          },
+          "end": {
+            "type": "number",
+            "description": "The optional exact end time of the lyrics on the same track-relative millisecond timeline as start. It is only returned for songLyrics version 2 enhanced responses. When present, start must also be present and end must be greater than or equal to start. Servers must not derive end from the next line's start. If this is not part of synced lyrics, end must be omitted"
           }
         },
         "required": [
