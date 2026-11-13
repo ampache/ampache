@@ -66,7 +66,7 @@ class OpenSubsonicSpecVersionTest extends TestCase
      * implementation has actually been checked against the new build, `composer spec:refresh` rewrites this and the
      * compliance date together.
      */
-    private const string SPEC_SHA256 = '67c7d915b69868a873ac6ab7cc3d0cf180e6200d9eccc0711ee8fd3c3724714c';
+    private const string SPEC_SHA256 = '1eec3a88c956963cb17ed8bd73e562feabf8f03af7fe62ce80098d77f522f6ba';
 
     /**
      * An advertised extension that no longer exists upstream is a lie to every client that checks.

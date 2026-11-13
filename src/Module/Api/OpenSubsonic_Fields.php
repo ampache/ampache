@@ -52,7 +52,7 @@ use Ampache\Repository\Model\User;
  * the method that would otherwise carry it. They are all optional in the spec, which requires omission over a
  * placeholder value.
  *
- * https://opensubsonic.netlify.app/docs/responses/
+ * https://opensubsonic.github.io/docs/responses/
  */
 final class OpenSubsonic_Fields
 {
@@ -211,7 +211,7 @@ final class OpenSubsonic_Fields
      * The titled discs of an album. Only discs that actually carry a subtitle are returned — the spec makes `title`
      * required, so an untitled disc has nothing to say and is left out entirely.
      *
-     * https://opensubsonic.netlify.app/docs/responses/disctitle/
+     * https://opensubsonic.github.io/docs/responses/disctitle/
      * @return array<int, array{'disc': int, 'title': string}>
      */
     public function albumDiscTitles(Album $album): array
@@ -235,7 +235,7 @@ final class OpenSubsonic_Fields
      *
      * The moods of an album, which Ampache derives from the moods of its songs when a catalog is scanned.
      *
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * https://opensubsonic.github.io/docs/responses/albumid3/
      *
      * @return string[]
      */
@@ -257,7 +257,7 @@ final class OpenSubsonic_Fields
      *
      * The record labels of an album. `name` is required by the spec, so a blank one is left out.
      *
-     * https://opensubsonic.netlify.app/docs/responses/recordlabel/
+     * https://opensubsonic.github.io/docs/responses/recordlabel/
      *
      * @return array<int, array{'name': string}>
      */
@@ -342,7 +342,7 @@ final class OpenSubsonic_Fields
      * An ItemDate built from a bare year. Ampache only records the year part of a release, so `month`/`day` are
      * never present; a zero or obviously invalid year yields an empty date and the caller omits the field.
      *
-     * https://opensubsonic.netlify.app/docs/responses/itemdate/
+     * https://opensubsonic.github.io/docs/responses/itemdate/
      * @return array{'year'?: int}
      */
     public function itemDate(?int $year): array
@@ -357,7 +357,7 @@ final class OpenSubsonic_Fields
      *
      * The `played` field: an ISO 8601 instant, or null when never streamed. Server-wide, like `playCount`.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      */
     public function lastPlayed(?int $timestamp): ?string
     {
@@ -444,7 +444,7 @@ final class OpenSubsonic_Fields
      * The tagged beats per minute. Ampache keeps the fraction a detection tool wrote, but the spec types the field
      * as an integer, so it is rounded on the way out.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      */
     public function songBpm(Song $song): ?int
     {
@@ -463,7 +463,7 @@ final class OpenSubsonic_Fields
      * than as free-form role tags, so the composer is the only relationship that maps onto a Contributor role; the
      * performing artists are already carried by `artists`/`albumArtists`. `subRole` has no source and is omitted.
      *
-     * https://opensubsonic.netlify.app/docs/responses/contributor/
+     * https://opensubsonic.github.io/docs/responses/contributor/
      * @return array<int, array{'role': string, 'artist': array{'id': string, 'name': string}}>
      */
     public function songContributors(Song $song): array
@@ -518,7 +518,7 @@ final class OpenSubsonic_Fields
      *
      * The moods of a song. The spec asks for names only, so the ids and the owner are dropped.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      *
      * @return string[]
      */
@@ -542,7 +542,7 @@ final class OpenSubsonic_Fields
      * point, so it is scaled back to plain dB here. The spec requires `replayGain` itself to always be present on
      * a Child, so the caller emits this even when it comes back empty.
      *
-     * https://opensubsonic.netlify.app/docs/responses/replaygain/
+     * https://opensubsonic.github.io/docs/responses/replaygain/
      * @return array{
      *     'trackGain'?: float,
      *     'albumGain'?: float,
@@ -606,7 +606,7 @@ final class OpenSubsonic_Fields
      * `kind` and `agents` are not emitted: Ampache stores one unattributed lyric layer, `main` is already the
      * default when `kind` is omitted, and the spec says agents should not appear without multiple vocal layers.
      *
-     * https://opensubsonic.netlify.app/docs/responses/structuredlyrics/
+     * https://opensubsonic.github.io/docs/responses/structuredlyrics/
      * @return array{
      *     'displayArtist': string,
      *     'displayTitle': string,

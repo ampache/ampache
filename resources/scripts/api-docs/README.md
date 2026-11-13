@@ -75,7 +75,7 @@ records the checksum and endpoint count of the build the implementation was last
 To take a newer build:
 
 ```shell
-curl -o docs/openapi-opensubsonic.json https://opensubsonic.netlify.app/docs/openapi/openapi.json
+curl -o docs/openapi-opensubsonic.json https://opensubsonic.github.io/docs/openapi/openapi.json
 composer qa
 ```
 

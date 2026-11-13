@@ -25,12 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Database\database_object;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\SongRepositoryInterface;
 use Override;
+use ReflectionMethod;
+use ReflectionProperty;
+use SimpleXMLElement;
 
 /**
  * Every song of an album maps to the same album artists, and a various-artists album maps every track
@@ -65,6 +74,67 @@ class OpenSubsonicAlbumArtistsTest extends MockeryTestCase
         $this->assertCount(1, $artists, 'a thousand names under every track is not a credit, it is a payload');
         $this->assertSame('ar-0', $artists[0]['id']);
         $this->assertSame(T_('Various'), $artists[0]['name']);
+    }
+
+    public function testArtistId3RatingsAreConsistentAcrossFormats(): void
+    {
+        AmpConfig::set('memory_cache', true, true);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
+        $previousUser    = $GLOBALS['user'] ?? null;
+        $user            = $this->mock(User::class);
+        $user->id        = 427;
+        $GLOBALS['user'] = $user;
+
+        try {
+            $albumRepository = $this->mock(AlbumRepositoryInterface::class);
+            $albumRepository->shouldReceive('getAlbumByArtist')->with(428)->andReturn([]);
+            $folderRepository    = $this->mock(FolderRepositoryInterface::class);
+            $songRepository      = $this->mock(SongRepositoryInterface::class);
+            $json                = new OpenSubsonic_Json_Data($albumRepository, $folderRepository, $this->subject(), $songRepository);
+            $xml                 = new OpenSubsonic_Xml_Data($albumRepository, $folderRepository, $this->subject(), $songRepository);
+            $artist              = $this->mock(Artist::class);
+            $artist->id          = 428;
+            $artist->name        = 'Example';
+            $artist->mbid        = 'example-id';
+            $artist->album_count = 0;
+            $artist->song_count  = 1;
+            $artist->shouldReceive('isNew')->andReturn(false);
+            $artist->shouldReceive('has_art')->andReturn(false);
+            $artist->shouldReceive('get_fullname')->andReturn('Example');
+
+            database_object::add_to_cache('rating_artist_user427', 428, [4]);
+            database_object::add_to_cache('userflag_artist_user427', 428, [false]);
+
+            $details = $json->addArtistWithAlbumsID3(['subsonic-response' => []], $artist)['subsonic-response']['artist'];
+            self::assertSame(4, $details['userRating']);
+            self::assertSame('example-id', $details['musicBrainzId']);
+            self::assertSame(['artist'], $details['roles']);
+            self::assertSame([], $details['album']);
+            self::assertSame(4, $json->addArtistID3(['subsonic-response' => []], $artist)['subsonic-response']['artist']['userRating']);
+
+            $document = new SimpleXMLElement('<subsonic-response/>');
+            $xml->addArtistID3($document, $artist, true);
+            self::assertSame('4', (string) $document->artist['userRating']);
+
+            $row     = ['id' => 428, 'f_name' => 'Example', 'name' => 'Example', 'album_count' => 0, 'song_count' => 1, 'catalog_id' => 1, 'has_art' => 0];
+            $indexed = new ReflectionMethod($json, '_getArtistArray')->invoke($json, [], $row);
+            self::assertSame(4, $indexed[0]['userRating']);
+            $document = new SimpleXMLElement('<index/>');
+            new ReflectionMethod($xml, '_addArtistArray')->invoke($xml, $document, $row);
+            self::assertSame('4', (string) $document->artist['userRating']);
+
+            database_object::add_to_cache('rating_artist_user427', 428, [0]);
+            self::assertArrayNotHasKey('userRating', $json->addArtistWithAlbumsID3(['subsonic-response' => []], $artist)['subsonic-response']['artist']);
+            $document = new SimpleXMLElement('<subsonic-response/>');
+            $xml->addArtistID3($document, $artist, true);
+            self::assertFalse(isset($document->artist['userRating']));
+        } finally {
+            if ($previousUser === null) {
+                unset($GLOBALS['user']);
+            } else {
+                $GLOBALS['user'] = $previousUser;
+            }
+        }
     }
 
     public function testTheDisplayStringIsJoinedOncePerAlbum(): void

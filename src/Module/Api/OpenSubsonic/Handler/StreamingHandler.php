@@ -56,7 +56,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * download
      *
      * Downloads a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/download/
+     * https://opensubsonic.github.io/docs/endpoints/download/
      * @param array<string, mixed> $input
      */
     public function download(array $input, User $user): void
@@ -83,7 +83,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getAvatar
      *
      * Returns the avatar (personal image) for a user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
+     * https://opensubsonic.github.io/docs/endpoints/getavatar/
      * @param array<string, mixed> $input
      */
     public function getavatar(array $input, User $user): void
@@ -120,7 +120,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getCaptions
      *
      * Returns captions (subtitles) for a video.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
+     * https://opensubsonic.github.io/docs/endpoints/getcaptions/
      * @param array<string, mixed> $input
      */
     public function getcaptions(array $input, User $user): void
@@ -174,7 +174,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getCoverArt
      *
      * Returns a cover art image.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
+     * https://opensubsonic.github.io/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
      */
     public function getcoverart(array $input, User $user): void
@@ -269,7 +269,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getLyrics
      *
      * Searches for and returns lyrics for a given song.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
+     * https://opensubsonic.github.io/docs/endpoints/getlyrics/
      * @param array<string, mixed> $input
      */
     public function getlyrics(array $input, User $user): void
@@ -323,7 +323,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getLyricsBySongId
      *
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
+     * https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
      */
     public function getlyricsbysongid(array $input, User $user): void
@@ -362,7 +362,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      *
      * OpenSubsonic extension `transcoding`. Reports whether a client can play a media item as it stands, and what it
      * would be given instead. POST only, because the client capabilities arrive as a JSON body.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodedecision/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodedecision/
      * @param array<string, mixed> $input
      */
     public function getTranscodeDecision(array $input, User $user): void
@@ -403,7 +403,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      *
      * OpenSubsonic extension `transcoding`. Streams a media item using the settings getTranscodeDecision resolved,
      * carried in the opaque `transcodeParams` token.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodestream/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodestream/
      * @param array<string, mixed> $input
      */
     public function getTranscodeStream(array $input, User $user): void
@@ -454,7 +454,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * hls
      *
      * Creates an HLS (HTTP Live Streaming) playlist used for streaming video or audio.
-     * https://opensubsonic.netlify.app/docs/endpoints/hls/
+     * https://opensubsonic.github.io/docs/endpoints/hls/
      * @param array<string, mixed> $input
      */
     public function hls(array $input, User $user): void
@@ -507,7 +507,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * stream
      *
      * Streams a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/stream/
+     * https://opensubsonic.github.io/docs/endpoints/stream/
      * @param array<string, mixed> $input
      */
     public function stream(array $input, User $user): void
@@ -544,7 +544,7 @@ final class StreamingHandler implements StreamingHandlerInterface
             $params .= '&frame=' . $timeOffset;
         }
 
-        // No scrobble for streams using open subsonic https://opensubsonic.netlify.app/docs/endpoints/stream/
+        // No scrobble for streams using open subsonic https://opensubsonic.github.io/docs/endpoints/stream/
         $params .= '&cache=1';
 
         $this->follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));

@@ -104,6 +104,18 @@ class OpenSubsonicFieldsTest extends TestCase
         );
     }
 
+    public function testParseLyricsNeverInfersExactLineEnds(): void
+    {
+        $lyrics = "[00:01.00]First\n[00:03.00]<00:03.00>Second";
+
+        foreach ([false, true] as $enhanced) {
+            $parsed = OpenSubsonic_Fields::parseLyrics($lyrics, $enhanced);
+            foreach ($parsed['line'] as $line) {
+                self::assertArrayNotHasKey('end', $line);
+            }
+        }
+    }
+
     public function testParseLyricsOmitsCueLinesUnlessEnhancedIsRequested(): void
     {
         $lyric = '[00:12.00]<00:12.00>Hello <00:13.20>world';

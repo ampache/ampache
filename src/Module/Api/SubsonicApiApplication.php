@@ -284,7 +284,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $api_auth   = false;
         $pass_auth  = (!empty($password) && !$token_auth);
 
-        // apiKey authentication https://opensubsonic.netlify.app/docs/extensions/apikeyauth/
+        // apiKey authentication https://opensubsonic.github.io/docs/extensions/apikeyauth/
         $apiKey = $gatekeeper->getAuth('apiKey');
         if ($apiKey) {
             $user = $gatekeeper->getUser('apiKey');

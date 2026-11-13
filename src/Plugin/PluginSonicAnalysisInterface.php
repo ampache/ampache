@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Song;
  * questions and must not stand in for one another. The extension is only advertised while a plugin of this type is
  * installed and enabled, so a server without an analysis backend reports it as unsupported instead of guessing.
  *
- * https://opensubsonic.netlify.app/docs/extensions/sonicsimilarity/
+ * https://opensubsonic.github.io/docs/extensions/sonicsimilarity/
  */
 interface PluginSonicAnalysisInterface extends AmpachePluginInterface
 {

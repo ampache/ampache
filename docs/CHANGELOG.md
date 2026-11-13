@@ -18,6 +18,7 @@
 * The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
 * Subsonic
   * Apply weighting to search result order
+  * OpenSubsonic artist responses include the user's rating when available
 
 ### Fixed (8.4.1)
 
@@ -1838,11 +1839,11 @@ While this fully implements new features it does not include all the new data fi
   * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
 * Subsonic
   * Implemented all OpenSubsonic [api extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
-  * Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
-  * Add [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/) method
-  * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
-  * Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
-  * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
+  * Add [API Key Authentication](https://opensubsonic.github.io/docs/extensions/apikeyauth/)
+  * Add [getPodcastEpisode](https://opensubsonic.github.io/docs/extensions/getpodcastepisode/) method
+  * Add [songLyrics](https://opensubsonic.github.io/docs/extensions/songlyrics/) support
+  * Add [Index based Queue](https://opensubsonic.github.io/docs/extensions/indexbasedqueue/)
+  * Expanded [subsonic-response error](https://opensubsonic.github.io/docs/responses/error/)
 
 ### Changed (7.6.0)
 

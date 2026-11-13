@@ -48,7 +48,7 @@ final class InternetRadioHandler implements InternetRadioHandlerInterface
      * createInternetRadioStation
      *
      * Adds a new internet radio station.
-     * https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/
+     * https://opensubsonic.github.io/docs/endpoints/createinternetradiostation/
      * @param array<string, mixed> $input
      */
     public function createinternetradiostation(array $input, User $user): void
@@ -88,7 +88,7 @@ final class InternetRadioHandler implements InternetRadioHandlerInterface
      * deleteInternetRadioStation
      *
      * Deletes an existing internet radio station.
-     * https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/
+     * https://opensubsonic.github.io/docs/endpoints/deleteinternetradiostation/
      * @param array<string, mixed> $input
      */
     public function deleteinternetradiostation(array $input, User $user): void
@@ -122,7 +122,7 @@ final class InternetRadioHandler implements InternetRadioHandlerInterface
      * getInternetRadioStations
      *
      * Returns all internet radio stations.
-     * https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/
+     * https://opensubsonic.github.io/docs/endpoints/getinternetradiostations/
      * @param array<string, mixed> $input
      */
     public function getinternetradiostations(array $input, User $user): void
@@ -143,7 +143,7 @@ final class InternetRadioHandler implements InternetRadioHandlerInterface
      * updateInternetRadioStation
      *
      * Updates an existing internet radio station.
-     * https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/
+     * https://opensubsonic.github.io/docs/endpoints/updateinternetradiostation/
      * @param array<string, mixed> $input
      */
     public function updateinternetradiostation(array $input, User $user): void

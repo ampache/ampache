@@ -57,7 +57,7 @@ final class ShareHandler implements ShareHandlerInterface
      * createShare
      *
      * Creates a public URL that can be used by anyone to stream music or video from the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/createshare/
+     * https://opensubsonic.github.io/docs/endpoints/createshare/
      * @param array<string, mixed> $input
      */
     public function createshare(array $input, User $user): void
@@ -155,7 +155,7 @@ final class ShareHandler implements ShareHandlerInterface
      * deleteShare
      *
      * Deletes an existing share.
-     * https://opensubsonic.netlify.app/docs/endpoints/deleteshare/
+     * https://opensubsonic.github.io/docs/endpoints/deleteshare/
      * @param array<string, mixed> $input
      */
     public function deleteshare(array $input, User $user): void
@@ -192,7 +192,7 @@ final class ShareHandler implements ShareHandlerInterface
      * getShares
      *
      * Returns information about shared media this user is allowed to manage.
-     * https://opensubsonic.netlify.app/docs/endpoints/getshares/
+     * https://opensubsonic.github.io/docs/endpoints/getshares/
      * @param array<string, mixed> $input
      */
     public function getshares(array $input, User $user): void
@@ -213,7 +213,7 @@ final class ShareHandler implements ShareHandlerInterface
      * updateShare
      *
      * Updates the description and/or expiration date for an existing share.
-     * https://opensubsonic.netlify.app/docs/endpoints/updateshare/
+     * https://opensubsonic.github.io/docs/endpoints/updateshare/
      * @param array<string, mixed> $input
      */
     public function updateshare(array $input, User $user): void

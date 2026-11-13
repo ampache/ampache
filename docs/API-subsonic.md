@@ -2,14 +2,14 @@
 
 **NOTE** Ampache8 will force all user preferences to the OpenSubsonic implementation by updating preferences to use the new version.
 
-Ampache implements the [OpenSubsonic](https://opensubsonic.netlify.app/docs/) API as well as a pure [Subsonic](http://www.subsonic.org/pages/api.jsp) API.
+Ampache implements the [OpenSubsonic](https://opensubsonic.github.io/docs/) API as well as a pure [Subsonic](http://www.subsonic.org/pages/api.jsp) API.
 
 Users who want to use a pure Subsonic implementation can enable the `Enable legacy Subsonic API responses for compatibility issues` preference on the Options page. (`preferences.php?tab=options`)
 
 **Compatible Versions:**
 
 * Ampache 8.0.0 => Force default to OpenSubsonic and clean up Subsonic to a pure 1.16.1 implementation
-* Ampache 7.6.0 => Separated OpenSubsonic [docs](https://opensubsonic.netlify.app/docs/) & Subsonic API's [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
+* Ampache 7.6.0 => Separated OpenSubsonic [docs](https://opensubsonic.github.io/docs/) & Subsonic API's [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache7 => OpenSubsonic extensions & Subsonic [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache6 => Subsonic [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache5 => Subsonic [1.13.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.13.0.xsd)
@@ -32,17 +32,17 @@ Your API key also still works as the Subsonic password with either auth method, 
 
 ## OpenSubsonic API extension
 
-[OpenSubsonic API](https://opensubsonic.netlify.app/docs/) is an open source initiative to create backward-compatible extensions for the original Subsonic API.
+[OpenSubsonic API](https://opensubsonic.github.io/docs/) is an open source initiative to create backward-compatible extensions for the original Subsonic API.
 
 Ampache Subsonic support is being extended to support these changes
 
 ### Spec compliance
 
-**Audited against the OpenSubsonic specification on 2026-08-07.**
+**Audited against the OpenSubsonic specification on 2026-11-13.**
 
 The spec is a moving target — upstream rebuilds it continuously and states the schema and prose are still being
 reconciled — so the audit is pinned to one build rather than to "latest". `docs/openapi-opensubsonic.json` is that
-build, copied verbatim from `https://opensubsonic.netlify.app/docs/openapi/openapi.json` and **never hand-edited**;
+build, copied verbatim from `https://opensubsonic.github.io/docs/openapi/openapi.json` and **never hand-edited**;
 `tests/Module/Api/OpenSubsonicSpecVersionTest.php` records its checksum and endpoint count so a refreshed copy fails
 CI and prompts a re-audit instead of drifting silently.
 
@@ -94,25 +94,27 @@ the next audit does not re-derive them:
 
 ### Extensions
 
-All are advertised by [getOpenSubsonicExtensions](https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/) at version 1.
+All are advertised by [getOpenSubsonicExtensions](https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/) at version 1.
 
 | Extension                                                                                  | Notes                                                                                                                    |
 |--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| [apiKeyAuthentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)       | see below; adds `tokenInfo`                                                                                              |
-| [formPost](https://opensubsonic.netlify.app/docs/extensions/formpost/)                     | HTTP form POST                                                                                                           |
-| [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/)   |                                                                                                                          |
-| [indexBasedQueue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)       | `getPlayQueueByIndex`, `savePlayQueueByIndex`                                                                            |
-| [playbackReport](https://opensubsonic.netlify.app/docs/extensions/playbackreport/)         | `reportPlayback`; `ignoreScrobble` suppresses play counts                                                                |
-| [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/)                 | `getLyricsBySongId`; `enhanced=true` returns word-level `cueLine` data when the stored lyrics carry Enhanced LRC timings |
-| [sonicSimilarity](https://opensubsonic.netlify.app/docs/extensions/sonicsimilarity/)       | **only advertised when a sonic-analysis plugin is enabled** — see below                                                  |
-| [topSongsByArtistId](https://opensubsonic.netlify.app/docs/extensions/topsongsbyartistid/) | `getTopSongs` accepts `id` as well as `artist`                                                                           |
-| [transcodeOffset](https://opensubsonic.netlify.app/docs/extensions/transcodeoffset/)       | `timeOffset` on `stream`                                                                                                 |
-| [transcoding](https://opensubsonic.netlify.app/docs/extensions/transcoding/)               | `getTranscodeDecision` (POST, JSON capabilities body) and `getTranscodeStream`                                           |
+| [apiKeyAuthentication](https://opensubsonic.github.io/docs/extensions/apikeyauth/)       | see below; adds `tokenInfo`                                                                                              |
+| [formPost](https://opensubsonic.github.io/docs/extensions/formpost/)                     | HTTP form POST                                                                                                           |
+| [getPodcastEpisode](https://opensubsonic.github.io/docs/extensions/getpodcastepisode/)   |                                                                                                                          |
+| [indexBasedQueue](https://opensubsonic.github.io/docs/extensions/indexbasedqueue/)       | `getPlayQueueByIndex`, `savePlayQueueByIndex`                                                                            |
+| [playbackReport](https://opensubsonic.github.io/docs/extensions/playbackreport/)         | `reportPlayback`; `ignoreScrobble` suppresses play counts                                                                |
+| [songLyrics](https://opensubsonic.github.io/docs/extensions/songlyrics/)                 | `getLyricsBySongId`; `enhanced=true` returns word-level `cueLine` data when the stored lyrics carry Enhanced LRC timings |
+| [sonicSimilarity](https://opensubsonic.github.io/docs/extensions/sonicsimilarity/)       | **only advertised when a sonic-analysis plugin is enabled** — see below                                                  |
+| [topSongsByArtistId](https://opensubsonic.github.io/docs/extensions/topsongsbyartistid/) | `getTopSongs` accepts `id` as well as `artist`                                                                           |
+| [transcodeOffset](https://opensubsonic.github.io/docs/extensions/transcodeoffset/)       | `timeOffset` on `stream`                                                                                                 |
+| [transcoding](https://opensubsonic.github.io/docs/extensions/transcoding/)               | `getTranscodeDecision` (POST, JSON capabilities body) and `getTranscodeStream`                                           |
+
+Stored LRC and SYLT lyrics provide start times, not exact line ends, so `line.end` is omitted even for enhanced responses.
 
 Also implemented, outside the named extensions:
 
-* Expanded [subsonic-response](https://opensubsonic.netlify.app/docs/responses/subsonic-response/)
-* Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
+* Expanded [subsonic-response](https://opensubsonic.github.io/docs/responses/subsonic-response/)
+* Expanded [subsonic-response error](https://opensubsonic.github.io/docs/responses/error/)
 
 #### Sonic similarity
 
@@ -162,15 +164,15 @@ Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddee
 
 ### Endpoint extension
 
-* Edit [search3](https://opensubsonic.netlify.app/docs/endpoints/search3/) to allow empty `query` argument
-* Edit [savePlayQueue](https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/) to allow empty `id` argument
-* Add [getOpenSubsonicExtensions](https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/)
+* Edit [search3](https://opensubsonic.github.io/docs/endpoints/search3/) to allow empty `query` argument
+* Edit [savePlayQueue](https://opensubsonic.github.io/docs/endpoints/saveplayqueue/) to allow empty `id` argument
+* Add [getOpenSubsonicExtensions](https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/)
 
 ### Partially implemented
 
-* [stream](https://opensubsonic.netlify.app/docs/endpoints/stream/)
+* [stream](https://opensubsonic.github.io/docs/endpoints/stream/)
   * Support `timeOffset` (Parameter is supported but untested)
-* [getLyricsBySongId](https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/)
+* [getLyricsBySongId](https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/)
   * `kind` and `agents` are not returned. Ampache stores one unattributed lyric layer, `main` is already the default
     when `kind` is absent, and the spec says agents should not appear without multiple vocal layers.
 

@@ -48,7 +48,7 @@ final class PlaylistHandler implements PlaylistHandlerInterface
      * createPlaylist
      *
      * Creates (or updates) a playlist.
-     * https://opensubsonic.netlify.app/docs/endpoints/createplaylist/
+     * https://opensubsonic.github.io/docs/endpoints/createplaylist/
      * @param array<string, mixed> $input
      */
     public function createplaylist(array $input, User $user): void
@@ -107,7 +107,7 @@ final class PlaylistHandler implements PlaylistHandlerInterface
      * deletePlaylist
      *
      * Deletes a saved playlist.
-     * https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/
+     * https://opensubsonic.github.io/docs/endpoints/deleteplaylist/
      * @param array<string, mixed> $input
      */
     public function deleteplaylist(array $input, User $user): void
@@ -142,7 +142,7 @@ final class PlaylistHandler implements PlaylistHandlerInterface
      * getPlaylist
      *
      * Returns a listing of files in a saved playlist.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplaylist/
+     * https://opensubsonic.github.io/docs/endpoints/getplaylist/
      * @param array<string, mixed> $input
      */
     public function getplaylist(array $input, User $user): void
@@ -185,7 +185,7 @@ final class PlaylistHandler implements PlaylistHandlerInterface
      * getPlaylists
      *
      * Returns all playlists a user is allowed to play.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplaylists/
+     * https://opensubsonic.github.io/docs/endpoints/getplaylists/
      * @param array<string, mixed> $input
      */
     public function getplaylists(array $input, User $user): void
@@ -230,7 +230,7 @@ final class PlaylistHandler implements PlaylistHandlerInterface
      * updatePlaylist
      *
      * Updates a playlist. Only the owner of a playlist is allowed to update it.
-     * https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/
+     * https://opensubsonic.github.io/docs/endpoints/updateplaylist/
      * @param array<string, mixed> $input
      */
     public function updateplaylist(array $input, User $user): void

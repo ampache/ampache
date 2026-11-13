@@ -45,7 +45,7 @@ final class SearchHandler implements SearchHandlerInterface
     /**
      * search
      *
-     * https://opensubsonic.netlify.app/docs/endpoints/search/
+     * https://opensubsonic.github.io/docs/endpoints/search/
      * @param array<string, mixed> $input
      */
     public function search(array $input, User $user): void
@@ -121,7 +121,7 @@ final class SearchHandler implements SearchHandlerInterface
      * search2
      *
      * Returns a listing of files matching the given search criteria. Supports paging through the result.
-     * https://opensubsonic.netlify.app/docs/endpoints/search2/
+     * https://opensubsonic.github.io/docs/endpoints/search2/
      * @param array<string, mixed> $input
      */
     public function search2(array $input, User $user): void
@@ -144,7 +144,7 @@ final class SearchHandler implements SearchHandlerInterface
      * search3 [OS]
      *
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
-     * https://opensubsonic.netlify.app/docs/endpoints/search3/
+     * https://opensubsonic.github.io/docs/endpoints/search3/
      * @param array<string, mixed> $input
      */
     public function search3(array $input, User $user): void

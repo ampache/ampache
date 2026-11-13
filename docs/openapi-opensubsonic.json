@@ -128,7 +128,7 @@
         },
         "externalDocs": {
           "description": "addChatMessage",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/addchatmessage/"
         }
       },
       "post": {
@@ -168,7 +168,7 @@
         },
         "externalDocs": {
           "description": "addChatMessage",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/addchatmessage/"
         }
       }
     },
@@ -207,7 +207,7 @@
         },
         "externalDocs": {
           "description": "changePassword",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/changepassword/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/changepassword/"
         }
       },
       "post": {
@@ -252,7 +252,7 @@
         },
         "externalDocs": {
           "description": "changePassword",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/changepassword/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/changepassword/"
         }
       }
     },
@@ -300,7 +300,7 @@
         },
         "externalDocs": {
           "description": "createBookmark",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createbookmark/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createbookmark/"
         }
       },
       "post": {
@@ -349,7 +349,7 @@
         },
         "externalDocs": {
           "description": "createBookmark",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createbookmark/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createbookmark/"
         }
       }
     },
@@ -397,7 +397,7 @@
         },
         "externalDocs": {
           "description": "createInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createinternetradiostation/"
         }
       },
       "post": {
@@ -446,7 +446,7 @@
         },
         "externalDocs": {
           "description": "createInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createinternetradiostation/"
         }
       }
     },
@@ -505,7 +505,7 @@
         },
         "externalDocs": {
           "description": "createPlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createplaylist/"
         }
       },
       "post": {
@@ -560,7 +560,7 @@
         },
         "externalDocs": {
           "description": "createPlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createplaylist/"
         }
       }
     },
@@ -590,7 +590,7 @@
         },
         "externalDocs": {
           "description": "createPodcastChannel",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createpodcastchannel/"
         }
       },
       "post": {
@@ -630,7 +630,7 @@
         },
         "externalDocs": {
           "description": "createPodcastChannel",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createpodcastchannel/"
         }
       }
     },
@@ -690,7 +690,7 @@
         },
         "externalDocs": {
           "description": "createShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createshare/"
         }
       },
       "post": {
@@ -748,7 +748,7 @@
         },
         "externalDocs": {
           "description": "createShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createshare/"
         }
       }
     },
@@ -940,7 +940,7 @@
         },
         "externalDocs": {
           "description": "createUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createuser/"
         }
       },
       "post": {
@@ -1062,7 +1062,7 @@
         },
         "externalDocs": {
           "description": "createUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createuser/"
         }
       }
     },
@@ -1092,7 +1092,7 @@
         },
         "externalDocs": {
           "description": "deleteBookmark",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletebookmark/"
         }
       },
       "post": {
@@ -1132,7 +1132,7 @@
         },
         "externalDocs": {
           "description": "deleteBookmark",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletebookmark/"
         }
       }
     },
@@ -1162,7 +1162,7 @@
         },
         "externalDocs": {
           "description": "deleteInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteinternetradiostation/"
         }
       },
       "post": {
@@ -1202,7 +1202,7 @@
         },
         "externalDocs": {
           "description": "deleteInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteinternetradiostation/"
         }
       }
     },
@@ -1232,7 +1232,7 @@
         },
         "externalDocs": {
           "description": "deletePlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteplaylist/"
         }
       },
       "post": {
@@ -1272,7 +1272,7 @@
         },
         "externalDocs": {
           "description": "deletePlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteplaylist/"
         }
       }
     },
@@ -1302,7 +1302,7 @@
         },
         "externalDocs": {
           "description": "deletePodcastChannel",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletepodcastchannel/"
         }
       },
       "post": {
@@ -1342,7 +1342,7 @@
         },
         "externalDocs": {
           "description": "deletePodcastChannel",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletepodcastchannel/"
         }
       }
     },
@@ -1372,7 +1372,7 @@
         },
         "externalDocs": {
           "description": "deletePodcastEpisode",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletepodcastepisode/"
         }
       },
       "post": {
@@ -1412,7 +1412,7 @@
         },
         "externalDocs": {
           "description": "deletePodcastEpisode",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deletepodcastepisode/"
         }
       }
     },
@@ -1442,7 +1442,7 @@
         },
         "externalDocs": {
           "description": "deleteShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteshare/"
         }
       },
       "post": {
@@ -1482,7 +1482,7 @@
         },
         "externalDocs": {
           "description": "deleteShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteshare/"
         }
       }
     },
@@ -1512,7 +1512,7 @@
         },
         "externalDocs": {
           "description": "deleteUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteuser/"
         }
       },
       "post": {
@@ -1552,7 +1552,7 @@
         },
         "externalDocs": {
           "description": "deleteUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/deleteuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/deleteuser/"
         }
       }
     },
@@ -1644,7 +1644,7 @@
         },
         "externalDocs": {
           "description": "downloadPodcastEpisode",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/downloadpodcastepisode/"
         }
       },
       "post": {
@@ -1738,7 +1738,7 @@
         },
         "externalDocs": {
           "description": "findSonicPath",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/findsonicpath/"
         }
       },
       "post": {
@@ -1796,7 +1796,7 @@
         },
         "externalDocs": {
           "description": "findSonicPath",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/findsonicpath/"
         }
       }
     },
@@ -1833,7 +1833,7 @@
         },
         "externalDocs": {
           "description": "getAlbum",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbum/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbum/"
         }
       },
       "post": {
@@ -1880,7 +1880,7 @@
         },
         "externalDocs": {
           "description": "getAlbum",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbum/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbum/"
         }
       }
     },
@@ -1917,7 +1917,7 @@
         },
         "externalDocs": {
           "description": "getAlbumInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbuminfo/"
         }
       },
       "post": {
@@ -1964,7 +1964,7 @@
         },
         "externalDocs": {
           "description": "getAlbumInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbuminfo/"
         }
       }
     },
@@ -2001,7 +2001,7 @@
         },
         "externalDocs": {
           "description": "getAlbumInfo2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbuminfo2/"
         }
       },
       "post": {
@@ -2048,7 +2048,7 @@
         },
         "externalDocs": {
           "description": "getAlbumInfo2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbuminfo2/"
         }
       }
     },
@@ -2143,7 +2143,7 @@
         },
         "externalDocs": {
           "description": "getAlbumList",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist/"
         }
       },
       "post": {
@@ -2218,7 +2218,7 @@
         },
         "externalDocs": {
           "description": "getAlbumList",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist/"
         }
       }
     },
@@ -2313,7 +2313,7 @@
         },
         "externalDocs": {
           "description": "getAlbumList2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist2/"
         }
       },
       "post": {
@@ -2388,7 +2388,7 @@
         },
         "externalDocs": {
           "description": "getAlbumList2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist2/"
         }
       }
     },
@@ -2425,7 +2425,7 @@
         },
         "externalDocs": {
           "description": "getArtist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartist/"
         }
       },
       "post": {
@@ -2472,7 +2472,7 @@
         },
         "externalDocs": {
           "description": "getArtist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartist/"
         }
       }
     },
@@ -2530,7 +2530,7 @@
         },
         "externalDocs": {
           "description": "getArtistInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo/"
         }
       },
       "post": {
@@ -2588,7 +2588,7 @@
         },
         "externalDocs": {
           "description": "getArtistInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo/"
         }
       }
     },
@@ -2646,7 +2646,7 @@
         },
         "externalDocs": {
           "description": "getArtistInfo2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo2/"
         }
       },
       "post": {
@@ -2704,7 +2704,7 @@
         },
         "externalDocs": {
           "description": "getArtistInfo2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo2/"
         }
       }
     },
@@ -2741,7 +2741,7 @@
         },
         "externalDocs": {
           "description": "getArtists",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartists/"
         }
       },
       "post": {
@@ -2785,7 +2785,7 @@
         },
         "externalDocs": {
           "description": "getArtists",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartists/"
         }
       }
     },
@@ -2814,7 +2814,7 @@
         },
         "externalDocs": {
           "description": "getAvatar",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getavatar/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getavatar/"
         }
       },
       "post": {
@@ -2854,7 +2854,7 @@
         },
         "externalDocs": {
           "description": "getAvatar",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getavatar/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getavatar/"
         }
       }
     },
@@ -2881,7 +2881,7 @@
         },
         "externalDocs": {
           "description": "getBookmarks",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getbookmarks/"
         }
       },
       "post": {
@@ -2919,7 +2919,7 @@
         },
         "externalDocs": {
           "description": "getBookmarks",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getbookmarks/"
         }
       }
     },
@@ -2975,7 +2975,7 @@
         },
         "externalDocs": {
           "description": "getCaptions",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getcaptions/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getcaptions/"
         }
       },
       "post": {
@@ -3036,7 +3036,7 @@
         },
         "externalDocs": {
           "description": "getCaptions",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getcaptions/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getcaptions/"
         }
       }
     },
@@ -3073,7 +3073,7 @@
         },
         "externalDocs": {
           "description": "getChatMessages",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getchatmessages/"
         }
       },
       "post": {
@@ -3117,7 +3117,7 @@
         },
         "externalDocs": {
           "description": "getChatMessages",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getchatmessages/"
         }
       }
     },
@@ -3157,7 +3157,7 @@
         },
         "externalDocs": {
           "description": "getCoverArt",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getcoverart/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getcoverart/"
         }
       },
       "post": {
@@ -3201,7 +3201,7 @@
         },
         "externalDocs": {
           "description": "getCoverArt",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getcoverart/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getcoverart/"
         }
       }
     },
@@ -3228,7 +3228,7 @@
         },
         "externalDocs": {
           "description": "getGenres",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getgenres/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getgenres/"
         }
       },
       "post": {
@@ -3266,7 +3266,7 @@
         },
         "externalDocs": {
           "description": "getGenres",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getgenres/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getgenres/"
         }
       }
     },
@@ -3312,7 +3312,7 @@
         },
         "externalDocs": {
           "description": "getIndexes",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getindexes/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getindexes/"
         }
       },
       "post": {
@@ -3360,7 +3360,7 @@
         },
         "externalDocs": {
           "description": "getIndexes",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getindexes/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getindexes/"
         }
       }
     },
@@ -3387,7 +3387,7 @@
         },
         "externalDocs": {
           "description": "getInternetRadioStations",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getinternetradiostations/"
         }
       },
       "post": {
@@ -3425,7 +3425,7 @@
         },
         "externalDocs": {
           "description": "getInternetRadioStations",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getinternetradiostations/"
         }
       }
     },
@@ -3452,7 +3452,7 @@
         },
         "externalDocs": {
           "description": "getLicense",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlicense/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlicense/"
         }
       },
       "post": {
@@ -3490,7 +3490,7 @@
         },
         "externalDocs": {
           "description": "getLicense",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlicense/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlicense/"
         }
       }
     },
@@ -3536,7 +3536,7 @@
         },
         "externalDocs": {
           "description": "getLyrics",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlyrics/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlyrics/"
         }
       },
       "post": {
@@ -3631,7 +3631,7 @@
         },
         "externalDocs": {
           "description": "getLyricsBySongId",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/"
         }
       },
       "post": {
@@ -3687,7 +3687,7 @@
         },
         "externalDocs": {
           "description": "getLyricsBySongId",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/"
         }
       }
     },
@@ -3724,7 +3724,7 @@
         },
         "externalDocs": {
           "description": "getMusicDirectory",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicdirectory/"
         }
       },
       "post": {
@@ -3771,7 +3771,7 @@
         },
         "externalDocs": {
           "description": "getMusicDirectory",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicdirectory/"
         }
       }
     },
@@ -3798,7 +3798,7 @@
         },
         "externalDocs": {
           "description": "getMusicFolders",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicfolders/"
         }
       },
       "post": {
@@ -3836,7 +3836,7 @@
         },
         "externalDocs": {
           "description": "getMusicFolders",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicfolders/"
         }
       }
     },
@@ -3874,7 +3874,7 @@
         },
         "externalDocs": {
           "description": "getNewestPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getnewestpodcasts/"
         }
       },
       "post": {
@@ -3919,7 +3919,7 @@
         },
         "externalDocs": {
           "description": "getNewestPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getnewestpodcasts/"
         }
       }
     },
@@ -3946,7 +3946,7 @@
         },
         "externalDocs": {
           "description": "getNowPlaying",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getnowplaying/"
         }
       },
       "post": {
@@ -4009,7 +4009,7 @@
         },
         "externalDocs": {
           "description": "getOpenSubsonicExtensions",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/"
         }
       },
       "post": {
@@ -4049,7 +4049,7 @@
         },
         "externalDocs": {
           "description": "getOpenSubsonicExtensions",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/"
         }
       }
     },
@@ -4086,7 +4086,7 @@
         },
         "externalDocs": {
           "description": "getPlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylist/"
         }
       },
       "post": {
@@ -4133,7 +4133,7 @@
         },
         "externalDocs": {
           "description": "getPlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylist/"
         }
       }
     },
@@ -4170,7 +4170,7 @@
         },
         "externalDocs": {
           "description": "getPlaylists",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylists/"
         }
       },
       "post": {
@@ -4214,7 +4214,7 @@
         },
         "externalDocs": {
           "description": "getPlaylists",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylists/"
         }
       }
     },
@@ -4241,7 +4241,7 @@
         },
         "externalDocs": {
           "description": "getPlayQueue",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplayqueue/"
         }
       },
       "post": {
@@ -4279,7 +4279,7 @@
         },
         "externalDocs": {
           "description": "getPlayQueue",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplayqueue/"
         }
       }
     },
@@ -4306,7 +4306,7 @@
         },
         "externalDocs": {
           "description": "getPlayQueueByIndex",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplayqueuebyindex/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplayqueuebyindex/"
         }
       },
       "post": {
@@ -4344,7 +4344,7 @@
         },
         "externalDocs": {
           "description": "getPlayQueueByIndex",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplayqueuebyindex/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplayqueuebyindex/"
         }
       }
     },
@@ -4542,7 +4542,7 @@
         },
         "externalDocs": {
           "description": "getPodcastEpisode",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcastepisode/"
         }
       },
       "post": {
@@ -4593,7 +4593,7 @@
         },
         "externalDocs": {
           "description": "getPodcastEpisode",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcastepisode/"
         }
       }
     },
@@ -4640,7 +4640,7 @@
         },
         "externalDocs": {
           "description": "getPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcasts/"
         }
       },
       "post": {
@@ -4689,7 +4689,7 @@
         },
         "externalDocs": {
           "description": "getPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcasts/"
         }
       }
     },
@@ -4765,7 +4765,7 @@
         },
         "externalDocs": {
           "description": "getRandomSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getrandomsongs/"
         }
       },
       "post": {
@@ -4828,7 +4828,7 @@
         },
         "externalDocs": {
           "description": "getRandomSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getrandomsongs/"
         }
       }
     },
@@ -4855,7 +4855,7 @@
         },
         "externalDocs": {
           "description": "getScanStatus",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getscanstatus/"
         }
       },
       "post": {
@@ -4893,7 +4893,7 @@
         },
         "externalDocs": {
           "description": "getScanStatus",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getscanstatus/"
         }
       }
     },
@@ -4920,7 +4920,7 @@
         },
         "externalDocs": {
           "description": "getShares",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getshares/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getshares/"
         }
       },
       "post": {
@@ -4958,7 +4958,7 @@
         },
         "externalDocs": {
           "description": "getShares",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getshares/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getshares/"
         }
       }
     },
@@ -5007,7 +5007,7 @@
         },
         "externalDocs": {
           "description": "getSimilarSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs/"
         }
       },
       "post": {
@@ -5060,7 +5060,7 @@
         },
         "externalDocs": {
           "description": "getSimilarSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs/"
         }
       }
     },
@@ -5108,7 +5108,7 @@
         },
         "externalDocs": {
           "description": "getSimilarSongs2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs2/"
         }
       },
       "post": {
@@ -5161,7 +5161,7 @@
         },
         "externalDocs": {
           "description": "getSimilarSongs2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs2/"
         }
       }
     },
@@ -5210,7 +5210,7 @@
         },
         "externalDocs": {
           "description": "getSonicSimilarTracks",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsonicsimilartracks/"
         }
       },
       "post": {
@@ -5263,7 +5263,7 @@
         },
         "externalDocs": {
           "description": "getSonicSimilarTracks",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsonicsimilartracks/"
         }
       }
     },
@@ -5300,7 +5300,7 @@
         },
         "externalDocs": {
           "description": "getSong",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsong/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsong/"
         }
       },
       "post": {
@@ -5412,7 +5412,7 @@
         },
         "externalDocs": {
           "description": "getSongsByGenre",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsongsbygenre/"
         }
       },
       "post": {
@@ -5476,7 +5476,7 @@
         },
         "externalDocs": {
           "description": "getSongsByGenre",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsongsbygenre/"
         }
       }
     },
@@ -5513,7 +5513,7 @@
         },
         "externalDocs": {
           "description": "getStarred",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred/"
         }
       },
       "post": {
@@ -5551,7 +5551,7 @@
         },
         "externalDocs": {
           "description": "getStarred",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred/"
         }
       }
     },
@@ -5588,7 +5588,7 @@
         },
         "externalDocs": {
           "description": "getStarred2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred2/"
         }
       },
       "post": {
@@ -5626,7 +5626,7 @@
         },
         "externalDocs": {
           "description": "getStarred2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred2/"
         }
       }
     },
@@ -5683,7 +5683,7 @@
         },
         "externalDocs": {
           "description": "getTopSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/gettopsongs/"
         }
       },
       "post": {
@@ -5737,7 +5737,7 @@
         },
         "externalDocs": {
           "description": "getTopSongs",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/gettopsongs/"
         }
       }
     },
@@ -5774,7 +5774,7 @@
         },
         "externalDocs": {
           "description": "getUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getuser/"
         }
       },
       "post": {
@@ -5821,7 +5821,7 @@
         },
         "externalDocs": {
           "description": "getUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getuser/"
         }
       }
     },
@@ -5848,7 +5848,7 @@
         },
         "externalDocs": {
           "description": "getUsers",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getusers/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getusers/"
         }
       },
       "post": {
@@ -5886,7 +5886,7 @@
         },
         "externalDocs": {
           "description": "getUsers",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getusers/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getusers/"
         }
       }
     },
@@ -5923,7 +5923,7 @@
         },
         "externalDocs": {
           "description": "getVideoInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideoinfo/"
         }
       },
       "post": {
@@ -5970,7 +5970,7 @@
         },
         "externalDocs": {
           "description": "getVideoInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideoinfo/"
         }
       }
     },
@@ -5997,7 +5997,7 @@
         },
         "externalDocs": {
           "description": "getVideos",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideos/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideos/"
         }
       },
       "post": {
@@ -6035,7 +6035,7 @@
         },
         "externalDocs": {
           "description": "getVideos",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideos/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideos/"
         }
       }
     },
@@ -6100,7 +6100,7 @@
         },
         "externalDocs": {
           "description": "hls.m3u8",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/hls/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/hls/"
         }
       },
       "post": {
@@ -6165,7 +6165,7 @@
         },
         "externalDocs": {
           "description": "hls.m3u8",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/hls/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/hls/"
         }
       }
     },
@@ -6248,7 +6248,7 @@
         },
         "externalDocs": {
           "description": "jukeboxControl",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/jukeboxcontrol/"
         }
       },
       "post": {
@@ -6417,7 +6417,7 @@
         },
         "externalDocs": {
           "description": "jukeboxControl",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/jukeboxcontrol/"
         }
       }
     },
@@ -6437,7 +6437,7 @@
         },
         "externalDocs": {
           "description": "ping",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/ping/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/ping/"
         }
       },
       "post": {
@@ -6468,7 +6468,7 @@
         },
         "externalDocs": {
           "description": "ping",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/ping/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/ping/"
         }
       }
     },
@@ -6488,7 +6488,7 @@
         },
         "externalDocs": {
           "description": "refreshPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/refreshpodcasts/"
         }
       },
       "post": {
@@ -6519,7 +6519,7 @@
         },
         "externalDocs": {
           "description": "refreshPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/refreshpodcasts/"
         }
       }
     },
@@ -6612,7 +6612,7 @@
         },
         "externalDocs": {
           "description": "reportPlayback",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/reportplayback/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/reportplayback/"
         }
       },
       "post": {
@@ -6693,7 +6693,7 @@
         },
         "externalDocs": {
           "description": "reportPlayback",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/reportplayback/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/reportplayback/"
         }
       }
     },
@@ -6743,7 +6743,7 @@
         },
         "externalDocs": {
           "description": "savePlayQueue",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/saveplayqueue/"
         }
       },
       "post": {
@@ -6837,7 +6837,7 @@
         },
         "externalDocs": {
           "description": "savePlayQueueByIndex",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/saveplayqueuebyindex/"
         }
       },
       "post": {
@@ -6930,7 +6930,7 @@
         },
         "externalDocs": {
           "description": "scrobble",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/scrobble/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/scrobble/"
         }
       },
       "post": {
@@ -6980,7 +6980,7 @@
         },
         "externalDocs": {
           "description": "scrobble",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/scrobble/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/scrobble/"
         }
       }
     },
@@ -7078,7 +7078,7 @@
         },
         "externalDocs": {
           "description": "search",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search/"
         }
       },
       "post": {
@@ -7153,7 +7153,7 @@
         },
         "externalDocs": {
           "description": "search",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search/"
         }
       }
     },
@@ -7265,7 +7265,7 @@
         },
         "externalDocs": {
           "description": "search2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search2/"
         }
       },
       "post": {
@@ -7352,7 +7352,7 @@
         },
         "externalDocs": {
           "description": "search2",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search2/"
         }
       }
     },
@@ -7465,7 +7465,7 @@
         },
         "externalDocs": {
           "description": "search3",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search3/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search3/"
         }
       },
       "post": {
@@ -7553,7 +7553,7 @@
         },
         "externalDocs": {
           "description": "search3",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search3/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search3/"
         }
       }
     },
@@ -7594,7 +7594,7 @@
         },
         "externalDocs": {
           "description": "setRating",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/setrating/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/setrating/"
         }
       },
       "post": {
@@ -7700,7 +7700,7 @@
         },
         "externalDocs": {
           "description": "star",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/star/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/star/"
         }
       },
       "post": {
@@ -7754,7 +7754,7 @@
         },
         "externalDocs": {
           "description": "star",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/star/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/star/"
         }
       }
     },
@@ -7781,7 +7781,7 @@
         },
         "externalDocs": {
           "description": "startScan",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/startscan/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/startscan/"
         }
       },
       "post": {
@@ -7819,7 +7819,7 @@
         },
         "externalDocs": {
           "description": "startScan",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/startscan/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/startscan/"
         }
       }
     },
@@ -7911,7 +7911,7 @@
         },
         "externalDocs": {
           "description": "stream",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/stream/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/stream/"
         }
       },
       "post": {
@@ -8011,7 +8011,7 @@
         },
         "externalDocs": {
           "description": "tokenInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/tokeninfo/"
         }
       },
       "post": {
@@ -8054,7 +8054,7 @@
         },
         "externalDocs": {
           "description": "tokenInfo",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/tokeninfo/"
         }
       }
     },
@@ -8117,7 +8117,7 @@
         },
         "externalDocs": {
           "description": "unstar",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/unstar/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/unstar/"
         }
       },
       "post": {
@@ -8159,7 +8159,7 @@
         },
         "externalDocs": {
           "description": "unstar",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/unstar/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/unstar/"
         }
       }
     },
@@ -8216,7 +8216,7 @@
         },
         "externalDocs": {
           "description": "updateInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateinternetradiostation/"
         }
       },
       "post": {
@@ -8270,7 +8270,7 @@
         },
         "externalDocs": {
           "description": "updateInternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateinternetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateinternetradiostation/"
         }
       }
     },
@@ -8355,7 +8355,7 @@
         },
         "externalDocs": {
           "description": "updatePlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateplaylist/"
         }
       },
       "post": {
@@ -8421,7 +8421,7 @@
         },
         "externalDocs": {
           "description": "updatePlaylist",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateplaylist/"
         }
       }
     },
@@ -8470,7 +8470,7 @@
         },
         "externalDocs": {
           "description": "updateShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateshare/"
         }
       },
       "post": {
@@ -8519,7 +8519,7 @@
         },
         "externalDocs": {
           "description": "updateShare",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateshare/"
         }
       }
     },
@@ -8727,7 +8727,7 @@
         },
         "externalDocs": {
           "description": "updateUser",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/updateuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/updateuser/"
         }
       },
       "post": {
@@ -8926,13 +8926,13 @@
         "type": "apiKey",
         "in": "query",
         "name": "t",
-        "description": "(Since 1.13.0) The authentication token computed as md5(password + salt). `u` and `s` must be specified. See https://opensubsonic.netlify.app/docs/api-reference/#authentication for details."
+        "description": "(Since 1.13.0) The authentication token computed as md5(password + salt). `u` and `s` must be specified. See https://opensubsonic.github.io/docs/api-reference/#authentication for details."
       },
       "salt": {
         "type": "apiKey",
         "in": "query",
         "name": "s",
-        "description": "(Since 1.13.0) A random string (“salt”) used as input for computing the password hash. `u` and `t` must be specified. See https://opensubsonic.netlify.app/docs/api-reference/#authentication for details."
+        "description": "(Since 1.13.0) A random string (“salt”) used as input for computing the password hash. `u` and `t` must be specified. See https://opensubsonic.github.io/docs/api-reference/#authentication for details."
       },
       "protocolVersion": {
         "type": "apiKey",
@@ -8994,7 +8994,7 @@
         },
         "externalDocs": {
           "description": "Error",
-          "url": "https://opensubsonic.netlify.app/docs/responses/error/"
+          "url": "https://opensubsonic.github.io/docs/responses/error/"
         }
       },
       "SubsonicBaseResponse": {
@@ -9045,7 +9045,7 @@
             ],
             "externalDocs": {
               "description": "SubsonicResponse",
-              "url": "https://opensubsonic.netlify.app/docs/responses/subsonic-response/"
+              "url": "https://opensubsonic.github.io/docs/responses/subsonic-response/"
             }
           }
         ]
@@ -9075,7 +9075,7 @@
             ],
             "externalDocs": {
               "description": "SubsonicResponse",
-              "url": "https://opensubsonic.netlify.app/docs/responses/subsonic-response/"
+              "url": "https://opensubsonic.github.io/docs/responses/subsonic-response/"
             }
           }
         ]
@@ -9097,7 +9097,7 @@
         },
         "externalDocs": {
           "description": "SubsonicResponse",
-          "url": "https://opensubsonic.netlify.app/docs/responses/subsonic-response/"
+          "url": "https://opensubsonic.github.io/docs/responses/subsonic-response/"
         }
       },
       "ItemGenre": {
@@ -9114,7 +9114,7 @@
         ],
         "externalDocs": {
           "description": "ItemGenre",
-          "url": "https://opensubsonic.netlify.app/docs/responses/itemgenre/"
+          "url": "https://opensubsonic.github.io/docs/responses/itemgenre/"
         }
       },
       "ArtistID3": {
@@ -9146,12 +9146,12 @@
             "format": "date-time",
             "description": "Date the artist was starred. [ISO 8601]"
           },
-        "userRating": {
+          "userRating": {
             "type": "integer",
             "minimum": 1,
             "maximum": 5,
             "description": "The user rating of the artist. [1-5]"
-        },
+          },
           "musicBrainzId": {
             "type": "string",
             "description": "The artist MusicBrainzID."
@@ -9178,7 +9178,7 @@
         ],
         "externalDocs": {
           "description": "ArtistID3",
-          "url": "https://opensubsonic.netlify.app/docs/responses/artistid3/"
+          "url": "https://opensubsonic.github.io/docs/responses/artistid3/"
         }
       },
       "Contributor": {
@@ -9203,7 +9203,7 @@
         ],
         "externalDocs": {
           "description": "Contributor",
-          "url": "https://opensubsonic.netlify.app/docs/responses/contributor/"
+          "url": "https://opensubsonic.github.io/docs/responses/contributor/"
         }
       },
       "ReplayGain": {
@@ -9239,7 +9239,7 @@
         },
         "externalDocs": {
           "description": "Replay Gain",
-          "url": "https://opensubsonic.netlify.app/docs/responses/replaygain/"
+          "url": "https://opensubsonic.github.io/docs/responses/replaygain/"
         }
       },
       "GenericMediaType": {
@@ -9528,7 +9528,7 @@
               ],
               "externalDocs": {
                 "description": "Work",
-                "url": "https://opensubsonic.netlify.app/docs/responses/work/"
+                "url": "https://opensubsonic.github.io/docs/responses/work/"
               }
             },
             "description": "The list of works associated with the song."
@@ -9557,7 +9557,7 @@
               ],
               "externalDocs": {
                 "description": "Movement",
-                "url": "https://opensubsonic.netlify.app/docs/responses/movement/"
+                "url": "https://opensubsonic.github.io/docs/responses/movement/"
               }
             },
             "description": "The list of movements associated with the song."
@@ -9577,7 +9577,7 @@
         ],
         "externalDocs": {
           "description": "Child",
-          "url": "https://opensubsonic.netlify.app/docs/responses/child/"
+          "url": "https://opensubsonic.github.io/docs/responses/child/"
         }
       },
       "Playlist": {
@@ -9653,7 +9653,7 @@
         ],
         "externalDocs": {
           "description": "Playlist",
-          "url": "https://opensubsonic.netlify.app/docs/responses/playlist/"
+          "url": "https://opensubsonic.github.io/docs/responses/playlist/"
         }
       },
       "PlaylistWithSongs": {
@@ -9674,7 +9674,7 @@
             },
             "externalDocs": {
               "description": "PlaylistWithSongs",
-              "url": "https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/"
+              "url": "https://opensubsonic.github.io/docs/responses/playlistwithsongs/"
             }
           }
         ]
@@ -9714,7 +9714,7 @@
         },
         "externalDocs": {
           "description": "CreatePlaylistResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createplaylist/"
         }
       },
       "Share": {
@@ -9773,7 +9773,7 @@
         ],
         "externalDocs": {
           "description": "Share",
-          "url": "https://opensubsonic.netlify.app/docs/responses/share/"
+          "url": "https://opensubsonic.github.io/docs/responses/share/"
         }
       },
       "Shares": {
@@ -9790,7 +9790,7 @@
         },
         "externalDocs": {
           "description": "Shares",
-          "url": "https://opensubsonic.netlify.app/docs/responses/shares/"
+          "url": "https://opensubsonic.github.io/docs/responses/shares/"
         }
       },
       "CreateSharesSuccessResponse": {
@@ -9828,7 +9828,7 @@
         },
         "externalDocs": {
           "description": "CreateSharesResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/createshare/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/createshare/"
         }
       },
       "RecordLabel": {
@@ -9844,7 +9844,7 @@
         ],
         "externalDocs": {
           "description": "RecordLabel",
-          "url": "https://opensubsonic.netlify.app/docs/responses/recordlabel/"
+          "url": "https://opensubsonic.github.io/docs/responses/recordlabel/"
         }
       },
       "ItemDate": {
@@ -9870,7 +9870,7 @@
         },
         "externalDocs": {
           "description": "ItemDate",
-          "url": "https://opensubsonic.netlify.app/docs/responses/itemdate/"
+          "url": "https://opensubsonic.github.io/docs/responses/itemdate/"
         }
       },
       "DiscTitle": {
@@ -9896,7 +9896,7 @@
         ],
         "externalDocs": {
           "description": "DiscTitle",
-          "url": "https://opensubsonic.netlify.app/docs/responses/disctitle/"
+          "url": "https://opensubsonic.github.io/docs/responses/disctitle/"
         }
       },
       "AlbumID3": {
@@ -10062,7 +10062,7 @@
         ],
         "externalDocs": {
           "description": "AlbumID3",
-          "url": "https://opensubsonic.netlify.app/docs/responses/albumid3/"
+          "url": "https://opensubsonic.github.io/docs/responses/albumid3/"
         }
       },
       "AlbumID3WithSongs": {
@@ -10086,7 +10086,7 @@
             ],
             "externalDocs": {
               "description": "AlbumID3WithSongs",
-              "url": "https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/"
+              "url": "https://opensubsonic.github.io/docs/responses/albumid3withsongs/"
             }
           }
         ]
@@ -10126,7 +10126,7 @@
         },
         "externalDocs": {
           "description": "GetAlbumResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbum/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbum/"
         }
       },
       "AlbumInfo": {
@@ -10160,7 +10160,7 @@
         },
         "externalDocs": {
           "description": "AlbumInfo",
-          "url": "https://opensubsonic.netlify.app/docs/responses/albuminfo/"
+          "url": "https://opensubsonic.github.io/docs/responses/albuminfo/"
         }
       },
       "GetAlbumInfoSuccessResponse": {
@@ -10198,7 +10198,7 @@
         },
         "externalDocs": {
           "description": "GetAlbumInfoResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbuminfo/"
         }
       },
       "AlbumListType": {
@@ -10231,7 +10231,7 @@
         },
         "externalDocs": {
           "description": "AlbumList",
-          "url": "https://opensubsonic.netlify.app/docs/responses/albumlist/"
+          "url": "https://opensubsonic.github.io/docs/responses/albumlist/"
         }
       },
       "GetAlbumListSuccessResponse": {
@@ -10269,7 +10269,7 @@
         },
         "externalDocs": {
           "description": "GetAlbumListResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist/"
         }
       },
       "AlbumList2": {
@@ -10283,7 +10283,7 @@
             "description": "Artist albums",
             "externalDocs": {
               "description": "AlbumList2",
-              "url": "https://opensubsonic.netlify.app/docs/responses/albumlist2/"
+              "url": "https://opensubsonic.github.io/docs/responses/albumlist2/"
             }
           }
         }
@@ -10323,7 +10323,7 @@
         },
         "externalDocs": {
           "description": "GetAlbumList2Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getalbumlist2/"
         }
       },
       "ArtistWithAlbumsID3": {
@@ -10347,7 +10347,7 @@
             ],
             "externalDocs": {
               "description": "ArtistWithAlbumsID3",
-              "url": "https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/"
+              "url": "https://opensubsonic.github.io/docs/responses/artistwithalbumsid3/"
             }
           }
         ]
@@ -10387,7 +10387,7 @@
         },
         "externalDocs": {
           "description": "GetArtistResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartist/"
         }
       },
       "Artist": {
@@ -10430,7 +10430,7 @@
         ],
         "externalDocs": {
           "description": "Artist",
-          "url": "https://opensubsonic.netlify.app/docs/responses/artist/"
+          "url": "https://opensubsonic.github.io/docs/responses/artist/"
         }
       },
       "ArtistInfo": {
@@ -10471,7 +10471,7 @@
         },
         "externalDocs": {
           "description": "ArtistInfo",
-          "url": "https://opensubsonic.netlify.app/docs/responses/artistinfo/"
+          "url": "https://opensubsonic.github.io/docs/responses/artistinfo/"
         }
       },
       "GetArtistInfoSuccessResponse": {
@@ -10509,7 +10509,7 @@
         },
         "externalDocs": {
           "description": "GetArtistInfoResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo/"
         }
       },
       "ArtistInfo2": {
@@ -10550,7 +10550,7 @@
         },
         "externalDocs": {
           "description": "ArtistInfo2",
-          "url": "https://opensubsonic.netlify.app/docs/responses/artistinfo2/"
+          "url": "https://opensubsonic.github.io/docs/responses/artistinfo2/"
         }
       },
       "GetArtistInfo2SuccessResponse": {
@@ -10588,7 +10588,7 @@
         },
         "externalDocs": {
           "description": "GetArtistInfo2Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartistinfo2/"
         }
       },
       "ArtistsID3": {
@@ -10596,7 +10596,7 @@
         "description": "A list of indexed Artists.",
         "externalDocs": {
           "description": "ArtistsID3",
-          "url": "https://opensubsonic.netlify.app/docs/responses/artistsid3/"
+          "url": "https://opensubsonic.github.io/docs/responses/artistsid3/"
         },
         "properties": {
           "ignoredArticles": {
@@ -10647,7 +10647,7 @@
         },
         "externalDocs": {
           "description": "GetArtistsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getartists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getartists/"
         }
       },
       "Bookmark": {
@@ -10655,7 +10655,7 @@
         "description": "A bookmark.",
         "externalDocs": {
           "description": "Bookmark",
-          "url": "https://opensubsonic.netlify.app/docs/responses/bookmark/"
+          "url": "https://opensubsonic.github.io/docs/responses/bookmark/"
         },
         "properties": {
           "position": {
@@ -10702,7 +10702,7 @@
         "description": "Bookmarks list.",
         "externalDocs": {
           "description": "Bookmarks",
-          "url": "https://opensubsonic.netlify.app/docs/responses/bookmarks/"
+          "url": "https://opensubsonic.github.io/docs/responses/bookmarks/"
         },
         "properties": {
           "bookmark": {
@@ -10749,7 +10749,7 @@
         },
         "externalDocs": {
           "description": "GetBookmarksResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getbookmarks/"
         }
       },
       "ChatMessage": {
@@ -10757,7 +10757,7 @@
         "description": "A chatMessage.",
         "externalDocs": {
           "description": "ChatMessage",
-          "url": "https://opensubsonic.netlify.app/docs/responses/chatmessage/"
+          "url": "https://opensubsonic.github.io/docs/responses/chatmessage/"
         },
         "properties": {
           "username": {
@@ -10784,7 +10784,7 @@
         "description": "Chat messages list.",
         "externalDocs": {
           "description": "ChatMessages",
-          "url": "https://opensubsonic.netlify.app/docs/responses/chatmessages/"
+          "url": "https://opensubsonic.github.io/docs/responses/chatmessages/"
         },
         "properties": {
           "chatMessage": {
@@ -10831,7 +10831,7 @@
         },
         "externalDocs": {
           "description": "GetChatMessagesResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getchatmessages/"
         }
       },
       "Genre": {
@@ -10839,7 +10839,7 @@
         "description": "A genre.",
         "externalDocs": {
           "description": "Genre",
-          "url": "https://opensubsonic.netlify.app/docs/responses/genre/"
+          "url": "https://opensubsonic.github.io/docs/responses/genre/"
         },
         "properties": {
           "value": {
@@ -10866,7 +10866,7 @@
         "description": "Genres list.",
         "externalDocs": {
           "description": "Genres",
-          "url": "https://opensubsonic.netlify.app/docs/responses/genres/"
+          "url": "https://opensubsonic.github.io/docs/responses/genres/"
         },
         "properties": {
           "genre": {
@@ -10913,7 +10913,7 @@
         },
         "externalDocs": {
           "description": "GetGenresResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getgenres/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getgenres/"
         }
       },
       "Index": {
@@ -10921,7 +10921,7 @@
         "description": "An indexed artist list.",
         "externalDocs": {
           "description": "Index",
-          "url": "https://opensubsonic.netlify.app/docs/responses/index_/"
+          "url": "https://opensubsonic.github.io/docs/responses/index_/"
         },
         "properties": {
           "name": {
@@ -10945,7 +10945,7 @@
         "description": "An indexed artist list by ID3 tags.",
         "externalDocs": {
           "description": "IndexID3",
-          "url": "https://opensubsonic.netlify.app/docs/responses/indexid3/"
+          "url": "https://opensubsonic.github.io/docs/responses/indexid3/"
         },
         "properties": {
           "name": {
@@ -10969,7 +10969,7 @@
         "description": "Artist list.",
         "externalDocs": {
           "description": "Indexes",
-          "url": "https://opensubsonic.netlify.app/docs/responses/indexes/"
+          "url": "https://opensubsonic.github.io/docs/responses/indexes/"
         },
         "properties": {
           "ignoredArticles": {
@@ -11042,7 +11042,7 @@
         },
         "externalDocs": {
           "description": "GetIndexesResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getindexes/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getindexes/"
         }
       },
       "InternetRadioStation": {
@@ -11050,7 +11050,7 @@
         "description": "An internetRadioStation.",
         "externalDocs": {
           "description": "InternetRadioStation",
-          "url": "https://opensubsonic.netlify.app/docs/responses/internetradiostation/"
+          "url": "https://opensubsonic.github.io/docs/responses/internetradiostation/"
         },
         "properties": {
           "id": {
@@ -11085,7 +11085,7 @@
         "description": "internetRadioStations.",
         "externalDocs": {
           "description": "InternetRadioStations",
-          "url": "https://opensubsonic.netlify.app/docs/responses/internetradiostations/"
+          "url": "https://opensubsonic.github.io/docs/responses/internetradiostations/"
         },
         "properties": {
           "internetRadioStation": {
@@ -11132,7 +11132,7 @@
         },
         "externalDocs": {
           "description": "GetInternetRadioStationsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getinternetradiostations/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getinternetradiostations/"
         }
       },
       "License": {
@@ -11140,7 +11140,7 @@
         "description": "getLicense result.",
         "externalDocs": {
           "description": "License",
-          "url": "https://opensubsonic.netlify.app/docs/responses/license/"
+          "url": "https://opensubsonic.github.io/docs/responses/license/"
         },
         "properties": {
           "valid": {
@@ -11201,7 +11201,7 @@
         },
         "externalDocs": {
           "description": "GetLicenseResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlicense/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlicense/"
         }
       },
       "Lyrics": {
@@ -11209,7 +11209,7 @@
         "description": "Lyrics.",
         "externalDocs": {
           "description": "Lyrics",
-          "url": "https://opensubsonic.netlify.app/docs/responses/lyrics/"
+          "url": "https://opensubsonic.github.io/docs/responses/lyrics/"
         },
         "properties": {
           "value": {
@@ -11264,7 +11264,7 @@
         },
         "externalDocs": {
           "description": "GetLicenseResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlyrics/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlyrics/"
         }
       },
       "Line": {
@@ -11272,7 +11272,7 @@
         "description": "One line of a song lyric",
         "externalDocs": {
           "description": "Line",
-          "url": "https://opensubsonic.netlify.app/docs/responses/line/"
+          "url": "https://opensubsonic.github.io/docs/responses/line/"
         },
         "properties": {
           "value": {
@@ -11297,7 +11297,7 @@
         "description": "Reusable metadata for a vocal agent within a structuredLyrics entry",
         "externalDocs": {
           "description": "Agent",
-          "url": "https://opensubsonic.netlify.app/docs/responses/agent/"
+          "url": "https://opensubsonic.github.io/docs/responses/agent/"
         },
         "properties": {
           "id": {
@@ -11329,7 +11329,7 @@
         "description": "A word or syllable cue within a cueLine",
         "externalDocs": {
           "description": "Cue",
-          "url": "https://opensubsonic.netlify.app/docs/responses/cue/"
+          "url": "https://opensubsonic.github.io/docs/responses/cue/"
         },
         "properties": {
           "start": {
@@ -11367,7 +11367,7 @@
         "description": "Word/syllable-level timing data for a lyrics line or agent layer",
         "externalDocs": {
           "description": "CueLine",
-          "url": "https://opensubsonic.netlify.app/docs/responses/cueline/"
+          "url": "https://opensubsonic.github.io/docs/responses/cueline/"
         },
         "properties": {
           "index": {
@@ -11409,7 +11409,7 @@
         "description": "Structured lyrics",
         "externalDocs": {
           "description": "StructuredLyrics",
-          "url": "https://opensubsonic.netlify.app/docs/responses/structuredlyrics/"
+          "url": "https://opensubsonic.github.io/docs/responses/structuredlyrics/"
         },
         "properties": {
           "lang": {
@@ -11475,7 +11475,7 @@
         "description": "List of structured lyrics",
         "externalDocs": {
           "description": "LyricsList",
-          "url": "https://opensubsonic.netlify.app/docs/responses/lyricslist/"
+          "url": "https://opensubsonic.github.io/docs/responses/lyricslist/"
         },
         "properties": {
           "structuredLyrics": {
@@ -11522,7 +11522,7 @@
         },
         "externalDocs": {
           "description": "GetLyricsBySongIdResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/"
         }
       },
       "Directory": {
@@ -11530,7 +11530,7 @@
         "description": "Directory.",
         "externalDocs": {
           "description": "Directory",
-          "url": "https://opensubsonic.netlify.app/docs/responses/directory/"
+          "url": "https://opensubsonic.github.io/docs/responses/directory/"
         },
         "properties": {
           "id": {
@@ -11614,7 +11614,7 @@
         },
         "externalDocs": {
           "description": "GetMusicDirectoryResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicdirectory/"
         }
       },
       "MusicFolder": {
@@ -11622,7 +11622,7 @@
         "description": "MusicFolder.",
         "externalDocs": {
           "description": "MusicFolder",
-          "url": "https://opensubsonic.netlify.app/docs/responses/musicfolder/"
+          "url": "https://opensubsonic.github.io/docs/responses/musicfolder/"
         },
         "properties": {
           "id": {
@@ -11643,7 +11643,7 @@
         "description": "MusicFolders.",
         "externalDocs": {
           "description": "MusicFolders",
-          "url": "https://opensubsonic.netlify.app/docs/responses/musicfolders/"
+          "url": "https://opensubsonic.github.io/docs/responses/musicfolders/"
         },
         "properties": {
           "musicFolder": {
@@ -11690,7 +11690,7 @@
         },
         "externalDocs": {
           "description": "GetMusicFoldersResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getmusicfolders/"
         }
       },
       "PodcastStatus": {
@@ -11698,7 +11698,7 @@
         "description": "An enumeration of possible podcast statuses",
         "externalDocs": {
           "description": "PodcastStatus",
-          "url": "https://opensubsonic.netlify.app/docs/responses/podcaststatus/"
+          "url": "https://opensubsonic.github.io/docs/responses/podcaststatus/"
         },
         "enum": [
           "new",
@@ -11719,7 +11719,7 @@
             "description": "A podcast episode.",
             "externalDocs": {
               "description": "PodcastEpisode",
-              "url": "https://opensubsonic.netlify.app/docs/responses/podcastepisode/"
+              "url": "https://opensubsonic.github.io/docs/responses/podcastepisode/"
             },
             "properties": {
               "streamId": {
@@ -11755,7 +11755,7 @@
         "description": "NewestPodcasts.",
         "externalDocs": {
           "description": "NewestPodcasts",
-          "url": "https://opensubsonic.netlify.app/docs/responses/newestpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/responses/newestpodcasts/"
         },
         "properties": {
           "episode": {
@@ -11801,7 +11801,7 @@
         },
         "externalDocs": {
           "description": "GetNewestPodcastsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getnewestpodcasts/"
         }
       },
       "NowPlayingEntry": {
@@ -11814,7 +11814,7 @@
             "description": "NowPlayingEntry.",
             "externalDocs": {
               "description": "NowPlayingEntry",
-              "url": "https://opensubsonic.netlify.app/docs/responses/nowplayingentry/"
+              "url": "https://opensubsonic.github.io/docs/responses/nowplayingentry/"
             },
             "properties": {
               "username": {
@@ -11866,7 +11866,7 @@
         "description": "nowPlaying.",
         "externalDocs": {
           "description": "NowPlaying",
-          "url": "https://opensubsonic.netlify.app/docs/responses/nowplaying/"
+          "url": "https://opensubsonic.github.io/docs/responses/nowplaying/"
         },
         "properties": {
           "entry": {
@@ -11916,7 +11916,7 @@
         },
         "externalDocs": {
           "description": "GetNowPlayingResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getnowplaying/"
         }
       },
       "OpenSubsonicExtension": {
@@ -11924,7 +11924,7 @@
         "description": "A supported OpenSubsonic API extension.",
         "externalDocs": {
           "description": "OpenSubsonicExtension",
-          "url": "https://opensubsonic.netlify.app/docs/responses/opensubsonicextension/"
+          "url": "https://opensubsonic.github.io/docs/responses/opensubsonicextension/"
         },
         "properties": {
           "name": {
@@ -11982,7 +11982,7 @@
         },
         "externalDocs": {
           "description": "GetOpenSubsonicExtensionsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/"
         }
       },
       "GetPlaylistSuccessResponse": {
@@ -12020,7 +12020,7 @@
         },
         "externalDocs": {
           "description": "GetPlaylistResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylist/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylist/"
         }
       },
       "Playlists": {
@@ -12028,7 +12028,7 @@
         "description": "Playlists.",
         "externalDocs": {
           "description": "Playlists",
-          "url": "https://opensubsonic.netlify.app/docs/responses/playlists/"
+          "url": "https://opensubsonic.github.io/docs/responses/playlists/"
         },
         "properties": {
           "playlist": {
@@ -12075,7 +12075,7 @@
         },
         "externalDocs": {
           "description": "GetPlaylistsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplaylists/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplaylists/"
         }
       },
       "PlayQueue": {
@@ -12083,7 +12083,7 @@
         "description": "NowPlayingEntry.",
         "externalDocs": {
           "description": "PlayQueue",
-          "url": "https://opensubsonic.netlify.app/docs/responses/playqueue/"
+          "url": "https://opensubsonic.github.io/docs/responses/playqueue/"
         },
         "properties": {
           "current": {
@@ -12126,7 +12126,7 @@
         "description": "NowPlayingEntry with queue index.",
         "externalDocs": {
           "description": "PlayQueueByIndex",
-          "url": "https://opensubsonic.netlify.app/docs/responses/playgueuebyindex/"
+          "url": "https://opensubsonic.github.io/docs/responses/playgueuebyindex/"
         },
         "properties": {
           "currentIndex": {
@@ -12199,7 +12199,7 @@
         },
         "externalDocs": {
           "description": "GetPlayQueueResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getplayqueue/"
         }
       },
       "GetPlayQueueByIndexSuccessResponse": {
@@ -12237,7 +12237,7 @@
         },
         "externalDocs": {
           "description": "GetPlayQueueByIndexSuccessResponse",
-          "url": "https://opensubsonic.netlify.app/docs/responses/playqueuebyindex/"
+          "url": "https://opensubsonic.github.io/docs/responses/playqueuebyindex/"
         }
       },
       "GetPodcastEpisodeSuccessResponse": {
@@ -12275,7 +12275,7 @@
         },
         "externalDocs": {
           "description": "GetPodcastEpisodeResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcastepisode/"
         }
       },
       "PodcastChannel": {
@@ -12283,7 +12283,7 @@
         "description": "A Podcast channel",
         "externalDocs": {
           "description": "PodcastChannel",
-          "url": "https://opensubsonic.netlify.app/docs/responses/podcastchannel/"
+          "url": "https://opensubsonic.github.io/docs/responses/podcastchannel/"
         },
         "properties": {
           "id": {
@@ -12336,7 +12336,7 @@
         "description": "Podcasts.",
         "externalDocs": {
           "description": "Podcasts",
-          "url": "https://opensubsonic.netlify.app/docs/responses/podcasts/"
+          "url": "https://opensubsonic.github.io/docs/responses/podcasts/"
         },
         "properties": {
           "channel": {
@@ -12383,7 +12383,7 @@
         },
         "externalDocs": {
           "description": "GetPodcastsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getpodcasts/"
         }
       },
       "Songs": {
@@ -12391,7 +12391,7 @@
         "description": "Songs list.",
         "externalDocs": {
           "description": "Songs",
-          "url": "https://opensubsonic.netlify.app/docs/responses/songs/"
+          "url": "https://opensubsonic.github.io/docs/responses/songs/"
         },
         "properties": {
           "song": {
@@ -12438,7 +12438,7 @@
         },
         "externalDocs": {
           "description": "GetRandomSongsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getrandomsongs/"
         }
       },
       "ScanStatus": {
@@ -12446,7 +12446,7 @@
         "description": "Scan status information.",
         "externalDocs": {
           "description": "ScanStatus",
-          "url": "https://opensubsonic.netlify.app/docs/responses/scanstatus/"
+          "url": "https://opensubsonic.github.io/docs/responses/scanstatus/"
         },
         "properties": {
           "scanning": {
@@ -12497,7 +12497,7 @@
         },
         "externalDocs": {
           "description": "GetScanStatusResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getscanstatus/"
         }
       },
       "GetSharesSuccessResponse": {
@@ -12535,7 +12535,7 @@
         },
         "externalDocs": {
           "description": "GetSharesResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getshares/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getshares/"
         }
       },
       "SimilarSongs": {
@@ -12543,7 +12543,7 @@
         "description": "SimilarSongs list.",
         "externalDocs": {
           "description": "SimilarSongs",
-          "url": "https://opensubsonic.netlify.app/docs/responses/similarsongs/"
+          "url": "https://opensubsonic.github.io/docs/responses/similarsongs/"
         },
         "properties": {
           "song": {
@@ -12590,7 +12590,7 @@
         },
         "externalDocs": {
           "description": "GetSimilarSongsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs/"
         }
       },
       "SimilarSongs2": {
@@ -12598,7 +12598,7 @@
         "description": "SimilarSongs2 list.",
         "externalDocs": {
           "description": "SimilarSongs2",
-          "url": "https://opensubsonic.netlify.app/docs/responses/similarsongs2/"
+          "url": "https://opensubsonic.github.io/docs/responses/similarsongs2/"
         },
         "properties": {
           "song": {
@@ -12645,7 +12645,7 @@
         },
         "externalDocs": {
           "description": "GetSimilarSongs2Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsimilarsongs2/"
         }
       },
       "GetSongSuccessResponse": {
@@ -12683,7 +12683,7 @@
         },
         "externalDocs": {
           "description": "GetSongResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsong/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsong/"
         }
       },
       "GetSongsByGenreSuccessResponse": {
@@ -12721,7 +12721,7 @@
         },
         "externalDocs": {
           "description": "GetSongsByGenreResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsongsbygenre/"
         }
       },
       "Starred": {
@@ -12729,7 +12729,7 @@
         "description": "starred.",
         "externalDocs": {
           "description": "Starred",
-          "url": "https://opensubsonic.netlify.app/docs/responses/starred/"
+          "url": "https://opensubsonic.github.io/docs/responses/starred/"
         },
         "properties": {
           "artist": {
@@ -12790,7 +12790,7 @@
         },
         "externalDocs": {
           "description": "GetStarredResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred/"
         }
       },
       "Starred2": {
@@ -12798,7 +12798,7 @@
         "description": "Starred2.",
         "externalDocs": {
           "description": "Starred2",
-          "url": "https://opensubsonic.netlify.app/docs/responses/starred2/"
+          "url": "https://opensubsonic.github.io/docs/responses/starred2/"
         },
         "properties": {
           "artist": {
@@ -12859,7 +12859,7 @@
         },
         "externalDocs": {
           "description": "GetStarred2Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getstarred2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getstarred2/"
         }
       },
       "TopSongs": {
@@ -12867,7 +12867,7 @@
         "description": "TopSongs list.",
         "externalDocs": {
           "description": "TopSongs",
-          "url": "https://opensubsonic.netlify.app/docs/responses/topsongs/"
+          "url": "https://opensubsonic.github.io/docs/responses/topsongs/"
         },
         "properties": {
           "song": {
@@ -12914,7 +12914,7 @@
         },
         "externalDocs": {
           "description": "GetTopSongsResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/gettopsongs/"
         }
       },
       "User": {
@@ -12922,7 +12922,7 @@
         "description": "user.",
         "externalDocs": {
           "description": "User",
-          "url": "https://opensubsonic.netlify.app/docs/responses/user/"
+          "url": "https://opensubsonic.github.io/docs/responses/user/"
         },
         "properties": {
           "username": {
@@ -13049,7 +13049,7 @@
         },
         "externalDocs": {
           "description": "GetUserResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getuser/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getuser/"
         }
       },
       "Users": {
@@ -13057,7 +13057,7 @@
         "description": "users.",
         "externalDocs": {
           "description": "Users",
-          "url": "https://opensubsonic.netlify.app/docs/responses/users/"
+          "url": "https://opensubsonic.github.io/docs/responses/users/"
         },
         "properties": {
           "user": {
@@ -13104,7 +13104,7 @@
         },
         "externalDocs": {
           "description": "GetUsersResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getusers/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getusers/"
         }
       },
       "Captions": {
@@ -13112,7 +13112,7 @@
         "description": "Video file caption details.",
         "externalDocs": {
           "description": "Captions",
-          "url": "https://opensubsonic.netlify.app/docs/responses/captions/"
+          "url": "https://opensubsonic.github.io/docs/responses/captions/"
         },
         "properties": {
           "id": {
@@ -13133,7 +13133,7 @@
         "description": "Video file audio tracks.",
         "externalDocs": {
           "description": "AudioTrack",
-          "url": "https://opensubsonic.netlify.app/docs/responses/audiotrack/"
+          "url": "https://opensubsonic.github.io/docs/responses/audiotrack/"
         },
         "properties": {
           "id": {
@@ -13158,7 +13158,7 @@
         "description": "Transcoded video files.",
         "externalDocs": {
           "description": "VideoConversion",
-          "url": "https://opensubsonic.netlify.app/docs/responses/videoconversion/"
+          "url": "https://opensubsonic.github.io/docs/responses/videoconversion/"
         },
         "properties": {
           "id": {
@@ -13183,7 +13183,7 @@
         "description": "Video details.",
         "externalDocs": {
           "description": "VideoInfo",
-          "url": "https://opensubsonic.netlify.app/docs/responses/videoinfo/"
+          "url": "https://opensubsonic.github.io/docs/responses/videoinfo/"
         },
         "properties": {
           "id": {
@@ -13251,7 +13251,7 @@
         },
         "externalDocs": {
           "description": "GetVideoInfoResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideoinfo/"
         }
       },
       "Videos": {
@@ -13259,7 +13259,7 @@
         "description": "Video list.",
         "externalDocs": {
           "description": "Videos",
-          "url": "https://opensubsonic.netlify.app/docs/responses/videos/"
+          "url": "https://opensubsonic.github.io/docs/responses/videos/"
         },
         "properties": {
           "video": {
@@ -13306,7 +13306,7 @@
         },
         "externalDocs": {
           "description": "GetVideosResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getvideos/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getvideos/"
         }
       },
       "JukeboxAction": {
@@ -13331,7 +13331,7 @@
         "description": "jukeboxStatus.",
         "externalDocs": {
           "description": "JukeboxStatus",
-          "url": "https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/"
+          "url": "https://opensubsonic.github.io/docs/responses/jukeboxstatus/"
         },
         "properties": {
           "currentIndex": {
@@ -13378,7 +13378,7 @@
             },
             "externalDocs": {
               "description": "JukeboxPlaylist",
-              "url": "https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/"
+              "url": "https://opensubsonic.github.io/docs/responses/jukeboxplaylist/"
             }
           }
         ]
@@ -13418,7 +13418,7 @@
         },
         "externalDocs": {
           "description": "JukeboxControlSuccessResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/jukeboxcontrol/"
         }
       },
       "SearchResult": {
@@ -13426,7 +13426,7 @@
         "description": "Search results.",
         "externalDocs": {
           "description": "SearchResult",
-          "url": "https://opensubsonic.netlify.app/docs/responses/searchresult/"
+          "url": "https://opensubsonic.github.io/docs/responses/searchresult/"
         },
         "properties": {
           "match": {
@@ -13485,7 +13485,7 @@
         },
         "externalDocs": {
           "description": "SearchResultResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search/"
         }
       },
       "SearchResult2": {
@@ -13493,7 +13493,7 @@
         "description": "searchResult2",
         "externalDocs": {
           "description": "SearchResult2",
-          "url": "https://opensubsonic.netlify.app/docs/responses/searchresult2/"
+          "url": "https://opensubsonic.github.io/docs/responses/searchresult2/"
         },
         "properties": {
           "artist": {
@@ -13554,7 +13554,7 @@
         },
         "externalDocs": {
           "description": "SearchResult2Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search2/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search2/"
         }
       },
       "SearchResult3": {
@@ -13562,7 +13562,7 @@
         "description": "searchResult3",
         "externalDocs": {
           "description": "SearchResult3",
-          "url": "https://opensubsonic.netlify.app/docs/responses/searchresult3/"
+          "url": "https://opensubsonic.github.io/docs/responses/searchresult3/"
         },
         "properties": {
           "artist": {
@@ -13623,7 +13623,7 @@
         },
         "externalDocs": {
           "description": "SearchResult3Response",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/search3/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/search3/"
         }
       },
       "StartScanSuccessResponse": {
@@ -13661,7 +13661,7 @@
         },
         "externalDocs": {
           "description": "StartScanResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/startscan/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/startscan/"
         }
       },
       "TokenInfo": {
@@ -13669,7 +13669,7 @@
         "description": "Information about an API key",
         "externalDocs": {
           "description": "TokenInfo",
-          "url": "https://opensubsonic.netlify.app/docs/responses/tokeninfo/"
+          "url": "https://opensubsonic.github.io/docs/responses/tokeninfo/"
         },
         "properties": {
           "username": {
@@ -13716,7 +13716,7 @@
         },
         "externalDocs": {
           "description": "GetTokenInfoResponse",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/gettokeninfo/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/gettokeninfo/"
         }
       },
       "TranscodeDecision": {
@@ -14076,7 +14076,7 @@
         },
         "externalDocs": {
           "description": "findSonicPath",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/findsonicpath/"
         }
       },
       "SonicSimilarTracksResult": {
@@ -14131,7 +14131,7 @@
         },
         "externalDocs": {
           "description": "getSonicSimilarTracks",
-          "url": "https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/"
+          "url": "https://opensubsonic.github.io/docs/endpoints/getsonicsimilartracks/"
         }
       }
     }

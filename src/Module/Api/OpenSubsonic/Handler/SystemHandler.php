@@ -45,7 +45,7 @@ final class SystemHandler implements SystemHandlerInterface
      * getLicense
      *
      * Get details about the software license.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlicense/
+     * https://opensubsonic.github.io/docs/endpoints/getlicense/
      * @param array<string, mixed> $input
      */
     public function getlicense(array $input, User $user): void
@@ -67,7 +67,7 @@ final class SystemHandler implements SystemHandlerInterface
      * getOpenSubsonicExtensions
      *
      * List the OpenSubsonic extensions supported by this server.
-     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
+     * https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/
      * @param array<string, mixed> $input
      */
     public function getopensubsonicextensions(array $input, User $user): void
@@ -108,7 +108,7 @@ final class SystemHandler implements SystemHandlerInterface
      * getScanStatus
      *
      * Returns the current status for media library scanning.
-     * https://opensubsonic.netlify.app/docs/endpoints/getscanstatus/
+     * https://opensubsonic.github.io/docs/endpoints/getscanstatus/
      * @param array<string, mixed> $input
      */
     public function getscanstatus(array $input, User $user): void
@@ -128,7 +128,7 @@ final class SystemHandler implements SystemHandlerInterface
      * ping
      *
      * Used to test connectivity with the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/ping/
+     * https://opensubsonic.github.io/docs/endpoints/ping/
      * @param array<string, mixed> $input
      */
     public function ping(array $input, User $user): void
@@ -142,7 +142,7 @@ final class SystemHandler implements SystemHandlerInterface
      * startScan
      *
      * Initiates a rescan of the media libraries.
-     * https://opensubsonic.netlify.app/docs/endpoints/startscan/
+     * https://opensubsonic.github.io/docs/endpoints/startscan/
      * @param array<string, mixed> $input
      */
     public function startscan(array $input, User $user): void
@@ -162,7 +162,7 @@ final class SystemHandler implements SystemHandlerInterface
      * tokenInfo [OS]
      *
      * Returns information about an API key.
-     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
+     * https://opensubsonic.github.io/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      */
     public function tokeninfo(array $input, User $user): void

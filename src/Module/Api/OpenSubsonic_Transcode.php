@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Song;
  * The decision is derived from the same Stream settings that serve the bytes, so `getTranscodeDecision` cannot
  * promise a format `getTranscodeStream` would not actually produce.
  *
- * https://opensubsonic.netlify.app/docs/extensions/transcoding/
+ * https://opensubsonic.github.io/docs/extensions/transcoding/
  */
 final class OpenSubsonic_Transcode
 {
@@ -54,7 +54,7 @@ final class OpenSubsonic_Transcode
      *
      * Build the TranscodeDecision for a media item against a client's declared capabilities.
      *
-     * https://opensubsonic.netlify.app/docs/responses/transcodedecision/
+     * https://opensubsonic.github.io/docs/responses/transcodedecision/
      * @param array<string, mixed> $clientInfo
      * @return array{
      *     'canDirectPlay': bool,
@@ -284,7 +284,7 @@ final class OpenSubsonic_Transcode
      * The StreamDetails of the file as it sits on disk. Ampache stores the container as the file suffix and has no
      * separate codec column, so the two carry the same value; bit depth has no source and is left out.
      *
-     * https://opensubsonic.netlify.app/docs/responses/streamdetails/
+     * https://opensubsonic.github.io/docs/responses/streamdetails/
      * @return array<string, mixed>
      */
     private static function _sourceStream(Song|Podcast_Episode $media): array

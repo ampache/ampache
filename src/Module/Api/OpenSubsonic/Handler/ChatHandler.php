@@ -46,7 +46,7 @@ final class ChatHandler implements ChatHandlerInterface
      * addChatMessage
      *
      * Adds a message to the chat log.
-     * https://opensubsonic.netlify.app/docs/endpoints/addchatmessage/
+     * https://opensubsonic.github.io/docs/endpoints/addchatmessage/
      * @param array<string, mixed> $input
      */
     public function addchatmessage(array $input, User $user): void
@@ -71,7 +71,7 @@ final class ChatHandler implements ChatHandlerInterface
      * getChatMessages
      *
      * Returns the current visible (non-expired) chat messages.
-     * https://opensubsonic.netlify.app/docs/endpoints/getchatmessages/
+     * https://opensubsonic.github.io/docs/endpoints/getchatmessages/
      * @param array<string, mixed> $input
      */
     public function getchatmessages(array $input, User $user): void

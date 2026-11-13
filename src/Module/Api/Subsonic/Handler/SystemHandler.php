@@ -130,7 +130,7 @@ final class SystemHandler implements SystemHandlerInterface
      * tokenInfo [OS] REMOVED
      *
      * Returns information about an API key.
-     * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
+     * https://opensubsonic.github.io/docs/endpoints/tokeninfo/
      * @param array<string, mixed> $input
      */
     public function tokeninfo(array $input, User $user): void

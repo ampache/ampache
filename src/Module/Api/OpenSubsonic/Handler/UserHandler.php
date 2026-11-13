@@ -50,7 +50,7 @@ final class UserHandler implements UserHandlerInterface
      * changePassword
      *
      * Changes the password of an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/changepassword/
+     * https://opensubsonic.github.io/docs/endpoints/changepassword/
      * @param array<string, mixed> $input
      */
     public function changepassword(array $input, User $user): void
@@ -83,7 +83,7 @@ final class UserHandler implements UserHandlerInterface
      * createUser
      *
      * Creates a new user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/createuser/
+     * https://opensubsonic.github.io/docs/endpoints/createuser/
      * @param array<string, mixed> $input
      */
     public function createuser(array $input, User $user): void
@@ -143,7 +143,7 @@ final class UserHandler implements UserHandlerInterface
      * deleteUser
      *
      * Deletes an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/deleteuser/
+     * https://opensubsonic.github.io/docs/endpoints/deleteuser/
      * @param array<string, mixed> $input
      */
     public function deleteuser(array $input, User $user): void
@@ -171,7 +171,7 @@ final class UserHandler implements UserHandlerInterface
      * getUser
      *
      * Get details about a given user, including which authorization roles and folder access it has.
-     * https://opensubsonic.netlify.app/docs/endpoints/getuser/
+     * https://opensubsonic.github.io/docs/endpoints/getuser/
      * @param array<string, mixed> $input
      */
     public function getuser(array $input, User $user): void
@@ -209,7 +209,7 @@ final class UserHandler implements UserHandlerInterface
      * getUsers
      *
      * Get details about all users, including which authorization roles and folder access they have.
-     * https://opensubsonic.netlify.app/docs/endpoints/getusers/
+     * https://opensubsonic.github.io/docs/endpoints/getusers/
      * @param array<string, mixed> $input
      */
     public function getusers(array $input, User $user): void
@@ -236,7 +236,7 @@ final class UserHandler implements UserHandlerInterface
      * updateUser
      *
      * Modifies an existing user on the server.
-     * https://opensubsonic.netlify.app/docs/endpoints/updateuser/
+     * https://opensubsonic.github.io/docs/endpoints/updateuser/
      * @param array<string, mixed> $input
      */
     public function updateuser(array $input, User $user): void

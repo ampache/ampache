@@ -47,7 +47,7 @@ final class BookmarkHandler implements BookmarkHandlerInterface
      * createBookmark
      *
      * Creates or updates a bookmark.
-     * https://opensubsonic.netlify.app/docs/endpoints/createbookmark/
+     * https://opensubsonic.github.io/docs/endpoints/createbookmark/
      * @param array<string, mixed> $input
      */
     public function createbookmark(array $input, User $user): void
@@ -92,7 +92,7 @@ final class BookmarkHandler implements BookmarkHandlerInterface
      * deleteBookmark
      *
      * Creates or updates a bookmark.
-     * https://opensubsonic.netlify.app/docs/endpoints/deletebookmark/
+     * https://opensubsonic.github.io/docs/endpoints/deletebookmark/
      * @param array<string, mixed> $input
      */
     public function deletebookmark(array $input, User $user): void
@@ -119,7 +119,7 @@ final class BookmarkHandler implements BookmarkHandlerInterface
      * getBookmarks
      *
      * Returns all bookmarks for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getbookmarks/
+     * https://opensubsonic.github.io/docs/endpoints/getbookmarks/
      * @param array<string, mixed> $input
      */
     public function getbookmarks(array $input, User $user): void

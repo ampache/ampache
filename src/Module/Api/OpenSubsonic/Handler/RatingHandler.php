@@ -48,7 +48,7 @@ final class RatingHandler implements RatingHandlerInterface
      * getStarred
      *
      * Returns starred songs, albums and artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getstarred/
+     * https://opensubsonic.github.io/docs/endpoints/getstarred/
      * @param array<string, mixed> $input
      */
     public function getstarred(array $input, User $user, string $elementName = 'starred'): void
@@ -83,7 +83,7 @@ final class RatingHandler implements RatingHandlerInterface
      * getStarred2
      *
      * Returns starred songs, albums and artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getstarred2/
+     * https://opensubsonic.github.io/docs/endpoints/getstarred2/
      * @param array<string, mixed> $input
      */
     public function getstarred2(array $input, User $user): void
@@ -95,7 +95,7 @@ final class RatingHandler implements RatingHandlerInterface
      * setRating
      *
      * Sets the rating for a music file.
-     * https://opensubsonic.netlify.app/docs/endpoints/setrating/
+     * https://opensubsonic.github.io/docs/endpoints/setrating/
      * @param array<string, mixed> $input
      */
     public function setrating(array $input, User $user): void
@@ -129,7 +129,7 @@ final class RatingHandler implements RatingHandlerInterface
      * star
      *
      * Attaches a star to a song, album or artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/star/
+     * https://opensubsonic.github.io/docs/endpoints/star/
      * @param array<string, mixed> $input
      */
     public function star(array $input, User $user): void
@@ -141,7 +141,7 @@ final class RatingHandler implements RatingHandlerInterface
      * unstar
      *
      * Attaches a star to a song, album or artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/unstar/
+     * https://opensubsonic.github.io/docs/endpoints/unstar/
      * @param array<string, mixed> $input
      */
     public function unstar(array $input, User $user): void
