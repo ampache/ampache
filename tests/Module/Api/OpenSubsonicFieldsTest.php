@@ -49,9 +49,9 @@ class OpenSubsonicFieldsTest extends TestCase
 
         self::assertSame(
             [
-                ['start' => 12000, 'byteStart' => 0, 'byteEnd' => 5],
-                ['start' => 13200, 'byteStart' => 6, 'byteEnd' => 11],
-                ['start' => 14100, 'byteStart' => 12, 'byteEnd' => 17],
+                ['start' => 12000, 'value' => 'Hello ', 'byteStart' => 0, 'byteEnd' => 5],
+                ['start' => 13200, 'value' => 'cruel ', 'byteStart' => 6, 'byteEnd' => 11],
+                ['start' => 14100, 'value' => 'world', 'byteStart' => 12, 'byteEnd' => 16],
             ],
             $cueLine['cue']
         );
@@ -70,11 +70,11 @@ class OpenSubsonicFieldsTest extends TestCase
         $parsed  = OpenSubsonic_Fields::parseLyrics('[00:01.00]<00:01.00>Café <00:02.00>naïve', true);
         $cueLine = $parsed['cueLine'][0];
 
-        foreach ([0 => 'Café', 1 => 'naïve'] as $index => $expected) {
+        foreach ([0 => 'Café ', 1 => 'naïve'] as $index => $expected) {
             $cue = $cueLine['cue'][$index];
             self::assertSame(
                 $expected,
-                substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'])
+                substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'] + 1)
             );
         }
     }
@@ -99,8 +99,18 @@ class OpenSubsonicFieldsTest extends TestCase
 
         self::assertSame('  spaced out', $cueLine['value']);
         self::assertSame(
-            'spaced',
-            substr($cueLine['value'], $cueLine['cue'][0]['byteStart'], $cueLine['cue'][0]['byteEnd'] - $cueLine['cue'][0]['byteStart'])
+            '  spaced ',
+            substr($cueLine['value'], $cueLine['cue'][0]['byteStart'], $cueLine['cue'][0]['byteEnd'] - $cueLine['cue'][0]['byteStart'] + 1)
+        );
+    }
+
+    public function testParseLyricsKeepsUntimedLinesWithoutInventingTimestamps(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[00:02.00]Later\nuntimed\n[00:00.00]First", true);
+
+        self::assertSame(
+            [['value' => 'untimed'], ['value' => 'First', 'start' => 0], ['value' => 'Later', 'start' => 2000]],
+            $parsed['line']
         );
     }
 
@@ -124,6 +134,17 @@ class OpenSubsonicFieldsTest extends TestCase
         self::assertNotSame([], OpenSubsonic_Fields::parseLyrics($lyric, true)['cueLine']);
     }
 
+    public function testParseLyricsPreservesUntimedTextAroundCues(): void
+    {
+        $parsed  = OpenSubsonic_Fields::parseLyrics('[00:01.00]Intro <00:01.00>Café & <00:02.00>tea', true);
+        $cueLine = $parsed['cueLine'][0];
+
+        self::assertSame('Intro Café & tea', $cueLine['value']);
+        foreach ($cueLine['cue'] as $cue) {
+            self::assertSame($cue['value'], substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'] + 1));
+        }
+    }
+
     public function testParseLyricsReadsLrcLineTimings(): void
     {
         $parsed = OpenSubsonic_Fields::parseLyrics("[00:12.00]Hello\n[01:02.50]World");
@@ -136,6 +157,17 @@ class OpenSubsonicFieldsTest extends TestCase
             ],
             $parsed['line']
         );
+    }
+
+    public function testParseLyricsSortsLinesAndReindexesCues(): void
+    {
+        $text   = "[00:04.00]<00:04.00>Fourth\n[00:01.00]First\n[00:02.00]<00:02.00>Second\n[00:02.00]Also second";
+        $parsed = OpenSubsonic_Fields::parseLyrics($text, true);
+
+        self::assertSame(['First', 'Second', 'Also second', 'Fourth'], array_column($parsed['line'], 'value'));
+        self::assertSame([1000, 2000, 2000, 4000], array_column($parsed['line'], 'start'));
+        self::assertSame([1, 3], array_column($parsed['cueLine'], 'index'));
+        self::assertSame(['Second', 'Fourth'], array_column($parsed['cueLine'], 'value'));
     }
 
     public function testParseLyricsTreatsUntimedTextAsUnsynced(): void

@@ -116,12 +116,23 @@ class OpenSubsonicAlbumArtistsTest extends MockeryTestCase
             $xml->addArtistID3($document, $artist, true);
             self::assertSame('4', (string) $document->artist['userRating']);
 
-            $row     = ['id' => 428, 'f_name' => 'Example', 'name' => 'Example', 'album_count' => 0, 'song_count' => 1, 'catalog_id' => 1, 'has_art' => 0];
+            $row     = ['id' => 428, 'f_name' => 'The Example', 'name' => 'Example', 'album_count' => 0, 'song_count' => 1, 'catalog_id' => 1, 'has_art' => 0];
             $indexed = new ReflectionMethod($json, '_getArtistArray')->invoke($json, [], $row);
             self::assertSame(4, $indexed[0]['userRating']);
+            self::assertSame('Example', $indexed[0]['sortName']);
             $document = new SimpleXMLElement('<index/>');
             new ReflectionMethod($xml, '_addArtistArray')->invoke($xml, $document, $row);
             self::assertSame('4', (string) $document->artist['userRating']);
+            self::assertSame('Example', (string) $document->artist['sortName']);
+            $row['f_name'] = 'Example';
+            $indexed       = new ReflectionMethod($json, '_getArtistArray')->invoke($json, [], $row);
+            self::assertArrayNotHasKey('sortName', $indexed[0]);
+            $row['f_name'] = 'The Example';
+            $indexed       = new ReflectionMethod($json, '_getArtistArray')->invoke($json, [], $row, false);
+            self::assertArrayNotHasKey('sortName', $indexed[0]);
+            $document = new SimpleXMLElement('<index/>');
+            new ReflectionMethod($xml, '_addArtistArray')->invoke($xml, $document, $row, false);
+            self::assertFalse(isset($document->artist['sortName']));
 
             database_object::add_to_cache('rating_artist_user427', 428, [0]);
             self::assertArrayNotHasKey('userRating', $json->addArtistWithAlbumsID3(['subsonic-response' => []], $artist)['subsonic-response']['artist']);

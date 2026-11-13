@@ -80,7 +80,7 @@ final class SystemHandler implements SystemHandlerInterface
             'indexBasedQueue' => [1],
             'formPost' => [1],
             'playbackReport' => [1],
-            'songLyrics' => [1],
+            'songLyrics' => [1, 2],
             'topSongsByArtistId' => [1],
             'transcodeOffset' => [1],
             'transcoding' => [1],

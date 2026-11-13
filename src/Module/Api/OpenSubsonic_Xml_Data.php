@@ -887,11 +887,10 @@ class OpenSubsonic_Xml_Data
         $xlyrics->addAttribute('synced', ($lyrics['synced']) ? 'true' : 'false');
 
         foreach ($lyrics['line'] as $line) {
-            $xline = $this->_addChildToResultXml($xlyrics, 'line');
+            $xline = $this->_addChildToResultXml($xlyrics, 'line', htmlspecialchars($line['value'], ENT_XML1 | ENT_QUOTES, 'UTF-8'));
             if (isset($line['start'])) {
                 $xline->addAttribute('start', (string) $line['start']);
             }
-            $xline->addAttribute('value', $line['value']);
         }
 
         foreach ($lyrics['cueLine'] ?? [] as $cueLine) {
@@ -900,7 +899,7 @@ class OpenSubsonic_Xml_Data
             $xcueline->addAttribute('start', (string) $cueLine['start']);
             $xcueline->addAttribute('value', $cueLine['value']);
             foreach ($cueLine['cue'] as $cue) {
-                $xcue = $this->_addChildToResultXml($xcueline, 'cue');
+                $xcue = $this->_addChildToResultXml($xcueline, 'cue', htmlspecialchars($cue['value'], ENT_XML1 | ENT_QUOTES, 'UTF-8'));
                 $xcue->addAttribute('start', (string) $cue['start']);
                 $xcue->addAttribute('byteStart', (string) $cue['byteStart']);
                 $xcue->addAttribute('byteEnd', (string) $cue['byteEnd']);
@@ -1833,6 +1832,10 @@ class OpenSubsonic_Xml_Data
             $rating = (new Rating($artist['id'], 'artist'))->get_user_rating();
             if ($rating !== null && $rating > 0) {
                 $xartist->addAttribute('userRating', (string) $rating);
+            }
+            $sort_name = $this->openSubsonicFields->sortName($artist['name'], $artist['f_name']);
+            if ($sort_name !== null) {
+                $xartist->addAttribute('sortName', $sort_name);
             }
         }
         $this->_setIfStarred($xartist, 'artist', $artist['id']);

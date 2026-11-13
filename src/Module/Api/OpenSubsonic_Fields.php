@@ -100,7 +100,7 @@ final class OpenSubsonic_Fields
      *         'index': int,
      *         'start': int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }
      */
@@ -142,6 +142,23 @@ final class OpenSubsonic_Fields
             }
         }
 
+        if ($synced) {
+            $order = array_keys($lines);
+            usort($order, static fn(int $a, int $b): int => ($lines[$a]['start'] ?? -1) <=> ($lines[$b]['start'] ?? -1));
+            $sortedLines = [];
+            $newIndexes  = [];
+            foreach ($order as $oldIndex) {
+                $newIndexes[$oldIndex] = count($sortedLines);
+                $sortedLines[]         = $lines[$oldIndex];
+            }
+            $lines = $sortedLines;
+            foreach ($cueLines as &$cueLine) {
+                $cueLine['index'] = $newIndexes[$cueLine['index']];
+            }
+            unset($cueLine);
+            usort($cueLines, static fn(array $a, array $b): int => $a['index'] <=> $b['index']);
+        }
+
         return [
             'synced' => $synced,
             'line' => $lines,
@@ -163,39 +180,34 @@ final class OpenSubsonic_Fields
      * `end` is deliberately absent from every cue: Enhanced LRC gives start-only timing, and the spec requires the
      * field to be present on all cues of a line or none.
      *
-     * @return array{'value': string, 'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>}|array{}
+     * @return array{'value': string, 'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>}|array{}
      */
     private static function _parseEnhancedCues(string $line): array
     {
         $matches = [];
-        if (!preg_match_all('/<(\d{2}):(\d{2})[.:](\d{2})>([^<]*)/', $line, $matches, PREG_SET_ORDER)) {
+        if (!preg_match_all('/<(\d{2}):(\d{2})[.:](\d{2})>/', $line, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             return [];
         }
 
-        $value = '';
+        $value = substr($line, 0, $matches[0][0][1]);
         $cues  = [];
-        foreach ($matches as $match) {
-            $word = $match[4];
-            if (trim($word) === '') {
-                $value .= $word;
+        foreach ($matches as $index => $match) {
+            $start = $match[0][1] + strlen($match[0][0]);
+            $end   = $matches[$index + 1][0][1] ?? strlen($line);
+            $word  = substr($line, $start, $end - $start);
+            if ($word === '') {
                 continue;
             }
 
-            // byteStart/byteEnd index the finished string, so spacing lands outside the cue it would otherwise shift.
-            $lead   = strlen($word) - strlen(ltrim($word));
-            $value .= substr($word, 0, $lead);
-
-            $trimmed    = trim($word);
             $byte_start = strlen($value);
-            $value .= $trimmed;
+            $value .= $word;
 
             $cues[] = [
-                'start' => self::_lrcTimeToMilliseconds($match[1], $match[2], $match[3]),
+                'start' => self::_lrcTimeToMilliseconds($match[1][0], $match[2][0], $match[3][0]),
+                'value' => $word,
                 'byteStart' => $byte_start,
-                'byteEnd' => strlen($value),
+                'byteEnd' => strlen($value) - 1,
             ];
-
-            $value .= substr($word, $lead + strlen($trimmed));
         }
 
         if ($cues === []) {
@@ -617,7 +629,7 @@ final class OpenSubsonic_Fields
      *         'index': int,
      *         'start': int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }|array{}
      */

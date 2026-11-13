@@ -94,7 +94,7 @@ the next audit does not re-derive them:
 
 ### Extensions
 
-All are advertised by [getOpenSubsonicExtensions](https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/) at version 1.
+All are advertised by [getOpenSubsonicExtensions](https://opensubsonic.github.io/docs/endpoints/getopensubsonicextensions/) at version 1; `songLyrics` also advertises version 2.
 
 | Extension                                                                                  | Notes                                                                                                                    |
 |--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|

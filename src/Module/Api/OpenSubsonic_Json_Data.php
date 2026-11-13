@@ -2263,6 +2263,7 @@ class OpenSubsonic_Json_Data
      *     'albumCount'?: int,
      *     'starred'?: string,
      *     'userRating'?: int,
+     *     'sortName'?: string,
      *     'roles'?: string[]
      * }> $artist_list
      * @param array{
@@ -2281,6 +2282,7 @@ class OpenSubsonic_Json_Data
      *     'albumCount'?: int,
      *     'starred'?: string,
      *     'userRating'?: int,
+     *     'sortName'?: string,
      *     'roles'?: string[]
      * }>
      */
@@ -2302,6 +2304,10 @@ class OpenSubsonic_Json_Data
             $rating             = (new Rating($artist['id'], 'artist'))->get_user_rating();
             if ($rating !== null && $rating > 0) {
                 $json['userRating'] = $rating;
+            }
+            $sort_name = $this->openSubsonicFields->sortName($artist['name'], $artist['f_name']);
+            if ($sort_name !== null) {
+                $json['sortName'] = $sort_name;
             }
         }
 

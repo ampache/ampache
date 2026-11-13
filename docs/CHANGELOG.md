@@ -17,8 +17,11 @@
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
 * The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
 * Subsonic
+  * OpenSubsonic implementation audited against the published specification on 2026-11-13; the audited build is committed as `docs/openapi-opensubsonic.json`
   * Apply weighting to search result order
   * OpenSubsonic artist responses include the user's rating when available
+  * OpenSubsonic artist indexes include `sortName` when a prefix is present
+  * Advertise `songLyrics` version 2 for enhanced lyrics
 
 ### Fixed (8.4.1)
 
