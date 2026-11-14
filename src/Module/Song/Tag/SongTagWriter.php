@@ -124,7 +124,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 $name  = $field?->getName();
 
                 if (is_string($name) && ($name !== '' && $name !== '0')) {
-                    $ndata[$name] = $metadata->getData();
+                    $ndata[$name] = [$metadata->getData()];
                 }
             }
         }
@@ -183,20 +183,19 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             if (!empty($id3v2Data)) {
                 unset($id3v2Data['text']);
                 foreach ($id3v2Data as $key => $value) {
-                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
-                        $ndata[$key] = [];
+                    // a custom tag edited in Ampache must not get the file's old value back
+                    if (isset($ndata[$key]) && !isset($songMeta[$key])) {
+                        continue;
                     }
 
-                    $ndata[$key][] = isset($songMeta[$key]) && $value[0] !== $songMeta[$key] ? $songMeta[$key] : $value[0];
+                    $ndata[$key] = [isset($songMeta[$key]) && $value[0] !== $songMeta[$key] ? $songMeta[$key] : $value[0]];
                 }
             } else {
                 unset($songMeta['text']);
-                foreach (array_keys($songMeta) as $key) {
-                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
-                        $ndata[$key] = [];
+                foreach ($songMeta as $key => $value) {
+                    if ($value !== null) {
+                        $ndata[$key] = [$value];
                     }
-
-                    $ndata[$key][] = $songMeta;
                 }
             }
 
