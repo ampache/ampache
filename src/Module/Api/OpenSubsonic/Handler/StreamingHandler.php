@@ -67,7 +67,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -518,7 +518,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
