@@ -461,6 +461,11 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             show: { effect: "fade", duration: 400 },
             open() {
                 loadDialogContent(this, parent.contentUrl, function() {
+                    // pressing Enter in a field saves, instead of reloading the page and losing the edit
+                    $(parent.editFormId).on("submit", function(e) {
+                        e.preventDefault();
+                        parent.dialog_buttons[jsSaveTitle]();
+                    });
                     if ($("#edit_tags").length > 0) {
                         $("#edit_tags").tagit({
                             allowSpaces: true,

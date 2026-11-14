@@ -2187,7 +2187,7 @@ class Song extends database_object implements
                 // remote network user will require transcoding with downsample_remote
                 $transcode = 'required';
                 debug_event(self::class, "Transcoding due to downsample_remote", 3);
-            } else {
+            } elseif ($transcode !== 'always') {
                 // lan user is allowed to play original quality
                 $transcode = 'never';
                 debug_event(self::class, "NOT transcoding local network due to downsample_remote", 5);

@@ -173,7 +173,8 @@ final class DefaultAction implements ApplicationActionInterface
                 $new_pass = '';
                 if (Core::get_post('db_user') === 'create_db_user') {
                     $new_user = Core::get_post('db_username');
-                    $new_pass = Core::get_post('db_password');
+                    // unscrubbed, as ampache.cfg.php receives it, or the new account rejects the saved password
+                    $new_pass = (string) ($_POST['db_password'] ?? '');
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));

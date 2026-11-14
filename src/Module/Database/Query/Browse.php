@@ -751,7 +751,8 @@ class Browse extends Query
      */
     public function update_browse_from_session(): void
     {
-        if ($this->is_simple() && $this->get_start() === 0) {
+        // an infinite scroll list reopens from the top, not from the last batch it loaded
+        if ($this->is_simple() && $this->is_use_pages() && $this->get_start() === 0) {
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable

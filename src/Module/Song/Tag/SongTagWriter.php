@@ -117,18 +117,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        $ndata = [];
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
-            foreach ($song->getMetadata() as $metadata) {
-                $field = $metadata->getField();
-                $name  = $field?->getName();
-
-                if (is_string($name) && ($name !== '' && $name !== '0')) {
-                    $ndata[$name] = $metadata->getData();
-                }
-            }
-        }
-
+        $ndata         = $this->getCustomMetadata($song);
         $ndata['text'] = [];
 
         $vainfo = $this->utilityFactory->createVaInfo(
@@ -180,25 +169,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 }
             }
 
-            if (!empty($id3v2Data)) {
-                unset($id3v2Data['text']);
-                foreach ($id3v2Data as $key => $value) {
-                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
-                        $ndata[$key] = [];
-                    }
-
-                    $ndata[$key][] = isset($songMeta[$key]) && $value[0] !== $songMeta[$key] ? $songMeta[$key] : $value[0];
-                }
-            } else {
-                unset($songMeta['text']);
-                foreach (array_keys($songMeta) as $key) {
-                    if (!isset($ndata[$key]) || !is_array($ndata[$key])) {
-                        $ndata[$key] = [];
-                    }
-
-                    $ndata[$key][] = $songMeta;
-                }
-            }
+            $this->mergeId3v2Frames($ndata, $songMeta, $id3v2Data);
 
             if (isset($songMeta['unique_file_identifier'])) {
                 $ndata['unique_file_identifier'] = $songMeta['unique_file_identifier'];
@@ -487,6 +458,27 @@ final readonly class SongTagWriter implements SongTagWriterInterface
     }
 
     /**
+     * Get the custom metadata of the song, one list of values per field name.
+     * @return array<string, list<string>>
+     */
+    private function getCustomMetadata(Song $song): array
+    {
+        $ndata = [];
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)) {
+            foreach ($song->getMetadata() as $metadata) {
+                $field = $metadata->getField();
+                $name  = $field?->getName();
+
+                if (is_string($name) && ($name !== '' && $name !== '0')) {
+                    $ndata[$name] = [$metadata->getData()];
+                }
+            }
+        }
+
+        return $ndata;
+    }
+
+    /**
      * Get an array of metadata for writing id3 file tags.
      * @return array{
      *     year: int|null,
@@ -717,6 +709,34 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         return $meta;
+    }
+
+    /**
+     * Merge the song metadata with the frames already in the file.
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $songMeta
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function mergeId3v2Frames(array &$ndata, array $songMeta, array $id3v2Data): void
+    {
+        if ($id3v2Data !== []) {
+            unset($id3v2Data['text']);
+            foreach ($id3v2Data as $key => $value) {
+                // a custom tag edited in Ampache must not get the file's old value back
+                if (isset($ndata[$key]) && !isset($songMeta[$key])) {
+                    continue;
+                }
+
+                $ndata[$key] = [isset($songMeta[$key]) && $value[0] !== $songMeta[$key] ? $songMeta[$key] : $value[0]];
+            }
+        } else {
+            unset($songMeta['text']);
+            foreach ($songMeta as $key => $value) {
+                if ($value !== null) {
+                    $ndata[$key] = [$value];
+                }
+            }
+        }
     }
 
     /**
