@@ -165,6 +165,10 @@ class Search extends playlist_object
             ['name' => '2star', 'description' => 'has rated 2 stars', 'sql' => '`rating` = 2'],
             ['name' => '1star', 'description' => 'has rated 1 star', 'sql' => '`rating` = 1'],
             ['name' => 'unrated', 'description' => 'has not rated', 'sql' => 'unrated'],
+            // appended so the API operator numbers above keep their meaning
+            ['name' => '4starplus', 'description' => 'has rated 4 stars or more', 'sql' => '`rating` >= 4'],
+            ['name' => '3starplus', 'description' => 'has rated 3 stars or more', 'sql' => '`rating` >= 3'],
+            ['name' => '2starplus', 'description' => 'has rated 2 stars or more', 'sql' => '`rating` >= 2'],
         ],
     ];
 
