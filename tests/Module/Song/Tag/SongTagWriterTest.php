@@ -29,8 +29,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\Model\Metadata;
+use Ampache\Repository\Model\MetadataField;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use ArrayIterator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -113,6 +116,56 @@ class SongTagWriterTest extends TestCase
         self::assertArrayNotHasKey('encoder_settings', $ndata);
     }
 
+    /** A custom tag not yet in the file was never written (#4256) */
+    public function testGetCustomMetadataReturnsAListOfValuesPerField(): void
+    {
+        $song     = $this->createMock(Song::class);
+        $metadata = $this->createMock(Metadata::class);
+        $field    = $this->createMock(MetadataField::class);
+
+        $this->configContainer->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA)
+            ->willReturn(true);
+        $song->method('getMetadata')
+            ->willReturn(new ArrayIterator([$metadata]));
+        $metadata->method('getField')
+            ->willReturn($field);
+        $metadata->method('getData')
+            ->willReturn('New Conductor');
+        $field->method('getName')
+            ->willReturn('conductor');
+
+        $method = new ReflectionMethod($this->subject, 'getCustomMetadata');
+
+        self::assertSame(['conductor' => ['New Conductor']], $method->invoke($this->subject, $song));
+    }
+
+    /** An edited conductor tag was overwritten by the file's old value (#4256) */
+    public function testMergeId3v2FramesKeepsAnEditedCustomTag(): void
+    {
+        $ndata     = ['conductor' => ['New Conductor'], 'text' => []];
+        $songMeta  = ['title' => 'New Title', 'text' => []];
+        $id3v2Data = ['conductor' => ['Old Conductor'], 'title' => ['Old Title']];
+
+        $this->invokeMergeId3v2Frames($ndata, $songMeta, $id3v2Data);
+
+        self::assertSame(['New Conductor'], $ndata['conductor']);
+        self::assertSame(['New Title'], $ndata['title']);
+    }
+
+    /** A file without id3v2 tags got the whole song metadata written into every frame (#4256) */
+    public function testMergeId3v2FramesWritesOneValuePerFrameForAFileWithoutTags(): void
+    {
+        $ndata    = ['text' => []];
+        $songMeta = ['title' => 'New Title', 'year' => 2001, 'composer' => null, 'text' => []];
+
+        $this->invokeMergeId3v2Frames($ndata, $songMeta, []);
+
+        self::assertSame(['New Title'], $ndata['title']);
+        self::assertSame([2001], $ndata['year']);
+        self::assertArrayNotHasKey('composer', $ndata);
+    }
+
     public function testWriteDoesNothingForANewSong(): void
     {
         $song = $this->createMock(Song::class);
@@ -182,6 +235,18 @@ class SongTagWriterTest extends TestCase
     {
         $method = new ReflectionMethod($this->subject, 'copyId3v2Frames');
         $args   = [&$ndata, $id3v2Data];
+        $method->invokeArgs($this->subject, $args);
+    }
+
+    /**
+     * @param array<string, mixed> $ndata
+     * @param array<string, mixed> $songMeta
+     * @param array<string, mixed> $id3v2Data
+     */
+    private function invokeMergeId3v2Frames(array &$ndata, array $songMeta, array $id3v2Data): void
+    {
+        $method = new ReflectionMethod($this->subject, 'mergeId3v2Frames');
+        $args   = [&$ndata, $songMeta, $id3v2Data];
         $method->invokeArgs($this->subject, $args);
     }
 }
