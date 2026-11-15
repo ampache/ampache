@@ -31,6 +31,7 @@ use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\StreamingHandler;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Repository\Model\User;
 use DI\Container;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -59,9 +60,12 @@ class SubsonicVideoStreamTest extends MockeryTestCase
         $responseHandler->shouldReceive('checkParameter')->andReturn('vi-' . self::VIDEO);
         $responseHandler->shouldNotReceive('errorOutput');
 
+        $streamProxy = $this->mock(StreamProxyInterface::class);
+        $streamProxy->shouldReceive('getRequestHeaders')->andReturn([]);
+
         $subject = $openSubsonic
-            ? new OpenSubsonicStreamingHandler($responseHandler, $this->mock(OpenSubsonic_Json_Data::class), $this->mock(OpenSubsonic_Xml_Data::class))
-            : new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class));
+            ? new OpenSubsonicStreamingHandler($responseHandler, $this->mock(OpenSubsonic_Json_Data::class), $this->mock(OpenSubsonic_Xml_Data::class), $streamProxy)
+            : new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class), $streamProxy);
 
         $user              = $this->mock(User::class);
         $user->id          = 1;

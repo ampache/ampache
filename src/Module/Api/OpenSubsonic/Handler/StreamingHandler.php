@@ -34,6 +34,7 @@ use Ampache\Module\Api\OpenSubsonic_Xml_Data;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -50,6 +51,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         private readonly OpenSubsonicResponseHandlerInterface $responseHandler,
         private readonly OpenSubsonic_Json_Data $openSubsonicJsonData,
         private readonly OpenSubsonic_Xml_Data $openSubsonicXmlData,
+        private readonly StreamProxyInterface $streamProxy,
     ) {}
 
     /**
@@ -561,15 +563,6 @@ final class StreamingHandler implements StreamingHandlerInterface
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
-            $headers    = apache_request_headers();
-            $reqheaders = [];
-            if (isset($headers['User-Agent'])) {
-                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
-            }
-            if (isset($headers['Range'])) {
-                $reqheaders[] = "Range: " . $headers['Range'];
-            }
-            $reqheaders[] = "X-Forwarded-For: " . Core::get_user_ip();
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
@@ -578,7 +571,7 @@ final class StreamingHandler implements StreamingHandlerInterface
                     $curl,
                     [
                         CURLOPT_FAILONERROR => true,
-                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HTTPHEADER => $this->streamProxy->getRequestHeaders(),
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
