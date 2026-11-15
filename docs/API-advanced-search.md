@@ -226,10 +226,10 @@ Select your operator (integer only!) based on the type or your selected search
 |        3        | ends with                         | does not equal / has rated 3 stars           |        |                                              | is not after (x) days ago  |
 |        4        | is                                | is greater than / has rated 2 stars          |        |                                              |                            |
 |        5        | is not                            | is less than / has rated 1 stars             |        |                                              |                            |
-|  6 (Text Only)  | sounds like                       |                                              |        |                                              |                            |
-|  7 (Text Only)  | does not sound like               |                                              |        |                                              |                            |
-|  8 (Text Only)  | matches regular expression        |                                              |        |                                              |                            |
-|  9 (Text Only)  | does not match regular expression |                                              |        |                                              |                            |
+|        6        | sounds like                       | user_numeric: has not rated                  |        |                                              |                            |
+|        7        | does not sound like               | user_numeric: has rated 4 stars or more      |        |                                              |                            |
+|        8        | matches regular expression        | user_numeric: has rated 3 stars or more      |        |                                              |                            |
+|        9        | does not match regular expression | user_numeric: has rated 2 stars or more      |        |                                              |                            |
 
 Send the correct input based on the type of search.
 

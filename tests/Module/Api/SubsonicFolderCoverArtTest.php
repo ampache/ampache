@@ -31,6 +31,7 @@ use Ampache\Module\Api\OpenSubsonic\OpenSubsonicResponseHandlerInterface;
 use Ampache\Module\Api\Subsonic\Handler\StreamingHandler;
 use Ampache\Module\Api\Subsonic\SubsonicResponseHandlerInterface;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -74,7 +75,7 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldReceive('checkParameter')->andReturn('fo-' . self::ART_FOLDER);
         $responseHandler->shouldNotReceive('errorOutput');
 
-        $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class));
+        $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
 
         $this->expectOutputString(self::FOLDER_ART);
         $subject->getcoverart(['id' => 'fo-' . self::ART_FOLDER], $this->mock(User::class));
@@ -88,7 +89,7 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldReceive('checkParameter')->andReturn('fo-' . self::ALBUM_FOLDER);
         $responseHandler->shouldNotReceive('errorOutput');
 
-        $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class));
+        $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
 
         $this->expectOutputString(self::ALBUM_ART);
         $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $this->mock(User::class));
@@ -102,7 +103,7 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldReceive('checkParameter')->andReturn('fo-' . self::ALBUM_FOLDER);
         $responseHandler->shouldNotReceive('errorOutput');
 
-        $subject = new OpenSubsonicStreamingHandler($responseHandler, $this->mock(OpenSubsonic_Json_Data::class), $this->mock(OpenSubsonic_Xml_Data::class));
+        $subject = new OpenSubsonicStreamingHandler($responseHandler, $this->mock(OpenSubsonic_Json_Data::class), $this->mock(OpenSubsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
 
         $this->expectOutputString(self::ALBUM_ART);
         $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $this->mock(User::class));

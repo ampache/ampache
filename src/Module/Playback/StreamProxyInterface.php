@@ -28,6 +28,13 @@ namespace Ampache\Module\Playback;
 interface StreamProxyInterface
 {
     /**
+     * The client headers a proxied request carries, so seeking and resuming still work through the proxy.
+     *
+     * @return list<string>
+     */
+    public function getRequestHeaders(): array;
+
+    /**
      * Streams a remote url back to the client through this server.
      *
      * A redirect would hand the client a cross-origin resource, which the web player cannot route through Web Audio.

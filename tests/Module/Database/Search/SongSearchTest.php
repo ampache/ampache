@@ -81,6 +81,23 @@ class SongSearchTest extends MockeryTestCase
         $this->assertSame(['%Rock%', '%Pop%'], $result['parameters']);
     }
 
+    /** API clients pick the operator by number, so the older ones keep theirs */
+    public function testAnotherUserOperatorNumbersAreUnchanged(): void
+    {
+        $user    = $this->mock(User::class);
+        $numbers = array_column(new Search(0, 'song', $user)->get_basetypes()['user_numeric'], 'name');
+
+        $this->assertSame(['love', '5star', '4star', '3star', '2star', '1star', 'unrated'], array_slice($numbers, 0, 7));
+    }
+
+    /** Another user's 3 star picks left out their 4 and 5 star ones (#2676) */
+    public function testAnotherUserRatedAtLeastKeepsTheHigherRatings(): void
+    {
+        $result = $this->ruleSql([['other_user', '3starplus', 7]]);
+
+        $this->assertStringContainsString('`rating_song_7`.`rating` >= 3 AND `rating_song_7`.`user` = 7', $result['where_sql']);
+    }
+
     /**
      * `addition_time` is never NULL, so "not added before" is a plain operator swap with no OR branch
      */

@@ -29,11 +29,48 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Module\Database\DatabaseLockInterface;
+use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class ArtistTest extends MockeryTestCase
 {
+    private const string MBID = '5b11f4ce-a62d-471e-81fc-a69a8278c7da';
+
+    /** A catalog import still asked MusicBrainz for artist names with the plugin uninstalled (#3142) */
+    #[RunInSeparateProcess]
+    public function testCheckLeavesMusicBrainzAloneWhenThePluginIsNotInstalled(): void
+    {
+        $artistRepository = $this->mock(ArtistRepositoryInterface::class);
+        $artistRepository->shouldReceive('findIdByMbid')->andReturnNull();
+        $artistRepository->shouldReceive('findIdsByNameWithoutMbid')->andReturn([]);
+        $artistRepository->shouldReceive('create')
+            ->with('Tagged Name', null, self::MBID, null)
+            ->once()
+            ->andReturnNull();
+
+        $this->bootMusicBrainzDic($artistRepository);
+
+        Artist::check('Tagged Name', self::MBID);
+    }
+
+    /** A catalog import still asked MusicBrainz for artist names with the plugin uninstalled (#3142) */
+    #[RunInSeparateProcess]
+    public function testCheckMbidLeavesMusicBrainzAloneWhenThePluginIsNotInstalled(): void
+    {
+        $artistRepository = $this->mock(ArtistRepositoryInterface::class);
+        $artistRepository->shouldReceive('findIdByMbid')->andReturnNull();
+        $artistRepository->shouldNotReceive('create');
+
+        $this->bootMusicBrainzDic($artistRepository);
+
+        self::assertSame(0, Artist::check_mbid(self::MBID));
+    }
+
     /**
      * `edit/album.phtml` and `edit/song.phtml` print this with `raw()` on the claim that it already escapes each
      * name, so an uploaded file's artist tag reaching an admin's edit dialog must not carry live markup.
@@ -97,6 +134,31 @@ class ArtistTest extends MockeryTestCase
         $dic = $this->mock(ContainerInterface::class);
         $dic->shouldReceive('get')->with(PrivilegeCheckerInterface::class)->andReturn($privilegeChecker);
         $dic->shouldReceive('get')->with(ArtistRepositoryInterface::class)->andReturn($artistRepository);
+
+        $GLOBALS['dic'] = $dic;
+    }
+
+    private function bootMusicBrainzDic(ArtistRepositoryInterface $artistRepository): void
+    {
+        $musicBrainz       = $this->mock(AmpacheMusicBrainz::class);
+        $musicBrainz->name = 'MusicBrainz';
+        $musicBrainz->shouldNotReceive('get_artist');
+
+        $updateInfoRepository = $this->mock(UpdateInfoRepositoryInterface::class);
+        $updateInfoRepository->shouldReceive('getPluginVersions')->andReturn([]);
+
+        $databaseLock = $this->mock(DatabaseLockInterface::class);
+        $databaseLock->shouldReceive('acquire')->andReturnFalse();
+
+        $logger = $this->mock(LoggerInterface::class);
+        $logger->shouldReceive('log');
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(ArtistRepositoryInterface::class)->andReturn($artistRepository);
+        $dic->shouldReceive('get')->with(UpdateInfoRepositoryInterface::class)->andReturn($updateInfoRepository);
+        $dic->shouldReceive('get')->with(DatabaseLockInterface::class)->andReturn($databaseLock);
+        $dic->shouldReceive('get')->with(LoggerInterface::class)->andReturn($logger);
+        $dic->shouldReceive('make')->with(AmpacheMusicBrainz::class)->andReturn($musicBrainz);
 
         $GLOBALS['dic'] = $dic;
     }
