@@ -25,15 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class SongTest extends MockeryTestCase
 {
@@ -283,6 +287,60 @@ class SongTest extends MockeryTestCase
         $lyrics   = $song->get_lyrics(true);
 
         self::assertSame(['text' => '[00:09.12] Hey Joe'], $lyrics);
+    }
+
+    /** A lan user with transcoding set to always got a flac url for an mp3 stream (#3596) */
+    public function testPlayUrlKeepsTheTranscodeForALanUserWhenTranscodingIsAlways(): void
+    {
+        $config = [
+            'cache_target' => '',
+            'downsample_remote' => true,
+            'encode_player_api_target' => null,
+            'encode_target' => 'mp3',
+            'encode_target_flac' => null,
+            'require_session' => false,
+            'stream_beautiful_url' => false,
+            'transcode' => 'always',
+            'use_auth' => false,
+            'web_path' => 'http://ampache.test',
+        ];
+        $previous = [];
+        foreach ($config as $key => $value) {
+            $previous[$key] = AmpConfig::get($key);
+            AmpConfig::set($key, $value, true);
+        }
+
+        unset($GLOBALS['transcode']);
+
+        $networkChecker = $this->mock(NetworkCheckerInterface::class);
+        $networkChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::NETWORK, -1, AccessLevelEnum::DEFAULT)
+            ->andReturnTrue();
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(NetworkCheckerInterface::class)->andReturn($networkChecker);
+        $dic->shouldReceive('get')->with(LoggerInterface::class)->andReturn($this->mock(LoggerInterface::class)->shouldIgnoreMissing());
+        $GLOBALS['dic'] = $dic;
+
+        $song          = new Song();
+        $song->id      = 3596;
+        $song->title   = 'Grapevine';
+        $song->type    = 'flac';
+        $song->bitrate = 900000;
+        new ReflectionProperty(Song::class, 'artist_full_name')->setValue($song, 'Artist');
+
+        try {
+            $url = $song->play_url('', 'api');
+        } finally {
+            foreach ($previous as $key => $value) {
+                AmpConfig::set($key, $value, true);
+            }
+
+            unset($GLOBALS['transcode']);
+        }
+
+        self::assertStringContainsString('&transcode_to=mp3', $url);
+        self::assertStringEndsWith('.mp3', $url);
     }
 
     public function testRunCustomPlayActionIgnoresAnIndexOutsideTheActionList(): void

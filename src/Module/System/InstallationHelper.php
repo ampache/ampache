@@ -796,7 +796,7 @@ final readonly class InstallationHelper implements InstallationHelperInterface
      */
     private function escape_ini(string $str): string
     {
-        return str_replace('"', '\"', $str);
+        return str_replace(['\\', '"', '$'], ['\\\\', '\"', '\$'], $str);
     }
 
     /**

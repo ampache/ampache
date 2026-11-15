@@ -112,6 +112,17 @@ class InstallationHelperTest extends MockeryTestCase
         );
     }
 
+    /** A database password with a backslash, quote or ${...} came back altered from the generated config (#2490) */
+    public function testGenerateConfigKeepsSpecialCharactersInValues(): void
+    {
+        $password = 'a\b"c${HOME}d\\';
+
+        $config = parse_ini_string($this->subject->generate_config(['database_password' => $password]));
+
+        self::assertIsArray($config);
+        self::assertSame($password, $config['database_password']);
+    }
+
     /**
      * @param array<string, string> $current
      */
