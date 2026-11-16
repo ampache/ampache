@@ -159,6 +159,9 @@ if ($this->showBiography()) {
         <ul id="tabs">
             <li<?php echo ($isAlbumType) ? ' class="tab_active"' : ''; ?>><a href="<?php echo ($isAlbumType) ? '#albums' : $this->e($listing . '&action=show#albums'); ?>"><?php echo T_('Albums'); ?></a></li>
             <li<?php echo ($isAlbumType) ? '' : ' class="tab_active"'; ?>><a id="artist_songs_link" href="<?php echo ($isAlbumType) ? '#songs' : '#albums'; ?>"><?php echo T_('Songs'); ?></a></li>
+            <?php if ($this->showPlaylistsTab()) { ?>
+            <li><a id="artist_playlists_link" href="#artist_playlists"><?php echo T_('Playlists'); ?></a></li>
+            <?php } ?>
             <li><a id="top_tracks_link" href="#top_tracks"><?php echo T_('Top Tracks'); ?></a></li>
             <?php if ($this->showWanted()) { ?>
             <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
@@ -169,9 +172,6 @@ if ($this->showBiography()) {
             <?php } ?>
             <?php if ($this->showLabels()) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
-            <?php } ?>
-            <?php if ($this->showPlaylistsTab()) { ?>
-            <li><a id="artist_playlists_link" href="#artist_playlists"><?php echo T_('Playlists'); ?></a></li>
             <?php } ?>
             <!-- Needed to avoid the 'only one' bug -->
             <li></li>
