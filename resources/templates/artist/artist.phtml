@@ -205,6 +205,14 @@ foreach ($this->getMultiObjectIds() as $key => $objectIds) {
             Ui::show_box_bottom(); ?>
         </div>
         <?php } ?>
+        <?php if ($this->showPlaylistsTab()) {
+            echo $this->raw(Ajax::observe('artist_playlists_link', 'click', Ajax::action('?page=index&action=artist_playlists&artist=' . $artistId, 'artist_playlists'))); ?>
+        <div id="artist_playlists" class="tab_content">
+            <?php Ui::show_box_top(T_('Playlists'), 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
         <?php echo $this->raw(Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artistId, 'top_tracks'))); ?>
         <div id="top_tracks" class="tab_content">
             <?php Ui::show_box_top('', 'info-box');
@@ -237,14 +245,6 @@ Ui::show_box_bottom(); ?>
             echo $this->raw(Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artistId, 'labels'))); ?>
         <div id="labels" class="tab_content">
             <?php Ui::show_box_top(T_('Labels'), 'info-box');
-            echo T_('Loading...');
-            Ui::show_box_bottom(); ?>
-        </div>
-        <?php } ?>
-        <?php if ($this->showPlaylistsTab()) {
-            echo $this->raw(Ajax::observe('artist_playlists_link', 'click', Ajax::action('?page=index&action=artist_playlists&artist=' . $artistId, 'artist_playlists'))); ?>
-        <div id="artist_playlists" class="tab_content">
-            <?php Ui::show_box_top(T_('Playlists'), 'info-box');
             echo T_('Loading...');
             Ui::show_box_bottom(); ?>
         </div>
