@@ -170,6 +170,9 @@ if ($this->showBiography()) {
             <?php if ($this->showLabels()) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
             <?php } ?>
+            <?php if ($this->showPlaylistsTab()) { ?>
+            <li><a id="artist_playlists_link" href="#artist_playlists"><?php echo T_('Playlists'); ?></a></li>
+            <?php } ?>
             <!-- Needed to avoid the 'only one' bug -->
             <li></li>
         </ul>
@@ -234,6 +237,14 @@ Ui::show_box_bottom(); ?>
             echo $this->raw(Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artistId, 'labels'))); ?>
         <div id="labels" class="tab_content">
             <?php Ui::show_box_top(T_('Labels'), 'info-box');
+            echo T_('Loading...');
+            Ui::show_box_bottom(); ?>
+        </div>
+        <?php } ?>
+        <?php if ($this->showPlaylistsTab()) {
+            echo $this->raw(Ajax::observe('artist_playlists_link', 'click', Ajax::action('?page=index&action=artist_playlists&artist=' . $artistId, 'artist_playlists'))); ?>
+        <div id="artist_playlists" class="tab_content">
+            <?php Ui::show_box_top(T_('Playlists'), 'info-box');
             echo T_('Loading...');
             Ui::show_box_bottom(); ?>
         </div>

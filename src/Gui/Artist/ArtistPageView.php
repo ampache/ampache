@@ -297,6 +297,14 @@ final class ArtistPageView extends AbstractView
             && Preference::get_by_user($this->currentUser->getId(), 'mb_overwrite_name');
     }
 
+    /**
+     * The tab lists the playlists holding a song credited to this artist, as song or album artist
+     */
+    public function showPlaylistsTab(): bool
+    {
+        return true;
+    }
+
     public function showPlayedTimes(): bool
     {
         return (bool) AmpConfig::get('show_played_times');

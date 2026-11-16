@@ -59,6 +59,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
@@ -70,6 +71,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private SlideshowInterface $slideshow,
         private AlbumRepositoryInterface $albumRepository,
         private LabelRepositoryInterface $labelRepository,
+        private PlaylistRepositoryInterface $playlistRepository,
         private SongRepositoryInterface $songRepository,
         private WantedRepositoryInterface $wantedRepository,
         private VideoRepositoryInterface $videoRepository,
@@ -110,6 +112,20 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $object_ids,
                     ['cel_artist']
                 )->render();
+                break;
+            case 'artist_playlists':
+                $artistId   = (int) $this->requestParser->getFromRequest('artist');
+                $object_ids = $this->playlistRepository->getIdsByArtist($artistId);
+
+                $browse = $this->browseFactory->create();
+                $browse->set_type('playlist');
+                $browse->set_simple_browse(false);
+                $browse->save_objects($object_ids);
+                $browse->store();
+
+                ob_start();
+                $browse->show_objects($object_ids);
+                $results['artist_playlists'] = ob_get_clean();
                 break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(

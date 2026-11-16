@@ -360,6 +360,30 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
     }
 
     /**
+     * Reads the ids of the playlists carrying a song credited to this artist, as song artist or album artist
+     *
+     * @return list<int>
+     */
+    public function getIdsByArtist(int $artistId): array
+    {
+        $result = $this->connection->query(
+            "SELECT DISTINCT `playlist_data`.`playlist` FROM `playlist_data` "
+            . "INNER JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' "
+            . "LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = ? "
+            . "LEFT JOIN `artist_map` AS `album_artist_map` ON `album_artist_map`.`object_id` = `song`.`album` AND `album_artist_map`.`object_type` = 'album' AND `album_artist_map`.`artist_id` = ? "
+            . "WHERE `artist_map`.`artist_id` IS NOT NULL OR `album_artist_map`.`artist_id` IS NOT NULL;",
+            [$artistId, $artistId]
+        );
+
+        $playlistIds = [];
+        while ($playlistId = $result->fetchColumn()) {
+            $playlistIds[] = (int) $playlistId;
+        }
+
+        return $playlistIds;
+    }
+
+    /**
      * Reads the playlists holding media of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>
