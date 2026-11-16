@@ -117,13 +117,6 @@ interface PlaylistRepositoryInterface extends PlaylistObjectRepositoryInterface
     public function findSearchNames(int $userId, bool $ownedOnly): array;
 
     /**
-     * Reads the ids of the playlists carrying a song credited to this artist, as song artist or album artist
-     *
-     * @return list<int>
-     */
-    public function getIdsByArtist(int $artistId): array;
-
-    /**
      * Reads the playlists holding media of one catalog, optionally only the ones with no original-size art
      *
      * @return list<int>

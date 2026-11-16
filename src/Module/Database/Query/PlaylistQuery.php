@@ -33,6 +33,7 @@ final class PlaylistQuery implements QueryInterface
 {
     public const array FILTERS = [
         'alpha_match',
+        'artist',
         'equal',
         'exact_match',
         'id',
@@ -147,6 +148,15 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'not_starts_with':
                 $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'artist':
+                $filter_sql = " `playlist`.`id` IN ("
+                    . "SELECT `playlist_data`.`playlist` FROM `playlist_data` "
+                    . "INNER JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' "
+                    . "LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`artist_id` = " . (int) $value . " "
+                    . "LEFT JOIN `artist_map` AS `album_artist_map` ON `album_artist_map`.`object_id` = `song`.`album` AND `album_artist_map`.`object_type` = 'album' AND `album_artist_map`.`artist_id` = " . (int) $value . " "
+                    . "WHERE `artist_map`.`artist_id` IS NOT NULL OR `album_artist_map`.`artist_id` IS NOT NULL"
+                    . ") AND ";
                 break;
             case 'playlist_open':
                 $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string) $value, 100);
