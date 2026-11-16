@@ -355,7 +355,7 @@ class Art extends database_object
         $web_path = AmpConfig::get_web_path();
         $use_auth = !self::isPublic();
 
-        $prettyPhoto = ($link === null);
+        $lightbox = ($link === null);
         if ($link === null) {
             $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
             if ($thumb_link) {
@@ -385,8 +385,8 @@ class Art extends database_object
         $name  = scrub_out($name);
         $hover = self::drawn_hover_title($name, !$has_db);
         echo '<a href="' . $link . '" title="' . $hover . '"';
-        if ($prettyPhoto) {
-            echo ' rel="prettyPhoto"';
+        if ($lightbox) {
+            echo ' data-lightbox';
         }
 
         echo ">";
@@ -433,7 +433,7 @@ class Art extends database_object
             echo "</div>";
         }
 
-        if ($prettyPhoto) {
+        if ($lightbox) {
             $user      = Core::get_global('user');
             $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var class-string<library_item> $className */
