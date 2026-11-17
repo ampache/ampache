@@ -471,6 +471,10 @@ msgid "Always show the rightbar"
 msgstr ""
 
 #: Ampache preference description
+msgid "Rotate the api key and stream token when the account password changes"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 
@@ -784,6 +788,10 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Security"
 msgstr ""
 
 #: Ampache preference subcategory
