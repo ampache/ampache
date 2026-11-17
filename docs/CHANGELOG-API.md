@@ -1,5 +1,18 @@
 # API CHANGELOG
 
+## API 8.5.0
+
+### Added (850000)
+
+* ALL
+  * `advanced_search`: song `other_user` rule gains operators `7` (has rated 4 stars or more), `8` (3 or more) and `9` (2 or more)
+  * Playlist browses (`playlists`, `cond`) accept an `artist` filter
+
+### Fixed (850000)
+
+* `download` (API8)
+  * A playlist or search the caller can't see could be downloaded
+
 ## API 8.4.0
 
 ### Added (840000)

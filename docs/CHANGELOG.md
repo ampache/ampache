@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## Ampache 8.4.1
+## Ampache 8.5.0
 
-### Added (8.4.1)
+### Added (8.5.0)
 
+* Translations 2026-11-18
 * Database 841001
   * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
 * Config version 104
@@ -11,20 +12,49 @@
   * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
   * New `art_min_width`, `art_max_width`, `art_min_height`, `art_max_height` keys, the preferred spelling of `album_art_*` now that the bounds apply to every art type; `album_art_*` still works
   * New `trusted_proxies` key listing reverse proxy IPs/CIDR ranges allowed to set `X-Forwarded-For`
+* Search
+  * Song `other_user` rule gains "has rated 4/3/2 stars or more" operators
+* Browse
+  * Artist pages gain a Playlists tab listing playlists that hold the artist's songs
+  * New `artist` filter on the playlist browse
+* The song license is read from an mp3's `WCOP` frame or `license` TXXX tag
 
-### Changed (8.4.1)
+### Changed (8.5.0)
 
 * Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
 * The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
+* Clicking art opens it full size in a native dialog; the unmaintained prettyPhoto library is gone
+* Graph date pickers use the browser's own date input; jquery-datetimepicker is gone
+* Bitrates are shown in kbps of 1000, not 1024, in the web UI, exports, DAAP and Subsonic
+* Pressing Enter in an edit dialog saves it instead of reloading the page
+* Last.fm similar song lookups send the track title as well as the artist
 * Subsonic
   * OpenSubsonic implementation audited against the published specification on 2026-11-13; the audited build is committed as `docs/openapi-opensubsonic.json`
   * Apply weighting to search result order
   * OpenSubsonic artist responses include the user's rating when available
   * OpenSubsonic artist indexes include `sortName` when a prefix is present
   * Advertise `songLyrics` version 2 for enhanced lyrics
+  * Folders use the cover of their album when they have one
 
-### Fixed (8.4.1)
+### Fixed (8.5.0)
 
+* A playlist or search the user can't see could be downloaded through the batch download page
+* Any user could delete, start or stop another user's broadcast
+* The installer saved a database password containing characters such as `&`, `$` or `\` differently from how it was typed
+* An infinite scroll list reopened at the last batch it loaded instead of the top
+* Searching song metadata wrapped the value in quotes, so text values never matched
+* LAN clients with `transcode` set to `always` were given a flac url for an mp3 stream
+* Artist pages queried MusicBrainz even when the MusicBrainz plugin wasn't installed
+* A catalog path with a trailing slash left every folder without a parent
+* Tag writer
+  * Custom metadata edited in Ampache was replaced by the file's old value
+  * Writing tags to an mp3 with no existing ID3v2 tags wrote broken values
+  * Ratings were written on a different scale from the one they are read back on, so a rating changed after a rescan
+  * Tag case changed the order tags were compared in, so an unchanged file showed as different
+* Subsonic
+  * Videos could not be streamed or downloaded
+  * An HTTP/2 client's lowercase `range` header was ignored, breaking seeking
+  * DSub stopped on a folder without a single artist; an empty artist info is returned instead
 * A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
 * IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic
