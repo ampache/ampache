@@ -137,24 +137,23 @@ $(document).ajaxError(function (event, jqXHR) {
     }
 });
 
-// The page currently rendered into #content, as path+search. Used to tell a real back/forward move
-// apart from a fragment-only one: the lightbox writes #prettyPhoto into the url, and going back over
-// that must not re-fetch the page we are already looking at (the old hashchange handler ignored it).
+// going back over a #anchor must not re-fetch the page already rendered into #content
 var loadedPage = window.location.pathname + window.location.search;
 
 $(function() {
 
     $("body").delegate("a", "click", function() {
+        // art opens full size over the page, not as a page of its own
+        if (this.hasAttribute("data-lightbox")) {
+            openLightbox(this.href, this.title);
+            return false;
+        }
+
         var link = $(this).attr("href");
         if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link.charAt(0) !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
-            if ($(this).attr("rel") !== "prettyPhoto") {
-                // Ajax load Ampache pages only
-                if (ampacheUrl(link)) {
-                    navigateToUrl(appendDeleteBurl(link));
-                    return false;
-                }
-            } else {
-                window.location.hash = $(this).attr("rel");
+            // Ajax load Ampache pages only
+            if (ampacheUrl(link)) {
+                navigateToUrl(appendDeleteBurl(link));
                 return false;
             }
         }
@@ -223,7 +222,7 @@ $(function() {
     // Legacy hash bookmarks (/index.php#browse.php?action=album) still resolve, and upgrade
     // themselves to the real url. Same single extra fetch these bookmarks have always cost.
     var legacy = window.location.hash.substring(1);
-    if (legacy && legacy.indexOf("prettyPhoto") !== 0 && legacy.indexOf(".php") > -1) {
+    if (legacy && legacy.indexOf(".php") > -1) {
         var legacyTarget = ampacheUrl(jsWebPath + "/" + legacy);
         if (legacyTarget) {
             history.replaceState(null, "", legacyTarget.href);
@@ -385,10 +384,6 @@ export function loadContentData(data, status, jqXHR)
         $pageWrap.animate({
             height: $mainContent.height() + "px"
         });
-    });
-    $("a[rel^='prettyPhoto']").prettyPhoto({
-        social_tools: false,
-        deeplinking: false
     });
     initTabs();
     scrollToHash();
