@@ -177,7 +177,8 @@ textarea {
 input[type=password],
 input[type=text],
 input[type=url],
-input[type=number] {
+input[type=number],
+input[type=datetime-local] {
     line-height: normal;
     height: 23px;
 }
@@ -192,6 +193,7 @@ input[type=password],
 input[type=text],
 input[type=url],
 input[type=number],
+input[type=datetime-local],
 select,
 textarea {
     padding: 4px 6px;
