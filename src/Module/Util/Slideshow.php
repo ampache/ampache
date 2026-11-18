@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
@@ -89,7 +90,7 @@ final readonly class Slideshow implements SlideshowInterface
     {
         $images = [];
 
-        if (Art::has_db($song->id, 'song')) {
+        if (AmpConfig::get_bool('show_song_art') && Art::has_db($song->id, 'song')) {
             $url = Art::url($song->id, 'song');
             if ($url !== null) {
                 $images[] = ['title' => $song->get_parent_fullname(), 'url' => $url];
