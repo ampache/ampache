@@ -1884,7 +1884,7 @@ class Catalog_local extends Catalog
         // A sidecar lyrics file follows its song; losing it silently would be worse than failing to move it
         $old_lrc = VaInfo::lrc_sidecar_path($media->file);
         if ($old_lrc !== null) {
-            $new_lrc = pathinfo($new_file, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($new_file, PATHINFO_FILENAME) . '.' . pathinfo($old_lrc, PATHINFO_EXTENSION);
+            $new_lrc = $directory . DIRECTORY_SEPARATOR . $info['filename'] . '.' . pathinfo($old_lrc, PATHINFO_EXTENSION);
             if (!file_exists($new_lrc) && copy($old_lrc, $new_lrc)) {
                 unlink($old_lrc);
             }

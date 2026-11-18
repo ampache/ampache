@@ -91,16 +91,16 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
 
         $stored = $song->get_lyrics(true);
 
-        // an editor chooses what is stored, so they see every plugin's answer and nothing is saved behind their back
+        // plugin lookups are a deliberate action (like Find Art), never fired just because nothing is stored yet
         $candidates = [];
         $refreshed  = $mayEdit && $this->requestParser->getFromRequest('refresh') === '1';
-        if ($mayEdit && ($stored === [] || $refreshed)) {
+        if ($mayEdit && $refreshed) {
             $candidates = $song->get_lyrics_candidates($user);
         }
 
         $lyrics = $stored;
-        if ($lyrics === []) {
-            $lyrics = ($mayEdit) ? (current($candidates) ?: []) : $song->get_lyrics();
+        if ($lyrics === [] && $refreshed) {
+            $lyrics = current($candidates) ?: [];
         }
 
         $this->ui->showHeader();

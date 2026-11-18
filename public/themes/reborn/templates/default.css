@@ -1929,7 +1929,42 @@ div.box.box_rules {
 }
 
 .lyrics_candidate {
-    margin-bottom: 1em;
+    margin-bottom: 0.75em;
+    padding: 8px 12px;
+    background-color: var(--amp-surface);
+    border: 1px solid var(--amp-border);
+    border-radius: 8px;
+}
+
+.lyrics_candidate_header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lyrics_candidate_plugin {
+    flex: 1 1 auto;
+}
+
+.lyrics_candidate_link {
+    color: var(--amp-muted);
+}
+
+.lyrics_candidate details {
+    margin-top: 6px;
+}
+
+.lyrics_candidate summary {
+    color: var(--amp-muted);
+    cursor: pointer;
+}
+
+.lyrics_candidate_text {
+    margin-top: 6px;
+    padding-top: 6px;
+    max-height: 40vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--amp-border);
 }
 
 #recent_more {
