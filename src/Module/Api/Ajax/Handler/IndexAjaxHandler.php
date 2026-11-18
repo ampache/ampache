@@ -541,33 +541,16 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['sidebar-content']       = $this->sidebarViewFactory->createSidebarView($button)->render();
                 break;
             case 'slideshow':
-                ob_start();
                 $images = $this->slideshow->getCurrentSlideshow($user);
-                if ($images !== []) {
-                    $fsname = 'fslider_' . time();
-                    echo "<div id='" . $fsname . "'>";
-                    foreach ($images as $image) {
-                        echo "<img src='" . $image['url'] . "' alt= '' onclick='update_action();' />";
-                    }
+                shuffle($images);
 
-                    echo "</div>";
-                    $results['fslider'] = ob_get_clean();
-                    ob_start();
-                    echo '<script>';
-                    echo "$('#" . $fsname . "').rhinoslider({
-                    showTime: 15000,
-                    effectTime: 2000,
-                    randomOrder: true,
-                    controlsPlayPause: false,
-                    autoPlay: true,
-                    showBullets: 'never',
-                    showControls: 'always',
-                    controlsMousewheel: false,
-            });";
-                    echo "</script>";
+                ob_start();
+                foreach ($images as $key => $image) {
+                    // the first one shows at once, slideshow.js fades through the rest
+                    echo '<img src="' . scrub_out($image['url']) . '" alt=""' . ($key === 0 ? ' class="active"' : '') . '>';
                 }
 
-                $results['fslider_script'] = ob_get_clean();
+                $results['fslider'] = ob_get_clean();
                 break;
             case 'albums':
                 $label_id = (int) ($_REQUEST['label'] ?? 0);

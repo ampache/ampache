@@ -24,7 +24,6 @@ declare(strict_types=1);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Preference;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
@@ -45,9 +44,6 @@ $web_path = AmpConfig::get_web_path();
     var jsAmpConfigSlideshowTime = "<?php echo (int) (AmpConfig::get('slideshow_time', 0)); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo AmpConfig::get_bool('sidebar_hide_switcher'); ?>";
     var jsAmpConfigSongPageTitle = "<?php echo AmpConfig::get_bool('song_page_title'); ?>";
-
-    // Preferences
-    var jsPrefExistsFlickrApiKey = "<?php echo (Preference::exists('flickr_api_key') > 0) ? '1' : ''; ?>";
 
     // Misc
     var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
