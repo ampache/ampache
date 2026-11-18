@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\ImageRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,6 +39,7 @@ class UserTest extends TestCase
 {
     private ContainerInterface&MockObject $dic;
     private ImageRepositoryInterface&MockObject $imageRepository;
+    private UserKeyGeneratorInterface&MockObject $userKeyGenerator;
     private UserRepositoryInterface&MockObject $userRepository;
 
     /**
@@ -104,6 +106,35 @@ class UserTest extends TestCase
         $user->revokeSessions();
     }
 
+    public function testUpdatePasswordDoesNotRotateKeysByDefault(): void
+    {
+        $user           = new User();
+        $user->username = 'some-user';
+
+        $this->userKeyGenerator->expects(static::never())
+            ->method('generateApikey');
+        $this->userKeyGenerator->expects(static::never())
+            ->method('generateStreamToken');
+
+        $user->update_password('some-password');
+    }
+
+    public function testUpdatePasswordDoesNotRotateKeysOnALoginTimeRehash(): void
+    {
+        // a login-time rehash is not a password change; rotating keys on every login would make them useless
+        AmpConfig::set('rotate_apikey_on_password_change', true, true);
+
+        $user           = new User();
+        $user->username = 'some-user';
+
+        $this->userKeyGenerator->expects(static::never())
+            ->method('generateApikey');
+        $this->userKeyGenerator->expects(static::never())
+            ->method('generateStreamToken');
+
+        $user->update_password('some-password', null, false);
+    }
+
     public function testUpdatePasswordKeepsSessionsWhenTheSecretDidNotChange(): void
     {
         // a login-time rehash stores the same secret, so it must not log the caller out
@@ -116,21 +147,45 @@ class UserTest extends TestCase
         $user->update_password('some-password', null, false);
     }
 
+    public function testUpdatePasswordRotatesKeysWhenEnabled(): void
+    {
+        AmpConfig::set('rotate_apikey_on_password_change', true, true);
+
+        $user           = new User();
+        $user->username = 'some-user';
+
+        $this->userKeyGenerator->expects(static::once())
+            ->method('generateApikey')
+            ->with($user);
+        $this->userKeyGenerator->expects(static::once())
+            ->method('generateStreamToken')
+            ->with($user);
+
+        $user->update_password('some-password');
+    }
+
     protected function setUp(): void
     {
-        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
-        $this->imageRepository = $this->createMock(ImageRepositoryInterface::class);
-        $this->dic             = $this->createMock(ContainerInterface::class);
+        $this->userRepository   = $this->createMock(UserRepositoryInterface::class);
+        $this->imageRepository  = $this->createMock(ImageRepositoryInterface::class);
+        $this->userKeyGenerator = $this->createMock(UserKeyGeneratorInterface::class);
+        $this->dic              = $this->createMock(ContainerInterface::class);
 
         $this->dic->method('get')
             ->willReturnMap([
                 [UserRepositoryInterface::class, $this->userRepository],
                 [ImageRepositoryInterface::class, $this->imageRepository],
+                [UserKeyGeneratorInterface::class, $this->userKeyGenerator],
                 [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
             ]);
 
         // the model reaches its repository through the `global $dic` bridge; phpunit.xml sets
         // backupGlobals so the real container is restored after every test
         $GLOBALS['dic'] = $this->dic;
+    }
+
+    protected function tearDown(): void
+    {
+        AmpConfig::set('rotate_apikey_on_password_change', false, true);
     }
 }

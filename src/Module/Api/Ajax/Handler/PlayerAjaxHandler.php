@@ -30,6 +30,7 @@ use Ampache\Gui\Broadcast\BroadcastActionView;
 use Ampache\Gui\Broadcast\BroadcastListenersView;
 use Ampache\Gui\Broadcast\BroadcastsDialogView;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
@@ -81,15 +82,22 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $albumId    = (int) $media->album;
                         $titleText  = scrub_out((string) $media->get_fullname());
                         $artistText = scrub_out(Artist::get_fullname_by_id($artistId));
-                        $albumText  = scrub_out((string) $media->get_album_fullname());
+                        $grouped    = AmpConfig::get_bool('album_group');
+                        $diskId     = (int) $media->album_disk;
+                        $albumText  = scrub_out($grouped ? (string) $media->get_album_fullname() : $media->get_album_disk_fullname());
+                        $albumLink  = ($grouped)
+                            ? ($albumId > 0 ? $web_path . '/albums.php?action=show&album=' . $albumId : '')
+                            : ($diskId > 0 ? $web_path . '/albums.php?action=show_disk&album_disk=' . $diskId : '');
 
                         // per-song action row (album button + rating/flag placeholder) mirroring the regular
                         // playlist flow in playback/web_player.phtml, which random/democratic streams skip
                         $showAlbum = T_('Show Album');
-                        $actions   = ($albumId > 0)
-                            ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
+                        $actions   = ($albumLink !== '')
+                            ? '<a href="javascript:NavigateTo(\'' . $albumLink . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
                             : '';
                         $actions .= "<div id='action_buttons_" . $current['object_id'] . '_' . $current['object_type'] . "'></div>";
+
+                        $media->fill_ext_info(Song::PARTIAL_FILTER);
 
                         $data = [
                             'found' => true,
@@ -101,14 +109,13 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             'artist' => ($artistId > 0)
                                 ? '<a href="javascript:NavigateTo(\'' . $web_path . '/artists.php?action=show&artist=' . $artistId . '\')">' . $artistText . '</a>'
                                 : $artistText,
-                            'album' => ($albumId > 0)
-                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')">' . $albumText . '</a>'
+                            'album' => ($albumLink !== '')
+                                ? '<a href="javascript:NavigateTo(\'' . $albumLink . '\')">' . $albumText . '</a>'
                                 : $albumText,
                             'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
-                            'lyrics' => (AmpConfig::get_bool('show_lyrics'))
-                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_lyrics&song_id=' . $media->id . '\')" title="' . T_('Show Lyrics') . '">' . Ui::get_material_symbol('lyrics', T_('Show Lyrics')) . '</a> |'
-                                : '',
+                            // the player greys its lyrics button for a song without stored lyrics
+                            'has_lyrics' => $media->lyrics_source !== null,
                         ];
                     }
                 }
@@ -231,7 +238,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $broadcast = new Broadcast((int) $broadcast_id);
-                if ($broadcast->isNew() === false) {
+                if (
+                    $broadcast->isNew() === false
+                    && ($broadcast->get_user_owner() === $user->getId() || $user->has_access(AccessLevelEnum::CONTENT_MANAGER))
+                ) {
                     $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
                     $results['broadcast']                = new BroadcastActionView((int) $broadcast_id)->render() . "<script>startBroadcast('" . $key . "');</script>";
@@ -242,7 +252,10 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
                 $broadcast    = new Broadcast((int) $broadcast_id);
-                if ($broadcast->isNew() === false) {
+                if (
+                    $broadcast->isNew() === false
+                    && ($broadcast->get_user_owner() === $user->getId() || $user->has_access(AccessLevelEnum::CONTENT_MANAGER))
+                ) {
                     $broadcast->update_state(0);
                     $results['broadcast']                = new BroadcastActionView()->render() . '<script>stopBroadcast();</script>';
                     $results['broadcast_listeners_wrap'] = '';

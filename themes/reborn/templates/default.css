@@ -177,7 +177,8 @@ textarea {
 input[type=password],
 input[type=text],
 input[type=url],
-input[type=number] {
+input[type=number],
+input[type=datetime-local] {
     line-height: normal;
     height: 23px;
 }
@@ -192,6 +193,7 @@ input[type=password],
 input[type=text],
 input[type=url],
 input[type=number],
+input[type=datetime-local],
 select,
 textarea {
     padding: 4px 6px;
@@ -1838,6 +1840,95 @@ div.box.box_rules {
 
 #now_playing .similars {
     margin-right: 10px;
+}
+
+/* timed lyrics scroll inside their own box, so following the song never moves the page */
+.lyrics_synced {
+    position: relative;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.lyrics_synced p {
+    margin: 0.3em 0;
+    color: var(--amp-muted);
+}
+
+.lyrics_synced p.lyrics_current {
+    color: var(--amp-accent);
+    font-weight: bold;
+}
+
+/* the web player's lyrics panel floats where a video would, above the bar and the expanded playlist */
+#lyrics_panel {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100vw - 32px));
+    box-sizing: border-box;
+    padding: 8px 16px 16px;
+    background-color: var(--amp-surface);
+    border: 1px solid var(--amp-border);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    z-index: 10001;
+}
+
+#lyrics_panel .lyrics_panel_bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#lyrics_panel .lyrics_panel_bar .material-symbol {
+    height: 20px;
+    width: 20px;
+}
+
+#lyrics_panel .lyrics_lines {
+    position: relative;
+    max-height: 40vh;
+    overflow-y: auto;
+    font-size: 16px;
+}
+
+#lyrics_panel:fullscreen {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 0;
+    border-radius: 0;
+}
+
+#lyrics_panel:fullscreen #lyrics_panel_body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* room above and below, so the first and last lines can still scroll to the middle of the screen */
+#lyrics_panel:fullscreen .lyrics_lines {
+    flex: 1;
+    max-height: none;
+    padding: 40vh 0;
+    font-size: 32px;
+}
+
+#lyrics_panel:fullscreen .lyrics_lines p {
+    margin: 0.4em 0;
+}
+
+.lyrics_source {
+    margin-top: 1em;
+    color: var(--amp-muted);
+    font-style: italic;
+}
+
+.lyrics_candidate {
+    margin-bottom: 1em;
 }
 
 #recent_more {
@@ -3566,7 +3657,11 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     white-space: nowrap;
 }
 
-.object-page #information_actions li .material-symbol {
+/* every icon in an action, not only a material symbol: an svg with no size of its own collapses with the label text */
+.object-page #information_actions li a > svg,
+.object-page #information_actions li a > img,
+.object-page #information_actions li label > svg {
+    flex: none;
     height: 18px;
     width: 18px;
 }
@@ -4531,6 +4626,13 @@ input[type=submit]:focus:active {
     color: var(--amp-text);
 }
 
+/* a textarea fills its column; dragging the corner still makes it taller */
+.edit_dialog_content textarea {
+    box-sizing: border-box;
+    resize: vertical;
+    width: 100%;
+}
+
 .edit_dialog_content input:focus,
 .edit_dialog_content select:focus {
     color: #555;
@@ -4896,9 +4998,6 @@ div.playing_album a {
     color: var(--amp-text);
 }
 
-div.playing_lyrics a {
-    color: var(--amp-accent);
-}
 
 div.jp-interface {
     background-color: var(--amp-webplayer-bg);

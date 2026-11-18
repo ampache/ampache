@@ -25,15 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class SongTest extends MockeryTestCase
 {
@@ -91,6 +95,18 @@ class SongTest extends MockeryTestCase
     }
 
     /**
+     * @return iterable<string, array{int, ?string, ?LyricsSourceEnum}>
+     */
+    public static function lyricsSourceProvider(): iterable
+    {
+        yield 'read from the file' => [4495101, 'file', LyricsSourceEnum::FILE];
+        yield 'found by a plugin' => [4495102, 'plugin', LyricsSourceEnum::PLUGIN];
+        yield 'set by a user' => [4495103, 'user', LyricsSourceEnum::USER];
+        yield 'no lyrics' => [4495104, null, null];
+        yield 'a value the enum does not know' => [4495105, 'bogus', null];
+    }
+
+    /**
      * A player asks for bpm first, and that read must not be mistaken for the whole row afterwards
      */
     public function testAPartialReadDoesNotBlockTheWholeRowLater(): void
@@ -109,6 +125,19 @@ class SongTest extends MockeryTestCase
         $song->fill_ext_info(Song::PARTIAL_FILTER);
 
         self::assertSame(['text' => 'Hey Joe'], $song->get_lyrics(true));
+    }
+
+    public function testCompareSongInformationClearsFileLyricsTheFileNoLongerHas(): void
+    {
+        $song                = new Song();
+        $song->title         = 'Grapevine';
+        $song->lyrics        = 'From the tag';
+        $song->lyrics_source = LyricsSourceEnum::FILE;
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+
+        self::assertTrue(Song::compare_song_information($song, $new_song)['change']);
     }
 
     /**
@@ -134,6 +163,39 @@ class SongTest extends MockeryTestCase
         $this->assertSame([], $result['element']);
     }
 
+    /** A genre stored in another case sorted elsewhere in the list, so every scan reported a change (#4166) */
+    public function testCompareSongInformationIgnoresTheCaseOfAGenre(): void
+    {
+        $song        = new Song();
+        $song->title = 'Grapevine';
+        $song->time  = 195;
+        $song->tags  = $this->tagRows(['Rock', 'Smooth Jazz', 'Soft Rock', 'jazz']);
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+        $new_song->time  = 195;
+        $new_song->tags  = $this->tagRows(['Jazz', 'Rock', 'Smooth Jazz', 'Soft Rock']);
+
+        $result = Song::compare_song_information($song, $new_song);
+
+        $this->assertFalse($result['change']);
+        $this->assertSame([], $result['element']);
+    }
+
+    public function testCompareSongInformationIgnoresTheFileForUserSetLyrics(): void
+    {
+        $song                = new Song();
+        $song->title         = 'Grapevine';
+        $song->lyrics        = 'Typed by hand';
+        $song->lyrics_source = LyricsSourceEnum::USER;
+
+        $new_song         = new Song();
+        $new_song->title  = 'Grapevine';
+        $new_song->lyrics = 'From the tag';
+
+        self::assertFalse(Song::compare_song_information($song, $new_song)['change']);
+    }
+
     public function testCompareSongInformationIgnoresWhitespaceOnlyStringChanges(): void
     {
         $song          = new Song();
@@ -150,6 +212,36 @@ class SongTest extends MockeryTestCase
 
         $this->assertFalse($result['change']);
         $this->assertSame([], $result['element']);
+    }
+
+    public function testCompareSongInformationKeepsAPluginResultWhenTheFileHasNone(): void
+    {
+        $song                = new Song();
+        $song->title         = 'Grapevine';
+        $song->lyrics        = 'From a plugin';
+        $song->lyrics_source = LyricsSourceEnum::PLUGIN;
+
+        $new_song        = new Song();
+        $new_song->title = 'Grapevine';
+
+        self::assertFalse(Song::compare_song_information($song, $new_song)['change']);
+    }
+
+    public function testCompareSongInformationLetsTheFileReplaceAPluginResult(): void
+    {
+        $song                = new Song();
+        $song->title         = 'Grapevine';
+        $song->lyrics        = 'From a plugin';
+        $song->lyrics_source = LyricsSourceEnum::PLUGIN;
+
+        $new_song         = new Song();
+        $new_song->title  = 'Grapevine';
+        $new_song->lyrics = 'From the tag';
+
+        $result = Song::compare_song_information($song, $new_song);
+
+        self::assertTrue($result['change']);
+        self::assertArrayHasKey('lyrics', $result['element']);
     }
 
     /**
@@ -266,6 +358,60 @@ class SongTest extends MockeryTestCase
         self::assertSame(['text' => '[00:09.12] Hey Joe'], $lyrics);
     }
 
+    /** A lan user with transcoding set to always got a flac url for an mp3 stream (#3596) */
+    public function testPlayUrlKeepsTheTranscodeForALanUserWhenTranscodingIsAlways(): void
+    {
+        $config = [
+            'cache_target' => '',
+            'downsample_remote' => true,
+            'encode_player_api_target' => null,
+            'encode_target' => 'mp3',
+            'encode_target_flac' => null,
+            'require_session' => false,
+            'stream_beautiful_url' => false,
+            'transcode' => 'always',
+            'use_auth' => false,
+            'web_path' => 'http://ampache.test',
+        ];
+        $previous = [];
+        foreach ($config as $key => $value) {
+            $previous[$key] = AmpConfig::get($key);
+            AmpConfig::set($key, $value, true);
+        }
+
+        unset($GLOBALS['transcode']);
+
+        $networkChecker = $this->mock(NetworkCheckerInterface::class);
+        $networkChecker->shouldReceive('check')
+            ->with(AccessTypeEnum::NETWORK, -1, AccessLevelEnum::DEFAULT)
+            ->andReturnTrue();
+
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(NetworkCheckerInterface::class)->andReturn($networkChecker);
+        $dic->shouldReceive('get')->with(LoggerInterface::class)->andReturn($this->mock(LoggerInterface::class)->shouldIgnoreMissing());
+        $GLOBALS['dic'] = $dic;
+
+        $song          = new Song();
+        $song->id      = 3596;
+        $song->title   = 'Grapevine';
+        $song->type    = 'flac';
+        $song->bitrate = 900000;
+        new ReflectionProperty(Song::class, 'artist_full_name')->setValue($song, 'Artist');
+
+        try {
+            $url = $song->play_url('', 'api');
+        } finally {
+            foreach ($previous as $key => $value) {
+                AmpConfig::set($key, $value, true);
+            }
+
+            unset($GLOBALS['transcode']);
+        }
+
+        self::assertStringContainsString('&transcode_to=mp3', $url);
+        self::assertStringEndsWith('.mp3', $url);
+    }
+
     public function testRunCustomPlayActionIgnoresAnIndexOutsideTheActionList(): void
     {
         $song = new Song();
@@ -313,6 +459,65 @@ class SongTest extends MockeryTestCase
         self::assertSame(120.0, $song->bpm);
     }
 
+    /**
+     * The player's has-lyrics flag comes from the partial read, which never loads the lyrics themselves.
+     */
+    public function testThePartialReadCarriesTheLyricsSource(): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getPartialDataRow')
+            ->with(4495106)
+            ->once()
+            ->andReturn(['lyrics_source' => 'file', 'bpm' => 120]);
+
+        $song = $this->songWithRepository(4495106, $songRepository);
+        $song->fill_ext_info(Song::PARTIAL_FILTER);
+
+        self::assertSame(LyricsSourceEnum::FILE, $song->lyrics_source);
+        self::assertNull($song->lyrics);
+    }
+
+    /**
+     * The stored `lyrics_source` must reach the song as its enum, or the rescan and the player misread who set the lyrics.
+     */
+    #[DataProvider('lyricsSourceProvider')]
+    public function testTheStoredLyricsSourceReachesTheSong(int $songId, ?string $stored, ?LyricsSourceEnum $expected): void
+    {
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('getDataRow')
+            ->with($songId)
+            ->once()
+            ->andReturn(['lyrics' => ($stored === null) ? null : 'Some lyrics', 'lyrics_source' => $stored]);
+
+        $song = $this->songWithRepository($songId, $songRepository);
+        $song->fill_ext_info();
+
+        self::assertSame($expected, $song->lyrics_source);
+    }
+
+    public function testUpdateClearsBlankLyricsToNullWithoutWritingTags(): void
+    {
+        $song         = new Song();
+        $song->id     = 123;
+        $song->lyrics = 'Old lyrics';
+
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldReceive('setLyrics')->once()->with(123, null, LyricsSourceEnum::USER)->andReturnTrue();
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->shouldReceive('check')->andReturnTrue();
+        $songTagWriter = $this->mock(SongTagWriterInterface::class);
+        $songTagWriter->shouldNotReceive('write');
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+        $dic->shouldReceive('get')->with(PrivilegeCheckerInterface::class)->andReturn($privilegeChecker);
+        $dic->shouldReceive('get')->with(SongTagWriterInterface::class)->andReturn($songTagWriter);
+        $GLOBALS['dic'] = $dic;
+
+        $song->update(['lyrics' => "  \r\n"]);
+
+        self::assertNull($song->lyrics);
+    }
+
     public function testUpdateDoesNotWriteTagsForANonTagField(): void
     {
         $song          = new Song();
@@ -353,6 +558,23 @@ class SongTest extends MockeryTestCase
         Song::update_enabled(true, 666);
 
         unset($GLOBALS['user']);
+    }
+
+    public function testUpdateIgnoresLyricsThatDifferOnlyInLineEndings(): void
+    {
+        $song         = new Song();
+        $song->id     = 123;
+        $song->lyrics = "Line one\nLine two";
+
+        $songRepository = $this->mock(SongRepositoryInterface::class);
+        $songRepository->shouldNotReceive('setDataField');
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(SongRepositoryInterface::class)->andReturn($songRepository);
+        $GLOBALS['dic'] = $dic;
+
+        $song->update(['lyrics' => "Line one\r\nLine two"]);
+
+        self::assertSame("Line one\nLine two", $song->lyrics);
     }
 
     public function testUpdateSkipsTheTagWriteWhenNothingActuallyChanged(): void

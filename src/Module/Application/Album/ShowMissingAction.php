@@ -158,7 +158,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
 
         if ($image_url !== null) {
             printf(
-                '<div class="item_art"><a href="%1$s" rel="prettyPhoto"><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
+                '<div class="item_art"><a href="%1$s" data-lightbox><img src="%1$s" alt="%2$s" height="128" width="128" /></a></div>',
                 $image_url,
                 scrub_out('[' . $walbum->get_parent_fullname() . '] ' . $walbum->name)
             );

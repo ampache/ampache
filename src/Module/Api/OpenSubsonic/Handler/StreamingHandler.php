@@ -34,7 +34,9 @@ use Ampache\Module\Api\OpenSubsonic_Xml_Data;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -49,13 +51,14 @@ final class StreamingHandler implements StreamingHandlerInterface
         private readonly OpenSubsonicResponseHandlerInterface $responseHandler,
         private readonly OpenSubsonic_Json_Data $openSubsonicJsonData,
         private readonly OpenSubsonic_Xml_Data $openSubsonicXmlData,
+        private readonly StreamProxyInterface $streamProxy,
     ) {}
 
     /**
      * download
      *
      * Downloads a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/download/
+     * https://opensubsonic.github.io/docs/endpoints/download/
      * @param array<string, mixed> $input
      */
     public function download(array $input, User $user): void
@@ -66,7 +69,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -82,7 +85,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getAvatar
      *
      * Returns the avatar (personal image) for a user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
+     * https://opensubsonic.github.io/docs/endpoints/getavatar/
      * @param array<string, mixed> $input
      */
     public function getavatar(array $input, User $user): void
@@ -119,7 +122,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getCaptions
      *
      * Returns captions (subtitles) for a video.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
+     * https://opensubsonic.github.io/docs/endpoints/getcaptions/
      * @param array<string, mixed> $input
      */
     public function getcaptions(array $input, User $user): void
@@ -173,7 +176,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getCoverArt
      *
      * Returns a cover art image.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
+     * https://opensubsonic.github.io/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
      */
     public function getcoverart(array $input, User $user): void
@@ -208,6 +211,18 @@ final class StreamingHandler implements StreamingHandlerInterface
             }
         } elseif ($object_type == 'artist' || $object_type == 'album' || $object_type == 'podcast' || $object_type == 'playlist') {
             $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'folder') {
+            if (Art::has_db($object_id, 'folder')) {
+                $art = new Art($object_id, 'folder');
+            } else {
+                // a folder browse lists albums as folders, so one without art of its own shows the album of the first track below it
+                $folder = new Folder($object_id);
+                $medias = ($folder->isNew()) ? [] : $folder->get_medias('song');
+                if ($medias !== []) {
+                    $song = new Song($medias[0]['object_id']);
+                    $art  = new Art($song->album, 'album');
+                }
+            }
         } elseif ($object_type == 'search') {
             $playlist  = new Search($object_id, 'song', $user);
             $listitems = $playlist->get_items();
@@ -256,7 +271,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getLyrics
      *
      * Searches for and returns lyrics for a given song.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
+     * https://opensubsonic.github.io/docs/endpoints/getlyrics/
      * @param array<string, mixed> $input
      */
     public function getlyrics(array $input, User $user): void
@@ -310,7 +325,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * getLyricsBySongId
      *
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
+     * https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
      */
     public function getlyricsbysongid(array $input, User $user): void
@@ -349,7 +364,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      *
      * OpenSubsonic extension `transcoding`. Reports whether a client can play a media item as it stands, and what it
      * would be given instead. POST only, because the client capabilities arrive as a JSON body.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodedecision/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodedecision/
      * @param array<string, mixed> $input
      */
     public function getTranscodeDecision(array $input, User $user): void
@@ -390,7 +405,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      *
      * OpenSubsonic extension `transcoding`. Streams a media item using the settings getTranscodeDecision resolved,
      * carried in the opaque `transcodeParams` token.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodestream/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodestream/
      * @param array<string, mixed> $input
      */
     public function getTranscodeStream(array $input, User $user): void
@@ -441,7 +456,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * hls
      *
      * Creates an HLS (HTTP Live Streaming) playlist used for streaming video or audio.
-     * https://opensubsonic.netlify.app/docs/endpoints/hls/
+     * https://opensubsonic.github.io/docs/endpoints/hls/
      * @param array<string, mixed> $input
      */
     public function hls(array $input, User $user): void
@@ -494,7 +509,7 @@ final class StreamingHandler implements StreamingHandlerInterface
      * stream
      *
      * Streams a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/stream/
+     * https://opensubsonic.github.io/docs/endpoints/stream/
      * @param array<string, mixed> $input
      */
     public function stream(array $input, User $user): void
@@ -505,7 +520,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -531,7 +546,7 @@ final class StreamingHandler implements StreamingHandlerInterface
             $params .= '&frame=' . $timeOffset;
         }
 
-        // No scrobble for streams using open subsonic https://opensubsonic.netlify.app/docs/endpoints/stream/
+        // No scrobble for streams using open subsonic https://opensubsonic.github.io/docs/endpoints/stream/
         $params .= '&cache=1';
 
         $this->follow_stream($object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
@@ -548,15 +563,6 @@ final class StreamingHandler implements StreamingHandlerInterface
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
-            $headers    = apache_request_headers();
-            $reqheaders = [];
-            if (isset($headers['User-Agent'])) {
-                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
-            }
-            if (isset($headers['Range'])) {
-                $reqheaders[] = "Range: " . $headers['Range'];
-            }
-            $reqheaders[] = "X-Forwarded-For: " . Core::get_user_ip();
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
@@ -565,7 +571,7 @@ final class StreamingHandler implements StreamingHandlerInterface
                     $curl,
                     [
                         CURLOPT_FAILONERROR => true,
-                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HTTPHEADER => $this->streamProxy->getRequestHeaders(),
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,

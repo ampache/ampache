@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
-use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\Config\RectorConfig;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
@@ -25,7 +24,6 @@ return RectorConfig::configure()
     ->withPhpSets(php85: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true)
     ->withSkip([
-        FlipTypeControlToUseExclusiveTypeRector::class,
         NewlineBetweenClassLikeStmtsRector::class,
         NullCoalescingOperatorRector::class,
         __DIR__ . '/src/Module/Api',

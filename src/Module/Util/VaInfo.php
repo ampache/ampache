@@ -115,6 +115,9 @@ final class VaInfo implements VaInfoInterface
 
     private const string ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
 
+    // a lyrics file this large is not a lyrics file
+    private const int LRC_MAX_BYTES = 524288;
+
     private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
     /**
@@ -256,6 +259,19 @@ final class VaInfo implements VaInfoInterface
     public static function canWriteTags(string $filename): bool
     {
         return array_key_exists(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::TAG_FORMATS);
+    }
+
+    /**
+     * Lyrics text as plain lines: `<br>` becomes a newline and markup is dropped, but enhanced LRC word cues are kept.
+     */
+    public static function clean_lyrics(string $lyrics): ?string
+    {
+        $text = str_replace(["\r\n", "\r"], "\n", $lyrics);
+        $text = (string) preg_replace('/<br\s*\/?>\n?/i', "\n", $text);
+        // only a tag that starts with a letter is markup; <00:12.34> is a word timing
+        $text = trim((string) preg_replace('/<\/?[a-z][^>]*>/i', '', $text));
+
+        return ($text === '') ? null : $text;
     }
 
     /**
@@ -420,7 +436,7 @@ final class VaInfo implements VaInfoInterface
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string) $tags['language']) : $info['language'];
             $info['license']  = (!$info['license'] && array_key_exists('license', $tags)) ? trim((string) $tags['license']) : $info['license'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string) $tags['comment']) : $info['comment'];
-            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
+            $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? self::clean_lyrics($tags['lyrics']) : $info['lyrics'];
 
             // extended checks to make sure "0" makes it through, which would otherwise eval to false
             $info['replaygain_track_gain'] = (!$info['replaygain_track_gain'] && array_key_exists('replaygain_track_gain', $tags) && !is_null($tags['replaygain_track_gain'])) ? (float) $tags['replaygain_track_gain'] : $info['replaygain_track_gain'];
@@ -460,6 +476,12 @@ final class VaInfo implements VaInfoInterface
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
         $size = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string) $filename));
         $info['size'] ??= $size;
+
+        // synced lyrics win: embedded timed lyrics, then a sidecar .lrc, then embedded plain lyrics
+        $embedded_synced = is_string($info['lyrics']) && preg_match('/^\[\d{2}:\d{2}[.:]\d{2}\]/m', $info['lyrics']) === 1;
+        if ($filename !== null && !$embedded_synced) {
+            $info['lyrics'] = self::read_lrc_sidecar($filename) ?? $info['lyrics'];
+        }
 
         return $info;
     }
@@ -540,6 +562,46 @@ final class VaInfo implements VaInfoInterface
         //debug_event(self::class, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
 
         return $returned_keys;
+    }
+
+    /**
+     * When a media file last changed, or null when it can't be read; a newer `.lrc` sidecar counts as a change to a song.
+     */
+    public static function last_modified(string $file, bool $with_sidecar): ?int
+    {
+        $path      = Core::conv_lc_file($file);
+        $file_time = (is_file($path)) ? filemtime($path) : false;
+        if ($file_time === false) {
+            return null;
+        }
+
+        $sidecar  = ($with_sidecar) ? self::lrc_sidecar_path($file) : null;
+        $lrc_time = ($sidecar !== null) ? filemtime($sidecar) : false;
+
+        return ($lrc_time === false) ? $file_time : max($file_time, $lrc_time);
+    }
+
+    /**
+     * The `.lrc` beside a media file with the same name, or null; it must really sit in the file's own folder.
+     */
+    public static function lrc_sidecar_path(string $file): ?string
+    {
+        $file    = Core::conv_lc_file($file);
+        $folder  = realpath(dirname($file));
+        $base    = pathinfo($file, PATHINFO_FILENAME);
+        if ($folder === false || $base === '') {
+            return null;
+        }
+
+        foreach (['.lrc', '.LRC'] as $extension) {
+            $candidate = dirname($file) . DIRECTORY_SEPARATOR . $base . $extension;
+            $real      = realpath($candidate);
+            if ($real !== false && is_file($real) && is_readable($real) && dirname($real) === $folder) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -766,6 +828,50 @@ final class VaInfo implements VaInfoInterface
         }
 
         return null;
+    }
+
+    /**
+     * rating_to_popm
+     * Convert 5 stars back to the 255 unit scale read by parse_rating
+     */
+    public static function rating_to_popm(?int $stars): int
+    {
+        $stars = max(0, min(5, (int) $stars));
+        if (AmpConfig::get('rating_file_tag_compatibility', false)) {
+            return [0, 1, 64, 128, 196, 255][$stars];
+        }
+
+        return $stars * 51;
+    }
+
+    /**
+     * The text of a media file's `.lrc` sidecar as UTF-8 with plain newlines, or null when there is none to use.
+     */
+    public static function read_lrc_sidecar(string $file): ?string
+    {
+        $path = self::lrc_sidecar_path($file);
+        $size = ($path !== null) ? filesize($path) : false;
+        if ($path === null || $size === false || $size === 0 || $size > self::LRC_MAX_BYTES) {
+            return null;
+        }
+
+        $text = file_get_contents($path);
+        if ($text === false) {
+            return null;
+        }
+
+        if (str_starts_with($text, "\xEF\xBB\xBF")) {
+            $text = substr($text, 3);
+        } elseif (str_starts_with($text, "\xFF\xFE")) {
+            $text = mb_convert_encoding(substr($text, 2), 'UTF-8', 'UTF-16LE');
+        } elseif (str_starts_with($text, "\xFE\xFF")) {
+            $text = mb_convert_encoding(substr($text, 2), 'UTF-8', 'UTF-16BE');
+        } elseif (!mb_check_encoding($text, 'UTF-8')) {
+            // a file that is not UTF-8 is almost always the Windows western codepage an older tagger wrote
+            $text = mb_convert_encoding($text, 'UTF-8', 'Windows-1252');
+        }
+
+        return self::clean_lyrics((string) $text);
     }
 
     /**
@@ -1446,6 +1552,10 @@ final class VaInfo implements VaInfoInterface
                 case 'version':
                     $parsed['version'] = $data[0];
                     break;
+                case 'copyright':
+                    // WCOP, where Picard puts a license url
+                    $parsed['license'] = $data[0];
+                    break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
@@ -1556,6 +1666,9 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'version':
                         $parsed['version'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'license':
+                        $parsed['license'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'musicbrainz release track id':
                         // Skip this tag

@@ -95800,6 +95800,19 @@
               ],
               "type": "integer"
             }
+          },
+          {
+            "description": "Search the plugins even when the database has lyrics if 1 (default 0); stored lyrics are not replaced",
+            "in": "query",
+            "name": "force",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
           }
         ],
         "responses": {

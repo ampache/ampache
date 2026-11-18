@@ -1019,7 +1019,8 @@ function display_notification(string $message, int $timeout = 5000): void
     ) ?: '""';
 
     echo "<script>";
-    echo "displayNotification(" . $literal . ", " . $timeout . ");";
+    // pages like stream.php load no bundle, so fall back to the parent frame that hosts the notifier
+    echo "(function(w){var f=w.displayNotification||(w.parent&&w.parent.displayNotification);if(typeof f==='function'){f(" . $literal . ", " . $timeout . ");}})(window);";
     echo "</script>\n";
 }
 

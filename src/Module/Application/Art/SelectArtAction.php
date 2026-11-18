@@ -90,7 +90,7 @@ final class SelectArtAction extends AbstractArtAction
         $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], $art_type);
         $dimensions = Core::image_dimensions($image);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
-        if (!Art::check_dimensions($dimensions)) {
+        if (!Art::check_dimensions($dimensions, $art_type)) {
             $this->ui->showHeader();
 
             $this->ui->showContinue(

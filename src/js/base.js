@@ -20,10 +20,6 @@
 
 $(document).ready(function () {
     initTabs();
-    $("a[rel^='prettyPhoto']").prettyPhoto({
-        social_tools: false,
-        deeplinking: false
-    });
     $.ajaxSetup({
         // Enable caching of AJAX responses, including script and jsonp
         cache: true
@@ -357,12 +353,30 @@ export function appendDeleteBurl(link) {
 }
 
 export function getCurrentPage() {
-    // the lightbox writes #prettyPhoto into the hash; that is not a page to come back to
-    if (window.location.hash === "#prettyPhoto") {
-        return "";
+    return btoa(window.location.href);
+}
+
+export function openLightbox(url, title) {
+    var dialog = document.getElementById("lightbox");
+    if (!dialog) {
+        dialog = document.createElement("dialog");
+        dialog.id = "lightbox";
+        dialog.appendChild(document.createElement("img"));
+        // a click anywhere closes it, Escape is handled by the dialog itself
+        dialog.addEventListener("click", function () {
+            dialog.close();
+        });
+        // the next art must not flash the previous one while it loads
+        dialog.addEventListener("close", function () {
+            dialog.querySelector("img").removeAttribute("src");
+        });
+        document.body.appendChild(dialog);
     }
 
-    return btoa(window.location.href);
+    var img = dialog.querySelector("img");
+    img.src = url;
+    img.alt = title || "";
+    dialog.showModal();
 }
 
 // ampacheConfirm

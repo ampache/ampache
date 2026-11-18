@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-06 08:41+1000\n"
+"POT-Creation-Date: 2026-11-18 07:40+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -331,6 +331,9 @@ msgid "Edit Artist"
 msgstr ""
 
 msgid "Albums"
+msgstr ""
+
+msgid "Playlists"
 msgstr ""
 
 msgid "Top Tracks"
@@ -1111,9 +1114,6 @@ msgid "External Link"
 msgstr ""
 
 msgid "Top Rated"
-msgstr ""
-
-msgid "Playlists"
 msgstr ""
 
 msgid "Importing a Playlist from a File"
@@ -8420,6 +8420,10 @@ msgid "Always show the rightbar"
 msgstr ""
 
 #: Ampache preference description
+msgid "Rotate the api key and stream token when the account password changes"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 
@@ -8733,6 +8737,10 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Query"
+msgstr ""
+
+#: Ampache preference subcategory
+msgid "Security"
 msgstr ""
 
 #: Ampache preference subcategory
