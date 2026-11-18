@@ -1915,6 +1915,7 @@ div.box.box_rules {
     max-height: none;
     padding: 40vh 0;
     font-size: 32px;
+    line-height: 1.4;
 }
 
 #lyrics_panel:fullscreen .lyrics_lines p {
