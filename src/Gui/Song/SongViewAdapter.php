@@ -406,6 +406,8 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             Ui::get_add_to_list_label()
         );
 
+        $actions[] = $this->link($this->configContainer->getWebPath() . '/song.php?action=show_lyrics&song_id=' . $songId, 'lyrics', T_('Show Lyrics'));
+
         if ($this->canPostShout()) {
             $actions[] = $this->link($this->getPostShoutUrl(), 'comment', T_('Post Shout'));
         }
@@ -624,10 +626,6 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
             $songprops[T_('Skipped')] = $this->song->total_skip;
-        }
-
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
-            $songprops[T_('Lyrics')] = '<a title="' . scrub_out($this->song->title) . '" href="' . $this->configContainer->getWebPath() . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . '">' . T_('Show Lyrics') . "</a>";
         }
 
         $license = $this->song->getLicense();

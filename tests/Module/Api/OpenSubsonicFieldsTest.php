@@ -79,6 +79,14 @@ class OpenSubsonicFieldsTest extends TestCase
         }
     }
 
+    public function testParseLyricsIgnoresAnOffsetForUnsyncedLyrics(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[offset:+500]\nJust words");
+
+        self::assertSame(0, $parsed['offset']);
+        self::assertSame([['value' => 'Just words']], $parsed['line']);
+    }
+
     public function testParseLyricsIndexesCueLinesAgainstTheLineArray(): void
     {
         $parsed = OpenSubsonic_Fields::parseLyrics(
@@ -134,6 +142,16 @@ class OpenSubsonicFieldsTest extends TestCase
         self::assertNotSame([], OpenSubsonic_Fields::parseLyrics($lyric, true)['cueLine']);
     }
 
+    /**
+     * The spec keeps `end` for the songLyrics version 2 enhanced response, so the plain response never carries it.
+     */
+    public function testParseLyricsOnlyReportsAStatedEndInTheEnhancedResponse(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics('[00:12.00]<00:12.00>Hello <00:14.50>', false);
+
+        self::assertSame(['value' => 'Hello ', 'start' => 12000], $parsed['line'][0]);
+    }
+
     public function testParseLyricsPreservesUntimedTextAroundCues(): void
     {
         $parsed  = OpenSubsonic_Fields::parseLyrics('[00:01.00]Intro <00:01.00>Café & <00:02.00>tea', true);
@@ -157,6 +175,32 @@ class OpenSubsonicFieldsTest extends TestCase
             ],
             $parsed['line']
         );
+    }
+
+    /**
+     * Enhanced LRC closes a line with a final tag that has no word after it; that is the one stated end LRC can carry.
+     */
+    public function testParseLyricsReadsTheEndAnEnhancedLineStates(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics('[00:12.00]<00:12.00>Hello <00:13.20>world <00:14.50>', true);
+
+        self::assertSame(['value' => 'Hello world ', 'start' => 12000, 'end' => 14500], $parsed['line'][0]);
+        self::assertSame(14500, $parsed['cueLine'][0]['end']);
+        self::assertSame(
+            [
+                ['start' => 12000, 'value' => 'Hello ', 'byteStart' => 0, 'byteEnd' => 5, 'end' => 13200],
+                ['start' => 13200, 'value' => 'world ', 'byteStart' => 6, 'byteEnd' => 11, 'end' => 14500],
+            ],
+            $parsed['cueLine'][0]['cue']
+        );
+    }
+
+    public function testParseLyricsReadsTheOffsetTagAndDropsHeaderTags(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[ar:Some Artist]\n[ti:Some Title]\n[offset:-250]\n[00:01.00]First\n[Drop: Somebody]");
+
+        self::assertSame(-250, $parsed['offset']);
+        self::assertSame([['value' => '[Drop: Somebody]'], ['value' => 'First', 'start' => 1000]], $parsed['line']);
     }
 
     public function testParseLyricsSortsLinesAndReindexesCues(): void

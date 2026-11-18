@@ -97,6 +97,8 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                             : '';
                         $actions .= "<div id='action_buttons_" . $current['object_id'] . '_' . $current['object_type'] . "'></div>";
 
+                        $media->fill_ext_info(Song::PARTIAL_FILTER);
+
                         $data = [
                             'found' => true,
                             'object_type' => $current['object_type'],
@@ -112,9 +114,8 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                                 : $albumText,
                             'art' => Art::url($albumId, 'album') ?? '',
                             'actions' => $actions,
-                            'lyrics' => (AmpConfig::get_bool('show_lyrics'))
-                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_lyrics&song_id=' . $media->id . '\')" title="' . T_('Show Lyrics') . '">' . Ui::get_material_symbol('lyrics', T_('Show Lyrics')) . '</a> |'
-                                : '',
+                            // the player greys its lyrics button for a song without stored lyrics
+                            'has_lyrics' => $media->lyrics_source !== null,
                         ];
                     }
                 }

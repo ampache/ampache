@@ -67,6 +67,34 @@ class OpenSubsonicLyricsTest extends MockeryTestCase
         self::assertArrayNotHasKey('cueLine', $legacy['subsonic-response']['lyricsList']['structuredLyrics'][0]);
     }
 
+    public function testLyricsJsonAndXmlCarryTheOffsetAndStatedEnds(): void
+    {
+        [$json, $xml]  = $this->serializers();
+        $song          = $this->mock(Song::class);
+        $song->enabled = true;
+        $song->title   = 'Title';
+        $song->shouldReceive('isNew')->andReturn(false);
+        $song->shouldReceive('get_parent_fullname')->andReturn('Artist');
+        $song->shouldReceive('get_lyrics')->andReturn(['text' => "[offset:+300]\n[00:01.00]<00:01.00>Hello <00:02.00>world <00:03.50>"]);
+
+        $lyrics = $json->addLyricsList(['subsonic-response' => []], $song, true)['subsonic-response']['lyricsList']['structuredLyrics'][0];
+        self::assertSame(300, $lyrics['offset']);
+        self::assertSame(3500, $lyrics['line'][0]['end']);
+        self::assertSame(3500, $lyrics['cueLine'][0]['end']);
+        self::assertSame([2000, 3500], array_column($lyrics['cueLine'][0]['cue'], 'end'));
+
+        $structured = $xml->addLyricsList(new SimpleXMLElement('<subsonic-response/>'), $song, true)->lyricsList->structuredLyrics;
+        self::assertSame('300', (string) $structured['offset']);
+        self::assertSame('3500', (string) $structured->line[0]['end']);
+        self::assertSame('3500', (string) $structured->cueLine['end']);
+        self::assertSame('2000', (string) $structured->cueLine->cue[0]['end']);
+        self::assertSame('3500', (string) $structured->cueLine->cue[1]['end']);
+
+        $plain = $json->addLyricsList(['subsonic-response' => []], $song, false)['subsonic-response']['lyricsList']['structuredLyrics'][0];
+        self::assertArrayNotHasKey('end', $plain['line'][0]);
+        self::assertSame(300, $plain['offset']);
+    }
+
     public function testSongLyricsVersionsAreAdvertisedInJsonAndXml(): void
     {
         [$json, $xml]    = $this->serializers();

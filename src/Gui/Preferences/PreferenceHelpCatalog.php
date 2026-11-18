@@ -68,7 +68,7 @@ final class PreferenceHelpCatalog
             'offset_limit' => new PreferenceHelp(T_('How many items one page of a browse shows before paging. It is also the size of a random selection.')),
             'popular_threshold' => new PreferenceHelp(T_('How many rows the popular, recently played and last shouts lists return.')),
             'show_license' => new PreferenceHelp(T_('Adds the license column to song lists. It shows nothing unless licensing is also enabled server-side.')),
-            'show_lyrics' => new PreferenceHelp(T_('Adds a lyrics link to the web player control bar. The lyrics page itself stays reachable either way.'), 'https://ampache.org/docs/information/web-player/'),
+            'show_lyrics' => new PreferenceHelp(T_('Adds a lyrics button to the web player, opening a panel that follows the playing song. The lyrics page itself stays reachable either way.'), 'https://ampache.org/docs/information/web-player/'),
             'show_original_year' => new PreferenceHelp(T_('Appends the original release year to an album title when the record carries one and it differs from the pressing year.')),
             'show_played_times' => new PreferenceHelp(T_('Adds a play count column to browse rows. While it is off the counts are not even queried, so turning it on costs one extra statistics lookup per page.')),
             'show_playlist_username' => new PreferenceHelp(T_('Appends the owner name to a playlist title. Your own playlists are never annotated.')),

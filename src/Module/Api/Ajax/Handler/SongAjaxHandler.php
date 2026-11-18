@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Ajax\Handler;
 
+use Ampache\Gui\Song\LyricsLinesView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -76,6 +77,16 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
+                break;
+            case 'lyrics':
+                // stored lyrics only: the player asks on every track change, which is no time to call out to a lyrics site
+                $song     = new Song((int) $this->requestParser->getFromRequest('song_id'));
+                $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->getId());
+                $text     = ($song->isNew() || !$song->isVisible($user) || !in_array($song->catalog, $catalogs))
+                    ? ''
+                    : ($song->get_lyrics(true)['text'] ?? '');
+
+                $results['lyrics_panel_body'] = new LyricsLinesView($song->getId(), $text)->render();
                 break;
             case 'shouts':
                 ob_start();

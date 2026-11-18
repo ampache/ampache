@@ -93,14 +93,18 @@ final class OpenSubsonic_Fields
      * Turn a stored lyric blob into timed lines, and into word cues when the caller asked for the enhanced layer.
      * Kept free of the Song model so the parsing itself is coverable without a database.
      *
+     * `end` is only ever what the file states (the closing tag of an Enhanced LRC line), never the next line's start.
+     *
      * @return array{
      *     'synced': bool,
-     *     'line': array<int, array{'value': string, 'start'?: int}>,
+     *     'offset': int,
+     *     'line': array<int, array{'value': string, 'start'?: int, 'end'?: int}>,
      *     'cueLine': array<int, array{
      *         'index': int,
      *         'start': int,
+     *         'end'?: int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }
      */
@@ -113,8 +117,18 @@ final class OpenSubsonic_Fields
         $lines    = [];
         $cueLines = [];
         $synced   = false;
+        $offset   = 0;
         foreach (explode("\n", html_entity_decode($text)) as $line) {
             if ($line === '') {
+                continue;
+            }
+
+            // an LRC header tag describes the file rather than being sung; [offset:] shifts every timing
+            if (preg_match('/^\[(ar|al|ti|au|by|length|offset|re|tool|ve|#):\s*(.*?)\s*\]$/i', trim($line), $tag)) {
+                if (strtolower($tag[1]) === 'offset' && preg_match('/^[+-]?\d+$/', $tag[2])) {
+                    $offset = (int) $tag[2];
+                }
+
                 continue;
             }
 
@@ -130,15 +144,27 @@ final class OpenSubsonic_Fields
             // The cue offsets are measured against the tag-free text, so that is what the line must carry.
             $value   = ($cues === []) ? trim($matches[4]) : $cues['value'];
             $index   = count($lines);
-            $lines[] = ['value' => $value, 'start' => $start];
+            $entry   = ['value' => $value, 'start' => $start];
+            // the spec keeps an exact end for the songLyrics version 2 enhanced response
+            $end = $cues['end'] ?? null;
+            if ($enhanced && $end !== null && $end >= $start) {
+                $entry['end'] = $end;
+            }
+
+            $lines[] = $entry;
 
             if ($enhanced && $cues !== []) {
-                $cueLines[] = [
+                $cueLine = [
                     'index' => $index,
                     'start' => $start,
                     'value' => $value,
                     'cue' => $cues['cue'],
                 ];
+                if (isset($entry['end'])) {
+                    $cueLine['end'] = $entry['end'];
+                }
+
+                $cueLines[] = $cueLine;
             }
         }
 
@@ -161,6 +187,7 @@ final class OpenSubsonic_Fields
 
         return [
             'synced' => $synced,
+            'offset' => ($synced) ? $offset : 0,
             'line' => $lines,
             'cueLine' => $cueLines,
         ];
@@ -177,10 +204,10 @@ final class OpenSubsonic_Fields
      * Split one Enhanced LRC line into its tag-free text and the word cues pointing into it. Returns an empty array
      * when the line carries no `<mm:ss.xx>` tags at all, so a plain LRC line stays a plain line.
      *
-     * `end` is deliberately absent from every cue: Enhanced LRC gives start-only timing, and the spec requires the
-     * field to be present on all cues of a line or none.
+     * A line closed by a final tag with no word after it states when it ends; only then does every cue get an `end`,
+     * each running to the next cue's start, because the spec wants `end` on all cues of a line or on none.
      *
-     * @return array{'value': string, 'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>}|array{}
+     * @return array{'value': string, 'end'?: int, 'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>}|array{}
      */
     private static function _parseEnhancedCues(string $line): array
     {
@@ -214,7 +241,17 @@ final class OpenSubsonic_Fields
             return [];
         }
 
-        return ['value' => $value, 'cue' => $cues];
+        $last = $matches[count($matches) - 1];
+        if (trim(substr($line, $last[0][1] + strlen($last[0][0]))) !== '') {
+            return ['value' => $value, 'cue' => $cues];
+        }
+
+        $end = self::_lrcTimeToMilliseconds($last[1][0], $last[2][0], $last[3][0]);
+        foreach ($cues as $index => $cue) {
+            $cues[$index]['end'] = $cues[$index + 1]['start'] ?? $end;
+        }
+
+        return ['value' => $value, 'end' => $end, 'cue' => $cues];
     }
 
     /**
@@ -624,12 +661,14 @@ final class OpenSubsonic_Fields
      *     'displayTitle': string,
      *     'lang': string,
      *     'synced': bool,
-     *     'line': array<int, array{'value': string, 'start'?: int}>,
+     *     'offset'?: int,
+     *     'line': array<int, array{'value': string, 'start'?: int, 'end'?: int}>,
      *     'cueLine'?: array<int, array{
      *         'index': int,
      *         'start': int,
+     *         'end'?: int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'value': string, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }|array{}
      */
@@ -652,6 +691,10 @@ final class OpenSubsonic_Fields
             'synced' => $parsed['synced'],
             'line' => $parsed['line'],
         ];
+
+        if ($parsed['offset'] !== 0) {
+            $entry['offset'] = $parsed['offset'];
+        }
 
         if ($parsed['synced'] && $parsed['cueLine'] !== []) {
             $entry['cueLine'] = $parsed['cueLine'];

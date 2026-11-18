@@ -2723,10 +2723,11 @@ PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api
 
 Return Database lyrics or search with plugins by Song id
 
-| Input     | Type   | Description                                           | Optional |
-|-----------|--------|-------------------------------------------------------|---------:|
-| 'filter'  | string | $song_id to find                                      |       NO |
-| 'plugins' | string | `0`, `1`, if false disable plugin lookup (default: 1) |       NO |
+| Input     | Type   | Description                                                | Optional |
+|-----------|--------|------------------------------------------------------------|---------:|
+| 'filter'  | string | $song_id to find                                           |       NO |
+| 'plugins' | string | `0`, `1`, if false disable plugin lookup (default: 1)      |       NO |
+| 'force'   | string | `0`, `1`, API8: search plugins even when lyrics are stored |      YES |
 
 * return object
 

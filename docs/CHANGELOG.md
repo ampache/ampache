@@ -2,11 +2,21 @@
 
 ## Ampache 8.5.0
 
+Lyrics have been reworked: they can be edited, chosen from each plugin's result, cleared and followed line by line.
+
+Timed lyrics are read from a `.lrc` file beside the song, and lyrics a user sets are never replaced by a rescan.
+
+The web player's lyrics button now sits with the player's action buttons on every screen size and opens a panel that follows the playing song.
+
+**NOTE**: `X-Forwarded-For` is only trusted from a reverse proxy listed in the new `trusted_proxies` config key; set it if Ampache sits behind one.
+
 ### Added (8.5.0)
 
 * Translations 2026-11-18
-* Database 841001
+* Database 850002
   * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
+  * New `song_data`.`lyrics_source` column (`file`, `plugin` or `user`); existing lyrics are marked `file`
+  * `show_lyrics` is on by default; users who already have their own setting keep it
 * Config version 104
   * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
   * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
@@ -18,6 +28,16 @@
   * Artist pages gain a Playlists tab listing playlists that hold the artist's songs
   * New `artist` filter on the playlist browse
 * The song license is read from an mp3's `WCOP` frame or `license` TXXX tag
+* Lyrics
+  * Timed (LRC) lyrics show line by line, highlighting the current line of the song in the web player
+  * Editors can edit, clear or re-search lyrics from the lyrics page, and choose between plugin results
+  * The song edit dialog gains a Lyrics field
+  * Lyrics are read from a `.lrc` file beside the song with the same name; a verify picks up a new or edited one
+  * Timed lyrics win: embedded timed lyrics, then the `.lrc` file, then embedded plain lyrics
+  * The web player's lyrics button sits with its action buttons and opens a lyrics panel that follows the playing song and can go full screen
+  * The button is greyed out for a song with no stored lyrics, and opens the lyrics page instead
+  * Timed lyrics follow an LRC `[offset:]`, and a line goes dark at the end an Enhanced LRC line states
+  * Lyrics a user edits or picks are marked User set and are never replaced by a rescan
 
 ### Changed (8.5.0)
 
@@ -27,6 +47,10 @@
 * Graph date pickers use the browser's own date input; jquery-datetimepicker is gone
 * Bitrates are shown in kbps of 1000, not 1024, in the web UI, exports, DAAP and Subsonic
 * Pressing Enter in an edit dialog saves it instead of reloading the page
+* Opening the lyrics page as an editor no longer stores the first plugin result; the editor picks which result to keep
+* A rescan of a file without lyrics no longer clears lyrics found by a plugin
+* The `community` preference preset turns `show_lyrics` on
+* Lyrics read from tags are stored as plain lines, so the next full verify rewrites each song's lyrics once
 * Last.fm similar song lookups send the track title as well as the artist
 * Subsonic
   * OpenSubsonic implementation audited against the published specification on 2026-11-13; the audited build is committed as `docs/openapi-opensubsonic.json`
@@ -35,9 +59,16 @@
   * OpenSubsonic artist indexes include `sortName` when a prefix is present
   * Advertise `songLyrics` version 2 for enhanced lyrics
   * Folders use the cover of their album when they have one
+  * Structured lyrics carry an LRC file's `[offset:]` as `offset`
+  * Enhanced lyrics carry `end` on a line and its cues when the Enhanced LRC line states one with a closing time tag
 
 ### Fixed (8.5.0)
 
+* The lyrics page showed songs from catalogs the user can't access
+* Song pages had no lyrics link unless `show_lyrics` was enabled
+* A scan dropped the word timings from embedded enhanced (word-timed) LRC lyrics
+* Edit dialog text areas didn't fill their column
+* An action icon with no size of its own, like MusicBrainz, disappeared when the action list showed icons only
 * A playlist or search the user can't see could be downloaded through the batch download page
 * Any user could delete, start or stop another user's broadcast
 * The installer saved a database password containing characters such as `&`, `$` or `\` differently from how it was typed
@@ -55,6 +86,7 @@
   * Videos could not be streamed or downloaded
   * An HTTP/2 client's lowercase `range` header was ignored, breaking seeking
   * DSub stopped on a folder without a single artist; an empty artist info is returned instead
+  * OpenSubsonic synced lyrics returned LRC header tags such as `[ar:]` and `[ti:]` as lyric lines
 * A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
 * IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic

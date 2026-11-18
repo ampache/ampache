@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
@@ -450,6 +451,16 @@ interface SongRepositoryInterface
      * Moves a song to another catalog and to the file it now lives in
      */
     public function setFileAndCatalog(int $songId, string $file, int $catalogId): bool;
+
+    /**
+     * Writes the lyrics a scan read from the file, leaving lyrics a user set alone
+     */
+    public function setFileLyrics(int $songId, ?string $lyrics): void;
+
+    /**
+     * Writes a song's lyrics together with where they came from; NULL text clears both
+     */
+    public function setLyrics(int $songId, ?string $lyrics, ?LyricsSourceEnum $source): bool;
 
     /**
      * Rebuilds every song's play and skip totals from `object_count`, and the played flag that follows them

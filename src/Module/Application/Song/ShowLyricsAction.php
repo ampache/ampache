@@ -28,16 +28,26 @@ namespace Ampache\Module\Application\Song;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Song\LyricsView;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * A song's lyrics; an editor can also save, clear or pick from what each lyric plugin found.
+ */
 final readonly class ShowLyricsAction implements ApplicationActionInterface
 {
+    public const string FORM_NAME   = 'song_lyrics';
     public const string REQUEST_KEY = 'show_lyrics';
 
     public function __construct(
@@ -50,23 +60,61 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
-        $this->ui->showHeader();
-
         $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
-        if ($song->isNew()) {
+        $user    = $gatekeeper->getUser();
+        if ($song->isNew() || !$user instanceof User || !$song->isVisible($user)) {
             throw new ObjectNotFoundException($song_id);
         }
 
-        $lyrics = $song->get_lyrics();
+        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->getId());
+        if (!in_array($song->catalog, $catalogs)) {
+            throw new ObjectNotFoundException($song_id);
+        }
+
+        $mayEdit = $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            || $user->getId() === $song->get_user_owner();
+
+        $body = $request->getParsedBody();
+        if (is_array($body) && isset($body['lyrics_action'])) {
+            if (!$mayEdit || !$this->requestParser->verifyForm(self::FORM_NAME)) {
+                throw new AccessDeniedException();
+            }
+
+            $text = ($body['lyrics_action'] === 'save')
+                ? str_replace("\r\n", "\n", (string) ($body['lyrics'] ?? ''))
+                : '';
+            Song::update_lyrics($text, $song->getId());
+            $song->lyrics        = (trim($text) === '') ? null : $text;
+            $song->lyrics_source = ($song->lyrics === null) ? null : LyricsSourceEnum::USER;
+        }
+
+        $stored = $song->get_lyrics(true);
+
+        // an editor chooses what is stored, so they see every plugin's answer and nothing is saved behind their back
+        $candidates = [];
+        $refreshed  = $mayEdit && $this->requestParser->getFromRequest('refresh') === '1';
+        if ($mayEdit && ($stored === [] || $refreshed)) {
+            $candidates = $song->get_lyrics_candidates($user);
+        }
+
+        $lyrics = $stored;
+        if ($lyrics === []) {
+            $lyrics = ($mayEdit) ? (current($candidates) ?: []) : $song->get_lyrics();
+        }
+
+        $this->ui->showHeader();
 
         echo new LyricsView(
             AmpConfig::get_web_path(),
             $song,
-            $lyrics
+            $lyrics,
+            $stored !== [],
+            $mayEdit,
+            $candidates,
+            $refreshed
         )->render();
 
-        // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

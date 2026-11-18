@@ -7,11 +7,15 @@
 * ALL
   * `advanced_search`: song `other_user` rule gains operators `7` (has rated 4 stars or more), `8` (3 or more) and `9` (2 or more)
   * Playlist browses (`playlists`, `cond`) accept an `artist` filter
+* `get_lyrics` (API8)
+  * New `force` parameter searches the lyric plugins even when lyrics are stored; the stored lyrics are not replaced
 
 ### Fixed (850000)
 
 * `download` (API8)
   * A playlist or search the caller can't see could be downloaded
+* `get_lyrics` (API6 and API8)
+  * One lyric plugin failing no longer fails the whole request; the other plugins are still asked
 
 ## API 8.4.0
 

@@ -36,5 +36,4 @@ enum SongDataFieldEnum: string
     case COMMENT  = 'comment';
     case LABEL    = 'label';
     case LANGUAGE = 'language';
-    case LYRICS   = 'lyrics';
 }

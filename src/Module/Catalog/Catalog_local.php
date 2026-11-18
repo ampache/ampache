@@ -2013,8 +2013,8 @@ class Catalog_local extends Catalog
                 }
 
                 if ($verify_by_time) {
-                    $file_time = filemtime($row['file']);
-                    if ($file_time === false) {
+                    $file_time = VaInfo::last_modified($row['file'], $tableName === 'song');
+                    if ($file_time === null) {
                         debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
                         switch ($tableName) {
                             case 'song':
@@ -2031,7 +2031,7 @@ class Catalog_local extends Catalog
                         continue;
                     }
 
-                    // check the modification time on the file to see if it's worth checking the tags.
+                    // check the modification time on the file to see if it's worth checking the tags
                     if ($row['min_update_time'] > $file_time) {
                         //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                         switch ($tableName) {
