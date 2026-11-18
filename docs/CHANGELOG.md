@@ -45,6 +45,10 @@ The web player's lyrics button now sits with the player's action buttons on ever
 * The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
 * Clicking art opens it full size in a native dialog; the unmaintained prettyPhoto library is gone
 * Graph date pickers use the browser's own date input; jquery-datetimepicker is gone
+* Slideshow
+  * Falls back to the artist's own art, their albums' covers, and the song's own art (`show_song_art`) when no plugin has anything to show
+  * The button shows whenever `slideshow_time` is set, not only when the Flickr plugin is configured
+  * Fades between images instead of using the rhinoslider carousel; the unmaintained library is gone
 * Bitrates are shown in kbps of 1000, not 1024, in the web UI, exports, DAAP and Subsonic
 * Pressing Enter in an edit dialog saves it instead of reloading the page
 * Opening the lyrics page as an editor no longer stores the first plugin result; the editor picks which result to keep
