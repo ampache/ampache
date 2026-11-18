@@ -1922,6 +1922,10 @@ div.box.box_rules {
     margin: 0.4em 0;
 }
 
+#lyrics_text {
+    padding-bottom: 15px;
+}
+
 .lyrics_source {
     margin-top: 1em;
     color: var(--amp-muted);
