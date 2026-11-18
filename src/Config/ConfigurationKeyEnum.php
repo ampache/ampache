@@ -200,6 +200,7 @@ final class ConfigurationKeyEnum
     public const TRACK_USER_IP                         = 'track_user_ip';
     public const TRANSCODE_BITRATE                     = 'transcode_bitrate';
     public const TRANSCODE                             = 'transcode';
+    public const TRUSTED_PROXIES                       = 'trusted_proxies';
     public const UI_FIXED                              = 'ui_fixed';
     public const UNIQUE_PLAYLIST                       = 'unique_playlist';
     public const UPLOAD_ACCESS_LEVEL                   = 'upload_access_level';
