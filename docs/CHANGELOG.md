@@ -35,7 +35,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * Lyrics are read from a `.lrc` file beside the song with the same name; a verify picks up a new or edited one
   * Timed lyrics win: embedded timed lyrics, then the `.lrc` file, then embedded plain lyrics
   * The web player's lyrics button sits with its action buttons and opens a lyrics panel that follows the playing song and can go full screen
-  * The button is greyed out for a song with no stored lyrics, and opens the lyrics page instead
+  * The button is grayed out for a song with no stored lyrics, and opens the lyrics page instead
   * Timed lyrics follow an LRC `[offset:]`, and a line goes dark at the end an Enhanced LRC line states
   * Lyrics a user edits or picks are marked User set and are never replaced by a rescan
 
