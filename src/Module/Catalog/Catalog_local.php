@@ -1881,6 +1881,15 @@ class Catalog_local extends Catalog
             return false;
         }
 
+        // A sidecar lyrics file follows its song; losing it silently would be worse than failing to move it
+        $old_lrc = VaInfo::lrc_sidecar_path($media->file);
+        if ($old_lrc !== null) {
+            $new_lrc = $directory . DIRECTORY_SEPARATOR . $info['filename'] . '.' . pathinfo($old_lrc, PATHINFO_EXTENSION);
+            if (!file_exists($new_lrc) && copy($old_lrc, $new_lrc)) {
+                unlink($old_lrc);
+            }
+        }
+
         // Update the catalog
         return match (true) {
             $media instanceof Video => self::getVideoRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),
@@ -2013,8 +2022,8 @@ class Catalog_local extends Catalog
                 }
 
                 if ($verify_by_time) {
-                    $file_time = filemtime($row['file']);
-                    if ($file_time === false) {
+                    $file_time = VaInfo::last_modified($row['file'], $tableName === 'song');
+                    if ($file_time === null) {
                         debug_event('local.catalog', 'Unable to get file modification time for ' . $row['file'], 3);
                         switch ($tableName) {
                             case 'song':
@@ -2031,7 +2040,7 @@ class Catalog_local extends Catalog
                         continue;
                     }
 
-                    // check the modification time on the file to see if it's worth checking the tags.
+                    // check the modification time on the file to see if it's worth checking the tags
                     if ($row['min_update_time'] > $file_time) {
                         //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                         switch ($tableName) {

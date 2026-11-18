@@ -885,11 +885,18 @@ class OpenSubsonic_Xml_Data
         $xlyrics->addAttribute('displayTitle', $lyrics['displayTitle']);
         $xlyrics->addAttribute('lang', $lyrics['lang']);
         $xlyrics->addAttribute('synced', ($lyrics['synced']) ? 'true' : 'false');
+        if (isset($lyrics['offset'])) {
+            $xlyrics->addAttribute('offset', (string) $lyrics['offset']);
+        }
 
         foreach ($lyrics['line'] as $line) {
             $xline = $this->_addChildToResultXml($xlyrics, 'line', htmlspecialchars($line['value'], ENT_XML1 | ENT_QUOTES, 'UTF-8'));
             if (isset($line['start'])) {
                 $xline->addAttribute('start', (string) $line['start']);
+            }
+
+            if (isset($line['end'])) {
+                $xline->addAttribute('end', (string) $line['end']);
             }
         }
 
@@ -897,10 +904,18 @@ class OpenSubsonic_Xml_Data
             $xcueline = $this->_addChildToResultXml($xlyrics, 'cueLine');
             $xcueline->addAttribute('index', (string) $cueLine['index']);
             $xcueline->addAttribute('start', (string) $cueLine['start']);
+            if (isset($cueLine['end'])) {
+                $xcueline->addAttribute('end', (string) $cueLine['end']);
+            }
+
             $xcueline->addAttribute('value', $cueLine['value']);
             foreach ($cueLine['cue'] as $cue) {
                 $xcue = $this->_addChildToResultXml($xcueline, 'cue', htmlspecialchars($cue['value'], ENT_XML1 | ENT_QUOTES, 'UTF-8'));
                 $xcue->addAttribute('start', (string) $cue['start']);
+                if (isset($cue['end'])) {
+                    $xcue->addAttribute('end', (string) $cue['end']);
+                }
+
                 $xcue->addAttribute('byteStart', (string) $cue['byteStart']);
                 $xcue->addAttribute('byteEnd', (string) $cue['byteEnd']);
             }

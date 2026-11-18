@@ -111,6 +111,19 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     ['cel_artist']
                 )->render();
                 break;
+            case 'artist_playlists':
+                $artistId = (int) $this->requestParser->getFromRequest('artist');
+
+                $browse = $this->browseFactory->create();
+                $browse->set_type('playlist');
+                $browse->set_simple_browse(true);
+                $browse->set_filter('artist', $artistId);
+
+                ob_start();
+                $browse->show_objects();
+                $results['artist_playlists'] = ob_get_clean();
+                $browse->store();
+                break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
                     $user->id ?: -1,

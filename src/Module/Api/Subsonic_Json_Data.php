@@ -700,13 +700,6 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addLine
-     *
-     * One line of a song lyricSubsonic
-     * @see $this->addLyricsList())
-     */
-
-    /**
      * addLyrics
      *
      * Lyrics.Subsonic
@@ -739,32 +732,6 @@ class Subsonic_Json_Data
 
             $response['subsonic-response']['lyrics'] = $json;
         }
-
-        return $response;
-    }
-
-    /**
-     * addLyricsList
-     *
-     * List of structured lyricsSubsonic
-     * @param array{'subsonic-response': array<string, mixed>} $response
-     * @return array{'subsonic-response': array<string, mixed>}
-     */
-    public function addLyricsList(array $response, Song $song): array
-    {
-        if ($song->isNew() || !$song->enabled) {
-            return $response;
-        }
-
-        $json = ['structuredLyrics' => []];
-
-        $lyrics = $this->_getStructuredLyrics($song);
-
-        if ($lyrics !== []) {
-            $json['structuredLyrics'][] = $lyrics;
-        }
-
-        $response['subsonic-response']['lyricsList'] = ($json['structuredLyrics']) ? (object) [] : $json;
 
         return $response;
     }
@@ -3536,70 +3503,6 @@ class Subsonic_Json_Data
         }
 
         return $json;
-    }
-
-    /**
-     * _getStructuredLyrics
-     *
-     * Structured lyricsSubsonic
-     * @return array{
-     *     'displayArtist'?: string,
-     *     'displayTitle'?: string,
-     *     'lang'?: string,
-     *     'synced'?: bool,
-     *     'line'?: array<array{'value': string}>
-     * }
-     */
-    private function _getStructuredLyrics(Song $song): array
-    {
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
-            $text = str_replace("\r", '', (string) $text);
-
-            $json = [
-                'displayArtist' => $song->get_parent_fullname(),
-                'displayTitle' => (string) $song->title,
-                'lang' => 'xxx',
-                'synced' => false,
-                'line' => [],
-            ];
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $json['synced'] = true;
-                        $minutes        = (int) $matches[1];
-                        $seconds        = (int) $matches[2];
-                        $centiseconds   = (int) $matches[3];
-                        $milliseconds   = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string) $milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => $line];
-                    }
-                }
-            }
-
-            if ($synced !== [] || $lines !== []) {
-                $json['line'] = ($json['synced'])
-                    ? $synced
-                    : $lines;
-            }
-
-            return $json;
-        }
-
-        return [];
     }
 
     /**

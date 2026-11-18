@@ -27,6 +27,7 @@ namespace Ampache\Gui\Edit\Renderer;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\Edit\AbstractEditFormRenderer;
+use Ampache\Gui\Song\LyricsLinesView;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -92,6 +93,14 @@ final class SongEditFormRenderer extends AbstractEditFormRenderer
     public function getLicenseId(): int
     {
         return (int) $this->getItem()->license;
+    }
+
+    /**
+     * The stored lyrics only; the lyric plugins are never asked from the dialog.
+     */
+    public function getLyrics(): string
+    {
+        return LyricsLinesView::toPlainText($this->getItem()->get_lyrics(true)['text'] ?? '');
     }
 
     public function getMbid(): string

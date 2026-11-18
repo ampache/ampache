@@ -109,7 +109,7 @@ All are advertised by [getOpenSubsonicExtensions](https://opensubsonic.github.io
 | [transcodeOffset](https://opensubsonic.github.io/docs/extensions/transcodeoffset/)       | `timeOffset` on `stream`                                                                                                 |
 | [transcoding](https://opensubsonic.github.io/docs/extensions/transcoding/)               | `getTranscodeDecision` (POST, JSON capabilities body) and `getTranscodeStream`                                           |
 
-Stored LRC and SYLT lyrics provide start times, not exact line ends, so `line.end` is omitted even for enhanced responses.
+LRC and SYLT lyrics only give start times, so `line.end` is never inferred from the next line. An enhanced response carries `end` on a line, its `cueLine` and its cues only when the Enhanced LRC line states it with a closing time tag (`[00:12.00]<00:12.00>Hello <00:14.50>`). An LRC `[offset:]` tag is returned as `offset`, and LRC header tags such as `[ar:]` are never returned as lyric lines.
 
 Also implemented, outside the named extensions:
 

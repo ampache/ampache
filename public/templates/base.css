@@ -360,3 +360,23 @@ a.tag_size4 { text-decoration: none; }
     color: #fff;
     margin-left: 10px;
 }
+
+#lightbox {
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+#lightbox::backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#lightbox img {
+    display: block;
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    cursor: zoom-out;
+}

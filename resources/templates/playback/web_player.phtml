@@ -113,8 +113,8 @@ $labels = $this->getLabels(); ?>
             $('.playing_actions').html(data.actions);
             ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
         }
-        if (data.lyrics) {
-            $('.playing_lyrics').html(data.lyrics);
+        if (typeof data.has_lyrics === 'boolean') {
+            setLyricsAvailable(data.has_lyrics);
         }
     }
 
@@ -133,7 +133,7 @@ $labels = $this->getLabels(); ?>
         $('.playing_artist').html(item ? item.artist : '');
         clearNowPlayingArt();
         $('.playing_actions').html('');
-        $('.playing_lyrics').html('');
+        setLyricsAvailable(true);
     }
 
     function scheduleNowPlayingExpiryCheck()
@@ -546,7 +546,8 @@ $labels = $this->getLabels(); ?>
                             echo "if (typeof actiontype !== 'undefined') { ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id')); }";
                             echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + titleText + '\">' + titleText + '</a>' : titleText;";
                             echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + artistText + '\">' + artistText + '</a>' : artistText;";
-                            echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"" . $this->raw($this->jsText(T_('Show Lyrics'))) . "\">" . Ui::get_material_symbol('lyrics', T_('Show Lyrics')) . "</a> |' : '';";
+                            echo "var lyricsitem = (jplaylist && jplaylist.playlist) ? jplaylist.playlist[jplaylist.current] : null;";
+                            echo "var haslyrics = currenttype === 'song' && !(lyricsitem && lyricsitem['has_lyrics'] === false);";
                             echo "var actionsobj = (currentjpitem.attr('data-album_id') && currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $this->raw($this->jsText($labels['showalbum'])) . "\">" . Ui::get_material_symbol('album', $labels['showalbum']) . "</a> |' : '';";
                             echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') && currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $this->e($this->getWebPath()) . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $this->raw($this->jsText($labels['showalbum'])) . "\">" . Ui::get_material_symbol('album', $labels['showalbum']) . "</a> |' : '';";
                             if ($this->mayPostShout()) {
@@ -563,13 +564,11 @@ $labels = $this->getLabels(); ?>
                         $('.playing_title').html(titleobj);
                         $('.playing_artist').html(artistobj);
                     }
-                    <?php // random/democratic placeholders carry no actiontype, so actionsobj/lyricsobj build empty; skip the overwrite
+                    <?php // random/democratic placeholders carry no actiontype, so actionsobj builds empty; skip the overwrite
                     if ($this->isIframed()) { ?>
                     if (!isPlaceholderTrack()) {
                         $('.playing_actions').html(actionsobj);
-                        <?php if ($this->showLyrics()) { ?>
-                        $('.playing_lyrics').html(lyricsobj);
-                        <?php } ?>
+                        setLyricsAvailable(haslyrics);
                     }
                     <?php
                     }
@@ -783,9 +782,16 @@ if (!$this->isVideo()) {
         <div class="playing_title"></div>
         <div class="playing_album"></div>
         <div class="playing_features">
-            <div class="playing_lyrics"></div>
             <div class="playing_actions"></div>
         </div>
+    </div>
+    <div id="lyrics_panel" class="display-none" data-song-id="" data-empty="<?php echo $this->e(T_('No lyrics found.')); ?>">
+        <div class="lyrics_panel_bar">
+            <a class="lyrics_panel_page" href="#" title="<?php echo $this->e(T_('Show Lyrics')); ?>"><?php echo $this->raw(Ui::get_material_symbol('open_in_new', T_('Show Lyrics'))); ?></a>
+            <a href="javascript:toggleLyricsFullscreen();" title="<?php echo $this->e($labels['fullscreen']); ?>"><?php echo $this->raw(Ui::get_material_symbol('fullscreen', $labels['fullscreen'])); ?></a>
+            <a href="javascript:closeLyricsPanel();" title="<?php echo $this->e(T_('Close')); ?>"><?php echo $this->raw(Ui::get_material_symbol('close', T_('Close'))); ?></a>
+        </div>
+        <div id="lyrics_panel_body"></div>
     </div>
     <?php }
     } ?>
@@ -936,6 +942,11 @@ if (!$this->isVideo()) {
                         <div id="nowplayingbtn" class="action_button">
                             <a href="javascript:ToggleNowPlaying();"><?php echo Ui::get_material_symbol('info', T_('Show Now Playing')); ?></a>
                         </div>
+                        <?php if ($this->showLyrics()) { ?>
+                        <div id="lyricsbtn" class="action_button" data-title-show="<?php echo $this->e(T_('Show Lyrics')); ?>" data-title-none="<?php echo $this->e(T_('No lyrics found.')); ?>">
+                            <a href="javascript:toggleLyricsPanel();" title="<?php echo $this->e(T_('Show Lyrics')); ?>"><?php echo $this->raw(Ui::get_material_symbol('lyrics', T_('Show Lyrics'))); ?></a>
+                        </div>
+                        <?php } ?>
                         <?php } ?>
                         <?php // ReplayGain and the Equalizer tap the <audio> element, so they do not apply to video
                         if (!$this->isVideo()) { ?>

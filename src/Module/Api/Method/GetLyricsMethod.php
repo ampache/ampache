@@ -29,9 +29,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\System\Plugin\Plugin;
-use Ampache\Module\System\Plugin\PluginTypeEnum;
-use Ampache\Plugin\PluginGetLyricsInterface;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -59,10 +57,12 @@ final class GetLyricsMethod implements MethodInterface
      *
      * filter  = (string) song id
      * plugins = (int) 0,1, if false disable plugin lookup (Default: 1)
+     * force   = (int) 0,1, if true search plugins even when the database has lyrics (Default: 0) API8 only
      *
      * @param array{
      *     filter?: string,
      *     plugins?: int,
+     *     force?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -112,23 +112,16 @@ final class GetLyricsMethod implements MethodInterface
             $results['plugin']['database'] = $databaseLyrics;
         }
 
-        // only search plugins when the database has nothing; a stored song is never re-fetched externally
-        if (empty($databaseLyrics) && (int) ($input['plugins'] ?? 1) === 1) {
-            $saved = false;
-            foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $pluginName) {
-                $plugin = new Plugin($pluginName);
-                if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
-                    $lyrics = $plugin->_plugin->get_lyrics($libitem);
+        // plugins are only searched when the database has nothing, unless an API8 caller forces it
+        $force = $apiVersion >= 8 && (int) ($input['force'] ?? 0) === 1;
+        if ((empty($databaseLyrics) || $force) && (int) ($input['plugins'] ?? 1) === 1) {
+            $found = array_filter($libitem->get_lyrics_candidates($user), static fn(array $lyrics): bool => !empty($lyrics['text']));
+            $results['plugin'] += $found;
 
-                    if ($lyrics && !empty($lyrics['text'])) {
-                        $results['plugin'][$pluginName] = $lyrics;
-                        // cache the first hit so the same song isn't searched externally again
-                        if (!$saved) {
-                            Song::update_lyrics((string) $lyrics['text'], $libitem->getId());
-                            $saved = true;
-                        }
-                    }
-                }
+            // cache the first hit so the same song isn't searched externally again; a forced search never replaces stored lyrics
+            $first = current($found);
+            if (empty($databaseLyrics) && $first !== false) {
+                Song::update_lyrics((string) $first['text'], $libitem->getId(), LyricsSourceEnum::PLUGIN);
             }
         }
 

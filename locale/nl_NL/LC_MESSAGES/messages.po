@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-04 10:11+1000\n"
+"POT-Creation-Date: 2026-11-06 08:41+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2026\n"
 "Language-Team: Dutch (Netherlands) (https://app.transifex.com/ampache/teams/40984/nl_NL/)\n"
@@ -662,7 +662,7 @@ msgid "Add tags to sub songs"
 msgstr "Voeg tags toe aan onderliggende liedjes"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Ingeschakeld"
 
 msgid "Summary"
 msgstr "Samenvatting"
@@ -4676,6 +4676,8 @@ msgid "There Was a Problem"
 msgstr "Er was een probleem"
 
 #. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter, Disk
+#. HINT: Artist, Album, Song, Catalog, Video, Catalog Filter
 #, php-format
 msgid "Couldn't delete this %s"
 msgstr "Ik kon deze %s niet verwijderen"
@@ -4970,8 +4972,14 @@ msgstr "Je hebt een object opgevraagd dat niet bestaat"
 msgid "The Album has been deleted"
 msgstr "Het album is verwijderd"
 
+msgid "The Disk has been deleted"
+msgstr ""
+
 msgid "The Album and all files will be deleted"
 msgstr "Het album en alle bestanden worden verwijderd"
+
+msgid "The Disk and all files will be deleted"
+msgstr ""
 
 msgid "Starting Update from Tags"
 msgstr "Start met bijwerken vanuit Tags"
@@ -5880,17 +5888,17 @@ msgid "Folder Pattern (optional)"
 msgstr "Map patroon (optioneel)"
 
 msgid "Create a local music catalog called `some-catalog`"
-msgstr ""
+msgstr "Maak een lokale muziekcatalogus aan met de naam `some-catalog`"
 
 msgid "Add a User"
-msgstr ""
+msgstr "Een gebruiker toevoegen"
 
 msgid "Add a User with the name `some-user`"
-msgstr ""
+msgstr "Voeg een gebruiker toe met de naam `some-user`"
 
 #, php-format
 msgid "Created %s user %s with password %s"
-msgstr ""
+msgstr "%s gebruiker %s aangemaakt met wachtwoord %s"
 
 msgid "User creation failed"
 msgstr "Aanmaken gebruiker mislukt"
@@ -5899,136 +5907,142 @@ msgid ""
 "Clear a cache. Only `perpetual_api_session` persists; object caches live for"
 " one process"
 msgstr ""
+"Leeg een cache. Alleen `perpetual_api_session` blijft bestaan; objectcaches "
+"blijven slechts één proces lang bestaan"
 
 msgid "Destroy stored perpetual API sessions"
-msgstr ""
+msgstr "Opgeslagen permanente API-sessies verwijderen"
 
 #, php-format
 msgid "Unknown cache type: %s"
-msgstr ""
+msgstr "Onbekend cachetype: %s"
 
 #, php-format
 msgid "Cleared cache: %s"
-msgstr ""
+msgstr "Cache gewist: %s"
 
 msgid "Delete a User"
-msgstr ""
+msgstr "Een gebruiker verwijderen"
 
 msgid "User ID"
-msgstr ""
+msgstr "Gebruikers-ID"
 
 msgid "Delete the User with the name `some-user`"
-msgstr ""
+msgstr "Verwijder de gebruiker met de naam `some-user`"
 
 msgid "Disable a User"
-msgstr ""
+msgstr "Een gebruiker uitschakelen"
 
 msgid "Disable the User with the name `some-user`"
-msgstr ""
+msgstr "De gebruiker met de naam `some-user` uitschakelen"
 
 msgid "Enable a User"
-msgstr ""
+msgstr "Een gebruiker inschakelen"
 
 msgid "Enable the User with the name `some-user`"
-msgstr ""
+msgstr "Schakel de gebruiker met de naam `some-user` in"
 
 #, php-format
 msgid "Database version: %s"
-msgstr ""
+msgstr "Databaserversie: %s"
 
 msgid "Install a catalog type"
-msgstr ""
+msgstr "Een catalogustype installeren"
 
 msgid "Enable the subsonic catalog type"
-msgstr ""
+msgstr "Schakel het catalogustype ‘subsonic’ in"
 
 msgid "Install a localplay controller"
-msgstr ""
+msgstr "Installeer een LocalPlay-controller"
 
 msgid "User ID to receive the localplay preferences"
-msgstr ""
+msgstr "Gebruikers-ID voor het ontvangen van de LocalPlay-voorkeuren"
 
 msgid "Localplay Type"
-msgstr ""
+msgstr "Localplay-type"
 
 msgid "Enable the mpd localplay controller"
-msgstr ""
+msgstr "Schakel de mpd localplay-controller in"
 
 msgid "Install a plugin"
-msgstr ""
+msgstr "Installeer een plug-in"
 
 msgid "Install the Last.FM plugin"
 msgstr ""
 
 msgid "List plugins, catalog types and localplay controllers"
-msgstr ""
+msgstr "Lijst met plug-ins, catalogustypen en LocalPlay-controllers"
 
 msgid "List all pluggable modules and their installed state"
-msgstr ""
+msgstr "Geef een overzicht van alle plugbare modules en hun installatiestatus"
 
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 msgid "Users List"
-msgstr ""
+msgstr "Gebruikerslijst"
 
 msgid "Find a User with the name `some-user`"
-msgstr ""
+msgstr "Zoek een gebruiker met de naam `some-user`"
 
 #, php-format
 msgid "%s (%d)"
-msgstr ""
+msgstr "%s (%d)"
 
 msgid "Send an e-mail to a group of users"
-msgstr ""
+msgstr "Stuur een e-mail naar een groep gebruikers"
 
 msgid "Mail all standard users"
-msgstr ""
+msgstr "E-mail alle standaardgebruikers"
 
 msgid "Mail is not enabled"
-msgstr ""
+msgstr "E-mail is niet ingeschakeld"
 
 msgid "Reset preference values for users"
-msgstr ""
+msgstr "Voorkeursinstellingen voor gebruikers opnieuw instellen"
 
 msgid "Execute the update"
-msgstr ""
+msgstr "Voer de update uit"
 
 msgid "Reset preferences for some-user to default values"
 msgstr ""
+"De instellingen voor gebruiker ‘some-user’ terugzetten naar de "
+"standaardwaarden"
 
 msgid "Running in Test Mode. Use -e|--execute to update"
-msgstr ""
+msgstr "Wordt uitgevoerd in testmodus. Gebruik -e|--execute om bij te werken"
 
 msgid "No changes have been made"
-msgstr ""
+msgstr "Er zijn geen wijzigingen aangebracht"
 
 msgid "Uninstall a catalog type"
-msgstr ""
+msgstr "Een catalogustype verwijderen"
 
 msgid "Disable the subsonic catalog type"
-msgstr ""
+msgstr "Schakel het subsonische catalogustype uit"
 
 msgid "Uninstall a localplay controller"
-msgstr ""
+msgstr "Een LocalPlay-controller verwijderen"
 
 msgid "Disable the mpd localplay controller"
-msgstr ""
+msgstr "Schakel de mpd localplay-controller uit"
 
 msgid "Uninstall a plugin"
-msgstr ""
+msgstr "Een plug-in verwijderen"
 
 msgid "Uninstall the Last.FM plugin"
-msgstr ""
+msgstr "Verwijder de Last.FM-plug-in"
 
 msgid "Update the Ampache config file"
-msgstr ""
+msgstr "Werk het Ampache-configuratiebestand bij"
 
 msgid "Update the config file"
-msgstr ""
+msgstr "Werk het configuratiebestand bij"
 
 msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr ""
+"Wordt uitgevoerd in de schrijfmodus. Zorg ervoor dat je het eerst hebt "
+"getest!"
 
 msgid "Update the database to the latest version"
 msgstr ""
@@ -7211,24 +7225,6 @@ msgstr ""
 
 msgid "Unknown Artist"
 msgstr "Onbekende artiest"
-
-msgid "Amazon art search"
-msgstr ""
-
-msgid "Amazon base url"
-msgstr ""
-
-msgid "Amazon max results pages"
-msgstr ""
-
-msgid "Amazon Access Key ID"
-msgstr ""
-
-msgid "Amazon Secret Access Key"
-msgstr ""
-
-msgid "Amazon associate tag"
-msgstr ""
 
 msgid "Sonic similarity from an AudioMuse-AI server"
 msgstr ""

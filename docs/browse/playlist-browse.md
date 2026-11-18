@@ -16,23 +16,24 @@ Send filters in the `cond` parameter as `filter,value` pairs, separated by `;`
 
 e.g. `cond=starts_with,a`
 
-| Filter            | Value   | Description                                                                                                                             |
-|-------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `alpha_match`     | string  | Alias of `like`.                                                                                                                        |
-| `equal`           | string  | The playlist name is exactly this value. Matching is case insensitive.                                                                  |
-| `exact_match`     | string  | Alias of `equal`.                                                                                                                       |
-| `id`              | array   | Only these playlist ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
-| `like`            | string  | The playlist name contains this value.                                                                                                  |
-| `not_like`        | string  | The playlist name does not contain this value.                                                                                          |
-| `not_starts_with` | string  | The playlist name does not start with this value.                                                                                       |
-| `playlist_open`   | user id | Only lists this user can open: public ones, their own, ones they collaborate on and ones shared with them.                              |
-| `playlist_type`   | 0 or 1  | Send `0` for lists owned by the current user, `1` for every list they can open. Sending it twice toggles it.                            |
-| `playlist_user`   | user id | Only lists owned by this user.                                                                                                          |
-| `regex_match`     | regex   | The playlist name matches this MySQL regular expression. Setting it clears any `regex_not_match` filter.                                |
-| `regex_not_match` | regex   | The playlist name does not match this MySQL regular expression. Setting it clears any `regex_match` filter.                             |
-| `starts_with`     | string  | The playlist name starts with this value.                                                                                               |
-| `user_flag`       | 0 or 1  | Send `1` for playlists the current user has favorited, `0` for the ones they have not.                                                  |
-| `user_rating`     | 0 to 5  | Only playlists the current user rated this value. Send `0` for unrated ones.                                                            |
+| Filter            | Value     | Description                                                                                                                             |
+|-------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `alpha_match`     | string    | Alias of `like`.                                                                                                                        |
+| `artist`          | artist id | Only playlists this artist is credited on.                                                                                              |
+| `equal`           | string    | The playlist name is exactly this value. Matching is case insensitive.                                                                  |
+| `exact_match`     | string    | Alias of `equal`.                                                                                                                       |
+| `id`              | array     | Only these playlist ids. It takes a list, which `cond` cannot send, so `cond=id,1` builds an empty list and the browse returns nothing. |
+| `like`            | string    | The playlist name contains this value.                                                                                                  |
+| `not_like`        | string    | The playlist name does not contain this value.                                                                                          |
+| `not_starts_with` | string    | The playlist name does not start with this value.                                                                                       |
+| `playlist_open`   | user id   | Only lists this user can open: public ones, their own, ones they collaborate on and ones shared with them.                              |
+| `playlist_type`   | 0 or 1    | Send `0` for lists owned by the current user, `1` for every list they can open. Sending it twice toggles it.                            |
+| `playlist_user`   | user id   | Only lists owned by this user.                                                                                                          |
+| `regex_match`     | regex     | The playlist name matches this MySQL regular expression. Setting it clears any `regex_not_match` filter.                                |
+| `regex_not_match` | regex     | The playlist name does not match this MySQL regular expression. Setting it clears any `regex_match` filter.                             |
+| `starts_with`     | string    | The playlist name starts with this value.                                                                                               |
+| `user_flag`       | 0 or 1    | Send `1` for playlists the current user has favorited, `0` for the ones they have not.                                                  |
+| `user_rating`     | 0 to 5    | Only playlists the current user rated this value. Send `0` for unrated ones.                                                            |
 
 ## Available browse sorts
 

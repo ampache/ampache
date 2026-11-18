@@ -6,17 +6,17 @@
 # Translators:
 # lachlan <lachlan.00@gmail.com>, 2026
 # petpunk <petpunk@gmail.com>, 2026
-# manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2026
 # César Enrique García <cquike@gmail.com>, 2026
+# manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-05 14:14+1000\n"
+"POT-Creation-Date: 2026-11-06 08:41+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
-"Last-Translator: César Enrique García <cquike@gmail.com>, 2026\n"
+"Last-Translator: manuelglez86 <manuel.gonzalez@correo.uady.mx>, 2026\n"
 "Language-Team: Spanish (Spain) (https://app.transifex.com/ampache/teams/40984/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,7 +217,7 @@ msgid "This affects all non-admin accounts"
 msgstr "Esto afecta a las cuentas no administrativas"
 
 msgid "Prevent Preset Override"
-msgstr ""
+msgstr "Evitar sobrescribir la configuración"
 
 msgid "Clear Stats"
 msgstr "Borrar las estadísticas"
@@ -514,7 +514,7 @@ msgid "Save Track Order"
 msgstr "Guardar orden de Pistas"
 
 msgid "Do you really want to delete this Folder?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres eliminar la Carpeta?"
 
 msgid "Reorder"
 msgstr "Re-ordenar"
@@ -742,7 +742,7 @@ msgid "Codec"
 msgstr "Códec"
 
 msgid "Folder"
-msgstr ""
+msgstr "Carpeta"
 
 msgid "None"
 msgstr "Ninguno"
@@ -837,7 +837,7 @@ msgid "Actions"
 msgstr "Acciones"
 
 msgid "Open in WebDAV"
-msgstr ""
+msgstr "Abrir en WebDAV"
 
 msgid "Add Current Host"
 msgstr "Añadir Host actual"
@@ -1632,7 +1632,7 @@ msgid "play/.htaccess configured?"
 msgstr "¿play/.htaccess configurado?"
 
 msgid "jellyfin/.htaccess action"
-msgstr ""
+msgstr "jellyfin/.htaccess "
 
 msgid "jellyfin/.htaccess exists?"
 msgstr "¿Existe el archivo jellyfin/.htaccess?"
@@ -1887,7 +1887,7 @@ msgid "WARNING"
 msgstr "AVISO"
 
 msgid "UNKNOWN"
-msgstr ""
+msgstr "DESCONOCIDO"
 
 msgid "HTTP compression"
 msgstr "Compresión HTTP"
@@ -1904,6 +1904,8 @@ msgid ""
 " xml. Do not compress audio streams: they are already compressed, so it only"
 " costs CPU on every listen."
 msgstr ""
+"Habilitar gzip o brotli en tu servidor web para html, css, javascript, json "
+"and xml. No comprime audio: solo consume CPU cuando se está escuchando."
 
 msgid ""
 "This check needs JavaScript, which is why it reads as unknown right now."
@@ -2130,7 +2132,7 @@ msgstr "Descargar una copia de la versión nueva"
 
 #, php-format
 msgid "%s selected"
-msgstr ""
+msgstr "%s seleccionado"
 
 msgid "Show less"
 msgstr ""
@@ -2180,7 +2182,7 @@ msgid "Show Lyrics"
 msgstr "Mostrar letra"
 
 msgid "Playback failed"
-msgstr ""
+msgstr "Reproducción fallida"
 
 msgid "Add All to playlist"
 msgstr "Añadir todo a lista de reproducción"
@@ -2360,7 +2362,7 @@ msgid "Downloads every preference, from every tab, as a JSON file"
 msgstr ""
 
 msgid "Export all preferences"
-msgstr ""
+msgstr "Exportar preferencias"
 
 msgid "Sections"
 msgstr ""
@@ -2369,16 +2371,16 @@ msgid "No preference matches this filter."
 msgstr ""
 
 msgid "(empty)"
-msgstr ""
+msgstr "(vacíoy)"
 
 msgid "(a new value)"
 msgstr ""
 
 msgid "Apply these changes?"
-msgstr ""
+msgstr "¿Aplicar los cambios?"
 
 msgid "for every account"
-msgstr ""
+msgstr "para todas las cuentas"
 
 msgid "Access Level"
 msgstr "Nivel de acceso"
@@ -2397,7 +2399,7 @@ msgid "Update Preferences"
 msgstr "Actualizar opciones"
 
 msgid "Tick \"apply to all\" on every change"
-msgstr ""
+msgstr "Seleccionar \"aplicar a todos\" a cada cambio"
 
 msgid "Preference"
 msgstr "Preferencia"
@@ -2409,7 +2411,7 @@ msgid "Reference"
 msgstr ""
 
 msgid "Restore"
-msgstr ""
+msgstr "Restaurar"
 
 msgid "Apply to All"
 msgstr "Aplicar a todos"
@@ -2421,7 +2423,7 @@ msgid "Modified"
 msgstr ""
 
 msgid "Read only"
-msgstr ""
+msgstr "Solo lectura"
 
 msgid "Help"
 msgstr "Ayuda"
@@ -3893,6 +3895,8 @@ msgid ""
 "Move and rename an uploaded file to where the catalog pattern says it "
 "belongs, instead of leaving it where it landed."
 msgstr ""
+"Mover y renombrar un archivo subido a donde el patrón del catálogo indique "
+"que pertenece."
 
 msgid ""
 "Command run in the upload directory once a file has arrived, with %FILE% "
@@ -3904,6 +3908,8 @@ msgid ""
 "Give every uploader a folder of their own under the catalog. An account "
 "whose username does not resolve cannot upload at all."
 msgstr ""
+"Dar a cada uploader una carpeta propia en el catálogo, una cuenta sin "
+"usuario no puede subir archivos"
 
 msgid ""
 "Drops the artist section from the uploads listing, for a server where the "
@@ -4304,7 +4310,7 @@ msgid "You will be automatically redirected in 10 seconds."
 msgstr "Será redirigido en 10 segundos."
 
 msgid "Something went wrong. Please check the logs for further information."
-msgstr ""
+msgstr "Algo salió mal. Por favor revisa los logs para más información"
 
 msgid "You do not have permission to write to this file or folder"
 msgstr "No tienes permisos para modificar este archivo o carpeta"
@@ -4351,7 +4357,7 @@ msgid "Upload complete"
 msgstr "Carga completada"
 
 msgid "Upload canceled"
-msgstr ""
+msgstr "Carga cancelada"
 
 msgid "Error during upload"
 msgstr "Error al cargar"
@@ -4558,19 +4564,20 @@ msgid "The Catalog art search has started"
 msgstr "La búsqueda de imágenes del catalogo ha empezado"
 
 msgid "The Catalog folder scan has started"
-msgstr ""
+msgstr "El Escaneo del Catálogo ha iniciado"
 
 msgid "This will clear all Now Playing data"
 msgstr ""
 
 msgid "This will permanently delete all catalog statistics"
-msgstr ""
+msgstr "Las estadísticas del catálogo se borrarán permanentemente"
 
 msgid "This will permanently delete your Catalog"
 msgstr "Esto eliminará permanentemente el Catálogo"
 
 msgid "The Catalog write file tags has started"
 msgstr ""
+"La escritura de las etiquetas de los archivos del Catálogo ha iniciado"
 
 msgid "The Catalog has been updated"
 msgstr "Se ha actualizado el Catálogo"
@@ -4634,7 +4641,7 @@ msgstr "Se ha creado la Licencia nueva"
 
 #, php-format
 msgid "This will permanently delete the license \"%s\""
-msgstr ""
+msgstr "La licencia se borrará permanentemente \"%s\""
 
 msgid "Edit license"
 msgstr "Editar licencia"
@@ -4692,7 +4699,7 @@ msgstr "Se ha actualizado la publicación de Shoutbox"
 
 #, php-format
 msgid "This will permanently delete the shoutbox post \"%s\""
-msgstr ""
+msgstr "La publicación en shoutbox se borrará permanentemente \"%s\""
 
 msgid "Your cache has been cleared successfully"
 msgstr "Tu cache se ha limpiado satisfactoriamente"
@@ -4737,11 +4744,11 @@ msgstr "Se necesita por lo menos una cuenta activa de Administrador activa"
 
 #, php-format
 msgid "%s has been disabled"
-msgstr ""
+msgstr "%s se ha deshabilitado"
 
 #, php-format
 msgid "%s has been enabled"
-msgstr ""
+msgstr "%s se habilitó"
 
 msgid "API key has been deleted"
 msgstr "La API key ha sido borrada"
@@ -4755,12 +4762,12 @@ msgstr "El token ha sido borrado"
 #. HINT: User Fullname
 #, php-format
 msgid "This will disable the user \"%s\""
-msgstr ""
+msgstr "Se desactivará el usuario \"%s\""
 
 #. HINT: User Fullname
 #, php-format
 msgid "This will enable the user \"%s\""
-msgstr ""
+msgstr "Se habilitará el usuario \"%s\""
 
 msgid "A new user API Key has been generated"
 msgstr "Una nueva API Key para el usuario ha sido generada"
@@ -4916,7 +4923,7 @@ msgid "The Playlist has been deleted"
 msgstr "Se ha eliminado la Lista de Reproducción"
 
 msgid "This Folder will be deleted"
-msgstr ""
+msgstr "La carpeta se eliminará"
 
 msgid "The Ampache database username or password is missing"
 msgstr ""
@@ -4964,16 +4971,16 @@ msgid "Playlist created"
 msgstr "La Lista de reproducción ha sido creada"
 
 msgid "Folder created"
-msgstr ""
+msgstr "Carpeta creada"
 
 msgid "This folder is not empty"
-msgstr ""
+msgstr "La carpeta no está vacía"
 
 msgid "A folder cannot contain itself"
-msgstr ""
+msgstr "Una carpeta no puede contenerse a sí misma"
 
 msgid "Folder updated"
-msgstr ""
+msgstr "Carpeta Actualizada"
 
 #. HINT: Number of songs
 #, php-format
@@ -5055,7 +5062,7 @@ msgid "Your account has not been updated"
 msgstr "Tu cuenta no ha sido actualizada"
 
 msgid "Device approved"
-msgstr ""
+msgstr "Dispositivo aprobado"
 
 msgid "That code is invalid, expired, or already used"
 msgstr ""
@@ -5778,13 +5785,13 @@ msgid "Delete the User with the name `some-user`"
 msgstr ""
 
 msgid "Disable a User"
-msgstr ""
+msgstr "Desactivar un usuario"
 
 msgid "Disable the User with the name `some-user`"
 msgstr ""
 
 msgid "Enable a User"
-msgstr ""
+msgstr "Habilitar un usuario"
 
 msgid "Enable the User with the name `some-user`"
 msgstr ""
@@ -5876,13 +5883,13 @@ msgid "Uninstall a plugin"
 msgstr "Desinstalar un plugin"
 
 msgid "Uninstall the Last.FM plugin"
-msgstr ""
+msgstr "Desinstalar el plugin de Last.FM"
 
 msgid "Update the Ampache config file"
-msgstr ""
+msgstr "Actualizar el archivo de configuración de Ampache"
 
 msgid "Update the config file"
-msgstr ""
+msgstr "Actualizar el archivo de configuración"
 
 msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr ""
@@ -8062,15 +8069,15 @@ msgstr "Subsonic"
 
 #: ./untranslated-strings.txt:119
 msgid "7digital"
-msgstr ""
+msgstr "7digital"
 
 #: ./untranslated-strings.txt:120
 msgid "Amazon"
-msgstr ""
+msgstr "Amazon"
 
 #: ./untranslated-strings.txt:121
 msgid "Bit.ly"
-msgstr ""
+msgstr "Bit.ly"
 
 #: ./untranslated-strings.txt:122
 msgid "Catalog Favorites"
@@ -8082,31 +8089,31 @@ msgstr ""
 
 #: ./untranslated-strings.txt:124
 msgid "Discogs"
-msgstr ""
+msgstr "Discogs"
 
 #: ./untranslated-strings.txt:125
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #: ./untranslated-strings.txt:126
 msgid "Flattr"
-msgstr ""
+msgstr "Flattr"
 
 #: ./untranslated-strings.txt:127
 msgid "Flickr"
-msgstr ""
+msgstr "Flickr"
 
 #: ./untranslated-strings.txt:129
 msgid "GoogleAnalytics"
-msgstr ""
+msgstr "GoogleAnalytics"
 
 #: ./untranslated-strings.txt:130
 msgid "GoogleMaps"
-msgstr ""
+msgstr "GoogleMaps"
 
 #: ./untranslated-strings.txt:131
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: ./untranslated-strings.txt:132
 msgid "Headphones"
@@ -8114,15 +8121,15 @@ msgstr ""
 
 #: ./untranslated-strings.txt:134
 msgid "Libravatar"
-msgstr ""
+msgstr "Libravatar"
 
 #: ./untranslated-strings.txt:135
 msgid "Libre.FM"
-msgstr ""
+msgstr "Libre.FM"
 
 #: ./untranslated-strings.txt:136
 msgid "ListenBrainz"
-msgstr ""
+msgstr "ListenBrainz"
 
 #: ./untranslated-strings.txt:137
 msgid "Lyrist Lyrics"
@@ -8130,11 +8137,11 @@ msgstr ""
 
 #: ./untranslated-strings.txt:138
 msgid "Matomo"
-msgstr ""
+msgstr "Matomo"
 
 #: ./untranslated-strings.txt:141
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #: ./untranslated-strings.txt:142
 msgid "Personal Favorites"
@@ -8150,7 +8157,7 @@ msgstr ""
 
 #: ./untranslated-strings.txt:145
 msgid "RSSView"
-msgstr ""
+msgstr "RSSView"
 
 #: ./untranslated-strings.txt:146
 msgid "Shout Home"
@@ -8170,11 +8177,11 @@ msgstr ""
 
 #: ./untranslated-strings.txt:150
 msgid "TheAudioDb"
-msgstr ""
+msgstr "TheAudioDb"
 
 #: ./untranslated-strings.txt:152
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ./untranslated-strings.txt:153
 msgid "YOURLS"
@@ -8182,11 +8189,11 @@ msgstr ""
 
 #: ./untranslated-strings.txt:154
 msgid "handshake"
-msgstr ""
+msgstr "handshake"
 
 #: ./untranslated-strings.txt:155
 msgid "ping"
-msgstr ""
+msgstr "ping"
 
 #: ./untranslated-strings.txt:260
 msgid "Home Dashboard"
@@ -8194,7 +8201,7 @@ msgstr ""
 
 #: ./untranslated-strings.txt:269
 msgid "Mpd"
-msgstr ""
+msgstr "Mpd"
 
 # This file lists all translatable strings from the Ampache preference table
 # (descriptions and subcategories). It is generated from the source code by
@@ -8242,11 +8249,11 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow Streaming"
-msgstr ""
+msgstr "Permitir Streaming"
 
 #: Ampache preference description
 msgid "Allow user uploads"
-msgstr ""
+msgstr "Permitir subir archivos"
 
 #: Ampache preference description
 msgid "Allow Video Features"
@@ -8260,27 +8267,27 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow Ampache API3 responses"
-msgstr ""
+msgstr "Permitir respuestas Ampache API3"
 
 #: Ampache preference description
 msgid "Allow Ampache API4 responses"
-msgstr ""
+msgstr "Permitir respuestas Ampache API4"
 
 #: Ampache preference description
 msgid "Allow Ampache API5 responses"
-msgstr ""
+msgstr "Permitir respuestas Ampache API5"
 
 #: Ampache preference description
 msgid "Allow Ampache API6 responses"
-msgstr ""
+msgstr "Permitir respuestas Ampache API6"
 
 #: Ampache preference description
 msgid "Allow Ampache API8 responses"
-msgstr ""
+msgstr "Permitir respuestas Ampache API8"
 
 #: Ampache preference description
 msgid "Force a specific API response no matter what version you send"
-msgstr ""
+msgstr "Forzar una API especifica si importar la versión envíada"
 
 #: Ampache preference description
 msgid "Hide playlists in Subsonic and API clients that start with this string"
@@ -8306,7 +8313,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Check for Ampache updates automatically"
-msgstr ""
+msgstr "Comprobar actualizaciones automáticamente"
 
 #: Ampache preference description
 msgid "Bit.ly API key"
@@ -8314,7 +8321,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Bit.ly Username"
-msgstr ""
+msgstr "Usuario Bit.ly"
 
 #: Ampache preference description
 msgid "Only keep the latest media bookmark"
@@ -8342,7 +8349,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Show filter box on browse"
-msgstr ""
+msgstr "Mostrar filtro en Navegar"
 
 #: Ampache preference description
 msgid "Force Grid View on Radio Station browse"
@@ -8374,7 +8381,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Web Player browser notifications"
-msgstr ""
+msgstr "Notificaciones de explorador del Reproductor Web"
 
 #: Ampache preference description
 msgid "Check library item at import time and disable duplicates"
@@ -8391,11 +8398,11 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom blank album default image"
-msgstr ""
+msgstr "Imagen para usar en álbum sin portada"
 
 #: Ampache preference description
 msgid "Custom datetime"
-msgstr ""
+msgstr "Fecha y hora personalizadas"
 
 #: Ampache preference description
 msgid ""
@@ -8405,15 +8412,15 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom URL - Favicon (SVG, PNG or ICO)"
-msgstr ""
+msgstr "URL para - Favicon (SVG, PNG or ICO)"
 
 #: Ampache preference description
 msgid "Custom URL - Login page background"
-msgstr ""
+msgstr "URL para - Fondo de página de inicio de sesión"
 
 #: Ampache preference description
 msgid "Custom URL - Login page logo"
-msgstr ""
+msgstr "URL para - logo de la página de inicio de sesión"
 
 #: Ampache preference description
 msgid ""
@@ -8423,7 +8430,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom URL - Logo"
-msgstr ""
+msgstr "URL para - Logo"
 
 #: Ampache preference description
 msgid "Custom URL - Use your avatar for header logo"
@@ -8431,7 +8438,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom text footer"
-msgstr ""
+msgstr "Pie de página personalizado"
 
 #: Ampache preference description
 msgid "Custom timezone (Override PHP date.timezone)"
@@ -8467,7 +8474,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow Downloads"
-msgstr ""
+msgstr "Permitir descargas"
 
 #: Ampache preference description
 msgid ""
@@ -8501,27 +8508,27 @@ msgstr "Mostrar búsqueda de Google en los elementos de la librería"
 
 #: Ampache preference description
 msgid "Show Discogs search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de Discogs en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Show DuckDuckGo search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de DuckDuckGo en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Show Wikipedia search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de Wikipedia en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Show Last.fm search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de Last.fm en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Show Bandcamp search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de Bandcamp en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Show MusicBrainz search icon on library items"
-msgstr ""
+msgstr "Mostrar icono de MusicBrainz en los elementos de la biblioteca"
 
 #: Ampache preference description
 msgid "Force HTTP playback regardless of port"
@@ -8537,7 +8544,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow Geolocation"
-msgstr ""
+msgstr "Permitir geolocaclización"
 
 #: Ampache preference description
 msgid "Hide the Genre column in browse table rows"
@@ -8625,7 +8632,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Now Playing filtered per user"
-msgstr ""
+msgstr "Filtrar Reproduciendo Ahora por Usuario"
 
 #: Ampache preference description
 msgid "Offset Limit"
@@ -8786,7 +8793,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Browse"
-msgstr ""
+msgstr "Orden CSS personalizado - Navegar"
 
 #: Ampache preference description
 msgid "Custom CSS Order - Dashboard"
@@ -8798,11 +8805,11 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Custom CSS Order - Playlist"
-msgstr ""
+msgstr "Orden CSS personalizado - Listas"
 
 #: Ampache preference description
 msgid "Custom CSS Order - Search"
-msgstr ""
+msgstr "Orden CSS personalizado - Busqueda"
 
 #: Ampache preference description
 msgid "Website Description - shown when a link to this server is shared"
@@ -8892,7 +8899,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Allow users to remove uploaded songs"
-msgstr ""
+msgstr "Permitir a los usuarios eliminar canciones subidas"
 
 #: Ampache preference description
 msgid "Rename uploaded file according to catalog pattern"
@@ -8900,7 +8907,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Destination catalog"
-msgstr ""
+msgstr "Catálogo destino"
 
 #: Ampache preference description
 msgid "Post-upload script (current directory = upload target directory)"
@@ -8908,11 +8915,11 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Create a subdirectory per user"
-msgstr ""
+msgstr "Crear subdirectorio por usuario"
 
 #: Ampache preference description
 msgid "Consider the user sender as the track's artist"
-msgstr ""
+msgstr "Considerar al usuario que subió la canción como el artista"
 
 #: Ampache preference description
 msgid "Use UPnP backend"
@@ -8932,7 +8939,7 @@ msgstr ""
 
 #: Ampache preference description
 msgid "Auto-pause between tabs"
-msgstr ""
+msgstr "Pausar entre pestañas"
 
 #: Ampache preference description
 msgid ""
@@ -8941,7 +8948,7 @@ msgstr "Eliminar pistas reproducidas en el reproductor web"
 
 #: Ampache preference subcategory
 msgid "Api"
-msgstr ""
+msgstr "Api"
 
 #: Ampache preference subcategory
 msgid "Backend"
@@ -8953,7 +8960,7 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Cookies"
-msgstr ""
+msgstr "Cookies"
 
 #: Ampache preference subcategory
 msgid "Custom"
@@ -8965,7 +8972,7 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Httpq"
-msgstr ""
+msgstr "Httpq"
 
 #: Ampache preference subcategory
 msgid "Interface"
@@ -8973,7 +8980,7 @@ msgstr "Interfaz"
 
 #: Ampache preference subcategory
 msgid "Last.fm"
-msgstr ""
+msgstr "Last.fm"
 
 #: Ampache preference subcategory
 msgid "Library"
