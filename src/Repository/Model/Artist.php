@@ -254,7 +254,7 @@ class Artist extends database_object implements
         if ($mbid !== null && $mbid !== '' && $mbid !== '0') {
             $plugin      = new Plugin('musicbrainz');
             $parsed_mbid = VaInfo::parse_mbid($mbid);
-            $data        = ($parsed_mbid && $plugin->_plugin instanceof AmpacheMusicBrainz)
+            $data        = ($parsed_mbid && $plugin->_plugin instanceof AmpacheMusicBrainz && Plugin::is_installed($plugin->_plugin->name) > 0)
                 ? $plugin->_plugin->get_artist($parsed_mbid)
                 : [];
             if (array_key_exists('name', $data)) {
@@ -324,7 +324,7 @@ class Artist extends database_object implements
 
             // if that fails, insert a new artist and return the id
             $plugin = new Plugin('musicbrainz');
-            $data   = ($plugin->_plugin instanceof AmpacheMusicBrainz)
+            $data   = ($plugin->_plugin instanceof AmpacheMusicBrainz && Plugin::is_installed($plugin->_plugin->name) > 0)
                 ? $plugin->_plugin->get_artist($parsed_mbid)
                 : [];
             if (array_key_exists('name', $data)) {

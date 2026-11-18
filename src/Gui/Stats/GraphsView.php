@@ -34,6 +34,9 @@ use Override;
  */
 final class GraphsView extends AbstractView
 {
+    // the value the browser's date picker reads and sends back, strtotime() reads it as is
+    private const string DATE_FORMAT = 'Y-m-d\TH:i';
+
     /**
      * @param list<string> $graphTypes
      */
@@ -47,8 +50,6 @@ final class GraphsView extends AbstractView
         private readonly int $startDate,
         private readonly int $endDate,
         private readonly string $zoom,
-        private readonly string $formattedStartDate,
-        private readonly string $formattedEndDate,
         private readonly string $requestAction,
         private readonly string $breadcrumbLink,
         private readonly bool $geolocationEnabled,
@@ -56,12 +57,12 @@ final class GraphsView extends AbstractView
 
     public function getFormattedEndDate(): string
     {
-        return $this->formattedEndDate;
+        return date(self::DATE_FORMAT, $this->endDate);
     }
 
     public function getFormattedStartDate(): string
     {
-        return $this->formattedStartDate;
+        return date(self::DATE_FORMAT, $this->startDate);
     }
 
     public function getGraph(): Graph

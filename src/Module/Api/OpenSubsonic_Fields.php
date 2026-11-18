@@ -52,7 +52,7 @@ use Ampache\Repository\Model\User;
  * the method that would otherwise carry it. They are all optional in the spec, which requires omission over a
  * placeholder value.
  *
- * https://opensubsonic.netlify.app/docs/responses/
+ * https://opensubsonic.github.io/docs/responses/
  */
 final class OpenSubsonic_Fields
 {
@@ -93,14 +93,18 @@ final class OpenSubsonic_Fields
      * Turn a stored lyric blob into timed lines, and into word cues when the caller asked for the enhanced layer.
      * Kept free of the Song model so the parsing itself is coverable without a database.
      *
+     * `end` is only ever what the file states (the closing tag of an Enhanced LRC line), never the next line's start.
+     *
      * @return array{
      *     'synced': bool,
-     *     'line': array<int, array{'value': string, 'start'?: int}>,
+     *     'offset': int,
+     *     'line': array<int, array{'value': string, 'start'?: int, 'end'?: int}>,
      *     'cueLine': array<int, array{
      *         'index': int,
      *         'start': int,
+     *         'end'?: int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }
      */
@@ -113,8 +117,18 @@ final class OpenSubsonic_Fields
         $lines    = [];
         $cueLines = [];
         $synced   = false;
+        $offset   = 0;
         foreach (explode("\n", html_entity_decode($text)) as $line) {
             if ($line === '') {
+                continue;
+            }
+
+            // an LRC header tag describes the file rather than being sung; [offset:] shifts every timing
+            if (preg_match('/^\[(ar|al|ti|au|by|length|offset|re|tool|ve|#):\s*(.*?)\s*\]$/i', trim($line), $tag)) {
+                if (strtolower($tag[1]) === 'offset' && preg_match('/^[+-]?\d+$/', $tag[2])) {
+                    $offset = (int) $tag[2];
+                }
+
                 continue;
             }
 
@@ -130,20 +144,50 @@ final class OpenSubsonic_Fields
             // The cue offsets are measured against the tag-free text, so that is what the line must carry.
             $value   = ($cues === []) ? trim($matches[4]) : $cues['value'];
             $index   = count($lines);
-            $lines[] = ['value' => $value, 'start' => $start];
+            $entry   = ['value' => $value, 'start' => $start];
+            // the spec keeps an exact end for the songLyrics version 2 enhanced response
+            $end = $cues['end'] ?? null;
+            if ($enhanced && $end !== null && $end >= $start) {
+                $entry['end'] = $end;
+            }
+
+            $lines[] = $entry;
 
             if ($enhanced && $cues !== []) {
-                $cueLines[] = [
+                $cueLine = [
                     'index' => $index,
                     'start' => $start,
                     'value' => $value,
                     'cue' => $cues['cue'],
                 ];
+                if (isset($entry['end'])) {
+                    $cueLine['end'] = $entry['end'];
+                }
+
+                $cueLines[] = $cueLine;
             }
+        }
+
+        if ($synced) {
+            $order = array_keys($lines);
+            usort($order, static fn(int $a, int $b): int => ($lines[$a]['start'] ?? -1) <=> ($lines[$b]['start'] ?? -1));
+            $sortedLines = [];
+            $newIndexes  = [];
+            foreach ($order as $oldIndex) {
+                $newIndexes[$oldIndex] = count($sortedLines);
+                $sortedLines[]         = $lines[$oldIndex];
+            }
+            $lines = $sortedLines;
+            foreach ($cueLines as &$cueLine) {
+                $cueLine['index'] = $newIndexes[$cueLine['index']];
+            }
+            unset($cueLine);
+            usort($cueLines, static fn(array $a, array $b): int => $a['index'] <=> $b['index']);
         }
 
         return [
             'synced' => $synced,
+            'offset' => ($synced) ? $offset : 0,
             'line' => $lines,
             'cueLine' => $cueLines,
         ];
@@ -160,49 +204,54 @@ final class OpenSubsonic_Fields
      * Split one Enhanced LRC line into its tag-free text and the word cues pointing into it. Returns an empty array
      * when the line carries no `<mm:ss.xx>` tags at all, so a plain LRC line stays a plain line.
      *
-     * `end` is deliberately absent from every cue: Enhanced LRC gives start-only timing, and the spec requires the
-     * field to be present on all cues of a line or none.
+     * A line closed by a final tag with no word after it states when it ends; only then does every cue get an `end`,
+     * each running to the next cue's start, because the spec wants `end` on all cues of a line or on none.
      *
-     * @return array{'value': string, 'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>}|array{}
+     * @return array{'value': string, 'end'?: int, 'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>}|array{}
      */
     private static function _parseEnhancedCues(string $line): array
     {
         $matches = [];
-        if (!preg_match_all('/<(\d{2}):(\d{2})[.:](\d{2})>([^<]*)/', $line, $matches, PREG_SET_ORDER)) {
+        if (!preg_match_all('/<(\d{2}):(\d{2})[.:](\d{2})>/', $line, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             return [];
         }
 
-        $value = '';
+        $value = substr($line, 0, $matches[0][0][1]);
         $cues  = [];
-        foreach ($matches as $match) {
-            $word = $match[4];
-            if (trim($word) === '') {
-                $value .= $word;
+        foreach ($matches as $index => $match) {
+            $start = $match[0][1] + strlen($match[0][0]);
+            $end   = $matches[$index + 1][0][1] ?? strlen($line);
+            $word  = substr($line, $start, $end - $start);
+            if ($word === '') {
                 continue;
             }
 
-            // byteStart/byteEnd index the finished string, so spacing lands outside the cue it would otherwise shift.
-            $lead   = strlen($word) - strlen(ltrim($word));
-            $value .= substr($word, 0, $lead);
-
-            $trimmed    = trim($word);
             $byte_start = strlen($value);
-            $value .= $trimmed;
+            $value .= $word;
 
             $cues[] = [
-                'start' => self::_lrcTimeToMilliseconds($match[1], $match[2], $match[3]),
+                'start' => self::_lrcTimeToMilliseconds($match[1][0], $match[2][0], $match[3][0]),
+                'value' => $word,
                 'byteStart' => $byte_start,
-                'byteEnd' => strlen($value),
+                'byteEnd' => strlen($value) - 1,
             ];
-
-            $value .= substr($word, $lead + strlen($trimmed));
         }
 
         if ($cues === []) {
             return [];
         }
 
-        return ['value' => $value, 'cue' => $cues];
+        $last = $matches[count($matches) - 1];
+        if (trim(substr($line, $last[0][1] + strlen($last[0][0]))) !== '') {
+            return ['value' => $value, 'cue' => $cues];
+        }
+
+        $end = self::_lrcTimeToMilliseconds($last[1][0], $last[2][0], $last[3][0]);
+        foreach ($cues as $index => $cue) {
+            $cues[$index]['end'] = $cues[$index + 1]['start'] ?? $end;
+        }
+
+        return ['value' => $value, 'end' => $end, 'cue' => $cues];
     }
 
     /**
@@ -211,7 +260,7 @@ final class OpenSubsonic_Fields
      * The titled discs of an album. Only discs that actually carry a subtitle are returned — the spec makes `title`
      * required, so an untitled disc has nothing to say and is left out entirely.
      *
-     * https://opensubsonic.netlify.app/docs/responses/disctitle/
+     * https://opensubsonic.github.io/docs/responses/disctitle/
      * @return array<int, array{'disc': int, 'title': string}>
      */
     public function albumDiscTitles(Album $album): array
@@ -235,7 +284,7 @@ final class OpenSubsonic_Fields
      *
      * The moods of an album, which Ampache derives from the moods of its songs when a catalog is scanned.
      *
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * https://opensubsonic.github.io/docs/responses/albumid3/
      *
      * @return string[]
      */
@@ -257,7 +306,7 @@ final class OpenSubsonic_Fields
      *
      * The record labels of an album. `name` is required by the spec, so a blank one is left out.
      *
-     * https://opensubsonic.netlify.app/docs/responses/recordlabel/
+     * https://opensubsonic.github.io/docs/responses/recordlabel/
      *
      * @return array<int, array{'name': string}>
      */
@@ -342,7 +391,7 @@ final class OpenSubsonic_Fields
      * An ItemDate built from a bare year. Ampache only records the year part of a release, so `month`/`day` are
      * never present; a zero or obviously invalid year yields an empty date and the caller omits the field.
      *
-     * https://opensubsonic.netlify.app/docs/responses/itemdate/
+     * https://opensubsonic.github.io/docs/responses/itemdate/
      * @return array{'year'?: int}
      */
     public function itemDate(?int $year): array
@@ -357,7 +406,7 @@ final class OpenSubsonic_Fields
      *
      * The `played` field: an ISO 8601 instant, or null when never streamed. Server-wide, like `playCount`.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      */
     public function lastPlayed(?int $timestamp): ?string
     {
@@ -444,7 +493,7 @@ final class OpenSubsonic_Fields
      * The tagged beats per minute. Ampache keeps the fraction a detection tool wrote, but the spec types the field
      * as an integer, so it is rounded on the way out.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      */
     public function songBpm(Song $song): ?int
     {
@@ -463,7 +512,7 @@ final class OpenSubsonic_Fields
      * than as free-form role tags, so the composer is the only relationship that maps onto a Contributor role; the
      * performing artists are already carried by `artists`/`albumArtists`. `subRole` has no source and is omitted.
      *
-     * https://opensubsonic.netlify.app/docs/responses/contributor/
+     * https://opensubsonic.github.io/docs/responses/contributor/
      * @return array<int, array{'role': string, 'artist': array{'id': string, 'name': string}}>
      */
     public function songContributors(Song $song): array
@@ -518,7 +567,7 @@ final class OpenSubsonic_Fields
      *
      * The moods of a song. The spec asks for names only, so the ids and the owner are dropped.
      *
-     * https://opensubsonic.netlify.app/docs/responses/child/
+     * https://opensubsonic.github.io/docs/responses/child/
      *
      * @return string[]
      */
@@ -542,7 +591,7 @@ final class OpenSubsonic_Fields
      * point, so it is scaled back to plain dB here. The spec requires `replayGain` itself to always be present on
      * a Child, so the caller emits this even when it comes back empty.
      *
-     * https://opensubsonic.netlify.app/docs/responses/replaygain/
+     * https://opensubsonic.github.io/docs/responses/replaygain/
      * @return array{
      *     'trackGain'?: float,
      *     'albumGain'?: float,
@@ -606,18 +655,20 @@ final class OpenSubsonic_Fields
      * `kind` and `agents` are not emitted: Ampache stores one unattributed lyric layer, `main` is already the
      * default when `kind` is omitted, and the spec says agents should not appear without multiple vocal layers.
      *
-     * https://opensubsonic.netlify.app/docs/responses/structuredlyrics/
+     * https://opensubsonic.github.io/docs/responses/structuredlyrics/
      * @return array{
      *     'displayArtist': string,
      *     'displayTitle': string,
      *     'lang': string,
      *     'synced': bool,
-     *     'line': array<int, array{'value': string, 'start'?: int}>,
+     *     'offset'?: int,
+     *     'line': array<int, array{'value': string, 'start'?: int, 'end'?: int}>,
      *     'cueLine'?: array<int, array{
      *         'index': int,
      *         'start': int,
+     *         'end'?: int,
      *         'value': string,
-     *         'cue': array<int, array{'start': int, 'byteStart': int, 'byteEnd': int}>
+     *         'cue': array<int, array{'start': int, 'end'?: int, 'value': string, 'byteStart': int, 'byteEnd': int}>
      *     }>
      * }|array{}
      */
@@ -640,6 +691,10 @@ final class OpenSubsonic_Fields
             'synced' => $parsed['synced'],
             'line' => $parsed['line'],
         ];
+
+        if ($parsed['offset'] !== 0) {
+            $entry['offset'] = $parsed['offset'];
+        }
 
         if ($parsed['synced'] && $parsed['cueLine'] !== []) {
             $entry['cueLine'] = $parsed['cueLine'];

@@ -33,7 +33,9 @@ use Ampache\Module\Api\Subsonic_Xml_Data;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -48,6 +50,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         private readonly SubsonicResponseHandlerInterface $responseHandler,
         private readonly Subsonic_Json_Data $subsonicJsonData,
         private readonly Subsonic_Xml_Data $subsonicXmlData,
+        private readonly StreamProxyInterface $streamProxy,
     ) {}
 
     /**
@@ -65,7 +68,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = Subsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -207,6 +210,18 @@ final class StreamingHandler implements StreamingHandlerInterface
             }
         } elseif ($object_type == 'artist' || $object_type == 'album' || $object_type == 'podcast' || $object_type == 'playlist') {
             $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'folder') {
+            if (Art::has_db($object_id, 'folder')) {
+                $art = new Art($object_id, 'folder');
+            } else {
+                // a folder browse lists albums as folders, so one without art of its own shows the album of the first track below it
+                $folder = new Folder($object_id);
+                $medias = ($folder->isNew()) ? [] : $folder->get_medias('song');
+                if ($medias !== []) {
+                    $song = new Song($medias[0]['object_id']);
+                    $art  = new Art($song->album, 'album');
+                }
+            }
         } elseif ($object_type == 'search') {
             $playlist  = new Search($object_id, 'song', $user);
             $listitems = $playlist->get_items();
@@ -383,7 +398,7 @@ final class StreamingHandler implements StreamingHandlerInterface
         }
 
         $object = Subsonic_Api::getAmpacheObject($sub_id);
-        if (($object instanceof Song || $object instanceof Podcast_Episode) === false) {
+        if (($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) === false) {
             $this->responseHandler->errorOutput($input, Subsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -428,15 +443,6 @@ final class StreamingHandler implements StreamingHandlerInterface
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
-            $headers    = apache_request_headers();
-            $reqheaders = [];
-            if (isset($headers['User-Agent'])) {
-                $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
-            }
-            if (isset($headers['Range'])) {
-                $reqheaders[] = "Range: " . $headers['Range'];
-            }
-            $reqheaders[] = "X-Forwarded-For: " . Core::get_user_ip();
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
@@ -445,7 +451,7 @@ final class StreamingHandler implements StreamingHandlerInterface
                     $curl,
                     [
                         CURLOPT_FAILONERROR => true,
-                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HTTPHEADER => $this->streamProxy->getRequestHeaders(),
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,

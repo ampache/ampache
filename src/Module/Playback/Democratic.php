@@ -348,10 +348,8 @@ class Democratic extends Tmp_Playlist
     public function get_items(?int $limit = null): array
     {
         $repository = self::getDemocraticRepository();
-        // Remove 'unconnected' users votes
-        if (AmpConfig::get('demo_clear_sessions')) {
-            $repository->deleteUnconnectedVotes();
-        }
+        // Only votes from users who enabled demo_clear_sessions are cleared, whoever is viewing
+        $repository->deleteUnconnectedVotes();
 
         $results = [];
         $count   = 1;

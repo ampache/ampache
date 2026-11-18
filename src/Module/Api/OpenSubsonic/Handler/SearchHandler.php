@@ -45,14 +45,15 @@ final class SearchHandler implements SearchHandlerInterface
     /**
      * search
      *
-     * https://opensubsonic.netlify.app/docs/endpoints/search/
+     * https://opensubsonic.github.io/docs/endpoints/search/
      * @param array<string, mixed> $input
      */
     public function search(array $input, User $user): void
     {
         $data = [
             'type' => 'song',
-            'operator' => 'and'
+            'operator' => 'and',
+            'weight' => true,
         ];
 
         $rule_count = 1;
@@ -120,7 +121,7 @@ final class SearchHandler implements SearchHandlerInterface
      * search2
      *
      * Returns a listing of files matching the given search criteria. Supports paging through the result.
-     * https://opensubsonic.netlify.app/docs/endpoints/search2/
+     * https://opensubsonic.github.io/docs/endpoints/search2/
      * @param array<string, mixed> $input
      */
     public function search2(array $input, User $user): void
@@ -143,7 +144,7 @@ final class SearchHandler implements SearchHandlerInterface
      * search3 [OS]
      *
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
-     * https://opensubsonic.netlify.app/docs/endpoints/search3/
+     * https://opensubsonic.github.io/docs/endpoints/search3/
      * @param array<string, mixed> $input
      */
     public function search3(array $input, User $user): void
@@ -188,6 +189,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $artistOffset;
             $data['type']     = 'artist';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
@@ -207,6 +209,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $albumOffset;
             $data['type']     = 'album';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];
@@ -226,6 +229,7 @@ final class SearchHandler implements SearchHandlerInterface
             $data['offset']   = $songOffset;
             $data['type']     = 'song';
             $data['operator'] = 'or';
+            $data['weight']   = true;
             $ruleCount        = 1;
             foreach ($query as $token) {
                 $data['rule_' . $ruleCount . '_input']    = $token['value'];

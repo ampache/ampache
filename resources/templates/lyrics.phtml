@@ -60,11 +60,77 @@ $lyricsUrl = $this->getLyricsUrl(); ?>
       </a>
   </div>
 </div>
+<?php if ($this->mayEdit()) { ?>
+<div id="information_actions">
+    <h3><?php echo T_('Actions'); ?></h3>
+    <ul>
+        <li>
+            <a href="<?php echo $this->e($this->getRefreshUrl()); ?>">
+                <?php echo $this->raw(Ui::get_material_symbol('refresh', T_('Refresh'))); ?>
+                <?php echo T_('Refresh'); ?>
+            </a>
+        </li>
+        <li>
+            <a data-title="<?php echo $this->e(T_('Song Edit')); ?>" onclick="showEditDialog('song_row', '<?php echo $song->getId(); ?>', 'edit_song_<?php echo $song->getId(); ?>', $(this).data('title'), '')">
+                <?php echo $this->raw(Ui::get_material_symbol('edit', T_('Edit'))); ?>
+                <?php echo T_('Edit'); ?>
+            </a>
+        </li>
+        <?php if ($this->isStored()) { ?>
+        <li>
+            <a data-confirm-text="<?php echo $this->e($this->getClearConfirmation()); ?>" onclick="window.ampacheConfirm($(this).data('confirm-text')).then(function (ok) { if (ok) { $('#lyrics_clear_form').trigger('submit'); } })">
+                <?php echo $this->raw(Ui::get_material_symbol('clear_all', T_('Clear'))); ?>
+                <?php echo T_('Clear'); ?>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+    <?php if ($this->isStored()) { ?>
+    <form id="lyrics_clear_form" method="post" action="<?php echo $this->e($this->getFormUrl()); ?>">
+        <?php echo $this->raw($this->getFormToken()); ?>
+        <input type="hidden" name="lyrics_action" value="clear" />
+    </form>
+    <?php } ?>
+</div>
+<?php } else { ?>
 <br /><br />
+<?php } ?>
 <div class="lyrics">
-    <div id="lyrics_text"><?php echo $this->raw($this->getLyrics()); ?></div>
+    <div id="lyrics_text"><?php echo $this->raw($this->getLinesView()->render()); ?></div>
+<?php if ($this->isUserSet()) { ?>
+    <div class="lyrics_source"><?php echo T_('User set'); ?></div>
+<?php } ?>
 <?php if ($lyricsUrl !== null) { ?>
     <div id="lyrics_url"><a href="<?php echo $this->e($lyricsUrl); ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
 <?php } ?>
 </div>
-<?php Ui::show_box_bottom(); ?>
+<?php Ui::show_box_bottom();
+
+$candidates = $this->getCandidates();
+if ($candidates === [] && $this->isRefreshed()) {
+    Ui::show_box_top(T_('Plugins'), 'box box_lyrics_plugins');
+    echo T_('No lyrics found.');
+    Ui::show_box_bottom();
+}
+if ($candidates !== []) {
+    Ui::show_box_top(T_('Plugins'), 'box box_lyrics_plugins');
+    foreach ($candidates as $candidate) { ?>
+<div class="lyrics_candidate">
+    <form method="post" action="<?php echo $this->e($this->getFormUrl()); ?>">
+        <?php echo $this->raw($this->getFormToken()); ?>
+        <input type="hidden" name="lyrics_action" value="save" />
+        <input type="hidden" name="lyrics" value="<?php echo $this->e($candidate['text']); ?>" />
+        <strong><?php echo $this->e($candidate['plugin']); ?></strong>
+        <input type="submit" value="<?php echo $this->e(T_('Select')); ?>" />
+        <?php if ($candidate['url'] !== null) { ?>
+        <a href="<?php echo $this->e($candidate['url']); ?>" target="_blank"><?php echo T_('Show more'); ?></a>
+        <?php } ?>
+    </form>
+    <details>
+        <summary><?php echo T_('Lyrics'); ?></summary>
+        <div class="lyrics_candidate_text"><?php echo $this->raw(nl2br($this->e($candidate['text']))); ?></div>
+    </details>
+</div>
+<?php }
+    Ui::show_box_bottom();
+} ?>

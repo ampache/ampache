@@ -29,14 +29,12 @@ use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Catalog\CountableTableEnum;
-use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
@@ -49,11 +47,9 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
 {
     public function __construct(
         private AlbumRepositoryInterface $albumRepository,
-        private ModelFactoryInterface $modelFactory,
         private LoggerInterface $logger,
         private SongRepositoryInterface $songRepository,
         private ShoutRepositoryInterface $shoutRepository,
-        private SongDeleterInterface $songDeleter,
         private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
@@ -69,21 +65,42 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
     ): void {
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
-        foreach ($songIds as $songId) {
-            $song    = $this->modelFactory->createSong($songId);
-            $deleted = $this->songDeleter->delete($song, true);
-            if (!$deleted) {
+
+        // one query for every file path and folder/counter stat instead of hydrating a Song model per id
+        $songStats     = [];
+        $enabledDelta  = 0;
+        $enabledTime   = 0;
+        $enabledSizeMb = 0.0;
+        foreach ($this->songRepository->getRowsByIds($songIds, false) as $row) {
+            $file = $row['file'];
+            if (!in_array($file, [null, '', '0'], true) && file_exists($file) && !unlink($file)) {
                 $this->logger->critical(
                     sprintf(
-                        'Error when deleting the song `%d`.',
-                        $songId
+                        'Error when deleting the song `%d`. Please check permissions.',
+                        $row['id']
                     ),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 throw new AlbumDeletionException();
             }
+
+            $songStats[(int) $row['id']] = [
+                'total_count' => (int) $row['total_count'],
+                'total_skip' => (int) $row['total_skip'],
+                'time' => (int) $row['time'],
+            ];
+
+            // a disabled song was never in the enabled-only totals, so removing it moves nothing
+            if ((bool) $row['enabled']) {
+                $enabledDelta--;
+                $enabledTime -= (int) $row['time'];
+                $enabledSizeMb -= (int) $row['size'] / 1024 / 1024;
+            }
         }
+
+        $this->songRepository->deleteByIdsWithArchive($songIds);
+        $this->artCleanup->collectGarbageForObjects('song', $songIds);
 
         $this->albumRepository->delete($album);
 
@@ -93,7 +110,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             // every song in this album is gone, so clean up their map table rows
             $this->songRepository->collectGarbageForSongs($songIds);
             $this->albumRepository->collectGarbageForAlbums([$albumId]);
-            $this->folderRepository->collectGarbage();
+            $this->folderRepository->collectGarbageForObjects('song', $songStats);
 
             // collect song garbage once
             Userflag::garbage_collection('song');
@@ -106,9 +123,11 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             $this->shoutRepository->collectGarbage('album', $albumId);
             $this->userActivityRepository->collectGarbage('album', $albumId);
 
-            $this->catalogCounter->count(CountableTableEnum::ALBUM);
+            // every enabled song in this album held its totals; album_disk still needs a real recount since
+            // its count query carries no enabled filter to move by a known delta
+            $this->catalogCounter->adjust(CountableTableEnum::ALBUM, ($enabledDelta < 0) ? -1 : 0);
             $this->catalogCounter->count(CountableTableEnum::ALBUM_DISK);
-            $this->catalogCounter->count(CountableTableEnum::SONG);
+            $this->catalogCounter->adjust(CountableTableEnum::SONG, $enabledDelta, $enabledTime, $enabledSizeMb);
         }
     }
 }

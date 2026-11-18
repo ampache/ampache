@@ -61,7 +61,7 @@ use Ampache\Repository\Model\Video;
 /**
  * OpenSubsonic Class
  *
- * This class wraps Ampache to OpenSubsonic API functions. See https://opensubsonic.netlify.app/
+ * This class wraps Ampache to OpenSubsonic API functions. See https://opensubsonic.github.io/
  *
  * @SuppressWarnings("unused")
  */
@@ -653,7 +653,7 @@ class OpenSubsonic_Api
      * download
      *
      * Downloads a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/download/
+     * https://opensubsonic.github.io/docs/endpoints/download/
      * @param array<string, mixed> $input
      */
     public function download(array $input, User $user): void
@@ -680,7 +680,7 @@ class OpenSubsonic_Api
 
     /**
      * findSonicPath [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/
+     * https://opensubsonic.github.io/docs/endpoints/findsonicpath/
      * @param array<string, mixed> $input
      */
     public function findSonicPath(array $input, User $user): void
@@ -692,7 +692,7 @@ class OpenSubsonic_Api
      * getAlbum
      *
      * Returns details for an album.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
+     * https://opensubsonic.github.io/docs/endpoints/getalbum/
      * @param array<string, mixed> $input
      */
     public function getalbum(array $input, User $user): void
@@ -704,7 +704,7 @@ class OpenSubsonic_Api
      * getAlbumInfo
      *
      * Returns album info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/
+     * https://opensubsonic.github.io/docs/endpoints/getalbuminfo/
      * @param array<string, mixed> $input
      */
     public function getalbuminfo(array $input, User $user): void
@@ -716,7 +716,7 @@ class OpenSubsonic_Api
      * getAlbumInfo2
      *
      * Returns album info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/
+     * https://opensubsonic.github.io/docs/endpoints/getalbuminfo2/
      * @param array<string, mixed> $input
      */
     public function getalbuminfo2(array $input, User $user): void
@@ -728,7 +728,7 @@ class OpenSubsonic_Api
      * getAlbumList
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
+     * https://opensubsonic.github.io/docs/endpoints/getalbumlist/
      * @param array<string, mixed> $input
      */
     public function getalbumlist(array $input, User $user): void
@@ -740,7 +740,7 @@ class OpenSubsonic_Api
      * getAlbumList2
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
+     * https://opensubsonic.github.io/docs/endpoints/getalbumlist2/
      * @param array<string, mixed> $input
      */
     public function getalbumlist2(array $input, User $user): void
@@ -752,7 +752,7 @@ class OpenSubsonic_Api
      * getArtist
      *
      * Returns details for an artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartist/
+     * https://opensubsonic.github.io/docs/endpoints/getartist/
      * @param array<string, mixed> $input
      */
     public function getartist(array $input, User $user): void
@@ -764,7 +764,7 @@ class OpenSubsonic_Api
      * getArtistInfo
      *
      * Returns artist info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
+     * https://opensubsonic.github.io/docs/endpoints/getartistinfo/
      * @param array<string, mixed> $input
      */
     public function getartistinfo(array $input, User $user): void
@@ -776,7 +776,7 @@ class OpenSubsonic_Api
      * getArtistInfo2
      *
      * Returns artist info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
+     * https://opensubsonic.github.io/docs/endpoints/getartistinfo2/
      * @param array<string, mixed> $input
      */
     public function getartistinfo2(array $input, User $user): void
@@ -788,7 +788,7 @@ class OpenSubsonic_Api
      * getArtists
      *
      * Returns all artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartists/
+     * https://opensubsonic.github.io/docs/endpoints/getartists/
      * @param array<string, mixed> $input
      */
     public function getartists(array $input, User $user): void
@@ -800,7 +800,7 @@ class OpenSubsonic_Api
      * getAvatar
      *
      * Returns the avatar (personal image) for a user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getavatar/
+     * https://opensubsonic.github.io/docs/endpoints/getavatar/
      * @param array<string, mixed> $input
      */
     public function getavatar(array $input, User $user): void
@@ -820,7 +820,7 @@ class OpenSubsonic_Api
      * getCaptions
      *
      * Returns captions (subtitles) for a video.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcaptions/
+     * https://opensubsonic.github.io/docs/endpoints/getcaptions/
      * @param array<string, mixed> $input
      */
     public function getcaptions(array $input, User $user): void
@@ -840,7 +840,7 @@ class OpenSubsonic_Api
      * getCoverArt
      *
      * Returns a cover art image.
-     * https://opensubsonic.netlify.app/docs/endpoints/getcoverart/
+     * https://opensubsonic.github.io/docs/endpoints/getcoverart/
      * @param array<string, mixed> $input
      */
     public function getcoverart(array $input, User $user): void
@@ -852,7 +852,7 @@ class OpenSubsonic_Api
      * getGenres
      *
      * Returns all genres.
-     * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
+     * https://opensubsonic.github.io/docs/endpoints/getgenres/
      * @param array<string, mixed> $input
      */
     public function getgenres(array $input, User $user): void
@@ -864,7 +864,7 @@ class OpenSubsonic_Api
      * getIndexes
      *
      * Returns an indexed structure of all artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
+     * https://opensubsonic.github.io/docs/endpoints/getindexes/
      * @param array<string, mixed> $input
      */
     public function getindexes(array $input, User $user): void
@@ -892,7 +892,7 @@ class OpenSubsonic_Api
      * getLyrics
      *
      * Searches for and returns lyrics for a given song.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyrics/
+     * https://opensubsonic.github.io/docs/endpoints/getlyrics/
      * @param array<string, mixed> $input
      */
     public function getlyrics(array $input, User $user): void
@@ -904,7 +904,7 @@ class OpenSubsonic_Api
      * getLyricsBySongId
      *
      * Add support for synchronized lyrics, multiple languages, and retrieval by song ID
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
+     * https://opensubsonic.github.io/docs/endpoints/getlyricsbysongid/
      * @param array<string, mixed> $input
      */
     public function getlyricsbysongid(array $input, User $user): void
@@ -916,7 +916,7 @@ class OpenSubsonic_Api
      * getMusicDirectory
      *
      * Returns a listing of all files in a music directory.
-     * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
+     * https://opensubsonic.github.io/docs/endpoints/getmusicdirectory/
      * @param array<string, mixed> $input
      */
     public function getmusicdirectory(array $input, User $user): void
@@ -928,7 +928,7 @@ class OpenSubsonic_Api
      * getMusicFolders
      *
      * Returns all configured top-level music folders.
-     * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
+     * https://opensubsonic.github.io/docs/endpoints/getmusicfolders/
      * @param array<string, mixed> $input
      */
     public function getmusicfolders(array $input, User $user): void
@@ -948,7 +948,7 @@ class OpenSubsonic_Api
      * getNowPlaying
      *
      * Returns what is currently being played by all users.
-     * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
+     * https://opensubsonic.github.io/docs/endpoints/getnowplaying/
      * @param array<string, mixed> $input
      */
     public function getnowplaying(array $input, User $user): void
@@ -984,7 +984,7 @@ class OpenSubsonic_Api
      * getPlayQueue
      *
      * Returns the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      */
     public function getplayqueue(array $input, User $user): void
@@ -996,7 +996,7 @@ class OpenSubsonic_Api
      * getPlayQueueByIndex
      *
      * Returns the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      */
     public function getplayqueuebyindex(array $input, User $user): void
@@ -1024,7 +1024,7 @@ class OpenSubsonic_Api
      * getRandomSongs
      *
      * Returns random songs matching the given criteria.
-     * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
+     * https://opensubsonic.github.io/docs/endpoints/getrandomsongs/
      * @param array<string, mixed> $input
      */
     public function getrandomsongs(array $input, User $user): void
@@ -1052,7 +1052,7 @@ class OpenSubsonic_Api
      * getSimilarSongs
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
+     * https://opensubsonic.github.io/docs/endpoints/getsimilarsongs/
      * @param array<string, mixed> $input
      */
     public function getsimilarsongs(array $input, User $user, string $elementName = 'similarSongs'): void
@@ -1064,7 +1064,7 @@ class OpenSubsonic_Api
      * getSimilarSongs2
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
+     * https://opensubsonic.github.io/docs/endpoints/getsimilarsongs2/
      * @param array<string, mixed> $input
      */
     public function getsimilarsongs2(array $input, User $user): void
@@ -1076,7 +1076,7 @@ class OpenSubsonic_Api
      * getSong
      *
      * Returns details for a song.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsong/
+     * https://opensubsonic.github.io/docs/endpoints/getsong/
      * @param array<string, mixed> $input
      */
     public function getsong(array $input, User $user): void
@@ -1088,7 +1088,7 @@ class OpenSubsonic_Api
      * getSongsByGenre
      *
      * Returns songs in a given genre.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
+     * https://opensubsonic.github.io/docs/endpoints/getsongsbygenre/
      * @param array<string, mixed> $input
      */
     public function getsongsbygenre(array $input, User $user): void
@@ -1098,7 +1098,7 @@ class OpenSubsonic_Api
 
     /**
      * getSonicSimilarTracks [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/
+     * https://opensubsonic.github.io/docs/endpoints/getsonicsimilartracks/
      * @param array<string, mixed> $input
      */
     public function getSonicSimilarTracks(array $input, User $user): void
@@ -1126,7 +1126,7 @@ class OpenSubsonic_Api
      * getTopSongs
      *
      * Returns top songs for the given artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
+     * https://opensubsonic.github.io/docs/endpoints/gettopsongs/
      * @param array<string, mixed> $input
      */
     public function gettopsongs(array $input, User $user): void
@@ -1139,7 +1139,7 @@ class OpenSubsonic_Api
      *
      * OpenSubsonic extension `transcoding`. Reports whether a client can play a media item as it stands, and what it
      * would be given instead. POST only, because the client capabilities arrive as a JSON body.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodedecision/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodedecision/
      * @param array<string, mixed> $input
      */
     public function getTranscodeDecision(array $input, User $user): void
@@ -1152,7 +1152,7 @@ class OpenSubsonic_Api
      *
      * OpenSubsonic extension `transcoding`. Streams a media item using the settings getTranscodeDecision resolved,
      * carried in the opaque `transcodeParams` token.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodestream/
+     * https://opensubsonic.github.io/docs/endpoints/gettranscodestream/
      * @param array<string, mixed> $input
      */
     public function getTranscodeStream(array $input, User $user): void
@@ -1180,7 +1180,7 @@ class OpenSubsonic_Api
      * getVideoInfo
      *
      * Returns details for a video.
-     * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
+     * https://opensubsonic.github.io/docs/endpoints/getvideoinfo/
      * @param array<string, mixed> $input
      */
     public function getvideoinfo(array $input, User $user): void
@@ -1192,7 +1192,7 @@ class OpenSubsonic_Api
      * getVideos
      *
      * Returns all video files.
-     * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
+     * https://opensubsonic.github.io/docs/endpoints/getvideos/
      * @param array<string, mixed> $input
      */
     public function getvideos(array $input, User $user): void
@@ -1204,7 +1204,7 @@ class OpenSubsonic_Api
      * hls
      *
      * Downloads a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/hls/
+     * https://opensubsonic.github.io/docs/endpoints/hls/
      * @param array<string, mixed> $input
      */
     public function hls(array $input, User $user): void
@@ -1216,7 +1216,7 @@ class OpenSubsonic_Api
      * jukeboxControl
      *
      * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
-     * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
+     * https://opensubsonic.github.io/docs/endpoints/jukeboxcontrol/
      * @param array<string, mixed> $input
      */
     public function jukeboxcontrol(array $input, User $user): void
@@ -1242,7 +1242,7 @@ class OpenSubsonic_Api
 
     /**
      * reportPlayback [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/reportplayback/
+     * https://opensubsonic.github.io/docs/endpoints/reportplayback/
      * @param array<string, mixed> $input
      */
     public function reportPlayback(array $input, User $user): void
@@ -1254,7 +1254,7 @@ class OpenSubsonic_Api
      * savePlayQueue [OS]
      *
      * Saves the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/saveplayqueue/
      * @param array<string, mixed> $input
      */
     public function saveplayqueue(array $input, User $user): void
@@ -1266,7 +1266,7 @@ class OpenSubsonic_Api
      * savePlayQueueByIndex [OS]
      *
      * Saves the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
+     * https://opensubsonic.github.io/docs/endpoints/saveplayqueuebyindex/
      * @param array<string, mixed> $input
      */
     public function saveplayqueuebyindex(array $input, User $user): void
@@ -1278,7 +1278,7 @@ class OpenSubsonic_Api
      * scrobble
      *
      * Registers the local playback of one or more media files.
-     * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
+     * https://opensubsonic.github.io/docs/endpoints/scrobble/
      * @param array<string, mixed> $input
      */
     public function scrobble(array $input, User $user): void
@@ -1338,7 +1338,7 @@ class OpenSubsonic_Api
      * stream [OS]
      *
      * Streams a given media file.
-     * https://opensubsonic.netlify.app/docs/endpoints/stream/
+     * https://opensubsonic.github.io/docs/endpoints/stream/
      * @param array<string, mixed> $input
      */
     public function stream(array $input, User $user): void

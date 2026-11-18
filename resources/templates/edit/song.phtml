@@ -96,6 +96,10 @@ $ownerId = $this->getOwnerId(); ?>
                 <td><input type="text" name="label" value="<?php echo $this->e($this->getLabel()); ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Lyrics'); ?></td>
+                <td><textarea name="lyrics" rows="10"><?php echo $this->e($this->getLyrics()); ?></textarea></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
                 <td><input type="text" name="year" value="<?php echo $this->e($this->getYear()); ?>" /></td>
             </tr>

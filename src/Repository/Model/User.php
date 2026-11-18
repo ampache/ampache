@@ -1207,6 +1207,12 @@ class User extends database_object
         if ($revokeSessions) {
             $this->revokeSessions();
         }
+
+        // the api key and stream token are long-lived bearer tokens; reissuing them is opt-in, not a login-time rehash
+        if ($revokeSessions && AmpConfig::get_bool('rotate_apikey_on_password_change')) {
+            $this->getUserKeyGenerator()->generateApikey($this);
+            $this->getUserKeyGenerator()->generateStreamToken($this);
+        }
     }
 
     public function update_state(string $new_state): void

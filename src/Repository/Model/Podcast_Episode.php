@@ -435,7 +435,7 @@ class Podcast_Episode extends database_object implements
 
     public function getBitrateFormatted(): string
     {
-        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string) $this->mode));
+        return sprintf('%d-%s', (int) ($this->bitrate / 1000), strtoupper((string) $this->mode));
     }
 
     /**

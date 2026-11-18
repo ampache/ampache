@@ -28,6 +28,7 @@ namespace Ampache\Repository;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\SongDataFieldEnum;
 use Ampache\Repository\Model\SongFieldEnum;
 use PDO;
@@ -479,16 +480,7 @@ class SongRepositoryTest extends TestCase
             ->method('query')
             ->willThrowException(new QueryFailedException('some-error'));
 
-        self::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::LYRICS, 'some-lyrics'));
-    }
-
-    public function testSetDataFieldWritesToSongDataKeyedBySongId(): void
-    {
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('UPDATE `song_data` SET `comment` = ? WHERE `song_id` = ?', ['some-comment', 666]);
-
-        self::assertTrue($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
+        self::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
     }
 
     public function testSetFieldAcceptsANullValue(): void
@@ -526,6 +518,48 @@ class SongRepositoryTest extends TestCase
             ->with('UPDATE `song` SET `file` = ? WHERE `id` = ?', ['/new/path.mp3', 666]);
 
         self::assertTrue($this->subject->setField(666, SongFieldEnum::FILE, '/new/path.mp3'));
+    }
+
+    public function testSetFileLyricsNeverReplacesUserSetLyrics(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "UPDATE `song_data` SET `lyrics` = ?, `lyrics_source` = 'file' WHERE `song_id` = ? AND (`lyrics_source` IS NULL OR `lyrics_source` <> 'user')",
+                ['some-lyrics', 666]
+            );
+
+        $this->subject->setFileLyrics(666, 'some-lyrics');
+    }
+
+    public function testSetFileLyricsWithoutLyricsOnlyClearsLyricsReadFromAFile(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                "UPDATE `song_data` SET `lyrics` = NULL, `lyrics_source` = NULL WHERE `song_id` = ? AND (`lyrics_source` IS NULL OR `lyrics_source` = 'file')",
+                [666]
+            );
+
+        $this->subject->setFileLyrics(666, null);
+    }
+
+    public function testSetLyricsClearsTheSourceWithTheText(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song_data` SET `lyrics` = ?, `lyrics_source` = ? WHERE `song_id` = ?', [null, null, 666]);
+
+        self::assertTrue($this->subject->setLyrics(666, null, LyricsSourceEnum::USER));
+    }
+
+    public function testSetLyricsWritesTheTextAndItsSource(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song_data` SET `lyrics` = ?, `lyrics_source` = ? WHERE `song_id` = ?', ['some-lyrics', 'user', 666]);
+
+        self::assertTrue($this->subject->setLyrics(666, 'some-lyrics', LyricsSourceEnum::USER));
     }
 
     public function testUpdateAllCountsRunsTheThreeSongSweeps(): void

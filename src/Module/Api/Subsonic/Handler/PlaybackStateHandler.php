@@ -263,7 +263,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      */
     public function saveplayqueue(array $input, User $user): void
     {
-        // current required by Subsonic https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
+        // current required by Subsonic https://opensubsonic.github.io/docs/endpoints/saveplayqueue/
         if (isset($input['current'])) {
             $current = (string) $input['current'];
         } else {

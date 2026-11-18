@@ -154,6 +154,7 @@ class WebPlayer
                 $json['r128_track_gain']       = $media->r128_track_gain;
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
+                $json['has_lyrics']            = $media->lyrics_source !== null;
             }
 
             $json['media_id']   = $media->id;

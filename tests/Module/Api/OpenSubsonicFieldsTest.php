@@ -49,9 +49,9 @@ class OpenSubsonicFieldsTest extends TestCase
 
         self::assertSame(
             [
-                ['start' => 12000, 'byteStart' => 0, 'byteEnd' => 5],
-                ['start' => 13200, 'byteStart' => 6, 'byteEnd' => 11],
-                ['start' => 14100, 'byteStart' => 12, 'byteEnd' => 17],
+                ['start' => 12000, 'value' => 'Hello ', 'byteStart' => 0, 'byteEnd' => 5],
+                ['start' => 13200, 'value' => 'cruel ', 'byteStart' => 6, 'byteEnd' => 11],
+                ['start' => 14100, 'value' => 'world', 'byteStart' => 12, 'byteEnd' => 16],
             ],
             $cueLine['cue']
         );
@@ -70,13 +70,21 @@ class OpenSubsonicFieldsTest extends TestCase
         $parsed  = OpenSubsonic_Fields::parseLyrics('[00:01.00]<00:01.00>Café <00:02.00>naïve', true);
         $cueLine = $parsed['cueLine'][0];
 
-        foreach ([0 => 'Café', 1 => 'naïve'] as $index => $expected) {
+        foreach ([0 => 'Café ', 1 => 'naïve'] as $index => $expected) {
             $cue = $cueLine['cue'][$index];
             self::assertSame(
                 $expected,
-                substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'])
+                substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'] + 1)
             );
         }
+    }
+
+    public function testParseLyricsIgnoresAnOffsetForUnsyncedLyrics(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[offset:+500]\nJust words");
+
+        self::assertSame(0, $parsed['offset']);
+        self::assertSame([['value' => 'Just words']], $parsed['line']);
     }
 
     public function testParseLyricsIndexesCueLinesAgainstTheLineArray(): void
@@ -99,9 +107,31 @@ class OpenSubsonicFieldsTest extends TestCase
 
         self::assertSame('  spaced out', $cueLine['value']);
         self::assertSame(
-            'spaced',
-            substr($cueLine['value'], $cueLine['cue'][0]['byteStart'], $cueLine['cue'][0]['byteEnd'] - $cueLine['cue'][0]['byteStart'])
+            '  spaced ',
+            substr($cueLine['value'], $cueLine['cue'][0]['byteStart'], $cueLine['cue'][0]['byteEnd'] - $cueLine['cue'][0]['byteStart'] + 1)
         );
+    }
+
+    public function testParseLyricsKeepsUntimedLinesWithoutInventingTimestamps(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[00:02.00]Later\nuntimed\n[00:00.00]First", true);
+
+        self::assertSame(
+            [['value' => 'untimed'], ['value' => 'First', 'start' => 0], ['value' => 'Later', 'start' => 2000]],
+            $parsed['line']
+        );
+    }
+
+    public function testParseLyricsNeverInfersExactLineEnds(): void
+    {
+        $lyrics = "[00:01.00]First\n[00:03.00]<00:03.00>Second";
+
+        foreach ([false, true] as $enhanced) {
+            $parsed = OpenSubsonic_Fields::parseLyrics($lyrics, $enhanced);
+            foreach ($parsed['line'] as $line) {
+                self::assertArrayNotHasKey('end', $line);
+            }
+        }
     }
 
     public function testParseLyricsOmitsCueLinesUnlessEnhancedIsRequested(): void
@@ -110,6 +140,27 @@ class OpenSubsonicFieldsTest extends TestCase
 
         self::assertSame([], OpenSubsonic_Fields::parseLyrics($lyric)['cueLine']);
         self::assertNotSame([], OpenSubsonic_Fields::parseLyrics($lyric, true)['cueLine']);
+    }
+
+    /**
+     * The spec keeps `end` for the songLyrics version 2 enhanced response, so the plain response never carries it.
+     */
+    public function testParseLyricsOnlyReportsAStatedEndInTheEnhancedResponse(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics('[00:12.00]<00:12.00>Hello <00:14.50>', false);
+
+        self::assertSame(['value' => 'Hello ', 'start' => 12000], $parsed['line'][0]);
+    }
+
+    public function testParseLyricsPreservesUntimedTextAroundCues(): void
+    {
+        $parsed  = OpenSubsonic_Fields::parseLyrics('[00:01.00]Intro <00:01.00>Café & <00:02.00>tea', true);
+        $cueLine = $parsed['cueLine'][0];
+
+        self::assertSame('Intro Café & tea', $cueLine['value']);
+        foreach ($cueLine['cue'] as $cue) {
+            self::assertSame($cue['value'], substr($cueLine['value'], $cue['byteStart'], $cue['byteEnd'] - $cue['byteStart'] + 1));
+        }
     }
 
     public function testParseLyricsReadsLrcLineTimings(): void
@@ -124,6 +175,43 @@ class OpenSubsonicFieldsTest extends TestCase
             ],
             $parsed['line']
         );
+    }
+
+    /**
+     * Enhanced LRC closes a line with a final tag that has no word after it; that is the one stated end LRC can carry.
+     */
+    public function testParseLyricsReadsTheEndAnEnhancedLineStates(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics('[00:12.00]<00:12.00>Hello <00:13.20>world <00:14.50>', true);
+
+        self::assertSame(['value' => 'Hello world ', 'start' => 12000, 'end' => 14500], $parsed['line'][0]);
+        self::assertSame(14500, $parsed['cueLine'][0]['end']);
+        self::assertSame(
+            [
+                ['start' => 12000, 'value' => 'Hello ', 'byteStart' => 0, 'byteEnd' => 5, 'end' => 13200],
+                ['start' => 13200, 'value' => 'world ', 'byteStart' => 6, 'byteEnd' => 11, 'end' => 14500],
+            ],
+            $parsed['cueLine'][0]['cue']
+        );
+    }
+
+    public function testParseLyricsReadsTheOffsetTagAndDropsHeaderTags(): void
+    {
+        $parsed = OpenSubsonic_Fields::parseLyrics("[ar:Some Artist]\n[ti:Some Title]\n[offset:-250]\n[00:01.00]First\n[Drop: Somebody]");
+
+        self::assertSame(-250, $parsed['offset']);
+        self::assertSame([['value' => '[Drop: Somebody]'], ['value' => 'First', 'start' => 1000]], $parsed['line']);
+    }
+
+    public function testParseLyricsSortsLinesAndReindexesCues(): void
+    {
+        $text   = "[00:04.00]<00:04.00>Fourth\n[00:01.00]First\n[00:02.00]<00:02.00>Second\n[00:02.00]Also second";
+        $parsed = OpenSubsonic_Fields::parseLyrics($text, true);
+
+        self::assertSame(['First', 'Second', 'Also second', 'Fourth'], array_column($parsed['line'], 'value'));
+        self::assertSame([1000, 2000, 2000, 4000], array_column($parsed['line'], 'start'));
+        self::assertSame([1, 3], array_column($parsed['cueLine'], 'index'));
+        self::assertSame(['Second', 'Fourth'], array_column($parsed['cueLine'], 'value'));
     }
 
     public function testParseLyricsTreatsUntimedTextAsUnsynced(): void

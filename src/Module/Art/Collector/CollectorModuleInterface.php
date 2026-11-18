@@ -32,6 +32,7 @@ interface CollectorModuleInterface
     /**
      * @param array{
      *     mb_albumid?: string,
+     *     mb_albumid_group?: string,
      *     artist?: string,
      *     album?: string,
      *     cover?: ?string,

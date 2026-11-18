@@ -302,6 +302,14 @@ final class ArtistPageView extends AbstractView
         return (bool) AmpConfig::get('show_played_times');
     }
 
+    /**
+     * The tab lists the playlists holding a song credited to this artist, as song or album artist
+     */
+    public function showPlaylistsTab(): bool
+    {
+        return true;
+    }
+
     public function showRatings(): bool
     {
         return User::is_registered() && AmpConfig::get('ratings');

