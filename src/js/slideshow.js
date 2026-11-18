@@ -1,5 +1,5 @@
 var lastaction = new Date().getTime();
-var refresh_slideshow_interval = jsPrefExistsFlickrApiKey ? jsAmpConfigSlideshowTime : 0;
+var refresh_slideshow_interval = jsAmpConfigSlideshowTime;
 var iSlideshow = null;
 var tSlideshow = null;
 var iSlide = null;
