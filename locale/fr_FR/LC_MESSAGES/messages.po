@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-05 14:14+1000\n"
+"POT-Creation-Date: 2026-11-18 12:57+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fufroma, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/ampache/teams/40984/fr_FR/)\n"
@@ -339,6 +339,9 @@ msgstr "Éditer l'artiste"
 
 msgid "Albums"
 msgstr "Albums"
+
+msgid "Playlists"
+msgstr "Playlists"
 
 msgid "Top Tracks"
 msgstr "Top des morceaux"
@@ -810,6 +813,9 @@ msgstr "Commentaire"
 msgid "Label"
 msgstr "Label"
 
+msgid "Lyrics"
+msgstr "Paroles"
+
 msgid "Music License"
 msgstr "Licence de musique"
 
@@ -1139,9 +1145,6 @@ msgstr "Lien externe"
 
 msgid "Top Rated"
 msgstr "Mieux notés"
-
-msgid "Playlists"
-msgstr "Playlists"
 
 msgid "Importing a Playlist from a File"
 msgstr "Importer une playlist depuis un fichier"
@@ -2115,8 +2118,26 @@ msgstr "Modifier flux en direct"
 msgid "Song Lyrics"
 msgstr "Paroles du morceau"
 
+msgid "Get Lyrics"
+msgstr ""
+
+msgid "Song Edit"
+msgstr "Modifier le morceau"
+
+msgid "Clear"
+msgstr "Effacer"
+
+msgid "User set"
+msgstr "Défini par un utilisateur"
+
 msgid "Show more"
 msgstr "Montrer plus"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "No lyrics found."
+msgstr "Aucune parole trouvée."
 
 msgid "Primary"
 msgstr "Primaire"
@@ -2208,11 +2229,11 @@ msgstr "Ouvrir sur %s"
 msgid "Log out"
 msgstr "Se déconnecter"
 
-msgid "Show Lyrics"
-msgstr "Afficher paroles"
-
 msgid "Playback failed"
 msgstr "La lecture a échoué"
+
+msgid "Show Lyrics"
+msgstr "Afficher paroles"
 
 msgid "Add All to playlist"
 msgstr "Tout ajouter à la playlist"
@@ -2387,9 +2408,6 @@ msgstr "Filtrer"
 
 msgid "Filter by name, description or key"
 msgstr "Filtrer par nom, description ou clé"
-
-msgid "Clear"
-msgstr "Effacer"
 
 msgid "Differs from default"
 msgstr "Diffère du défaut"
@@ -3530,11 +3548,9 @@ msgstr ""
 "tant que les licences ne sont pas aussi activées côté serveur."
 
 msgid ""
-"Adds a lyrics link to the web player control bar. The lyrics page itself "
-"stays reachable either way."
+"Adds a lyrics button to the web player, opening a panel that follows the "
+"playing song. The lyrics page itself stays reachable either way."
 msgstr ""
-"Ajoute un lien vers les paroles dans la barre du lecteur web. La page des "
-"paroles reste accessible dans tous les cas."
 
 msgid ""
 "Appends the original release year to an album title when the record carries "
@@ -3620,12 +3636,9 @@ msgstr ""
 
 msgid ""
 "Seconds of inactivity before the web player fades into a full-screen artist "
-"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
-"anything to show."
+"slideshow. 0 turns it off. Uses the Flickr plugin key if set, otherwise the "
+"artist and album art already in the catalog."
 msgstr ""
-"Secondes d'inactivité avant que le lecteur web ne bascule en diaporama "
-"d'artistes plein écran. 0 le désactive, et il faut la clé du greffon Flickr "
-"pour avoir quelque chose à montrer."
 
 msgid ""
 "Puts the playing track in the browser tab title. Share pages never do it, "
@@ -4639,11 +4652,11 @@ msgstr "Accès refusé"
 msgid "Localplay Controller Not Defined"
 msgstr "Contrôleur du mode de Localplay non défini"
 
-msgid "No lyrics found."
-msgstr "Aucune parole trouvée."
+msgid "These lyrics were set by hand and will be lost. Clear them?"
+msgstr ""
 
-msgid "Song Edit"
-msgstr "Modifier le morceau"
+msgid "Clear the stored lyrics?"
+msgstr ""
 
 #, php-format
 msgid "Track %d"
@@ -4684,9 +4697,6 @@ msgstr "ISRC"
 
 msgid "Last Updated"
 msgstr "Dernière mise à jour"
-
-msgid "Lyrics"
-msgstr "Paroles"
 
 msgid "Licensing"
 msgstr "Licences"
@@ -6307,9 +6317,6 @@ msgstr ""
 
 msgid "List all pluggable modules and their installed state"
 msgstr "Lister tous les modules enfichables et leur état d'installation"
-
-msgid "Plugins"
-msgstr "Plugins"
 
 msgid "Users List"
 msgstr "Liste d'utilisateurs"
@@ -8044,9 +8051,6 @@ msgstr "Le catalogue n'est pas valide"
 msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr "L'URL n'est pas valide, doit être mms:// , https:// ou http://"
 
-msgid "User set"
-msgstr "Défini par un utilisateur"
-
 msgid "Share Edit"
 msgstr "Éditer le partage"
 
@@ -9274,6 +9278,10 @@ msgid "Always show the rightbar"
 msgstr "Toujours afficher la barre latérale droite"
 
 #: Ampache preference description
+msgid "Rotate the api key and stream token when the account password changes"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr ""
 "Temps d'expiration (en jours) par défaut des liens de partage (0=jamais)"
@@ -9607,6 +9615,10 @@ msgstr "Confidentialité"
 #: Ampache preference subcategory
 msgid "Query"
 msgstr "Requêtes"
+
+#: Ampache preference subcategory
+msgid "Security"
+msgstr ""
 
 #: Ampache preference subcategory
 msgid "Sidebar"
