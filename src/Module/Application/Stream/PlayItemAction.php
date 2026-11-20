@@ -34,6 +34,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -106,6 +107,11 @@ final class PlayItemAction extends AbstractStreamAction
             );
 
             if ($item instanceof container_item) {
+                // a private playlist or smartlist belongs to its owner and must not expand for anyone else
+                if ($item instanceof playlist_object && !$item->isVisible($gatekeeper->getUser())) {
+                    continue;
+                }
+
                 $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {

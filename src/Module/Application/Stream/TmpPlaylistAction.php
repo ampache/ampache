@@ -55,7 +55,12 @@ final class TmpPlaylistAction extends AbstractStreamAction
         }
 
         $tmp_playlist = $this->modelFactory->createTmpPlaylist((int) $_REQUEST['tmpplaylist_id']);
-        $mediaIds     = $tmp_playlist->get_items();
+        // a play queue belongs to the session that built it, not to anyone who guesses its id
+        if ($tmp_playlist->session !== null && $tmp_playlist->session !== session_id()) {
+            return null;
+        }
+
+        $mediaIds = $tmp_playlist->get_items();
 
         return $this->stream(
             $mediaIds,
