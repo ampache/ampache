@@ -25,7 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\UrlValidatorInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -62,6 +65,21 @@ class AmpachelistenbrainzTest extends TestCase
         self::assertSame('10.10.10.10:4110/apis/listenbrainz', $this->apiHost());
     }
 
+    public function testAnApiUrlTheValidatorAcceptsIsFetched(): void
+    {
+        $this->pointAtDataUrl(true);
+
+        self::assertSame('ok/1/submit-listens', $this->postJsonUrl());
+    }
+
+    // the api url is a user preference, so fetching it unchecked lets any user make the server request internal hosts
+    public function testAnApiUrlTheValidatorRefusesIsNeverFetched(): void
+    {
+        $this->pointAtDataUrl(false);
+
+        self::assertNull($this->postJsonUrl());
+    }
+
     public function testAnEmptyValueLeavesTheDefaultsInPlace(): void
     {
         $this->resolveApiUrl('');
@@ -87,6 +105,32 @@ class AmpachelistenbrainzTest extends TestCase
         $property = new ReflectionProperty(Ampachelistenbrainz::class, 'api_host');
 
         return $property->getValue($this->plugin);
+    }
+
+    // a data: url answers without a network, so a non-null result proves the fetch happened
+    private function pointAtDataUrl(bool $public): void
+    {
+        new ReflectionProperty(Ampachelistenbrainz::class, 'scheme')->setValue($this->plugin, 'data');
+        new ReflectionProperty(Ampachelistenbrainz::class, 'api_host')->setValue($this->plugin, 'text/plain,ok');
+
+        $validator = $this->createMock(UrlValidatorInterface::class);
+        $validator->expects(self::once())
+            ->method('isPublicHttpUrl')
+            ->with('data://text/plain,ok/1/submit-listens')
+            ->willReturn($public);
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnMap([
+            [UrlValidatorInterface::class, $validator],
+            [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
+        ]);
+        $GLOBALS['dic'] = $dic;
+    }
+
+    private function postJsonUrl(): ?string
+    {
+        $method = new ReflectionMethod(Ampachelistenbrainz::class, 'post_json_url');
+
+        return $method->invoke($this->plugin, '/1/submit-listens', '{}');
     }
 
     private function resolveApiUrl(string $configured): void
