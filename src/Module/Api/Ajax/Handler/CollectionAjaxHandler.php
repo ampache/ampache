@@ -30,10 +30,10 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Database\Query\Smartlist;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,6 +47,7 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private CollectionRepositoryInterface $collectionRepository,
         private BrowseFactoryInterface $browseFactory,
+        private ModelFactoryInterface $modelFactory,
     ) {}
 
     public function handle(User $user): void
@@ -102,7 +103,7 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
                 } elseif ($itemType === 'search') {
                     // A smartlist is not a storable type, so it adds the songs it resolves to instead
                     foreach (explode(',', $requestIds) as $itemId) {
-                        $smartlist = new Smartlist((int) $itemId);
+                        $smartlist = $this->modelFactory->createSmartlist((int) $itemId);
                         if ($smartlist->isNew()) {
                             continue;
                         }
