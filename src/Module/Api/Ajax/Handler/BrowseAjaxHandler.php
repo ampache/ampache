@@ -95,7 +95,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 $filter = false;
                 // data set by the filter box (browse_filters.inc.php)
-                if (isset($_REQUEST['key'])) {
+                if (isset($_REQUEST['key']) && !$this->ownsPrivateRows($browse->get_type(), (string) $_REQUEST['key'])) {
                     // user typed a word to match the name against
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         // the mode is remembered on the browse, so an empty box doesn't reset it on the next render
@@ -351,5 +351,19 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
         // We always do this
         echo xoutput_from_array($results);
+    }
+
+    /**
+     * The page that lists private messages or shares picks the owner server-side; these keys would let a
+     * client re-render repoint that owner filter at another user and read their rows, so the filter box
+     * is not allowed to set them.
+     */
+    private function ownsPrivateRows(string $type, string $key): bool
+    {
+        return match ($type) {
+            'pvmsg' => in_array($key, ['user', 'to_user', 'from_user'], true),
+            'share' => $key === 'user',
+            default => false,
+        };
     }
 }
