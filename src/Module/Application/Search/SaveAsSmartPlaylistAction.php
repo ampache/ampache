@@ -63,7 +63,7 @@ final readonly class SaveAsSmartPlaylistAction implements ApplicationActionInter
             /* HINT: playlist name */
             sprintf(
                 T_('Your search has been saved as a Smart Playlist with the name %s'),
-                // the confirmation box renders its text as html, so the user-chosen name must be escaped here
+                // the confirmation renders html, so a crafted smartlist name would run script
                 scrub_out($playlist->name)
             ),
             sprintf(

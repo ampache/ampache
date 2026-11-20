@@ -103,7 +103,7 @@ final class SubsonicResponseHandler implements SubsonicResponseHandlerInterface
             $output = json_encode($this->subsonicJsonData->addError(Subsonic_Api::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
-        // the callback is reflected into an executable response, so a non-identifier would let a crafted link run as script
+        // the callback is echoed as javascript, so anything but a name lets a crafted link run script
         if (preg_match('/^[A-Za-z0-9_.]+$/', $callback) !== 1) {
             $callback = 'jsonp';
         }

@@ -47,7 +47,7 @@ use Psr\Log\LoggerInterface;
 
 class PlayItemActionTest extends TestCase
 {
-    // a playlist id is a plain request value, so expanding one the user can't see streams someone else's private list
+    // a playlist id is a plain request value, so expanding a private one streams someone else's list
     public function testAPrivatePlaylistIsNotExpanded(): void
     {
         $playlist = $this->playlist(false);

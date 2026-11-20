@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SaveAsSmartPlaylistActionTest extends TestCase
 {
-    // the name comes raw from the request and the confirmation box renders html, so a crafted link runs script
+    // the name comes raw from the request and the confirmation renders html, so a crafted link runs script
     public function testTheConfirmationEscapesTheSmartlistName(): void
     {
         $smartlist       = $this->createMock(Smartlist::class);

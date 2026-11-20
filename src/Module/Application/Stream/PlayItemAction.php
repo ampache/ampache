@@ -99,6 +99,7 @@ final class PlayItemAction extends AbstractStreamAction
             return null;
         }
 
+        $user     = $gatekeeper->getUser();
         $mediaIds = [];
         foreach ($objectIds as $object_id) {
             $item = $this->libraryItemLoader->load(
@@ -108,7 +109,7 @@ final class PlayItemAction extends AbstractStreamAction
 
             if ($item instanceof container_item) {
                 // a private playlist or smartlist belongs to its owner and must not expand for anyone else
-                if ($item instanceof playlist_object && !$item->isVisible($gatekeeper->getUser())) {
+                if ($item instanceof playlist_object && !$item->isVisible($user)) {
                     continue;
                 }
 
@@ -120,7 +121,6 @@ final class PlayItemAction extends AbstractStreamAction
                     }
                 }
 
-                $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
                     $user instanceof User

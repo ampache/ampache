@@ -104,7 +104,7 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
                     // A smartlist is not a storable type, so it adds the songs it resolves to instead
                     foreach (explode(',', $requestIds) as $itemId) {
                         $smartlist = $this->modelFactory->createSmartlist((int) $itemId);
-                        // a private smartlist belongs to someone else, so it must not resolve into this collection
+                        // a private smartlist would copy someone else's songs into this collection
                         if ($smartlist->isNew() || !$smartlist->isVisible($user)) {
                             continue;
                         }

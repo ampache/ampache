@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 use Ampache\Module\Util\UrlValidatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -40,6 +41,7 @@ use ReflectionProperty;
 class AmpachelistenbrainzTest extends TestCase
 {
     private Ampachelistenbrainz $plugin;
+    private UrlValidatorInterface&MockObject $urlValidator;
 
     public function testABareHostKeepsTheDefaultHttpsScheme(): void
     {
@@ -72,7 +74,7 @@ class AmpachelistenbrainzTest extends TestCase
         self::assertSame('ok/1/submit-listens', $this->postJsonUrl());
     }
 
-    // the api url is a user preference, so fetching it unchecked lets any user make the server request internal hosts
+    // the api url is a user preference, so fetching it unchecked lets a user aim the server at internal hosts
     public function testAnApiUrlTheValidatorRefusesIsNeverFetched(): void
     {
         $this->pointAtDataUrl(false);
@@ -97,7 +99,8 @@ class AmpachelistenbrainzTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plugin = new Ampachelistenbrainz();
+        $this->urlValidator = $this->createMock(UrlValidatorInterface::class);
+        $this->plugin       = new Ampachelistenbrainz($this->urlValidator);
     }
 
     private function apiHost(): string
@@ -113,14 +116,12 @@ class AmpachelistenbrainzTest extends TestCase
         new ReflectionProperty(Ampachelistenbrainz::class, 'scheme')->setValue($this->plugin, 'data');
         new ReflectionProperty(Ampachelistenbrainz::class, 'api_host')->setValue($this->plugin, 'text/plain,ok');
 
-        $validator = $this->createMock(UrlValidatorInterface::class);
-        $validator->expects(self::once())
+        $this->urlValidator->expects(self::once())
             ->method('isPublicHttpUrl')
             ->with('data://text/plain,ok/1/submit-listens', true)
             ->willReturn($public);
         $dic = $this->createMock(ContainerInterface::class);
         $dic->method('get')->willReturnMap([
-            [UrlValidatorInterface::class, $validator],
             [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
         ]);
         $GLOBALS['dic'] = $dic;

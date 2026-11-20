@@ -35,7 +35,7 @@ use Psr\Log\LoggerInterface;
 
 class TmpPlaylistActionTest extends TestCase
 {
-    // a queue id is a plain request value, so serving one from another session streams someone else's play queue
+    // a queue id is a plain request value, so serving another session's queue streams someone else's plays
     public function testAnotherSessionsQueueIsNotServed(): void
     {
         $queue = $this->queue('someone-elses-session');

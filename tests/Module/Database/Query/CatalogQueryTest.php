@@ -33,17 +33,13 @@ class CatalogQueryTest extends MockeryTestCase
 {
     private ?string $originalDatabaseName = null;
 
-    /**
-     * Every other string filter in CatalogQuery escapes its value, but the `gather_types` IN-list imploded the
-     * raw filter array straight into the SQL, so a quote in a list element broke out of the literal and injected
-     * arbitrary SQL (reachable through the browse ajax `tag[]` parameter).
-     */
+    // a quote in one gather_types element must stay inside its literal, or it injects sql into the IN list
     public function testGatherTypesEscapesEachListElement(): void
     {
         $this->stubDbaEscape();
         $query = new Query(0, false);
 
-        $sql = (new CatalogQuery())->get_sql_filter($query, 'gather_types', ['music', "x') OR SLEEP(1)-- -"]);
+        $sql = new CatalogQuery()->get_sql_filter($query, 'gather_types', ['music', "x') OR SLEEP(1)-- -"]);
 
         self::assertSame(
             " `catalog`.`gather_types` IN ('music', 'x\\') OR SLEEP(1)-- -') AND ",

@@ -107,7 +107,7 @@ final readonly class UrlValidator implements UrlValidatorInterface
 
     private function isAllowedByPolicy(string $address, bool $allowLan): bool
     {
-        // the reserved ranges hold loopback, link-local and the metadata address, so they stay refused on a lan
+        // loopback, link-local and the metadata address are reserved ranges, so they stay refused on a lan
         $flags = ($allowLan) ? FILTER_FLAG_NO_RES_RANGE : FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
         if (filter_var($address, FILTER_VALIDATE_IP, $flags) === false) {
             return false;

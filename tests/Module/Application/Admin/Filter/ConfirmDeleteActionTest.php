@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ConfirmDeleteActionTest extends TestCase
 {
-    // filter_name comes from the query string and the confirmation box renders html, so a crafted admin link runs script
+    // filter_name comes from the query string and the confirmation renders html, so a link can run script
     public function testTheConfirmationEscapesTheFilterName(): void
     {
         $dic = $this->createMock(ContainerInterface::class);

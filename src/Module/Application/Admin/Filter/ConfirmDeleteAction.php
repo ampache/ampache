@@ -60,7 +60,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                // the confirmation box renders its text as html, so the name from the query string must be escaped
+                // the confirmation renders html, so a crafted filter_name link would run script
                 sprintf(T_('%s has been deleted'), scrub_out($filter_name)),
                 sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );

@@ -50,7 +50,7 @@ class BrowseAjaxHandlerTest extends TestCase
         yield 'share user' => ['share', 'user'];
     }
 
-    // the owning page sets these filters server-side, so a filter box request pointing them at another user reads their rows
+    // the owning page sets these filters server-side; a filter box repointing them reads another user's rows
     #[DataProvider('ownerKeyProvider')]
     #[RunInSeparateProcess]
     public function testFilterBoxCannotRepointTheOwnerOfPrivateRows(string $type, string $key): void
@@ -58,8 +58,7 @@ class BrowseAjaxHandlerTest extends TestCase
         $browse = $this->filterBoxBrowse($type, $key);
 
         $browse->expects(self::never())
-            ->method('set_filter')
-            ->with($key);
+            ->method('set_filter');
 
         $this->handle($browse);
     }

@@ -31,10 +31,9 @@ namespace Ampache\Module\Util;
 interface UrlValidatorInterface
 {
     /**
-     * Whether the url is http(s) and resolves only to public addresses
+     * Whether the url is http(s) and resolves only to public addresses, or also private ones with $allowLan
      *
-     * With $allowLan, private network addresses pass too, for a service the admin may host on their own network;
-     * loopback, link-local and the cloud metadata address are still refused.
+     * Loopback, link-local and the cloud metadata address are refused either way.
      */
     public function isPublicHttpUrl(string $url, bool $allowLan = false): bool;
 

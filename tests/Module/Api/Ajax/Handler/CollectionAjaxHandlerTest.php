@@ -38,7 +38,7 @@ class CollectionAjaxHandlerTest extends TestCase
 {
     private Smartlist $smartlist;
 
-    // a smartlist id is a plain request value, so resolving one the user can't see copies someone else's private songs
+    // a smartlist id is a plain request value, so resolving a private one copies someone else's songs
     public function testAppendingAPrivateSmartlistAddsNothing(): void
     {
         $collection = $this->appendSmartlist(false);

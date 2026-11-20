@@ -68,8 +68,9 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly UrlValidatorInterface $urlValidator,
+    ) {
         $this->description = T_('Scrobble songs you play to your ListenBrainz Account');
         $this->url         = $this->scheme . '://' . $this->host;
     }
@@ -260,9 +261,8 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
-        global $dic;
-        // a self-hosted server on the lan is a real setup (#4522), but loopback or a metadata endpoint never is
-        if (!$dic->get(UrlValidatorInterface::class)->isPublicHttpUrl($target, true)) {
+        // a self-hosted server on the lan is a real setup (#4522); loopback or a metadata endpoint never is
+        if (!$this->urlValidator->isPublicHttpUrl($target, true)) {
             debug_event('listenbrainz.plugin', 'Refused non-public api url: ' . $target, 1);
 
             return null;
