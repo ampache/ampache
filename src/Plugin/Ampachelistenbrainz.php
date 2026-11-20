@@ -28,6 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
@@ -258,6 +259,15 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;
+
+        global $dic;
+        // the api host comes from a user preference, so an internal address would turn a scrobble into a
+        // server-side request against the host's own network
+        if (!$dic->get(UrlValidatorInterface::class)->isPublicHttpUrl($target)) {
+            debug_event('listenbrainz.plugin', 'Refused non-public api url: ' . $target, 1);
+
+            return null;
+        }
 
         return file_get_contents($target, false, $context) ?: null;
     }
