@@ -61,34 +61,6 @@ final readonly class UrlValidator implements UrlValidatorInterface
     }
 
     /**
-     * @return array{host: string, port: int, address: string}|null
-     */
-    private function resolveTarget(string $url, bool $allowLan): ?array
-    {
-        $parts = parse_url($url);
-        if ($parts === false || empty($parts['host'])) {
-            return null;
-        }
-
-        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
-        if (!in_array($scheme, self::SCHEMES, true)) {
-            return null;
-        }
-
-        $addresses = $this->resolve($parts['host']);
-        if ($addresses === [] || !array_all($addresses, fn(string $address): bool => $this->isAllowedAddress($address, $allowLan))) {
-            return null;
-        }
-
-        return [
-            // bracketed in a url, but CURLOPT_RESOLVE (and gethostbynamel above) both want it bare
-            'host' => trim($parts['host'], '[]'),
-            'port' => $parts['port'] ?? ($scheme === 'https' ? 443 : 80),
-            'address' => $addresses[0],
-        ];
-    }
-
-    /**
      * The IPv4 address embedded in an IPv4-mapped or NAT64 IPv6 literal, or null when the address is neither form
      *
      * Compares packed binary rather than the textual prefix, because the embedded address can be spelled as a
@@ -184,5 +156,33 @@ final readonly class UrlValidator implements UrlValidatorInterface
             gethostbynamel($host) ?: [],
             array_column((array) @dns_get_record($host, DNS_AAAA), 'ipv6')
         );
+    }
+
+    /**
+     * @return array{host: string, port: int, address: string}|null
+     */
+    private function resolveTarget(string $url, bool $allowLan): ?array
+    {
+        $parts = parse_url($url);
+        if ($parts === false || empty($parts['host'])) {
+            return null;
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        if (!in_array($scheme, self::SCHEMES, true)) {
+            return null;
+        }
+
+        $addresses = $this->resolve($parts['host']);
+        if ($addresses === [] || !array_all($addresses, fn(string $address): bool => $this->isAllowedAddress($address, $allowLan))) {
+            return null;
+        }
+
+        return [
+            // bracketed in a url, but CURLOPT_RESOLVE (and gethostbynamel above) both want it bare
+            'host' => trim($parts['host'], '[]'),
+            'port' => $parts['port'] ?? ($scheme === 'https' ? 443 : 80),
+            'address' => $addresses[0],
+        ];
     }
 }

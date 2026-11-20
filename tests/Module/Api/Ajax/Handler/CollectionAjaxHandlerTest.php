@@ -36,6 +36,8 @@ use PHPUnit\Framework\TestCase;
 
 class CollectionAjaxHandlerTest extends TestCase
 {
+    private Smartlist $smartlist;
+
     // a smartlist id is a plain request value, so resolving one the user can't see copies someone else's private songs
     public function testAppendingAPrivateSmartlistAddsNothing(): void
     {
@@ -58,8 +60,6 @@ class CollectionAjaxHandlerTest extends TestCase
 
         $this->handle($collection);
     }
-
-    private Smartlist $smartlist;
 
     private function appendSmartlist(bool $visible): Collection
     {
