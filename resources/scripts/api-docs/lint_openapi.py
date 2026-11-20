@@ -5,7 +5,7 @@ The schema/response/parameter generators produce a correct spec; this guards aga
 hand edits or future generator changes silently breaking the structure the audit
 fixed. It asserts, across the whole document:
 
-  1. every operation carries an operationId (codegen names methods from it)
+  1. every operation carries an operationId, and no two share one (codegen names methods from it)
   2. no schema uses additionalProperties: false (a new response field must not break
      validating clients)
   3. every operation documents the universal error set 400/401/403/500
@@ -15,6 +15,7 @@ fixed. It asserts, across the whole document:
   6. no two named schemas are byte-for-byte identical, except the generated *Request
      bodies (create/edit with the same fields) and a small allowlist of intentional
      twins
+  7. every array schema declares its items (OpenAPI 3.0 requires it)
 
 This is the Python stand-in for the Spectral/Redocly lint the plan named; the repo's
 other doc checks are all Python under `composer api:docs:check`, so it lives there too.
@@ -74,6 +75,24 @@ def resolves(spec: dict, ref: str) -> bool:
 
 def check_operation_ids(spec: dict) -> list[str]:
     return [f"{label}: missing operationId" for label, op in operations(spec) if "operationId" not in op]
+
+
+def check_operation_ids_unique(spec: dict) -> list[str]:
+    seen: dict[str, list[str]] = {}
+    for label, op in operations(spec):
+        if "operationId" in op:
+            seen.setdefault(op["operationId"], []).append(label)
+    return [f"operationId {op_id} shared by {', '.join(labels)}" for op_id, labels in seen.items() if len(labels) > 1]
+
+
+def check_array_items(spec: dict) -> list[str]:
+    out = []
+    for name, schema in spec.get("components", {}).get("schemas", {}).items():
+        for node in _walk_objects(schema):
+            if node.get("type") == "array" and "items" not in node:
+                out.append(f"schema {name}: array without items")
+                break
+    return out
 
 
 def check_no_additional_false(spec: dict) -> list[str]:
@@ -141,6 +160,8 @@ def check_no_identical_schemas(spec: dict) -> list[str]:
 
 CHECKS = (
     ("operationId present", check_operation_ids),
+    ("operationId unique", check_operation_ids_unique),
+    ("arrays declare items", check_array_items),
     ("no additionalProperties: false", check_no_additional_false),
     ("universal error set", check_error_set),
     ("shared parameters $ref'd", check_shared_params_not_inline),
