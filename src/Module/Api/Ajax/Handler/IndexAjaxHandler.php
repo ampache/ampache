@@ -271,14 +271,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
                     $artists = Recommendation::get_artists_like((int) $this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
-                    ob_start();
-                    echo new NowPlayingSimilarView(
+
+                    $results['similar_items_' . $media_id] = new NowPlayingSimilarView(
                         AmpConfig::get_web_path(),
                         $artists,
                         $songs,
                         (bool) AmpConfig::get('wanted')
                     )->render();
-                    $results['similar_items_' . $media_id] = ob_get_clean();
                 }
 
                 break;
@@ -318,9 +317,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
                     }
 
-                    ob_start();
-                    echo new MissingAlbumsView($walbums)->render();
-                    $results['missing_albums'] = ob_get_clean();
+                    $results['missing_albums'] = new MissingAlbumsView($walbums)->render();
                 }
 
                 break;
@@ -401,11 +398,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
-                ob_start();
-                $user_id   = $user->id ?: -1;
-                echo $this->createRecentlyPlayedView($user, $user_id, false)->render();
-
-                $results['recently_played'] = ob_get_clean();
+                $results['recently_played'] = $this->createRecentlyPlayedView($user, $user->id ?: -1, false)->render();
                 break;
             case 'ignore_update':
                 // The ajax entry point has no gatekeeper, so repeat the admin gate update.php's clear action applies
