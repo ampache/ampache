@@ -116,7 +116,7 @@ class AmpachelistenbrainzTest extends TestCase
         $validator = $this->createMock(UrlValidatorInterface::class);
         $validator->expects(self::once())
             ->method('isPublicHttpUrl')
-            ->with('data://text/plain,ok/1/submit-listens')
+            ->with('data://text/plain,ok/1/submit-listens', true)
             ->willReturn($public);
         $dic = $this->createMock(ContainerInterface::class);
         $dic->method('get')->willReturnMap([

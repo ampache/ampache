@@ -261,9 +261,8 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
         $target  = $this->scheme . '://' . $this->api_host . $url;
 
         global $dic;
-        // the api host comes from a user preference, so an internal address would turn a scrobble into a
-        // server-side request against the host's own network
-        if (!$dic->get(UrlValidatorInterface::class)->isPublicHttpUrl($target)) {
+        // a self-hosted server on the lan is a real setup (#4522), but loopback or a metadata endpoint never is
+        if (!$dic->get(UrlValidatorInterface::class)->isPublicHttpUrl($target, true)) {
             debug_event('listenbrainz.plugin', 'Refused non-public api url: ' . $target, 1);
 
             return null;

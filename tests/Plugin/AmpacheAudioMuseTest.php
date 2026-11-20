@@ -147,7 +147,7 @@ class AmpacheAudioMuseTest extends TestCase
         $method = new ReflectionMethod(AmpacheAudioMuse::class, '_toMatches');
 
         $urlValidator = new class implements UrlValidatorInterface {
-            public function isPublicHttpUrl(string $url): bool
+            public function isPublicHttpUrl(string $url, bool $allowLan = false): bool
             {
                 return true;
             }

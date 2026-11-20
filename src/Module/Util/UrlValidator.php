@@ -50,12 +50,20 @@ final readonly class UrlValidator implements UrlValidatorInterface
     /** @var string[] the only schemes the server will fetch */
     private const array SCHEMES = ['http', 'https'];
 
-    public function isPublicHttpUrl(string $url): bool
+    public function isPublicHttpUrl(string $url, bool $allowLan = false): bool
     {
-        return $this->resolvePinnedTarget($url) !== null;
+        return $this->resolveTarget($url, $allowLan) !== null;
     }
 
     public function resolvePinnedTarget(string $url): ?array
+    {
+        return $this->resolveTarget($url, false);
+    }
+
+    /**
+     * @return array{host: string, port: int, address: string}|null
+     */
+    private function resolveTarget(string $url, bool $allowLan): ?array
     {
         $parts = parse_url($url);
         if ($parts === false || empty($parts['host'])) {
@@ -68,7 +76,7 @@ final readonly class UrlValidator implements UrlValidatorInterface
         }
 
         $addresses = $this->resolve($parts['host']);
-        if ($addresses === [] || !array_all($addresses, $this->isAllowedAddress(...))) {
+        if ($addresses === [] || !array_all($addresses, fn(string $address): bool => $this->isAllowedAddress($address, $allowLan))) {
             return null;
         }
 
@@ -114,21 +122,27 @@ final readonly class UrlValidator implements UrlValidatorInterface
      * as well as the address itself, so an address blocked in its IPv4 spelling can't slip past as ::ffff:a.b.c.d
      * or a NAT64 literal
      */
-    private function isAllowedAddress(string $address): bool
+    private function isAllowedAddress(string $address, bool $allowLan): bool
     {
-        if (!$this->isAllowedByPolicy($address)) {
+        if (!$this->isAllowedByPolicy($address, $allowLan)) {
             return false;
         }
 
         $embedded = $this->extractEmbeddedIpv4($address);
 
-        return $embedded === null || $this->isAllowedByPolicy($embedded);
+        return $embedded === null || $this->isAllowedByPolicy($embedded, $allowLan);
     }
 
-    private function isAllowedByPolicy(string $address): bool
+    private function isAllowedByPolicy(string $address, bool $allowLan): bool
     {
-        if (filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        // the reserved ranges hold loopback, link-local and the metadata address, so they stay refused on a lan
+        $flags = ($allowLan) ? FILTER_FLAG_NO_RES_RANGE : FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+        if (filter_var($address, FILTER_VALIDATE_IP, $flags) === false) {
             return false;
+        }
+
+        if ($allowLan) {
+            return true;
         }
 
         foreach (self::EXTRA_BLOCKED_IPV4_RANGES as [$network, $prefixLength]) {

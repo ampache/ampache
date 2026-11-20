@@ -32,8 +32,11 @@ interface UrlValidatorInterface
 {
     /**
      * Whether the url is http(s) and resolves only to public addresses
+     *
+     * With $allowLan, private network addresses pass too, for a service the admin may host on their own network;
+     * loopback, link-local and the cloud metadata address are still refused.
      */
-    public function isPublicHttpUrl(string $url): bool;
+    public function isPublicHttpUrl(string $url, bool $allowLan = false): bool;
 
     /**
      * The host, port and one address a fetch may pin its connection to, or null when the url may not be fetched
