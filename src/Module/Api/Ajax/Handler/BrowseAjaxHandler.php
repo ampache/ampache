@@ -258,9 +258,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 )->render();
                 break;
             case 'hide_filters':
-                ob_start();
-                echo '';
-                $results['browse_filters'] = ob_get_clean();
+                $results['browse_filters'] = '';
                 break;
             case 'options':
                 $filter = false;

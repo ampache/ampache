@@ -78,10 +78,7 @@ final class VideoView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('video', $this->video->getId(), $this->getName(), ['width' => 200, 'height' => 300], null, true, false, 'preview');
-
-        return (string) ob_get_clean();
+        return Art::render('video', $this->video->getId(), $this->getName(), ['width' => 200, 'height' => 300], null, true, false, 'preview');
     }
 
     public function getDeleteUrl(): string

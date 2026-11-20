@@ -69,10 +69,7 @@ final class PodcastView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('podcast', $this->podcast->getId(), $this->getName(), $this->getArtSize(), null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('podcast', $this->podcast->getId(), $this->getName(), $this->getArtSize(), null, true, false);
     }
 
     /**
