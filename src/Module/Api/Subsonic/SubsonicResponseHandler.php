@@ -103,7 +103,13 @@ final class SubsonicResponseHandler implements SubsonicResponseHandlerInterface
             $output = json_encode($this->subsonicJsonData->addError(Subsonic_Api::SSERROR_GENERIC, 'system'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '';
         }
 
+        // the callback is reflected into an executable response, so a non-identifier would let a crafted link run as script
+        if (preg_match('/^[A-Za-z0-9_.]+$/', $callback) !== 1) {
+            $callback = 'jsonp';
+        }
+
         header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset', 'UTF-8'));
+        header("X-Content-Type-Options: nosniff");
         header("Access-Control-Allow-Origin: *");
         echo $callback . '(' . $output . ')';
     }
