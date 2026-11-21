@@ -45,6 +45,15 @@ final readonly class UrlValidator implements UrlValidatorInterface
     /** @var string the IPv4-mapped IPv6 range embedding an IPv4 destination in its last 32 bits (::ffff:0:0/96) */
     private const string IPV4_MAPPED_PREFIX = '::ffff:0:0';
 
+    /**
+     * @var string[] cloud metadata endpoints outside the reserved ranges (Alibaba in CGNAT, AWS's IPv6 one in ULA),
+     * refused even when private addresses are allowed
+     */
+    private const array METADATA_ADDRESSES = [
+        '100.100.100.200',
+        'fd00:ec2::254',
+    ];
+
     /** @var string the well-known NAT64 range embedding an IPv4 destination in its last 32 bits (64:ff9b::/96) */
     private const string NAT64_PREFIX = '64:ff9b::';
     /** @var string[] the only schemes the server will fetch */
@@ -55,9 +64,9 @@ final readonly class UrlValidator implements UrlValidatorInterface
         return $this->resolveTarget($url, $allowLan) !== null;
     }
 
-    public function resolvePinnedTarget(string $url): ?array
+    public function resolvePinnedTarget(string $url, bool $allowLan = false): ?array
     {
-        return $this->resolveTarget($url, false);
+        return $this->resolveTarget($url, $allowLan);
     }
 
     /**
@@ -111,6 +120,13 @@ final readonly class UrlValidator implements UrlValidatorInterface
         $flags = ($allowLan) ? FILTER_FLAG_NO_RES_RANGE : FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
         if (filter_var($address, FILTER_VALIDATE_IP, $flags) === false) {
             return false;
+        }
+
+        $binary = inet_pton($address);
+        foreach (self::METADATA_ADDRESSES as $metadata) {
+            if ($binary === inet_pton($metadata)) {
+                return false;
+            }
         }
 
         if ($allowLan) {

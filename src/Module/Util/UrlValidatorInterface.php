@@ -33,7 +33,7 @@ interface UrlValidatorInterface
     /**
      * Whether the url is http(s) and resolves only to public addresses, or also private ones with $allowLan
      *
-     * Loopback, link-local and the cloud metadata address are refused either way.
+     * Loopback, link-local and the cloud metadata addresses are refused either way.
      */
     public function isPublicHttpUrl(string $url, bool $allowLan = false): bool;
 
@@ -47,5 +47,5 @@ interface UrlValidatorInterface
      *
      * @return array{host: string, port: int, address: string}|null
      */
-    public function resolvePinnedTarget(string $url): ?array;
+    public function resolvePinnedTarget(string $url, bool $allowLan = false): ?array;
 }

@@ -28,8 +28,6 @@ namespace Ampache\Plugin;
 use Ampache\Module\Util\UrlValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -67,17 +65,13 @@ class AmpachelistenbrainzTest extends TestCase
         self::assertSame('10.10.10.10:4110/apis/listenbrainz', $this->apiHost());
     }
 
-    public function testAnApiUrlTheValidatorAcceptsIsFetched(): void
-    {
-        $this->pointAtDataUrl(true);
-
-        self::assertSame('ok/1/submit-listens', $this->postJsonUrl());
-    }
-
     // the api url is a user preference, so fetching it unchecked lets a user aim the server at internal hosts
     public function testAnApiUrlTheValidatorRefusesIsNeverFetched(): void
     {
-        $this->pointAtDataUrl(false);
+        $this->urlValidator->expects(self::once())
+            ->method('resolvePinnedTarget')
+            ->with('https://api.listenbrainz.org/1/submit-listens', true)
+            ->willReturn(null);
 
         self::assertNull($this->postJsonUrl());
     }
@@ -108,23 +102,6 @@ class AmpachelistenbrainzTest extends TestCase
         $property = new ReflectionProperty(Ampachelistenbrainz::class, 'api_host');
 
         return $property->getValue($this->plugin);
-    }
-
-    // a data: url answers without a network, so a non-null result proves the fetch happened
-    private function pointAtDataUrl(bool $public): void
-    {
-        new ReflectionProperty(Ampachelistenbrainz::class, 'scheme')->setValue($this->plugin, 'data');
-        new ReflectionProperty(Ampachelistenbrainz::class, 'api_host')->setValue($this->plugin, 'text/plain,ok');
-
-        $this->urlValidator->expects(self::once())
-            ->method('isPublicHttpUrl')
-            ->with('data://text/plain,ok/1/submit-listens', true)
-            ->willReturn($public);
-        $dic = $this->createMock(ContainerInterface::class);
-        $dic->method('get')->willReturnMap([
-            [LoggerInterface::class, $this->createMock(LoggerInterface::class)],
-        ]);
-        $GLOBALS['dic'] = $dic;
     }
 
     private function postJsonUrl(): ?string

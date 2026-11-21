@@ -49,6 +49,10 @@ class UrlValidatorTest extends TestCase
             ['http://[fe80::1]/', false],
             ['http://[::ffff:127.0.0.1]/', false],
             ['http://0.0.0.0/', false],
+            ['http://100.100.100.200/latest/meta-data/', false],
+            ['http://[fd00:ec2::254]/latest/meta-data/', false],
+            ['http://[fd00:ec2:0::254]/', false],
+            ['http://[::ffff:100.100.100.200]/', false],
             ['file:///etc/passwd', false],
         ];
     }
@@ -138,6 +142,16 @@ class UrlValidatorTest extends TestCase
     public function testResolvePinnedTarget(string $url, ?array $expected): void
     {
         self::assertSame($expected, $this->subject->resolvePinnedTarget($url), $url);
+    }
+
+    public function testResolvePinnedTargetAllowingLan(): void
+    {
+        self::assertSame(
+            ['host' => '10.10.10.10', 'port' => 4110, 'address' => '10.10.10.10'],
+            $this->subject->resolvePinnedTarget('http://10.10.10.10:4110/apis/listenbrainz', true)
+        );
+        self::assertNull($this->subject->resolvePinnedTarget('http://10.10.10.10:4110/apis/listenbrainz'));
+        self::assertNull($this->subject->resolvePinnedTarget('http://100.100.100.200/', true));
     }
 
     protected function setUp(): void
