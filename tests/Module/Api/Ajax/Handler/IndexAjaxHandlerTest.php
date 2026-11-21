@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Sidebar\SidebarViewFactoryInterface;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
@@ -39,18 +40,30 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 
 class IndexAjaxHandlerTest extends TestCase
 {
+    // the page swaps the box by fragment, so its html must come back in the response, not printed before it
+    public function testRefreshNowPlayingReturnsTheBoxAsItsFragment(): void
+    {
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturnMap([
+            [PrivilegeCheckerInterface::class, $this->createStub(PrivilegeCheckerInterface::class)],
+            [LoggerInterface::class, $this->createStub(LoggerInterface::class)],
+        ]);
+        $GLOBALS['dic'] = $dic;
+
+        $xml = $this->handle('refresh_now_playing');
+
+        self::assertCount(1, $xml->xpath('//content[@div="now_playing"]'));
+    }
+
     /** The slideshow no longer ships a script to run, the page fades through plain images on its own */
     public function testSlideshowSendsOnlyImagesWithTheFirstShowing(): void
     {
-        $requestParser = $this->createMock(RequestParserInterface::class);
-        $requestParser->method('getFromRequest')
-            ->with('action')
-            ->willReturn('slideshow');
-
         $slideshow = $this->createMock(SlideshowInterface::class);
         $slideshow->method('getCurrentSlideshow')
             ->willReturn([
@@ -59,9 +72,27 @@ class IndexAjaxHandlerTest extends TestCase
                 ['title' => new SimpleXMLElement('<t/>'), 'url' => 'https://x.test/"onerror="alert(1)'],
             ]);
 
+        $xml = $this->handle('slideshow', $slideshow);
+
+        self::assertCount(1, $xml->xpath('//content'));
+        $html = (string) $xml->xpath('//content[@div="fslider"]')[0];
+
+        self::assertSame(3, substr_count($html, '<img '));
+        self::assertSame(1, substr_count($html, 'class="active"'));
+        self::assertStringNotContainsString('<script', $html);
+        self::assertStringNotContainsString('"onerror=', $html, 'a url cannot break out of its src attribute');
+    }
+
+    private function handle(string $action, ?SlideshowInterface $slideshow = null): SimpleXMLElement
+    {
+        $requestParser = $this->createMock(RequestParserInterface::class);
+        $requestParser->method('getFromRequest')
+            ->with('action')
+            ->willReturn($action);
+
         $subject = new IndexAjaxHandler(
             $requestParser,
-            $slideshow,
+            $slideshow ?? $this->createStub(SlideshowInterface::class),
             $this->createStub(AlbumRepositoryInterface::class),
             $this->createStub(LabelRepositoryInterface::class),
             $this->createStub(SongRepositoryInterface::class),
@@ -76,14 +107,7 @@ class IndexAjaxHandlerTest extends TestCase
 
         ob_start();
         $subject->handle($this->createStub(User::class));
-        $xml = new SimpleXMLElement((string) ob_get_clean());
 
-        self::assertCount(1, $xml->xpath('//content'));
-        $html = (string) $xml->xpath('//content[@div="fslider"]')[0];
-
-        self::assertSame(3, substr_count($html, '<img '));
-        self::assertSame(1, substr_count($html, 'class="active"'));
-        self::assertStringNotContainsString('<script', $html);
-        self::assertStringNotContainsString('"onerror=', $html, 'a url cannot break out of its src attribute');
+        return new SimpleXMLElement((string) ob_get_clean());
     }
 }
