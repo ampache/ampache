@@ -351,7 +351,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         echo xoutput_from_array($results);
     }
 
-    // messages and shares pin their owner server-side; a filter box repointing it reads another user's rows
+    /**
+     * messages and shares pin their owner server-side; a filter box repointing it reads another user's rows
+     */
     private function isOwnerFilter(string $type, string $key): bool
     {
         return match ($type) {
