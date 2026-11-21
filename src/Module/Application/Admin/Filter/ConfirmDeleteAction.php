@@ -27,7 +27,9 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Catalog\Catalog;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,6 +43,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly CatalogFilterRepositoryInterface $catalogFilterRepository,
+        private readonly RequestParserInterface $requestParser,
     ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -49,9 +52,10 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             return null;
         }
 
-        // if (!Core::form_verify('delete_catalog_filter')) {
-        //     throw new AccessDeniedException();
-        // }
+        if (!$this->requestParser->verifyForm('delete_catalog_filter')) {
+            throw new AccessDeniedException();
+        }
+
         $this->ui->showHeader();
 
         $filter_id   = (int) ($request->getQueryParams()['filter_id'] ?? 0);

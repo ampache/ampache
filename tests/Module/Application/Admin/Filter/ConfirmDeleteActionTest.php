@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CatalogFilterRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -36,6 +38,30 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ConfirmDeleteActionTest extends TestCase
 {
+    // a filter decides which catalogs users see, so a plain link must not be able to delete one
+    public function testADeleteWithoutAValidFormTokenIsRefused(): void
+    {
+        $catalogFilterRepository = $this->createMock(CatalogFilterRepositoryInterface::class);
+        $catalogFilterRepository->expects(self::never())->method('deleteGroup');
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn(['filter_id' => '2', 'filter_name' => 'kids']);
+
+        $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $gatekeeper->method('mayAccess')->willReturn(true);
+
+        $subject = new ConfirmDeleteAction(
+            $this->createMock(UiInterface::class),
+            $this->createMock(ConfigContainerInterface::class),
+            $catalogFilterRepository,
+            $this->requestParser(false),
+        );
+
+        $this->expectException(AccessDeniedException::class);
+
+        $subject->run($request, $gatekeeper);
+    }
+
     // filter_name comes from the query string and the confirmation renders html, so a link can run script
     public function testTheConfirmationEscapesTheFilterName(): void
     {
@@ -66,8 +92,16 @@ class ConfirmDeleteActionTest extends TestCase
         $gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
         $gatekeeper->method('mayAccess')->willReturn(true);
 
-        $subject = new ConfirmDeleteAction($ui, $this->createMock(ConfigContainerInterface::class), $catalogFilterRepository);
+        $subject = new ConfirmDeleteAction($ui, $this->createMock(ConfigContainerInterface::class), $catalogFilterRepository, $this->requestParser(true));
 
         $subject->run($request, $gatekeeper);
+    }
+
+    private function requestParser(bool $valid): RequestParserInterface
+    {
+        $requestParser = $this->createMock(RequestParserInterface::class);
+        $requestParser->method('verifyForm')->with('delete_catalog_filter')->willReturn($valid);
+
+        return $requestParser;
     }
 }

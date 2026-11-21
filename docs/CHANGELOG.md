@@ -111,6 +111,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
 * A crafted private message browse filter listed other users' messages
 * A crafted catalog browse filter could inject SQL
 * A crafted smartlist or filter name could run script in its save or delete confirmation
+* A link could delete a catalog filter without the admin confirming it
 * ListenBrainz could be pointed at the server itself or a cloud metadata address; a LAN server is still allowed
 
 ## Ampache 8.4.0
