@@ -95,7 +95,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 $filter = false;
                 // data set by the filter box (browse_filters.inc.php)
-                if (isset($_REQUEST['key'])) {
+                if (isset($_REQUEST['key']) && !$this->isOwnerFilter($browse->get_type(), (string) $_REQUEST['key'])) {
                     // user typed a word to match the name against
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         // the mode is remembered on the browse, so an empty box doesn't reset it on the next render
@@ -349,5 +349,17 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
         // We always do this
         echo xoutput_from_array($results);
+    }
+
+    /**
+     * messages and shares pin their owner server-side; a filter box repointing it reads another user's rows
+     */
+    private function isOwnerFilter(string $type, string $key): bool
+    {
+        return match ($type) {
+            'pvmsg' => in_array($key, ['user', 'to_user', 'from_user'], true),
+            'share' => $key === 'user',
+            default => false,
+        };
     }
 }

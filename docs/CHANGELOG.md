@@ -91,6 +91,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * An HTTP/2 client's lowercase `range` header was ignored, breaking seeking
   * DSub stopped on a folder without a single artist; an empty artist info is returned instead
   * OpenSubsonic synced lyrics returned LRC header tags such as `[ar:]` and `[ti:]` as lyric lines
+  * A crafted JSONP `callback` could run script in the browser
 * A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
 * IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic
@@ -102,6 +103,16 @@ The web player's lyrics button now sits with the player's action buttons on ever
 * `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
 * Possible duplicate folder inserts
 * `cleanup:art` could refuse to run, or silently run with nothing to do, because its config check used inverted width/height logic
+* Another user's private playlist or smartlist
+  * Could be streamed by id through `stream.php`
+  * Could be copied into, or played through, your own collection
+* Another user's private collection could be added to your play queue or a playlist
+* Another session's play queue could be streamed by id
+* A crafted private message browse filter listed other users' messages
+* A crafted catalog browse filter could inject SQL
+* A crafted smartlist or filter name could run script in its save or delete confirmation
+* A link could delete a catalog filter without the admin confirming it
+* ListenBrainz could be pointed at the server itself or a cloud metadata address; a LAN server is still allowed
 
 ## Ampache 8.4.0
 

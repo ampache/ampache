@@ -33,6 +33,31 @@ class UrlValidatorTest extends TestCase
     private UrlValidator $subject;
 
     /**
+     * @return list<array{0: string, 1: bool}>
+     */
+    public static function lanUrlDataProvider(): array
+    {
+        return [
+            ['http://10.10.10.10:4110/apis/listenbrainz', true],
+            ['http://192.168.1.10/feed.xml', true],
+            ['http://[fd00::1]/', true],
+            ['http://100.64.2.1/a.png', true],
+            ['http://93.184.216.34/feed.xml', true],
+            ['http://127.0.0.1:8080/admin', false],
+            ['http://169.254.169.254/latest/meta-data/', false],
+            ['http://[::1]/', false],
+            ['http://[fe80::1]/', false],
+            ['http://[::ffff:127.0.0.1]/', false],
+            ['http://0.0.0.0/', false],
+            ['http://100.100.100.200/latest/meta-data/', false],
+            ['http://[fd00:ec2::254]/latest/meta-data/', false],
+            ['http://[fd00:ec2:0::254]/', false],
+            ['http://[::ffff:100.100.100.200]/', false],
+            ['file:///etc/passwd', false],
+        ];
+    }
+
+    /**
      * @return list<array{0: string, 1: array{host: string, port: int, address: string}|null}>
      */
     public static function pinnedTargetDataProvider(): array
@@ -103,6 +128,13 @@ class UrlValidatorTest extends TestCase
         );
     }
 
+    // a self-hosted service on the lan passes, while the addresses that reach the server itself still don't
+    #[DataProvider('lanUrlDataProvider')]
+    public function testIsPublicHttpUrlAllowingLan(string $url, bool $expected): void
+    {
+        self::assertSame($expected, $this->subject->isPublicHttpUrl($url, true), $url);
+    }
+
     /**
      * @param array{host: string, port: int, address: string}|null $expected
      */
@@ -110,6 +142,16 @@ class UrlValidatorTest extends TestCase
     public function testResolvePinnedTarget(string $url, ?array $expected): void
     {
         self::assertSame($expected, $this->subject->resolvePinnedTarget($url), $url);
+    }
+
+    public function testResolvePinnedTargetAllowingLan(): void
+    {
+        self::assertSame(
+            ['host' => '10.10.10.10', 'port' => 4110, 'address' => '10.10.10.10'],
+            $this->subject->resolvePinnedTarget('http://10.10.10.10:4110/apis/listenbrainz', true)
+        );
+        self::assertNull($this->subject->resolvePinnedTarget('http://10.10.10.10:4110/apis/listenbrainz'));
+        self::assertNull($this->subject->resolvePinnedTarget('http://100.100.100.200/', true));
     }
 
     protected function setUp(): void

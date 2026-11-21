@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Statistics\Rating;
 use Ampache\Module\Statistics\Userflag;
 use Ampache\Module\System\Core;
@@ -41,6 +40,7 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -113,7 +113,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                             // a private list you cannot see is not yours to expand into the queue here
                             if (
-                                ($object instanceof Playlist || $object instanceof Search)
+                                $object instanceof playlist_object
                                 && !$object->isVisible($user)
                             ) {
                                 continue;
