@@ -31,6 +31,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\playlist_object;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -68,6 +69,11 @@ final class StreamItemAction extends AbstractStreamAction
             );
 
             if ($item !== null) {
+                // a private playlist or smartlist belongs to its owner and must not expand for anyone else
+                if ($item instanceof playlist_object && $item->type !== 'public' && !$item->has_collaborate($gatekeeper->getUser())) {
+                    continue;
+                }
+
                 $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
