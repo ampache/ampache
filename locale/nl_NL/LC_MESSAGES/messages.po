@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-06 08:41+1000\n"
+"POT-Creation-Date: 2026-11-18 12:57+1000\n"
 "PO-Revision-Date: 2026-09-10 05:22+0000\n"
 "Last-Translator: Fritigern <fritigerngothly@gmail.com>, 2026\n"
 "Language-Team: Dutch (Netherlands) (https://app.transifex.com/ampache/teams/40984/nl_NL/)\n"
@@ -339,6 +339,9 @@ msgstr "Artiest bewerken"
 
 msgid "Albums"
 msgstr "Albums"
+
+msgid "Playlists"
+msgstr "Afspeellijsten"
 
 msgid "Top Tracks"
 msgstr "Top nummers"
@@ -810,6 +813,9 @@ msgstr "Commentaar"
 msgid "Label"
 msgstr "Label"
 
+msgid "Lyrics"
+msgstr "Songteksten"
+
 msgid "Music License"
 msgstr "Muziek licentie"
 
@@ -1136,9 +1142,6 @@ msgstr "Externe link"
 
 msgid "Top Rated"
 msgstr "Best beoordeeld"
-
-msgid "Playlists"
-msgstr "Afspeellijsten"
 
 msgid "Importing a Playlist from a File"
 msgstr "Importeer afspeellijst vanuit een bestand"
@@ -2111,8 +2114,26 @@ msgstr "Live stream bewerken"
 msgid "Song Lyrics"
 msgstr "Songteksten"
 
+msgid "Get Lyrics"
+msgstr ""
+
+msgid "Song Edit"
+msgstr "Nummer bewerken"
+
+msgid "Clear"
+msgstr "Wissen"
+
+msgid "User set"
+msgstr ""
+
 msgid "Show more"
 msgstr "Meer"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "No lyrics found."
+msgstr "Er zijn geen songteksten gevonden."
 
 msgid "Primary"
 msgstr "Primair"
@@ -2204,11 +2225,11 @@ msgstr "Openen op %s"
 msgid "Log out"
 msgstr "Uitloggen"
 
-msgid "Show Lyrics"
-msgstr "Liedteksten weergeven"
-
 msgid "Playback failed"
 msgstr "Afspelen mislukt"
+
+msgid "Show Lyrics"
+msgstr "Liedteksten weergeven"
 
 msgid "Add All to playlist"
 msgstr "Alles aan afspeellijst toevoegen"
@@ -2382,9 +2403,6 @@ msgstr "Filter"
 
 msgid "Filter by name, description or key"
 msgstr "Filteren op naam, beschrijving of sleutel"
-
-msgid "Clear"
-msgstr "Wissen"
 
 msgid "Differs from default"
 msgstr "Verschilt van standaardinstelling"
@@ -3504,8 +3522,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Adds a lyrics link to the web player control bar. The lyrics page itself "
-"stays reachable either way."
+"Adds a lyrics button to the web player, opening a panel that follows the "
+"playing song. The lyrics page itself stays reachable either way."
 msgstr ""
 
 msgid ""
@@ -3568,8 +3586,8 @@ msgstr ""
 
 msgid ""
 "Seconds of inactivity before the web player fades into a full-screen artist "
-"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
-"anything to show."
+"slideshow. 0 turns it off. Uses the Flickr plugin key if set, otherwise the "
+"artist and album art already in the catalog."
 msgstr ""
 
 msgid ""
@@ -4326,11 +4344,11 @@ msgstr "Toegang geweigerd"
 msgid "Localplay Controller Not Defined"
 msgstr "Localplay-controller niet gedefinieerd"
 
-msgid "No lyrics found."
-msgstr "Er zijn geen songteksten gevonden."
+msgid "These lyrics were set by hand and will be lost. Clear them?"
+msgstr ""
 
-msgid "Song Edit"
-msgstr "Nummer bewerken"
+msgid "Clear the stored lyrics?"
+msgstr ""
 
 #, php-format
 msgid "Track %d"
@@ -4371,9 +4389,6 @@ msgstr "ISRC"
 
 msgid "Last Updated"
 msgstr "Laatst bijgewerkt"
-
-msgid "Lyrics"
-msgstr "Songteksten"
 
 msgid "Licensing"
 msgstr "Licenties"
@@ -5968,16 +5983,13 @@ msgid "Install a plugin"
 msgstr "Installeer een plug-in"
 
 msgid "Install the Last.FM plugin"
-msgstr ""
+msgstr "Installeer de Last.FM-plug-in"
 
 msgid "List plugins, catalog types and localplay controllers"
 msgstr "Lijst met plug-ins, catalogustypen en LocalPlay-controllers"
 
 msgid "List all pluggable modules and their installed state"
 msgstr "Geef een overzicht van alle plugbare modules en hun installatiestatus"
-
-msgid "Plugins"
-msgstr "Plugins"
 
 msgid "Users List"
 msgstr "Gebruikerslijst"
@@ -7618,9 +7630,6 @@ msgstr ""
 msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
-msgid "User set"
-msgstr ""
-
 msgid "Share Edit"
 msgstr "Gedeelde bron bewerken"
 
@@ -8819,6 +8828,10 @@ msgid "Always show the rightbar"
 msgstr "Laat altijd de rechterbalk zien"
 
 #: Ampache preference description
+msgid "Rotate the api key and stream token when the account password changes"
+msgstr ""
+
+#: Ampache preference description
 msgid "Share links default expiration days (0=never)"
 msgstr "Standaard vervaldagen voor gedeelde links (0 = nooit)"
 
@@ -9142,6 +9155,10 @@ msgstr "Privacy"
 #: Ampache preference subcategory
 msgid "Query"
 msgstr "Zoekopdracht"
+
+#: Ampache preference subcategory
+msgid "Security"
+msgstr ""
 
 #: Ampache preference subcategory
 msgid "Sidebar"

@@ -61,17 +61,15 @@ final class NowPlayingVideoRowView extends AbstractView
         // page as its link, matching getVideoLink().
         $link = ($this->showLinks()) ? $this->media->get_link() : null;
 
-        ob_start();
-        $shown = false;
-        if ($this->media->get_default_art_kind() === 'preview') {
-            $shown = Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 150, 'height' => 84], $link, false, true, 'preview');
+        $html = ($this->media->get_default_art_kind() === 'preview')
+            ? Art::render('video', $this->media->getId(), $this->media->getFileName(), ['width' => 150, 'height' => 84], $link, false, true, 'preview')
+            : '';
+
+        if ($html === '') {
+            $html = Art::render('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $link);
         }
 
-        if (!$shown) {
-            Art::display('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $link);
-        }
-
-        return (string) ob_get_clean();
+        return $html;
     }
 
     public function getAvatar(): string

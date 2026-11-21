@@ -90,11 +90,8 @@ final class AlbumPageView extends AbstractView
         $size     = ['width' => 384, 'height' => 384];
         $album_id = $this->getUploadAlbumId();
 
-        ob_start();
         // art is stored against the album; a disk has none of its own
-        Art::display('album', $album_id, $name, $size, null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('album', $album_id, $name, $size, null, true, false);
     }
 
     public function getArtistId(): int

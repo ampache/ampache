@@ -2119,7 +2119,7 @@ msgid "Song Lyrics"
 msgstr "Paroles du morceau"
 
 msgid "Get Lyrics"
-msgstr ""
+msgstr "Afficher les paroles"
 
 msgid "Song Edit"
 msgstr "Modifier le morceau"
@@ -3551,6 +3551,8 @@ msgid ""
 "Adds a lyrics button to the web player, opening a panel that follows the "
 "playing song. The lyrics page itself stays reachable either way."
 msgstr ""
+"Ajoute un bouton paroles au lecteur web, qui ouvre un panneau suivant le "
+"morceau en cours. La page des paroles reste accessible dans tous les cas."
 
 msgid ""
 "Appends the original release year to an album title when the record carries "
@@ -3639,6 +3641,10 @@ msgid ""
 "slideshow. 0 turns it off. Uses the Flickr plugin key if set, otherwise the "
 "artist and album art already in the catalog."
 msgstr ""
+"Secondes d'inactivité avant que le lecteur web bascule en diaporama plein "
+"écran de l'artiste. 0 le désactive. Utilise la clef du plugin Flickr si elle"
+" est définie, sinon les images d'artistes et d'albums déjà présentes dans le"
+" catalogue."
 
 msgid ""
 "Puts the playing track in the browser tab title. Share pages never do it, "
@@ -4654,9 +4660,10 @@ msgstr "Contrôleur du mode de Localplay non défini"
 
 msgid "These lyrics were set by hand and will be lost. Clear them?"
 msgstr ""
+"Ces paroles ont été saisies à la main et seront perdues. Les effacer ?"
 
 msgid "Clear the stored lyrics?"
-msgstr ""
+msgstr "Effacer les paroles enregistrées ?"
 
 #, php-format
 msgid "Track %d"
@@ -9280,6 +9287,8 @@ msgstr "Toujours afficher la barre latérale droite"
 #: Ampache preference description
 msgid "Rotate the api key and stream token when the account password changes"
 msgstr ""
+"Renouveler la clef API et le token pour le stream quand le mot de passe du "
+"compte change"
 
 #: Ampache preference description
 msgid "Share links default expiration days (0=never)"
@@ -9618,7 +9627,7 @@ msgstr "Requêtes"
 
 #: Ampache preference subcategory
 msgid "Security"
-msgstr ""
+msgstr "Sécurité"
 
 #: Ampache preference subcategory
 msgid "Sidebar"
