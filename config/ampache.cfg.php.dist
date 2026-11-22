@@ -1160,7 +1160,7 @@ site_charset = "UTF-8"
 
 ; Your custom play action title
 ;custom_play_action_title_0 = ""
-; Your custom play action icon name (stored as /images/icon_[your_image].png)
+; Your custom play action icon, a material symbol name from resources/images/material-symbols (e.g. play_arrow)
 ;custom_play_action_icon_0 = ""
 ; Your custom action script, where:
 ;   - %f: the media file path
