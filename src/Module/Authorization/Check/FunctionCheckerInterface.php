@@ -24,11 +24,14 @@
 namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Repository\Model\User;
 
 interface FunctionCheckerInterface
 {
     /**
      * This checks if specific functionality is enabled.
+     *
+     * @param User|null $user Defaults to the global session user; pass one explicitly when the caller has no global session (e.g. a stream-session request).
      */
-    public function check(AccessFunctionEnum $function): bool;
+    public function check(AccessFunctionEnum $function, ?User $user = null): bool;
 }

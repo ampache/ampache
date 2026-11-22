@@ -43,6 +43,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -71,10 +72,15 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (
-            !defined('NO_SESSION') &&
-            !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
-        ) {
+        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
+        $userId = $gatekeeper->getUserId();
+        if ($userId === 0) {
+            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
+            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
+        }
+        $batchUser = $this->userRepository->findById($userId);
+
+        if (!$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD, $batchUser)) {
             throw new AccessDeniedException();
         }
 
@@ -101,13 +107,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        // a stream session has no global user under NO_SESSION, so resolve the owner from it directly
-        $userId = $gatekeeper->getUserId();
-        if ($userId === 0) {
-            $ssidUsername = Session::username($this->requestParser->getFromRequest('ssid'));
-            $userId       = ($ssidUsername !== '') ? $this->userRepository->idByUsername($ssidUsername) : 0;
-        }
-
         $libItem = $this->libraryItemLoader->load(
             LibraryItemEnum::from($object_type),
             $object_id,
@@ -116,6 +115,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (
             $libItem instanceof playable_item
             && (!$libItem instanceof CatalogItemInterface || Catalog::has_access($libItem->getCatalogId(), $userId))
+            && (!$libItem instanceof playlist_object || $libItem->type === 'public' || $libItem->has_collaborate($batchUser))
         ) {
             if ($libItem instanceof Song) {
                 $libItem->fill_ext_info();
@@ -180,9 +180,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
+        if (!User::stream_control($media_ids, $batchUser)) {
             $this->logger->notice(
-                'Access denied: Stream control failed for user ' . Core::get_global('user')?->username,
+                'Access denied: Stream control failed for user ' . $batchUser?->username,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();

@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -53,7 +54,11 @@ final class PlaylistRandomAction extends AbstractStreamAction
 
         $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
-        $mediaIds    = $playlist->get_random_items();
+        if ($playlist->type !== 'public' && !$playlist->has_collaborate($gatekeeper->getUser())) {
+            throw new AccessDeniedException();
+        }
+
+        $mediaIds = $playlist->get_random_items();
 
         return $this->stream(
             $mediaIds,

@@ -87,6 +87,13 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration850002 needs no rollback: it only turned `show_lyrics` on by default, a value Ampache7 reads the same way
+
+        if ($currentVersion >= 850001) {
+            // Migration\V8\Migration850001 (Ampache7 copies every `song_data` column onto the song); silent, so a replay still passes
+            Dba::write('ALTER TABLE `song_data` DROP COLUMN `lyrics_source`;', [], true);
+        }
+
         if ($currentVersion >= 830003) {
             // Migration\V8\Migration830003 (Ampache7's rightbar never reads this preference)
             if (!Preference::delete('rightbar_always_show')) {

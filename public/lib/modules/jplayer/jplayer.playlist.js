@@ -25,6 +25,18 @@
 
 // Before you minify this file comment out ALL the debug, it's loud
 (function($, undefined) {
+    var escapeHtml = function(value) {
+        if (value === undefined || value === null) {
+            return "";
+        }
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    };
+
     jPlayerPlaylist = function(cssSelector, playlist, options) {
         var self = this;
 
@@ -269,19 +281,19 @@
             attrClass += "\" ";
 
             var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length +
-                "\" data-poster=\"" + media.poster +
-                "\" data-media_id=\"" + media.media_id +
-                "\" data-album_id=\"" + media.album_id +
-                "\" data-albumdisk_id=\"" + media.albumdisk_id +
-                "\" data-album_name=\"" + media.album_name +
-                "\" data-artist_id=\"" + media.artist_id +
-                "\" data-replaygain_track_gain=\"" + media.replaygain_track_gain +
-                "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak +
-                "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain +
-                "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak +
-                "\" data-r128_track_gain=\"" + media.r128_track_gain +
-                "\" data-r128_album_gain=\"" + media.r128_album_gain +
-                "\" data-duration=\"" + media.duration +
+                "\" data-poster=\"" + escapeHtml(media.poster) +
+                "\" data-media_id=\"" + escapeHtml(media.media_id) +
+                "\" data-album_id=\"" + escapeHtml(media.album_id) +
+                "\" data-albumdisk_id=\"" + escapeHtml(media.albumdisk_id) +
+                "\" data-album_name=\"" + escapeHtml(media.album_name) +
+                "\" data-artist_id=\"" + escapeHtml(media.artist_id) +
+                "\" data-replaygain_track_gain=\"" + escapeHtml(media.replaygain_track_gain) +
+                "\" data-replaygain_track_peak=\"" + escapeHtml(media.replaygain_track_peak) +
+                "\" data-replaygain_album_gain=\"" + escapeHtml(media.replaygain_album_gain) +
+                "\" data-replaygain_album_peak=\"" + escapeHtml(media.replaygain_album_peak) +
+                "\" data-r128_track_gain=\"" + escapeHtml(media.r128_track_gain) +
+                "\" data-r128_album_gain=\"" + escapeHtml(media.r128_album_gain) +
+                "\" data-duration=\"" + escapeHtml(media.duration) +
                 "\"><div>";
 
             // Create image
@@ -296,7 +308,7 @@
             }
 
             // The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
-            listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
+            listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + escapeHtml(media.title) + (media.artist ? " <span class='jp-artist'>by " + escapeHtml(media.artist) + "</span>" : "") + "</a>";
             listItem += "</div></li>";
 
             return listItem;
@@ -359,7 +371,7 @@
             if (this.playlist.length && typeof index !== "undefined") {
                 $(this.cssSelector.playlist + " .jp-playlist-current").removeClass("jp-playlist-current");
                 $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").addClass("jp-playlist-current").find(".jp-playlist-item").addClass("jp-playlist-current");
-                $(this.cssSelector.title + " li:last").html(this.playlist[index].title + (this.playlist[index].artist ? " <span class='jp-artist'>by " + this.playlist[index].artist + "</span>" : ""));
+                $(this.cssSelector.title + " li:last").html(escapeHtml(this.playlist[index].title) + (this.playlist[index].artist ? " <span class='jp-artist'>by " + escapeHtml(this.playlist[index].artist) + "</span>" : ""));
             }
         },
         add: function(media, playNow) {

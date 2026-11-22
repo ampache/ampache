@@ -329,11 +329,13 @@ class Catalog_local extends Catalog
                     $songsadded++;
                 }
             } catch (Exception $error) {
+                $message = $error->getMessage() ?: get_class($error);
                 $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
+                    T_('Error') . ' ' . $message,
                     true
                 );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+                AmpError::add('catalog_add', sprintf(T_('Unable to add "%s": %s'), $full_file, $message));
+                debug_event('local.catalog', 'add_file error: ' . $message, 1);
             }
         } // end while reading directory
 

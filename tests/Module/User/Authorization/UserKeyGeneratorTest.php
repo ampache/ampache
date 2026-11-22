@@ -80,6 +80,10 @@ class UserKeyGeneratorTest extends MockeryTestCase
             ->once()
             ->andReturn($password);
 
+        $this->userRepository->shouldReceive('deleteApiSessions')
+            ->with($userName)
+            ->once();
+
         $this->logger->shouldReceive('notice')
             ->with(
                 sprintf('Updating apikey for %d', $userId),

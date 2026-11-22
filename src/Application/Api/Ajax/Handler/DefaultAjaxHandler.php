@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -87,7 +88,10 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         $className = ObjectTypeToClassNameMapper::map($object_type);
                         /** @var playable_item $object */
                         $object = new $className($object_id);
-                        $medias = $object->get_medias();
+                        // a private list you cannot see is not yours to expand into the queue here
+                        $medias = ($object instanceof playlist_object && $object->type !== 'public' && !$object->has_collaborate($user))
+                            ? []
+                            : $object->get_medias();
 
                         $user->load_playlist();
                         $user->playlist?->add_medias($medias);
@@ -165,9 +169,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             break;
                         case 'playlist_random':
                             $playlist = new Playlist($request_id);
-                            $items    = $playlist->get_random_items();
-                            foreach ($items as $item) {
-                                $user->playlist?->add_object($item['object_id'], $item['object_type']);
+                            // a private list you cannot see is not yours to expand into the queue here
+                            if ($playlist->type === 'public' || $playlist->has_collaborate($user)) {
+                                $items = $playlist->get_random_items();
+                                foreach ($items as $item) {
+                                    $user->playlist?->add_object($item['object_id'], $item['object_type']);
+                                }
                             }
 
                             break;

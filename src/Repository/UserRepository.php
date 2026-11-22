@@ -466,6 +466,23 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Drops every session and remember-me token this username holds
+     */
+    public function deleteSessions(string $username): void
+    {
+        Dba::write('DELETE FROM `session` WHERE `username` = ?', [$username]);
+        Dba::write('DELETE FROM `session_remember` WHERE `username` = ?', [$username]);
+    }
+
+    /**
+     * Drops every api session this username holds
+     */
+    public function deleteApiSessions(string $username): void
+    {
+        Dba::write('DELETE FROM `session` WHERE `username` = ? AND `type` = \'api\'', [$username]);
+    }
+
+    /**
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)
