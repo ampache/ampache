@@ -36,24 +36,62 @@ final class UrlValidator implements UrlValidatorInterface
     /** @var string[] the only schemes the server will fetch */
     private const SCHEMES = ['http', 'https'];
 
-    public function isPublicHttpUrl(string $url): bool
+    /**
+     * @var string[] cloud metadata endpoints outside the reserved ranges (Alibaba in CGNAT, AWS's IPv6 one in ULA),
+     * refused even when private addresses are allowed
+     */
+    private const METADATA_ADDRESSES = [
+        '100.100.100.200',
+        'fd00:ec2::254',
+    ];
+
+    public function isPublicHttpUrl(string $url, bool $allowLan = false): bool
+    {
+        return $this->resolvePinnedTarget($url, $allowLan) !== null;
+    }
+
+    public function resolvePinnedTarget(string $url, bool $allowLan = false): ?array
     {
         $parts = parse_url($url);
-        if (
-            $parts === false
-            || empty($parts['host'])
-            || !in_array(strtolower((string) ($parts['scheme'] ?? '')), self::SCHEMES, true)
-        ) {
-            return false;
+        if ($parts === false || empty($parts['host'])) {
+            return null;
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        if (!in_array($scheme, self::SCHEMES, true)) {
+            return null;
         }
 
         $addresses = $this->resolve($parts['host']);
         if ($addresses === []) {
-            return false;
+            return null;
         }
 
         foreach ($addresses as $address) {
-            if (filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            if (!$this->isAllowedAddress($address, $allowLan)) {
+                return null;
+            }
+        }
+
+        return [
+            // bracketed in a url, but CURLOPT_RESOLVE wants it bare
+            'host' => trim($parts['host'], '[]'),
+            'port' => $parts['port'] ?? ($scheme === 'https' ? 443 : 80),
+            'address' => $addresses[0],
+        ];
+    }
+
+    private function isAllowedAddress(string $address, bool $allowLan): bool
+    {
+        // loopback, link-local and the metadata address are reserved ranges, so they stay refused on a lan
+        $flags = ($allowLan) ? FILTER_FLAG_NO_RES_RANGE : FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+        if (filter_var($address, FILTER_VALIDATE_IP, $flags) === false) {
+            return false;
+        }
+
+        $binary = inet_pton($address);
+        foreach (self::METADATA_ADDRESSES as $metadata) {
+            if ($binary === inet_pton($metadata)) {
                 return false;
             }
         }

@@ -31,7 +31,16 @@ namespace Ampache\Module\Util;
 interface UrlValidatorInterface
 {
     /**
-     * Whether the url is http(s) and resolves only to public addresses
+     * Whether the url is http(s) and resolves only to public addresses, or also private ones with $allowLan
+     *
+     * Loopback, link-local and the cloud metadata addresses are refused either way.
      */
-    public function isPublicHttpUrl(string $url): bool;
+    public function isPublicHttpUrl(string $url, bool $allowLan = false): bool;
+
+    /**
+     * The host, port and one address a fetch may pin its connection to, or null when the url may not be fetched
+     *
+     * @return array{host: string, port: int, address: string}|null
+     */
+    public function resolvePinnedTarget(string $url, bool $allowLan = false): ?array;
 }

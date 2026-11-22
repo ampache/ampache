@@ -15,6 +15,17 @@
 * A stream session (`ssid`) bypassed `allow_zip_download` and per-stream access control on `/batch.php`
 * The `playlist_random`/`search_random` basket and stream actions could reveal another user's private playlist contents
 * Changing a password or rotating an API key left existing sessions and remember-me cookies valid instead of ending them
+* Another user's private playlist or smartlist
+  * Could be streamed by id through `stream.php`
+  * Could be added to your play queue or copied into one of your playlists
+  * Could be zipped through the batch download page
+* Another session's play queue could be streamed by id
+* A crafted private message browse filter listed other users' messages
+* A crafted catalog browse filter could inject SQL
+* A crafted smartlist or filter name could run script in its save or delete confirmation
+* A link could delete a catalog filter without the admin confirming it
+* ListenBrainz could be pointed at the server itself or a cloud metadata address; a LAN server is still allowed
+* Subsonic and OpenSubsonic: a crafted JSONP `callback` could run script in the browser
 
 ## Ampache 7.10.5
 
