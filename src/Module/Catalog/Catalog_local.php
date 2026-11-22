@@ -1501,7 +1501,7 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
-        if ($interactor == null && $gather_type == 'music') {
+        if ($interactor == null && $gather_type === 'music') {
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
