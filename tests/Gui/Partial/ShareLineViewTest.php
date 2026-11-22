@@ -64,7 +64,7 @@ class ShareLineViewTest extends TestCase
         $html = $this->render(mayShareAdvanced: false);
 
         self::assertStringContainsString('data-copy-link="https://music.example/song.php?action=show_song&amp;song_id=7"', $html);
-        self::assertStringNotContainsString('showShareDialog', $html);
+        self::assertStringNotContainsString('data-share-dialog', $html);
     }
 
     public function testTheLinkIsEscapedOnItsWayOut(): void
@@ -86,7 +86,7 @@ class ShareLineViewTest extends TestCase
     {
         $html = $this->render(mayShareAdvanced: true);
 
-        self::assertStringContainsString("showShareDialog(event, 'song', 7)", $html);
+        self::assertStringContainsString('data-share-dialog="song" data-share-id="7"', $html);
     }
 
     protected function setUp(): void

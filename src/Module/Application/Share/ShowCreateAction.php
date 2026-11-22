@@ -37,6 +37,7 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
@@ -78,7 +79,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
             $object = $this->libraryItemLoader->load(
                 $object_type,
                 $object_id,
-                [Song::class, Album::class, AlbumDisk::class, Playlist::class, Video::class]
+                [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]
             );
 
             if ($object instanceof displayable_item) {

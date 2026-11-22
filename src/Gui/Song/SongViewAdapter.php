@@ -833,6 +833,9 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
         );
     }
 
+    /**
+     * The share line is for anyone the page is open to; without logins that is every visitor
+     */
     public function showShare(): bool
     {
         return (

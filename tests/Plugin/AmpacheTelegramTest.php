@@ -43,12 +43,4 @@ class AmpacheTelegramTest extends TestCase
     {
         self::assertSame(AmpacheTelegram::class, PluginEnum::LIST['telegram']);
     }
-
-    public function testWithoutTextOnlyTheLinkIsSent(): void
-    {
-        self::assertSame(
-            'https://t.me/share/url?url=https%3A%2F%2Fmusic.example%2Fsong.php%3Fid%3D7',
-            new AmpacheTelegram()->external_share('https://music.example/song.php?id=7', '')
-        );
-    }
 }

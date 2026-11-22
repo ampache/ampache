@@ -3675,24 +3675,18 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     cursor: pointer;
 }
 
-.object-header-share a svg,
-.object-header-share a img,
-.object-header-share span svg {
+.object-header-share svg {
     height: 18px;
     width: 18px;
 }
 
 /* a touch screen shows no pointer, so where the share sheet works the label looks like a button */
-.can-share-natively .object-header-share > span[data-native-share] {
+.can-share-natively .object-header-share > span {
     background-color: var(--amp-accent);
     border-radius: 20px;
     color: var(--amp-accent-ink);
     cursor: pointer;
     padding: 4px 12px;
-}
-
-.object-header-share .copy-link-field {
-    flex: 1 1 100%;
 }
 
 .object-header-note {
@@ -4183,7 +4177,7 @@ table.tabledata tbody tr.withdrawn > td:first-child {
 .pref-chip {
     background: transparent;
     border: 1px solid var(--amp-border);
-    border-radius: 20px;
+    border-radius: 999px;
     color: var(--amp-muted);
     cursor: pointer;
     font: inherit;
@@ -4282,7 +4276,7 @@ table.preferences tr.pref-row-dirty td:first-child {
 
 .pref-badge {
     border: 1px solid var(--amp-border);
-    border-radius: 20px;
+    border-radius: 999px;
     font-size: 11px;
     padding: 1px 8px;
     white-space: nowrap;
@@ -4528,7 +4522,7 @@ tbody tr.pref-subcategory:first-child > td {
 /* only the lines that leave this account carry it, so the badge has to be readable at a glance */
 .pref-summary-everyone {
     border: 1px solid var(--amp-accent);
-    border-radius: 20px;
+    border-radius: 999px;
     color: var(--amp-accent);
     font-size: 11px;
     padding: 0 8px;

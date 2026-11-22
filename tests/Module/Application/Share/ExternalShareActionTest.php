@@ -396,30 +396,6 @@ class ExternalShareActionTest extends TestCase
     }
 
     // an instance with no site title still posts a whole sentence, never a dangling "on" with nothing after it
-    public function testWithoutASiteTitleTheSentenceNamesAmpache(): void
-    {
-        $this->publicInstance('');
-        $this->request('video', 8);
-
-        $video = $this->createMock(Video::class);
-        $video->method('get_link')
-            ->willReturn('https://music.example/video.php?action=show_video&video_id=8');
-        $video->method('get_fullname')
-            ->willReturn('Clip');
-
-        $this->libraryItemLoader->method('load')
-            ->willReturn($video);
-
-        $this->plugin->expects(static::once())
-            ->method('external_share')
-            ->with('https://music.example/video.php?action=show_video&video_id=8', "I'm watching Clip on Ampache")
-            ->willReturn('https://social.example/share');
-        $this->response->method('withHeader')
-            ->willReturnSelf();
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
     protected function setUp(): void
     {
         $this->requestParser     = $this->createMock(RequestParserInterface::class);
@@ -482,7 +458,7 @@ class ExternalShareActionTest extends TestCase
     /**
      * No logins, nobody signed in, and the visitor may see catalog 3 only
      */
-    private function publicInstance(string $siteTitle = 'Music'): void
+    private function publicInstance(): void
     {
         $this->configContainer->method('isFeatureEnabled')
             ->willReturnMap([
@@ -493,7 +469,7 @@ class ExternalShareActionTest extends TestCase
             ->willReturn(false);
         $this->configContainer->method('get')
             ->with(ConfigurationKeyEnum::SITE_TITLE)
-            ->willReturn($siteTitle);
+            ->willReturn('Music');
         $this->gatekeeper->method('getUser')
             ->willReturn(null);
         $this->modelFactory->method('createUser')

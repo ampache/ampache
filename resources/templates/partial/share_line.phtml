@@ -33,12 +33,12 @@ $type = $this->getObjectType();
 $id   = $this->getObjectId();
 $link = $this->getLink(); ?>
 <div class="object-header-share">
-    <span class="object-header-share-label" data-native-share="<?php echo $this->e($link); ?>" data-copy-notice="<?php echo $this->e(T_('Link copied')); ?>"><?php echo $this->raw(Ui::get_material_symbol('share', T_('Share'))); ?><?php echo T_('Share'); ?></span>
+    <span data-native-share="<?php echo $this->e($link); ?>"><?php echo $this->raw(Ui::get_material_symbol('share', T_('Share'))); ?><?php echo T_('Share'); ?></span>
     <a class="nohtml" href="<?php echo $this->e($link); ?>" data-copy-link="<?php echo $this->e($link); ?>" data-copy-notice="<?php echo $this->e(T_('Link copied')); ?>" title="<?php echo $this->e($link); ?>"><?php echo $this->raw(Ui::get_material_symbol('content_copy', T_('Copy link'))); ?><?php echo T_('Copy link'); ?></a>
 <?php foreach ($this->getPluginIcons() as $name => $icon) { ?>
     <a href="<?php echo $this->e($this->getWebPath()); ?>/share.php?action=external_share&plugin=<?php echo $this->e($name); ?>&type=<?php echo $this->e($type); ?>&id=<?php echo $id; ?>" target="_blank" rel="nofollow noopener"><?php echo $this->raw($icon); ?></a>
 <?php } ?>
 <?php if ($this->mayShareAdvanced()) { ?>
-    <a onclick="showShareDialog(event, '<?php echo $this->e($type); ?>', <?php echo $id; ?>)"><?php echo $this->raw(Ui::get_material_symbol('tune', T_('Advanced Share'))); ?><?php echo T_('Advanced Share'); ?></a>
+    <a data-share-dialog="<?php echo $this->e($type); ?>" data-share-id="<?php echo $id; ?>"><?php echo $this->raw(Ui::get_material_symbol('tune', T_('Advanced Share'))); ?><?php echo T_('Advanced Share'); ?></a>
 <?php } ?>
 </div>

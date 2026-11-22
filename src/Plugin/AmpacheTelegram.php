@@ -59,12 +59,7 @@ class AmpacheTelegram extends AmpachePlugin implements PluginExternalShareInterf
     #[Override]
     public function external_share(string $url, string $text): string
     {
-        $share = "https://t.me/share/url?url=" . rawurlencode($url);
-        if ($text !== '') {
-            $share .= "&text=" . rawurlencode($text);
-        }
-
-        return $share;
+        return "https://t.me/share/url?url=" . rawurlencode($url) . "&text=" . rawurlencode($text);
     }
 
     #[Override]

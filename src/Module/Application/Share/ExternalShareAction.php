@@ -42,7 +42,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -102,13 +101,40 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
                 throw new AccessDeniedException();
             }
 
-            $share = $this->createShare($user, $type, $objectId);
+            $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD))
+                || $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
+
+            $share_id = $this->shareCreator->create(
+                $user,
+                $type,
+                $objectId,
+                true,
+                $allow_download,
+                (int) ($this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7),
+                $this->passwordGenerator->generate_token()
+            );
+
+            $share = new Share($share_id);
             $url   = $share->public_url ?? throw new AccessDeniedException('Access Denied - Unable to create share');
             $text  = $share->getObjectName();
         } else {
             // the page is open to everyone, so its own address is the link and no share is created
-            $user = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-            $item = $this->shownItem($type, $objectId, $user);
+            $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
+            $item     = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
+            $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
+
+            // the same refusals as the show actions, so nothing a page hides is named or linked
+            $shown = match (true) {
+                $item instanceof Song, $item instanceof AlbumDisk => in_array($item->catalog, $catalogs) && $item->isVisible($user),
+                $item instanceof Album => ($item->catalog === 0 || in_array($item->catalog, $catalogs)) && $item->isVisible($user),
+                $item instanceof Artist, $item instanceof Playlist => $item->isVisible($user),
+                $item instanceof Video => true,
+                default => false,
+            };
+            if (!$item instanceof container_item || !$shown) {
+                throw new AccessDeniedException('Access Denied - Unknown or hidden object');
+            }
+
             $url  = $item->get_link();
             $text = $this->shareText($item);
         }
@@ -123,31 +149,12 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             );
     }
 
-    private function createShare(User $user, LibraryItemEnum $type, int $objectId): Share
-    {
-        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD))
-            || $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
-
-        $share_id = $this->shareCreator->create(
-            $user,
-            $type,
-            $objectId,
-            true,
-            $allow_download,
-            (int) ($this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7),
-            $this->passwordGenerator->generate_token()
-        );
-
-        return new Share($share_id);
-    }
-
     /**
      * The sentence posted before the link, as the visitor would say it
      */
-    private function shareText(library_item $item): string
+    private function shareText(container_item $item): string
     {
-        $parent = ($item instanceof container_item) ? $item->get_parent_fullname() : '';
-        $site   = (string) $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE);
+        $parent = $item->get_parent_fullname();
 
         // a whole sentence per kind of item, so a translator places the names where the language wants
         $sentence = match (true) {
@@ -163,30 +170,6 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             default => T_("I'm listening to %1\$s by %2\$s on %3\$s"),
         };
 
-        return sprintf($sentence, (string) $item->get_fullname(), $parent, ($site !== '') ? $site : 'Ampache');
-    }
-
-    /**
-     * The item as its own page would show it to this viewer, so nothing the page hides is named or linked
-     */
-    private function shownItem(LibraryItemEnum $type, int $objectId, User $user): library_item
-    {
-        $item     = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
-        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-
-        // the same refusals as the show actions, type by type
-        $shown = match (true) {
-            $item instanceof Song, $item instanceof AlbumDisk => in_array($item->catalog, $catalogs) && $item->isVisible($user),
-            $item instanceof Album => ($item->catalog === 0 || in_array($item->catalog, $catalogs)) && $item->isVisible($user),
-            $item instanceof Artist, $item instanceof Playlist => $item->isVisible($user),
-            $item instanceof Video => true,
-            default => false,
-        };
-
-        if (!$item instanceof library_item || !$shown) {
-            throw new AccessDeniedException('Access Denied - Unknown or hidden object');
-        }
-
-        return $item;
+        return sprintf($sentence, (string) $item->get_fullname(), $parent, (string) $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE));
     }
 }

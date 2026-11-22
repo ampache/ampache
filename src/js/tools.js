@@ -367,68 +367,42 @@ export function handleShareAction(url) {
 $(document).on("click", "a[data-copy-link]", function (event) {
     event.preventDefault();
 
-    var anchor = this;
-    var link   = anchor.getAttribute("data-copy-link");
-    var notice = anchor.getAttribute("data-copy-notice");
+    var link   = this.getAttribute("data-copy-link");
+    var notice = this.getAttribute("data-copy-notice");
 
-    if (navigator.clipboard && window.isSecureContext) {
+    // the clipboard api only exists on https; plain http, usual on a home server, copies from a selected field
+    if (navigator.clipboard) {
         navigator.clipboard.writeText(link).then(function () {
             displayNotification(notice, 3000);
-        }, function () {
-            selectLinkField(anchor, link, notice);
         });
         return;
     }
 
-    selectLinkField(anchor, link, notice);
+    var field   = document.createElement("input");
+    field.value = link;
+    document.body.append(field);
+    field.select();
+    document.execCommand("copy");
+    field.remove();
+    displayNotification(notice, 3000);
 });
 
-// The phone's share sheet reaches every installed app, so the share label opens it where there is one
+// The phone's share sheet reaches every installed app, so where there is one the share label opens it
 if (navigator.share) {
     document.documentElement.classList.add("can-share-natively");
-}
 
-$(document).on("click", "[data-native-share]", function (event) {
-    // without a share sheet the label is plain text
-    if (!navigator.share) {
-        return;
-    }
-
-    event.preventDefault();
-
-    var anchor = this;
-    var link   = anchor.getAttribute("data-native-share");
-
-    // the page title is the router's generic one, the link's own card names what is shared
-    navigator.share({ url: link }).catch(function (error) {
-        // closing the sheet is not a failure; anything else falls back to the copy field
-        if (error.name !== "AbortError") {
-            selectLinkField(anchor, link, anchor.getAttribute("data-copy-notice"));
-        }
+    $(document).on("click", "[data-native-share]", function () {
+        // the page title is the router's generic one, the link's own card names what is shared
+        navigator.share({ url: this.getAttribute("data-native-share") }).catch(function () {
+            // closing the sheet rejects the promise, and that is not an error
+        });
     });
-});
-
-// Plain http has no clipboard api, so the address is left selected in a field for a copy by hand
-function selectLinkField(anchor, link, notice) {
-    var field = anchor.nextElementSibling;
-    if (!field || !field.classList.contains("copy-link-field")) {
-        field           = document.createElement("input");
-        field.type      = "text";
-        field.readOnly  = true;
-        field.className = "copy-link-field";
-        field.value     = link;
-        anchor.after(field);
-    }
-
-    field.focus();
-    field.select();
-
-    // the old command still copies on most browsers; where it does not, the selected field stays
-    if (document.execCommand("copy")) {
-        field.remove();
-        displayNotification(notice, 3000);
-    }
 }
+
+// The advanced share is the same dialog the row icons open, reached from the share line without inline script
+$(document).on("click", "a[data-share-dialog]", function (event) {
+    showShareDialog(event, this.getAttribute("data-share-dialog"), this.getAttribute("data-share-id"));
+});
 
 /***************************************************/
 /* Edit modal dialog for artists, albums and songs */
