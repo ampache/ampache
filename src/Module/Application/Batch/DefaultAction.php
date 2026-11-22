@@ -43,6 +43,7 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -114,6 +115,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (
             $libItem instanceof playable_item
             && (!$libItem instanceof CatalogItemInterface || Catalog::has_access($libItem->getCatalogId(), $userId))
+            && (!$libItem instanceof playlist_object || $libItem->type === 'public' || $libItem->has_collaborate($batchUser))
         ) {
             if ($libItem instanceof Song) {
                 $libItem->fill_ext_info();

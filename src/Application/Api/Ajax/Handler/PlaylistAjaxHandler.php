@@ -35,6 +35,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 
 final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
@@ -116,6 +117,11 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         $className = ObjectTypeToClassNameMapper::map($item_type);
                         /** @var library_item $libitem */
                         $libitem = new $className($iid);
+                        // a private list you cannot see is not yours to expand into a playlist you can edit
+                        if ($libitem instanceof playlist_object && $libitem->type !== 'public' && !$libitem->has_collaborate($user)) {
+                            continue;
+                        }
+
                         if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }

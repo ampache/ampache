@@ -69,7 +69,7 @@ final class DeleteAction extends AbstractFilterAction
                 $filter_name
             ),
             1,
-            'delete_user'
+            'delete_catalog_filter'
         );
 
         $this->ui->showQueryStats();

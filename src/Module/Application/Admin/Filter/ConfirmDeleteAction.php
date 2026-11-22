@@ -27,6 +27,8 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
@@ -40,12 +42,16 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
     private ConfigContainerInterface $configContainer;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        RequestParserInterface $requestParser
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->requestParser   = $requestParser;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -54,18 +60,20 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             return null;
         }
 
-        // if (!Core::form_verify('delete_catalog_filter')) {
-        //     throw new AccessDeniedException();
-        // }
+        if (!$this->requestParser->verifyForm('delete_catalog_filter')) {
+            throw new AccessDeniedException();
+        }
+
         $this->ui->showHeader();
 
         $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
-        $filter_name = $request->getQueryParams()['filter_name'];
+        $filter_name = (string) ($request->getQueryParams()['filter_name'] ?? T_('Catalog Filter'));
         if (Catalog::delete_catalog_filter($filter_id) !== false) {
             Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                sprintf(T_('%s has been deleted'), $filter_name),
+                // the confirmation renders html, so a crafted filter_name link would run script
+                sprintf(T_('%s has been deleted'), scrub_out($filter_name)),
                 sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );
         } else {
