@@ -1025,14 +1025,13 @@ function display_notification(string $message, int $timeout = 5000): void
 }
 
 /**
- * show_now_playing
- * This shows the Now Playing templates and expires the rows it is about to read
+ * The Now Playing html, after expiring the rows it is about to read
  */
-function show_now_playing(): void
+function render_now_playing(): string
 {
     Stream::garbage_collection();
 
-    echo new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
+    return new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
 }
 
 /**

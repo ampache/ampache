@@ -409,21 +409,15 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'refresh_now_playing':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
+                $results['now_playing'] = render_now_playing();
                 break;
             case 'refresh_index':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
+                $results['now_playing'] = render_now_playing();
+
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
-                echo $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
-
-                $results['recently_played'] = ob_get_clean();
+                $results['recently_played'] = $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
                 break;
             case 'dashboard_newest':
             case 'dashboard_popular':

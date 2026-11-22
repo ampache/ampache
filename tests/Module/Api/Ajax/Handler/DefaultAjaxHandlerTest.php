@@ -39,6 +39,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 
 class DefaultAjaxHandlerTest extends TestCase
 {
@@ -49,6 +50,23 @@ class DefaultAjaxHandlerTest extends TestCase
     private SongRepositoryInterface&MockObject $songRepository;
     private DefaultAjaxHandler $subject;
     private UiInterface&MockObject $ui;
+
+    // the row swaps its buttons by fragment, so they must come back in the response, not printed before it
+    public function testActionButtonsReturnTheirFragment(): void
+    {
+        $this->requestParser->method('getFromRequest')
+            ->willReturnMap([
+                ['action', 'action_buttons'],
+                ['id', ''],
+                ['type', ''],
+            ]);
+
+        ob_start();
+        $this->subject->handle($this->createStub(User::class));
+        $xml = new SimpleXMLElement((string) ob_get_clean());
+
+        self::assertCount(1, $xml->xpath('//content[starts-with(@div, "action_buttons_")]'));
+    }
 
     public function testBasketExpandsAnObjectTypeThatIsOnlyAnAliasOfALoadableType(): void
     {

@@ -226,47 +226,40 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
             case 'set_rating':
                 /* Setting ratings */
                 if (User::is_registered() && check_http_referer() === true) {
-                    ob_start();
                     $object_id = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $rating    = new Rating($object_id, Core::get_get('rating_type'));
                     $rating->set_rating((int) Core::get_get('rating'));
-                    echo Rating::show($object_id, Core::get_get('rating_type'));
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
-                    $results[$key] = ob_get_contents();
-                    ob_end_clean();
+                    $results[$key] = Rating::show($object_id, Core::get_get('rating_type'));
                 }
 
                 break;
             case 'set_userflag':
                 /* Setting userflags */
                 if (User::is_registered() && check_http_referer() === true) {
-                    ob_start();
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $userflag = new Userflag((int) $flag_id, $flagtype);
                     $userflag->set_flag(make_bool($_GET['userflag'] ?? null));
-                    echo Userflag::show((int) $flag_id, $flagtype);
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
-                    $results[$key] = ob_get_contents();
-                    ob_end_clean();
+                    $results[$key] = Userflag::show((int) $flag_id, $flagtype);
                 }
 
                 break;
             case 'action_buttons':
                 $rating_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                 $rating_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
-                ob_start();
+                $buttons     = '';
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
-                    echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
-                    echo Rating::show($rating_id, $rating_type);
-                    echo "</span>";
-                    echo " <span id='userflag_" . $rating_id . "_" . $rating_type . "'>";
-                    echo Userflag::show($rating_id, $rating_type);
-                    echo "</span>";
+                    $buttons = " <span id='rating_" . $rating_id . "_" . $rating_type . "'>"
+                        . Rating::show($rating_id, $rating_type)
+                        . "</span>"
+                        . " <span id='userflag_" . $rating_id . "_" . $rating_type . "'>"
+                        . Userflag::show($rating_id, $rating_type)
+                        . "</span>";
                 }
 
-                $results['action_buttons_' . $rating_id . '_' . $rating_type] = ob_get_contents();
-                ob_end_clean();
+                $results['action_buttons_' . $rating_id . '_' . $rating_type] = $buttons;
         }
 
         // Go ahead and do the echo
