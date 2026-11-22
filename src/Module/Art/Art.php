@@ -857,7 +857,7 @@ class Art extends database_object
             ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
             : $out_w . 'x' . $out_h;
 
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
         $use_auth = !self::isPublic();
 
         $lightbox = ($link === null);
