@@ -3590,6 +3590,7 @@
           },
           {
             "type": "array",
+            "items": {},
             "maxItems": 0
           }
         ]
@@ -14685,7 +14686,7 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "foldersFoldersGet",
+        "operationId": "foldersFoldersGetByFolderId",
         "description": "Return children of a parent folder object by ID **Ampache 8.0.0+**"
       }
     },

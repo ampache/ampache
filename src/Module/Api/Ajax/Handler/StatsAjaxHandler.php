@@ -103,10 +103,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
+                $results['now_playing'] = render_now_playing();
+
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
@@ -119,7 +117,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                 }
 
-                echo new RecentlyPlayedView(
+                $results['recently_played'] = new RecentlyPlayedView(
                     ($all_types) ? RecentlyPlayedMode::ALL_TYPES : RecentlyPlayedMode::SONGS,
                     $data,
                     $user,
@@ -127,8 +125,6 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user_only,
                     AmpConfig::get_web_path()
                 )->render();
-
-                $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
                 if (
@@ -139,17 +135,15 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
+                $results['now_playing'] = render_now_playing();
+
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 Song::build_cache(array_keys($data));
-                echo new RecentlyPlayedView(
+                $results['recently_skipped'] = new RecentlyPlayedView(
                     RecentlyPlayedMode::SKIPPED,
                     $data,
                     $user,
@@ -157,20 +151,17 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user_only,
                     AmpConfig::get_web_path()
                 )->render();
-                $results['recently_skipped'] = ob_get_clean();
                 break;
             case 'refresh_skipped':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
+                $results['now_playing'] = render_now_playing();
+
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $data      = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 Song::build_cache(array_keys($data));
-                echo new RecentlyPlayedView(
+                $results['recently_skipped'] = new RecentlyPlayedView(
                     RecentlyPlayedMode::SKIPPED,
                     $data,
                     $user,
@@ -178,7 +169,6 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     $user_only,
                     AmpConfig::get_web_path()
                 )->render();
-                $results['recently_skipped'] = ob_get_clean();
                 break;
         } // switch on action;
 

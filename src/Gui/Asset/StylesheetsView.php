@@ -43,7 +43,7 @@ final class StylesheetsView extends AbstractView
         '/templates/jquery-editdialog.css',
         '/lib/modules/jquery-ui-ampache/jquery-ui.min.css',
         '/lib/components/tag-it/css/jquery.tagit.css',
-        '/lib/modules/rhinoslider/css/rhinoslider-1.05.css',
+        '/lib/components/datetimepicker/jquery.datetimepicker.min.css',
         '/lib/components/jquery-contextmenu/jquery.contextMenu.min.css',
         '/lib/components/filepond/filepond.min.css',
     ];

@@ -64,10 +64,11 @@ $lyricsUrl = $this->getLyricsUrl(); ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?></h3>
     <ul>
+        <?php $lookupLabel = ($this->isStored()) ? T_('Refresh') : T_('Get Lyrics'); ?>
         <li>
             <a href="<?php echo $this->e($this->getRefreshUrl()); ?>">
-                <?php echo $this->raw(Ui::get_material_symbol('refresh', T_('Refresh'))); ?>
-                <?php echo T_('Refresh'); ?>
+                <?php echo $this->raw(Ui::get_material_symbol(($this->isStored()) ? 'refresh' : 'search', $lookupLabel)); ?>
+                <?php echo $this->e($lookupLabel); ?>
             </a>
         </li>
         <li>
@@ -116,15 +117,15 @@ if ($candidates !== []) {
     Ui::show_box_top(T_('Plugins'), 'box box_lyrics_plugins');
     foreach ($candidates as $candidate) { ?>
 <div class="lyrics_candidate">
-    <form method="post" action="<?php echo $this->e($this->getFormUrl()); ?>">
+    <form class="lyrics_candidate_header" method="post" action="<?php echo $this->e($this->getFormUrl()); ?>">
         <?php echo $this->raw($this->getFormToken()); ?>
         <input type="hidden" name="lyrics_action" value="save" />
         <input type="hidden" name="lyrics" value="<?php echo $this->e($candidate['text']); ?>" />
-        <strong><?php echo $this->e($candidate['plugin']); ?></strong>
-        <input type="submit" value="<?php echo $this->e(T_('Select')); ?>" />
+        <strong class="lyrics_candidate_plugin"><?php echo $this->e($candidate['plugin']); ?></strong>
         <?php if ($candidate['url'] !== null) { ?>
-        <a href="<?php echo $this->e($candidate['url']); ?>" target="_blank"><?php echo T_('Show more'); ?></a>
+        <a class="lyrics_candidate_link" href="<?php echo $this->e($candidate['url']); ?>" target="_blank"><?php echo T_('Show more'); ?></a>
         <?php } ?>
+        <input class="lyrics_candidate_select" type="submit" value="<?php echo $this->e(T_('Select')); ?>" />
     </form>
     <details>
         <summary><?php echo T_('Lyrics'); ?></summary>

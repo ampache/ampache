@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Util\UrlValidatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -37,6 +39,7 @@ use ReflectionProperty;
 class AmpachelistenbrainzTest extends TestCase
 {
     private Ampachelistenbrainz $plugin;
+    private UrlValidatorInterface&MockObject $urlValidator;
 
     public function testABareHostKeepsTheDefaultHttpsScheme(): void
     {
@@ -62,6 +65,17 @@ class AmpachelistenbrainzTest extends TestCase
         self::assertSame('10.10.10.10:4110/apis/listenbrainz', $this->apiHost());
     }
 
+    // the api url is a user preference, so fetching it unchecked lets a user aim the server at internal hosts
+    public function testAnApiUrlTheValidatorRefusesIsNeverFetched(): void
+    {
+        $this->urlValidator->expects(self::once())
+            ->method('resolvePinnedTarget')
+            ->with('https://api.listenbrainz.org/1/submit-listens', true)
+            ->willReturn(null);
+
+        self::assertNull($this->postJsonUrl());
+    }
+
     public function testAnEmptyValueLeavesTheDefaultsInPlace(): void
     {
         $this->resolveApiUrl('');
@@ -79,7 +93,8 @@ class AmpachelistenbrainzTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plugin = new Ampachelistenbrainz();
+        $this->urlValidator = $this->createMock(UrlValidatorInterface::class);
+        $this->plugin       = new Ampachelistenbrainz($this->urlValidator);
     }
 
     private function apiHost(): string
@@ -87,6 +102,13 @@ class AmpachelistenbrainzTest extends TestCase
         $property = new ReflectionProperty(Ampachelistenbrainz::class, 'api_host');
 
         return $property->getValue($this->plugin);
+    }
+
+    private function postJsonUrl(): ?string
+    {
+        $method = new ReflectionMethod(Ampachelistenbrainz::class, 'post_json_url');
+
+        return $method->invoke($this->plugin, '/1/submit-listens', '{}');
     }
 
     private function resolveApiUrl(string $configured): void

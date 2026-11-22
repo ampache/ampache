@@ -275,7 +275,9 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
         return ['tables' => $tables, 'columns' => $columns];
     }
 
-    // utf8 and utf8mb3 are the same charset; modern servers report the latter
+    /**
+     * utf8 and utf8mb3 are the same charset; modern servers report the latter
+     */
     private function normalizeCharset(string $charset): string
     {
         return $charset === 'utf8' ? 'utf8mb3' : $charset;

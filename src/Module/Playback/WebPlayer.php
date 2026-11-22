@@ -32,6 +32,7 @@ use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\LyricsSourceEnum;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -154,7 +155,7 @@ class WebPlayer
                 $json['r128_track_gain']       = $media->r128_track_gain;
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
-                $json['has_lyrics']            = $media->lyrics_source !== null;
+                $json['has_lyrics']            = $media->lyrics_source instanceof LyricsSourceEnum;
             }
 
             $json['media_id']   = $media->id;

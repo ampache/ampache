@@ -81,10 +81,7 @@ final class LabelView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('label', $this->label->id, $this->getName(), ['width' => 384, 'height' => 384], null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('label', $this->label->id, $this->getName(), ['width' => 384, 'height' => 384], null, true, false);
     }
 
     /**

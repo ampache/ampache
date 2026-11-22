@@ -81,7 +81,7 @@ final class PreferenceHelpCatalog
             'sidebar_order_information' => new PreferenceHelp(T_('Position of the Information menu in the sidebar. Sections are stacked in ascending order, so a lower number moves it up.')),
             'sidebar_order_playlist' => new PreferenceHelp(T_('Position of the Playlist menu in the sidebar. Sections are stacked in ascending order, so a lower number moves it up.')),
             'sidebar_order_search' => new PreferenceHelp(T_('Position of the Search menu in the sidebar. Sections are stacked in ascending order, so a lower number moves it up.')),
-            'slideshow_time' => new PreferenceHelp(T_('Seconds of inactivity before the web player fades into a full-screen artist slideshow. 0 turns it off, and it needs the Flickr plugin key to have anything to show.'), 'https://ampache.org/docs/plugins/'),
+            'slideshow_time' => new PreferenceHelp(T_('Seconds of inactivity before the web player fades into a full-screen artist slideshow. 0 turns it off. Uses the Flickr plugin key if set, otherwise the artist and album art already in the catalog.'), 'https://ampache.org/docs/plugins/'),
             'song_page_title' => new PreferenceHelp(T_('Puts the playing track in the browser tab title. Share pages never do it, whatever this says.'), 'https://ampache.org/docs/information/web-player/'),
             'stats_threshold' => new PreferenceHelp(T_('How many days back the statistics pages look. 0 means all time, which is the case the cached counts are built for.')),
             'theme_color' => new PreferenceHelp(T_('Light or dark variant of the chosen theme. It also picks the logo and icon set, and the template the drawn placeholder art uses under Auto.'), 'https://ampache.org/docs/themes/'),

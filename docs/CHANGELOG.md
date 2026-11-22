@@ -12,7 +12,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
 
 ### Added (8.5.0)
 
-* Translations 2026-11-18
+* Translations 2026-11-21
 * Database 850002
   * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
   * New `song_data`.`lyrics_source` column (`file`, `plugin` or `user`); existing lyrics are marked `file`
@@ -35,7 +35,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * Lyrics are read from a `.lrc` file beside the song with the same name; a verify picks up a new or edited one
   * Timed lyrics win: embedded timed lyrics, then the `.lrc` file, then embedded plain lyrics
   * The web player's lyrics button sits with its action buttons and opens a lyrics panel that follows the playing song and can go full screen
-  * The button is greyed out for a song with no stored lyrics, and opens the lyrics page instead
+  * The button is grayed out for a song with no stored lyrics, and opens the lyrics page instead
   * Timed lyrics follow an LRC `[offset:]`, and a line goes dark at the end an Enhanced LRC line states
   * Lyrics a user edits or picks are marked User set and are never replaced by a rescan
 
@@ -45,6 +45,10 @@ The web player's lyrics button now sits with the player's action buttons on ever
 * The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
 * Clicking art opens it full size in a native dialog; the unmaintained prettyPhoto library is gone
 * Graph date pickers use the browser's own date input; jquery-datetimepicker is gone
+* Slideshow
+  * Falls back to the artist's own art, their albums' covers, and the song's own art (`show_song_art`) when no plugin has anything to show
+  * The button shows whenever `slideshow_time` is set, not only when the Flickr plugin is configured
+  * Fades between images instead of using the rhinoslider carousel; the unmaintained library is gone
 * Bitrates are shown in kbps of 1000, not 1024, in the web UI, exports, DAAP and Subsonic
 * Pressing Enter in an edit dialog saves it instead of reloading the page
 * Opening the lyrics page as an editor no longer stores the first plugin result; the editor picks which result to keep
@@ -87,6 +91,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * An HTTP/2 client's lowercase `range` header was ignored, breaking seeking
   * DSub stopped on a folder without a single artist; an empty artist info is returned instead
   * OpenSubsonic synced lyrics returned LRC header tags such as `[ar:]` and `[ti:]` as lyric lines
+  * A crafted JSONP `callback` could run script in the browser
 * A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
 * IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
 * Democratic
@@ -98,6 +103,16 @@ The web player's lyrics button now sits with the player's action buttons on ever
 * `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
 * Possible duplicate folder inserts
 * `cleanup:art` could refuse to run, or silently run with nothing to do, because its config check used inverted width/height logic
+* Another user's private playlist or smartlist
+  * Could be streamed by id through `stream.php`
+  * Could be copied into, or played through, your own collection
+* Another user's private collection could be added to your play queue or a playlist
+* Another session's play queue could be streamed by id
+* A crafted private message browse filter listed other users' messages
+* A crafted catalog browse filter could inject SQL
+* A crafted smartlist or filter name could run script in its save or delete confirmation
+* A link could delete a catalog filter without the admin confirming it
+* ListenBrainz could be pointed at the server itself or a cloud metadata address; a LAN server is still allowed
 
 ## Ampache 8.4.0
 

@@ -292,9 +292,7 @@ class Art extends database_object
     }
 
     /**
-     * Display item art.
-     * This function requires you to call the explicit size of the thumbnail
-     * This removes the ambiguity of Art::display() by requiring a thumbnail size array
+     * Print an item's art. Returns false when nothing was printed.
      * @param array{width: int, height: int} $size
      */
     public static function display(
@@ -307,165 +305,10 @@ class Art extends database_object
         bool $thumb_link = true,
         string $kind = 'default',
     ): bool {
-        if (!self::is_valid_type($object_type)) {
-            return false;
-        }
+        $html = self::render($object_type, $object_id, $name, $size, $link, $show_default, $thumb_link, $kind);
+        echo $html;
 
-        if ($object_type === 'video' && $kind !== 'default') {
-            Video::generate_preview($object_id);
-        }
-
-        $art    = new Art($object_id, $object_type, $kind);
-        $has_db = $art->has_db_meta();
-        // Don't show any image if not available
-        if (!$show_default && !$has_db) {
-            return false;
-        }
-
-        // Expand wide art slightly if it's larger than the desired thumbnail size
-        $expanded = false;
-        if (!$thumb_link && $art->width && $art->height) {
-            $src_ratio  = $art->width / $art->height;
-            $dst_ratio  = $size['width'] / $size['height'];
-            $difference = $src_ratio - $dst_ratio;
-            if ($difference > 0.3) {
-                // keep original height and widen a bit
-                $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
-                $expanded      = true;
-            }
-
-            if ($difference < -0.1) {
-                // extend the height a little bit and thin it out
-                $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
-                $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
-                $expanded       = true;
-            }
-        }
-
-        // double the image output size for display scaling
-        $scale  = (AmpConfig::get('upscale_images', true)) ? 2 : 1;
-        $out_w  = $size['width'] * $scale;
-        $out_h  = $size['height'] * $scale;
-        // the size above came from this image's own ratio, so asking for it verbatim stores a derivative
-        // per ratio. Only the file we request is rounded, the markup below keeps the exact size.
-        $out_size = ($expanded)
-            ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
-            : $out_w . 'x' . $out_h;
-
-        $web_path = AmpConfig::get_web_path();
-        $use_auth = !self::isPublic();
-
-        $lightbox = ($link === null);
-        if ($link === null) {
-            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
-            if ($thumb_link) {
-                $link .= "&size=" . $out_size;
-            }
-
-            if ($use_auth) {
-                $link .= "&auth=" . session_id();
-            }
-
-            if ($kind !== 'default') {
-                $link .= '&kind=' . $kind;
-            }
-
-            if ($has_db) {
-                $link .= '&id=' . $art->id;
-            }
-
-            // the full size view of a drawn tile has to be the same drawing as the thumbnail
-            $link .= self::generated_art_query();
-        }
-
-        echo '<div class="item_art">';
-        // A drawn tile is not the cover, and nothing on screen says so. The hover text does, while the
-        // alt text stays the plain name so a listing is not read out as a paragraph per row.
-        // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
-        $name  = scrub_out($name);
-        $hover = self::drawn_hover_title($name, !$has_db);
-        echo '<a href="' . $link . '" title="' . $hover . '"';
-        if ($lightbox) {
-            echo ' data-lightbox';
-        }
-
-        echo ">";
-        if ($has_db) {
-            $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
-            if ($use_auth) {
-                $imgurl .= "&auth=" . session_id();
-            }
-
-            if ($kind !== 'default') {
-                $imgurl .= '&kind=' . $kind;
-            }
-
-            // Keeps the browser cache feature but forces a refresh once the art changes: the original row's id and changes on every replace and thumbs are deleted
-            $imgurl .= '&id=' . $art->id;
-            $imgurl .= self::generated_art_query();
-        } else {
-            $suffix = self::generated_art_query();
-            if ($suffix !== '') {
-                $imgurl = $web_path . '/image.php?object_id=' . $object_id . '&object_type=' . $object_type
-                    . '&size=' . $out_size . $suffix;
-                if ($use_auth) {
-                    $imgurl .= '&auth=' . session_id();
-                }
-            } else {
-                // one shared url for every item with no art, so the browser fetches and caches the placeholder once
-                $imgurl = self::get_fallback_url($object_type, $out_size);
-            }
-        }
-
-        echo '<img src="' . $imgurl . '" alt="' . $name . '" height="' . $size['height'] . '" width="' . $size['width'] . '" loading="lazy" decoding="async" />';
-
-        $item_art_play = ($size['height'] == 150)
-            ? '<div class="item_art_play_150">'
-            : '<div class="item_art_play">';
-        // don't put the play icon on really large images.
-        if ($size['width'] == 150 && $size['height'] == 150) {
-            echo $item_art_play;
-            echo Ajax::text(
-                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id,
-                '<span class="item_art_play_icon" title="' . T_('Play') . '"></span>',
-                'directplay_art_' . $object_type . '_' . $object_id
-            );
-            echo "</div>";
-        }
-
-        if ($lightbox) {
-            $user      = Core::get_global('user');
-            $className = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var class-string<library_item> $className */
-            $libitem = new $className($object_id);
-            echo '<div class="item_art_actions">';
-            if (
-                $user instanceof User
-                && (
-                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER)
-                    || (
-                        $user->has_access(AccessLevelEnum::USER)
-                        && $user->id == $libitem->get_user_owner()
-                    )
-                )
-            ) {
-                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
-                echo "</a>";
-                if ($has_db) {
-                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" data-confirm=\"" . T_('Do you really want to reset art?') . '">';
-                    echo Ui::get_material_symbol('close', T_('Reset Art'));
-                    echo "</a>";
-                }
-            }
-
-            echo "</div>";
-        }
-
-        echo "</a>\n";
-        echo "</div>";
-
-        return true;
+        return $html !== '';
     }
 
     /**
@@ -953,6 +796,178 @@ class Art extends database_object
             || !$config->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH)
             || !$config->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)
         );
+    }
+
+    /**
+     * Build the markup for an item's art, or an empty string when there is nothing to show.
+     * @param array{width: int, height: int} $size
+     */
+    public static function render(
+        string $object_type,
+        int $object_id,
+        string $name,
+        array $size,
+        ?string $link = null,
+        bool $show_default = true,
+        bool $thumb_link = true,
+        string $kind = 'default',
+    ): string {
+        if (!self::is_valid_type($object_type)) {
+            return '';
+        }
+
+        if ($object_type === 'video' && $kind !== 'default') {
+            Video::generate_preview($object_id);
+        }
+
+        $art    = new Art($object_id, $object_type, $kind);
+        $has_db = $art->has_db_meta();
+        // Don't show any image if not available
+        if (!$show_default && !$has_db) {
+            return '';
+        }
+
+        // Expand wide art slightly if it's larger than the desired thumbnail size
+        $expanded = false;
+        if (!$thumb_link && $art->width && $art->height) {
+            $src_ratio  = $art->width / $art->height;
+            $dst_ratio  = $size['width'] / $size['height'];
+            $difference = $src_ratio - $dst_ratio;
+            if ($difference > 0.3) {
+                // keep original height and widen a bit
+                $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
+                $expanded      = true;
+            }
+
+            if ($difference < -0.1) {
+                // extend the height a little bit and thin it out
+                $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
+                $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
+                $expanded       = true;
+            }
+        }
+
+        // double the image output size for display scaling
+        $scale  = (AmpConfig::get('upscale_images', true)) ? 2 : 1;
+        $out_w  = $size['width'] * $scale;
+        $out_h  = $size['height'] * $scale;
+        // the size above came from this image's own ratio, so asking for it verbatim stores a derivative
+        // per ratio. Only the file we request is rounded, the markup below keeps the exact size.
+        $out_size = ($expanded)
+            ? self::_snap_expanded($out_w) . 'x' . self::_snap_expanded($out_h)
+            : $out_w . 'x' . $out_h;
+
+        $web_path = AmpConfig::get_web_path();
+        $use_auth = !self::isPublic();
+
+        $lightbox = ($link === null);
+        if ($link === null) {
+            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type;
+            if ($thumb_link) {
+                $link .= "&size=" . $out_size;
+            }
+
+            if ($use_auth) {
+                $link .= "&auth=" . session_id();
+            }
+
+            if ($kind !== 'default') {
+                $link .= '&kind=' . $kind;
+            }
+
+            if ($has_db) {
+                $link .= '&id=' . $art->id;
+            }
+
+            // the full size view of a drawn tile has to be the same drawing as the thumbnail
+            $link .= self::generated_art_query();
+        }
+
+        $html = '<div class="item_art">';
+        // A drawn tile is not the cover, and nothing on screen says so. The hover text does, while the
+        // alt text stays the plain name so a listing is not read out as a paragraph per row.
+        // $name is the object's plain-text title, so it is escaped here rather than at 40 call sites
+        $name  = scrub_out($name);
+        $hover = self::drawn_hover_title($name, !$has_db);
+        $html .= '<a href="' . $link . '" title="' . $hover . '"';
+        if ($lightbox) {
+            $html .= ' data-lightbox';
+        }
+
+        $html .= ">";
+        if ($has_db) {
+            $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&size=" . $out_size;
+            if ($use_auth) {
+                $imgurl .= "&auth=" . session_id();
+            }
+
+            if ($kind !== 'default') {
+                $imgurl .= '&kind=' . $kind;
+            }
+
+            // Keeps the browser cache feature but forces a refresh once the art changes: the original row's id and changes on every replace and thumbs are deleted
+            $imgurl .= '&id=' . $art->id;
+            $imgurl .= self::generated_art_query();
+        } else {
+            $suffix = self::generated_art_query();
+            if ($suffix !== '') {
+                $imgurl = $web_path . '/image.php?object_id=' . $object_id . '&object_type=' . $object_type
+                    . '&size=' . $out_size . $suffix;
+                if ($use_auth) {
+                    $imgurl .= '&auth=' . session_id();
+                }
+            } else {
+                // one shared url for every item with no art, so the browser fetches and caches the placeholder once
+                $imgurl = self::get_fallback_url($object_type, $out_size);
+            }
+        }
+
+        $html .= '<img src="' . $imgurl . '" alt="' . $name . '" height="' . $size['height'] . '" width="' . $size['width'] . '" loading="lazy" decoding="async" />';
+
+        // don't put the play icon on really large images.
+        if ($size['width'] == 150 && $size['height'] == 150) {
+            $html .= '<div class="item_art_play_150">';
+            $html .= Ajax::text(
+                '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id,
+                '<span class="item_art_play_icon" title="' . T_('Play') . '"></span>',
+                'directplay_art_' . $object_type . '_' . $object_id
+            );
+            $html .= "</div>";
+        }
+
+        if ($lightbox) {
+            $user      = Core::get_global('user');
+            $className = ObjectTypeToClassNameMapper::map($object_type);
+            /** @var class-string<library_item> $className */
+            $libitem = new $className($object_id);
+            $html .= '<div class="item_art_actions">';
+            if (
+                $user instanceof User
+                && (
+                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER)
+                    || (
+                        $user->has_access(AccessLevelEnum::USER)
+                        && $user->id == $libitem->get_user_owner()
+                    )
+                )
+            ) {
+                $html .= "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                $html .= Ui::get_material_symbol('edit', T_('Edit/Find Art'));
+                $html .= "</a>";
+                if ($has_db) {
+                    $html .= "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" data-confirm=\"" . T_('Do you really want to reset art?') . '">';
+                    $html .= Ui::get_material_symbol('close', T_('Reset Art'));
+                    $html .= "</a>";
+                }
+            }
+
+            $html .= "</div>";
+        }
+
+        $html .= "</a>\n";
+        $html .= "</div>";
+
+        return $html;
     }
 
     /**

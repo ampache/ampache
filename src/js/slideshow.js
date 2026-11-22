@@ -1,13 +1,19 @@
 var lastaction = new Date().getTime();
-var refresh_slideshow_interval = jsPrefExistsFlickrApiKey ? jsAmpConfigSlideshowTime : 0;
+var refresh_slideshow_interval = jsAmpConfigSlideshowTime;
 var iSlideshow = null;
 var tSlideshow = null;
+var iSlide = null;
 
-$("#aslideshow").click(function(e) {
-    if (!$(e.target).hasClass('rhino-btn')) {
-        update_action();
-    }
+$("#aslideshow").click(function() {
+    update_action();
 });
+
+function next_slide()
+{
+    var slides = $("#fslider img");
+    var next = slides.filter(".active").removeClass("active").next("img");
+    (next.length ? next : slides.first()).addClass("active");
+}
 
 export function init_slideshow_check()
 {
@@ -36,6 +42,7 @@ export function init_slideshow_refresh()
             .css({'display': 'inline'});
 
         iSlideshow = true;
+        iSlide = window.setInterval(next_slide, 15000);
         refresh_slideshow();
     }
 }
@@ -51,6 +58,7 @@ export function stop_slideshow()
 {
     if (iSlideshow != null) {
         iSlideshow = null;
+        clearInterval(iSlide);
         $("#aslideshow").css({'display': 'none'});
     }
 }
