@@ -363,6 +363,73 @@ export function handleShareAction(url) {
     $("#sharedialog").dialog("close");
 }
 
+// Delegated like the ajax buttons, so a share line rendered into an ajax-loaded page copies too
+$(document).on("click", "a[data-copy-link]", function (event) {
+    event.preventDefault();
+
+    var anchor = this;
+    var link   = anchor.getAttribute("data-copy-link");
+    var notice = anchor.getAttribute("data-copy-notice");
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(function () {
+            displayNotification(notice, 3000);
+        }, function () {
+            selectLinkField(anchor, link, notice);
+        });
+        return;
+    }
+
+    selectLinkField(anchor, link, notice);
+});
+
+// The phone's share sheet reaches every installed app, so the share label opens it where there is one
+if (navigator.share) {
+    document.documentElement.classList.add("can-share-natively");
+}
+
+$(document).on("click", "[data-native-share]", function (event) {
+    // without a share sheet the label is plain text
+    if (!navigator.share) {
+        return;
+    }
+
+    event.preventDefault();
+
+    var anchor = this;
+    var link   = anchor.getAttribute("data-native-share");
+
+    // the page title is the router's generic one, the link's own card names what is shared
+    navigator.share({ url: link }).catch(function (error) {
+        // closing the sheet is not a failure; anything else falls back to the copy field
+        if (error.name !== "AbortError") {
+            selectLinkField(anchor, link, anchor.getAttribute("data-copy-notice"));
+        }
+    });
+});
+
+// Plain http has no clipboard api, so the address is left selected in a field for a copy by hand
+function selectLinkField(anchor, link, notice) {
+    var field = anchor.nextElementSibling;
+    if (!field || !field.classList.contains("copy-link-field")) {
+        field           = document.createElement("input");
+        field.type      = "text";
+        field.readOnly  = true;
+        field.className = "copy-link-field";
+        field.value     = link;
+        anchor.after(field);
+    }
+
+    field.focus();
+    field.select();
+
+    // the old command still copies on most browsers; where it does not, the selected field stays
+    if (document.execCommand("copy")) {
+        field.remove();
+        displayNotification(notice, 3000);
+    }
+}
+
 /***************************************************/
 /* Edit modal dialog for artists, albums and songs */
 /***************************************************/

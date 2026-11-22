@@ -34,7 +34,7 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
     public string $categories = 'share';
 
     #[Override]
-    public string $description = 'Twitter share';
+    public string $description = 'X (Twitter) share';
 
     #[Override]
     public string $max_ampache = '999999';
@@ -46,7 +46,7 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
     public string $name = 'Twitter';
 
     #[Override]
-    public string $url = 'https://twitter.com';
+    public string $url = 'https://x.com';
 
     #[Override]
     public string $version = '000001';
@@ -56,7 +56,7 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
      */
     public function __construct()
     {
-        $this->description = T_('Twitter share');
+        $this->description = T_('X (Twitter) share');
     }
 
     /**
@@ -64,7 +64,7 @@ class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterfa
      */
     public function external_share(string $url, string $text): string
     {
-        $share = "https://twitter.com/share?url=" . rawurlencode($url);
+        $share = "https://x.com/intent/post?url=" . rawurlencode($url);
         if ($text !== '' && $text !== '0') {
             $share .= "&text=" . rawurlencode($text);
         }

@@ -171,4 +171,9 @@ interface SongViewAdapterInterface extends TemplateInterface
     public function hasWaveform(): bool;
 
     public function isEditable(): bool;
+
+    /**
+     * The share line is for anyone the page is open to; without logins that is every visitor
+     */
+    public function showShare(): bool;
 }

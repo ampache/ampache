@@ -52,6 +52,7 @@ final class ObjectHeaderView extends AbstractView
         private readonly string $ratingKey = '',
         private readonly string $note = '',
         private readonly string $links = '',
+        private readonly string $share = '',
         private readonly string $primaryAction = '',
         private readonly array $actions = [],
         private readonly bool $wideArt = false,
@@ -137,6 +138,14 @@ final class ObjectHeaderView extends AbstractView
     public function getRatingKey(): string
     {
         return $this->ratingKey;
+    }
+
+    /**
+     * The rendered share line, or nothing when the page offers no sharing
+     */
+    public function getShare(): string
+    {
+        return $this->share;
     }
 
     /**

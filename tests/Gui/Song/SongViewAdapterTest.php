@@ -556,6 +556,70 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
+    public function testShowShareIsFalseForAVisitorBehindLogins(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->once()
+            ->andReturnTrue();
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->showShare()
+        );
+    }
+
+    public function testShowShareIsFalseWhenSharingIsOff(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->showShare()
+        );
+    }
+
+    public function testShowShareIsTrueForAnAccountBehindLogins(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->once()
+            ->andReturnTrue();
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->showShare()
+        );
+    }
+
+    public function testShowShareIsTrueForAVisitorWhenThereAreNoLogins(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->showShare()
+        );
+    }
+
     #[Override]
     protected function setUp(): void
     {

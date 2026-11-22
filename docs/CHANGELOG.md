@@ -28,6 +28,12 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * Artist pages gain a Playlists tab listing playlists that hold the artist's songs
   * New `artist` filter on the playlist browse
 * The song license is read from an mp3's `WCOP` frame or `license` TXXX tag
+* Sharing
+  * Song, album and artist pages gain a Share line: copy link, one icon per share plugin, and the share dialog for an account
+  * Without logins (`use_auth = false`) a visitor can share too, and the networks get the page's own link instead of a share url
+  * Where the browser has a share sheet (phones, https), the Share label opens it
+  * New WhatsApp and Telegram share plugins; each network is its own plugin, install only the ones you want
+  * Share icons are svg, the Twitter plugin shows the X logo and opens x.com directly
 * Lyrics
   * Timed (LRC) lyrics show line by line, highlighting the current line of the song in the web player
   * Editors can edit, clear or re-search lyrics from the lyrics page, and choose between plugin results

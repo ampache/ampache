@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Partial\HeaderChip;
 use Ampache\Gui\Partial\ObjectHeaderView;
+use Ampache\Gui\Partial\ShareLineView;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Api\Ajax;
@@ -370,6 +371,9 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             ratingKey: $this->song->getId() . '_song',
             note: $this->getPlayNote(),
             links: $this->getExternalLinks(),
+            share: ($this->showShare())
+                ? new ShareLineView('song', $this->song->getId(), $this->song->get_link(), $this->configContainer->getWebPath(), $this->canShare())->render()
+                : '',
             primaryAction: $this->getPrimaryHeaderAction(),
             actions: $this->getHeaderActions(),
             notice: ($this->song->enabled) ? '' : T_('Disabled'),
@@ -407,10 +411,6 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         if ($this->canPostShout()) {
             $actions[] = $this->link($this->getPostShoutUrl(), 'comment', T_('Post Shout'));
-        }
-
-        if ($this->canShare()) {
-            $actions[] = Share::display_ui('song', $songId);
         }
 
         if ($this->canDownload()) {
@@ -831,6 +831,15 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
                 && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             )
         );
+    }
+
+    public function showShare(): bool
+    {
+        return (
+            $this->configContainer->isAuthenticationEnabled() === false
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        )
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     #[Override]

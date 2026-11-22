@@ -32,8 +32,8 @@ use ReflectionClass;
  * Finding the key a plugin's stored display name belongs to.
  *
  * A preference files itself under the plugin's own `$name`, which is what an operator reads and carries
- * spaces and dots. Twelve of the thirty-nine differ from their key, so the preferences screen's lookup by
- * key alone answered nothing for them, showing their settings with no help and no error.
+ * spaces and dots. Some differ from their key, so the preferences screen's lookup by key alone answered
+ * nothing for them, showing their settings with no help and no error.
  */
 class PluginEnumKeyForDisplayNameTest extends TestCase
 {
