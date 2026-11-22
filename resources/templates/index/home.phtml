@@ -40,7 +40,7 @@ use Ampache\Module\Util\Ui;
 </div>
 <?php if ($this->showNowPlaying()) { ?>
 <div id="now_playing">
-    <?php show_now_playing(); ?>
+    <?php echo $this->raw(render_now_playing()); ?>
 </div>
 <?php } ?>
 <?php if ($this->showMomentAlbums()) {

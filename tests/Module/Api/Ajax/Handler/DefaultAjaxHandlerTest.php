@@ -30,13 +30,16 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 
 class DefaultAjaxHandlerTest extends TestCase
 {
@@ -47,6 +50,23 @@ class DefaultAjaxHandlerTest extends TestCase
     private SongRepositoryInterface&MockObject $songRepository;
     private DefaultAjaxHandler $subject;
     private UiInterface&MockObject $ui;
+
+    // the row swaps its buttons by fragment, so they must come back in the response, not printed before it
+    public function testActionButtonsReturnTheirFragment(): void
+    {
+        $this->requestParser->method('getFromRequest')
+            ->willReturnMap([
+                ['action', 'action_buttons'],
+                ['id', ''],
+                ['type', ''],
+            ]);
+
+        ob_start();
+        $this->subject->handle($this->createStub(User::class));
+        $xml = new SimpleXMLElement((string) ob_get_clean());
+
+        self::assertCount(1, $xml->xpath('//content[starts-with(@div, "action_buttons_")]'));
+    }
 
     public function testBasketExpandsAnObjectTypeThatIsOnlyAnAliasOfALoadableType(): void
     {
@@ -110,6 +130,18 @@ class DefaultAjaxHandlerTest extends TestCase
         self::assertSame($medias, $this->runBasket($playlist));
     }
 
+    // a collection is a private list too, so someone else's must not expand into the queue either
+    public function testBasketRefusesToExpandAPrivateCollectionTheViewerCannotSee(): void
+    {
+        $collection = $this->createMock(Collection::class);
+        $collection->method('isVisible')
+            ->willReturn(false);
+        $collection->expects(static::never())
+            ->method('get_medias');
+
+        self::assertSame([], $this->runBasket($collection));
+    }
+
     public function testBasketRefusesToExpandAPrivateListTheViewerCannotSee(): void
     {
         $playlist = $this->playlist('private', false);
@@ -153,7 +185,7 @@ class DefaultAjaxHandlerTest extends TestCase
      *
      * @return array<mixed>
      */
-    private function runBasket(Playlist&MockObject $playlist): array
+    private function runBasket(playlist_object&MockObject $playlist): array
     {
         $this->requestParser->method('getFromRequest')
             ->willReturnMap([

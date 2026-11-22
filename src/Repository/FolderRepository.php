@@ -75,6 +75,89 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
     }
 
+    /**
+     * Removes the folder_map rows for a known, already-deleted batch of objects and decrements the affected
+     * folders' own stats by exactly what those objects held, instead of the full catalog-wide recompute
+     * collectGarbage()/update_folder_counts() does
+     *
+     * @param array<int, array{total_count: int, total_skip: int, time: int}> $objectStats keyed by object id
+     */
+    public function collectGarbageForObjects(string $objectType, array $objectStats): void
+    {
+        if ($objectStats === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map(intval(...), array_keys($objectStats)));
+
+        try {
+            // read the mapping before it is deleted, to know which folders lose which objects
+            $result            = $this->connection->query(
+                "SELECT `object_id`, `folder_id` FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($idList);",
+                [$objectType]
+            );
+            $folderIdByObject = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $folderIdByObject[(int) $row['object_id']] = (int) $row['folder_id'];
+            }
+
+            $this->connection->query("DELETE FROM `folder_map` WHERE `object_type` = ? AND `object_id` IN ($idList);", [$objectType]);
+
+            if ($folderIdByObject === []) {
+                return;
+            }
+
+            $folderIds         = array_values(array_unique($folderIdByObject));
+            $ancestorsByFolder = [];
+            $foldersResult     = $this->connection->query(
+                'SELECT `id`, `path` FROM `folder` WHERE `id` IN (' . implode(',', array_map(intval(...), $folderIds)) . ');'
+            );
+            while ($row = $foldersResult->fetch(PDO::FETCH_ASSOC)) {
+                $ancestorsByFolder[(int) $row['id']] = array_map(intval(...), array_filter(explode(',', (string) $row['path'])));
+            }
+
+            // object_count is a direct per-folder tally, so only the immediate folder loses one per removed mapping
+            $objectCountDelta = [];
+            // total_count/total_skip/time roll up to every ancestor too, same as rollUpFolderCounts()
+            $statsDelta = [];
+
+            foreach ($folderIdByObject as $objectId => $folderId) {
+                $objectCountDelta[$folderId] = ($objectCountDelta[$folderId] ?? 0) + 1;
+
+                $stats = $objectStats[$objectId];
+                foreach ([$folderId, ...($ancestorsByFolder[$folderId] ?? [])] as $id) {
+                    $statsDelta[$id] ??= [0, 0, 0];
+                    $statsDelta[$id][0] += $stats['total_count'];
+                    $statsDelta[$id][1] += $stats['total_skip'];
+                    $statsDelta[$id][2] += $stats['time'];
+                }
+            }
+
+            foreach ($objectCountDelta as $folderId => $delta) {
+                $this->connection->query(
+                    'UPDATE `folder` SET `object_count` = GREATEST(`object_count` - ?, 0) WHERE `id` = ?;',
+                    [$delta, $folderId]
+                );
+                $this->connection->query(
+                    "UPDATE `folder` SET `playable` = EXISTS (SELECT 1 FROM `folder_map` WHERE `folder_id` = ? AND `object_type` != 'folder') WHERE `id` = ?;",
+                    [$folderId, $folderId]
+                );
+            }
+
+            foreach ($statsDelta as $folderId => [$count, $skip, $time]) {
+                $this->connection->query(
+                    'UPDATE `folder` SET `total_count` = GREATEST(`total_count` - ?, 0), `total_skip` = GREATEST(`total_skip` - ?, 0), `time` = GREATEST(`time` - ?, 0) WHERE `id` = ?;',
+                    [$count, $skip, $time, $folderId]
+                );
+            }
+        } catch (DatabaseException) {
+            $this->logger->debug(
+                'collectGarbageForObjects error',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+        }
+    }
+
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
         //$this->logger->debug('CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, [LegacyLogger::CONTEXT_TYPE => self::class]);
@@ -705,8 +788,27 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $artistIds[] = (int) $row['artist'];
         }
 
-        return (count($artistIds) === 1)
-            ? $artistIds[0]
+        if (count($artistIds) === 1) {
+            return $artistIds[0];
+        }
+
+        if ($artistIds === []) {
+            return null;
+        }
+
+        // a guest on one track must not hide the directory's own artist, so fall back to the shared album artist
+        $result = $this->connection->query(
+            "SELECT DISTINCT `album`.`album_artist` FROM `album` INNER JOIN `song` ON `song`.`album` = `album`.`id` INNER JOIN `folder_map` ON `folder_map`.`object_id` = `song`.`id` AND `folder_map`.`object_type` = 'song' WHERE `album`.`album_artist` IS NOT NULL AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?){$filterSql} LIMIT 2;",
+            [$folder->getId(), $folder->path_name . '/%']
+        );
+
+        $albumArtistIds = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $albumArtistIds[] = (int) $row['album_artist'];
+        }
+
+        return (count($albumArtistIds) === 1)
+            ? $albumArtistIds[0]
             : null;
     }
 
@@ -731,7 +833,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         $this->connection->query('UPDATE `folder` SET `parent` = NULL WHERE `parent` = -1;');
 
         // folder
-        $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
+        $this->connection->query("INSERT IGNORE INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song, podcast_episode, video: a media table maps the same way, keyed on the directory its file sits in
         // the old pre-path streaming URL format (e.g. https://host/rest/stream.view?...) isn't a real path to map
         // Split in PHP, not SQL's REGEXP_REPLACE()/SUBSTRING_INDEX() — MySQL 5.x predates REGEXP_REPLACE entirely.
@@ -756,8 +858,10 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                     continue;
                 }
 
+                // IGNORE: a concurrent mapObject()/scan for the same object can win the race between the
+                // IS NULL check above and this insert, since nothing here locks the row in between
                 $this->connection->query(
-                    'INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) VALUES (?, ?, ?, ?, ?, ?);',
+                    'INSERT IGNORE INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) VALUES (?, ?, ?, ?, ?, ?);',
                     [$folderId, $row['id'], $objectType, $name, $row['catalog'], $pathName]
                 );
             }

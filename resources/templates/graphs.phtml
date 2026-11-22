@@ -48,9 +48,9 @@ foreach ($this->getGraphs() as $graph) { ?>
 <form action="<?php echo $this->e(get_current_path()); ?>" method="post" enctype="multipart/form-data">
     <dl class="media_details">
         <dt><?php echo T_('Start Date'); ?></dt>
-        <dd><input type="text" name="start_date" id="start_date" value="<?php echo $this->e($this->getFormattedStartDate()); ?>" /></dd>
+        <dd><input type="datetime-local" name="start_date" id="start_date" value="<?php echo $this->e($this->getFormattedStartDate()); ?>" /></dd>
         <dt><?php echo T_('End Date'); ?></dt>
-        <dd><input type="text" name="end_date" id="end_date" value="<?php echo $this->e($this->getFormattedEndDate()); ?>" /></dd>
+        <dd><input type="datetime-local" name="end_date" id="end_date" value="<?php echo $this->e($this->getFormattedEndDate()); ?>" /></dd>
         <dt><?php echo T_('Zoom'); ?></dt>
         <dd>
             <select name="zoom">
@@ -70,17 +70,4 @@ foreach ($this->getGraphs() as $graph) { ?>
     <input type="hidden" name="action" value="<?php echo $this->e($this->getRequestAction()); ?>" />
     <input type="hidden" name="rendered_zoom" value="<?php echo $this->e($this->getZoom()); ?>" />
 </form>
-<script>
-    // the picker is a deferred script, so it only exists once the document has been parsed
-    $(function () {
-        $('#start_date').datetimepicker({
-            format: 'Y-m-d H:i',
-            theme: 'dark'
-        });
-        $('#end_date').datetimepicker({
-            format: 'Y-m-d H:i',
-            theme: 'dark'
-        });
-    });
-</script>
 <?php Ui::show_box_bottom(); ?>

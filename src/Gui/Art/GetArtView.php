@@ -145,6 +145,11 @@ final class GetArtView extends AbstractView
 
     private function isSpotifyEnabled(): bool
     {
-        return in_array('spotify', AmpConfig::get_array('art_order'), true);
+        $artOrder = AmpConfig::get_array('art_order_' . $this->objectType);
+        if ($artOrder === []) {
+            $artOrder = AmpConfig::get_array('art_order');
+        }
+
+        return in_array('spotify', $artOrder, true);
     }
 }

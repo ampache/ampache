@@ -27,9 +27,12 @@ namespace Ampache\Repository\Model;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class CollectionTest extends TestCase
 {
+    private mixed $previousDic = null;
+
     public static function validTypeDataProvider(): Generator
     {
         yield 'folder' => ['folder', true];
@@ -63,9 +66,57 @@ class CollectionTest extends TestCase
         self::assertFalse($subject->acceptsType('search'));
     }
 
+    // anyone can add a playlist id to their own collection, so a private member must not expand through it
+    public function testGetMediasSkipsAPrivateMemberTheOwnerCannotSee(): void
+    {
+        $hidden = $this->createMock(Playlist::class);
+        $hidden->method('isPrivate')->willReturn(true);
+        $hidden->method('isVisible')->willReturn(false);
+        $hidden->expects(self::never())->method('get_medias');
+
+        $shared = $this->createMock(Playlist::class);
+        $shared->method('isPrivate')->willReturn(true);
+        $shared->method('isVisible')->willReturn(true);
+        $shared->method('get_medias')->willReturn([
+            ['object_type' => LibraryItemEnum::SONG, 'object_id' => 5, 'track' => 1, 'track_id' => 9],
+        ]);
+
+        $medias = $this->collectionHolding([1 => $hidden, 2 => $shared])->get_medias();
+
+        self::assertSame([5], array_column($medias, 'object_id'));
+    }
+
     #[DataProvider('validTypeDataProvider')]
     public function testIsValidTypeAnswersForTheType(string $objectType, bool $expected): void
     {
         self::assertSame($expected, Collection::isValidType($objectType));
+    }
+
+    protected function tearDown(): void
+    {
+        $GLOBALS['dic'] = $this->previousDic;
+    }
+
+    /**
+     * @param array<int, Playlist> $playlists
+     */
+    private function collectionHolding(array $playlists): Collection
+    {
+        $loader = $this->createMock(LibraryItemLoaderInterface::class);
+        $loader->method('load')->willReturnCallback(
+            static fn(LibraryItemEnum $type, int $id): ?Playlist => $playlists[$id] ?? null
+        );
+        $dic = $this->createMock(ContainerInterface::class);
+        $dic->method('get')->willReturn($loader);
+        $this->previousDic = $GLOBALS['dic'] ?? null;
+        $GLOBALS['dic']    = $dic;
+
+        $collection = $this->createPartialMock(Collection::class, ['get_items']);
+        $collection->method('get_items')->willReturn(array_map(
+            static fn(int $id): array => ['object_type' => LibraryItemEnum::PLAYLIST, 'object_id' => $id, 'track' => $id, 'track_id' => $id],
+            array_keys($playlists)
+        ));
+
+        return $collection;
     }
 }

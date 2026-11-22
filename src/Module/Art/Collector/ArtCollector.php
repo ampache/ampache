@@ -59,6 +59,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
      * @param array{
      *     type?: string,
      *     mb_albumid?: string,
+     *     mb_albumid_group?: string,
      *     artist?: string,
      *     album?: string,
      *     cover?: ?string,
@@ -94,7 +95,10 @@ final readonly class ArtCollector implements ArtCollectorInterface
             return [];
         }
 
-        $artOrder = $this->configContainer->getArray('art_order');
+        $artOrder = $this->configContainer->getArray('art_order_' . $type);
+        if ($artOrder === []) {
+            $artOrder = $this->configContainer->getArray('art_order');
+        }
 
         /* If it's not set */
         if ($artOrder === []) {

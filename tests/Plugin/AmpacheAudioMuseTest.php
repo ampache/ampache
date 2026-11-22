@@ -147,12 +147,12 @@ class AmpacheAudioMuseTest extends TestCase
         $method = new ReflectionMethod(AmpacheAudioMuse::class, '_toMatches');
 
         $urlValidator = new class implements UrlValidatorInterface {
-            public function isPublicHttpUrl(string $url): bool
+            public function isPublicHttpUrl(string $url, bool $allowLan = false): bool
             {
                 return true;
             }
 
-            public function resolvePinnedTarget(string $url): array
+            public function resolvePinnedTarget(string $url, bool $allowLan = false): array
             {
                 return ['host' => 'some-host', 'port' => 80, 'address' => '203.0.113.10'];
             }

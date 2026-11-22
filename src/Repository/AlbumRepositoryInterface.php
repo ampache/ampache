@@ -306,6 +306,11 @@ interface AlbumRepositoryInterface
     public function getVerifyRowsByCatalog(int $catalogId, int $limit, bool $onlyStale, int $lastUpdate, int $offset = 0): array;
 
     /**
+     * Whether one album is missing an album_artist, the single-row twin of getIdsMissingAlbumArtist()
+     */
+    public function isMissingAlbumArtist(int $albumId): bool;
+
+    /**
      * Whether the album is one of the placeholders the scanner parks songs on when their real album is unknown
      */
     public function isOrphan(int $albumId): bool;

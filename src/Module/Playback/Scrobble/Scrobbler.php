@@ -88,10 +88,7 @@ class Scrobbler
             return null;
         }
 
-        ob_start();
-        fpassthru($filepath);
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = stream_get_contents($filepath);
         fclose($filepath);
 
         return $buffer ?: null;

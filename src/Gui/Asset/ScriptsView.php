@@ -43,13 +43,10 @@ final class ScriptsView extends AbstractView
     private const array LIBRARIES = [
         ['/lib/components/jquery/jquery.min.js', false],
         ['/lib/components/jquery-ui/jquery-ui.min.js', false],
-        ['/lib/modules/prettyphoto/js/jquery.prettyPhoto.min.js', false],
         ['/lib/components/tag-it/js/tag-it.min.js', false],
         ['/lib/components/js-cookie/js.cookie.js', false],
         ['/lib/components/jscroll/jquery.jscroll.min.js', false],
         ['/lib/components/jquery-qrcode/jquery.qrcode.min.js', true],
-        ['/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js', true],
-        ['/lib/components/datetimepicker/jquery.datetimepicker.full.min.js', true],
         ['/lib/components/filepond/filepond.min.js', false],
         ['/lib/components/jquery-contextmenu/jquery.contextMenu.js', false],
     ];

@@ -53,6 +53,19 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final class BrowsingHandler implements BrowsingHandlerInterface
 {
+    /** @var array{id: ?int, summary: ?string, placeformed: ?string, yearformed: ?int, lastfm_url: ?string, largephoto: ?string, smallphoto: ?string, mediumphoto: ?string, megaphoto: ?string} */
+    private const array DEFAULT_INFO = [
+        'id' => null,
+        'summary' => null,
+        'placeformed' => null,
+        'yearformed' => null,
+        'lastfm_url' => null,
+        'largephoto' => null,
+        'smallphoto' => null,
+        'mediumphoto' => null,
+        'megaphoto' => null,
+    ];
+
     public function __construct(
         private readonly AlbumRepositoryInterface $albumRepository,
         private readonly ArtistRepositoryInterface $artistRepository,
@@ -68,7 +81,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
 
     /**
      * findSonicPath [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/
+     * https://opensubsonic.github.io/docs/endpoints/findsonicpath/
      * @param array<string, mixed> $input
      */
     public function findSonicPath(array $input, User $user): void
@@ -121,7 +134,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getAlbum
      *
      * Returns details for an album.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbum/
+     * https://opensubsonic.github.io/docs/endpoints/getalbum/
      * @param array<string, mixed> $input
      */
     public function getalbum(array $input, User $user): void
@@ -153,7 +166,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getAlbumInfo
      *
      * Returns album info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo/
+     * https://opensubsonic.github.io/docs/endpoints/getalbuminfo/
      * @param array<string, mixed> $input
      */
     public function getalbuminfo(array $input, User $user): void
@@ -186,7 +199,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getAlbumInfo2
      *
      * Returns album info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbuminfo2/
+     * https://opensubsonic.github.io/docs/endpoints/getalbuminfo2/
      * @param array<string, mixed> $input
      */
     public function getalbuminfo2(array $input, User $user): void
@@ -198,7 +211,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getAlbumList
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist/
+     * https://opensubsonic.github.io/docs/endpoints/getalbumlist/
      * @param array<string, mixed> $input
      */
     public function getalbumlist(array $input, User $user): void
@@ -234,7 +247,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getAlbumList2
      *
      * Returns a list of random, newest, highest rated etc. albums.
-     * https://opensubsonic.netlify.app/docs/endpoints/getalbumlist2/
+     * https://opensubsonic.github.io/docs/endpoints/getalbumlist2/
      * @param array<string, mixed> $input
      */
     public function getalbumlist2(array $input, User $user): void
@@ -270,7 +283,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getArtist
      *
      * Returns details for an artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartist/
+     * https://opensubsonic.github.io/docs/endpoints/getartist/
      * @param array<string, mixed> $input
      */
     public function getartist(array $input, User $user): void
@@ -302,7 +315,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getArtistInfo
      *
      * Returns artist info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo/
+     * https://opensubsonic.github.io/docs/endpoints/getartistinfo/
      * @param array<string, mixed> $input
      */
     public function getartistinfo(array $input, User $user): void
@@ -313,18 +326,24 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
-        if ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
+        if ($artist === null && $this->isFolderSubId($sub_id)) {
+            // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
+            $artist   = new Artist();
+            $info     = self::DEFAULT_INFO;
+            $similars = [];
+        } elseif ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
+        } else {
+            $count             = (int) ($input['count'] ?? 20);
+            $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
+
+            $info     = Recommendation::get_artist_info($artist->getId());
+            $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         }
 
-        $count             = (int) ($input['count'] ?? 20);
-        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
-
-        $info     = Recommendation::get_artist_info($artist->getId());
-        $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
-        $format   = (string) ($input['f'] ?? 'xml');
+        $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtistInfo($response, $info, $artist, $similars);
@@ -339,7 +358,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getArtistInfo2
      *
      * Returns artist info.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartistinfo2/
+     * https://opensubsonic.github.io/docs/endpoints/getartistinfo2/
      * @param array<string, mixed> $input
      */
     public function getartistinfo2(array $input, User $user): void
@@ -350,18 +369,24 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
-        if ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
+        if ($artist === null && $this->isFolderSubId($sub_id)) {
+            // DSub opens every folder as an artist and stops on an error, so a folder without a single artist gets an empty bio
+            $artist   = new Artist();
+            $info     = self::DEFAULT_INFO;
+            $similars = [];
+        } elseif ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
+        } else {
+            $count             = (int) ($input['count'] ?? 20);
+            $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
+
+            $info     = Recommendation::get_artist_info($artist->getId());
+            $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
         }
 
-        $count             = (int) ($input['count'] ?? 20);
-        $includeNotPresent = make_bool($input['includeNotPresent'] ?? false);
-
-        $info     = Recommendation::get_artist_info($artist->getId());
-        $similars = Recommendation::get_artists_like($artist->getId(), $count, !$includeNotPresent);
-        $format   = (string) ($input['f'] ?? 'xml');
+        $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
             $response = $this->openSubsonicXmlData->addArtistInfo2($response, $info, $artist, $similars);
@@ -376,7 +401,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getArtists
      *
      * Returns all artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getartists/
+     * https://opensubsonic.github.io/docs/endpoints/getartists/
      * @param array<string, mixed> $input
      */
     public function getartists(array $input, User $user): void
@@ -404,7 +429,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getGenres
      *
      * Returns all genres.
-     * https://opensubsonic.netlify.app/docs/endpoints/getgenres/
+     * https://opensubsonic.github.io/docs/endpoints/getgenres/
      * @param array<string, mixed> $input
      */
     public function getgenres(array $input, User $user): void
@@ -426,7 +451,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getIndexes
      *
      * Returns an indexed structure of all artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getindexes/
+     * https://opensubsonic.github.io/docs/endpoints/getindexes/
      * @param array<string, mixed> $input
      */
     public function getindexes(array $input, User $user): void
@@ -504,7 +529,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getMusicDirectory
      *
      * Returns a listing of all files in a music directory.
-     * https://opensubsonic.netlify.app/docs/endpoints/getmusicdirectory/
+     * https://opensubsonic.github.io/docs/endpoints/getmusicdirectory/
      * @param array<string, mixed> $input
      */
     public function getmusicdirectory(array $input, User $user): void
@@ -553,7 +578,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getMusicFolders
      *
      * Returns all configured top-level music folders.
-     * https://opensubsonic.netlify.app/docs/endpoints/getmusicfolders/
+     * https://opensubsonic.github.io/docs/endpoints/getmusicfolders/
      * @param array<string, mixed> $input
      */
     public function getmusicfolders(array $input, User $user): void
@@ -574,7 +599,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getRandomSongs
      *
      * Returns random songs matching the given criteria.
-     * https://opensubsonic.netlify.app/docs/endpoints/getrandomsongs/
+     * https://opensubsonic.github.io/docs/endpoints/getrandomsongs/
      * @param array<string, mixed> $input
      */
     public function getrandomsongs(array $input, User $user): void
@@ -655,7 +680,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getSimilarSongs
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs/
+     * https://opensubsonic.github.io/docs/endpoints/getsimilarsongs/
      * @param array<string, mixed> $input
      */
     public function getsimilarsongs(array $input, User $user, string $elementName = 'similarSongs'): void
@@ -740,7 +765,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getSimilarSongs2
      *
      * Returns a random collection of songs from the given artist and similar artists.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsimilarsongs2/
+     * https://opensubsonic.github.io/docs/endpoints/getsimilarsongs2/
      * @param array<string, mixed> $input
      */
     public function getsimilarsongs2(array $input, User $user): void
@@ -752,7 +777,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getSong
      *
      * Returns details for a song.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsong/
+     * https://opensubsonic.github.io/docs/endpoints/getsong/
      * @param array<string, mixed> $input
      */
     public function getsong(array $input, User $user): void
@@ -792,7 +817,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getSongsByGenre
      *
      * Returns songs in a given genre.
-     * https://opensubsonic.netlify.app/docs/endpoints/getsongsbygenre/
+     * https://opensubsonic.github.io/docs/endpoints/getsongsbygenre/
      * @param array<string, mixed> $input
      */
     public function getsongsbygenre(array $input, User $user): void
@@ -826,7 +851,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
 
     /**
      * getSonicSimilarTracks [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/
+     * https://opensubsonic.github.io/docs/endpoints/getsonicsimilartracks/
      * @param array<string, mixed> $input
      */
     public function getSonicSimilarTracks(array $input, User $user): void
@@ -868,7 +893,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getTopSongs
      *
      * Returns top songs for the given artist.
-     * https://opensubsonic.netlify.app/docs/endpoints/gettopsongs/
+     * https://opensubsonic.github.io/docs/endpoints/gettopsongs/
      * @param array<string, mixed> $input
      */
     public function gettopsongs(array $input, User $user): void
@@ -920,7 +945,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getVideoInfo
      *
      * Returns details for a video.
-     * https://opensubsonic.netlify.app/docs/endpoints/getvideoinfo/
+     * https://opensubsonic.github.io/docs/endpoints/getvideoinfo/
      * @param array<string, mixed> $input
      */
     public function getvideoinfo(array $input, User $user): void
@@ -953,7 +978,7 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      * getVideos
      *
      * Returns all video files.
-     * https://opensubsonic.netlify.app/docs/endpoints/getvideos/
+     * https://opensubsonic.github.io/docs/endpoints/getvideos/
      * @param array<string, mixed> $input
      */
     public function getvideos(array $input, User $user): void
@@ -1056,6 +1081,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         return $albums;
+    }
+
+    private function isFolderSubId(string $sub_id): bool
+    {
+        $folder = OpenSubsonic_Api::getAmpacheObject($sub_id);
+
+        return $folder instanceof Folder && !$folder->isNew();
     }
 
     /**

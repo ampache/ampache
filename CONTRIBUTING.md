@@ -29,7 +29,7 @@ Ampache uses gettext to handle the translation between different languages.
 If you are interested in translating Ampache into a new language or updating
 an existing translation please join us on Transifex.
 
-Benifits to using the Transifex platform include:
+Benefits to using the Transifex platform include:
 
 * Everything is managed in a central location.
 * Translations are updated in a single commit without conflicts.

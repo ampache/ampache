@@ -28,6 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Preference;
+use Ampache\Module\Util\UrlValidatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
@@ -67,8 +68,9 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly UrlValidatorInterface $urlValidator,
+    ) {
         $this->description = T_('Scrobble songs you play to your ListenBrainz Account');
         $this->url         = $this->scheme . '://' . $this->host;
     }
@@ -244,21 +246,36 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
      */
     private function post_json_url(string $url, string $content): ?string
     {
-        $opts = [
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Authorization: token ' . $this->token,
-                    'Content-type: application/json; charset=utf-8',
-                    'Content-length: ' . strlen($content)
-                ],
-                'content' => $content
-            ]
-        ];
-        debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
-        $context = stream_context_create($opts);
-        $target  = $this->scheme . '://' . $this->api_host . $url;
+        $target = $this->scheme . '://' . $this->api_host . $url;
+        // a self-hosted server on the lan is a real setup (#4522); loopback or a metadata endpoint never is
+        $pinned = $this->urlValidator->resolvePinnedTarget($target, true);
+        if ($pinned === null) {
+            debug_event('listenbrainz.plugin', 'Refused non-public api url: ' . $target, 1);
 
-        return file_get_contents($target, false, $context) ?: null;
+            return null;
+        }
+
+        $curl = curl_init($target);
+        curl_setopt_array($curl, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $content,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: token ' . $this->token,
+                'Content-type: application/json; charset=utf-8',
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_TIMEOUT => 10,
+            // connect to the address that was checked, so a second dns answer can't move the request elsewhere
+            CURLOPT_RESOLVE => [sprintf('%s:%d:%s', $pinned['host'], $pinned['port'], $pinned['address'])],
+        ]);
+        $response = curl_exec($curl);
+        $status   = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+        debug_event('listenbrainz.plugin', sprintf('Submission to %s answered %d', $target, $status), 5);
+
+        return (is_string($response) && $response !== '' && $status >= 200 && $status < 300)
+            ? $response
+            : null;
     }
 }

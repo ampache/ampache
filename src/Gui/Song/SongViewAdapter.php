@@ -174,10 +174,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('album', $this->song->album, $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('album', $this->song->album, $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
     }
 
     public function getArtistLink(): string
@@ -349,7 +346,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getHeader(): ObjectHeaderView
     {
-        $bitrate = (int) ($this->song->bitrate / 1024);
+        $bitrate = (int) ($this->song->bitrate / 1000);
 
         return new ObjectHeaderView(
             kind: T_('Song'),
@@ -405,6 +402,8 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()),
             Ui::get_add_to_list_label()
         );
+
+        $actions[] = $this->link($this->configContainer->getWebPath() . '/song.php?action=show_lyrics&song_id=' . $songId, 'lyrics', T_('Show Lyrics'));
 
         if ($this->canPostShout()) {
             $actions[] = $this->link($this->getPostShoutUrl(), 'comment', T_('Post Shout'));
@@ -576,7 +575,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
-        $songprops[T_('Bitrate')]        = scrub_out((int) ($this->song->bitrate / 1024) . "-" . strtoupper((string) $this->song->mode));
+        $songprops[T_('Bitrate')]        = scrub_out((int) ($this->song->bitrate / 1000) . "-" . strtoupper((string) $this->song->mode));
         $songprops[T_('Channels')]       = $this->song->channels;
         if ($this->song->bpm !== null) {
             $songprops[T_('BPM')] = $this->song->bpm;
@@ -624,10 +623,6 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
             $songprops[T_('Skipped')] = $this->song->total_skip;
-        }
-
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
-            $songprops[T_('Lyrics')] = '<a title="' . scrub_out($this->song->title) . '" href="' . $this->configContainer->getWebPath() . "/song.php?action=show_lyrics&song_id=" . $this->song->getId() . '">' . T_('Show Lyrics') . "</a>";
         }
 
         $license = $this->song->getLicense();

@@ -713,69 +713,6 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addLyricsList
-     */
-    public function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
-    {
-        if ($song->isNew() || !$song->enabled) {
-            return $xml;
-        }
-
-        $xlist  = $this->_addChildToResultXml($xml, 'lyricsList');
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $xlyrics = $this->_addChildToResultXml($xlist, 'structuredLyrics');
-            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
-            $xlyrics->addAttribute('displayTitle', (string) $song->title);
-            $xlyrics->addAttribute('lang', 'xxx');
-
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
-            $text = str_replace("\r", '', (string) $text);
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $minutes      = (int) $matches[1];
-                        $seconds      = (int) $matches[2];
-                        $centiseconds = (int) $matches[3];
-                        $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string) $milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => $line];
-                    }
-                }
-            }
-
-            if ($synced !== []) {
-                $xlyrics->addAttribute('synced', 'true');
-                foreach ($synced as $line) {
-                    $xline = $this->_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('start', $line['start']);
-                    $xline->addAttribute('value', $line['value']);
-                }
-            } elseif ($lines !== []) {
-                $xlyrics->addAttribute('synced', 'false');
-                foreach ($lines as $line) {
-                    $xline = $this->_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('value', $line['value']);
-                }
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
      * addMixedIndexes
      *
      * One catalog's folder tree and another's artist fallback, interleaved into a single index -
@@ -1310,7 +1247,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('coverArt', $art_id);
         }
         $xsong->addAttribute('duration', (string) $song->time);
-        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1024)));
+        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1000)));
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
         if ($user_rating > 0) {
@@ -1677,7 +1614,8 @@ class Subsonic_Xml_Data
         $xchild->addAttribute('parent', Subsonic_Api::getFolderSubId($folder->parent ?? -1));
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', (string) $folder->name);
-        if ($folder->has_art()) {
+        // a folder holding tracks is an album to the client, and getCoverArt serves it that album's art
+        if ($folder->has_art() || $folder->playable) {
             $xchild->addAttribute('coverArt', $sub_id);
         }
     }

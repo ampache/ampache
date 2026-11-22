@@ -1,5 +1,119 @@
 # CHANGELOG
 
+## Ampache 8.5.0
+
+Lyrics have been reworked: they can be edited, chosen from each plugin's result, cleared and followed line by line.
+
+Timed lyrics are read from a `.lrc` file beside the song, and lyrics a user sets are never replaced by a rescan.
+
+The web player's lyrics button now sits with the player's action buttons on every screen size and opens a panel that follows the playing song.
+
+**NOTE**: `X-Forwarded-For` is only trusted from a reverse proxy listed in the new `trusted_proxies` config key; set it if Ampache sits behind one.
+
+### Added (8.5.0)
+
+* Translations 2026-11-21
+* Database 850002
+  * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
+  * New `song_data`.`lyrics_source` column (`file`, `plugin` or `user`); existing lyrics are marked `file`
+  * `show_lyrics` is on by default; users who already have their own setting keep it
+* Config version 104
+  * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
+  * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
+  * New `art_min_width`, `art_max_width`, `art_min_height`, `art_max_height` keys, the preferred spelling of `album_art_*` now that the bounds apply to every art type; `album_art_*` still works
+  * New `trusted_proxies` key listing reverse proxy IPs/CIDR ranges allowed to set `X-Forwarded-For`
+* Search
+  * Song `other_user` rule gains "has rated 4/3/2 stars or more" operators
+* Browse
+  * Artist pages gain a Playlists tab listing playlists that hold the artist's songs
+  * New `artist` filter on the playlist browse
+* The song license is read from an mp3's `WCOP` frame or `license` TXXX tag
+* Lyrics
+  * Timed (LRC) lyrics show line by line, highlighting the current line of the song in the web player
+  * Editors can edit, clear or re-search lyrics from the lyrics page, and choose between plugin results
+  * The song edit dialog gains a Lyrics field
+  * Lyrics are read from a `.lrc` file beside the song with the same name; a verify picks up a new or edited one
+  * Timed lyrics win: embedded timed lyrics, then the `.lrc` file, then embedded plain lyrics
+  * The web player's lyrics button sits with its action buttons and opens a lyrics panel that follows the playing song and can go full screen
+  * The button is grayed out for a song with no stored lyrics, and opens the lyrics page instead
+  * Timed lyrics follow an LRC `[offset:]`, and a line goes dark at the end an Enhanced LRC line states
+  * Lyrics a user edits or picks are marked User set and are never replaced by a rescan
+
+### Changed (8.5.0)
+
+* Deleting an album and updating a single catalog folder from the CLI do less work, and no longer run a global garbage collection
+* The `musicbrainz` art source now gathers album covers from the Cover Art Archive, by release or release group MBID
+* Clicking art opens it full size in a native dialog; the unmaintained prettyPhoto library is gone
+* Graph date pickers use the browser's own date input; jquery-datetimepicker is gone
+* Slideshow
+  * Falls back to the artist's own art, their albums' covers, and the song's own art (`show_song_art`) when no plugin has anything to show
+  * The button shows whenever `slideshow_time` is set, not only when the Flickr plugin is configured
+  * Fades between images instead of using the rhinoslider carousel; the unmaintained library is gone
+* Bitrates are shown in kbps of 1000, not 1024, in the web UI, exports, DAAP and Subsonic
+* Pressing Enter in an edit dialog saves it instead of reloading the page
+* Opening the lyrics page as an editor no longer stores the first plugin result; the editor picks which result to keep
+* A rescan of a file without lyrics no longer clears lyrics found by a plugin
+* The `community` preference preset turns `show_lyrics` on
+* Lyrics read from tags are stored as plain lines, so the next full verify rewrites each song's lyrics once
+* Last.fm similar song lookups send the track title as well as the artist
+* Subsonic
+  * OpenSubsonic implementation audited against the published specification on 2026-11-13; the audited build is committed as `docs/openapi-opensubsonic.json`
+  * Apply weighting to search result order
+  * OpenSubsonic artist responses include the user's rating when available
+  * OpenSubsonic artist indexes include `sortName` when a prefix is present
+  * Advertise `songLyrics` version 2 for enhanced lyrics
+  * Folders use the cover of their album when they have one
+  * Structured lyrics carry an LRC file's `[offset:]` as `offset`
+  * Enhanced lyrics carry `end` on a line and its cues when the Enhanced LRC line states one with a closing time tag
+
+### Fixed (8.5.0)
+
+* The lyrics page showed songs from catalogs the user can't access
+* Song pages had no lyrics link unless `show_lyrics` was enabled
+* A scan dropped the word timings from embedded enhanced (word-timed) LRC lyrics
+* Edit dialog text areas didn't fill their column
+* An action icon with no size of its own, like MusicBrainz, disappeared when the action list showed icons only
+* A playlist or search the user can't see could be downloaded through the batch download page
+* Any user could delete, start or stop another user's broadcast
+* The installer saved a database password containing characters such as `&`, `$` or `\` differently from how it was typed
+* An infinite scroll list reopened at the last batch it loaded instead of the top
+* Searching song metadata wrapped the value in quotes, so text values never matched
+* LAN clients with `transcode` set to `always` were given a flac url for an mp3 stream
+* Artist pages queried MusicBrainz even when the MusicBrainz plugin wasn't installed
+* A catalog path with a trailing slash left every folder without a parent
+* Tag writer
+  * Custom metadata edited in Ampache was replaced by the file's old value
+  * Writing tags to an mp3 with no existing ID3v2 tags wrote broken values
+  * Ratings were written on a different scale from the one they are read back on, so a rating changed after a rescan
+  * Tag case changed the order tags were compared in, so an unchanged file showed as different
+* Subsonic
+  * Videos could not be streamed or downloaded
+  * An HTTP/2 client's lowercase `range` header was ignored, breaking seeking
+  * DSub stopped on a folder without a single artist; an empty artist info is returned instead
+  * OpenSubsonic synced lyrics returned LRC header tags such as `[ar:]` and `[ti:]` as lyric lines
+  * A crafted JSONP `callback` could run script in the browser
+* A user's api key logged them into the web UI and Subsonic password auth as if it were their account password
+* IP-based access control (`access_control`) could be bypassed by sending a spoofed `X-Forwarded-For` header; it is now only trusted from a configured `trusted_proxies` peer
+* Democratic
+  * Removing a row as an admin refreshes the playlist
+  * Votes were cleared for users who were still logged in, or who had `demo_clear_sessions` off
+  * Only a voter's own `demo_clear_sessions` preference decides whether their votes are cleared
+  * Notifications showed `displayNotification is not defined` in the stream frame
+* Web player random play now works for users browsing by `album_disk` (`album_group` off)
+* `.htaccess.dist` denied `config/*.json`, so a web client installed under the `client` structure (e.g. Ample) couldn't load its own runtime settings
+* Possible duplicate folder inserts
+* `cleanup:art` could refuse to run, or silently run with nothing to do, because its config check used inverted width/height logic
+* Another user's private playlist or smartlist
+  * Could be streamed by id through `stream.php`
+  * Could be copied into, or played through, your own collection
+* Another user's private collection could be added to your play queue or a playlist
+* Another session's play queue could be streamed by id
+* A crafted private message browse filter listed other users' messages
+* A crafted catalog browse filter could inject SQL
+* A crafted smartlist or filter name could run script in its save or delete confirmation
+* A link could delete a catalog filter without the admin confirming it
+* ListenBrainz could be pointed at the server itself or a cloud metadata address; a LAN server is still allowed
+
 ## Ampache 8.4.0
 
 **NOTE**: Apache + php-fpm buffers catalog progress by default; see `docs/examples/apache-site.conf` for the fix.
@@ -1805,11 +1919,11 @@ While this fully implements new features it does not include all the new data fi
   * Add `subsonic_legacy` preference. (Turn off to enable the new OpenSubsonic classes)
 * Subsonic
   * Implemented all OpenSubsonic [api extentions](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
-  * Add [API Key Authentication](https://opensubsonic.netlify.app/docs/extensions/apikeyauth/)
-  * Add [getPodcastEpisode](https://opensubsonic.netlify.app/docs/extensions/getpodcastepisode/) method
-  * Add [songLyrics](https://opensubsonic.netlify.app/docs/extensions/songlyrics/) support
-  * Add [Index based Queue](https://opensubsonic.netlify.app/docs/extensions/indexbasedqueue/)
-  * Expanded [subsonic-response error](https://opensubsonic.netlify.app/docs/responses/error/)
+  * Add [API Key Authentication](https://opensubsonic.github.io/docs/extensions/apikeyauth/)
+  * Add [getPodcastEpisode](https://opensubsonic.github.io/docs/extensions/getpodcastepisode/) method
+  * Add [songLyrics](https://opensubsonic.github.io/docs/extensions/songlyrics/) support
+  * Add [Index based Queue](https://opensubsonic.github.io/docs/extensions/indexbasedqueue/)
+  * Expanded [subsonic-response error](https://opensubsonic.github.io/docs/responses/error/)
 
 ### Changed (7.6.0)
 

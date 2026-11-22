@@ -587,15 +587,6 @@ a.jp-volume-max:hover {
     font-size: 0.5em;
 }
 
-.playing_lyrics {
-    position: relative;
-    display: inline;
-}
-
-.playing_lyrics a {
-    text-decoration: none;
-}
-
 .playing_actions {
     position: relative;
     display: inline;
@@ -930,6 +921,10 @@ a.jp-shuffle-off:hover {
 
 .action_button {
     display: inline-block;
+}
+
+#lyricsbtn.lyrics_none {
+    opacity: 0.35;
 }
 
 .broadcast-info {

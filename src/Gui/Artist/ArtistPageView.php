@@ -77,10 +77,7 @@ final class ArtistPageView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('artist', $this->getArtistId(), $this->getFullname(), ['width' => 384, 'height' => 384], null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('artist', $this->getArtistId(), $this->getFullname(), ['width' => 384, 'height' => 384], null, true, false);
     }
 
     public function getArtistId(): int
@@ -300,6 +297,14 @@ final class ArtistPageView extends AbstractView
     public function showPlayedTimes(): bool
     {
         return (bool) AmpConfig::get('show_played_times');
+    }
+
+    /**
+     * The tab lists the playlists holding a song credited to this artist, as song or album artist
+     */
+    public function showPlaylistsTab(): bool
+    {
+        return true;
     }
 
     public function showRatings(): bool

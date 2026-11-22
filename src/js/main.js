@@ -1,6 +1,7 @@
 import * as Ajax from './ajax.js';
 import * as Artist from './artist.js';
 import * as Base from './base.js';
+import * as Lyrics from './lyrics.js';
 import * as Multiselect from './multiselect.js';
 import './preferences.js';
 import './rowlist.js';
@@ -12,6 +13,7 @@ import * as Tools from './tools.js';
 
 Object.assign(window, Ajax);
 Object.assign(window, Base);
+Object.assign(window, Lyrics);
 Object.assign(window, Tools);
 Object.assign(window, Search);
 Object.assign(window, Sidebar);

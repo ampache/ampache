@@ -37,7 +37,7 @@ Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <tr>
     <?php foreach ($row as $cell) { ?>
     <td>
-        <a href="<?php echo $this->e($cell['url']); ?>" title="<?php echo $this->e($cell['title']); ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $this->e($cell['url']); ?>" alt="<?php echo T_('Art'); ?>" width="175" /></a>
+        <a href="<?php echo $this->e($cell['url']); ?>" title="<?php echo $this->e($cell['title']); ?>" data-lightbox target="_blank"><img src="<?php echo $this->e($cell['url']); ?>" alt="<?php echo T_('Art'); ?>" width="175" /></a>
         <br />
         <p>
         <?php if ($cell['selectUrl'] !== null) { ?>

@@ -83,7 +83,7 @@ final readonly class CsvExporter implements CatalogExporterInterface
                     (string) $song->track,
                     $song->year,
                     get_datetime($song->getAdditionTime()),
-                    (int) ($song->bitrate / 1024) . "-" . strtoupper((string) $song->mode),
+                    (int) ($song->bitrate / 1000) . "-" . strtoupper((string) $song->mode),
                     $song->played,
                     $song->file
                 ],

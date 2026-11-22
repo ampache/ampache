@@ -89,7 +89,7 @@ class Subsonic_Json_Data
      * addAlbumID3
      *
      * An album from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
+     * https://opensubsonic.github.io/docs/responses/albumid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -162,7 +162,7 @@ class Subsonic_Json_Data
      * addAlbumList2
      *
      * Album list.
-     * https://opensubsonic.netlify.app/docs/responses/albumlist2/
+     * https://opensubsonic.github.io/docs/responses/albumlist2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $albums
      * @return array{'subsonic-response': array<string, mixed>}
@@ -206,7 +206,7 @@ class Subsonic_Json_Data
      * addArtistID3
      *
      * An artist from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/artistid3/
+     * https://opensubsonic.github.io/docs/responses/artistid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -274,7 +274,7 @@ class Subsonic_Json_Data
      * addArtistInfo2
      *
      * Artist info.
-     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
+     * https://opensubsonic.github.io/docs/responses/artistinfo2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array{
      *     id: ?int,
@@ -306,7 +306,7 @@ class Subsonic_Json_Data
      * addArtists
      *
      * A list of indexed Artists.
-     * https://opensubsonic.netlify.app/docs/responses/artistsid3/
+     * https://opensubsonic.github.io/docs/responses/artistsid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array<int, array{
      *     id: int,
@@ -336,7 +336,7 @@ class Subsonic_Json_Data
      * addArtistWithAlbumsID3
      *
      * Artist details.
-     * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
+     * https://opensubsonic.github.io/docs/responses/artistwithalbumsid3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -355,7 +355,7 @@ class Subsonic_Json_Data
      * addArtistWithAlbumsID3
      *
      * An extension of ArtistID3 with AlbumID3
-     * https://opensubsonic.netlify.app/docs/responses/artistwithalbumsid3/
+     * https://opensubsonic.github.io/docs/responses/artistwithalbumsid3/
      * @see $this->addArtistID3()
      */
 
@@ -551,7 +551,7 @@ class Subsonic_Json_Data
      * addGenres
      *
      * Genres list.
-     * https://opensubsonic.netlify.app/docs/responsesq
+     * https://opensubsonic.github.io/docs/responsesq
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array{'subsonic-response': array<string, mixed>}
@@ -700,13 +700,6 @@ class Subsonic_Json_Data
     }
 
     /**
-     * addLine
-     *
-     * One line of a song lyricSubsonic
-     * @see $this->addLyricsList())
-     */
-
-    /**
      * addLyrics
      *
      * Lyrics.Subsonic
@@ -739,32 +732,6 @@ class Subsonic_Json_Data
 
             $response['subsonic-response']['lyrics'] = $json;
         }
-
-        return $response;
-    }
-
-    /**
-     * addLyricsList
-     *
-     * List of structured lyricsSubsonic
-     * @param array{'subsonic-response': array<string, mixed>} $response
-     * @return array{'subsonic-response': array<string, mixed>}
-     */
-    public function addLyricsList(array $response, Song $song): array
-    {
-        if ($song->isNew() || !$song->enabled) {
-            return $response;
-        }
-
-        $json = ['structuredLyrics' => []];
-
-        $lyrics = $this->_getStructuredLyrics($song);
-
-        if ($lyrics !== []) {
-            $json['structuredLyrics'][] = $lyrics;
-        }
-
-        $response['subsonic-response']['lyricsList'] = ($json['structuredLyrics']) ? (object) [] : $json;
 
         return $response;
     }
@@ -1129,7 +1096,7 @@ class Subsonic_Json_Data
      * addPodcasts
      *
      * Podcasts.
-     *  https://opensubsonic.netlify.app/docs/responses/podcasts/
+     *  https://opensubsonic.github.io/docs/responses/podcasts/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param Podcast[] $podcasts
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1195,7 +1162,7 @@ class Subsonic_Json_Data
      * addResponse
      *
      * Generate a subsonic-response
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
+     * https://opensubsonic.github.io/docs/responses/subsonic-response/
      * @return array{'subsonic-response': array{'status': string, 'version': string}}
      */
     public function addResponse(string $function): array
@@ -1241,7 +1208,7 @@ class Subsonic_Json_Data
      * addSearchResult
      *
      * searchResult.
-     * https://opensubsonic.netlify.app/docs/responses/searchresult/
+     * https://opensubsonic.github.io/docs/responses/searchresult/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $songs
      * @return array{'subsonic-response': array<string, mixed>}
@@ -1277,7 +1244,7 @@ class Subsonic_Json_Data
      * addSearchResult2
      *
      * searchResult2.
-     * https://opensubsonic.netlify.app/docs/responses/searchresult2/
+     * https://opensubsonic.github.io/docs/responses/searchresult2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -1332,7 +1299,7 @@ class Subsonic_Json_Data
      * addSearchResult3
      *
      * search3 result.
-     * https://opensubsonic.netlify.app/docs/responses/searchresult3/
+     * https://opensubsonic.github.io/docs/responses/searchresult3/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -1455,7 +1422,7 @@ class Subsonic_Json_Data
      * addSimilarSongs2
      *
      * SimilarSongs2 list.
-     * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
+     * https://opensubsonic.github.io/docs/responses/similarsongs2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param array<int, array{
      *     id: ?int,
@@ -1601,7 +1568,7 @@ class Subsonic_Json_Data
      * addStarred2
      *
      * starred2.
-     * https://opensubsonic.netlify.app/docs/responses/starred2/
+     * https://opensubsonic.github.io/docs/responses/starred2/
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @param int[] $artists
      * @param int[] $albums
@@ -1846,8 +1813,8 @@ class Subsonic_Json_Data
      * _getAlbumID3 [OS]
      *
      * An album from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
-     * https://opensubsonic.netlify.app/docs/responses/albumid3withsongs/
+     * https://opensubsonic.github.io/docs/responses/albumid3/
+     * https://opensubsonic.github.io/docs/responses/albumid3withsongs/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -2050,7 +2017,7 @@ class Subsonic_Json_Data
      * _getArtistID3
      *
      * An artist from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/artistid3/
+     * https://opensubsonic.github.io/docs/responses/artistid3/
      * @return array{
      *     'id': string,
      *     'name': string,
@@ -2401,7 +2368,8 @@ class Subsonic_Json_Data
             'isDir' => true,
             'title' => (string) $folder->name,
         ];
-        if ($folder->has_art()) {
+        // a folder holding tracks is an album to the client, and getCoverArt serves it that album's art
+        if ($folder->has_art() || $folder->playable) {
             $json['coverArt'] = $sub_id;
         }
 
@@ -2489,7 +2457,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $episode->time;
-        $json['bitRate']  = ((int) ($episode->bitrate / 1024));
+        $json['bitRate']  = ((int) ($episode->bitrate / 1000));
 
         $rating      = new Rating($episode->id, 'podcast_episode');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -2590,7 +2558,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $song->time;
-        $json['bitRate']  = ((int) ($song->bitrate / 1024));
+        $json['bitRate']  = ((int) ($song->bitrate / 1000));
 
         $rating      = new Rating($song->id, 'song');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -2707,7 +2675,7 @@ class Subsonic_Json_Data
         }
 
         $json['duration'] = $video->time;
-        $json['bitRate']  = ((int) ($video->bitrate / 1024));
+        $json['bitRate']  = ((int) ($video->bitrate / 1000));
 
         $rating      = new Rating($video->id, 'video');
         $user_rating = ($rating->get_user_rating() ?? 0);
@@ -3111,7 +3079,7 @@ class Subsonic_Json_Data
      * addIndexID3
      *
      * An indexed artist list by ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/indexid3/
+     * https://opensubsonic.github.io/docs/responses/indexid3/
      */
 
     /**
@@ -3535,70 +3503,6 @@ class Subsonic_Json_Data
         }
 
         return $json;
-    }
-
-    /**
-     * _getStructuredLyrics
-     *
-     * Structured lyricsSubsonic
-     * @return array{
-     *     'displayArtist'?: string,
-     *     'displayTitle'?: string,
-     *     'lang'?: string,
-     *     'synced'?: bool,
-     *     'line'?: array<array{'value': string}>
-     * }
-     */
-    private function _getStructuredLyrics(Song $song): array
-    {
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
-            $text = str_replace("\r", '', (string) $text);
-
-            $json = [
-                'displayArtist' => $song->get_parent_fullname(),
-                'displayTitle' => (string) $song->title,
-                'lang' => 'xxx',
-                'synced' => false,
-                'line' => [],
-            ];
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $json['synced'] = true;
-                        $minutes        = (int) $matches[1];
-                        $seconds        = (int) $matches[2];
-                        $centiseconds   = (int) $matches[3];
-                        $milliseconds   = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string) $milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => $line];
-                    }
-                }
-            }
-
-            if ($synced !== [] || $lines !== []) {
-                $json['line'] = ($json['synced'])
-                    ? $synced
-                    : $lines;
-            }
-
-            return $json;
-        }
-
-        return [];
     }
 
     /**

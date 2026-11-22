@@ -1019,19 +1019,19 @@ function display_notification(string $message, int $timeout = 5000): void
     ) ?: '""';
 
     echo "<script>";
-    echo "displayNotification(" . $literal . ", " . $timeout . ");";
+    // pages like stream.php load no bundle, so fall back to the parent frame that hosts the notifier
+    echo "(function(w){var f=w.displayNotification||(w.parent&&w.parent.displayNotification);if(typeof f==='function'){f(" . $literal . ", " . $timeout . ");}})(window);";
     echo "</script>\n";
 }
 
 /**
- * show_now_playing
- * This shows the Now Playing templates and expires the rows it is about to read
+ * The Now Playing html, after expiring the rows it is about to read
  */
-function show_now_playing(): void
+function render_now_playing(): string
 {
     Stream::garbage_collection();
 
-    echo new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
+    return new NowPlayingView(Stream::get_now_playing(), AmpConfig::get_web_path())->render();
 }
 
 /**

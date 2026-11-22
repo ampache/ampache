@@ -122,10 +122,7 @@ final class SmartPlaylistPageView extends AbstractView
 
     public function getFullname(): string
     {
-        ob_start();
-        echo $this->playlist->getFullname();
-
-        return (string) ob_get_clean();
+        return $this->playlist->getFullname();
     }
 
     public function getHeader(): ObjectHeaderView

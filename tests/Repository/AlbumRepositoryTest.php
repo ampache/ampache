@@ -214,18 +214,28 @@ class AlbumRepositoryTest extends TestCase
 
         $albumId = 666;
 
-        $album->expects(static::once())
-            ->method('getId')
+        $album->method('getId')
             ->willReturn($albumId);
 
-        $this->connection->expects(static::once())
+        $calls   = [];
+        $pdoStub = $this->createMock(\PDOStatement::class);
+        $this->connection->expects(static::exactly(2))
             ->method('query')
-            ->with(
-                'DELETE FROM `album` WHERE `id` = ?',
-                [$albumId]
-            );
+            ->willReturnCallback(function (string $sql, array $params = []) use (&$calls, $pdoStub): \PDOStatement {
+                $calls[] = [$sql, $params];
+
+                return $pdoStub;
+            });
 
         $this->subject->delete($album);
+
+        self::assertSame(
+            [
+                ['DELETE FROM `album` WHERE `id` = ?', [$albumId]],
+                ['DELETE FROM `album_disk` WHERE `album_id` = ?', [$albumId]],
+            ],
+            $calls,
+        );
     }
 
     public function testDeleteEmptyCarriesOnAfterAFailedStatement(): void

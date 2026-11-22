@@ -69,7 +69,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * getNowPlaying
      *
      * Returns what is currently being played by all users.
-     * https://opensubsonic.netlify.app/docs/endpoints/getnowplaying/
+     * https://opensubsonic.github.io/docs/endpoints/getnowplaying/
      * @param array<string, mixed> $input
      */
     public function getnowplaying(array $input, User $user): void
@@ -91,7 +91,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * getPlayQueue
      *
      * Returns the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      */
     public function getplayqueue(array $input, User $user): void
@@ -114,7 +114,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * getPlayQueueByIndex
      *
      * Returns the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/getplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/getplayqueue/
      * @param array<string, mixed> $input
      */
     public function getplayqueuebyindex(array $input, User $user): void
@@ -137,7 +137,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * jukeboxControl
      *
      * Controls the jukebox, i.e., playback directly on the server’s audio hardware.
-     * https://opensubsonic.netlify.app/docs/endpoints/jukeboxcontrol/
+     * https://opensubsonic.github.io/docs/endpoints/jukeboxcontrol/
      * @param array<string, mixed> $input
      */
     public function jukeboxcontrol(array $input, User $user): void
@@ -268,7 +268,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
 
     /**
      * reportPlayback [OS] //TODO
-     * https://opensubsonic.netlify.app/docs/endpoints/reportplayback/
+     * https://opensubsonic.github.io/docs/endpoints/reportplayback/
      * @param array<string, mixed> $input
      */
     public function reportPlayback(array $input, User $user): void
@@ -339,7 +339,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * savePlayQueue [OS]
      *
      * Saves the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
+     * https://opensubsonic.github.io/docs/endpoints/saveplayqueue/
      * @param array<string, mixed> $input
      */
     public function saveplayqueue(array $input, User $user): void
@@ -423,7 +423,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * savePlayQueueByIndex [OS]
      *
      * Saves the state of the play queue for this user.
-     * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
+     * https://opensubsonic.github.io/docs/endpoints/saveplayqueuebyindex/
      * @param array<string, mixed> $input
      */
     public function saveplayqueuebyindex(array $input, User $user): void
@@ -514,7 +514,7 @@ final class PlaybackStateHandler implements PlaybackStateHandlerInterface
      * scrobble
      *
      * Registers the local playback of one or more media files.
-     * https://opensubsonic.netlify.app/docs/endpoints/scrobble/
+     * https://opensubsonic.github.io/docs/endpoints/scrobble/
      * @param array<string, mixed> $input
      */
     public function scrobble(array $input, User $user): void

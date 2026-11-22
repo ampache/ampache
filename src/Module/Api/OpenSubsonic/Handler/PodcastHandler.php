@@ -58,7 +58,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * createPodcastChannel
      *
      * Adds a new Podcast channel.
-     * https://opensubsonic.netlify.app/docs/endpoints/createpodcastchannel/
+     * https://opensubsonic.github.io/docs/endpoints/createpodcastchannel/
      * @param array<string, mixed> $input
      */
     public function createpodcastchannel(array $input, User $user): void
@@ -97,7 +97,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * deletePodcastChannel
      *
      * Deletes a Podcast channel.
-     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastchannel/
+     * https://opensubsonic.github.io/docs/endpoints/deletepodcastchannel/
      * @param array<string, mixed> $input
      */
     public function deletepodcastchannel(array $input, User $user): void
@@ -128,7 +128,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * deletePodcastEpisode
      *
      * Deletes a Podcast episode.
-     * https://opensubsonic.netlify.app/docs/endpoints/deletepodcastepisode/
+     * https://opensubsonic.github.io/docs/endpoints/deletepodcastepisode/
      * @param array<string, mixed> $input
      */
     public function deletepodcastepisode(array $input, User $user): void
@@ -158,7 +158,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * downloadPodcastEpisode
      *
      * Request the server to start downloading a given Podcast episode.
-     * https://opensubsonic.netlify.app/docs/endpoints/downloadpodcastepisode/
+     * https://opensubsonic.github.io/docs/endpoints/downloadpodcastepisode/
      * @param array<string, mixed> $input
      */
     public function downloadpodcastepisode(array $input, User $user): void
@@ -186,7 +186,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * getNewestPodcasts
      *
      * Returns the most recently published Podcast episodes.
-     * https://opensubsonic.netlify.app/docs/endpoints/getnewestpodcasts/
+     * https://opensubsonic.github.io/docs/endpoints/getnewestpodcasts/
      * @param array<string, mixed> $input
      */
     public function getnewestpodcasts(array $input, User $user): void
@@ -215,7 +215,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * getPodcastEpisode [OS]
      *
      * Returns details for a podcast episode.
-     * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
+     * https://opensubsonic.github.io/docs/endpoints/getpodcastepisode/
      * @param array<string, mixed> $input
      */
     public function getpodcastepisode(array $input, User $user): void
@@ -254,7 +254,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * getPodcasts
      *
      * Returns all Podcast channels the server subscribes to, and (optionally) their episodes.
-     * https://opensubsonic.netlify.app/docs/endpoints/getpodcasts/
+     * https://opensubsonic.github.io/docs/endpoints/getpodcasts/
      * @param array<string, mixed> $input
      */
     public function getpodcasts(array $input, User $user): void
@@ -297,7 +297,7 @@ final class PodcastHandler implements PodcastHandlerInterface
      * refreshPodcasts
      *
      * Requests the server to check for new Podcast episodes.
-     * https://opensubsonic.netlify.app/docs/endpoints/refreshpodcasts/
+     * https://opensubsonic.github.io/docs/endpoints/refreshpodcasts/
      * @param array<string, mixed> $input
      */
     public function refreshpodcasts(array $input, User $user): void

@@ -50,10 +50,7 @@ final class LiveStreamView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('live_stream', $this->liveStream->id, $this->getName(), $this->getArtSize(), null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('live_stream', $this->liveStream->id, $this->getName(), $this->getArtSize(), null, true, false);
     }
 
     /**

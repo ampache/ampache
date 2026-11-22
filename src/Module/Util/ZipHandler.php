@@ -37,6 +37,9 @@ use ZipArchive;
 
 final class ZipHandler implements ZipHandlerInterface
 {
+    /** @var int an archive this old is a dead worker's leftover, not a slow download still running */
+    private const int STALE_ZIP_AGE = 86400;
+
     private ?string $zipFile = null;
 
     public function __construct(
@@ -90,7 +93,10 @@ final class ZipHandler implements ZipHandlerInterface
         $archiveName = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
         $comment     = (string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
-        $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
+        $tmpDir = Core::get_tmp_dir();
+        // swept here and not from cron: this is apache's own tmp, which systemd's PrivateTmp hides from cron
+        $this->removeStaleZips($tmpDir);
+        $this->zipFile = $tmpDir . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 
         ob_end_clean();
 
@@ -186,5 +192,19 @@ final class ZipHandler implements ZipHandlerInterface
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withBody($body);
+    }
+
+    /**
+     * A worker killed mid download never runs its shutdown function, leaving its zip or libzip's .part behind
+     */
+    private function removeStaleZips(string $tmpDir): void
+    {
+        $limit = time() - self::STALE_ZIP_AGE;
+        foreach (glob($tmpDir . DIRECTORY_SEPARATOR . 'ampache-zip-*') ?: [] as $file) {
+            // another request may have removed it since the glob
+            if ((int) @filemtime($file) < $limit) {
+                self::destroyZip($file);
+            }
+        }
     }
 }

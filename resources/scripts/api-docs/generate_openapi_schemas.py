@@ -1047,7 +1047,7 @@ MANUAL_SCHEMAS: dict[str, dict] = {
     "_PluginMap": {
         "oneOf": [
             {"type": "object", "additionalProperties": {}},
-            {"type": "array", "maxItems": 0},
+            {"type": "array", "items": {}, "maxItems": 0},
         ],
     },
     "LyricsResponse": {
@@ -1576,7 +1576,7 @@ def apply_operation_ids(spec: dict) -> list[str]:
     id is `camelCase(action)` plus any path segment that adds meaning the action does not already
     carry, so `album_songs` -> `albumSongs` and `/catalogs/{id}/clean` -> `catalogActionClean`. The
     23 actions that map to several operations are disambiguated by those extra segments; the handful
-    that still collide fall back to the full path and then the http method.
+    that still collide fall back to the full path, then the http method, then the path parameters.
     """
     actions: dict[tuple[str, str], str] = {}
     for path, method, rpc in mapping_operations(spec):
@@ -1613,6 +1613,13 @@ def apply_operation_ids(spec: dict) -> list[str]:
     for (method, path), value in list(ids.items()):
         if value in clashing:
             ids[(method, path)] = value + method.capitalize()
+
+    # routes that differ only by a path parameter, like /folders and /folders/{folder_id}, still collide here
+    clashing = {v for v, n in Counter(ids.values()).items() if n > 1}
+    for (method, path), value in list(ids.items()):
+        params = [w for s in path.strip("/").split("/") if s.startswith("{") for w in _id_words(s.strip("{}"))]
+        if value in clashing and params:
+            ids[(method, path)] = value + "By" + "".join(w.capitalize() for w in params)
 
     applied: list[str] = []
     for path, operations in spec["paths"].items():

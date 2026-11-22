@@ -3590,6 +3590,7 @@
           },
           {
             "type": "array",
+            "items": {},
             "maxItems": 0
           }
         ]
@@ -14685,7 +14686,7 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "foldersFoldersGet",
+        "operationId": "foldersFoldersGetByFolderId",
         "description": "Return children of a parent folder object by ID **Ampache 8.0.0+**"
       }
     },
@@ -95793,6 +95794,19 @@
             "in": "query",
             "name": "plugins",
             "required": true,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Search the plugins even when the database has lyrics if 1 (default 0); stored lyrics are not replaced",
+            "in": "query",
+            "name": "force",
+            "required": false,
             "schema": {
               "enum": [
                 0,

@@ -10,7 +10,6 @@
     "filepond": "^4.30.6",
     "jquery": "3.5.*",
     "jquery-contextmenu": "^2.9.2",
-    "jquery-datetimepicker": "^2.5.21",
     "jquery-ui": "1.13.*",
     "jquery.qrcode": "^1.0.3",
     "js-cookie": "^3.0.7",
@@ -28,7 +27,6 @@
     "minify:jplayer-playlist": "uglifyjs public/lib/modules/jplayer/jplayer.playlist.js -o public/lib/modules/jplayer/jplayer.playlist.min.js",
     "copy:bootstrap": "copyfiles --error --up 3 \"node_modules/bootstrap/dist/**/*\" public/lib/components/bootstrap",
     "copy:contextmenu": "copyfiles --error --up 3 \"node_modules/jquery-contextmenu/dist/*\" public/lib/components/jquery-contextmenu",
-    "copy:datetimepicker": "copyfiles --error --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
     "copy:filepond": "copyfiles --error --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css public/lib/components/filepond",
     "copy:jscookie": "copyfiles --error --up 3 node_modules/js-cookie/dist/js.cookie.js public/lib/components/js-cookie",
     "copy:jscroll": "copyfiles --error --up 3 \"node_modules/jscroll/dist/**/*\" public/lib/components/jscroll",
@@ -56,7 +54,6 @@
   "homepage": "https://github.com/ampache/ampache#readme",
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "jshint": "^0.5.9",
     "npm-run-all": "^4.1.5",
     "uglify-js": "^3.17.4",
     "vite": "^8.3.3"

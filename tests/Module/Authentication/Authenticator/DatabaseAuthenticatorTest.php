@@ -35,7 +35,7 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
 {
     private const string PASSWORD_SQL = 'SELECT `password` FROM `user` WHERE `username` = ?';
 
-    private const string SECRET_SQL = 'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?';
+    private const string SECRET_SQL = 'SELECT `subsonic_secret` FROM `user` WHERE `username` = ?';
 
     private const string USERNAME = 'some-username';
 
@@ -57,9 +57,9 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
     public function testAuthFailsWhenNoCredentialIsStored(): void
     {
         $this->expectPasswordRow(false);
-        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => null]);
+        $this->expectSecretRow(['subsonic_secret' => null]);
 
-        // an empty apikey column must never be matched by an empty-ish password
+        // an empty subsonic_secret column must never be matched by an empty-ish password
         self::assertSame(
             ['success' => false, 'error' => 'MySQL login attempt failed'],
             $this->subject->auth(self::USERNAME, '0')
@@ -69,7 +69,7 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
     public function testAuthFailsWhenTheSubsonicSecretCannotBeDecrypted(): void
     {
         $this->expectPasswordRow(false);
-        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => 'some-payload']);
+        $this->expectSecretRow(['subsonic_secret' => 'some-payload']);
 
         // a rotated secret_key leaves an undecryptable payload behind; it must not authenticate anything
         $this->symmetricEncrypter->shouldReceive('decrypt')
@@ -98,13 +98,32 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
     }
 
     /**
+     * The api key is a long-lived bearer token that ends up in URLs and logs; it must never
+     * double as a password, in the web UI or anywhere else this authenticator backs
+     */
+    public function testAuthFailsWithTheApiKeyAsPassword(): void
+    {
+        $apiKey = 'some-api-key';
+
+        $this->expectPasswordRow(false);
+        $this->expectSecretRow(['subsonic_secret' => null]);
+
+        $this->symmetricEncrypter->shouldNotReceive('decrypt');
+
+        self::assertSame(
+            ['success' => false, 'error' => 'MySQL login attempt failed'],
+            $this->subject->auth(self::USERNAME, $apiKey)
+        );
+    }
+
+    /**
      * The stored hash and the candidate are compared with `hash_equals()`; a wrong password must still fail
      * even though both are same-length sha256 digests, the shape a magic-hash/type-juggling attack relies on
      */
     public function testAuthFailsWithTheWrongPassword(): void
     {
         $this->expectPasswordRow(['password' => hash('sha256', 'the-real-password')]);
-        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => null]);
+        $this->expectSecretRow(['subsonic_secret' => null]);
 
         self::assertSame(
             ['success' => false, 'error' => 'MySQL login attempt failed'],
@@ -115,7 +134,7 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
     public function testAuthFailsWithTheWrongSubsonicSecret(): void
     {
         $this->expectPasswordRow(false);
-        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => 'some-payload']);
+        $this->expectSecretRow(['subsonic_secret' => 'some-payload']);
 
         $this->symmetricEncrypter->shouldReceive('decrypt')
             ->with('some-payload')
@@ -125,21 +144,6 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
         self::assertSame(
             ['success' => false, 'error' => 'MySQL login attempt failed'],
             $this->subject->auth(self::USERNAME, 'not-the-real-password')
-        );
-    }
-
-    public function testAuthSucceedsWithTheLegacyApiKey(): void
-    {
-        $apiKey = 'some-api-key';
-
-        $this->expectPasswordRow(false);
-        $this->expectSecretRow(['apikey' => $apiKey, 'subsonic_secret' => null]);
-
-        $this->symmetricEncrypter->shouldNotReceive('decrypt');
-
-        self::assertSame(
-            ['success' => true, 'type' => 'mysql', 'username' => self::USERNAME],
-            $this->subject->auth(self::USERNAME, $apiKey)
         );
     }
 
@@ -160,7 +164,7 @@ class DatabaseAuthenticatorTest extends MockeryTestCase
         $password = 'some-subsonic-password';
 
         $this->expectPasswordRow(false);
-        $this->expectSecretRow(['apikey' => null, 'subsonic_secret' => 'some-payload']);
+        $this->expectSecretRow(['subsonic_secret' => 'some-payload']);
 
         $this->symmetricEncrypter->shouldReceive('decrypt')
             ->with('some-payload')

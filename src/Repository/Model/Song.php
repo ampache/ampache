@@ -125,15 +125,16 @@ class Song extends database_object implements
     /** @var null|string[] $isrc */
     public ?array $isrc = null;
 
-    public ?string $label    = null;
-    public ?string $language = null;
-    public ?int $last_played = null; // When this song was last streamed, as a unix timestamp; null until it has been played.
-    public ?int $license     = null;
-    public ?string $link     = null;
-    public ?string $lyrics   = null;
-    public ?string $mbid     = null;
-    public ?string $mime     = null;
-    public ?string $mode     = null;
+    public ?string $label                   = null;
+    public ?string $language                = null;
+    public ?int $last_played                = null; // When this song was last streamed, as a unix timestamp; null until it has been played.
+    public ?int $license                    = null;
+    public ?string $link                    = null;
+    public ?string $lyrics                  = null;
+    public ?LyricsSourceEnum $lyrics_source = null;
+    public ?string $mbid                    = null;
+    public ?string $mime                    = null;
+    public ?string $mode                    = null;
 
     /** @var null|list<array{id: int, name: string, user: int, count: int}> $moods */
     public ?array $moods = null;
@@ -363,7 +364,8 @@ class Song extends database_object implements
                 $arr = ($key === 'tags' && !empty($media->get_tags()))
                     ? self::_unique_tag_names(array_column($media->get_tags(), 'name'))
                     : $media->$key;
-                sort($arr);
+                // tags compare without case, so they must sort without it too
+                sort($arr, SORT_STRING | SORT_FLAG_CASE);
                 $mediaData = implode(" ", $arr);
             } else {
                 $mediaData = $media->$key;
@@ -383,7 +385,7 @@ class Song extends database_object implements
                 $arr = ($key === 'tags' && !empty($new_media->get_tags()))
                     ? self::_unique_tag_names(array_column($new_media->get_tags(), 'name'))
                     : $new_media->$key;
-                sort($arr);
+                sort($arr, SORT_STRING | SORT_FLAG_CASE);
                 $newMediaData = implode(" ", $arr);
             } else {
                 $newMediaData = $new_media->$key;
@@ -458,6 +460,7 @@ class Song extends database_object implements
             'mbid',
             'mime',
             'partial_data_loaded',
+            'lyrics_source',
             'played',
             'song_data_loaded',
             'total_count',
@@ -466,6 +469,14 @@ class Song extends database_object implements
             'update_time',
             'waveform',
         ];
+
+        // a rescan leaves user-set lyrics alone, and a file with none leaves a plugin result alone, so neither is a change
+        if (
+            $song->lyrics_source === LyricsSourceEnum::USER
+            || ($song->lyrics_source === LyricsSourceEnum::PLUGIN && empty($new_song->lyrics))
+        ) {
+            $skip_array[] = 'lyrics';
+        }
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     }
@@ -868,7 +879,7 @@ class Song extends database_object implements
             }
         }
 
-        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
+        self::getSongRepository()->insertData([$song_id, $disksubtitle ?: null, $comment ?: null, $lyrics ?: null, ($lyrics) ? LyricsSourceEnum::FILE->value : null, $label ?: null, $language ?: null, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain, $bpm]);
 
         self::getFolderRepository()->mapObject('song', $song_id, (string) $file, $catalog);
 
@@ -1066,11 +1077,18 @@ class Song extends database_object implements
 
     /**
      * update_lyrics
-     * updates the lyrics field
+     * Updates the lyrics and where they came from; blank text clears both, whatever set them
      */
-    public static function update_lyrics(string $new_lyrics, int $song_id): void
+    public static function update_lyrics(string $new_lyrics, int $song_id, LyricsSourceEnum $source = LyricsSourceEnum::USER): void
     {
-        self::_update_ext_item('lyrics', $new_lyrics, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+        $level = AccessLevelEnum::CONTENT_MANAGER;
+        if (Core::get_global('user') instanceof User) {
+            $level = self::_ownerLevel($song_id, $level);
+        }
+
+        if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
+            self::getSongRepository()->setLyrics($song_id, (trim($new_lyrics) === '') ? null : $new_lyrics, $source);
+        }
     }
 
     /**
@@ -1126,12 +1144,14 @@ class Song extends database_object implements
     public static function update_song(int $song_id, Song $new_song): void
     {
         $update_time = time();
+        $repository  = self::getSongRepository();
 
-        self::getSongRepository()->updateSong(
+        $repository->updateSong(
             $song_id,
             [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer ?: null, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id],
-            [$new_song->label ?: null, $new_song->lyrics ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $new_song->bpm, $song_id]
+            [$new_song->label ?: null, $new_song->language ?: null, $new_song->disksubtitle ?: null, $new_song->comment ?: null, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $new_song->bpm, $song_id]
         );
+        $repository->setFileLyrics($song_id, $new_song->lyrics ?: null);
     }
 
     /**
@@ -1874,7 +1894,7 @@ class Song extends database_object implements
 
     /**
      * Get lyrics.
-     * @return array{'text'?: string}
+     * @return array{}|array{'text': string, 'url'?: string}
      */
     public function get_lyrics(bool $db_only = false): array
     {
@@ -1891,35 +1911,57 @@ class Song extends database_object implements
         }
 
         $user = Core::get_global('user');
-        if ($user instanceof User) {
-            foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if (
-                    $plugin->_plugin instanceof PluginGetLyricsInterface
-                    && $plugin->load($user)
-                ) {
-                    // a plugin talking to an unreachable service must not take the request down with it; skip to the next
-                    try {
-                        $lyrics = $plugin->_plugin->get_lyrics($this);
-                    } catch (\Throwable $error) {
-                        debug_event(self::class, 'get_lyrics error in ' . $plugin_name . ': ' . $error->getMessage(), 1);
+        if (!$user instanceof User) {
+            return [];
+        }
 
-                        continue;
-                    }
+        $lyrics = current($this->get_lyrics_candidates($user, true));
+        if ($lyrics === false) {
+            return [];
+        }
 
-                    if (!empty($lyrics)) {
-                        // save the lyrics if not set before
-                        if (!empty($lyrics['text'])) {
-                            self::update_lyrics($lyrics['text'], $this->id);
-                        }
+        // save the lyrics if not set before
+        if (!empty($lyrics['text'])) {
+            self::update_lyrics($lyrics['text'], $this->id, LyricsSourceEnum::PLUGIN);
+        }
 
-                        return $lyrics;
-                    }
+        return $lyrics;
+    }
+
+    /**
+     * Ask every lyric plugin the user has enabled, keyed by plugin name; nothing is stored.
+     * @return array<string, array{'text': string, 'url': string}>
+     */
+    public function get_lyrics_candidates(User $user, bool $first_only = false): array
+    {
+        $results = [];
+        foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if (
+                !$plugin->_plugin instanceof PluginGetLyricsInterface
+                || !$plugin->load($user)
+            ) {
+                continue;
+            }
+
+            // a plugin talking to an unreachable service must not take the request down with it; skip to the next
+            try {
+                $lyrics = $plugin->_plugin->get_lyrics($this);
+            } catch (\Throwable $error) {
+                debug_event(self::class, 'get_lyrics error in ' . $plugin_name . ': ' . $error->getMessage(), 1);
+
+                continue;
+            }
+
+            if (!empty($lyrics)) {
+                $results[$plugin_name] = $lyrics;
+                if ($first_only) {
+                    break;
                 }
             }
         }
 
-        return [];
+        return $results;
     }
 
     /**
@@ -2186,7 +2228,7 @@ class Song extends database_object implements
                 // remote network user will require transcoding with downsample_remote
                 $transcode = 'required';
                 debug_event(self::class, "Transcoding due to downsample_remote", 3);
-            } else {
+            } elseif ($transcode !== 'always') {
                 // lan user is allowed to play original quality
                 $transcode = 'never';
                 debug_event(self::class, "NOT transcoding local network due to downsample_remote", 5);
@@ -2488,6 +2530,16 @@ class Song extends database_object implements
                         $changed = true;
                     }
                     break;
+                case 'lyrics':
+                    // not a file tag, so a change here does not rewrite the file
+                    $new_lyrics = str_replace("\r\n", "\n", (string) $value);
+                    $this->get_lyrics(true);
+                    if ($new_lyrics !== (string) $this->lyrics) {
+                        self::update_lyrics($new_lyrics, $this->id);
+                        $this->lyrics        = (trim($new_lyrics) === '') ? null : $new_lyrics;
+                        $this->lyrics_source = ($this->lyrics === null) ? null : LyricsSourceEnum::USER;
+                    }
+                    break;
                 case 'mbid':
                     if ($value != $this->mbid) {
                         self::update_mbid((string) $value, $this->id);
@@ -2719,6 +2771,9 @@ class Song extends database_object implements
                 break;
             case 'lyrics':
                 $this->lyrics = $value !== null ? (string) $value : null;
+                break;
+            case 'lyrics_source':
+                $this->lyrics_source = ($value !== null) ? LyricsSourceEnum::tryFrom((string) $value) : null;
                 break;
             case 'label':
                 $this->label = $value !== null ? (string) $value : null;
