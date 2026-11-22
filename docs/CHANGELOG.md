@@ -12,7 +12,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
 
 ### Added (8.5.0)
 
-* Translations 2026-11-18
+* Translations 2026-11-21
 * Database 850002
   * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
   * New `song_data`.`lyrics_source` column (`file`, `plugin` or `user`); existing lyrics are marked `file`
