@@ -789,6 +789,9 @@ final class Xml8_Data
                 case 'video':
                     $libitem = new Video($object_id);
                     break;
+                default:
+                    $libitem = null;
+                    break;
             }
 
             if ($libitem === null || $libitem->isNew() || $object_type === null) {

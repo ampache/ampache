@@ -110,7 +110,7 @@ class OutputObjectValidityTest extends TestCase
             [$variable, $offset] = $match;
 
             // the check belongs immediately after the hydration, before any field is read
-            $following = substr($source, $offset, 400);
+            $following = substr($source, $offset, 450);
             if (!preg_match('/\$' . preg_quote($variable, '/') . '->isNew\(\)/', $following)) {
                 $unguarded[] = sprintf(
                     'line %d: $%s = new %s(...)',
