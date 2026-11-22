@@ -32,15 +32,26 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
-use Mockery;
+use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use ReflectionProperty;
 
 class UpdateUserActionTest extends MockeryTestCase
 {
@@ -52,86 +63,42 @@ class UpdateUserActionTest extends MockeryTestCase
     private MockInterface|UiInterface $ui;
     private MockInterface|UserRepositoryInterface $userRepository;
 
-    /**
-     * A self-service profile update must never let the request smuggle in `access` or `catalog_filter_group` --
-     * both are admin-only fields on the exact same `User::update()` allowlist this action also uses.
-     */
-    public function testRunStripsAccessAndCatalogFilterGroupFromThePost(): void
+    public function testPasswordsThatDoNotMatchChangeNothing(): void
     {
-        $request        = $this->mock(ServerRequestInterface::class);
-        $gatekeeper     = $this->mock(GuiGatekeeperInterface::class);
-        $user           = $this->mock(User::class);
-        $user->username = 'some-username';
-        $user->shouldReceive('getId')->withNoArgs()->andReturn(42);
+        $user = $this->createUser();
+        $user->shouldNotReceive('update_fullname', 'update_password', 'upload_avatar');
 
-        $_SESSION = [];
-        $_POST    = [
-            'fullname' => 'Some Name',
+        $this->runWith($user, [
+            'fullname' => 'New Name',
+            'password1' => 'one',
+            'password2' => 'two',
+        ]);
+
+        self::assertTrue(AmpError::occurred());
+    }
+
+    // the form has no public full name box, so saving it used to make a name the admin had set public private again
+    public function testTheFormChangesOnlyWhatItSends(): void
+    {
+        $user = $this->createUser();
+        $user->shouldReceive('update_fullname')->with('New Name')->once();
+        $user->shouldNotReceive('update_fullname_public', 'update_access', 'update_catalog_filter_group', 'update_username');
+        $user->shouldReceive('upload_avatar')->withNoArgs()->once()->andReturnTrue();
+
+        $this->runWith($user, [
+            'fullname' => 'New Name',
             'access' => (string) AccessLevelEnum::ADMIN->value,
             'catalog_filter_group' => '2',
-        ];
-        $GLOBALS['user'] = $user;
-
-        try {
-            $gatekeeper->shouldReceive('isDemoMode')->andReturnFalse();
-            $gatekeeper->shouldReceive('mayAccess')
-                ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-                ->once()
-                ->andReturnTrue();
-            $this->requestParser->shouldReceive('verifyForm')
-                ->with('update_user')
-                ->once()
-                ->andReturnTrue();
-            $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse()->byDefault();
-            $this->configContainer->shouldReceive('isFeatureEnabled')
-                ->with(ConfigurationKeyEnum::SIMPLE_USER_MODE)
-                ->once()
-                ->andReturnFalse();
-            $this->configContainer->shouldReceive('getArray')
-                ->with(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS)
-                ->once()
-                ->andReturn([]);
-
-            $user->shouldReceive('update')
-                ->once()
-                ->with(Mockery::on(function (array $data): bool {
-                    self::assertArrayNotHasKey('access', $data);
-                    self::assertArrayNotHasKey('catalog_filter_group', $data);
-
-                    return true;
-                }))
-                ->andReturnTrue();
-            $user->shouldReceive('upload_avatar')
-                ->withNoArgs()
-                ->once()
-                ->andReturnTrue();
-
-            $this->ui->shouldReceive('showHeader')->withNoArgs()->once();
-            $this->ui->shouldReceive('showQueryStats')->withNoArgs()->once();
-            $this->ui->shouldReceive('showFooter')->withNoArgs()->once();
-
-            $gatekeeper->shouldReceive('getUser')
-                ->withNoArgs()
-                ->once()
-                ->andReturnNull();
-
-            ob_start();
-
-            try {
-                $result = $this->subject->run($request, $gatekeeper);
-            } finally {
-                ob_get_clean();
-            }
-
-            $this->assertNull($result);
-        } finally {
-            unset($GLOBALS['user']);
-        }
+            'username' => 'someone-else',
+        ]);
     }
 
     #[Override]
     protected function setUp(): void
     {
+        new ReflectionProperty(AmpError::class, 'errors')->setValue(null, []);
+        new ReflectionProperty(AmpError::class, 'state')->setValue(null, false);
+
         $this->configContainer         = $this->mock(ConfigContainerInterface::class);
         $this->preferencesViewFactory  = $this->mock(PreferencesViewFactoryInterface::class);
         $this->requestParser           = $this->mock(RequestParserInterface::class);
@@ -146,6 +113,58 @@ class UpdateUserActionTest extends MockeryTestCase
             $this->requestParser,
             $this->symmetricEncrypter,
             $this->userRepository,
+            new Stats(
+                $this->mock(AlbumRepositoryInterface::class),
+                $this->mock(ArtistRepositoryInterface::class),
+                $this->mock(PodcastEpisodeRepositoryInterface::class),
+                $this->mock(PodcastRepositoryInterface::class),
+                $this->mock(SongRepositoryInterface::class),
+                $this->mock(UserActivityPosterInterface::class),
+                $this->mock(UserActivityRepositoryInterface::class),
+                $this->mock(VideoRepositoryInterface::class),
+                $this->mock(LoggerInterface::class),
+            ),
         );
+    }
+
+    private function createUser(): MockInterface|User
+    {
+        $user                  = $this->mock(User::class);
+        $user->username        = 'some-username';
+        $user->fullname        = 'Old Name';
+        $user->fullname_public = true;
+        $user->shouldReceive('getId')->withNoArgs()->andReturn(42);
+
+        return $user;
+    }
+
+    /**
+     * @param array<string, string> $post
+     */
+    private function runWith(User $user, array $post): void
+    {
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $gatekeeper->shouldReceive('isDemoMode')->andReturnFalse();
+        $gatekeeper->shouldReceive('mayAccess')->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)->andReturnTrue();
+        $gatekeeper->shouldReceive('getUser')->withNoArgs()->andReturnNull();
+        $this->requestParser->shouldReceive('verifyForm')->with('update_user')->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')->andReturnFalse();
+        $this->configContainer->shouldReceive('getArray')
+            ->with(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS)
+            ->andReturn([]);
+        $this->ui->shouldReceive('showHeader', 'showQueryStats', 'showFooter')->withNoArgs();
+
+        $_SESSION        = [];
+        $_POST           = $post;
+        $GLOBALS['user'] = $user;
+
+        ob_start();
+
+        try {
+            self::assertNull($this->subject->run($this->mock(ServerRequestInterface::class), $gatekeeper));
+        } finally {
+            ob_get_clean();
+            unset($GLOBALS['user']);
+        }
     }
 }
