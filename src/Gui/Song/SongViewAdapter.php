@@ -174,10 +174,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('album', $this->song->album, $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('album', $this->song->album, $this->song->get_album_fullname(), ['width' => 384, 'height' => 384], null, true, false);
     }
 
     public function getArtistLink(): string

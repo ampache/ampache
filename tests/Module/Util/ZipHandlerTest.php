@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
@@ -41,6 +42,7 @@ class ZipHandlerTest extends MockeryTestCase
     private MockInterface&LoggerInterface $logger;
     private StreamFactoryInterface&MockObject $streamFactory;
     private ZipHandler $subject;
+    private ?string $tmpDir = null;
 
     public function testIsZipableReturnsFalseIfNotSupported(): void
     {
@@ -100,6 +102,44 @@ class ZipHandlerTest extends MockeryTestCase
         self::assertSame(404, $response->getStatusCode());
     }
 
+    // a worker killed mid download never runs its shutdown function, so a later zip must sweep its archive
+    public function testZipRemovesArchivesADeadWorkerLeftBehind(): void
+    {
+        $this->tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('ziphandler-test-');
+        mkdir($this->tmpDir);
+        AmpConfig::set('tmp_dir_path', $this->tmpDir, true);
+
+        $dayAndAHalfAgo = time() - 129600;
+        $stale          = ['ampache-zip-6b01eb51d1e85', 'ampache-zip-6b01eb4a4eaa9.4sahlt.part'];
+        $kept           = ['ampache-zip-6b01eb9f00000', 'waveform-6b01eb51d1e85'];
+        foreach ([...$stale, $kept[1]] as $name) {
+            touch($this->tmpDir . DIRECTORY_SEPARATOR . $name, $dayAndAHalfAgo);
+        }
+
+        touch($this->tmpDir . DIRECTORY_SEPARATOR . $kept[0]);
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME)
+            ->andReturn('folder.jpg');
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ART_ZIP_ADD)
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::FILE_ZIP_COMMENT)
+            ->andReturn('');
+        $this->logger->shouldReceive('debug')->zeroOrMoreTimes();
+        $this->logger->shouldReceive('warning')->zeroOrMoreTimes();
+
+        ob_start();
+        $this->subject->zip(new Response(), 'Nothing To Send', ['total_size' => 0, 'files' => []], false);
+
+        $left = array_values(array_diff((array) scandir($this->tmpDir), ['.', '..']));
+        sort($left);
+
+        // a download still running is fresh, and files that are not ours are none of the sweep's business
+        self::assertSame($kept, $left);
+    }
+
     #[Override]
     protected function setUp(): void
     {
@@ -112,5 +152,17 @@ class ZipHandlerTest extends MockeryTestCase
             $this->streamFactory,
             $this->logger
         );
+    }
+
+    #[Override]
+    protected function tearDown(): void
+    {
+        if ($this->tmpDir !== null) {
+            array_map(unlink(...), glob($this->tmpDir . DIRECTORY_SEPARATOR . '*') ?: []);
+            rmdir($this->tmpDir);
+            AmpConfig::set('tmp_dir_path', '', true);
+        }
+
+        parent::tearDown();
     }
 }

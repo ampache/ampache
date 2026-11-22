@@ -314,9 +314,15 @@ class Collection extends playlist_object
         $medias = [];
         $seen   = [];
         $track  = 0;
+        $owner  = null;
         foreach ($this->get_items() as $item) {
             $libitem = $this->getLibraryItemLoader()->load($item['object_type'], $item['object_id']);
             if (!$libitem instanceof container_item) {
+                continue;
+            }
+
+            // a member list expands only as far as the collection's owner could see it, or a private one leaks through it
+            if ($libitem instanceof playlist_object && $libitem->isPrivate() && !$libitem->isVisible($owner ??= new User($this->user))) {
                 continue;
             }
 

@@ -31,6 +31,7 @@ use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Tmp_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\Plugin;
@@ -51,6 +52,9 @@ use Override;
  */
 final class UserPageView extends AbstractView
 {
+    private ?displayable_item $nowPlayingMedia = null;
+    private bool $nowPlayingResolved           = false;
+
     /**
      * @param array<int> $following
      * @param array<int> $followers
@@ -155,6 +159,16 @@ final class UserPageView extends AbstractView
         return ($this->client->last_seen) ? get_datetime($this->client->last_seen) : T_('Never');
     }
 
+    public function getNowPlayingLink(): string
+    {
+        return $this->resolveNowPlayingMedia()?->get_f_link() ?? '';
+    }
+
+    public function getNowPlayingParentLink(): string
+    {
+        return $this->resolveNowPlayingMedia()?->get_f_parent_link() ?? '';
+    }
+
     /**
      * @return array<int>
      */
@@ -242,6 +256,11 @@ final class UserPageView extends AbstractView
         return date('Y') ?: '';
     }
 
+    public function hasNowPlayingMedia(): bool
+    {
+        return $this->resolveNowPlayingMedia() instanceof displayable_item;
+    }
+
     public function isAdmin(): bool
     {
         return $this->isAdmin;
@@ -303,5 +322,24 @@ final class UserPageView extends AbstractView
     protected function templateFile(): string
     {
         return $this->findTemplate('user/user.phtml');
+    }
+
+    /**
+     * The song or video this user is currently streaming, if any and if the viewer is allowed to see it.
+     * `Stream::get_now_playing()` already applies the `allow_personal_info_now` preference and catalog access.
+     */
+    private function resolveNowPlayingMedia(): ?displayable_item
+    {
+        if (!$this->nowPlayingResolved) {
+            $this->nowPlayingResolved = true;
+            foreach (Stream::get_now_playing($this->getClientId()) as $item) {
+                if ($item['media'] instanceof displayable_item) {
+                    $this->nowPlayingMedia = $item['media'];
+                    break;
+                }
+            }
+        }
+
+        return $this->nowPlayingMedia;
     }
 }

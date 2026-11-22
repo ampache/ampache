@@ -27,9 +27,11 @@ namespace Ampache\Module\Api\Ajax\Handler;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -43,6 +45,22 @@ class PlaylistAjaxHandlerTest extends TestCase
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
     private RequestParserInterface&MockObject $requestParser;
     private PlaylistAjaxHandler $subject;
+
+    // a collection is a private list too, so someone else's must not be copied into a playlist either
+    public function testAppendRefusesAPrivateCollectionTheCallerCannotSee(): void
+    {
+        $target = $this->target();
+        $source = $this->createMock(Collection::class);
+        $source->method('isVisible')
+            ->willReturn(false);
+
+        $source->expects(static::never())
+            ->method('get_medias');
+        $target->expects(static::never())
+            ->method('add_medias');
+
+        $this->append($target, $source);
+    }
 
     public function testAppendRefusesAPrivateSourceTheCallerCannotSee(): void
     {
@@ -138,11 +156,11 @@ class PlaylistAjaxHandlerTest extends TestCase
         unset($_REQUEST['playlist_id'], $_REQUEST['item_type'], $_REQUEST['item_id']);
     }
 
-    private function append(Playlist&MockObject $target, Playlist&MockObject $source): void
+    private function append(Playlist&MockObject $target, playlist_object&MockObject $source): void
     {
         $this->libraryItemLoader->method('load')
             ->willReturnCallback(
-                static fn(LibraryItemEnum $type, int $id): Playlist => ($id === 10) ? $target : $source
+                static fn(LibraryItemEnum $type, int $id): playlist_object => ($id === 10) ? $target : $source
             );
 
         ob_start();

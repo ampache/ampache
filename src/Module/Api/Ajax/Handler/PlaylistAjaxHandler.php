@@ -30,13 +30,13 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
-use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\User;
 
 final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
@@ -136,7 +136,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         }
                         // a private list you cannot see is not yours to expand into a playlist you can edit
                         if (
-                            ($libitem instanceof Playlist || $libitem instanceof Search)
+                            $libitem instanceof playlist_object
                             && !$libitem->isVisible($user)
                         ) {
                             continue;

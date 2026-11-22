@@ -271,14 +271,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
                     $artists = Recommendation::get_artists_like((int) $this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
-                    ob_start();
-                    echo new NowPlayingSimilarView(
+
+                    $results['similar_items_' . $media_id] = new NowPlayingSimilarView(
                         AmpConfig::get_web_path('/client'),
                         $artists,
                         $songs,
                         (bool) AmpConfig::get('wanted')
                     )->render();
-                    $results['similar_items_' . $media_id] = ob_get_clean();
                 }
 
                 break;
@@ -318,9 +317,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
                     }
 
-                    ob_start();
-                    echo new MissingAlbumsView($walbums)->render();
-                    $results['missing_albums'] = ob_get_clean();
+                    $results['missing_albums'] = new MissingAlbumsView($walbums)->render();
                 }
 
                 break;
@@ -401,11 +398,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
-                ob_start();
-                $user_id   = $user->id ?: -1;
-                echo $this->createRecentlyPlayedView($user, $user_id, false)->render();
-
-                $results['recently_played'] = ob_get_clean();
+                $results['recently_played'] = $this->createRecentlyPlayedView($user, $user->id ?: -1, false)->render();
                 break;
             case 'ignore_update':
                 // The ajax entry point has no gatekeeper, so repeat the admin gate update.php's clear action applies
@@ -416,21 +409,15 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'refresh_now_playing':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
+                $results['now_playing'] = render_now_playing();
                 break;
             case 'refresh_index':
-                ob_start();
-                show_now_playing();
-                $results['now_playing'] = ob_get_clean();
-                ob_start();
+                $results['now_playing'] = render_now_playing();
+
                 $user_id = (isset($_REQUEST['user_id']))
                     ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
-                echo $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
-
-                $results['recently_played'] = ob_get_clean();
+                $results['recently_played'] = $this->createRecentlyPlayedView($user, $user_id, isset($_REQUEST['user_only']))->render();
                 break;
             case 'dashboard_newest':
             case 'dashboard_popular':
@@ -541,33 +528,16 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['sidebar-content']       = $this->sidebarViewFactory->createSidebarView($button)->render();
                 break;
             case 'slideshow':
-                ob_start();
                 $images = $this->slideshow->getCurrentSlideshow($user);
-                if ($images !== []) {
-                    $fsname = 'fslider_' . time();
-                    echo "<div id='" . $fsname . "'>";
-                    foreach ($images as $image) {
-                        echo "<img src='" . $image['url'] . "' alt= '' onclick='update_action();' />";
-                    }
+                shuffle($images);
 
-                    echo "</div>";
-                    $results['fslider'] = ob_get_clean();
-                    ob_start();
-                    echo '<script>';
-                    echo "$('#" . $fsname . "').rhinoslider({
-                    showTime: 15000,
-                    effectTime: 2000,
-                    randomOrder: true,
-                    controlsPlayPause: false,
-                    autoPlay: true,
-                    showBullets: 'never',
-                    showControls: 'always',
-                    controlsMousewheel: false,
-            });";
-                    echo "</script>";
+                ob_start();
+                foreach ($images as $key => $image) {
+                    // the first one shows at once, slideshow.js fades through the rest
+                    echo '<img src="' . scrub_out($image['url']) . '" alt=""' . ($key === 0 ? ' class="active"' : '') . '>';
                 }
 
-                $results['fslider_script'] = ob_get_clean();
+                $results['fslider'] = ob_get_clean();
                 break;
             case 'albums':
                 $label_id = (int) ($_REQUEST['label'] ?? 0);

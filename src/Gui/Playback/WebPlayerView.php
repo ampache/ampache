@@ -28,7 +28,6 @@ namespace Ampache\Gui\Playback;
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Preference;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use JsonException;
 use Override;
@@ -71,7 +70,7 @@ final class WebPlayerView extends AbstractView
 
     public function canSlideshow(): bool
     {
-        return (bool) Preference::exists('flickr_api_key');
+        return AmpConfig::get_int('slideshow_time') > 0;
     }
 
     public function getAreaClass(): string

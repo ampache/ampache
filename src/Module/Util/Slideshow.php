@@ -25,10 +25,13 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Art;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\Ampacheflickr;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -39,10 +42,11 @@ final readonly class Slideshow implements SlideshowInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private PluginRetrieverInterface $pluginRetriever,
+        private AlbumRepositoryInterface $albumRepository,
     ) {}
 
     /**
-     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     * @return array<int, array{title: SimpleXMLElement|string, url: string}>
      */
     public function getCurrentSlideshow(User $user): array
     {
@@ -57,7 +61,7 @@ final readonly class Slideshow implements SlideshowInterface
     }
 
     /**
-     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     * @return array<int, array{title: SimpleXMLElement|string, url: string}>
      */
     private function getImages(Song $song, User $user): array
     {
@@ -66,6 +70,51 @@ final readonly class Slideshow implements SlideshowInterface
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
             if ($plugin->_plugin instanceof Ampacheflickr) {
                 $images += $plugin->_plugin->get_photos($song->get_parent_fullname());
+            }
+        }
+
+        // no plugin configured anything usable (e.g. no Flickr key); fall back to the artist's own art already in the catalog
+        if ($images === []) {
+            $images = $this->getLocalArt($song);
+        }
+
+        return $images;
+    }
+
+    /**
+     * The song's own art, the artist's photo, and their albums' covers, for when no slideshow plugin has anything to show.
+     *
+     * @return array<int, array{title: string, url: string}>
+     */
+    private function getLocalArt(Song $song): array
+    {
+        $images = [];
+
+        if (AmpConfig::get_bool('show_song_art') && Art::has_db($song->id, 'song')) {
+            $url = Art::url($song->id, 'song');
+            if ($url !== null) {
+                $images[] = ['title' => $song->get_parent_fullname(), 'url' => $url];
+            }
+        }
+
+        $artist_id = $song->artist;
+        if ($artist_id === null) {
+            return $images;
+        }
+
+        if (Art::has_db($artist_id, 'artist')) {
+            $url = Art::url($artist_id, 'artist');
+            if ($url !== null) {
+                $images[] = ['title' => $song->get_parent_fullname(), 'url' => $url];
+            }
+        }
+
+        foreach ($this->albumRepository->getAlbumByArtist($artist_id) as $album_id) {
+            if (Art::has_db($album_id, 'album')) {
+                $url = Art::url($album_id, 'album');
+                if ($url !== null) {
+                    $images[] = ['title' => $song->get_parent_fullname(), 'url' => $url];
+                }
             }
         }
 

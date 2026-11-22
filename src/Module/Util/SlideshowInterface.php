@@ -31,7 +31,7 @@ use SimpleXMLElement;
 interface SlideshowInterface
 {
     /**
-     * @return array<int, array{title: SimpleXMLElement, url: string}>
+     * @return array<int, array{title: SimpleXMLElement|string, url: string}>
      */
     public function getCurrentSlideshow(User $user): array;
 }

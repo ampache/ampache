@@ -1881,6 +1881,15 @@ class Catalog_local extends Catalog
             return false;
         }
 
+        // A sidecar lyrics file follows its song; losing it silently would be worse than failing to move it
+        $old_lrc = VaInfo::lrc_sidecar_path($media->file);
+        if ($old_lrc !== null) {
+            $new_lrc = $directory . DIRECTORY_SEPARATOR . $info['filename'] . '.' . pathinfo($old_lrc, PATHINFO_EXTENSION);
+            if (!file_exists($new_lrc) && copy($old_lrc, $new_lrc)) {
+                unlink($old_lrc);
+            }
+        }
+
         // Update the catalog
         return match (true) {
             $media instanceof Video => self::getVideoRepository()->setFileAndCatalog($media->id, $new_file, $newCatalogId),

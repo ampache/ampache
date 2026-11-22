@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-11-18 07:40+1000\n"
+"POT-Creation-Date: 2026-11-18 12:57+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -804,6 +804,9 @@ msgid "Comment"
 msgstr ""
 
 msgid "Label"
+msgstr ""
+
+msgid "Lyrics"
 msgstr ""
 
 msgid "Music License"
@@ -1940,7 +1943,25 @@ msgstr ""
 msgid "Song Lyrics"
 msgstr ""
 
+msgid "Get Lyrics"
+msgstr ""
+
+msgid "Song Edit"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "User set"
+msgstr ""
+
 msgid "Show more"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "No lyrics found."
 msgstr ""
 
 msgid "Primary"
@@ -2033,10 +2054,10 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-msgid "Show Lyrics"
+msgid "Playback failed"
 msgstr ""
 
-msgid "Playback failed"
+msgid "Show Lyrics"
 msgstr ""
 
 msgid "Add All to playlist"
@@ -2200,9 +2221,6 @@ msgid "Filter"
 msgstr ""
 
 msgid "Filter by name, description or key"
-msgstr ""
-
-msgid "Clear"
 msgstr ""
 
 msgid "Differs from default"
@@ -3247,8 +3265,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Adds a lyrics link to the web player control bar. The lyrics page itself "
-"stays reachable either way."
+"Adds a lyrics button to the web player, opening a panel that follows the "
+"playing song. The lyrics page itself stays reachable either way."
 msgstr ""
 
 msgid ""
@@ -3311,8 +3329,8 @@ msgstr ""
 
 msgid ""
 "Seconds of inactivity before the web player fades into a full-screen artist "
-"slideshow. 0 turns it off, and it needs the Flickr plugin key to have "
-"anything to show."
+"slideshow. 0 turns it off. Uses the Flickr plugin key if set, otherwise the "
+"artist and album art already in the catalog."
 msgstr ""
 
 msgid ""
@@ -4031,10 +4049,10 @@ msgstr ""
 msgid "Localplay Controller Not Defined"
 msgstr ""
 
-msgid "No lyrics found."
+msgid "These lyrics were set by hand and will be lost. Clear them?"
 msgstr ""
 
-msgid "Song Edit"
+msgid "Clear the stored lyrics?"
 msgstr ""
 
 #, php-format
@@ -4075,9 +4093,6 @@ msgid "ISRC"
 msgstr ""
 
 msgid "Last Updated"
-msgstr ""
-
-msgid "Lyrics"
 msgstr ""
 
 msgid "Licensing"
@@ -5599,9 +5614,6 @@ msgid "List plugins, catalog types and localplay controllers"
 msgstr ""
 
 msgid "List all pluggable modules and their installed state"
-msgstr ""
-
-msgid "Plugins"
 msgstr ""
 
 msgid "Users List"
@@ -7234,9 +7246,6 @@ msgid "Catalog is invalid"
 msgstr ""
 
 msgid "URL is invalid, must be mms://, https:// or http://"
-msgstr ""
-
-msgid "User set"
 msgstr ""
 
 msgid "Share Edit"

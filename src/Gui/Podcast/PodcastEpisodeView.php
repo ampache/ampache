@@ -66,10 +66,7 @@ final class PodcastEpisodeView extends AbstractView
 
     public function getArt(): string
     {
-        ob_start();
-        Art::display('podcast', $this->episode->podcast, (string) $this->episode->get_fullname(), ['width' => 384, 'height' => 384], null, true, false);
-
-        return (string) ob_get_clean();
+        return Art::render('podcast', $this->episode->podcast, (string) $this->episode->get_fullname(), ['width' => 384, 'height' => 384], null, true, false);
     }
 
     public function getDeleteUrl(): string
