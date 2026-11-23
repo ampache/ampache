@@ -26,8 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Gui\Album;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\User;
 use PHPUnit\Framework\TestCase;
 
 class AlbumPageViewTest extends TestCase
@@ -35,36 +37,24 @@ class AlbumPageViewTest extends TestCase
     /** @var array<string, mixed> */
     private array $config = [];
 
-    public function testTheShareLineGoesWithTheFeature(): void
+    // the line is offered to whoever is looking at the page, not to whoever may use the interface
+    public function testTheShareLineIsForTheVisitorOfThePage(): void
     {
-        AmpConfig::set('use_auth', false, true);
-        AmpConfig::set('share', false, true);
+        $guest         = $this->createMock(User::class);
+        $guest->access = AccessLevelEnum::GUEST->value;
 
-        self::assertFalse($this->view(mayUse: true)->showShare());
-    }
-
-    public function testTheShareLineIsForAnAccountBehindLogins(): void
-    {
-        AmpConfig::set('use_auth', true, true);
-
-        self::assertTrue($this->view(mayUse: true)->showShare());
-        self::assertFalse($this->view(mayUse: false)->showShare());
-    }
-
-    public function testTheShareLineIsForEveryVisitorWhenThereAreNoLogins(): void
-    {
-        AmpConfig::set('use_auth', false, true);
-
-        self::assertTrue($this->view(mayUse: false)->showShare());
+        self::assertTrue($this->view($guest)->showShare());
+        self::assertFalse($this->view(null)->showShare());
     }
 
     protected function setUp(): void
     {
-        foreach (['use_auth', 'share'] as $key) {
+        foreach (['share', 'share_line_access_level'] as $key) {
             $this->config[$key] = AmpConfig::get($key);
         }
 
         AmpConfig::set('share', true, true);
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
     }
 
     protected function tearDown(): void
@@ -74,16 +64,16 @@ class AlbumPageViewTest extends TestCase
         }
     }
 
-    private function view(bool $mayUse): AlbumPageView
+    private function view(?User $user): AlbumPageView
     {
         return new AlbumPageView(
             $this->createMock(Album::class),
             $this->createMock(BrowseFactoryInterface::class),
-            null,
+            $user,
             '/amp',
             false,
             false,
-            $mayUse,
+            false,
             false
         );
     }

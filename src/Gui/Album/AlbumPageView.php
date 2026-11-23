@@ -365,12 +365,9 @@ final class AlbumPageView extends AbstractView
         return (bool) AmpConfig::get('use_rss');
     }
 
-    /**
-     * The share line is for anyone the page is open to; without logins that is every visitor
-     */
     public function showShare(): bool
     {
-        return (!AmpConfig::get('use_auth') || $this->mayUse) && AmpConfig::get('share');
+        return ShareLineView::isOfferedTo($this->currentUser);
     }
 
     public function showShout(): bool

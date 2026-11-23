@@ -371,7 +371,7 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
             ratingKey: $this->song->getId() . '_song',
             note: $this->getPlayNote(),
             links: $this->getExternalLinks(),
-            share: ($this->showShare())
+            share: (ShareLineView::isOfferedTo($this->gatekeeper->getUser()))
                 ? new ShareLineView('song', $this->song->getId(), $this->song->get_link(), $this->configContainer->getWebPath(), $this->canShare())->render()
                 : '',
             primaryAction: $this->getPrimaryHeaderAction(),
@@ -831,18 +831,6 @@ final class SongViewAdapter extends AbstractView implements SongViewAdapterInter
                 && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             )
         );
-    }
-
-    /**
-     * The share line is for anyone the page is open to; without logins that is every visitor
-     */
-    public function showShare(): bool
-    {
-        return (
-            $this->configContainer->isAuthenticationEnabled() === false
-            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        )
-            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     #[Override]

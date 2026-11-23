@@ -25,8 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Plugin\PluginEnum;
 use Ampache\Plugin\PluginExternalShareInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use DI\FactoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -41,12 +44,32 @@ use Psr\Log\LoggerInterface;
  */
 class ShareLineViewTest extends TestCase
 {
+    /** @var array<string, mixed> */
+    private array $config = [];
+
+    // a level the list never offers falls back to accounts rather than opening the line to guests
+    public function testAnUnknownLevelOffersTheLineToAccounts(): void
+    {
+        AmpConfig::set('share_line_access_level', 7, true);
+
+        self::assertFalse(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::GUEST)));
+        self::assertTrue(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::USER)));
+    }
+
     // the page router would reload the page on a plain link, and without the href no keyboard reaches it
     public function testCopyLinkIsAPlainLinkTheRouterLeavesAlone(): void
     {
         $html = $this->render(mayShareAdvanced: false);
 
         self::assertStringContainsString('<a class="nohtml" href="https://music.example/song.php?action=show_song&amp;song_id=7"', $html);
+    }
+
+    // the level list shows 0 as Disabled, so it hides the line even from an admin
+    public function testDisabledOffersTheLineToNobody(): void
+    {
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::DEFAULT->value, true);
+
+        self::assertFalse(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::ADMIN)));
     }
 
     // a network without its own svg shows the red error icon in the share line
@@ -59,12 +82,37 @@ class ShareLineViewTest extends TestCase
         }
     }
 
+    // behind logins a visitor who has not signed in gets no line, even at the guest level
+    public function testNobodySignedInIsOfferedNothing(): void
+    {
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+
+        self::assertFalse(ShareLineView::isOfferedTo(null));
+    }
+
+    // without logins the visitor is the guest user, so guest is the level that opens the line to everyone
+    public function testTheLevelTheAdminSetDecides(): void
+    {
+        $guest = $this->user(AccessLevelEnum::GUEST);
+        self::assertFalse(ShareLineView::isOfferedTo($guest));
+
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        self::assertTrue(ShareLineView::isOfferedTo($guest));
+    }
+
     public function testTheLineCarriesThePermalinkForAnyVisitor(): void
     {
         $html = $this->render(mayShareAdvanced: false);
 
         self::assertStringContainsString('data-copy-link="https://music.example/song.php?action=show_song&amp;song_id=7"', $html);
         self::assertStringNotContainsString('data-share-dialog', $html);
+    }
+
+    public function testTheLineGoesWithTheFeature(): void
+    {
+        AmpConfig::set('share', false, true);
+
+        self::assertFalse(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::ADMIN)));
     }
 
     public function testTheLinkIsEscapedOnItsWayOut(): void
@@ -91,6 +139,13 @@ class ShareLineViewTest extends TestCase
 
     protected function setUp(): void
     {
+        foreach (['share', 'share_line_access_level'] as $key) {
+            $this->config[$key] = AmpConfig::get($key);
+        }
+
+        AmpConfig::set('share', true, true);
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
+
         // the installed plugins are read through the global container, and none is installed here
         $dic = $this->createMockForIntersectionOfInterfaces([ContainerInterface::class, FactoryInterface::class]);
         $dic->method('get')
@@ -101,8 +156,23 @@ class ShareLineViewTest extends TestCase
         $GLOBALS['dic'] = $dic;
     }
 
+    protected function tearDown(): void
+    {
+        foreach ($this->config as $key => $value) {
+            AmpConfig::set($key, $value, true);
+        }
+    }
+
     private function render(bool $mayShareAdvanced, string $link = 'https://music.example/song.php?action=show_song&song_id=7'): string
     {
         return new ShareLineView('song', 7, $link, '/amp', $mayShareAdvanced)->render();
+    }
+
+    private function user(AccessLevelEnum $level): User
+    {
+        $user         = $this->createMock(User::class);
+        $user->access = $level->value;
+
+        return $user;
     }
 }

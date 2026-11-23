@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Partial\ShareLineView;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessFunctionEnum;
@@ -44,7 +45,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -67,7 +67,6 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         private FunctionCheckerInterface $functionChecker,
         private ShareCreatorInterface $shareCreator,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        private ModelFactoryInterface $modelFactory,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
@@ -77,6 +76,11 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $gatekeeper->getUser();
+        if (!$user instanceof User || !ShareLineView::isOfferedTo($user)) {
             throw new AccessDeniedException();
         }
 
@@ -96,11 +100,6 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         $objectId = (int) $this->requestParser->getFromRequest('id');
 
         if ($this->configContainer->isAuthenticationEnabled()) {
-            $user = $gatekeeper->getUser();
-            if (!$user instanceof User) {
-                throw new AccessDeniedException();
-            }
-
             $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD))
                 || $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 
@@ -119,7 +118,6 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             $text  = $share->getObjectName();
         } else {
             // the page is open to everyone, so its own address is the link and no share is created
-            $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
             $item     = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
             $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
 

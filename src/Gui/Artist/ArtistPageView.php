@@ -139,7 +139,7 @@ final class ArtistPageView extends AbstractView
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
                 : '',
             links: $this->getExternalLinks()->render(),
-            share: ($this->showShare())
+            share: (ShareLineView::isOfferedTo($this->currentUser))
                 ? new ShareLineView('artist', $this->getArtistId(), $this->artist->get_link(), $this->webPath, $this->mayUse)->render()
                 : '',
             notice: ($this->artist->isEnabled()) ? '' : T_('Disabled'),
@@ -319,14 +319,6 @@ final class ArtistPageView extends AbstractView
     public function showRss(): bool
     {
         return (bool) AmpConfig::get('use_rss');
-    }
-
-    /**
-     * The share line is for anyone the page is open to; without logins that is every visitor
-     */
-    public function showShare(): bool
-    {
-        return (!AmpConfig::get('use_auth') || $this->mayUse) && AmpConfig::get('share');
     }
 
     public function showShout(): bool

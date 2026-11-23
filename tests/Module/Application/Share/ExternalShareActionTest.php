@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Share;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
@@ -39,7 +41,6 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -59,10 +60,12 @@ use Psr\Log\LoggerInterface;
  */
 class ExternalShareActionTest extends TestCase
 {
+    /** @var array<string, mixed> */
+    private array $config = [];
+
     private ConfigContainerInterface&MockObject $configContainer;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
-    private ModelFactoryInterface&MockObject $modelFactory;
     private AmpacheMastodon&MockObject $plugin;
     private ServerRequestInterface&MockObject $request;
     private RequestParserInterface&MockObject $requestParser;
@@ -362,6 +365,23 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+    // the level is checked before the plugin is even built, so a refused visitor costs nothing
+    public function testAVisitorBelowTheShareLevelIsRefused(): void
+    {
+        $this->publicInstance();
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
+        $this->request('song', 7);
+
+        $this->plugin->expects(static::never())
+            ->method('load');
+        $this->libraryItemLoader->expects(static::never())
+            ->method('load');
+
+        static::expectException(AccessDeniedException::class);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testAWithdrawnAlbumIsRefused(): void
     {
         $this->publicInstance();
@@ -395,19 +415,25 @@ class ExternalShareActionTest extends TestCase
         $this->expectRefusal($artist);
     }
 
-    // an instance with no site title still posts a whole sentence, never a dangling "on" with nothing after it
     protected function setUp(): void
     {
         $this->requestParser     = $this->createMock(RequestParserInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
         $this->shareCreator      = $this->createMock(ShareCreatorInterface::class);
         $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
         $this->response          = $this->createMock(ResponseInterface::class);
         $this->plugin            = $this->createMock(AmpacheMastodon::class);
         $this->user              = $this->createMock(User::class);
         $this->request           = $this->createMock(ServerRequestInterface::class);
         $this->gatekeeper        = $this->createMock(GuiGatekeeperInterface::class);
+        $this->user->access      = AccessLevelEnum::USER->value;
+
+        foreach (['share', 'share_line_access_level'] as $key) {
+            $this->config[$key] = AmpConfig::get($key);
+        }
+
+        AmpConfig::set('share', true, true);
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
 
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->method('createResponse')
@@ -421,8 +447,7 @@ class ExternalShareActionTest extends TestCase
             $responseFactory,
             $this->createMock(FunctionCheckerInterface::class),
             $this->shareCreator,
-            $this->libraryItemLoader,
-            $this->modelFactory
+            $this->libraryItemLoader
         );
 
         // `new Plugin()` builds its controller from the global container, so the mastodon plugin is this mock
@@ -435,6 +460,13 @@ class ExternalShareActionTest extends TestCase
             ->willReturn($this->createMock(LoggerInterface::class));
         $GLOBALS['dic'] = $dic;
         $_GET['plugin'] = 'mastodon';
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->config as $key => $value) {
+            AmpConfig::set($key, $value, true);
+        }
     }
 
     /**
@@ -456,7 +488,7 @@ class ExternalShareActionTest extends TestCase
     }
 
     /**
-     * No logins, nobody signed in, and the visitor may see catalog 3 only
+     * No logins, the visitor is the guest user, guests may share, and the visitor may see catalog 3 only
      */
     private function publicInstance(): void
     {
@@ -471,10 +503,9 @@ class ExternalShareActionTest extends TestCase
             ->with(ConfigurationKeyEnum::SITE_TITLE)
             ->willReturn('Music');
         $this->gatekeeper->method('getUser')
-            ->willReturn(null);
-        $this->modelFactory->method('createUser')
-            ->with(-1)
             ->willReturn($this->user);
+        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        $this->user->access   = AccessLevelEnum::GUEST->value;
         $this->user->catalogs = ['music' => [3]];
     }
 

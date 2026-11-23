@@ -25,14 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\Partial;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\View\AbstractView;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * One line for song, album and artist pages: any visitor copies or posts the permalink, accounts also share
+ * One line for song, album and artist pages: copy or post the link, and accounts also get the share dialog
  */
 final class ShareLineView extends AbstractView
 {
@@ -43,6 +47,20 @@ final class ShareLineView extends AbstractView
         private readonly string $webPath,
         private readonly bool $mayShareAdvanced,
     ) {}
+
+    /**
+     * Sharing is on and the visitor reaches `share_line_access_level`, which Disabled (0) closes to everyone
+     */
+    public static function isOfferedTo(?User $user): bool
+    {
+        $level = AccessLevelEnum::tryFrom((int) AmpConfig::get(ConfigurationKeyEnum::SHARE_LINE_ACCESS_LEVEL, AccessLevelEnum::USER->value))
+            ?? AccessLevelEnum::USER;
+
+        return AmpConfig::get(ConfigurationKeyEnum::SHARE)
+            && $level !== AccessLevelEnum::DEFAULT
+            && $user instanceof User
+            && $user->access >= $level->value;
+    }
 
     public function getLink(): string
     {

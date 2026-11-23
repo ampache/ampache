@@ -155,6 +155,7 @@ final class PreferenceHelpCatalog
             'podcast_keep' => new PreferenceHelp(T_('Episodes past this many newest ones are deleted from a podcast once a sync has downloaded something. 0 keeps every episode.')),
             'podcast_new_download' => new PreferenceHelp(T_('How many freshly published episodes a sync downloads. 0 means all of them and -1 means none, so 0 is not the way to turn downloads off.')),
             'quickconnect_enable' => new PreferenceHelp(T_('Let a device pair by showing a short code instead of asking for a password.'), 'https://ampache.org/docs/configuration/api/'),
+            'share_line_access_level' => new PreferenceHelp(T_('Lowest access level offered the share line on song, album and artist pages, Disabled hides it. Set it to Guest to let visitors of an instance without logins share too.')),
             'share_expire' => new PreferenceHelp(T_('Days a new share link stays valid, used when the person creating it picks no date. 0 creates links that never expire.')),
             'stream_beautiful_url' => new PreferenceHelp(T_('Write stream and art URLs as paths instead of query strings, which needs the rewrite rules in the web server. API responses always use plain query strings regardless, and the UPnP backend always uses the rewritten form.'), 'https://ampache.org/docs/configuration/'),
             'subsonic_backend' => new PreferenceHelp(T_('Serve the Subsonic API, used by many third-party players.'), 'https://ampache.org/api/subsonic'),
