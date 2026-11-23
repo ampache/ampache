@@ -29,14 +29,18 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Add share_line_access_level, the lowest access level offered the share line
+ * Add share_line_access_level, who gets the share line, and share_text, the sentence posted with the link
  */
 final class Migration850003 extends AbstractMigration
 {
-    protected array $changelog = ['Add `share_line_access_level` to choose who gets the share line, guests included'];
+    protected array $changelog = [
+        'Add `share_line_access_level` to choose who gets the share line, guests included',
+        'Add `share_text`, the sentence posted with a shared link',
+    ];
 
     public function migrate(): void
     {
         $this->updatePreferences('share_line_access_level', 'Share Line Access Level', AccessLevelEnum::USER->value, AccessLevelEnum::ADMIN->value, 'special', 'system', 'share');
+        $this->updatePreferences('share_text', 'Share text posted with the link', '', AccessLevelEnum::ADMIN->value, 'string', 'system', 'share');
     }
 }

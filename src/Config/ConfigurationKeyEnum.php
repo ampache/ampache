@@ -217,6 +217,7 @@ final class ConfigurationKeyEnum
     public const string SHARE                                  = 'share';
     public const string SHARE_EXPIRE                           = 'share_expire';
     public const string SHARE_LINE_ACCESS_LEVEL                = 'share_line_access_level';
+    public const string SHARE_TEXT                             = 'share_text';
     public const string SHOW_COLLECTION                        = 'show_collection';
     public const string SHOW_DONATE                            = 'show_donate';
     public const string SHOW_FOLDER                            = 'show_folder';

@@ -115,7 +115,10 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 
             $share = new Share($share_id);
             $url   = $share->public_url ?? throw new AccessDeniedException('Access Denied - Unable to create share');
-            $text  = $share->getObjectName();
+
+            // the share went through, so the item gets the same sentence as without logins, anything else its name
+            $item = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
+            $text = ($item instanceof container_item) ? $this->shareText($item, $user) : $share->getObjectName();
         } else {
             // the page is open to everyone, so its own address is the link and no share is created
             $item     = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
@@ -134,7 +137,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             }
 
             $url  = $item->get_link();
-            $text = $this->shareText($item);
+            $text = $this->shareText($item, $user);
         }
 
         $plugin->load($user);
@@ -148,11 +151,88 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
     }
 
     /**
+     * Fills in each {name}; a [part] holding an empty one is left out, so no dangling "by" is posted
+     *
+     * @param array<string, string> $values
+     */
+    private function fillShareText(string $text, array $values): string
+    {
+        $text = (string) preg_replace_callback(
+            '/\[([^][]*)]/',
+            static function (array $part) use ($values): string {
+                preg_match_all('/{(\w+)}/', $part[1], $names);
+                foreach ($names[1] as $name) {
+                    if (($values[$name] ?? '') === '') {
+                        return '';
+                    }
+                }
+
+                return $part[1];
+            },
+            $text
+        );
+
+        $pairs = [];
+        foreach ($values as $name => $value) {
+            $pairs['{' . $name . '}'] = $value;
+        }
+
+        // strtr replaces in one pass, so a title that itself reads {site} is posted as typed
+        return trim(strtr($text, $pairs));
+    }
+
+    /**
+     * The first three tags as hashtags, stripped of the spaces and signs a network would cut a hashtag at
+     *
+     * @param array<int, array{name: string}> $tags
+     */
+    private function hashtags(array $tags): string
+    {
+        $hashtags = [];
+        foreach ($tags as $tag) {
+            $word = (string) preg_replace('/[^\p{L}\p{N}_]+/u', '', $tag['name']);
+            // a tag made only of signs would post a bare #
+            if ($word !== '') {
+                $hashtags[] = '#' . $word;
+            }
+        }
+
+        return implode(' ', array_slice($hashtags, 0, 3));
+    }
+
+    /**
      * The sentence posted before the link, as the visitor would say it
      */
-    private function shareText(container_item $item): string
+    private function shareText(container_item $item, User $user): string
     {
         $parent = $item->get_parent_fullname();
+        $site   = (string) $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE);
+
+        $custom = trim((string) $this->configContainer->get(ConfigurationKeyEnum::SHARE_TEXT));
+        if ($custom !== '') {
+            return $this->fillShareText($custom, [
+                'title' => (string) $item->get_fullname(),
+                'artist' => match (true) {
+                    $item instanceof Artist => (string) $item->get_fullname(),
+                    $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk => $parent,
+                    default => '',
+                },
+                'album' => match (true) {
+                    $item instanceof Song => $item->get_album_fullname(),
+                    $item instanceof Album, $item instanceof AlbumDisk => $item->get_fullname(),
+                    default => '',
+                },
+                'site' => $site,
+                'tags' => match (true) {
+                    $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk,
+                    $item instanceof Artist, $item instanceof Video => $this->hashtags($item->get_tags()),
+                    default => '',
+                },
+                // the visitor without an account is the guest user, who has no name worth posting
+                'user' => ($user->id > 0) ? (string) $user->get_fullname() : '',
+                'license' => ($item instanceof Song) ? (string) $item->getLicense()?->getName() : '',
+            ]);
+        }
 
         // a whole sentence per kind of item, so a translator places the names where the language wants
         $sentence = match (true) {
@@ -168,6 +248,6 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             default => T_("I'm listening to %1\$s by %2\$s on %3\$s"),
         };
 
-        return sprintf($sentence, (string) $item->get_fullname(), $parent, (string) $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE));
+        return sprintf($sentence, (string) $item->get_fullname(), $parent, $site);
     }
 }

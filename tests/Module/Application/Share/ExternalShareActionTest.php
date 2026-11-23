@@ -41,6 +41,7 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -71,6 +72,10 @@ class ExternalShareActionTest extends TestCase
     private RequestParserInterface&MockObject $requestParser;
     private ResponseInterface&MockObject $response;
     private ShareCreatorInterface&MockObject $shareCreator;
+
+    /** the admin's `share_text`, empty for the built-in sentences */
+    private string $shareText = '';
+
     private ExternalShareAction $subject;
     private User&MockObject $user;
 
@@ -415,6 +420,115 @@ class ExternalShareActionTest extends TestCase
         $this->expectRefusal($artist);
     }
 
+    // a song without an artist drops the bracketed part, so no dangling "by" reaches the network
+    public function testTheAdminsTextDropsAPartWhoseVariableIsEmpty(): void
+    {
+        $this->shareText = '{site}: {title}[ by {artist}] ({album})';
+
+        self::assertSame('Music: Some song (Some album)', $this->postedText($this->song('', 'Some song')));
+    }
+
+    // a name that happens to read like a variable is posted as typed, never filled in again
+    public function testTheAdminsTextFillsInOnePass(): void
+    {
+        $this->shareText = '{title} on {site}';
+
+        self::assertSame('Live at {site} on Music', $this->postedText($this->song('Some artist', 'Live at {site}')));
+    }
+
+    // the admin picks the variables and their order, and leaves out the ones they do not want
+    public function testTheAdminsTextIsPostedWithTheVariablesItUses(): void
+    {
+        $this->shareText = '{site}: {title}[ by {artist}] ({album})';
+
+        self::assertSame('Music: Some song by Some artist (Some album)', $this->postedText($this->song('Some artist', 'Some song')));
+    }
+
+    // an optional part at the end of the text leaves no trailing space behind
+    public function testTheAdminsTextIsTrimmed(): void
+    {
+        $this->shareText = '{title} [{tags}]';
+
+        self::assertSame('Some song', $this->postedText($this->song('Some artist', 'Some song')));
+    }
+
+    // a visitor without an account is the guest user, whose placeholder name would be posted otherwise
+    public function testTheAdminsTextLeavesTheGuestUnnamed(): void
+    {
+        $this->shareText = '[{user} recommends ]{title}';
+
+        $this->user->id = -1;
+        $this->user->method('get_fullname')
+            ->willReturn('Guest');
+
+        self::assertSame('Some song', $this->postedText($this->song('Some artist', 'Some song')));
+    }
+
+    // on an album page the album and its artist fill the same variables a song page does
+    public function testTheAdminsTextNamesAnAlbumLikeASong(): void
+    {
+        $this->shareText = '{album} by {artist}';
+
+        $album          = $this->createMock(Album::class);
+        $album->catalog = 3;
+        $album->method('get_fullname')
+            ->willReturn('Curses');
+        $album->method('get_parent_fullname')
+            ->willReturn('ProleteR');
+
+        self::assertSame('Curses by ProleteR', $this->postedText($album));
+    }
+
+    // on an artist page the artist is the page itself
+    public function testTheAdminsTextNamesTheArtistOfAnArtistPage(): void
+    {
+        $this->shareText = 'Discover {artist}';
+
+        $artist = $this->createMock(Artist::class);
+        $artist->method('get_fullname')
+            ->willReturn('ProleteR');
+
+        self::assertSame('Discover ProleteR', $this->postedText($artist));
+    }
+
+    public function testTheAdminsTextNamesTheLicense(): void
+    {
+        $this->shareText = '{title}[ ({license})]';
+
+        $license = $this->createMock(License::class);
+        $license->method('getName')
+            ->willReturn('CC BY-SA');
+        $song = $this->song('Some artist', 'Some song');
+        $song->method('getLicense')
+            ->willReturn($license);
+
+        self::assertSame('Some song (CC BY-SA)', $this->postedText($song));
+    }
+
+    // someone signed in is named where the admin put {user}
+    public function testTheAdminsTextNamesWhoShares(): void
+    {
+        $this->shareText = '[{user} recommends ]{title}';
+
+        $this->user->id = 12;
+        $this->user->method('get_fullname')
+            ->willReturn('Alan');
+
+        self::assertSame('Alan recommends Some song', $this->postedText($this->song('Some artist', 'Some song')));
+    }
+
+    // a network cuts a hashtag at a space or a sign, so each tag is one word, and a tag of signs alone is skipped
+    public function testTheAdminsTextPostsTheTagsAsHashtags(): void
+    {
+        $this->shareText = '{title} {tags}';
+
+        $song = $this->song('Some artist', 'Some song');
+        $song->method('get_tags')
+            ->willReturn([['name' => 'Drum & Bass'], ['name' => '&'], ['name' => 'électro'], ['name' => 'dub'], ['name' => 'jazz']]);
+
+        self::assertSame('Some song #DrumBass #électro #dub', $this->postedText($song));
+    }
+
     protected function setUp(): void
     {
         $this->requestParser     = $this->createMock(RequestParserInterface::class);
@@ -488,6 +602,36 @@ class ExternalShareActionTest extends TestCase
     }
 
     /**
+     * Shares the item from a public instance and returns the sentence the network was handed
+     */
+    private function postedText(MockObject $item): string
+    {
+        $this->publicInstance();
+        $this->request('song', 7);
+
+        $item->method('isVisible')
+            ->willReturn(true);
+        $item->method('get_link')
+            ->willReturn('https://music.example/');
+        $this->libraryItemLoader->method('load')
+            ->willReturn($item);
+
+        $posted = '';
+        $this->plugin->method('external_share')
+            ->willReturnCallback(function (string $url, string $text) use (&$posted): string {
+                $posted = $text;
+
+                return 'https://social.example/share';
+            });
+        $this->response->method('withHeader')
+            ->willReturnSelf();
+
+        $this->subject->run($this->request, $this->gatekeeper);
+
+        return $posted;
+    }
+
+    /**
      * No logins, the visitor is the guest user, guests may share, and the visitor may see catalog 3 only
      */
     private function publicInstance(): void
@@ -500,8 +644,10 @@ class ExternalShareActionTest extends TestCase
         $this->configContainer->method('isAuthenticationEnabled')
             ->willReturn(false);
         $this->configContainer->method('get')
-            ->with(ConfigurationKeyEnum::SITE_TITLE)
-            ->willReturn('Music');
+            ->willReturnCallback(fn(string $key): string => match ($key) {
+                ConfigurationKeyEnum::SITE_TITLE => 'Music',
+                ConfigurationKeyEnum::SHARE_TEXT => $this->shareText,
+            });
         $this->gatekeeper->method('getUser')
             ->willReturn($this->user);
         AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
@@ -516,5 +662,19 @@ class ExternalShareActionTest extends TestCase
                 ['type', $type],
                 ['id', (string) $id],
             ]);
+    }
+
+    private function song(string $artist, string $title): Song&MockObject
+    {
+        $song          = $this->createMock(Song::class);
+        $song->catalog = 3;
+        $song->method('get_fullname')
+            ->willReturn($title);
+        $song->method('get_parent_fullname')
+            ->willReturn($artist);
+        $song->method('get_album_fullname')
+            ->willReturn('Some album');
+
+        return $song;
     }
 }
