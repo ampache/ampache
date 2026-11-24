@@ -199,7 +199,11 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     );
                     if ($media->id && $verificationMode == 1) {
                         // Verify Existing files
-                        Catalog::update_media_from_tags($media);
+                        $info = Catalog::update_media_from_tags($media);
+                        // video/podcast episodes have no field-level diff, so any change is treated as needing a mapping/garbage pass
+                        if ($info['has_garbage'] ?? ($info['change'] ?? false)) {
+                            $changed++;
+                        }
                     }
 
                     if ($searchArtMode == 1 && $file_id) {
@@ -261,7 +265,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 $changed += $catalog->add_files($folderPath, $options);
             }
 
-            if (($verificationMode == 1 && $file_ids !== []) || $changed > 0) {
+            if ($changed > 0) {
                 $interactor->info(
                     T_('Update table mapping, counts and delete garbage data'),
                     true

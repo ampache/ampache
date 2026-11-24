@@ -2282,6 +2282,7 @@ abstract class Catalog extends database_object
      *     change?: bool,
      *     element?: array<string, string>,
      *     maps?: bool,
+     *     has_garbage?: bool,
      *     error?: bool
      * }
      */
@@ -2426,11 +2427,8 @@ abstract class Catalog extends database_object
             echo "<tbody>\n";
         }
 
-        $album   = false;
-        $artist  = false;
-        $tags    = false;
-        $maps    = false;
-        $changed = false;
+        $has_garbage = false;
+        $changed     = false;
         foreach ($songs as $song_id) {
             $diff = false;
             $song = new Song($song_id);
@@ -2439,12 +2437,9 @@ abstract class Catalog extends database_object
             } else {
                 $info = self::update_media_from_tags($song);
 
-                $changed = $changed || ($info['change'] ?? false);
-                $diff    = array_key_exists('element', $info) && $info['element'] !== [];
-                $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
-                $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));
-                $tags    = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-                $maps    = ($maps) || array_key_exists('maps', $info);
+                $changed     = $changed || ($info['change'] ?? false);
+                $diff        = array_key_exists('element', $info) && $info['element'] !== [];
+                $has_garbage = $has_garbage || ($info['has_garbage'] ?? false);
             }
 
             // don't echo useless info when using api
@@ -2478,9 +2473,7 @@ abstract class Catalog extends database_object
         $artists = [];
 
         if ($libitem instanceof Album) {
-            if (
-                $artist || $album || $tags || $maps
-            ) {
+            if ($has_garbage) {
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
@@ -2502,12 +2495,12 @@ abstract class Catalog extends database_object
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true, from_file_tags: true);
             // update incorrect counts for album_disk
             if ($libitem->album_count > 0 && $libitem->album_disk_count === 0) {
-                $maps = true;
+                $has_garbage = true;
             }
         }
 
         if ($type !== 'song') {
-            if ($album || $artist || $maps) {
+            if ($has_garbage) {
                 // make sure all the counts are up to date for each artist after changes
                 foreach ($artists as $artistId) {
                     Artist::update_artist_count($artistId);
@@ -2523,8 +2516,8 @@ abstract class Catalog extends database_object
 
         return [
             'object_id' => $return_id,
-            'change' => ($changed || $album || $artist || $maps || $tags),
-            'has_garbage' => ($album || $artist || $maps || $tags),
+            'change' => ($changed || $has_garbage),
+            'has_garbage' => $has_garbage,
         ];
     }
 
@@ -2699,6 +2692,7 @@ abstract class Catalog extends database_object
      *     change: bool,
      *     element: array<string, string>,
      *     maps?: bool,
+     *     has_garbage: bool,
      *     error?: bool
      * }
      */
@@ -3208,12 +3202,12 @@ abstract class Catalog extends database_object
             $info['change'] = true;
         }
 
-        if (
-            $map_change
+        $info['has_garbage'] = $map_change
             || array_key_exists('album', $info['element'])
             || array_key_exists('artist', $info['element'])
-            || array_key_exists('tags', $info['element'])
-        ) {
+            || array_key_exists('tags', $info['element']);
+
+        if ($info['has_garbage']) {
             self::updateAlbumTags($song->album);
             self::updateArtistTags($song->album, $song->id);
         }
