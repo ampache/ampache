@@ -199,7 +199,10 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     );
                     if ($media->id && $verificationMode == 1) {
                         // Verify Existing files
-                        Catalog::update_media_from_tags($media);
+                        $info = Catalog::update_media_from_tags($media);
+                        if ($info['has_garbage'] ?? false) {
+                            $changed++;
+                        }
                     }
 
                     if ($searchArtMode == 1 && $file_id) {
@@ -261,7 +264,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 $changed += $catalog->add_files($folderPath, $options);
             }
 
-            if (($verificationMode == 1 && $file_ids !== []) || $changed > 0) {
+            if ($changed > 0) {
                 $interactor->info(
                     T_('Update table mapping, counts and delete garbage data'),
                     true

@@ -33,8 +33,6 @@ use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\database_object;
 use Ampache\Module\Playback\Tmp_Playlist;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\Plugin;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -561,16 +559,6 @@ class User extends database_object
     /**
      * @deprecated inject dependency
      */
-    private static function getStats(): Stats
-    {
-        global $dic;
-
-        return $dic->get(Stats::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
     private static function getStreamControlIpActivityRepository(): StreamControlIpActivityRepositoryInterface
     {
         global $dic;
@@ -1050,71 +1038,6 @@ class User extends database_object
         foreach (self::getUserRepository()->getPreferenceValues($this->id) as $row) {
             $this->prefs[$row['name']] = $row['value'];
         }
-    }
-
-    /**
-     * update
-     * This function is an all encompassing update function that
-     * calls the mini ones does all the error checking and all that
-     * good stuff
-     * @param array<string, mixed> $data
-     */
-    public function update(array $data): ?int
-    {
-        if (
-            empty($data['username'])
-            && in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
-        ) {
-            AmpError::add('username', T_('Username is required'));
-        }
-
-        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
-            AmpError::add('password', T_("Passwords do not match"));
-        }
-
-        if (AmpError::occurred()) {
-            return null;
-        }
-
-        if (!isset($data['fullname_public'])) {
-            $data['fullname_public'] = false;
-        }
-
-        foreach ($data as $name => $value) {
-            if ($name == 'password1') {
-                $name = 'password';
-            } elseif ($name !== 'fullname_public') {
-                $value = scrub_in($value);
-            }
-
-            switch ($name) {
-                case 'access':
-                case 'catalog_filter_group':
-                case 'city':
-                case 'email':
-                case 'fullname_public':
-                case 'fullname':
-                case 'state':
-                case 'username':
-                case 'website':
-                    if ($this->$name != $value) {
-                        $function = 'update_' . $name;
-                        $this->$function($value);
-                    }
-                    break;
-                case 'password':
-                    // there is no plaintext `$this->password` to compare against, so a non-empty submission always applies
-                    if (!empty($value)) {
-                        $this->update_password((string) $value);
-                    }
-                    break;
-                case 'clear_stats':
-                    self::getStats()->clear($this->id);
-                    break;
-            }
-        }
-
-        return $this->id;
     }
 
     /**
