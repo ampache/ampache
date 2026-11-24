@@ -68,7 +68,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
 
 ### Removed (8.5.0)
 
-* 97 images in `public/images` that nothing served any more: the old png icons, the top menu pngs shadowed by their svg and unused logos
+* Images in `public/images` that are not served any more by the site
 
 ### Fixed (8.5.0)
 
