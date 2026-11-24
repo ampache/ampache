@@ -34,6 +34,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
@@ -55,6 +56,7 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private SymmetricEncrypterInterface $symmetricEncrypter,
         private UserRepositoryInterface $userRepository,
+        private Stats $stats,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,11 +87,6 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         // Remove the value
         unset($_SESSION['forms']['account']);
 
-        // Don't let them change access, catalog_filter_group, or username here
-        unset($_POST['access']);
-        unset($_POST['catalog_filter_group']);
-        $_POST['username'] = $user->username;
-
         $mandatory_fields = $this->configContainer->getArray(ConfigurationKeyEnum::REGISTRATION_MANDATORY_FIELDS);
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
             AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
@@ -107,18 +104,41 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
             AmpError::add('city', T_("Please fill in your city"));
         }
 
-        // The Subsonic password is stored reversibly encrypted rather than sha256 hashed, so it never goes through
-        // User::update() with the login password and is applied separately once the rest of the form has been accepted.
+        $password = (string) ($_POST['password1'] ?? '');
+        if ($password !== '' && $password !== (string) ($_POST['password2'] ?? '')) {
+            AmpError::add('password', T_("Passwords do not match"));
+        }
+
+        // stored reversibly encrypted rather than hashed, so it is applied apart once the rest of the form is accepted
         $subsonicPassword = (string) ($_POST['subsonic_password1'] ?? '');
         if ($subsonicPassword !== '' && $subsonicPassword !== (string) ($_POST['subsonic_password2'] ?? '')) {
             AmpError::add('subsonic_password', T_("Passwords do not match"));
         }
 
         $this->ui->showHeader();
-        /** @see User::update() */
-        if (!$user->update($_POST)) {
+        if (AmpError::occurred()) {
             AmpError::add('general', T_('Update failed'));
         } else {
+            // only what this form sends, so the admin-only fields (access, username, public full name) stay as they are
+            foreach (['fullname', 'email', 'website', 'state', 'city'] as $field) {
+                if (!isset($_POST[$field])) {
+                    continue;
+                }
+
+                $value = scrub_in((string) $_POST[$field]);
+                if ($value !== (string) $user->$field) {
+                    $user->{'update_' . $field}($value);
+                }
+            }
+
+            if ($password !== '') {
+                $user->update_password($password);
+            }
+
+            if (isset($_POST['clear_stats'])) {
+                $this->stats->clear($user->getId());
+            }
+
             $user->upload_avatar();
             $this->updateSubsonicSecret($user, $subsonicPassword);
             display_notification(T_('User updated successfully'));

@@ -72,6 +72,7 @@ The web player's lyrics button now sits with the player's action buttons on ever
 
 ### Fixed (8.5.0)
 
+* Saving your own account made a full name the admin had set public private again
 * The lyrics page showed songs from catalogs the user can't access
 * Song pages had no lyrics link unless `show_lyrics` was enabled
 * A scan dropped the word timings from embedded enhanced (word-timed) LRC lyrics
