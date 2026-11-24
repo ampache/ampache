@@ -210,6 +210,27 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+    // a podcast has no page to ask, so the share decides, as it did before the share line
+    public function testAPrivateInstanceLeavesAnItemWithoutAPageToItsShare(): void
+    {
+        $this->privateInstance();
+        $this->request('podcast_episode', 2);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn(null);
+
+        // a failed creation refuses, which is the one outcome reachable without a database behind the share
+        $this->shareCreator->expects(static::once())
+            ->method('create')
+            ->with($this->user, LibraryItemEnum::PODCAST_EPISODE, 2)
+            ->willReturn(null);
+
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access Denied - Unable to create share');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
     public function testAPrivateInstanceRefusesAVisitorWithoutAnAccount(): void
     {
         $this->configContainer->method('isFeatureEnabled')
@@ -231,23 +252,38 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-    public function testAPrivateInstanceStillGoesThroughAShare(): void
+    // an account outside the album's catalog gets no share row, and the network never hears its name
+    public function testAPrivateInstanceSharesNothingThePageHides(): void
     {
-        $this->configContainer->method('isFeatureEnabled')
-            ->willReturnMap([
-                [ConfigurationKeyEnum::SHARE, true],
-                [ConfigurationKeyEnum::DEMO_MODE, false],
-            ]);
-        $this->configContainer->method('isAuthenticationEnabled')
-            ->willReturn(true);
-        $this->gatekeeper->method('getUser')
-            ->willReturn($this->user);
+        $this->privateInstance();
         $this->request('album', 4);
 
-        $this->libraryItemLoader->expects(static::never())
-            ->method('load');
+        $album = $this->createMock(Album::class);
+        $album->method('isShownTo')
+            ->with($this->user)
+            ->willReturn(false);
 
-        // a failed creation refuses, which is the one outcome reachable without a database behind the share
+        $this->libraryItemLoader->method('load')
+            ->willReturn($album);
+
+        $this->shareCreator->expects(static::never())
+            ->method('create');
+
+        $this->expectRefusal($album);
+    }
+
+    public function testAPrivateInstanceStillGoesThroughAShare(): void
+    {
+        $this->privateInstance();
+        $this->request('album', 4);
+
+        $album = $this->createMock(Album::class);
+        $album->method('isShownTo')
+            ->willReturn(true);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn($album);
+
         $this->shareCreator->expects(static::once())
             ->method('create')
             ->with($this->user, LibraryItemEnum::ALBUM, 4)
@@ -600,6 +636,22 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
 
         return $posted;
+    }
+
+    /**
+     * Logins on, and the account asking may share
+     */
+    private function privateInstance(): void
+    {
+        $this->configContainer->method('isFeatureEnabled')
+            ->willReturnMap([
+                [ConfigurationKeyEnum::SHARE, true],
+                [ConfigurationKeyEnum::DEMO_MODE, false],
+            ]);
+        $this->configContainer->method('isAuthenticationEnabled')
+            ->willReturn(true);
+        $this->gatekeeper->method('getUser')
+            ->willReturn($this->user);
     }
 
     /**
