@@ -128,7 +128,7 @@ final class ArtSelectionView extends AbstractView
         return sprintf(
             '%s/images/%s.png',
             $this->webPath,
-            ($this->objectType === 'folder') ? 'folder' : 'blankalbum'
+            ($this->objectType === 'folder') ? 'blankfolder' : 'blankalbum'
         );
     }
 

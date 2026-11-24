@@ -66,6 +66,10 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * Structured lyrics carry an LRC file's `[offset:]` as `offset`
   * Enhanced lyrics carry `end` on a line and its cues when the Enhanced LRC line states one with a closing time tag
 
+### Removed (8.5.0)
+
+* Images in `public/images` that are not served any more by the site
+
 ### Fixed (8.5.0)
 
 * The lyrics page showed songs from catalogs the user can't access
