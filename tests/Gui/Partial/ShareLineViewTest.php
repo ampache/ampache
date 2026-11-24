@@ -83,14 +83,14 @@ class ShareLineViewTest extends TestCase
     }
 
     // behind logins a visitor who has not signed in gets no line, even at the guest level
-    public function testNobodySignedInIsOfferedNothing(): void
+    public function testSomeoneNotSignedInIsOfferedNothing(): void
     {
         AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
 
         self::assertFalse(ShareLineView::isOfferedTo(null));
     }
 
-    // without logins the visitor is the guest user, so guest is the level that opens the line to everyone
+    // without logins the visitor is the guest user, so the guest level opens the line to everyone
     public function testTheLevelTheAdminSetDecides(): void
     {
         $guest = $this->user(AccessLevelEnum::GUEST);

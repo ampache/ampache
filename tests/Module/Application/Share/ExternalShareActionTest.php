@@ -43,6 +43,8 @@ use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -210,23 +212,41 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-    // a podcast has no page to ask, so the share decides, as it did before the share line
-    public function testAPrivateInstanceLeavesAnItemWithoutAPageToItsShare(): void
+    // a smartlist is checked by the share itself, as it was before the share line
+    public function testAPrivateInstanceLeavesASmartlistToItsShare(): void
     {
         $this->privateInstance();
-        $this->request('podcast_episode', 2);
+        $this->request('search', 2);
 
         $this->libraryItemLoader->method('load')
             ->willReturn(null);
 
-        // a failed creation refuses, which is the one outcome reachable without a database behind the share
+        // a failed creation refuses, the one outcome reachable without a database behind the share
         $this->shareCreator->expects(static::once())
             ->method('create')
-            ->with($this->user, LibraryItemEnum::PODCAST_EPISODE, 2)
+            ->with($this->user, LibraryItemEnum::SEARCH, 2)
             ->willReturn(null);
 
         static::expectException(AccessDeniedException::class);
         static::expectExceptionMessage('Access Denied - Unable to create share');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    // a link to nothing would still write a share row, so an unknown id stops before the share
+    public function testAPrivateInstanceRefusesAnIdThatNamesNothing(): void
+    {
+        $this->privateInstance();
+        $this->request('song', 999);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn(null);
+
+        $this->shareCreator->expects(static::never())
+            ->method('create');
+
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access Denied - Unknown or hidden object');
 
         $this->subject->run($this->request, $this->gatekeeper);
     }
@@ -250,6 +270,48 @@ class ExternalShareActionTest extends TestCase
         static::expectException(AccessDeniedException::class);
 
         $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testAPrivateInstanceSharesAnEpisodeFromTheAccountsCatalogs(): void
+    {
+        $this->privateInstance();
+        $this->request('podcast_episode', 2);
+
+        $episode = $this->createMock(Podcast_Episode::class);
+        $episode->method('getCatalogId')
+            ->willReturn(5);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn($episode);
+
+        $this->shareCreator->expects(static::once())
+            ->method('create')
+            ->with($this->user, LibraryItemEnum::PODCAST_EPISODE, 2)
+            ->willReturn(null);
+
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access Denied - Unable to create share');
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    // the episode page refuses an account outside the podcast catalog, so the share does too
+    public function testAPrivateInstanceSharesNoEpisodeOutsideTheAccountsCatalogs(): void
+    {
+        $this->privateInstance();
+        $this->request('podcast_episode', 2);
+
+        $episode = $this->createMock(Podcast_Episode::class);
+        $episode->method('getCatalogId')
+            ->willReturn(9);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn($episode);
+
+        $this->shareCreator->expects(static::never())
+            ->method('create');
+
+        $this->expectRefusal($episode);
     }
 
     // an account outside the album's catalog gets no share row, and the network never hears its name
@@ -329,7 +391,7 @@ class ExternalShareActionTest extends TestCase
 
         $this->libraryItemLoader->expects(static::once())
             ->method('load')
-            ->with(LibraryItemEnum::SONG, 7, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class])
+            ->with(LibraryItemEnum::SONG, 7, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Podcast::class, Podcast_Episode::class, Video::class])
             ->willReturn($song);
 
         // the tell: no share row is ever written for a visitor
@@ -350,6 +412,41 @@ class ExternalShareActionTest extends TestCase
             ->willReturnSelf();
 
         self::assertSame($this->response, $this->subject->run($this->request, $this->gatekeeper));
+    }
+
+    // only a share carries a podcast, and without logins no share is ever written
+    public function testAPublicInstanceNeverLinksAPodcast(): void
+    {
+        $this->publicInstance();
+        $this->request('podcast', 3);
+
+        $podcast = $this->createMock(Podcast::class);
+        $podcast->method('getCatalogId')
+            ->willReturn(5);
+        $this->user->catalogs = ['podcast' => [5]];
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn($podcast);
+
+        $this->expectRefusal($podcast);
+    }
+
+    // a smartlist only travels as a share, and a visitor without an account never writes one
+    public function testAPublicInstanceNeverSharesASmartlist(): void
+    {
+        $this->publicInstance();
+        $this->request('search', 2);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn(null);
+
+        $this->shareCreator->expects(static::never())
+            ->method('create');
+
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access Denied - Unknown or hidden object');
+
+        $this->subject->run($this->request, $this->gatekeeper);
     }
 
     public function testASongItsPageHidesIsRefused(): void
@@ -526,7 +623,7 @@ class ExternalShareActionTest extends TestCase
         self::assertSame('Alan recommends Some song', $this->postedText($this->song('Some artist', 'Some song')));
     }
 
-    // a network cuts a hashtag at a space or a sign, so each tag is one word, and a tag of signs alone is skipped
+    // a network cuts a hashtag at a space or a sign, so each tag is one word, a tag of signs alone skipped
     public function testTheAdminsTextPostsTheTagsAsHashtags(): void
     {
         $this->shareText = '{title} {tags}';
@@ -573,7 +670,7 @@ class ExternalShareActionTest extends TestCase
             $this->libraryItemLoader
         );
 
-        // `new Plugin()` builds its controller from the global container, so the mastodon plugin is this mock
+        // `new Plugin()` builds its controller from the global container, so mastodon is this mock
         $dic = $this->createMockForIntersectionOfInterfaces([ContainerInterface::class, FactoryInterface::class]);
         $dic->method('make')
             ->with(AmpacheMastodon::class)
@@ -639,7 +736,7 @@ class ExternalShareActionTest extends TestCase
     }
 
     /**
-     * Logins on, and the account asking may share
+     * Logins on, the account asking may share, and it sees podcast catalog 5 only
      */
     private function privateInstance(): void
     {
@@ -652,6 +749,7 @@ class ExternalShareActionTest extends TestCase
             ->willReturn(true);
         $this->gatekeeper->method('getUser')
             ->willReturn($this->user);
+        $this->user->catalogs = ['podcast' => [5]];
     }
 
     /**

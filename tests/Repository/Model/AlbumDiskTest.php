@@ -111,7 +111,7 @@ class AlbumDiskTest extends TestCase
         self::assertSame(LibraryItemEnum::ALBUM_DISK, $subject->getMediaType());
     }
 
-    // the disk page and a shared link refuse alike: outside the viewer's catalogs, or its album withdrawn
+    // the disk page and a shared link refuse alike: outside the viewer's catalogs, or album withdrawn
     public function testIsShownToNeedsTheViewersCatalogAndAnEnabledAlbum(): void
     {
         $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);

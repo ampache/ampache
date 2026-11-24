@@ -370,7 +370,7 @@ $(document).on("click", "a[data-copy-link]", function (event) {
     var link   = this.getAttribute("data-copy-link");
     var notice = this.getAttribute("data-copy-notice");
 
-    // the clipboard api only exists on https; plain http, usual on a home server, copies from a selected field
+    // the clipboard api is https only; plain http, usual on a home server, copies from a selected field
     if (navigator.clipboard) {
         navigator.clipboard.writeText(link).then(function () {
             displayNotification(notice, 3000);
@@ -399,7 +399,7 @@ if (navigator.share) {
     });
 }
 
-// The advanced share is the same dialog the row icons open, reached from the share line without inline script
+// The advanced share is the dialog the row icons open, reached from the share line without inline script
 $(document).on("click", "a[data-share-dialog]", function (event) {
     showShareDialog(event, this.getAttribute("data-share-dialog"), this.getAttribute("data-share-id"));
 });

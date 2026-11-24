@@ -46,6 +46,8 @@ use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -59,8 +61,17 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'external_share';
 
-    /** The items that have a show page: the only ones linked without a share or named in the sentence */
-    private const array SHAREABLE_ITEMS = [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class];
+    /** The items whose own page decides if they are shared; a smartlist is left to the share, which checks it */
+    private const array SHAREABLE_ITEMS = [
+        Song::class,
+        Album::class,
+        AlbumDisk::class,
+        Artist::class,
+        Playlist::class,
+        Podcast::class,
+        Podcast_Episode::class,
+        Video::class,
+    ];
 
     public function __construct(
         private RequestParserInterface $requestParser,
@@ -109,9 +120,12 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         $shown = match (true) {
             $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk => $item->isShownTo($user),
             $item instanceof Artist, $item instanceof Playlist => $item->isVisible($user),
+            // never linked bare: only a share carries a podcast, so there must be logins to share one
+            $item instanceof Podcast, $item instanceof Podcast_Episode => $logins
+                && in_array($item->getCatalogId(), $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id)),
             $item instanceof Video => true,
-            // a podcast or a smartlist has no page to ask, so only a share carries it, with the share's own refusals
-            default => $logins,
+            // a smartlist is checked by the share itself, and an id that names nothing is refused
+            default => $logins && $type === LibraryItemEnum::SEARCH,
         };
         if (!$shown) {
             throw new AccessDeniedException('Access Denied - Unknown or hidden object');
@@ -138,7 +152,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             $share = new Share($share_id);
             $url   = $share->public_url ?? throw new AccessDeniedException('Access Denied - Unable to create share');
 
-            // a podcast or a smartlist has no sentence of its own, so it is posted under the name its share gives it
+            // a smartlist has no sentence of its own, so it is posted under its share's name
             $text = ($item instanceof container_item) ? $this->shareText($item, $user) : $share->getObjectName();
         }
 

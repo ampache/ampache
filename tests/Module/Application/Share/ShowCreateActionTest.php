@@ -39,7 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowCreateActionTest extends TestCase
 {
-    // the artist page offers the advanced share, so its form has to load an artist instead of staying empty
+    // the artist page offers the advanced share, so its form loads an artist instead of staying empty
     public function testTheFormLoadsAnArtist(): void
     {
         $configContainer = $this->createStub(ConfigContainerInterface::class);

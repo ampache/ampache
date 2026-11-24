@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 use Override;
 
 /**
- * One line for song, album and artist pages: copy or post the link, and accounts also get the share dialog
+ * One line for song, album and artist pages: copy or post the link, and an account gets the share dialog
  */
 final class ShareLineView extends AbstractView
 {
@@ -49,7 +49,7 @@ final class ShareLineView extends AbstractView
     ) {}
 
     /**
-     * Sharing is on and the visitor reaches `share_line_access_level`, which Disabled (0) closes to everyone
+     * Sharing is on and the visitor reaches `share_line_access_level`; Disabled (0) hides it from everyone
      */
     public static function isOfferedTo(?User $user): bool
     {
