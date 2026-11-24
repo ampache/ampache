@@ -43,7 +43,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -68,11 +67,10 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $user        = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs    = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $query       = $request->getQueryParams();
         $albumDiskId = (int) ($query['album_disk'] ?? 0);
         $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
-        $shown       = !$albumDisk->isNew() && in_array($albumDisk->catalog, $catalogs) && $albumDisk->isVisible($user);
+        $shown       = !$albumDisk->isNew() && $albumDisk->isShownTo($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if (!empty($query['embed'])) {

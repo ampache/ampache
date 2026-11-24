@@ -44,7 +44,6 @@ use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -70,11 +69,10 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $query    = $request->getQueryParams();
         $albumId  = (int) ($query['album'] ?? 0);
         $album    = $this->modelFactory->createAlbum($albumId);
-        $shown    = !$album->isNew() && ($album->catalog === 0 || in_array($album->catalog, $catalogs)) && $album->isVisible($user);
+        $shown    = !$album->isNew() && $album->isShownTo($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if (!empty($query['embed'])) {

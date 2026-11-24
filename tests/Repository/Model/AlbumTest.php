@@ -36,6 +36,30 @@ use Psr\Container\ContainerInterface;
 
 class AlbumTest extends MockeryTestCase
 {
+    // an album spread over several catalogs (0) is shown like its page shows it, a withdrawn one never
+    public function testIsShownToNeedsTheViewersCatalogAndAnEnabledAlbum(): void
+    {
+        $this->bootDic($this->mock(AlbumRepositoryInterface::class), false);
+
+        $viewer           = $this->createMock(User::class);
+        $viewer->catalogs = ['music' => [3]];
+
+        $album          = new Album();
+        $album->catalog = 3;
+
+        self::assertTrue($album->isShownTo($viewer));
+
+        $album->catalog = 0;
+        self::assertTrue($album->isShownTo($viewer));
+
+        $album->catalog = 9;
+        self::assertFalse($album->isShownTo($viewer));
+
+        $album->catalog = 3;
+        $album->enabled = false;
+        self::assertFalse($album->isShownTo($viewer));
+    }
+
     /**
      * release_type and release_status are unrelated fields that are almost never equal to each other, so a
      * comparison that mixed them up used to rewrite release_status on every save of an album, changed or not

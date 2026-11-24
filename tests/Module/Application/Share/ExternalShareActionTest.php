@@ -79,15 +79,15 @@ class ExternalShareActionTest extends TestCase
     private ExternalShareAction $subject;
     private User&MockObject $user;
 
-    public function testADiskOutsideTheVisitorsCatalogsIsRefused(): void
+    public function testADiskItsPageHidesIsRefused(): void
     {
         $this->publicInstance();
         $this->request('album_disk', 5);
 
-        $disk          = $this->createMock(AlbumDisk::class);
-        $disk->catalog = 9;
-        $disk->method('isVisible')
-            ->willReturn(true);
+        $disk = $this->createMock(AlbumDisk::class);
+        $disk->method('isShownTo')
+            ->with($this->user)
+            ->willReturn(false);
 
         $this->libraryItemLoader->method('load')
             ->willReturn($disk);
@@ -108,15 +108,30 @@ class ExternalShareActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
+    public function testAnAlbumItsPageHidesIsRefused(): void
+    {
+        $this->publicInstance();
+        $this->request('album', 4);
+
+        $album = $this->createMock(Album::class);
+        $album->method('isShownTo')
+            ->with($this->user)
+            ->willReturn(false);
+
+        $this->libraryItemLoader->method('load')
+            ->willReturn($album);
+
+        $this->expectRefusal($album);
+    }
+
     // an album is named as one, so the reader knows the link holds more than a song
     public function testAnAlbumSaysItIsOne(): void
     {
         $this->publicInstance();
         $this->request('album', 4);
 
-        $album          = $this->createMock(Album::class);
-        $album->catalog = 3;
-        $album->method('isVisible')
+        $album = $this->createMock(Album::class);
+        $album->method('isShownTo')
             ->willReturn(true);
         $album->method('get_fullname')
             ->willReturn('Curses');
@@ -131,33 +146,6 @@ class ExternalShareActionTest extends TestCase
         $this->plugin->expects(static::once())
             ->method('external_share')
             ->with('https://music.example/albums.php?action=show&album=4', "I'm listening to the album Curses by ProleteR on Music")
-            ->willReturn('https://social.example/share');
-        $this->response->method('withHeader')
-            ->willReturnSelf();
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testAnOrphanedAlbumIsShownLikeItsPage(): void
-    {
-        $this->publicInstance();
-        $this->request('album', 4);
-
-        $album          = $this->createMock(Album::class);
-        $album->catalog = 0;
-        $album->method('isVisible')
-            ->willReturn(true);
-        $album->method('get_link')
-            ->willReturn('https://music.example/albums.php?action=show&album=4');
-        $album->method('get_fullname')
-            ->willReturn('Orphans');
-
-        $this->libraryItemLoader->method('load')
-            ->willReturn($album);
-
-        $this->plugin->expects(static::once())
-            ->method('external_share')
-            ->with('https://music.example/albums.php?action=show&album=4', "I'm listening to Orphans on Music")
             ->willReturn('https://social.example/share');
         $this->response->method('withHeader')
             ->willReturnSelf();
@@ -292,9 +280,8 @@ class ExternalShareActionTest extends TestCase
         $this->publicInstance();
         $this->request('song', 7);
 
-        $song          = $this->createMock(Song::class);
-        $song->catalog = 3;
-        $song->method('isVisible')
+        $song = $this->createMock(Song::class);
+        $song->method('isShownTo')
             ->with($this->user)
             ->willReturn(true);
         $song->method('get_link')
@@ -329,15 +316,15 @@ class ExternalShareActionTest extends TestCase
         self::assertSame($this->response, $this->subject->run($this->request, $this->gatekeeper));
     }
 
-    public function testASongOutsideTheVisitorsCatalogsIsRefused(): void
+    public function testASongItsPageHidesIsRefused(): void
     {
         $this->publicInstance();
         $this->request('song', 7);
 
-        $song          = $this->createMock(Song::class);
-        $song->catalog = 9;
-        $song->method('isVisible')
-            ->willReturn(true);
+        $song = $this->createMock(Song::class);
+        $song->method('isShownTo')
+            ->with($this->user)
+            ->willReturn(false);
 
         $this->libraryItemLoader->method('load')
             ->willReturn($song);
@@ -385,23 +372,6 @@ class ExternalShareActionTest extends TestCase
         static::expectException(AccessDeniedException::class);
 
         $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testAWithdrawnAlbumIsRefused(): void
-    {
-        $this->publicInstance();
-        $this->request('album', 4);
-
-        $album          = $this->createMock(Album::class);
-        $album->catalog = 3;
-        $album->method('isVisible')
-            ->with($this->user)
-            ->willReturn(false);
-
-        $this->libraryItemLoader->method('load')
-            ->willReturn($album);
-
-        $this->expectRefusal($album);
     }
 
     public function testAWithdrawnArtistIsRefused(): void
@@ -469,8 +439,9 @@ class ExternalShareActionTest extends TestCase
     {
         $this->shareText = '{album} by {artist}';
 
-        $album          = $this->createMock(Album::class);
-        $album->catalog = 3;
+        $album = $this->createMock(Album::class);
+        $album->method('isShownTo')
+            ->willReturn(true);
         $album->method('get_fullname')
             ->willReturn('Curses');
         $album->method('get_parent_fullname')
@@ -485,6 +456,8 @@ class ExternalShareActionTest extends TestCase
         $this->shareText = 'Discover {artist}';
 
         $artist = $this->createMock(Artist::class);
+        $artist->method('isVisible')
+            ->willReturn(true);
         $artist->method('get_fullname')
             ->willReturn('ProleteR');
 
@@ -609,8 +582,6 @@ class ExternalShareActionTest extends TestCase
         $this->publicInstance();
         $this->request('song', 7);
 
-        $item->method('isVisible')
-            ->willReturn(true);
         $item->method('get_link')
             ->willReturn('https://music.example/');
         $this->libraryItemLoader->method('load')
@@ -632,7 +603,7 @@ class ExternalShareActionTest extends TestCase
     }
 
     /**
-     * No logins, the visitor is the guest user, guests may share, and the visitor may see catalog 3 only
+     * No logins, the visitor is the guest user, and guests may share
      */
     private function publicInstance(): void
     {
@@ -651,8 +622,7 @@ class ExternalShareActionTest extends TestCase
         $this->gatekeeper->method('getUser')
             ->willReturn($this->user);
         AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
-        $this->user->access   = AccessLevelEnum::GUEST->value;
-        $this->user->catalogs = ['music' => [3]];
+        $this->user->access = AccessLevelEnum::GUEST->value;
     }
 
     private function request(string $type, int $id): void
@@ -666,8 +636,9 @@ class ExternalShareActionTest extends TestCase
 
     private function song(string $artist, string $title): Song&MockObject
     {
-        $song          = $this->createMock(Song::class);
-        $song->catalog = 3;
+        $song = $this->createMock(Song::class);
+        $song->method('isShownTo')
+            ->willReturn(true);
         $song->method('get_fullname')
             ->willReturn($title);
         $song->method('get_parent_fullname')

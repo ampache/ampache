@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionProperty;
 
 class AlbumDiskTest extends TestCase
 {
@@ -107,6 +109,34 @@ class AlbumDiskTest extends TestCase
         self::assertTrue($subject->isNew());
         self::assertSame(0, $subject->getId());
         self::assertSame(LibraryItemEnum::ALBUM_DISK, $subject->getMediaType());
+    }
+
+    // the disk page and a shared link refuse alike: outside the viewer's catalogs, or its album withdrawn
+    public function testIsShownToNeedsTheViewersCatalogAndAnEnabledAlbum(): void
+    {
+        $privilegeChecker = $this->createMock(PrivilegeCheckerInterface::class);
+        $dic              = $this->createMock(ContainerInterface::class);
+        $dic->method('get')
+            ->with(PrivilegeCheckerInterface::class)
+            ->willReturn($privilegeChecker);
+        $GLOBALS['dic'] = $dic;
+
+        $viewer           = $this->createMock(User::class);
+        $viewer->catalogs = ['music' => [3]];
+
+        $disk          = new AlbumDisk();
+        $disk->catalog = 3;
+
+        $album = new ReflectionProperty(AlbumDisk::class, 'album')->getValue($disk);
+
+        self::assertTrue($disk->isShownTo($viewer));
+
+        $album->enabled = false;
+        self::assertFalse($disk->isShownTo($viewer));
+
+        $album->enabled = true;
+        $disk->catalog  = 9;
+        self::assertFalse($disk->isShownTo($viewer));
     }
 
     protected function setUp(): void

@@ -124,13 +124,11 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             $text = ($item instanceof container_item) ? $this->shareText($item, $user) : $share->getObjectName();
         } else {
             // the page is open to everyone, so its own address is the link and no share is created
-            $item     = $this->libraryItemLoader->load($type, $objectId, self::SHAREABLE_ITEMS);
-            $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
+            $item = $this->libraryItemLoader->load($type, $objectId, self::SHAREABLE_ITEMS);
 
             // the same refusals as the show actions, so nothing a page hides is named or linked
             $shown = match (true) {
-                $item instanceof Song, $item instanceof AlbumDisk => in_array($item->catalog, $catalogs) && $item->isVisible($user),
-                $item instanceof Album => ($item->catalog === 0 || in_array($item->catalog, $catalogs)) && $item->isVisible($user),
+                $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk => $item->isShownTo($user),
                 $item instanceof Artist, $item instanceof Playlist => $item->isVisible($user),
                 $item instanceof Video => true,
                 default => false,

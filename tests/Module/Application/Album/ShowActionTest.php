@@ -72,10 +72,7 @@ class ShowActionTest extends MockeryTestCase
         $album      = $this->mock(Album::class);
         $user       = $this->mock(User::class);
 
-        $albumId        = 42;
-        $album->catalog = 1;
-
-        $user->catalogs['music'] = [1];
+        $albumId = 42;
 
         $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
@@ -117,10 +114,7 @@ class ShowActionTest extends MockeryTestCase
         $album      = $this->mock(Album::class);
         $user       = $this->mock(User::class);
 
-        $albumId        = 42;
-        $album->catalog = 1;
-
-        $user->catalogs['music'] = [1];
+        $albumId = 42;
 
         $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()

@@ -1002,6 +1002,15 @@ class Album extends database_object implements
     }
 
     /**
+     * What the album page answers: an album spread over several catalogs (0) is not filtered by one
+     */
+    public function isShownTo(User $user): bool
+    {
+        return ($this->catalog === 0 || in_array($this->catalog, $user->catalogs['music'] ?? User::get_user_catalogs($user->id)))
+            && $this->isVisible($user);
+    }
+
+    /**
      * update
      * This function takes a key'd array of data and updates this object
      * as needed
