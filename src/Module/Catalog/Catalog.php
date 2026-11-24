@@ -2444,7 +2444,7 @@ abstract class Catalog extends database_object
                 $album   = ($album) || ($diff && array_key_exists('album', $info['element']));
                 $artist  = ($artist) || ($diff && array_key_exists('artist', $info['element']));
                 $tags    = ($tags) || ($diff && array_key_exists('tags', $info['element']));
-                $maps    = ($maps) || ($diff && array_key_exists('maps', $info));
+                $maps    = ($maps) || array_key_exists('maps', $info);
             }
 
             // don't echo useless info when using api
@@ -3209,16 +3209,12 @@ abstract class Catalog extends database_object
         }
 
         if (
-            self::updateAlbumTags($song->album)
-            || $map_change
-            || (
-                $info['change'] && (
-                    array_key_exists('album', $info['element'])
-                    || array_key_exists('artist', $info['element'])
-                    || array_key_exists('tags', $info['element'])
-                )
-            )
+            $map_change
+            || array_key_exists('album', $info['element'])
+            || array_key_exists('artist', $info['element'])
+            || array_key_exists('tags', $info['element'])
         ) {
+            self::updateAlbumTags($song->album);
             self::updateArtistTags($song->album, $song->id);
         }
 
