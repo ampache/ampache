@@ -986,9 +986,9 @@ class Catalog_local extends Catalog
                 'podcast_episode' => self::getPodcastEpisodeRepository()->deleteByIdsWithArchive($dead),
                 default => $this->deleteSongsAndRefreshCounts($dead),
             };
-        }
 
-        $this->getMetadataManager()->collectGarbage();
+            $this->getMetadataManager()->collectGarbage();
+        }
 
         // clean built this cache with real-case keys; add_file()'s lookups are lowercased, so it must rebuild its own.
         $this->_filecache = [];
@@ -1501,7 +1501,7 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', sprintf('Verify finished, %d updated in ', $this->count) . $this->name, 5);
-        if ($interactor == null && $gather_type === 'music') {
+        if ($this->count > 0 && $gather_type === 'music') {
             $this->getArtistRepository()->collectGarbage();
             $this->getAlbumRepository()->collectGarbage();
         }
