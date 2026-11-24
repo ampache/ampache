@@ -1124,6 +1124,7 @@ final class VaInfo implements VaInfoInterface
         * This hasn't been tested on Windows and there is evidence that
         * metaflac.exe behaves differently.
         */
+        $backupFilename = null;
         if ($extension !== 'mp3') {
             if (php_uname('s') === 'Linux') {
                 /**
@@ -1143,13 +1144,30 @@ final class VaInfo implements VaInfoInterface
                 }
             }
 
+            // metaflac/vorbiscomment rewrite via rename, which isn't atomic on a networked mount and can delete the original.
+            $backupFilename = $this->_backupBeforeExternalTagWrite($this->filename);
+            if ($backupFilename === null) {
+                $this->logger->error(
+                    sprintf('Writing Tags: could not create a safety backup of %s, tags not written', $this->filename),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+
+                return;
+            }
+
             if (GETID3_OS_ISWINDOWS) {
-                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename) . ' 2>&1';
             } else {
-                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename) . ' 2>&1';
             }
 
             $commandError = shell_exec($command);
+            if (!empty($commandError)) {
+                $this->logger->error(
+                    'Error Writing Tags: ' . $commandError,
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
         }
 
         if ($tagWriter->WriteTags()) {
@@ -1167,6 +1185,23 @@ final class VaInfo implements VaInfoInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
+
+        if ($backupFilename !== null) {
+            $this->_restoreFromBackupIfTagWriteDestroyedFile($this->filename, $backupFilename);
+        }
+    }
+
+    /**
+     * Copies $filename to a backup path beside it, so a failed external tag-writer rewrite
+     * (metaflac/vorbiscomment) can be rolled back. Returns the backup path, or null on failure.
+     */
+    private function _backupBeforeExternalTagWrite(string $filename): ?string
+    {
+        $backupFilename = $filename . '.ampache-tagwrite-backup-' . bin2hex(random_bytes(4));
+
+        return (copy($filename, $backupFilename))
+            ? $backupFilename
+            : null;
     }
 
     /**
@@ -2333,6 +2368,29 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $parsed;
+    }
+
+    /**
+     * Restores $filename from $backupFilename when the external tag writer left it missing or
+     * empty, then always removes the backup copy so it never lingers on disk.
+     */
+    private function _restoreFromBackupIfTagWriteDestroyedFile(string $filename, string $backupFilename): void
+    {
+        if (!is_file($filename) || filesize($filename) === 0) {
+            if (copy($backupFilename, $filename)) {
+                $this->logger->error(
+                    sprintf('Writing Tags: external tag writer destroyed %s, restored from backup', $filename),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            } else {
+                $this->logger->error(
+                    sprintf('Writing Tags: external tag writer destroyed %s and the backup restore failed, file is lost', $filename),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+
+        unlink($backupFilename);
     }
 
     /**
