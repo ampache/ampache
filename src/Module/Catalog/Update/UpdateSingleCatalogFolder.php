@@ -200,8 +200,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     if ($media->id && $verificationMode == 1) {
                         // Verify Existing files
                         $info = Catalog::update_media_from_tags($media);
-                        // video/podcast episodes have no field-level diff, so any change is treated as needing a mapping/garbage pass
-                        if ($info['has_garbage'] ?? ($info['change'] ?? false)) {
+                        if ($info['has_garbage'] ?? false) {
                             $changed++;
                         }
                     }

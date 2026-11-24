@@ -2527,6 +2527,7 @@ abstract class Catalog extends database_object
      *     change: bool,
      *     element: array<string, string>,
      *     maps?: bool,
+     *     has_garbage: bool,
      *     error?: bool
      * }
      */
@@ -2586,6 +2587,9 @@ abstract class Catalog extends database_object
                 $info['change'] = true;
             }
         }
+
+        // a video has no album/artist mapping of its own, so any change is treated as needing a mapping/garbage pass
+        $info['has_garbage'] = $info['change'];
 
         return $info;
     }
@@ -3493,6 +3497,7 @@ abstract class Catalog extends database_object
      * @return array{
      *     change: bool,
      *     element: array<string, string>,
+     *     has_garbage: bool,
      * }
      */
     private static function _update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
@@ -3507,6 +3512,8 @@ abstract class Catalog extends database_object
         $array            = [];
         $array['change']  = true;
         $array['element'] = [];
+        // a podcast episode has no field-level diff, so every update is treated as needing a mapping/garbage pass
+        $array['has_garbage'] = true;
 
         $array['element']['podcast_episode'] = '';
 
