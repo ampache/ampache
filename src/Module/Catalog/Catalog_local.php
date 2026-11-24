@@ -2061,7 +2061,7 @@ class Catalog_local extends Catalog
             }
 
             try {
-                if (self::update_single_item($tableName, $row['id'], true, true)['change']) {
+                if (self::update_single_item($tableName, $row['id'], true, true)['has_garbage']) {
                     $changed++;
                 }
             } catch (Throwable $error) {

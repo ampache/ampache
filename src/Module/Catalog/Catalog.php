@@ -2370,6 +2370,7 @@ abstract class Catalog extends database_object
      * @return array{
      *     object_id: int,
      *     change: bool,
+     *     has_garbage: bool,
      * }
      */
     public static function update_single_item(string $type, int $object_id, bool $api = false, bool $multi_object = false): array
@@ -2404,7 +2405,8 @@ abstract class Catalog extends database_object
 
                 return [
                     'object_id' => $object_id,
-                    'change' => true
+                    'change' => true,
+                    'has_garbage' => true,
                 ];
             case 'video':
                 $video = new Video($object_id);
@@ -2412,7 +2414,8 @@ abstract class Catalog extends database_object
 
                 return [
                     'object_id' => $object_id,
-                    'change' => true
+                    'change' => true,
+                    'has_garbage' => true,
                 ];
         }
 
@@ -2521,6 +2524,7 @@ abstract class Catalog extends database_object
         return [
             'object_id' => $return_id,
             'change' => ($changed || $album || $artist || $maps || $tags),
+            'has_garbage' => ($album || $artist || $maps || $tags),
         ];
     }
 
