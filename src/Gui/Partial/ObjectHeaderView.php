@@ -140,9 +140,6 @@ final class ObjectHeaderView extends AbstractView
         return $this->ratingKey;
     }
 
-    /**
-     * The rendered share line, or nothing when the page offers no sharing
-     */
     public function getShare(): string
     {
         return $this->share;

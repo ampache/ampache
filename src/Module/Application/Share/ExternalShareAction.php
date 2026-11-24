@@ -59,6 +59,9 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'external_share';
 
+    /** The items that have a show page: the only ones linked without a share or named in the sentence */
+    private const array SHAREABLE_ITEMS = [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class];
+
     public function __construct(
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
@@ -94,7 +97,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
 
-        // a visitor can now reach this, so a made up type is refused instead of failing with a server error
+        // a visitor can reach this, so a made up type is refused rather than ending in a server error
         $type     = LibraryItemEnum::tryFrom($this->requestParser->getFromRequest('type'))
             ?? throw new AccessDeniedException('Access Denied - Unknown or hidden object');
         $objectId = (int) $this->requestParser->getFromRequest('id');
@@ -116,12 +119,12 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
             $share = new Share($share_id);
             $url   = $share->public_url ?? throw new AccessDeniedException('Access Denied - Unable to create share');
 
-            // the share went through, so the item gets the same sentence as without logins, anything else its name
-            $item = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
+            // a podcast or a smartlist has no sentence of its own, so it is posted under the name its share gives it
+            $item = $this->libraryItemLoader->load($type, $objectId, self::SHAREABLE_ITEMS);
             $text = ($item instanceof container_item) ? $this->shareText($item, $user) : $share->getObjectName();
         } else {
             // the page is open to everyone, so its own address is the link and no share is created
-            $item     = $this->libraryItemLoader->load($type, $objectId, [Song::class, Album::class, AlbumDisk::class, Artist::class, Playlist::class, Video::class]);
+            $item     = $this->libraryItemLoader->load($type, $objectId, self::SHAREABLE_ITEMS);
             $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
 
             // the same refusals as the show actions, so nothing a page hides is named or linked
