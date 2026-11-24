@@ -80,9 +80,8 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'lyrics':
                 // stored lyrics only: the player asks on every track change, which is no time to call out to a lyrics site
-                $song     = new Song((int) $this->requestParser->getFromRequest('song_id'));
-                $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->getId());
-                $text     = ($song->isNew() || !$song->isVisible($user) || !in_array($song->catalog, $catalogs))
+                $song = new Song((int) $this->requestParser->getFromRequest('song_id'));
+                $text = ($song->isNew() || !$song->isShownTo($user))
                     ? ''
                     : ($song->get_lyrics(true)['text'] ?? '');
 

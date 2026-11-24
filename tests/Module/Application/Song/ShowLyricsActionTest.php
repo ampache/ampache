@@ -45,14 +45,15 @@ class ShowLyricsActionTest extends MockeryTestCase
     private GuiGatekeeperInterface&MockInterface $gatekeeper;
     private ModelFactoryInterface&MockInterface $modelFactory;
     private RequestParserInterface&MockInterface $requestParser;
+    private bool $shown = true;
     private Song&MockInterface $song;
     private ShowLyricsAction $subject;
     private UiInterface&MockInterface $ui;
     private User&MockInterface $user;
 
-    public function testRunRefusesASongOutsideTheUsersCatalogs(): void
+    public function testRunRefusesASongItsPageHides(): void
     {
-        $this->user->catalogs['music'] = [2];
+        $this->shown = false;
 
         $this->expectException(ObjectNotFoundException::class);
 
@@ -99,14 +100,11 @@ class ShowLyricsActionTest extends MockeryTestCase
         $this->song          = $this->mock(Song::class);
         $this->user          = $this->mock(User::class);
 
-        $this->song->catalog            = 1;
-        $this->user->catalogs['music']  = [1];
-
         $this->requestParser->shouldReceive('getFromRequest')->with('song_id')->andReturn('42');
         $this->modelFactory->shouldReceive('createSong')->with(42)->andReturn($this->song);
         $this->gatekeeper->shouldReceive('getUser')->andReturn($this->user);
         $this->song->shouldReceive('isNew')->andReturnFalse();
-        $this->song->shouldReceive('isVisible')->with($this->user)->andReturnTrue();
+        $this->song->shouldReceive('isShownTo')->with($this->user)->andReturnUsing(fn(): bool => $this->shown);
         $this->song->shouldReceive('get_user_owner')->andReturn(7);
         $this->user->shouldReceive('getId')->andReturn(3);
 
