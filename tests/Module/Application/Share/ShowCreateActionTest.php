@@ -34,6 +34,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Podcast_Episode;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -54,6 +55,33 @@ class ShowCreateActionTest extends TestCase
         $libraryItemLoader->expects(static::once())
             ->method('load')
             ->with(LibraryItemEnum::ARTIST, 7, self::containsEqual(Artist::class))
+            ->willReturn(null);
+
+        new ShowCreateAction(
+            $requestParser,
+            $configContainer,
+            $this->createStub(UiInterface::class),
+            $this->createStub(PasswordGeneratorInterface::class),
+            $this->createStub(ZipHandlerInterface::class),
+            $libraryItemLoader,
+        )->run($this->createStub(ServerRequestInterface::class), $this->createStub(GuiGatekeeperInterface::class));
+    }
+
+    // an episode offers the advanced share too, so its form loads the episode instead of staying empty
+    public function testTheFormLoadsAnEpisode(): void
+    {
+        $configContainer = $this->createStub(ConfigContainerInterface::class);
+        $configContainer->method('isFeatureEnabled')
+            ->willReturn(true);
+
+        $requestParser = $this->createStub(RequestParserInterface::class);
+        $requestParser->method('getFromRequest')
+            ->willReturnMap([['type', 'podcast_episode'], ['id', '7']]);
+
+        $libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
+        $libraryItemLoader->expects(static::once())
+            ->method('load')
+            ->with(LibraryItemEnum::PODCAST_EPISODE, 7, self::containsEqual(Podcast_Episode::class))
             ->willReturn(null);
 
         new ShowCreateAction(

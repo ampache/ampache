@@ -61,8 +61,8 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'external_share';
 
-    /** The items whose own page decides if they are shared; a smartlist is left to the share, which checks it */
-    private const array SHAREABLE_ITEMS = [
+    /** The items shared one by one, here and in the share form; a smartlist is checked by its share */
+    public const array SHAREABLE_ITEMS = [
         Song::class,
         Album::class,
         AlbumDisk::class,
