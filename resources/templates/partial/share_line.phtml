@@ -1,0 +1,44 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// partial/share_line.phtml -- rendered by Ampache\Gui\Partial\ShareLineView
+
+use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Gui\Partial\ShareLineView $this */
+
+$type = $this->getObjectType();
+$id   = $this->getObjectId();
+$link = $this->getLink(); ?>
+<div class="object-header-share">
+    <span data-native-share="<?php echo $this->e($link); ?>"><?php echo $this->raw(Ui::get_material_symbol('share', T_('Share'))); ?><?php echo T_('Share'); ?></span>
+    <a class="nohtml" href="<?php echo $this->e($link); ?>" data-copy-link="<?php echo $this->e($link); ?>" data-copy-notice="<?php echo $this->e(T_('Link copied')); ?>" title="<?php echo $this->e($link); ?>"><?php echo $this->raw(Ui::get_material_symbol('content_copy', T_('Copy link'))); ?><?php echo T_('Copy link'); ?></a>
+<?php foreach ($this->getPluginIcons() as $name => $icon) { ?>
+    <a href="<?php echo $this->e($this->getWebPath()); ?>/share.php?action=external_share&plugin=<?php echo $this->e($name); ?>&type=<?php echo $this->e($type); ?>&id=<?php echo $id; ?>" target="_blank" rel="nofollow noopener"><?php echo $this->raw($icon); ?></a>
+<?php } ?>
+<?php if ($this->mayShareAdvanced()) { ?>
+    <a data-share-dialog="<?php echo $this->e($type); ?>" data-share-id="<?php echo $id; ?>"><?php echo $this->raw(Ui::get_material_symbol('tune', T_('Advanced Share'))); ?><?php echo T_('Advanced Share'); ?></a>
+<?php } ?>
+</div>

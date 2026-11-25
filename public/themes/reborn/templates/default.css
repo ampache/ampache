@@ -3652,6 +3652,43 @@ table.tabledata tbody tr.withdrawn > td:first-child {
     width: 20px;
 }
 
+.object-header-share {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.object-header-share > span,
+.object-header-share > a {
+    align-items: center;
+    display: inline-flex;
+    gap: 4px;
+}
+
+.object-header-share > span {
+    color: var(--amp-muted);
+}
+
+/* the advanced share opens a dialog and has no href, so the pointer has to say it is a link */
+.object-header-share > a {
+    cursor: pointer;
+}
+
+.object-header-share svg {
+    height: 18px;
+    width: 18px;
+}
+
+/* a touch screen shows no pointer, so where the share sheet works the label looks like a button */
+.can-share-natively .object-header-share > span {
+    background-color: var(--amp-accent);
+    border-radius: 20px;
+    color: var(--amp-accent-ink);
+    cursor: pointer;
+    padding: 4px 12px;
+}
+
 .object-header-note {
     color: var(--amp-muted);
     font-size: 12px;

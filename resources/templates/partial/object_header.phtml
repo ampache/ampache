@@ -40,6 +40,7 @@ $globalRating = $this->getGlobalRating();
 $ratingKey    = $this->getRatingKey();
 $note         = $this->getNote();
 $links        = $this->getLinks();
+$share        = $this->getShare();
 $tags         = $this->getTags();
 $notice       = $this->getNotice(); ?>
 <?php if ($notice !== '') { ?>
@@ -104,6 +105,9 @@ $notice       = $this->getNotice(); ?>
 <?php if ($links !== '') { ?>
         <div class="object-header-links"><?php echo $this->raw($links); ?></div>
 <?php } ?>
+<?php if ($share !== '') {
+    echo $this->raw($share);
+} ?>
     </div>
 </div>
 <?php if ($primary !== '' || $actions !== []) { ?>

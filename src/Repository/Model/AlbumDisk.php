@@ -599,6 +599,15 @@ class AlbumDisk extends database_object implements
         return $this->getId() === 0;
     }
 
+    /**
+     * What the disk page answers: nothing outside the viewer's catalogs, nothing withdrawn
+     */
+    public function isShownTo(User $user): bool
+    {
+        return in_array($this->catalog, $user->catalogs['music'] ?? User::get_user_catalogs($user->id))
+            && $this->isVisible($user);
+    }
+
     public function isVisible(?User $user = null): bool
     {
         return $this->album->isVisible($user);

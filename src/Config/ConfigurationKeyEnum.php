@@ -215,7 +215,9 @@ final class ConfigurationKeyEnum
     public const string SECRET_KEY                             = 'secret_key';
     public const string SESSION_NAME                           = 'session_name';
     public const string SHARE                                  = 'share';
+    public const string SHARE_ACCESS_LEVEL                     = 'share_access_level';
     public const string SHARE_EXPIRE                           = 'share_expire';
+    public const string SHARE_TEXT                             = 'share_text';
     public const string SHOW_COLLECTION                        = 'show_collection';
     public const string SHOW_DONATE                            = 'show_donate';
     public const string SHOW_FOLDER                            = 'show_folder';

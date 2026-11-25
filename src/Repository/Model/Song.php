@@ -2194,6 +2194,15 @@ class Song extends database_object implements
     }
 
     /**
+     * What the song page answers: nothing outside the viewer's catalogs, nothing withdrawn
+     */
+    public function isShownTo(User $user): bool
+    {
+        return in_array($this->catalog, $user->catalogs['music'] ?? User::get_user_catalogs($user->id))
+            && $this->isVisible($user);
+    }
+
+    /**
      * play_url
      * This function takes all the song information and correctly formats a
      * stream URL taking into account the downsampling mojo and everything

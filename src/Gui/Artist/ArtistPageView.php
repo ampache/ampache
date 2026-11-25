@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\ExternalLinksView;
 use Ampache\Gui\Partial\HeaderChip;
 use Ampache\Gui\Partial\ObjectHeaderView;
+use Ampache\Gui\Partial\ShareLineView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
@@ -138,6 +139,9 @@ final class ArtistPageView extends AbstractView
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
                 : '',
             links: $this->getExternalLinks()->render(),
+            share: (ShareLineView::isOfferedTo($this->currentUser))
+                ? new ShareLineView('artist', $this->getArtistId(), $this->artist->get_link(), $this->webPath, $this->mayUse)->render()
+                : '',
             notice: ($this->artist->isEnabled()) ? '' : T_('Disabled'),
         );
     }

@@ -339,6 +339,31 @@ class SongTest extends MockeryTestCase
         $this->assertFalse($method->invoke(null, ''));
     }
 
+    // the song page and a shared link refuse alike: outside the viewer's catalogs, or withdrawn
+    public function testIsShownToNeedsTheViewersCatalogAndAnEnabledSong(): void
+    {
+        $privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+        $privilegeChecker->shouldReceive('check')->andReturnFalse();
+        $dic = $this->mock(ContainerInterface::class);
+        $dic->shouldReceive('get')->with(PrivilegeCheckerInterface::class)->andReturn($privilegeChecker);
+        $GLOBALS['dic'] = $dic;
+
+        $viewer           = $this->createMock(User::class);
+        $viewer->catalogs = ['music' => [3]];
+
+        $song          = new Song();
+        $song->catalog = 3;
+
+        self::assertTrue($song->isShownTo($viewer));
+
+        $song->enabled = false;
+        self::assertFalse($song->isShownTo($viewer));
+
+        $song->enabled = true;
+        $song->catalog = 9;
+        self::assertFalse($song->isShownTo($viewer));
+    }
+
     /**
      * The partial row carries the replaygain scalars and bpm, and no lyrics column at all: a read routed there
      * answers nothing, which reads exactly like a song that has no lyrics.

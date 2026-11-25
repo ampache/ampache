@@ -363,6 +363,47 @@ export function handleShareAction(url) {
     $("#sharedialog").dialog("close");
 }
 
+// Delegated like the ajax buttons, so a share line rendered into an ajax-loaded page copies too
+$(document).on("click", "a[data-copy-link]", function (event) {
+    event.preventDefault();
+
+    var link   = this.getAttribute("data-copy-link");
+    var notice = this.getAttribute("data-copy-notice");
+
+    // the clipboard api is https only; plain http, usual on a home server, copies from a selected field
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(link).then(function () {
+            displayNotification(notice, 3000);
+        });
+        return;
+    }
+
+    var field   = document.createElement("input");
+    field.value = link;
+    document.body.append(field);
+    field.select();
+    document.execCommand("copy");
+    field.remove();
+    displayNotification(notice, 3000);
+});
+
+// The phone's share sheet reaches every installed app, so where there is one the share label opens it
+if (navigator.share) {
+    document.documentElement.classList.add("can-share-natively");
+
+    $(document).on("click", "[data-native-share]", function () {
+        // the page title is the router's generic one, the link's own card names what is shared
+        navigator.share({ url: this.getAttribute("data-native-share") }).catch(function () {
+            // closing the sheet rejects the promise, and that is not an error
+        });
+    });
+}
+
+// The advanced share is the dialog the row icons open, reached from the share line without inline script
+$(document).on("click", "a[data-share-dialog]", function (event) {
+    showShareDialog(event, this.getAttribute("data-share-dialog"), this.getAttribute("data-share-id"));
+});
+
 /***************************************************/
 /* Edit modal dialog for artists, albums and songs */
 /***************************************************/

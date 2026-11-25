@@ -85,7 +85,8 @@ final class GetLyricsMethod implements MethodInterface
         $objectId = (int) $input['filter'];
         $libitem  = $this->modelFactory->createSong($objectId);
 
-        if ($libitem->isNew()) {
+        // a song outside the caller's catalogs or withdrawn is refused like an id that was never there
+        if ($libitem->isNew() || !$libitem->isShownTo($user)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,

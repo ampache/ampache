@@ -54,10 +54,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song       = $this->mock(Song::class);
         $user       = $this->mock(User::class);
 
-        $song_id       = 666;
-        $song->catalog = 1;
-
-        $user->catalogs['music'] = [1];
+        $song_id = 666;
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -118,10 +115,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song_id = 666;
         $content = 'some-content';
 
-        $song->id      = $song_id;
-        $song->catalog = 1;
-
-        $user->catalogs['music'] = [1];
+        $song->id = $song_id;
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -146,7 +140,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(false);
-        $song->shouldReceive('isVisible')
+        $song->shouldReceive('isShownTo')
             ->with($user)
             ->once()
             ->andReturn(true);

@@ -63,12 +63,7 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
         $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         $user    = $gatekeeper->getUser();
-        if ($song->isNew() || !$user instanceof User || !$song->isVisible($user)) {
-            throw new ObjectNotFoundException($song_id);
-        }
-
-        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->getId());
-        if (!in_array($song->catalog, $catalogs)) {
+        if ($song->isNew() || !$user instanceof User || !$song->isShownTo($user)) {
             throw new ObjectNotFoundException($song_id);
         }
 

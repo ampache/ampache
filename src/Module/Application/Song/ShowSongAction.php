@@ -36,7 +36,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -59,11 +58,10 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper,
     ): ?ResponseInterface {
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
         $query    = $request->getQueryParams();
         $songId   = (int) ($query['song_id'] ?? 0);
         $song     = $this->modelFactory->createSong($songId);
-        $shown    = !$song->isNew() && in_array($song->catalog, $catalogs) && $song->isVisible($user);
+        $shown    = !$song->isNew() && $song->isShownTo($user);
 
         // a stranger's page frames this, so it answers with the player alone and none of the chrome
         if (!empty($query['embed'])) {

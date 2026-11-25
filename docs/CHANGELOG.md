@@ -13,10 +13,12 @@ The web player's lyrics button now sits with the player's action buttons on ever
 ### Added (8.5.0)
 
 * Translations 2026-11-21
-* Database 850002
+* Database 850003
   * New `rotate_apikey_on_password_change` preference to reissue a user's api key and stream token when their password changes
   * New `song_data`.`lyrics_source` column (`file`, `plugin` or `user`); existing lyrics are marked `file`
   * `show_lyrics` is on by default; users who already have their own setting keep it
+  * New `share_line_access_level` preference, the lowest access level offered the share line (default User)
+  * New `share_text` preference, the sentence posted with a shared link
 * Config version 104
   * New `art_order_TYPE` key (e.g. `art_order_album`, `art_order_artist`) to override `art_order` per object type
   * New `TYPE_art_min_width`, `TYPE_art_max_width`, `TYPE_art_min_height`, `TYPE_art_max_height` keys to override the `album_art_*` size bounds per object type
@@ -28,6 +30,13 @@ The web player's lyrics button now sits with the player's action buttons on ever
   * Artist pages gain a Playlists tab listing playlists that hold the artist's songs
   * New `artist` filter on the playlist browse
 * The song license is read from an mp3's `WCOP` frame or `license` TXXX tag
+* Sharing
+  * Song, album and artist pages gain a Share line: copy link, one icon per share plugin, and the share dialog for an account
+  * The sentence posted with the link can be written by the admin in `share_text`, with `{title}`, `{artist}`, `{album}`, `{site}`, `{tags}` (as hashtags), `{user}` and `{license}` in any order; a part in `[brackets]` is left out when one of its variables is empty. With logins the networks get that sentence too, instead of the bare item name
+  * Set `share_line_access_level` to Guest and visitors share too; without logins (`use_auth = false`) the networks get the page's own link instead of a share url
+  * Where the browser has a share sheet (phones, https), the Share label opens it
+  * New WhatsApp and Telegram share plugins; each network is its own plugin, install only the ones you want
+  * Share icons are svg, the Twitter plugin shows the X logo and opens x.com directly
 * Lyrics
   * Timed (LRC) lyrics show line by line, highlighting the current line of the song in the web player
   * Editors can edit, clear or re-search lyrics from the lyrics page, and choose between plugin results

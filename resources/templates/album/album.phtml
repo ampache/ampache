@@ -29,7 +29,6 @@ use Ampache\Gui\Partial\ObjectHeaderView;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Share;
 
 /** @var Ampache\Gui\Album\AlbumPageView $this */
 
@@ -70,9 +69,7 @@ Ui::show_box_top('', 'info-box'); ?>
             </a>
         </li>
         <?php } ?>
-        <?php if ($this->showShare()) { ?>
-        <li><?php echo $this->raw(Share::display_ui($type, $albumId)); ?></li>
-        <?php } else { ?>
+        <?php if (!$this->showShare()) { ?>
         <li>
             <a href="<?php echo $this->e($this->getLink()); ?>" target="_blank">
                 <?php echo $this->raw(Ui::get_material_symbol('open_in_new', T_('Link'))); ?>&nbsp;<?php echo T_('Link'); ?>

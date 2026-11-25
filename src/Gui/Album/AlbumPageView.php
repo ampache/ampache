@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Gui\Partial\ExternalLinksView;
 use Ampache\Gui\Partial\HeaderChip;
 use Ampache\Gui\Partial\ObjectHeaderView;
+use Ampache\Gui\Partial\ShareLineView;
 use Ampache\Gui\View\AbstractView;
 use Ampache\Module\Art\Art;
 use Ampache\Module\Catalog\Catalog;
@@ -173,6 +174,9 @@ final class AlbumPageView extends AbstractView
                 ? sprintf(nT_('Played %d time', 'Played %d times', $this->getPlayedTimes()), $this->getPlayedTimes())
                 : '',
             links: $this->getExternalLinks()->render(),
+            share: ($this->showShare())
+                ? new ShareLineView($this->getObjectType(), $this->getAlbumId(), $this->getLink(), $this->webPath, $this->mayUse)->render()
+                : '',
             wideArt: true,
             notice: ($this->album->isEnabled()) ? '' : T_('Disabled'),
         );
@@ -363,7 +367,7 @@ final class AlbumPageView extends AbstractView
 
     public function showShare(): bool
     {
-        return $this->mayUse && AmpConfig::get('share');
+        return ShareLineView::isOfferedTo($this->currentUser);
     }
 
     public function showShout(): bool
