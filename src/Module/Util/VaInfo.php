@@ -1124,8 +1124,8 @@ final class VaInfo implements VaInfoInterface
         * This hasn't been tested on Windows and there is evidence that
         * metaflac.exe behaves differently.
         */
-        $backupFilename = null;
-        $writeError     = false;
+        $workFile   = $this->filename;
+        $writeError = false;
         if ($extension !== 'mp3') {
             if (php_uname('s') === 'Linux') {
                 /**
@@ -1145,21 +1145,22 @@ final class VaInfo implements VaInfoInterface
                 }
             }
 
-            // metaflac/vorbiscomment rewrite via rename, which isn't atomic on a networked mount and can delete the original.
-            $backupFilename = $this->_backupBeforeExternalTagWrite($this->filename);
-            if ($backupFilename === null) {
+            // growing a file, their tools rename a copy over it, which deletes one streamed from a cifs share
+            $workFile = tempnam(sys_get_temp_dir(), 'ampache-tags-');
+            if ($workFile === false || !copy($this->filename, $workFile)) {
                 $this->logger->error(
-                    sprintf('Writing Tags: could not create a safety backup of %s, tags not written', $this->filename),
+                    sprintf('Writing Tags: no local copy of %s, tags not written', $this->filename),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 return;
             }
 
+            $tagWriter->filename = $workFile;
             if (GETID3_OS_ISWINDOWS) {
-                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename) . ' 2>&1';
+                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($workFile) . ' 2>&1';
             } else {
-                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename) . ' 2>&1';
+                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($workFile) . ' 2>&1';
             }
 
             $commandError = shell_exec($command);
@@ -1189,31 +1190,17 @@ final class VaInfo implements VaInfoInterface
             );
         }
 
-        if ($backupFilename !== null) {
-            $this->_restoreFromBackupIfTagWriteDestroyedFile($this->filename, $backupFilename, $writeError);
+        if ($workFile !== $this->filename) {
+            // copied back over the original in place; if that fails, the tagged file stays in temp
+            if ($writeError || copy($workFile, $this->filename)) {
+                unlink($workFile);
+            } else {
+                $this->logger->error(
+                    sprintf('Writing Tags: %s not copied back, the tagged file is %s', $this->filename, $workFile),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
         }
-    }
-
-    /**
-     * Copies $filename to a backup path beside it, so a failed external tag-writer rewrite
-     * (metaflac/vorbiscomment) can be rolled back. The copy's size is checked against the
-     * original before continuing, since a network filesystem can report success on a copy()
-     * that actually truncated the data. Returns the backup path, or null on failure.
-     */
-    private function _backupBeforeExternalTagWrite(string $filename): ?string
-    {
-        $backupFilename = $filename . '.ampache-tagwrite-backup-' . bin2hex(random_bytes(4));
-        if (!copy($filename, $backupFilename)) {
-            return null;
-        }
-
-        if (filesize($backupFilename) !== filesize($filename)) {
-            unlink($backupFilename);
-
-            return null;
-        }
-
-        return $backupFilename;
     }
 
     /**
@@ -2380,33 +2367,6 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $parsed;
-    }
-
-    /**
-     * Restores $filename from $backupFilename on a reported write error or a missing/empty file,
-     * then removes the backup; $writeError forces the restore even when $filename still
-     * looks intact, since a network mount can delay a held-open file's real deletion past this check.
-     */
-    private function _restoreFromBackupIfTagWriteDestroyedFile(string $filename, string $backupFilename, bool $writeError): void
-    {
-        if ($writeError || !is_file($filename) || filesize($filename) === 0) {
-            if (copy($backupFilename, $filename) && filesize($filename) === filesize($backupFilename)) {
-                $this->logger->error(
-                    sprintf('Writing Tags: external tag writer destroyed %s, restored from backup', $filename),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-            } else {
-                // the restore didn't take, so the backup is the only good copy left; keep it instead of deleting it below
-                $this->logger->error(
-                    sprintf('Writing Tags: external tag writer destroyed %s and the restore did not take, the original is kept at %s', $filename, $backupFilename),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-
-                return;
-            }
-        }
-
-        unlink($backupFilename);
     }
 
     /**
