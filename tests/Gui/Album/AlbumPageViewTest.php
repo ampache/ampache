@@ -49,12 +49,12 @@ class AlbumPageViewTest extends TestCase
 
     protected function setUp(): void
     {
-        foreach (['share', 'share_line_access_level'] as $key) {
+        foreach (['share', 'share_access_level'] as $key) {
             $this->config[$key] = AmpConfig::get($key);
         }
 
         AmpConfig::set('share', true, true);
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::GUEST->value, true);
     }
 
     protected function tearDown(): void

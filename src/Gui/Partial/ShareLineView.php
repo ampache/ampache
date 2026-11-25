@@ -49,11 +49,11 @@ final class ShareLineView extends AbstractView
     ) {}
 
     /**
-     * Sharing is on and the visitor reaches `share_line_access_level`; Disabled (0) hides it from everyone
+     * Sharing is on and the visitor reaches `share_access_level`; Disabled (0) hides it from everyone
      */
     public static function isOfferedTo(?User $user): bool
     {
-        $level = AccessLevelEnum::tryFrom((int) AmpConfig::get(ConfigurationKeyEnum::SHARE_LINE_ACCESS_LEVEL, AccessLevelEnum::USER->value))
+        $level = AccessLevelEnum::tryFrom((int) AmpConfig::get(ConfigurationKeyEnum::SHARE_ACCESS_LEVEL, AccessLevelEnum::USER->value))
             ?? AccessLevelEnum::USER;
 
         return AmpConfig::get(ConfigurationKeyEnum::SHARE)

@@ -226,28 +226,31 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
 
         $custom = trim((string) $this->configContainer->get(ConfigurationKeyEnum::SHARE_TEXT));
         if ($custom !== '') {
-            return $this->fillShareText($custom, [
-                'title' => (string) $item->get_fullname(),
-                'artist' => match (true) {
-                    $item instanceof Artist => (string) $item->get_fullname(),
-                    $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk => $parent,
-                    default => '',
-                },
-                'album' => match (true) {
-                    $item instanceof Song => $item->get_album_fullname(),
-                    $item instanceof Album, $item instanceof AlbumDisk => $item->get_fullname(),
-                    default => '',
-                },
-                'site' => $site,
-                'tags' => match (true) {
-                    $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk,
-                    $item instanceof Artist, $item instanceof Video => $this->hashtags($item->get_tags()),
-                    default => '',
-                },
-                // the visitor without an account is the guest user, who has no name worth posting
-                'user' => ($user->id > 0) ? (string) $user->get_fullname() : '',
-                'license' => ($item instanceof Song) ? (string) $item->getLicense()?->getName() : '',
-            ]);
+            return $this->fillShareText(
+                $custom,
+                [
+                    'title' => (string) $item->get_fullname(),
+                    'artist' => match (true) {
+                        $item instanceof Artist => (string) $item->get_fullname(),
+                        $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk => $parent,
+                        default => '',
+                    },
+                    'album' => match (true) {
+                        $item instanceof Song => $item->get_album_fullname(),
+                        $item instanceof Album, $item instanceof AlbumDisk => $item->get_fullname(),
+                        default => '',
+                    },
+                    'site' => $site,
+                    'tags' => match (true) {
+                        $item instanceof Song, $item instanceof Album, $item instanceof AlbumDisk,
+                        $item instanceof Artist, $item instanceof Video => $this->hashtags($item->get_tags()),
+                        default => '',
+                    },
+                    // the visitor without an account is the guest user, who has no name worth posting
+                    'user' => ($user->id > 0) ? (string) $user->get_fullname() : '',
+                    'license' => ($item instanceof Song) ? (string) $item->getLicense()?->getName() : '',
+                ]
+            );
         }
 
         // a whole sentence per kind of item, so a translator places the names where the language wants

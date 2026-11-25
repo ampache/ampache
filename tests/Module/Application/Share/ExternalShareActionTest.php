@@ -494,7 +494,7 @@ class ExternalShareActionTest extends TestCase
     public function testAVisitorBelowTheShareLevelIsRefused(): void
     {
         $this->publicInstance();
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::USER->value, true);
         $this->request('song', 7);
 
         $this->plugin->expects(static::never())
@@ -648,12 +648,12 @@ class ExternalShareActionTest extends TestCase
         $this->gatekeeper        = $this->createMock(GuiGatekeeperInterface::class);
         $this->user->access      = AccessLevelEnum::USER->value;
 
-        foreach (['share', 'share_line_access_level'] as $key) {
+        foreach (['share', 'share_access_level'] as $key) {
             $this->config[$key] = AmpConfig::get($key);
         }
 
         AmpConfig::set('share', true, true);
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::USER->value, true);
 
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $responseFactory->method('createResponse')
@@ -771,7 +771,7 @@ class ExternalShareActionTest extends TestCase
             });
         $this->gatekeeper->method('getUser')
             ->willReturn($this->user);
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::GUEST->value, true);
         $this->user->access = AccessLevelEnum::GUEST->value;
     }
 

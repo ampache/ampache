@@ -73,7 +73,7 @@ final readonly class PreferenceChoiceProvider implements PreferenceChoiceProvide
             'jp_volume' => $this->getVolumes(),
             'lang' => get_languages(),
             'localplay_controller' => $this->getLocalplayControllers(),
-            'localplay_level', 'share_line_access_level', 'upload_access_level' => $this->getAccessLevels(),
+            'localplay_level', 'share_access_level', 'upload_access_level' => $this->getAccessLevels(),
             'personalfav_playlist' => ($owner instanceof User) ? Playlist::get_playlist_array($owner->getId()) : [],
             'personalfav_smartlist' => ($owner instanceof User) ? Search::get_search_array($owner->getId()) : [],
             'play_type' => $this->getPlayTypes($held),

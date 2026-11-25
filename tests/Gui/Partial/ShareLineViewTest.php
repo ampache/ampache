@@ -50,7 +50,7 @@ class ShareLineViewTest extends TestCase
     // a level the list never offers falls back to accounts rather than opening the line to guests
     public function testAnUnknownLevelOffersTheLineToAccounts(): void
     {
-        AmpConfig::set('share_line_access_level', 7, true);
+        AmpConfig::set('share_access_level', 7, true);
 
         self::assertFalse(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::GUEST)));
         self::assertTrue(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::USER)));
@@ -67,7 +67,7 @@ class ShareLineViewTest extends TestCase
     // the level list shows 0 as Disabled, so it hides the line even from an admin
     public function testDisabledOffersTheLineToNobody(): void
     {
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::DEFAULT->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::DEFAULT->value, true);
 
         self::assertFalse(ShareLineView::isOfferedTo($this->user(AccessLevelEnum::ADMIN)));
     }
@@ -85,7 +85,7 @@ class ShareLineViewTest extends TestCase
     // behind logins a visitor who has not signed in gets no line, even at the guest level
     public function testSomeoneNotSignedInIsOfferedNothing(): void
     {
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::GUEST->value, true);
 
         self::assertFalse(ShareLineView::isOfferedTo(null));
     }
@@ -96,7 +96,7 @@ class ShareLineViewTest extends TestCase
         $guest = $this->user(AccessLevelEnum::GUEST);
         self::assertFalse(ShareLineView::isOfferedTo($guest));
 
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::GUEST->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::GUEST->value, true);
         self::assertTrue(ShareLineView::isOfferedTo($guest));
     }
 
@@ -139,12 +139,12 @@ class ShareLineViewTest extends TestCase
 
     protected function setUp(): void
     {
-        foreach (['share', 'share_line_access_level'] as $key) {
+        foreach (['share', 'share_access_level'] as $key) {
             $this->config[$key] = AmpConfig::get($key);
         }
 
         AmpConfig::set('share', true, true);
-        AmpConfig::set('share_line_access_level', AccessLevelEnum::USER->value, true);
+        AmpConfig::set('share_access_level', AccessLevelEnum::USER->value, true);
 
         // the installed plugins are read through the global container, and none is installed here
         $dic = $this->createMockForIntersectionOfInterfaces([ContainerInterface::class, FactoryInterface::class]);
