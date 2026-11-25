@@ -1193,15 +1193,24 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * Copies $filename to a backup path beside it, so a failed external tag-writer rewrite
-     * (metaflac/vorbiscomment) can be rolled back. Returns the backup path, or null on failure.
+     * (metaflac/vorbiscomment) can be rolled back. The copy's size is checked against the
+     * original before continuing, since a network filesystem can report success on a copy()
+     * that actually truncated the data. Returns the backup path, or null on failure.
      */
     private function _backupBeforeExternalTagWrite(string $filename): ?string
     {
         $backupFilename = $filename . '.ampache-tagwrite-backup-' . bin2hex(random_bytes(4));
+        if (!copy($filename, $backupFilename)) {
+            return null;
+        }
 
-        return (copy($filename, $backupFilename))
-            ? $backupFilename
-            : null;
+        if (filesize($backupFilename) !== filesize($filename)) {
+            unlink($backupFilename);
+
+            return null;
+        }
+
+        return $backupFilename;
     }
 
     /**
@@ -2377,16 +2386,19 @@ final class VaInfo implements VaInfoInterface
     private function _restoreFromBackupIfTagWriteDestroyedFile(string $filename, string $backupFilename): void
     {
         if (!is_file($filename) || filesize($filename) === 0) {
-            if (copy($backupFilename, $filename)) {
+            if (copy($backupFilename, $filename) && filesize($filename) === filesize($backupFilename)) {
                 $this->logger->error(
                     sprintf('Writing Tags: external tag writer destroyed %s, restored from backup', $filename),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } else {
+                // the restore didn't take, so the backup is the only good copy left; keep it instead of deleting it below
                 $this->logger->error(
-                    sprintf('Writing Tags: external tag writer destroyed %s and the backup restore failed, file is lost', $filename),
+                    sprintf('Writing Tags: external tag writer destroyed %s and the restore did not take, the original is kept at %s', $filename, $backupFilename),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
+
+                return;
             }
         }
 
