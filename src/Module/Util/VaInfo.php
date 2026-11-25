@@ -1125,6 +1125,7 @@ final class VaInfo implements VaInfoInterface
         * metaflac.exe behaves differently.
         */
         $backupFilename = null;
+        $writeError     = false;
         if ($extension !== 'mp3') {
             if (php_uname('s') === 'Linux') {
                 /**
@@ -1163,6 +1164,7 @@ final class VaInfo implements VaInfoInterface
 
             $commandError = shell_exec($command);
             if (!empty($commandError)) {
+                $writeError = true;
                 $this->logger->error(
                     'Error Writing Tags: ' . $commandError,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -1180,6 +1182,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         foreach ($tagWriter->errors as $message) {
+            $writeError = true;
             $this->logger->error(
                 'Error Writing Tags: ' . $message,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -1187,7 +1190,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         if ($backupFilename !== null) {
-            $this->_restoreFromBackupIfTagWriteDestroyedFile($this->filename, $backupFilename);
+            $this->_restoreFromBackupIfTagWriteDestroyedFile($this->filename, $backupFilename, $writeError);
         }
     }
 
@@ -2380,12 +2383,13 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * Restores $filename from $backupFilename when the external tag writer left it missing or
-     * empty, then always removes the backup copy so it never lingers on disk.
+     * Restores $filename from $backupFilename on a reported write error or a missing/empty file,
+     * then removes the backup; $writeError forces the restore even when $filename still
+     * looks intact, since a network mount can delay a held-open file's real deletion past this check.
      */
-    private function _restoreFromBackupIfTagWriteDestroyedFile(string $filename, string $backupFilename): void
+    private function _restoreFromBackupIfTagWriteDestroyedFile(string $filename, string $backupFilename, bool $writeError): void
     {
-        if (!is_file($filename) || filesize($filename) === 0) {
+        if ($writeError || !is_file($filename) || filesize($filename) === 0) {
             if (copy($backupFilename, $filename) && filesize($filename) === filesize($backupFilename)) {
                 $this->logger->error(
                     sprintf('Writing Tags: external tag writer destroyed %s, restored from backup', $filename),
