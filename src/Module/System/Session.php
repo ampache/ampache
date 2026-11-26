@@ -662,6 +662,26 @@ final readonly class Session implements SessionInterface
     }
 
     /**
+     * Reads the share id a stream session was minted for, or 0 when it carries none
+     *
+     * A stream session never expires (see exists()), so this ignores `expire` the same way that does
+     */
+    public static function getShareId(string $key): int
+    {
+        if ($key === '' || $key === '0') {
+            return 0;
+        }
+
+        $db_results = Dba::read("SELECT `value` FROM `session` WHERE `id` = ? AND `type` = 'stream';", [$key]);
+        $row        = Dba::fetch_assoc($db_results);
+        $value      = (string) ($row['value'] ?? '');
+
+        return (str_starts_with($value, 'share:'))
+            ? (int) substr($value, 6)
+            : 0;
+    }
+
+    /**
      * read
      *
      * This takes a key and returns the data from the database.

@@ -246,7 +246,7 @@ final class StatsMethod implements MethodInterface
                 break;
             case 'random':
             default:
-                $results = $this->getRandom($type, $user, $userId, $limit, $input);
+                $results = $this->getRandom($type, $user, $userId, $viewer->getId(), $limit, $input);
         }
 
         if ($results === []) {
@@ -308,7 +308,7 @@ final class StatsMethod implements MethodInterface
      * @param array<string, mixed> $input
      * @return array<int|string>
      */
-    private function getRandom(string $type, User $user, int $userId, int $limit, array $input): array
+    private function getRandom(string $type, User $user, int $userId, int $viewerId, int $limit, array $input): array
     {
         switch ($type) {
             case 'song':
@@ -324,12 +324,13 @@ final class StatsMethod implements MethodInterface
                 $browse->set_user_id($user);
                 $browse->set_type('playlist_search');
                 $browse->set_sort('rand', null, false);
-                $browse->set_filter('playlist_open', $userId);
+                // playlist_open decides visibility by whoever's id is passed, so it must stay the caller's
+                $browse->set_filter('playlist_open', $viewerId);
 
                 $hideString = str_replace(
                     '%',
                     '\%',
-                    str_replace('_', '\_', (string) Preference::get_by_user($userId, 'api_hidden_playlists'))
+                    str_replace('_', '\_', (string) Preference::get_by_user($viewerId, 'api_hidden_playlists'))
                 );
                 if (!empty($hideString)) {
                     $browse->set_filter('not_starts_with', $hideString);

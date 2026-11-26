@@ -32,12 +32,14 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Mockery;
 use Mockery\MockInterface;
 use Override;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +56,93 @@ class Stats5MethodTest extends MockeryTestCase
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?Stats5Method $subject;
+
+    /**
+     * GHSA-vfj7-w766-538w: a random-playlist stats lookup must filter playlist_open by the caller, not the target
+     */
+    public function testHandleFiltersPlaylistVisibilityByTheViewerNotTheTarget(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $viewer     = $this->mock(User::class);
+        $target     = $this->mock(User::class);
+        $browse     = $this->mock(Browse::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $results = [1, 2];
+        $result  = 'some-result';
+
+        AmpConfig::set('memory_cache', true, true);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
+        Preference::add_to_cache('get_by_user-allow_personal_info_recent', 7, [1]);
+        Preference::add_to_cache('get_by_user-api_hidden_playlists', 1, ['']);
+
+        $viewer->id          = 1;
+        $viewer->streamtoken = 'viewer-token';
+        $target->id          = 7;
+        $target->shouldReceive('isNew')->andReturn(false);
+
+        $this->modelFactory->shouldReceive('createUser')
+            ->with(7)
+            ->once()
+            ->andReturn($target);
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::ALLOW_VIDEO)
+            ->once()
+            ->andReturn(true);
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->once()
+            ->andReturn(true);
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::POPULAR_THRESHOLD)
+            ->once()
+            ->andReturn(10);
+
+        $this->browseFactory->shouldReceive('create')
+            ->with(null, false)
+            ->once()
+            ->andReturn($browse);
+
+        $browse->shouldReceive('set_user_id')->once();
+        $browse->shouldReceive('set_type')->with('playlist_search')->once();
+        $browse->shouldReceive('set_sort')->with('rand', null, false)->once();
+        $browse->shouldReceive('set_filter')->with('playlist_open', 1)->once();
+        $browse->shouldReceive('get_objects')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($results);
+
+        $output->shouldReceive('setOffset')->with(5, 0)->once();
+        $output->shouldReceive('setLimit')->with(5, 10)->once();
+        $output->shouldReceive('playlists')
+            ->with(5, $results, Mockery::any(), 'some-auth')
+            ->once()
+            ->andReturn($result);
+
+        $response->shouldReceive('withBody')
+            ->once()
+            ->andReturn($response);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                ['type' => 'playlist', 'user_id' => 7, 'api_format' => 'json', 'auth' => 'some-auth'],
+                $viewer,
+                5
+            )
+        );
+    }
 
     public function testHandleRendersNothingForAUserWhoKeepsRecentPrivate(): void
     {

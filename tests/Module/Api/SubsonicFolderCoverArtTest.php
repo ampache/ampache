@@ -76,9 +76,11 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldNotReceive('errorOutput');
 
         $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
+        $user    = $this->mock(User::class);
+        $user->shouldReceive('getId')->andReturn(-1);
 
         $this->expectOutputString(self::FOLDER_ART);
-        $subject->getcoverart(['id' => 'fo-' . self::ART_FOLDER], $this->mock(User::class));
+        $subject->getcoverart(['id' => 'fo-' . self::ART_FOLDER], $user);
     }
 
     public function testGetCoverArtServesTheFirstTracksAlbumForAFolderWithoutArtOfItsOwn(): void
@@ -90,9 +92,11 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldNotReceive('errorOutput');
 
         $subject = new StreamingHandler($responseHandler, $this->mock(Subsonic_Json_Data::class), $this->mock(Subsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
+        $user    = $this->mock(User::class);
+        $user->shouldReceive('getId')->andReturn(-1);
 
         $this->expectOutputString(self::ALBUM_ART);
-        $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $this->mock(User::class));
+        $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $user);
     }
 
     public function testOpenSubsonicGetCoverArtServesTheFirstTracksAlbumToo(): void
@@ -104,9 +108,11 @@ class SubsonicFolderCoverArtTest extends MockeryTestCase
         $responseHandler->shouldNotReceive('errorOutput');
 
         $subject = new OpenSubsonicStreamingHandler($responseHandler, $this->mock(OpenSubsonic_Json_Data::class), $this->mock(OpenSubsonic_Xml_Data::class), $this->mock(StreamProxyInterface::class));
+        $user    = $this->mock(User::class);
+        $user->shouldReceive('getId')->andReturn(-1);
 
         $this->expectOutputString(self::ALBUM_ART);
-        $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $this->mock(User::class));
+        $subject->getcoverart(['id' => 'fo-' . self::ALBUM_FOLDER], $user);
     }
 
     public function testOpenSubsonicListsAFolderHoldingTracksWithCoverArt(): void

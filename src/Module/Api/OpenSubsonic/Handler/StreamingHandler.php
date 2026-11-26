@@ -32,12 +32,15 @@ use Ampache\Module\Api\OpenSubsonic_Json_Data;
 use Ampache\Module\Api\OpenSubsonic_Transcode;
 use Ampache\Module\Api\OpenSubsonic_Xml_Data;
 use Ampache\Module\Art\Art;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\Database\Query\Search;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\StreamProxyInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -127,14 +130,18 @@ final class StreamingHandler implements StreamingHandlerInterface
      */
     public function getcaptions(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
 
         $video = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$video instanceof Video || $video->isNew()) {
+        // a catalog-filtered video is refused like an id that was never there, so nothing says it exists
+        if (
+            !$video instanceof Video
+            || $video->isNew()
+            || !Catalog::has_cached_access($video->getCatalogId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -202,22 +209,60 @@ final class StreamingHandler implements StreamingHandlerInterface
 
         $art = null;
         if (($object_type == 'song')) {
+            $song = new Song($object_id);
+            if ($song->isNew() || !Catalog::has_cached_access($song->getCatalogId(), $user->getId())) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
             if (AmpConfig::get('show_song_art', false) && Art::has_db($object_id, 'song')) {
                 $art = new Art($object_id, 'song');
             } else {
                 // in most cases the song doesn't have a picture, but the album does
-                $song = new Song($object_id);
-                $art  = new Art($song->album, 'album');
+                $art = new Art($song->album, 'album');
             }
-        } elseif ($object_type == 'artist' || $object_type == 'album' || $object_type == 'podcast' || $object_type == 'playlist') {
+        } elseif ($object_type == 'artist') {
+            if (!Catalog::has_access_to_artist($object_id, $user->getId())) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'album') {
+            $album = new Album($object_id);
+            if ($album->isNew() || !Catalog::has_cached_access($album->getCatalogId(), $user->getId())) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'podcast') {
+            $podcast = new Podcast($object_id);
+            if ($podcast->isNew() || !Catalog::has_cached_access($podcast->getCatalogId(), $user->getId())) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
+            $art = new Art($object_id, $object_type);
+        } elseif ($object_type == 'playlist') {
             $art = new Art($object_id, $object_type);
         } elseif ($object_type == 'folder') {
+            $folder = new Folder($object_id);
+            if ($folder->isNew() || !Catalog::has_cached_access($folder->getCatalogId(), $user->getId())) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
             if (Art::has_db($object_id, 'folder')) {
                 $art = new Art($object_id, 'folder');
             } else {
                 // a folder browse lists albums as folders, so one without art of its own shows the album of the first track below it
-                $folder = new Folder($object_id);
-                $medias = ($folder->isNew()) ? [] : $folder->get_medias('song');
+                $medias = $folder->get_medias('song');
                 if ($medias !== []) {
                     $song = new Song($medias[0]['object_id']);
                     $art  = new Art($song->album, 'album');

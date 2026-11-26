@@ -248,12 +248,13 @@ final class Stats5Method implements MethodInterface
                         $browse->set_user_id($user);
                         $browse->set_type('playlist_search');
                         $browse->set_sort('rand', null, false);
-                        $browse->set_filter('playlist_open', $user->getId());
+                        // playlist_open decides visibility by whoever's id is passed, so it must stay the caller's
+                        $browse->set_filter('playlist_open', $viewer->id);
 
                         $hideString = str_replace(
                             '%',
                             '\%',
-                            str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists'))
+                            str_replace('_', '\_', (string) Preference::get_by_user($viewer->id, 'api_hidden_playlists'))
                         );
                         if (!empty($hideString)) {
                             $browse->set_filter('not_starts_with', $hideString);

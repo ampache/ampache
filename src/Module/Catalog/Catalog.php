@@ -1655,6 +1655,35 @@ abstract class Catalog extends database_object
         return self::getCatalogFilterRepository()->hasAccess($catalog_id, $user_id);
     }
 
+    /**
+     * has_access_to_artist
+     *
+     * An artist has no catalog column of its own, so this checks catalog_map instead of a single id
+     */
+    public static function has_access_to_artist(int $artist_id, int $user_id): bool
+    {
+        if (!AmpConfig::get('catalog_filter')) {
+            return true;
+        }
+
+        // an artist carries no catalog column, so check against the catalogs the user is already allowed
+        return self::getArtistRepository()->inCatalogs($artist_id, User::get_user_catalogs($user_id));
+    }
+
+    /**
+     * has_cached_access
+     *
+     * Same check as has_access(), cached per user so checking several objects costs one query, not one each
+     */
+    public static function has_cached_access(?int $catalog_id, int $user_id): bool
+    {
+        if ($catalog_id === null || !AmpConfig::get('catalog_filter')) {
+            return true;
+        }
+
+        return in_array($catalog_id, User::get_user_catalogs($user_id), true);
+    }
+
     public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
         if ($name === '/') {

@@ -218,20 +218,6 @@ final readonly class PlayAction implements ApplicationActionInterface
             $secret   = '';
         }
 
-        // allow disabling stat recording from the play url
-        $record_stats = true;
-        if (
-            $share_id
-            || $cache === 1
-            || !in_array($type, ['song', 'video', 'podcast_episode'])
-        ) {
-            $this->logger->debug(
-                'record_stats disabled: cache {' . $type . "}",
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-            $record_stats = false;
-        }
-
         $is_download = ($action === self::ACTION_DOWNLOAD);
         $maxbitrate  = 0;
         $resolution  = '';
@@ -363,6 +349,16 @@ final readonly class PlayAction implements ApplicationActionInterface
                 : new User(-1);
         }
 
+        // a share-bound session carries no username, so it never falls through to the request's uid/oid; the share it names decides access instead
+        if (!($user instanceof User) && $share_id === 0) {
+            $boundShareId = Session::getShareId($session_id);
+            if ($boundShareId > 0) {
+                $boundShare = new Share($boundShareId);
+                $share_id   = $boundShareId;
+                $secret     = (string) $boundShare->secret;
+            }
+        }
+
         // did you pass a specific user id? (uid)
         $user_id = ($user instanceof User)
             ? $user->id
@@ -422,7 +418,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            if (!$share->is_shared_media((int) $object_id)) {
+            if (!$share->is_shared_media((int) $object_id, $type)) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;
@@ -483,6 +479,26 @@ final readonly class PlayAction implements ApplicationActionInterface
             $playlist->generate_playlist($playlist_type);
 
             return null;
+        }
+
+        // a share never redirects to a democratic/random pick, since that would leak the owner's permanent streamtoken via Location
+        if ($share_id > 0 && ($demo_id > 0 || $random === 1)) {
+            $demo_id = 0;
+            $random  = 0;
+        }
+
+        // allow disabling stat recording from the play url; $share_id is now fully resolved, whatever supplied it
+        $record_stats = true;
+        if (
+            $share_id
+            || $cache === 1
+            || !in_array($type, ['song', 'video', 'podcast_episode'])
+        ) {
+            $this->logger->debug(
+                'record_stats disabled: cache {' . $type . "}",
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+            $record_stats = false;
         }
 
         /**

@@ -31,6 +31,7 @@ use Ampache\Module\Database\database_object;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShareRepositoryInterface;
 
@@ -199,10 +200,19 @@ class Share extends database_object
         }
 
         if (!empty($medias)) {
+            // bind the session to this share, rather than leaving it anonymous, so a captured ssid can only ever replay this share
+            $shareSession = Session::create([
+                'type' => 'stream',
+                'value' => 'share:' . $this->id,
+            ]);
+            $shareUser = clone(new User(User::INTERNAL_SYSTEM_USER_ID), [
+                'streamtoken' => $shareSession,
+            ]);
+
             $playlist->add(
                 $medias,
                 '&share_id=' . $this->id . '&share_secret=' . $this->secret,
-                new User(User::INTERNAL_SYSTEM_USER_ID)
+                $shareUser
             );
         }
 
@@ -277,8 +287,10 @@ class Share extends database_object
 
     /**
      * Has this media object come from a shared object?
+     *
+     * $requestedType must match what the share actually points to; an id is only unambiguous within its own type
      */
-    public function is_shared_media(int $media_id): bool
+    public function is_shared_media(int $media_id, string $requestedType): bool
     {
         $objectType = $this->getObjectType();
 
@@ -286,6 +298,11 @@ class Share extends database_object
             case LibraryItemEnum::ALBUM:
             case LibraryItemEnum::ALBUM_DISK:
             case LibraryItemEnum::PLAYLIST:
+                // get_songs() only ever returns song ids, whatever media types the album/playlist itself holds
+                if ($requestedType !== 'song') {
+                    return false;
+                }
+
                 /** @var Album|AlbumDisk|Playlist $object */
                 $object = $this->getLibraryItemLoader()->load(
                     LibraryItemEnum::from((string) $this->object_type),
@@ -299,7 +316,9 @@ class Share extends database_object
                     true
                 );
             default:
-                return ($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id === $media_id;
+                return $this->object_type === $requestedType
+                    && ($this->object_type == 'song' || $this->object_type == 'video')
+                    && $this->object_id === $media_id;
         }
     }
 

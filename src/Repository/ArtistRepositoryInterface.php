@@ -212,6 +212,13 @@ interface ArtistRepositoryInterface
     public function getUploaderId(int $artistId): int;
 
     /**
+     * Whether the artist has a catalog_map row in at least one of the given catalogs
+     *
+     * @param int[] $catalogIds
+     */
+    public function inCatalogs(int $artistId, array $catalogIds): bool;
+
+    /**
      * Moves everything credited to one artist onto another, or clears the credit when there is no replacement
      */
     public function migrate(int $oldArtistId, int $newArtistId): void;

@@ -607,6 +607,21 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         return (int) $this->connection->fetchOne('SELECT `user` FROM `artist` WHERE `id` = ?', [$artistId]);
     }
 
+    public function inCatalogs(int $artistId, array $catalogIds): bool
+    {
+        if ($catalogIds === []) {
+            return false;
+        }
+
+        $catalogIds   = array_values(array_map(intval(...), $catalogIds));
+        $placeholders = implode(',', array_fill(0, count($catalogIds), '?'));
+
+        return $this->connection->fetchOne(
+            "SELECT 1 FROM `catalog_map` WHERE `object_type` = 'artist' AND `object_id` = ? AND `catalog_id` IN ($placeholders) LIMIT 1;",
+            array_merge([$artistId], $catalogIds)
+        ) !== false;
+    }
+
     /**
      * Moves everything credited to one artist onto another, or clears the credit when there is no replacement
      */

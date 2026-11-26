@@ -35,6 +35,7 @@ use Ampache\Module\Api\Method\Exception\AccessDeniedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Database\database_object;
+use Ampache\Module\Database\Query\Browse;
 use Ampache\Module\Database\Query\BrowseFactoryInterface;
 use Ampache\Module\System\Preference;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -46,6 +47,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use ReflectionMethod;
 use ReflectionProperty;
 
 /**
@@ -84,6 +86,43 @@ class StatsMethodTest extends MockeryTestCase
             'podcast' => ['podcast', ConfigurationKeyEnum::PODCAST, 'Enable: podcast'],
             'podcast_episode' => ['podcast_episode', ConfigurationKeyEnum::PODCAST, 'Enable: podcast'],
         ];
+    }
+
+    /**
+     * GHSA-vfj7-w766-538w: a random-playlist stats lookup must filter playlist_open by the caller, not the target
+     */
+    public function testGetRandomFiltersPlaylistVisibilityByTheViewerNotTheTarget(): void
+    {
+        $user     = $this->mock(User::class);
+        $browse   = $this->mock(Browse::class);
+        $viewerId = 1;
+        $targetId = 7;
+        $results  = [1, 2];
+
+        AmpConfig::set('memory_cache', true, true);
+        new ReflectionProperty(database_object::class, '_enabled')->setValue(null, null);
+        Preference::add_to_cache('get_by_user-api_hidden_playlists', $viewerId, ['']);
+
+        $this->browseFactory->shouldReceive('create')
+            ->with(null, false)
+            ->once()
+            ->andReturn($browse);
+
+        $browse->shouldReceive('set_user_id')->with($user)->once();
+        $browse->shouldReceive('set_type')->with('playlist_search')->once();
+        $browse->shouldReceive('set_sort')->with('rand', null, false)->once();
+        $browse->shouldReceive('set_filter')->with('playlist_open', $viewerId)->once();
+        $browse->shouldReceive('get_objects')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($results);
+
+        $method = new ReflectionMethod(StatsMethod::class, 'getRandom');
+
+        $this->assertSame(
+            $results,
+            $method->invoke($this->subject, 'playlist', $user, $targetId, $viewerId, 10, [])
+        );
     }
 
     public function testHandleRendersNothingForAUserWhoKeepsRecentPrivate(): void

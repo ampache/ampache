@@ -145,7 +145,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $album = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$album instanceof Album || $album->isNew() || !$album->isVisible($user)) {
+        // a withdrawn or catalog-filtered album is refused like an id that was never there, so nothing says it exists
+        if (
+            !$album instanceof Album
+            || $album->isNew()
+            || !$album->isVisible($user)
+            || !Catalog::has_cached_access($album->getCatalogId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -177,7 +183,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $album = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$album instanceof Album || $album->isNew() || !$album->isVisible($user)) {
+        // a withdrawn or catalog-filtered album is refused like an id that was never there, so nothing says it exists
+        if (
+            !$album instanceof Album
+            || $album->isNew()
+            || !$album->isVisible($user)
+            || !Catalog::has_cached_access($album->getCatalogId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -294,7 +306,13 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $artist = $this->resolveArtistFromSubId($sub_id, $user->getId());
-        if ($artist === null || $artist->isNew() || !$artist->isVisible($user)) {
+        // a withdrawn or catalog-filtered artist is refused like an id that was never there, so nothing says it exists
+        if (
+            $artist === null
+            || $artist->isNew()
+            || !$artist->isVisible($user)
+            || !Catalog::has_access_to_artist($artist->getId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
@@ -560,6 +578,18 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         if ($object instanceof Album || $object instanceof Artist || $object instanceof Catalog || $object instanceof Folder) {
+            $catalogAccessible = match (true) {
+                $object instanceof Artist => Catalog::has_access_to_artist($object->getId(), $user->getId()),
+                $object instanceof Catalog => Catalog::has_cached_access($object->getId(), $user->getId()),
+                default => Catalog::has_cached_access($object->getCatalogId(), $user->getId()),
+            };
+            // a catalog-filtered album/artist/folder is refused like an id that was never there
+            if (!$catalogAccessible) {
+                $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+                return;
+            }
+
             $format = (string) ($input['f'] ?? 'xml');
             if ($format === 'xml') {
                 $response = $this->responseHandler->addXmlResponse(__FUNCTION__);
@@ -782,7 +812,6 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getsong(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
@@ -796,7 +825,12 @@ final class BrowsingHandler implements BrowsingHandlerInterface
         }
 
         $song = new Song($song_id);
-        if ($song->isNew() || !$song->enabled) {
+        // a disabled or catalog-filtered song is refused like an id that was never there, so nothing says it exists
+        if (
+            $song->isNew()
+            || !$song->enabled
+            || !Catalog::has_cached_access($song->getCatalogId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;
