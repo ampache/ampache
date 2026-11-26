@@ -130,6 +130,14 @@ class AlbumMethodTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturnTrue();
+        $album->shouldReceive('getCatalogId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(1);
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
         $album->shouldReceive('getId')
             ->withNoArgs()
             ->once()

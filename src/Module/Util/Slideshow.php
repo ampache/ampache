@@ -75,7 +75,7 @@ final readonly class Slideshow implements SlideshowInterface
 
         // no plugin configured anything usable (e.g. no Flickr key); fall back to the artist's own art already in the catalog
         if ($images === []) {
-            $images = $this->getLocalArt($song);
+            return $this->getLocalArt($song);
         }
 
         return $images;

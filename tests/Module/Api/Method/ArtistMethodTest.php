@@ -142,6 +142,14 @@ class ArtistMethodTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturnTrue();
+        $artist->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
 
         $output->shouldReceive('artists')
             ->with($apiVersion, [$objectId], $expected, $user, 'some-auth', false)
@@ -200,6 +208,14 @@ class ArtistMethodTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturnTrue();
+        $artist->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($objectId);
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
 
         // the resolved api version must reach the output untouched
         $output->shouldReceive('artists')

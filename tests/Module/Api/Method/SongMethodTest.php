@@ -126,6 +126,14 @@ class SongMethodTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturnTrue();
+        $item->shouldReceive('getCatalogId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(1);
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
 
         // the resolved api version must reach the output untouched
         $output->shouldReceive('songs')

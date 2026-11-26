@@ -111,6 +111,14 @@ class Artist3MethodTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturnTrue();
+        $artist->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($artistId);
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(42);
 
         $output->shouldReceive('artists')
             ->with(

@@ -66,7 +66,7 @@ final class NowPlayingVideoRowView extends AbstractView
             : '';
 
         if ($html === '') {
-            $html = Art::render('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $link);
+            return Art::render('video', $this->media->getId(), $this->media->getFileName(), ['width' => 100, 'height' => 150], $link);
         }
 
         return $html;
