@@ -48,10 +48,9 @@ final class ClearArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
-        $kind        = (string) filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_SPECIAL_CHARS);
-        if ($kind === '' || $kind === '0') {
-            $kind = 'default';
-        }
+        $kind        = ((string) filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_SPECIAL_CHARS) === 'preview')
+            ? 'preview'
+            : 'default';
 
         $burl = $this->deletionUrlResolver->resolveBurl(Core::get_get('burl'));
 

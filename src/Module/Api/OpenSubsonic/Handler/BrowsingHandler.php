@@ -1017,9 +1017,11 @@ final class BrowsingHandler implements BrowsingHandlerInterface
      */
     public function getvideos(array $input, User $user): void
     {
-        unset($user);
+        $catalogs = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? $user->get_catalogs('video')
+            : null;
 
-        $videos = Catalog::get_videos();
+        $videos = Catalog::get_videos($catalogs);
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = $this->responseHandler->addXmlResponse(__FUNCTION__);

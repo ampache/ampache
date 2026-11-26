@@ -375,13 +375,17 @@ final class StreamingHandler implements StreamingHandlerInterface
      */
     public function getlyricsbysongid(array $input, User $user): void
     {
-        unset($user);
         $sub_id = $this->responseHandler->checkParameter($input, 'id', __FUNCTION__);
         if ($sub_id === false) {
             return;
         }
         $song = OpenSubsonic_Api::getAmpacheObject($sub_id);
-        if (!$song instanceof Song || $song->isNew()) {
+        if (
+            !$song instanceof Song
+            || $song->isNew()
+            || !$song->enabled
+            || !Catalog::has_cached_access($song->getCatalogId(), $user->getId())
+        ) {
             $this->responseHandler->errorOutput($input, OpenSubsonic_Api::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
             return;

@@ -96,7 +96,9 @@ final class ItemMethod implements JellyfinMethodInterface
     {
         $artist = new Artist($id);
 
-        return $artist->isNew() ? null : $this->mapper->mapArtist($artist, $user, ['Overview']);
+        return ($artist->isNew() || !Catalog::has_access_to_artist($artist->getId(), $user->getId()))
+            ? null
+            : $this->mapper->mapArtist($artist, $user, ['Overview']);
     }
 
     /** @return array<string, mixed>|null */

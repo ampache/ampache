@@ -476,6 +476,12 @@ class Art extends database_object
      */
     public static function get_dir_on_disk(string $type, int $uid, string $size, string $kind = '', bool $autocreate = false): ?string
     {
+        if (!self::isSafePathSegment($type) || !self::isSafePathSegment($size) || ($kind !== '' && !self::isSafePathSegment($kind))) {
+            debug_event(self::class, sprintf('get_dir_on_disk: refusing unsafe path segment (type=%s, size=%s, kind=%s)', $type, $size, $kind), 1);
+
+            return null;
+        }
+
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
             debug_event(self::class, 'local_metadata_dir setting is required to store art on disk.', 1);
@@ -1297,6 +1303,14 @@ class Art extends database_object
         global $dic;
 
         return $dic->get(WebFetcherInterface::class);
+    }
+
+    /**
+     * A path segment interpolated into an on-disk art path must name a single component, never traverse out of it.
+     */
+    private static function isSafePathSegment(string $segment): bool
+    {
+        return $segment === basename($segment) && !str_contains($segment, '..');
     }
 
     /**

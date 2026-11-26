@@ -29,6 +29,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -93,8 +94,8 @@ final class AlbumMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        // a withdrawn album is refused like an id that was never there, so nothing says it exists
-        if (!$album->isVisible($user)) {
+        // a withdrawn or catalog-filtered album is refused like an id that was never there, so nothing says it exists
+        if (!$album->isVisible($user) || !Catalog::has_access($album->getCatalogId(), $user->getId())) {
             throw new ResultEmptyException((string) $objectId);
         }
 

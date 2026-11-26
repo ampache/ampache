@@ -29,6 +29,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -70,8 +71,8 @@ final class Artist3Method implements MethodInterface
             throw new ResultEmptyException($uid);
         }
 
-        // a withdrawn artist is refused like an id that was never there, so nothing says it exists
-        if (!$artist->isVisible($user)) {
+        // a withdrawn or catalog-filtered artist is refused like an id that was never there, so nothing says it exists
+        if (!$artist->isVisible($user) || !Catalog::has_access_to_artist($artist->getId(), $user->getId())) {
             throw new ResultEmptyException($uid);
         }
 

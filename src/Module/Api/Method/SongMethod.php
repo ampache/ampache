@@ -29,6 +29,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -83,8 +84,8 @@ final class SongMethod implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        // a disabled song is refused like an id that was never there, so nothing says it exists
-        if (!$song->isVisible($user)) {
+        // a disabled or catalog-filtered song is refused like an id that was never there, so nothing says it exists
+        if (!$song->isVisible($user) || !Catalog::has_access($song->getCatalogId(), $user->getId())) {
             throw new ResultEmptyException((string) $objectId);
         }
 

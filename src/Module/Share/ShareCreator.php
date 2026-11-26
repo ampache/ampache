@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
+use Ampache\Module\Catalog\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
@@ -96,6 +97,26 @@ final readonly class ShareCreator implements ShareCreatorInterface
 
                 return null;
             }
+        }
+
+        // a catalog-filtered object is not the sharer's to publish, whether or not they can already see its metadata
+        $catalogAccess = match ($object_type) {
+            LibraryItemEnum::ALBUM => Catalog::has_access($this->modelFactory->createAlbum($object_id)->getCatalogId(), $user->getId()),
+            LibraryItemEnum::ALBUM_DISK => Catalog::has_access($this->modelFactory->createAlbumDisk($object_id)->getCatalogId(), $user->getId()),
+            LibraryItemEnum::ARTIST => Catalog::has_access_to_artist($object_id, $user->getId()),
+            LibraryItemEnum::PODCAST => Catalog::has_access($this->modelFactory->createPodcast($object_id)->getCatalogId(), $user->getId()),
+            LibraryItemEnum::PODCAST_EPISODE => Catalog::has_access($this->modelFactory->createPodcastEpisode($object_id)->getCatalogId(), $user->getId()),
+            LibraryItemEnum::SONG => Catalog::has_access($this->modelFactory->createSong($object_id)->getCatalogId(), $user->getId()),
+            LibraryItemEnum::VIDEO => Catalog::has_access($this->modelFactory->createVideo($object_id)->getCatalogId(), $user->getId()),
+            default => true,
+        };
+        if (!$catalogAccess) {
+            $this->logger->error(
+                'create_share: not allowed to share an object outside your catalog filter',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return null;
         }
 
         if ($description === '') {
