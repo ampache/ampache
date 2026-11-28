@@ -666,7 +666,7 @@ sociable = "true"
 ; Specify a filename to look for if you always give the same filename
 ; i.e. "folder.jpg" Ampache currently only supports jpg/gif and png
 ; Especially useful if you have a front and a back image in a folder
-; comment out if Ampache should search for any jpg, gif or png
+; When that file is not in the folder, every jpg, gif or png found there is offered instead
 ; DEFAULT: "folder.jpg"
 ;album_art_preferred_filename = "folder.jpg"
 
