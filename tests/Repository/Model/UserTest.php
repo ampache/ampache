@@ -81,6 +81,20 @@ class UserTest extends TestCase
         self::assertTrue(User::build_cache([666]));
     }
 
+    public function testCreateDoesNotLookUpAnEmptyEmail(): void
+    {
+        // every account left without an email matched, so a second one without email was refused
+        AmpConfig::set('user_name_filter', 'some-user', true);
+
+        $this->userRepository->expects(static::never())
+            ->method('idByEmail');
+
+        self::assertSame(
+            0,
+            User::create('some-user', 'Full Name', '', '', 'password', AccessLevelEnum::USER)
+        );
+    }
+
     #[DataProvider('pathLikeUsernameProvider')]
     public function testCreateRejectsAUsernameThatCarriesAPathSegment(string $username): void
     {
@@ -187,5 +201,6 @@ class UserTest extends TestCase
     protected function tearDown(): void
     {
         AmpConfig::set('rotate_apikey_on_password_change', false, true);
+        AmpConfig::set('user_name_filter', '', true);
     }
 }

@@ -163,11 +163,11 @@ class User extends database_object
             return 0;
         }
 
-        // don't try to overwrite users that already exist
+        // don't overwrite existing users; an empty email would match every account left without one
         if (
             in_array(strtolower($username), [strtolower(T_('System')), 'system'])
             || self::getUserRepository()->idByUsername($username) > 0
-            || self::getUserRepository()->idByEmail($email) > 0
+            || ($email !== '' && self::getUserRepository()->idByEmail($email) > 0)
         ) {
             return 0;
         }
