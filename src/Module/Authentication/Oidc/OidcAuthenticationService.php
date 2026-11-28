@@ -40,7 +40,7 @@ final readonly class OidcAuthenticationService implements OidcAuthenticationServ
     public const string SESSION_REFERRER_KEY = 'oidc_referrer';
 
     /**
-     * Claims which are copied to the local account when configured. Mapping to the field used by Login\DefaultAction
+     * Claims copied to the local account, keyed by the field Login\DefaultAction reads from the result
      */
     private const array OPTIONAL_CLAIMS = [
         'name' => ConfigurationKeyEnum::OIDC_NAME_CLAIM,
@@ -124,7 +124,11 @@ final readonly class OidcAuthenticationService implements OidcAuthenticationServ
         ];
 
         foreach (self::OPTIONAL_CLAIMS as $field => $configKey) {
-            $claimName = $this->readConfig($configKey);
+            // name and email fall back to their standard claim as the docs say, the others stay off until set
+            $claimName = $this->readConfig($configKey) ?: match ($field) {
+                'name', 'email' => $field,
+                default => '',
+            };
             if ($claimName === '') {
                 continue;
             }

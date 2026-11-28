@@ -137,6 +137,32 @@ class OidcAuthenticationServiceTest extends MockeryTestCase
         self::assertSame('Some Name', $result['name']);
     }
 
+    // config and docs say name and email are read by default; without them an auto-created account failed
+    public function testHandleCallbackReadsNameAndEmailWhenTheirClaimsAreUnset(): void
+    {
+        $this->mockClient(
+            (object) [
+                'preferred_username' => 'some-username',
+                'name' => 'Some Name',
+                'email' => 'some-user@example.com',
+                'website' => 'https://example.com',
+            ]
+        );
+
+        $this->configureWith([]);
+
+        self::assertSame(
+            [
+                'success' => true,
+                'type' => 'oidc',
+                'username' => 'some-username',
+                'name' => 'Some Name',
+                'email' => 'some-user@example.com',
+            ],
+            $this->subject->handleCallback()
+        );
+    }
+
     public function testHandleCallbackReturnsTheConfiguredClaims(): void
     {
         $this->mockClient(
@@ -185,9 +211,6 @@ class OidcAuthenticationServiceTest extends MockeryTestCase
      */
     private function configureWith(array $config): void
     {
-        $config[ConfigurationKeyEnum::OIDC_NAME_CLAIM] ??= 'name';
-        $config[ConfigurationKeyEnum::OIDC_EMAIL_CLAIM] ??= 'email';
-
         $this->configContainer->shouldReceive('get')
             ->andReturnUsing(static fn(string $configKey): ?string => $config[$configKey] ?? null);
     }
